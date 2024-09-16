@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","title":"[WIP] The Elements of Computing Systems: Building a Modern Computer from First Principles","tags":["notes","gardenEntry"],"created":"2024-09-16T20:48:29.447+02:00","updated":"2024-09-16T21:47:05.749+02:00"}
+{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","title":"[WIP] The Elements of Computing Systems: Building a Modern Computer from First Principles","tags":["notes","gardenEntry"],"created":"2024-09-16T20:48:29.447+02:00","updated":"2024-09-16T22:19:42.816+02:00"}
 ---
 
 
@@ -23,29 +23,16 @@ Modern computers store and process information stored as two-valued signals — 
 
 A binary variable or a bit can represent two possible states: `0` and `1`; `off` and `on`; `false` and `true`; `no` and `yes`; etc. $n$ binary variables can be used to represent $2^n$ states. e.g.
 
-  
-
 | $b_2$ | $b_1$ | $b_0$ |
-
 | ----- | ----- | ----- |
-
-| 0 | 0 | 0 |
-
-| 0 | 0 | 1 |
-
-| 0 | 1 | 0 |
-
-| 0 | 1 | 1 |
-
-| 1 | 0 | 0 |
-
-| 1 | 0 | 1 |
-
-| 1 | 1 | 0 |
-
-| 1 | 1 | 1 |
-
-  
+| 0     | 0     | 0     |
+| 0     | 0     | 1     |
+| 0     | 1     | 0     |
+| 0     | 1     | 1     |
+| 1     | 0     | 0     |
+| 1     | 0     | 1     |
+| 1     | 1     | 0     |
+| 1     | 1     | 1     |
 
 ### Boolean functions
 
@@ -65,43 +52,24 @@ The total number of boolean functions for $n$ binary variables is $2^{2^n}$. Exp
 
   
 
-| Function | Expression | A=0, B=0 | A=0, B=1 | A=1, B=0 | A=1, B=1 |
-
-|----------|-------------------------------|----------|----------|----------|----------|
-
-| F0 | 0 | 0 | 0 | 0 | 0 |
-
-| F1 | NOT A AND NOT B | 1 | 0 | 0 | 0 |
-
-| F2 | NOT A AND B | 0 | 1 | 0 | 0 |
-
-| F3 | NOT A | 1 | 1 | 0 | 0 |
-
-| F4 | A AND NOT B | 0 | 0 | 1 | 0 |
-
-| F5 | NOT B | 1 | 0 | 1 | 0 |
-
-| F6 | XOR(A, B) | 0 | 1 | 1 | 0 |
-
-| F7 | NAND(A, B) | 1 | 1 | 1 | 0 |
-
-| F8 | A AND B | 0 | 0 | 0 | 1 |
-
-| F9 | XNOR(A, B) | 1 | 0 | 0 | 1 |
-
-| F10 | B | 0 | 1 | 0 | 1 |
-
-| F11 | NOT A OR B | 1 | 1 | 0 | 1 |
-
-| F12 | A | 0 | 0 | 1 | 1 |
-
-| F13 | A OR NOT B | 1 | 0 | 1 | 1 |
-
-| F14 | A OR B | 0 | 1 | 1 | 1 |
-
-| F15 | 1 | 1 | 1 | 1 | 1 |
-
-  
+| Function | Expression      | A=0, B=0 | A=0, B=1 | A=1, B=0 | A=1, B=1 |
+| -------- | --------------- | -------- | -------- | -------- | -------- |
+| F0       | 0               | 0        | 0        | 0        | 0        |
+| F1       | NOT A AND NOT B | 1        | 0        | 0        | 0        |
+| F2       | NOT A AND B     | 0        | 1        | 0        | 0        |
+| F3       | NOT A           | 1        | 1        | 0        | 0        |
+| F4       | A AND NOT B     | 0        | 0        | 1        | 0        |
+| F5       | NOT B           | 1        | 0        | 1        | 0        |
+| F6       | XOR(A, B)       | 0        | 1        | 1        | 0        |
+| F7       | NAND(A, B)      | 1        | 1        | 1        | 0        |
+| F8       | A AND B         | 0        | 0        | 0        | 1        |
+| F9       | XNOR(A, B)      | 1        | 0        | 0        | 1        |
+| F10      | B               | 0        | 1        | 0        | 1        |
+| F11      | NOT A OR B      | 1        | 1        | 0        | 1        |
+| F12      | A               | 0        | 0        | 1        | 1        |
+| F13      | A OR NOT B      | 1        | 0        | 1        | 1        |
+| F14      | A OR B          | 0        | 1        | 1        | 1        |
+| F15      | 1               | 1        | 1        | 1        | 1        |
 
 ### Logic gates
 
@@ -157,36 +125,22 @@ Truth table:
 
   
 
-| a | b | Nand(a, b) |
-
-|:---:|:---:|:----------:|
-
-| 0 | 0 | 1 |
-
-| 0 | 1 | 1 |
-
-| 1 | 0 | 1 |
-
-| 1 | 1 | 0 |
-
+| a   | b   | Nand(a, b) |
+| --- | --- | ---------- |
+| 0   | 0   | 1          |
+| 0   | 1   | 1          |
+| 1   | 0   | 1          |
+| 1   | 1   | 0          |
   
 
 API:
 
-  
-
-| | |
-
-|-----------|-------------------------------------------------------|
-
-| Chip name | `Nand` |
-
-| Input | `a`, `b` |
-
-| Output | `out` |
-
-| Function | `if ((a == 1) and (b==1)) then out = 0, else out = 1` |
-
+|           |                                                       |
+| --------- | ----------------------------------------------------- |
+| Chip name | `Nand`                                                |
+| Input     | `a`, `b`                                              |
+| Output    | `out`                                                 |
+| Function  | `if ((a == 1) and (b==1)) then out = 0, else out = 1` |
   
 
 The NAND gate is a primitive gate because it can be used to implement any boolean function. Proof:
@@ -219,33 +173,19 @@ This gate outputs the opposite value of its input’s value.
 
 Truth table:
 
-  
-
-| a | Not(a) |
-
-|-------|---------|
-
-| 0 | 1 |
-
-| 1 | 0 |
-
-  
+| a   | Not(a) |
+| --- | ------ |
+| 0   | 1      |
+| 1   | 0      |
 
 API:
 
-  
-
-| | |
-
-|-----------|-------------------------------------------|
-
-| Chip name | `Not` |
-
-| Input | `in` |
-
-| Output | `out` |
-
-| Function | `if (in == 0) then out = 1, else out = 0` |
+|           |                                           |
+| --------- | ----------------------------------------- |
+| Chip name | `Not`                                     |
+| Input     | `in`                                      |
+| Output    | `out`                                     |
+| Function  | `if (in == 0) then out = 1, else out = 0` |
 
   
 
@@ -1046,7 +986,7 @@ A binary number is a number expressed in base-2 (binary) numeral system. The bas
 
   
 
-![Counting in base-2](assets/binary_counter.gif)
+![Counting in base-2](/img/user/book-notes/assets/nand_to_tetris_binary_counter.gif)
 
   
 
