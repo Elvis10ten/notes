@@ -5,7 +5,7 @@ body {
    ***/
     
      /* Dracula Code view*/
-  --code-normal: #F8F8F2;
+  --code-normal: #F8F8F2; !important
   --code-background: #282a36;
   --dracula-foreground: #F8F8F2;
   --dracula-Comment: #6272A4;
@@ -22,14 +22,6 @@ body {
 
 /* code blocks in preview */
 
-    .markdown-rendered code {
-    color: #F8F8F2;
-    font-family: var(--font-monospace);
-    background-color: var(--code-background);
-    border-radius: var(--radius-s);
-    font-size: var(--code-size);
-    padding: .1em .25em;
-}
 pre code {
   padding: 5px !important;
   color: var(--dracula-foreground);
