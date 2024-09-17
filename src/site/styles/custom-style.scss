@@ -22,9 +22,14 @@ body {
 
 /* code blocks in preview */
 
-    code {
-    color: white;
-    }
+    .markdown-rendered code {
+    color: #F8F8F2;
+    font-family: var(--font-monospace);
+    background-color: var(--code-background);
+    border-radius: var(--radius-s);
+    font-size: var(--code-size);
+    padding: .1em .25em;
+}
 pre code {
   padding: 5px !important;
   color: var(--dracula-foreground);
