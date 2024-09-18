@@ -6,6 +6,15 @@ body {
 
   --blockquote-border-thickness: 4px !important;
   --blockquote-background-color: #f4f4f4 !important;
+  .markdown-rendered blockquote {
+    color: var(--blockquote-color);
+    font-style: var(--blockquote-font-style);
+    background-color: var(--blockquote-background-color);
+    border-left: var(--blockquote-border-thickness) solid var(--blockquote-border-color);
+    padding: 6px;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+  }
 
   --code-normal: #F8F8F2 !important;
   --code-background: #282a36 !important;
