@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","title":"[WIP] The Elements of Computing Systems: Building a Modern Computer from First Principles","tags":["notes","gardenEntry"],"created":"2024-09-16T20:48:29.447+02:00","updated":"2024-09-17T21:03:09.231+02:00"}
+{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","title":"[WIP] The Elements of Computing Systems: Building a Modern Computer from First Principles","tags":["notes","gardenEntry"],"created":"2024-09-16T20:48:29.447+02:00","updated":"2024-09-18T19:38:15.345+02:00"}
 ---
 
 
@@ -19,7 +19,9 @@ Modern computers store and process information stored as two-valued signals — 
 
 * A magnetic domain oriented clockwise or counterclockwise.
 
-  
+  >  hhhhh
+  >  kkk
+  >  m
 
 A binary variable or a bit can represent two possible states: `0` and `1`; `off` and `on`; `false` and `true`; `no` and `yes`; etc. $n$ binary variables can be used to represent $2^n$ states. e.g.
 
@@ -34,9 +36,10 @@ A binary variable or a bit can represent two possible states: `0` and `1`; `off`
 | 1     | 1     | 0     |
 | 1     | 1     | 1     |
 
-```json
-{
-"key": "value"
+```kotlin
+fun main(arg: String) {
+// prints hello world
+println("Hello world")
 }
 ```
 ### Boolean functions
