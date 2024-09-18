@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","title":"[WIP] The Elements of Computing Systems: Building a Modern Computer from First Principles","tags":["notes","gardenEntry"],"created":"2024-09-16T20:48:29.447+02:00","updated":"2024-09-18T20:38:23.376+02:00"}
+{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","title":"[WIP] The Elements of Computing Systems: Building a Modern Computer from First Principles","tags":["notes","gardenEntry","gardenEntry"],"created":"2024-09-16T20:48:29.447+02:00","updated":"2024-09-18T21:02:27.863+02:00"}
 ---
 
 
@@ -56,6 +56,47 @@ std::cout << "i = " << i << std::endl;
 }
 return 0;
 }
+```
+
+```javascript
+function caesarCipher(str, shift) {
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+    const shiftedAlphabet = alphabet.slice(shift) + alphabet.slice(0, shift);
+    const lowerCaseStr = str.toLowerCase();
+
+    let result = '';
+
+    for (let i = 0; i < lowerCaseStr.length; i++) {
+        const char = lowerCaseStr[i];
+        const index = alphabet.indexOf(char);
+
+        if (index === -1) {
+            // Character is not in the alphabet (e.g., spaces, punctuation)
+            result += char;
+        } else {
+            // Shift character
+            result += shiftedAlphabet[index];
+        }
+    }
+
+    // Preserve original case
+    return result.split('').map((char, index) => {
+        if (str[index] === str[index].toUpperCase()) {
+            return char.toUpperCase();
+        }
+        return char;
+    }).join('');
+}
+
+// Example usage:
+const plaintext = 'Hello, World!';
+const shift = 3;
+const encrypted = caesarCipher(plaintext, shift);
+console.log('Encrypted:', encrypted);
+
+const decrypted = caesarCipher(encrypted, -shift);
+console.log('Decrypted:', decrypted);
+
 ```
 ### Boolean functions
 
