@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","title":"[WIP] The Elements of Computing Systems: Building a Modern Computer from First Principles","tags":["notes","gardenEntry","gardenEntry"],"created":"2024-09-16T20:48:29.447+02:00","updated":"2024-09-18T21:02:27.863+02:00"}
+{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","title":"[WIP] The Elements of Computing Systems: Building a Modern Computer from First Principles","tags":["notes","gardenEntry"],"created":"2024-09-16T20:48:29.447+02:00","updated":"2024-09-18T21:54:09.233+02:00"}
 ---
 
 
@@ -1181,3 +1181,48 @@ A pair of binary numbers can be added bitwise from right to left, using the same
 ### Adder
 
 An adder or summer is a digital circuit used in the ALU to perform addition on binary numbers.
+
+Chapter 2  
+**🎯 Objective**: Use the gates from chapter 1 to build an ALU (Arithmetic logic unit).
+
+  
+
+The ALU is the centerpiece chip that executes all the arithmetic and logical operations performed by the computer.
+
+  
+
+### Binary numbers
+
+A **binary number** is a number expressed in the **base-2 positional numeral system**. Let $x = x_{n}x_{n − 1}x_{n − 2} ... x_{0}$ be a string of binary digits, the value of $x$ in the base-2 positional numeral system is defined as:  
+$$  
+x = \sum_{i=0}^{n} x_i \cdot b^i  
+$$
+
+  
+
+e.g.  
+$$  
+101_two = 1 \cdot 2^2 + 0 \cdot 2^1 + 1 \cdot 2^0 = 5_ten  
+$$
+
+  
+
+> [!faq]- What is a (positional) numeral system? A **numeral system** is a mathematical notation for representing numbers of a given set using digits or other symbols in a consistent manner.
+> 
+>   
+> 
+> In a **positional numeral system**, the **radix** or **base** is the number of unique digits, including the digit zero, used to represent numbers.
+
+  
+
+Any number can be represented by a sequence of bits (binary digits), which in turn may be represented by any mechanism capable of being in two mutually exclusive states.
+
+  
+
+### Signed binary numbers
+
+The three common methods of extending the binary numeral system to represent signed (positive, negative, and zero) numbers are: sign–magnitude, ones' complement, and two's complement. Of the three, two’s complement is the most commonly used today.
+
+  
+
+### Binary arithmetic
