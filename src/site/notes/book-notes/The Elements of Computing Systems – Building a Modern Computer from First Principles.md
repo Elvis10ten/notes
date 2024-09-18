@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","title":"[WIP] The Elements of Computing Systems: Building a Modern Computer from First Principles","tags":["notes","gardenEntry"],"created":"2024-09-16T20:48:29.447+02:00","updated":"2024-09-18T19:40:55.125+02:00"}
+{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","title":"[WIP] The Elements of Computing Systems: Building a Modern Computer from First Principles","tags":["notes","gardenEntry"],"created":"2024-09-16T20:48:29.447+02:00","updated":"2024-09-18T20:22:54.115+02:00"}
 ---
 
 
@@ -37,9 +37,11 @@ A binary variable or a bit can represent two possible states: `0` and `1`; `off`
 | 1     | 1     | 1     |
 
 ```kotlin
+private val variable = true;
+
 fun main(arg: String) {
 // prints hello world here.
-println("Hello world")
+println("Hello world");
 }
 ```
 ### Boolean functions
