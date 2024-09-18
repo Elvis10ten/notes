@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","title":"[WIP] The Elements of Computing Systems: Building a Modern Computer from First Principles","tags":["notes","gardenEntry"],"created":"2024-09-16T20:48:29.447+02:00","updated":"2024-09-18T20:30:34.552+02:00"}
+{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","title":"[WIP] The Elements of Computing Systems: Building a Modern Computer from First Principles","tags":["notes","gardenEntry"],"created":"2024-09-16T20:48:29.447+02:00","updated":"2024-09-18T20:38:23.376+02:00"}
 ---
 
 
@@ -43,6 +43,18 @@ private val variable = true;
 fun main(arg: String) {
 // prints hello world here.
 println("Hello world");
+}
+```
+
+```c++
+#include <iostream>
+
+int main() {
+// For loop that runs from 0 to 4
+for (int i = 0; i < 5; i++) {
+std::cout << "i = " << i << std::endl;
+}
+return 0;
 }
 ```
 ### Boolean functions
