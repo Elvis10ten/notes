@@ -6,13 +6,15 @@ body {
 
      /* Dracula Code view*/
   --code-normal: #F8F8F2 !important;
-  --code-background: #282a36;
-  --dracula-foreground: #F8F8F2;
-  --dracula-Comment: #6272A4;
-  --dracula-keyword: #FF79C6;
-  --dracula-definition: #50FA7B;
-  --dracula-variable: #F8F8F2; /*"variable" tags are used everywhere in code, but Dracula usually only uses orange color only for declaration inputs, thus white is less annoying to look at*/
-  --dracula-number: #BD93F9;
-  --dracula-function: #8BE9FD;
-  --dracula-string: #F1FA8C;
+  --code-background: #282a36 !important;
+  --dracula-foreground: #F8F8F2 !important;
+  --code-comment: #6272A4 !important;
+  --code-keyword: #FF79C6 !important;
+  --code-operator: #FF79C6 !important;
+  --code-function: #50FA7B !important;
+  --code-property: #F8F8F2 !important; /*"variable" tags are used everywhere in code, but Dracula usually only uses orange color only for declaration inputs, thus white is less annoying to look at*/
+  --code-value: #BD93F9 !important;
+  --code-tag: #8BE9FD !important;
+  --code-important: #8BE9FD !important;
+  --code-string: #F1FA8C !important;
 }
