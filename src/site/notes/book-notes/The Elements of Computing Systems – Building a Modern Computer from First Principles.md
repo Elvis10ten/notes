@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","title":"[WIP] The Elements of Computing Systems: Building a Modern Computer from First Principles","tags":["notes","gardenEntry"],"created":"2024-09-16T20:48:29.447+02:00","updated":"2024-09-18T21:54:09.233+02:00"}
+{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","title":"[WIP] The Elements of Computing Systems: Building a Modern Computer from First Principles","tags":["notes","gardenEntry"],"created":"2024-09-16T20:48:29.447+02:00","updated":"2024-09-19T17:27:41.772+02:00"}
 ---
 
 
@@ -1040,127 +1040,103 @@ HDL:
 
 ```
 
-  
+## Chapter 2: Boolean arithmetic
+**🎯 Objective**: Use the gates from chapter 1 to build an ALU (Arithmetic logic unit).
 
-## Chapter 2
+The ALU is the centerpiece chip that executes all the arithmetic and logical operations performed by the computer.
 
-### Binary number
+### Binary numbers
+A **binary number** is a number expressed in the **base-2 positional numeral system**. Let $x = x_{n}x_{n − 1}x_{n − 2} ... x_{0}$ be a string of binary digits, the value of $x$ in the base-2 positional numeral system is defined as:  
+$$  
+x = \sum_{i=0}^{n} x_i \cdot b^i  
+$$
 
-A binary number is a number expressed in base-2 (binary) numeral system. The base-2 numeral system is a positional notation with a radix of 2.
-
-  
-
-![Counting in base-2](/img/user/book-notes/assets/nand_to_tetris_binary_counter.gif)
-
-  
-
-Each binary digit (bit) represents an increasing power of $2$, with the rightmost bit representing $2^0$, the next representing $2^1$, then $2^2$, and so on. e.g.
-
-  
+e.g.    
 
 $100101_2$ = $[ ( 1 ) × 2^5 ] + [ ( 0 ) × 2^4 ] + [ ( 0 ) × 2^3 ] + [ ( 1 ) × 2^2 ] + [ ( 0 ) × 2^1 ] + [ ( 1 ) × 2^0 ]$
 
 $100101_2$ = $[ 1 × 32 ] + [ 0 × 16 ] + [ 0 × 8 ] + [ 1 × 4 ] + [ 0 × 2 ] + [ 1 × 1 ]$
 
-$100101_2$ = $37_10$
+$100101_2$ = $37_{10}$
 
-  
+> [!faq]- What is a (positional) numeral system?
+> 
+> A **numeral system** is a mathematical notation for representing numbers of a given set using digits or other symbols in a consistent manner.
+> 
+>   
+> 
+> In a **positional numeral system**, the **radix** or **base** is the number of unique digits, including the digit zero, used to represent numbers.
 
-Any number can be represented by a sequence of bits, which in turn can be represented by any mechanism capable of being in two mutually exclusive states.
+Computers represent numbers in binary. Any number can be represented by a sequence of bits (binary digits), which in turn may be represented by any mechanism capable of being in two mutually exclusive states.
 
-  
+Integer numbers are unbounded: for any given number $x$, there are integers that are less than $x$ and integers greater than $x$. However, computers are finite machines that use a fixed word size for representing numbers. An 8-bit register can represent $2^8 = 256$ different things. Using $n$ bits, we can represent all the nonnegative integers ranging from $0$ to $2^n - 1$.
 
-Integer numbers are unbounded: for any given number $x$, there are integers that are less than $x$ and integers greater than $x$. However, computers are finite machines that use a fixed word size for reprensenting numbers. An 8-bit register can represent $2^8 = 256$ different things. Using $n$ bits, we can represent all the nonnegative integers ranging from $0$ to $2^n - 1$.
+### Signed binary numbers
+The three common methods of extending the binary numeral system to represent signed (positive, negative, and zero) numbers are:
+* Sign–magnitude,
+* Ones' complement, and
+* Two's complement.
 
-  
+Of the three, two’s complement is the most commonly used today
 
 #### Two's complement
-
-A two's complement number system encodes positive and negative numbers in a binary number representation. The weight of each bit is a power of two, except for the most significant bit (aka sign bit), whose weight is the negative of the corresponding power of two. The value $w$ of an $N$-bit integer $a_{N-1} a_{N-2} ... a_0$ is given by the following formula:
+A two's complement number system encodes positive and negative numbers in a binary number representation. The weight of each bit is a power of two, except for the **most significant bit** (aka **sign bit**), whose weight is the negative of the corresponding power of two. The value $w$ of an $N$-bit integer $a_{N-1} a_{N-2} ... a_0$ is given by the following formula:
 
 $$
-
-w = -a_{N-1} 2^{N-1} + \sum_{i=0}^{N-2} a_i 2^i
-
+w = -(a_{N-1} 2^{N-1}) + \sum_{i=0}^{N-2} a_i 2^i
 $$
 
   
 
 The two's complement of an $N$-bit number is the complement of that number with respect to $2^N$. i.e. Given that $x$ is an $N$-bit number and $y$ is its two's complement, then $x + y = 2^N$. e.g.
 
-  
-
 $$
-
 N = 3
-
+$$
+$$
 2^N = 2^3 = 8_10 = 1000_2
-
+$$
+$$
 If \space x = 011_2 \space (3_10)
-
+$$
+$$
 Then \space y \space (x's \space two's \space complement) = 101_2 \space (5_10)
-
+$$
+$$
 Because,
-
+$$
+$$
 011_2 + 101_2 = 1000_2 = 2^N
-
 $$
 
-  
-
-##### How to calculate
-
+##### How to calculate the two's complement of a number
 Calculation of the two's complement of a number essentially means subtracting the number from $2^N$. But as can be seen from the 3-bit example and the 4-bit $1000_2$, the number $2^N$ will not itself be representable in a system limited to $N$ bits, as it is just outside the $N$ bit space. Because of this, systems with maximally $N$-bit must break the subtraction into two operations:
 
-1. First, subtract from the maximum number in the $N$-bit system, that is $2^N - 1$. This term in binary is actually a simple number consisting of 'all 1s', and a subtraction from it can be done by simply inverting all bits in the number. The number obtained in this step is called the **ones' complement** because summing it with the orignal number yields 'all 1s'.
-
+1. First, subtract from the maximum number in the $N$-bit system, that is $2^N - 1$. This term in binary is actually a simple number consisting of 'all 1s', and a subtraction from it can be done by simply inverting all bits in the number. The number obtained in this step is called the **ones' complement** because summing it with the original number yields 'all 1s'.
 2. Secondly, add one to the result.
 
-  
-
 | Bits | Unsigned value | Signed value (Two's complement) |
+| ---- | -------------- | ------------------------------- |
+| 000  | 0              | 0                               |
+| 001  | 1              | 1                               |
+| 010  | 2              | 2                               |
+| 011  | 3              | 3                               |
+| 100  | 4              | -4                              |
+| 101  | 5              | -3                              |
+| 110  | 6              | -2                              |
+| 111  | 7              | -1                              |
 
-|--------|----------|--------------------------|
+##### Why the two's complement system works
+Given a set of all possible $N$-bit values, we can assign the lower (by the binary value) half to be the integers from 0 to ($2^{N-1} - 1) inclusive and the upper half to be $-2^{N-1}$ to $-1$ inclusive. The upper half (again, by the binary value) can be used to represent negative integers from $-2^{N-1}$ to $-1$ because, under addition modulo $2^N$ they behave the same way as those negative integers. That is to say that, because $i + j \bmod 2^N = i + (j + 2^N) \bmod 2^N$, any value in the set $\{j + k2^N \space | \space k \space is \space an \space integer\}$ can be used in place of $j$. Fundamentally, the system counts negative numbers by counting backwards and wrapping around.
 
-| 000 | 0 | 0 |
-
-| 001 | 1 | 1 |
-
-| 010 | 2 | 2 |
-
-| 011 | 3 | 3 |
-
-| 100 | 4 | -4 |
-
-| 101 | 5 | -3 |
-
-| 110 | 6 | -2 |
-
-| 111 | 7 | -1 |
-
-  
-
-##### Why it works
-
-Given a set of all possible $N$-bit values, we can assign the lower (by the binary value) half to be the integers from 0 to ($2^{N-1} - 1) inclusive and the upper half to be $-2^{N-1}$ to $-1$ inclusive. The upper half (again, by the binary value) can be used to represent negative integers from $-2^{N-1}$ to $-1$ because, under addition modulo $2^N$ they behave the same way as those negative integers. That is to say that, because $i + j \bmod 2^N = i + (j + 2^N) \bmod 2^N$, any value in the set ${j + k2^N | k \space is \space an \space integer}$ can be used in place of $j$. Fundamentally, the system counts negative numbers by counting backwards and wrapping around.
-
-  
-
-##### Benefits
-
+##### Benefits of the two's complement system
 The two's complement system has the following advantages over other systems for representing signed numbers:
 
-1. The fundamental arithmetic operations of addition, subtraction, and multiplication are identical to those for unsigned binary numbers (as long as the inputs are represented in the same number of bits as the output, and any overflow beyond those bits are discarded from the result). The system therefore allows certain arithmetic operations without dedicated or sign detection circuit.
+1. The fundamental arithmetic operations of addition, subtraction, and multiplication are identical to those for unsigned binary numbers (as long as the inputs are represented in the same number of bits as the output, and any overflow beyond those bits are discarded from the result). The system therefore allows certain arithmetic operations without requiring dedicated arithmetic or sign detection circuit.
+2. It has no representation for negative zero (unlike the ones' complement and sign-magnitude representations).
 
-2. It has no representation for negative zero.
-
-  
-
-## Binary addition
-
+### Binary arithmetic
 A pair of binary numbers can be added bitwise from right to left, using the same decimal addition algorithm learned in elementary school.
-
-  
 
 ```
 
@@ -1176,53 +1152,6 @@ A pair of binary numbers can be added bitwise from right to left, using the same
 
 ```
 
-  
-
 ### Adder
 
 An adder or summer is a digital circuit used in the ALU to perform addition on binary numbers.
-
-Chapter 2  
-**🎯 Objective**: Use the gates from chapter 1 to build an ALU (Arithmetic logic unit).
-
-  
-
-The ALU is the centerpiece chip that executes all the arithmetic and logical operations performed by the computer.
-
-  
-
-### Binary numbers
-
-A **binary number** is a number expressed in the **base-2 positional numeral system**. Let $x = x_{n}x_{n − 1}x_{n − 2} ... x_{0}$ be a string of binary digits, the value of $x$ in the base-2 positional numeral system is defined as:  
-$$  
-x = \sum_{i=0}^{n} x_i \cdot b^i  
-$$
-
-  
-
-e.g.  
-$$  
-101_two = 1 \cdot 2^2 + 0 \cdot 2^1 + 1 \cdot 2^0 = 5_ten  
-$$
-
-  
-
-> [!faq]- What is a (positional) numeral system? A **numeral system** is a mathematical notation for representing numbers of a given set using digits or other symbols in a consistent manner.
-> 
->   
-> 
-> In a **positional numeral system**, the **radix** or **base** is the number of unique digits, including the digit zero, used to represent numbers.
-
-  
-
-Any number can be represented by a sequence of bits (binary digits), which in turn may be represented by any mechanism capable of being in two mutually exclusive states.
-
-  
-
-### Signed binary numbers
-
-The three common methods of extending the binary numeral system to represent signed (positive, negative, and zero) numbers are: sign–magnitude, ones' complement, and two's complement. Of the three, two’s complement is the most commonly used today.
-
-  
-
-### Binary arithmetic
