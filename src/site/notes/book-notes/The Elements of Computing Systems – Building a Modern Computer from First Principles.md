@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","title":"[WIP] The Elements of Computing Systems: Building a Modern Computer from First Principles","tags":["notes","gardenEntry"],"created":"2024-09-16T20:48:29.447+02:00","updated":"2024-09-19T17:27:41.772+02:00"}
+{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","title":"[WIP] The Elements of Computing Systems: Building a Modern Computer from First Principles","tags":["notes","gardenEntry"],"created":"2024-09-16T20:48:29.447+02:00","updated":"2024-09-19T20:45:59.540+02:00"}
 ---
 
 
@@ -1088,7 +1088,7 @@ $$
 
   
 
-The two's complement of an $N$-bit number is the complement of that number with respect to $2^N$. i.e. Given that $x$ is an $N$-bit number and $y$ is its two's complement, then $x + y = 2^N$. e.g.
+The two's complement of an $N$-bit number is the complement of that number with respect to $2^N$ (this is the property that gives this system its name). i.e. Given that $x$ is an $N$-bit number and $y$ is its two's complement, then $x + y = 2^N$. e.g.
 
 $$
 N = 3
@@ -1097,14 +1097,9 @@ $$
 2^N = 2^3 = 8_10 = 1000_2
 $$
 $$
-If \space x = 011_2 \space (3_10)
+If \space x = 011_2 \space (3_{10})
 $$
-$$
-Then \space y \space (x's \space two's \space complement) = 101_2 \space (5_10)
-$$
-$$
-Because,
-$$
+Then $y$ ($x$'s two's complement) $= 101_2$ $(5_{10})$ because:
 $$
 011_2 + 101_2 = 1000_2 = 2^N
 $$
@@ -1129,12 +1124,23 @@ Calculation of the two's complement of a number essentially means subtracting th
 ##### Why the two's complement system works
 Given a set of all possible $N$-bit values, we can assign the lower (by the binary value) half to be the integers from 0 to ($2^{N-1} - 1) inclusive and the upper half to be $-2^{N-1}$ to $-1$ inclusive. The upper half (again, by the binary value) can be used to represent negative integers from $-2^{N-1}$ to $-1$ because, under addition modulo $2^N$ they behave the same way as those negative integers. That is to say that, because $i + j \bmod 2^N = i + (j + 2^N) \bmod 2^N$, any value in the set $\{j + k2^N \space | \space k \space is \space an \space integer\}$ can be used in place of $j$. Fundamentally, the system counts negative numbers by counting backwards and wrapping around.
 
+Given $2^N = 2^3$, these are some examples:
+
+| Addition in the two's complement system      | Addition modulo $2^3$                                             |
+| -------------------------------------------- | ----------------------------------------------------------------- |
+| $-4 + 3 = -1$ (represented as $7$ in binary) | $4 + 3 \bmod 8 = 7$ (the two's complement representation of $-1$) |
+| $-3 + 3 = 0$ (represented as $0$ in binary)  | $5 + 3 \bmod 8 = 8$ (the two's complement representation of $0$)  |
+| $-2 + 3 = 1$ (represented as $1$ in binary)  | $6 + 3 \bmod 8 = 1$ (the two's complement representation of $1$)  |
+
 ##### Benefits of the two's complement system
 The two's complement system has the following advantages over other systems for representing signed numbers:
 
-1. The fundamental arithmetic operations of addition, subtraction, and multiplication are identical to those for unsigned binary numbers (as long as the inputs are represented in the same number of bits as the output, and any overflow beyond those bits are discarded from the result). The system therefore allows certain arithmetic operations without requiring dedicated arithmetic or sign detection circuit.
+1. The fundamental arithmetic operations of addition, subtraction, and multiplication are identical to those for unsigned binary numbers (as long as the inputs are represented in the same number of bits as the output, and any overflow beyond those bits are discarded from the result).
 2. It has no representation for negative zero (unlike the ones' complement and sign-magnitude representations).
 
+The material implications of these theoretical results are significant:
+* Dedicated hardware is not needed to handle arithmetic with signed numbers.
+* Subtraction can be treated as adding the complement of the subtrahend. Again, no dedicated hardware required.
 ### Binary arithmetic
 A pair of binary numbers can be added bitwise from right to left, using the same decimal addition algorithm learned in elementary school.
 
@@ -1142,16 +1148,16 @@ A pair of binary numbers can be added bitwise from right to left, using the same
 
 1 1 1 1 1 (carried bits )
 
-0 1 1 0 1
+  0 1 1 0 1 (13_10)
 
-+ 1 0 1 1 1
++ 1 0 1 1 1 (23_10)
 
 -------------
 
-= 1 0 0 1 0 0 = 36
+1 0 0 1 0 0 (36_10)
 
 ```
-
+### Specification
 ### Adder
 
-An adder or summer is a digital circuit used in the ALU to perform addition on binary numbers.
+An adder or summer is a digital circuit used in the ALU to perform addition on binary numbers. We saw that computer hardware for binary addition of two $n$-bit numbers can be built from logic gates designed to calculate the sum of three bits (pair of bits plus carry bit).
