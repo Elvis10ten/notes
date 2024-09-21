@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","tags":["hardware","book-notes"],"created":"2024-09-16T20:48:29.447+02:00","updated":"2024-09-21T14:03:58.978+02:00"}
+{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","tags":["hardware","book-notes"],"updated":"2024-09-21T14:03:58.978+02:00"}
 ---
 
 
