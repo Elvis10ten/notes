@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ meta.mainLanguage }}">
   <head>
-    <base href="/notes" target="">
     <title>{% if title %}{{ title }}{% else %}{{ page.fileSlug }}{% endif %}</title>
     {%include "components/pageheader.njk"%}
     {% for imp in dynamics.common.head %}
