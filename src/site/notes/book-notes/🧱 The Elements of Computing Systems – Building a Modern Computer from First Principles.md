@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","tags":["hardware","book-notes"],"updated":"2024-09-23T21:16:21.267+02:00"}
+{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","tags":["hardware","book-notes"],"updated":"2024-09-23T21:19:59.342+02:00"}
 ---
 
 
@@ -1247,6 +1247,7 @@ HDL:
 ```
 
 ## Chapter 2: Boolean arithmetic
+
 **🎯 Objective**: Use the gates from chapter 1 to build an ALU (Arithmetic logic unit).
 
 The ALU is the centerpiece chip that executes all the arithmetic and logical operations performed by the computer.
