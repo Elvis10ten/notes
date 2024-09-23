@@ -1,22 +1,14 @@
 ---
-{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","tags":["hardware","book-notes"],"updated":"2024-09-21T14:03:58.978+02:00"}
+{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","tags":["hardware","book-notes"],"updated":"2024-09-21T21:27:59.772+02:00"}
 ---
 
 
-  
-
 ## Chapter 1: Boolean logic
-
-  
-
 ### Binary variables
 
-Modern computers store and process information stored as two-valued signals — called `bits` (i.e. binary digits). Two-value signals were chosen because they can readily be represented, stored, and transmitted. For example, as:
-
-* The presence or absence of a hole in a punched card
-
-* High or low voltage on a wire
-
+Modern computers store and process information stored as two-valued signals — called `bits` (i.e. binary digits). Two-value signals were chosen because they can readily be represented, stored, and transmitted. For example, they can be represented as:
+* The presence or absence of a hole in a punched card,
+* High or low voltage on a wire,
 * A magnetic domain oriented clockwise or counterclockwise.
 
 A binary variable or a bit can represent two possible states: `0` and `1`; `off` and `on`; `false` and `true`; `no` and `yes`; etc. $n$ binary variables can be used to represent $2^n$ states. e.g.
@@ -32,19 +24,13 @@ A binary variable or a bit can represent two possible states: `0` and `1`; `off`
 
 **Boolean algebra** is used to manipulate binary values. A boolean function (aka boolean operator) is a function that operates on binary inputs and returns binary outputs.
 
-  
-
-The total number of boolean functions for $n$ binary variables is $2^{2^n}$. Explanation:
+The total number of boolean functions for $n$ binary variables is $2^{2^n}$, because:
 
 * There are $2^n$ input combinations.
-
 * Each of these input combinations can be mapped to either `0` or `1`.
+* Therefore, the total number of boolean functions is: $2^{2^n}$
 
-* The total number of boolean functions is thus: $2^{2^n}$
-
-* e.g. There are `16` distinct boolean functions for `2` binary variables.
-
-  
+e.g. There are `16` distinct boolean functions for `2` binary variables.
 
 | Function | Expression      | A=0, B=0 | A=0, B=1 | A=1, B=0 | A=1, B=1 |
 | -------- | --------------- | -------- | -------- | -------- | -------- |
