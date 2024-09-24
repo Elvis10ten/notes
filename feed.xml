@@ -3,14 +3,14 @@
     <title>Elvis Chidera</title>
     <link href="https://elvischidera.com/notes/feed.xml" rel="self" />
     <link href="https://elvischidera.com/notes" />
-    <updated>2024-09-23T19:20:31Z</updated>
+    <updated>2024-09-24T16:53:59Z</updated>
     <id>https://elvischidera.com/notes</id>
         <entry>
             <title>
                 🧱 The Elements of Computing Systems – Building a Modern Computer from First Principles
                 
             </title>
-            <updated>2024-09-23T19:19:59.342Z</updated>
+            <updated>2024-09-24T16:53:22.410Z</updated>
             <id>https://elvischidera.com/notes/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/</id>
             <content type="html">
                 &lt;h2 id=&quot;chapter-1-boolean-logic&quot; tabindex=&quot;-1&quot;&gt;Chapter 1: Boolean logic&lt;/h2&gt;
@@ -224,7 +224,7 @@
 &lt;h5 id=&quot;nand-gate&quot; tabindex=&quot;-1&quot;&gt;Nand gate&lt;/h5&gt;
 
 &lt;!-- Created with Inkscape (http://www.inkscape.org/) --&gt;
-&lt;p&gt;&lt;svg xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot; xmlns:cc=&quot;http://web.resource.org/cc/&quot; xmlns:rdf=&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot; xmlns:svg=&quot;http://www.w3.org/2000/svg&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; xmlns:sodipodi=&quot;http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd&quot; xmlns:inkscape=&quot;http://www.inkscape.org/namespaces/inkscape&quot; id=&quot;svg2&quot; sodipodi:version=&quot;0.32&quot; inkscape:version=&quot;0.43&quot; width=&quot;400pt&quot; height=&quot;144pt&quot; sodipodi:docbase=&quot;D:&#92;wiki_svg&quot; sodipodi:docname=&quot;Nand-gate-en.svg&quot; version=&quot;1.0&quot;&gt;&lt;br /&gt;
+&lt;p&gt;&lt;svg xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot; xmlns:cc=&quot;http://creativecommons.org/ns#&quot; xmlns:rdf=&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot; xmlns:svg=&quot;http://www.w3.org/2000/svg&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; xmlns:sodipodi=&quot;http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd&quot; xmlns:inkscape=&quot;http://www.inkscape.org/namespaces/inkscape&quot; id=&quot;svg2&quot; sodipodi:version=&quot;0.32&quot; inkscape:version=&quot;0.48.3.1 r9886&quot; width=&quot;400pt&quot; height=&quot;144pt&quot; sodipodi:docname=&quot;Nand-gate-en.svg&quot; version=&quot;1.0&quot;&gt;&lt;br /&gt;
 &lt;metadata id=&quot;metadata7&quot;&gt;&lt;br /&gt;
 &lt;a href=&quot;rdf:RDF&quot; target=&quot;_blank&quot; class=&quot;external-link&quot;&gt;rdf:RDF&lt;/a&gt;&lt;br /&gt;
 &amp;lt;cc:Work&lt;br /&gt;
@@ -232,6 +232,7 @@ rdf:about=&amp;quot;&amp;quot;&amp;gt;&lt;br /&gt;
 &lt;a href=&quot;dc:format&quot; target=&quot;_blank&quot; class=&quot;external-link&quot;&gt;dc:format&lt;/a&gt;image/svg+xml&amp;lt;/dc:format&amp;gt;&lt;br /&gt;
 &amp;lt;dc:type&lt;br /&gt;
 rdf:resource=&amp;quot;&lt;a href=&quot;http://purl.org/dc/dcmitype/StillImage&quot; target=&quot;_blank&quot; class=&quot;external-link&quot;&gt;http://purl.org/dc/dcmitype/StillImage&lt;/a&gt;&amp;quot; /&amp;gt;&lt;br /&gt;
+&lt;a href=&quot;dc:title&quot; target=&quot;_blank&quot; class=&quot;external-link&quot;&gt;dc:title&lt;/a&gt;&amp;lt;/dc:title&amp;gt;&lt;br /&gt;
 &amp;lt;/cc:Work&amp;gt;&lt;br /&gt;
 &amp;lt;/rdf:RDF&amp;gt;&lt;br /&gt;
 &lt;/metadata&gt;&lt;br /&gt;
@@ -252,7 +253,9 @@ inkscape:cx=&amp;quot;303.21391&amp;quot;&lt;br /&gt;
 inkscape:cy=&amp;quot;52.95286&amp;quot;&lt;br /&gt;
 inkscape:window-x=&amp;quot;66&amp;quot;&lt;br /&gt;
 inkscape:window-y=&amp;quot;66&amp;quot;&lt;br /&gt;
-inkscape:current-layer=&amp;quot;svg2&amp;quot; /&amp;gt;&lt;br /&gt;
+inkscape:current-layer=&amp;quot;svg2&amp;quot;&lt;br /&gt;
+showgrid=&amp;quot;false&amp;quot;&lt;br /&gt;
+inkscape:window-maximized=&amp;quot;0&amp;quot; /&amp;gt;&lt;br /&gt;
 &lt;text xml:space=&quot;preserve&quot; style=&quot;font-size:72px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Verdana&quot; x=&quot;9&quot; y=&quot;77.173828&quot; id=&quot;text1308&quot; sodipodi:linespacing=&quot;125%&quot;&gt;&lt;tspan sodipodi:role=&quot;line&quot; id=&quot;tspan1310&quot; x=&quot;9&quot; y=&quot;77.173828&quot;&gt;A&lt;/tspan&gt;&lt;/text&gt;&lt;br /&gt;
 &lt;text sodipodi:linespacing=&quot;125%&quot; id=&quot;text1312&quot; y=&quot;155.17383&quot; x=&quot;9&quot; style=&quot;font-size:72px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Verdana&quot; xml:space=&quot;preserve&quot;&gt;&lt;tspan y=&quot;155.17383&quot; x=&quot;9&quot; id=&quot;tspan1314&quot; sodipodi:role=&quot;line&quot;&gt;B&lt;/tspan&gt;&lt;/text&gt;&lt;br /&gt;
 &lt;path style=&quot;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:7.5;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none&quot; d=&quot;M 72,51 L 185,51&quot; id=&quot;path1316&quot;&gt;&lt;/path&gt;&lt;br /&gt;
@@ -260,7 +263,6 @@ inkscape:current-layer=&amp;quot;svg2&amp;quot; /&amp;gt;&lt;br /&gt;
 &lt;use x=&quot;0&quot; y=&quot;0&quot; xlink:href=&quot;#path1316&quot; id=&quot;use2208&quot; transform=&quot;translate(196.5757,39)&quot; width=&quot;500&quot; height=&quot;180&quot;&gt;&lt;/use&gt;&lt;br /&gt;
 &lt;path id=&quot;rect2193&quot; style=&quot;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:7.49999857;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1&quot; d=&quot;M 207,171 L 135.7,170.99994 L 135.7,12.499996 L 207.46,12.49997 C 246.3576,12.499945 278.3,48.003958 278.3,91.749974 C 278.3,135.49599 246.3576,171 207,171 z &quot; sodipodi:nodetypes=&quot;ccccsc&quot;&gt;&lt;/path&gt;&lt;br /&gt;
 &lt;text xml:space=&quot;preserve&quot; style=&quot;font-size:56px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Verdana&quot; x=&quot;395.41205&quot; y=&quot;109.23633&quot; id=&quot;text2210&quot; sodipodi:linespacing=&quot;125%&quot;&gt;&lt;tspan sodipodi:role=&quot;line&quot; id=&quot;tspan2212&quot; x=&quot;395.41205&quot; y=&quot;109.23633&quot;&gt;out&lt;/tspan&gt;&lt;/text&gt;&lt;br /&gt;
-&lt;path transform=&quot;translate(12.90989,-0.353527)&quot; d=&quot;M 305.47014 89.843887 A 20.152544 20.152544 0 1 1  265.16505,89.843887 A 20.152544 20.152544 0 1 1  305.47014 89.843887 z&quot; sodipodi:ry=&quot;20.152544&quot; sodipodi:rx=&quot;20.152544&quot; sodipodi:cy=&quot;89.843887&quot; sodipodi:cx=&quot;285.3176&quot; id=&quot;path2247&quot; style=&quot;opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:7.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1&quot; sodipodi:type=&quot;arc&quot;&gt;&lt;/path&gt;&lt;br /&gt;
 &lt;/svg&gt;&lt;/p&gt;
 &lt;p&gt;Shorthand for &lt;strong&gt;Not-And&lt;/strong&gt; because its equivalent to &lt;code&gt;Not(And(a, b))&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Truth table:&lt;/p&gt;
