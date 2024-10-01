@@ -43,7 +43,7 @@
 #book-notes
 </a>
 </div>
-<div class="timestamps"><div><i icon-name="calendar-clock"></i> <span class="human-date" data-date="2024-09-24T19:09:26.204+02:00"></span></div></div></div>
+<div class="timestamps"><div><i icon-name="calendar-clock"></i> <span class="human-date" data-date="2024-10-01T19:38:16.715+02:00"></span></div></div></div>
 </header>
 <h2 id="chapter-1-boolean-logic" tabindex="-1">Chapter 1: Boolean logic</h2>
 <h3 id="binary-variables" tabindex="-1">Binary variables</h3>
@@ -245,7 +245,7 @@
 <li><strong>Internal</strong>: The implementation of the gate. There can be multiple implementations of a gate’s interface. The goal is to find an implementation that is correct (functional requirement) and efficient (performance requirement).</li>
 </ol>
 <h3 id="hardware-description-language-hdl" tabindex="-1">Hardware description language (HDL)</h3>
-<p>Hardware description language is a formalism used by hardware designers to design chip architecture.</p>
+<p>A hardware description language (HDL) is a specialized computer language used to describe the structure and behavior of chips.</p>
 <blockquote>
 <p>The designer specifies the chip logic by writing a HDL program, which is then subjected to a rigorous battery of tests. The tests are carried out virtually, using computer simulation: A special software tool, called a <strong>hardware simulator</strong>, takes the HDL program as input and creates a software representation of the chip logic. Next, the designer can instruct the simulator to test the virtual chip on various sets of inputs. The simulator computes the chip outputs, which are then compared to the desired outputs.</p>
 </blockquote>
@@ -853,7 +853,7 @@ And(a= in, b= sel, out= b);
 
 </code></pre>
 <h4 id="multi-bit-versions-of-basic-gates" tabindex="-1">Multi-bit versions of basic gates</h4>
-<p>This section describes several 16-bit logic gates that will be needed for constructing our target computer platform. HDL programs treat multi-bit values like single-bit values, except that the values can be indexed in order to access individual bits. For example, if <code>in</code> and <code>out</code> represent 16-bit values, then <code>out [3] = in[5]</code> sets the 3rd bit of <code>out</code> to the value of the 5th bit of in. The bits are indexed from right to left, the rightmost bit being the 0’th but and the leftmost bit being the 15’th bit (in a 16-bit setting).</p>
+<p>This section describes several 16-bit logic gates that will be needed for constructing our target computer platform. HDL programs treat multi-bit values like single-bit values, except that the values can be indexed in order to access individual bits. For example, if <code>in</code> and <code>out</code> represent 16-bit values, then <code>out [3] = in[5]</code> sets the 3rd bit of <code>out</code> to the value of the 5th bit of <code>in</code>. The bits are indexed from right to left, the rightmost bit being the 0’th but and the leftmost bit being the 15’th bit (in a 16-bit setting).</p>
 <h5 id="16-bit-not-gate" tabindex="-1">16-bit Not gate</h5>
 <p>Applies the Boolean operation <code>Not</code> to every one of the input bits.</p>
 <p>API:</p>
@@ -1160,6 +1160,60 @@ Mux(a= a[15], b= b[15], sel= sel, out= out[15]);
 </code></pre>
 <h4 id="multi-way-versions-of-basic-gates" tabindex="-1">Multi-way versions of basic gates</h4>
 <p>Logic gates that operate on one or two inputs have natural generalization to multi-way variants that operate on more than two inputs.</p>
+<h5 id="multi-way-or" tabindex="-1">Multi-way Or</h5>
+<p>An m-way <code>Or</code> gate outputs <code>1</code> when at least one of its <code>m</code> input bits is <code>1</code>, and <code>0</code> otherwise. Our target computer will need an 8-way variant of this gate:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chip name</td>
+<td><code>Or8Way</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>in[8]</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>out = Or(in[0], in[1], ..., in[7])</code></td>
+</tr>
+</tbody>
+</table></div>
+<pre><code class="language-hdl">CHIP Or8Way {
+
+IN in[8];
+
+OUT out;
+
+  
+
+PARTS:
+
+Or(a= in[0], b= in[1], out= in01);
+
+Or(a= in01, b= in[2], out= in012);
+
+Or(a= in012, b= in[3], out= in0123);
+
+Or(a= in0123, b= in[4], out= in01234);
+
+Or(a= in01234, b= in[5], out= in012345);
+
+Or(a= in012345, b= in[6], out= in0123456);
+
+Or(a= in0123456, b= in[7], out= out);
+
+}
+</code></pre>
 <h5 id="multi-way-16-bit-demultiplexer-gate" tabindex="-1">Multi-way 16-bit demultiplexer gate</h5>
 <p>An m-way n-bit demultiplexer routes its single n-bit input to one of its m n-bit outputs. The other outputs are set to 0. The selection is specified by a set of k selection bits, where <mjx-container class="MathJax" jax="SVG" style="direction:ltr;position:relative"><svg style="overflow:visible;min-height:1px;min-width:1px;vertical-align:-.464ex" xmlns="http://www.w3.org/2000/svg" width="10.021ex" height="2.034ex" role="img" focusable="false" viewBox="0 -694 4429.1 899" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D458" d="M121 647Q121 657 125 670T137 683Q138 683 209 688T282 694Q294 694 294 686Q294 679 244 477Q194 279 194 272Q213 282 223 291Q247 309 292 354T362 415Q402 442 438 442Q468 442 485 423T503 369Q503 344 496 327T477 302T456 291T438 288Q418 288 406 299T394 328Q394 353 410 369T442 390L458 393Q446 405 434 405H430Q398 402 367 380T294 316T228 255Q230 254 243 252T267 246T293 238T320 224T342 206T359 180T365 147Q365 130 360 106T354 66Q354 26 381 26Q429 26 459 145Q461 153 479 153H483Q499 153 499 144Q499 139 496 130Q455 -11 378 -11Q333 -11 305 15T277 90Q277 108 280 121T283 145Q283 167 269 183T234 206T200 217T182 220H180Q168 178 159 139T145 81T136 44T129 20T122 7T111 -2Q98 -11 83 -11Q66 -11 57 -1T48 16Q48 26 85 176T158 471L195 616Q196 629 188 632T149 637H144Q134 637 131 637T124 640T121 647Z" style="stroke-width:3"></path></g><g data-mml-node="mo" transform="translate(798.8,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z" style="stroke-width:3"></path></g><g data-mml-node="mi" transform="translate(1854.6,0)"><path data-c="1D459" d="M117 59Q117 26 142 26Q179 26 205 131Q211 151 215 152Q217 153 225 153H229Q238 153 241 153T246 151T248 144Q247 138 245 128T234 90T214 43T183 6T137 -11Q101 -11 70 11T38 85Q38 97 39 102L104 360Q167 615 167 623Q167 626 166 628T162 632T157 634T149 635T141 636T132 637T122 637Q112 637 109 637T101 638T95 641T94 647Q94 649 96 661Q101 680 107 682T179 688Q194 689 213 690T243 693T254 694Q266 694 266 686Q266 675 193 386T118 83Q118 81 118 75T117 65V59Z" style="stroke-width:3"></path></g><g data-mml-node="mi" transform="translate(2152.6,0)"><path data-c="1D45C" d="M201 -11Q126 -11 80 38T34 156Q34 221 64 279T146 380Q222 441 301 441Q333 441 341 440Q354 437 367 433T402 417T438 387T464 338T476 268Q476 161 390 75T201 -11ZM121 120Q121 70 147 48T206 26Q250 26 289 58T351 142Q360 163 374 216T388 308Q388 352 370 375Q346 405 306 405Q243 405 195 347Q158 303 140 230T121 120Z" style="stroke-width:3"></path></g><g data-mml-node="msub" transform="translate(2637.6,0)"><g data-mml-node="mi"><path data-c="1D454" d="M311 43Q296 30 267 15T206 0Q143 0 105 45T66 160Q66 265 143 353T314 442Q361 442 401 394L404 398Q406 401 409 404T418 412T431 419T447 422Q461 422 470 413T480 394Q480 379 423 152T363 -80Q345 -134 286 -169T151 -205Q10 -205 10 -137Q10 -111 28 -91T74 -71Q89 -71 102 -80T116 -111Q116 -121 114 -130T107 -144T99 -154T92 -162L90 -164H91Q101 -167 151 -167Q189 -167 211 -155Q234 -144 254 -122T282 -75Q288 -56 298 -13Q311 35 311 43ZM384 328L380 339Q377 350 375 354T369 368T359 382T346 393T328 402T306 405Q262 405 221 352Q191 313 171 233T151 117Q151 38 213 38Q269 38 323 108L331 118L384 328Z" style="stroke-width:3"></path></g><g data-mml-node="mn" transform="translate(510,-150) scale(0.707)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z" style="stroke-width:3"></path></g></g><g data-mml-node="TeXAtom" data-mjx-texclass="ORD" transform="translate(3551.1,0)"><g data-mml-node="mi"><path data-c="1D45A" d="M21 287Q22 293 24 303T36 341T56 388T88 425T132 442T175 435T205 417T221 395T229 376L231 369Q231 367 232 367L243 378Q303 442 384 442Q401 442 415 440T441 433T460 423T475 411T485 398T493 385T497 373T500 364T502 357L510 367Q573 442 659 442Q713 442 746 415T780 336Q780 285 742 178T704 50Q705 36 709 31T724 26Q752 26 776 56T815 138Q818 149 821 151T837 153Q857 153 857 145Q857 144 853 130Q845 101 831 73T785 17T716 -10Q669 -10 648 17T627 73Q627 92 663 193T700 345Q700 404 656 404H651Q565 404 506 303L499 291L466 157Q433 26 428 16Q415 -11 385 -11Q372 -11 364 -4T353 8T350 18Q350 29 384 161L420 307Q423 322 423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 181Q151 335 151 342Q154 357 154 369Q154 405 129 405Q107 405 92 377T69 316T57 280Q55 278 41 278H27Q21 284 21 287Z" style="stroke-width:3"></path></g></g></g></g></svg><mjx-assistive-mml unselectable="on" display="inline" style="top:0;left:0;clip:rect(1px,1px,1px,1px);-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;position:absolute;padding:1px 0 0 0;border:0;display:block;width:auto;overflow:hidden"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>k</mi><mo>=</mo><mi>l</mi><mi>o</mi><msub><mi>g</mi><mn>2</mn></msub><mrow data-mjx-texclass="ORD"><mi>m</mi></mrow></math></mjx-assistive-mml></mjx-container>.</p>
 <p>Our target computer platform requires two variants of this chip: a 4-way 1-bit demultiplexer and an 8-way 1-bit demultiplexer.</p>
@@ -1186,12 +1240,42 @@ Mux(a= a[15], b= b[15], sel= sel, out= out[15]);
 </tr>
 <tr>
 <td>Function</td>
-<td><code>if (sel == 00) then {a, b, c, d} = {1, 0, 0, 0},&lt;br&gt;&lt;br&gt;else if (sel == 01) then {a, b, c, d} = {0, 1, 0, 0},&lt;br&gt;&lt;br&gt;else if (sel == 01) then {a, b, c, d} = {0, 0, 1, 0},&lt;br&gt;&lt;br&gt;else if (sel == 11) then {a, b, c, d} = {0, 0, 0, 1}&lt;br&gt;</code></td>
+<td><code>if (sel == 00) then {a, b, c, d} = {1, 0, 0, 0},</code><br><br><code>else if (sel == 01) then {a, b, c, d} = {0, 1, 0, 0},</code><br><br><code>else if (sel == 01) then {a, b, c, d} = {0, 0, 1, 0},</code><br><br><code>else if (sel == 11) then {a, b, c, d} = {0, 0, 0, 1}</code></td>
 </tr>
 </tbody>
 </table></div>
 <p>HDL:</p>
-<pre><code class="language-hdl">
+<pre><code class="language-hdl">CHIP DMux4Way {
+
+IN in, sel[2];
+
+OUT a, b, c, d;
+
+  
+
+PARTS:
+
+Not(in= sel[1], out= notsel1);
+
+Not(in= sel[0], out= notsel0);
+
+  
+
+And(a= in, b= sel[1], out= inandsel1);
+
+And(a= in, b= notsel1, out= inandnotsel1);
+
+  
+
+And(a= inandnotsel1, b= notsel0, out= a);
+
+And(a= inandnotsel1, b= sel[0], out= b);
+
+And(a= inandsel1, b= notsel0, out= c);
+
+And(a= inandsel1, b= sel[0], out= d);
+
+}
 </code></pre>
 <div class="table-wrapper"><table>
 <thead>
@@ -1215,7 +1299,7 @@ Mux(a= a[15], b= b[15], sel= sel, out= out[15]);
 </tr>
 <tr>
 <td>Function</td>
-<td><code>if (sel == 000) then {a, b, c, …, h} = {1, 0, 0, 0, 0, 0, 0, 0},&lt;br&gt;&lt;br&gt;else if (sel == 001) then {a, b, c, …, h} = {0, 1, 0, 0, 0, 0, 0, 0},&lt;br&gt;&lt;br&gt;if (sel == 010) then {a, b, c, …, h} = {0, 0, 1, 0, 0, 0, 0, 0},&lt;br&gt;&lt;br&gt;…&lt;br&gt;&lt;br&gt;if (sel == 111) then {a, b, c, …, h} = {0, 0, 0, 0, 0, 0, 0, 1}&lt;br&gt;</code></td>
+<td><code>if (sel == 000) then {a, b, c, …, h} = {1, 0, 0, 0, 0, 0, 0, 0},</code><br><br><code>else if (sel == 001) then {a, b, c, …, h} = {0, 1, 0, 0, 0, 0, 0, 0},</code><br><br><code>if (sel == 010) then {a, b, c, …, h} = {0, 0, 1, 0, 0, 0, 0, 0},</code><br><br>…<br><br><code>if (sel == 111) then {a, b, c, …, h} = {0, 0, 0, 0, 0, 0, 0, 1}</code></td>
 </tr>
 </tbody>
 </table></div>
@@ -1361,7 +1445,477 @@ Mux(a= a[15], b= b[15], sel= sel, out= out[15]);
 <p>When adding in the two's complement system, any extra carry bit is discarded, such that the result and the addends always have the same number of bits. This is effectively the same as applying the modulo operator. For any number <mjx-container class="MathJax" jax="SVG" style="direction:ltr;position:relative"><svg style="overflow:visible;min-height:1px;min-width:1px;vertical-align:-.025ex" xmlns="http://www.w3.org/2000/svg" width="1.294ex" height="1.025ex" role="img" focusable="false" viewBox="0 -442 572 453" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D465" d="M52 289Q59 331 106 386T222 442Q257 442 286 424T329 379Q371 442 430 442Q467 442 494 420T522 361Q522 332 508 314T481 292T458 288Q439 288 427 299T415 328Q415 374 465 391Q454 404 425 404Q412 404 406 402Q368 386 350 336Q290 115 290 78Q290 50 306 38T341 26Q378 26 414 59T463 140Q466 150 469 151T485 153H489Q504 153 504 145Q504 144 502 134Q486 77 440 33T333 -11Q263 -11 227 52Q186 -10 133 -10H127Q78 -10 57 16T35 71Q35 103 54 123T99 143Q142 143 142 101Q142 81 130 66T107 46T94 41L91 40Q91 39 97 36T113 29T132 26Q168 26 194 71Q203 87 217 139T245 247T261 313Q266 340 266 352Q266 380 251 392T217 404Q177 404 142 372T93 290Q91 281 88 280T72 278H58Q52 284 52 289Z" style="stroke-width:3"></path></g></g></g></svg><mjx-assistive-mml unselectable="on" display="inline" style="top:0;left:0;clip:rect(1px,1px,1px,1px);-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;position:absolute;padding:1px 0 0 0;border:0;display:block;width:auto;overflow:hidden"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi></math></mjx-assistive-mml></mjx-container>, computing <mjx-container class="MathJax" jax="SVG" style="direction:ltr;position:relative"><svg style="overflow:visible;min-height:1px;min-width:1px;vertical-align:-.025ex" xmlns="http://www.w3.org/2000/svg" width="9.564ex" height="1.939ex" role="img" focusable="false" viewBox="0 -846 4227.5 857" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D465" d="M52 289Q59 331 106 386T222 442Q257 442 286 424T329 379Q371 442 430 442Q467 442 494 420T522 361Q522 332 508 314T481 292T458 288Q439 288 427 299T415 328Q415 374 465 391Q454 404 425 404Q412 404 406 402Q368 386 350 336Q290 115 290 78Q290 50 306 38T341 26Q378 26 414 59T463 140Q466 150 469 151T485 153H489Q504 153 504 145Q504 144 502 134Q486 77 440 33T333 -11Q263 -11 227 52Q186 -10 133 -10H127Q78 -10 57 16T35 71Q35 103 54 123T99 143Q142 143 142 101Q142 81 130 66T107 46T94 41L91 40Q91 39 97 36T113 29T132 26Q168 26 194 71Q203 87 217 139T245 247T261 313Q266 340 266 352Q266 380 251 392T217 404Q177 404 142 372T93 290Q91 281 88 280T72 278H58Q52 284 52 289Z" style="stroke-width:3"></path></g><g data-mml-node="mo" transform="translate(849.8,0)"><path data-c="6D" d="M41 46H55Q94 46 102 60V68Q102 77 102 91T102 122T103 161T103 203Q103 234 103 269T102 328V351Q99 370 88 376T43 385H25V408Q25 431 27 431L37 432Q47 433 65 434T102 436Q119 437 138 438T167 441T178 442H181V402Q181 364 182 364T187 369T199 384T218 402T247 421T285 437Q305 442 336 442Q351 442 364 440T387 434T406 426T421 417T432 406T441 395T448 384T452 374T455 366L457 361L460 365Q463 369 466 373T475 384T488 397T503 410T523 422T546 432T572 439T603 442Q729 442 740 329Q741 322 741 190V104Q741 66 743 59T754 49Q775 46 803 46H819V0H811L788 1Q764 2 737 2T699 3Q596 3 587 0H579V46H595Q656 46 656 62Q657 64 657 200Q656 335 655 343Q649 371 635 385T611 402T585 404Q540 404 506 370Q479 343 472 315T464 232V168V108Q464 78 465 68T468 55T477 49Q498 46 526 46H542V0H534L510 1Q487 2 460 2T422 3Q319 3 310 0H302V46H318Q379 46 379 62Q380 64 380 200Q379 335 378 343Q372 371 358 385T334 402T308 404Q263 404 229 370Q202 343 195 315T187 232V168V108Q187 78 188 68T191 55T200 49Q221 46 249 46H265V0H257L234 1Q210 2 183 2T145 3Q42 3 33 0H25V46H41Z" style="stroke-width:3"></path><path data-c="6F" d="M28 214Q28 309 93 378T250 448Q340 448 405 380T471 215Q471 120 407 55T250 -10Q153 -10 91 57T28 214ZM250 30Q372 30 372 193V225V250Q372 272 371 288T364 326T348 362T317 390T268 410Q263 411 252 411Q222 411 195 399Q152 377 139 338T126 246V226Q126 130 145 91Q177 30 250 30Z" transform="translate(833,0)" style="stroke-width:3"></path><path data-c="64" d="M376 495Q376 511 376 535T377 568Q377 613 367 624T316 637H298V660Q298 683 300 683L310 684Q320 685 339 686T376 688Q393 689 413 690T443 693T454 694H457V390Q457 84 458 81Q461 61 472 55T517 46H535V0Q533 0 459 -5T380 -11H373V44L365 37Q307 -11 235 -11Q158 -11 96 50T34 215Q34 315 97 378T244 442Q319 442 376 393V495ZM373 342Q328 405 260 405Q211 405 173 369Q146 341 139 305T131 211Q131 155 138 120T173 59Q203 26 251 26Q322 26 373 103V342Z" transform="translate(1333,0)" style="stroke-width:3"></path></g><g data-mml-node="msup" transform="translate(3016.6,0)"><g data-mml-node="mn"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z" style="stroke-width:3"></path></g><g data-mml-node="mi" transform="translate(533,363) scale(0.707)"><path data-c="1D441" d="M234 637Q231 637 226 637Q201 637 196 638T191 649Q191 676 202 682Q204 683 299 683Q376 683 387 683T401 677Q612 181 616 168L670 381Q723 592 723 606Q723 633 659 637Q635 637 635 648Q635 650 637 660Q641 676 643 679T653 683Q656 683 684 682T767 680Q817 680 843 681T873 682Q888 682 888 672Q888 650 880 642Q878 637 858 637Q787 633 769 597L620 7Q618 0 599 0Q585 0 582 2Q579 5 453 305L326 604L261 344Q196 88 196 79Q201 46 268 46H278Q284 41 284 38T282 19Q278 6 272 0H259Q228 2 151 2Q123 2 100 2T63 2T46 1Q31 1 31 10Q31 14 34 26T39 40Q41 46 62 46Q130 49 150 85Q154 91 221 362L289 634Q287 635 234 637Z" style="stroke-width:3"></path></g></g></g></g></svg><mjx-assistive-mml unselectable="on" display="inline" style="top:0;left:0;clip:rect(1px,1px,1px,1px);-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;position:absolute;padding:1px 0 0 0;border:0;display:block;width:auto;overflow:hidden"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi><mo lspace="thickmathspace" rspace="thickmathspace">mod</mo><msup><mn>2</mn><mi>N</mi></msup></math></mjx-assistive-mml></mjx-container> essentially results in keeping the lowest <mjx-container class="MathJax" jax="SVG" style="direction:ltr;position:relative"><svg style="overflow:visible;min-height:1px;min-width:1px;vertical-align:0" xmlns="http://www.w3.org/2000/svg" width="2.009ex" height="1.545ex" role="img" focusable="false" viewBox="0 -683 888 683" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D441" d="M234 637Q231 637 226 637Q201 637 196 638T191 649Q191 676 202 682Q204 683 299 683Q376 683 387 683T401 677Q612 181 616 168L670 381Q723 592 723 606Q723 633 659 637Q635 637 635 648Q635 650 637 660Q641 676 643 679T653 683Q656 683 684 682T767 680Q817 680 843 681T873 682Q888 682 888 672Q888 650 880 642Q878 637 858 637Q787 633 769 597L620 7Q618 0 599 0Q585 0 582 2Q579 5 453 305L326 604L261 344Q196 88 196 79Q201 46 268 46H278Q284 41 284 38T282 19Q278 6 272 0H259Q228 2 151 2Q123 2 100 2T63 2T46 1Q31 1 31 10Q31 14 34 26T39 40Q41 46 62 46Q130 49 150 85Q154 91 221 362L289 634Q287 635 234 637Z" style="stroke-width:3"></path></g></g></g></svg><mjx-assistive-mml unselectable="on" display="inline" style="top:0;left:0;clip:rect(1px,1px,1px,1px);-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;position:absolute;padding:1px 0 0 0;border:0;display:block;width:auto;overflow:hidden"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>N</mi></math></mjx-assistive-mml></mjx-container> bits of the number <mjx-container class="MathJax" jax="SVG" style="direction:ltr;position:relative"><svg style="overflow:visible;min-height:1px;min-width:1px;vertical-align:-.025ex" xmlns="http://www.w3.org/2000/svg" width="1.294ex" height="1.025ex" role="img" focusable="false" viewBox="0 -442 572 453" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D465" d="M52 289Q59 331 106 386T222 442Q257 442 286 424T329 379Q371 442 430 442Q467 442 494 420T522 361Q522 332 508 314T481 292T458 288Q439 288 427 299T415 328Q415 374 465 391Q454 404 425 404Q412 404 406 402Q368 386 350 336Q290 115 290 78Q290 50 306 38T341 26Q378 26 414 59T463 140Q466 150 469 151T485 153H489Q504 153 504 145Q504 144 502 134Q486 77 440 33T333 -11Q263 -11 227 52Q186 -10 133 -10H127Q78 -10 57 16T35 71Q35 103 54 123T99 143Q142 143 142 101Q142 81 130 66T107 46T94 41L91 40Q91 39 97 36T113 29T132 26Q168 26 194 71Q203 87 217 139T245 247T261 313Q266 340 266 352Q266 380 251 392T217 404Q177 404 142 372T93 290Q91 281 88 280T72 278H58Q52 284 52 289Z" style="stroke-width:3"></path></g></g></g></svg><mjx-assistive-mml unselectable="on" display="inline" style="top:0;left:0;clip:rect(1px,1px,1px,1px);-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;position:absolute;padding:1px 0 0 0;border:0;display:block;width:auto;overflow:hidden"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>x</mi></math></mjx-assistive-mml></mjx-container>. As explained in the two's complement section, this modulo operation is what makes the two's complement system work.</p>
 <h3 id="specification" tabindex="-1">Specification</h3>
 <h3 id="adder" tabindex="-1">Adder</h3>
-<p>An adder or summer is a digital circuit used in the ALU to perform addition on binary numbers. We saw that computer hardware for binary addition of two <mjx-container class="MathJax" jax="SVG" style="direction:ltr;position:relative"><svg style="overflow:visible;min-height:1px;min-width:1px;vertical-align:-.025ex" xmlns="http://www.w3.org/2000/svg" width="1.357ex" height="1.025ex" role="img" focusable="false" viewBox="0 -442 600 453" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z" style="stroke-width:3"></path></g></g></g></svg><mjx-assistive-mml unselectable="on" display="inline" style="top:0;left:0;clip:rect(1px,1px,1px,1px);-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;position:absolute;padding:1px 0 0 0;border:0;display:block;width:auto;overflow:hidden"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>n</mi></math></mjx-assistive-mml></mjx-container>-bit numbers can be built from logic gates designed to calculate the sum of three bits (pair of bits plus carry bit).</p>
+<p>An adder or summer is a digital circuit used in the ALU to perform addition on binary numbers. We saw (from the elementary school style addition) that computer hardware for binary addition of two <mjx-container class="MathJax" jax="SVG" style="direction:ltr;position:relative"><svg style="overflow:visible;min-height:1px;min-width:1px;vertical-align:-.025ex" xmlns="http://www.w3.org/2000/svg" width="1.357ex" height="1.025ex" role="img" focusable="false" viewBox="0 -442 600 453" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z" style="stroke-width:3"></path></g></g></g></svg><mjx-assistive-mml unselectable="on" display="inline" style="top:0;left:0;clip:rect(1px,1px,1px,1px);-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;position:absolute;padding:1px 0 0 0;border:0;display:block;width:auto;overflow:hidden"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>n</mi></math></mjx-assistive-mml></mjx-container>-bit numbers can be built from logic gates designed to calculate the sum of three bits (pair of bits plus carry bit). These are the following hierarchy of adders that will be built:</p>
+<h4 id="half-adder" tabindex="-1">Half adder</h4>
+<p>A half adder is designed to add two bits.</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chip name</td>
+<td><code>HalfAdder</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>a</code>, <code>b</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>sum</code>, <code>carry</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>sum = LSB of a + b</code><br><br><code>carry = MSB of a + b</code></td>
+</tr>
+<tr>
+<td>An inspection of the truth table reveals that the outputs <code>sum(a, b)</code> and <code>carry(a, b)</code> are identical to those of two simple Boolean functions <code>Xor</code> and <code>And</code> repectively.</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+<th>carry</th>
+<th>sum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table></div>
+<pre><code class="language-hdl">/**
+* Computes the sum of two bits.
+*/
+CHIP HalfAdder {
+
+IN a, b; // 1-bit inputs
+
+OUT sum, // Right bit of a + b
+
+carry; // Left bit of a + b
+
+PARTS:
+
+And(a= a, b= b, out= carry);
+
+Xor(a = a, b = b, out = sum);
+}
+</code></pre>
+<h4 id="full-adder" tabindex="-1">Full adder</h4>
+<p>A full adder is designed to add three bits. Like the half-adder, the full-adder chip outputs two bits that, taken together, represents the addition of the three input bits.</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chip name</td>
+<td>FullAdder`</td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>a</code>, <code>b</code>, <code>c</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>sum</code>, <code>carry</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>sum = LSB of a + b + c</code><br><br><code>carry = MSB of a + b + c</code></td>
+</tr>
+</tbody>
+</table></div>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+<th>c</th>
+<th>carry</th>
+<th>sum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table></div>
+<p>The names <code>Half-adder</code> and <code>Full-adder</code> derive from the implementation detail that a full-adder chip can be realized from two half-adders (and one other basic chip).</p>
+<pre><code class="language-hdl">/**
+* Computes the sum of three bits.
+*/
+
+CHIP FullAdder {
+
+IN a, b, c; // 1-bit inputs
+
+OUT sum, // Right bit of a + b + c
+
+carry; // Left bit of a + b + c
+
+PARTS:
+
+HalfAdder(a= a, b= b, sum= partialSum, carry= partialCarry);
+
+HalfAdder(a= partialSum, b= c, sum= sum, carry= partialCarry2);
+
+Or(a= partialCarry, b= partialCarry2, out= carry);
+}
+</code></pre>
+<h4 id="adder-1" tabindex="-1">Adder</h4>
+<p>An adder is designed to add two <mjx-container class="MathJax" jax="SVG" style="direction:ltr;position:relative"><svg style="overflow:visible;min-height:1px;min-width:1px;vertical-align:-.025ex" xmlns="http://www.w3.org/2000/svg" width="1.357ex" height="1.025ex" role="img" focusable="false" viewBox="0 -442 600 453" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z" style="stroke-width:3"></path></g></g></g></svg><mjx-assistive-mml unselectable="on" display="inline" style="top:0;left:0;clip:rect(1px,1px,1px,1px);-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;position:absolute;padding:1px 0 0 0;border:0;display:block;width:auto;overflow:hidden"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>n</mi></math></mjx-assistive-mml></mjx-container>-bit numbers.</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chip name</td>
+<td><code>Add16</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>a[16]</code>, <code>b[16]</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out[16]</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td>Adds two 16-bit numbers.</td>
+</tr>
+<tr>
+<td>Comment</td>
+<td>The overflow bit is ignored.</td>
+</tr>
+</tbody>
+</table></div>
+<p>The addition of two <mjx-container class="MathJax" jax="SVG" style="direction:ltr;position:relative"><svg style="overflow:visible;min-height:1px;min-width:1px;vertical-align:-.025ex" xmlns="http://www.w3.org/2000/svg" width="1.357ex" height="1.025ex" role="img" focusable="false" viewBox="0 -442 600 453" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z" style="stroke-width:3"></path></g></g></g></svg><mjx-assistive-mml unselectable="on" display="inline" style="top:0;left:0;clip:rect(1px,1px,1px,1px);-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;position:absolute;padding:1px 0 0 0;border:0;display:block;width:auto;overflow:hidden"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>n</mi></math></mjx-assistive-mml></mjx-container>-bit numbers can be done bitwise, from right to left (from LSB pairs to MSB pairs). In each step, the resulting carry bit from the previous step is fed into the addition.</p>
+<pre><code class="language-hdl">/**
+* 16-bit adder: Adds two 16-bit two's complement values.
+* The most significant carry bit is ignored.
+*/
+
+CHIP Add16 {
+
+IN a[16], b[16];
+
+OUT out[16];
+
+  
+
+PARTS:
+
+FullAdder(a= a[0], b= b[0], c= false, sum= out[0], carry= carry0);
+
+FullAdder(a= a[1], b= b[1], c= carry0, sum= out[1], carry= carry1);
+
+FullAdder(a= a[2], b= b[2], c= carry1, sum= out[2], carry= carry2);
+
+FullAdder(a= a[3], b= b[3], c= carry2, sum= out[3], carry= carry3);
+
+FullAdder(a= a[4], b= b[4], c= carry3, sum= out[4], carry= carry4);
+
+FullAdder(a= a[5], b= b[5], c= carry4, sum= out[5], carry= carry5);
+
+FullAdder(a= a[6], b= b[6], c= carry5, sum= out[6], carry= carry6);
+
+FullAdder(a= a[7], b= b[7], c= carry6, sum= out[7], carry= carry7);
+
+FullAdder(a= a[8], b= b[8], c= carry7, sum= out[8], carry= carry8);
+
+FullAdder(a= a[9], b= b[9], c= carry8, sum= out[9], carry= carry9);
+
+FullAdder(a= a[10], b= b[10], c= carry9, sum= out[10], carry= carry10);
+
+FullAdder(a= a[11], b= b[11], c= carry10, sum= out[11], carry= carry11);
+
+FullAdder(a= a[12], b= b[12], c= carry11, sum= out[12], carry= carry12);
+
+FullAdder(a= a[13], b= b[13], c= carry12, sum= out[13], carry= carry13);
+
+FullAdder(a= a[14], b= b[14], c= carry13, sum= out[14], carry= carry14);
+
+FullAdder(a= a[15], b= b[15], c= carry14, sum= out[15], carry= carry15);
+}
+</code></pre>
+<h4 id="incrementer" tabindex="-1">Incrementer</h4>
+<p>Designed to add <code>1</code> to a given number. Although, the <code>x + 1</code> operation can be realized with the general-purpose <code>Adder</code> chip, a dedicated <code>Incrementer</code> chip can do it more efficiently.</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chip name</td>
+<td><code>Inc16</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>in[16]</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out[16]</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>out = in + 1</code></td>
+</tr>
+<tr>
+<td>Comment</td>
+<td>The overflow bit is ignored.</td>
+</tr>
+</tbody>
+</table></div>
+<pre><code class="language-hdl">/**
+* 16-bit incrementer:
+* out = in + 1
+*/
+
+CHIP Inc16 {
+
+IN in[16];
+
+OUT out[16];
+
+PARTS:
+
+Add16(a = in, b[0] = true, b[1..15] = false, out = out);
+
+}
+</code></pre>
+<h4 id="alu" tabindex="-1">ALU</h4>
+<pre><code class="language-hdl">/**
+
+* ALU (Arithmetic Logic Unit):
+
+* Computes out = one of the following functions:
+
+* 0, 1, -1,
+
+* x, y, !x, !y, -x, -y,
+
+* x + 1, y + 1, x - 1, y - 1,
+
+* x + y, x - y, y - x,
+
+* x &amp; y, x | y
+
+* on the 16-bit inputs x, y,
+
+* according to the input bits zx, nx, zy, ny, f, no.
+
+* In addition, computes the two output bits:
+
+* if (out == 0) zr = 1, else zr = 0
+
+* if (out &lt; 0) ng = 1, else ng = 0
+
+*/
+
+// Implementation: Manipulates the x and y inputs
+
+// and operates on the resulting values, as follows:
+
+// if (zx == 1) sets x = 0 // 16-bit constant
+
+// if (nx == 1) sets x = !x // bitwise not
+
+// if (zy == 1) sets y = 0 // 16-bit constant
+
+// if (ny == 1) sets y = !y // bitwise not
+
+// if (f == 1) sets out = x + y // integer 2's complement addition
+
+// if (f == 0) sets out = x &amp; y // bitwise and
+
+// if (no == 1) sets out = !out // bitwise not
+
+  
+
+CHIP ALU {
+
+IN
+
+x[16], y[16], // 16-bit inputs
+
+zx, // zero the x input?
+
+nx, // negate the x input?
+
+zy, // zero the y input?
+
+ny, // negate the y input?
+
+f, // compute (out = x + y) or (out = x &amp; y)?
+
+no; // negate the out output?
+
+OUT
+
+out[16], // 16-bit output
+
+zr, // if (out == 0) equals 1, else 0
+
+ng; // if (out &lt; 0) equals 1, else 0
+
+  
+
+PARTS:
+
+// x's pre-processing
+
+Mux16(a= x, sel= zx, out= x1);
+
+Not16(in= x1, out= x1Negated);
+
+Mux16(a= x1, b= x1Negated, sel= nx, out= x2);
+
+  
+
+// y's pre-processing
+
+Mux16(a= y, sel= zy, out= y1);
+
+Not16(in= y1, out= y1Negated);
+
+Mux16(a= y1, b= y1Negated, sel= ny, out= y2);
+
+  
+
+// function
+
+Add16(a = x2, b = y2, out = summed);
+
+And16(a = x2, b = y2, out = andded);
+
+Mux16(a= andded, b= summed, sel= f, out= out1);
+
+  
+
+// output post-processing
+
+Not16(in= out1, out= out1Negated);
+
+Mux16(a= out1, b= out1Negated, sel= no, out= out, out[15]= outFirst, out[0..7]= outLeft, out[8..15]= outRight);
+
+  
+
+// ng status bit
+
+And(a= true, b= outFirst, out=ng);
+
+  
+
+// zr status bit
+
+Or8Way(in= outLeft, out= zrLeft);
+
+Or8Way(in= outRight, out= zrRight);
+
+Or(a= zrLeft, b= zrRight, out= zrLeftOrZrRight);
+
+Not(in= zrLeftOrZrRight, out= zr);
+
+}
+</code></pre>
 </main>
 <style>#tooltip-wrapper{background:var(--background-primary);padding:1em;border-radius:4px;overflow:hidden;position:fixed;width:80%;max-width:400px;height:auto;max-height:300px;font-size:.8em;box-shadow:0 5px 10px rgba(0,0,0,.1);opacity:0;transition:opacity .1s;unicode-bidi:plaintext;overflow-y:scroll;z-index:10}#tooltip-wrapper:after{content:"";position:absolute;z-index:1;bottom:0;left:0;pointer-events:none;width:100%;unicode-bidi:plaintext;height:75px}</style>
 <div style="opacity:0;display:none" id="tooltip-wrapper">
