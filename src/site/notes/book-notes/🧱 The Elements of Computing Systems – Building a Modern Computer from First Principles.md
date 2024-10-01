@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","tags":["hardware","book-notes"],"updated":"2024-10-01T19:38:16.715+02:00"}
+{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","tags":["hardware","book-notes"],"updated":"2024-10-01T20:34:39.191+02:00"}
 ---
 
 
@@ -698,6 +698,8 @@ Or(a= in0123456, b= in[7], out= out);
 
 }
 ```
+
+// todo
 ##### Multi-way 16-bit demultiplexer gate
 An m-way n-bit demultiplexer routes its single n-bit input to one of its m n-bit outputs. The other outputs are set to 0. The selection is specified by a set of k selection bits, where $k = log_2{m}$.
 
@@ -1063,6 +1065,48 @@ Add16(a = in, b[0] = true, b[1..15] = false, out = out);
 ```
 
 #### ALU
+The Arithmetic logic unit (ALU) is a chip designed to compute a set of arithmetic and logic operations. Unlike the generic chips discussed so far, the ALU described below is specific to the Hack computer:
+* It only performs integer arithmetic (and not, for example, floating point arithmetic)
+* It computes only a set of 18 arithmetic-logical functions.
+
+| x   | y   | zx  | nx  | zy  | ny  | f   | no  | out | Description             |        |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | ----------------------- | ------ |
+| 0   | y   | 1   | 0   | 1   | 0   | 1   | 0   | 0   | 0 (constant zero)       |        |
+| 1   | y   | 1   | 1   | 1   | 1   | 1   | 1   | 1   | 1 (constant one)        |        |
+| -1  | y   | 1   | 1   | 1   | 0   | 1   | 0   | -1  | -1 (constant minus one) |        |
+| x   | y   | 0   | 0   | 1   | 1   | 0   | 0   | x   | x                       |        |
+| x   | y   | 1   | 1   | 0   | 0   | 0   | 0   | y   | y                       |        |
+| x   | y   | 0   | 0   | 1   | 1   | 0   | 1   | ¬x  | NOT x                   |        |
+| x   | y   | 1   | 1   | 0   | 0   | 0   | 1   | ¬y  | NOT y                   |        |
+| x   | y   | 0   | 0   | 1   | 1   | 1   | 1   | -x  | -x                      |        |
+| x   | y   | 1   | 1   | 0   | 0   | 1   | 1   | -y  | -y                      |        |
+| x   | y   | 0   | 1   | 1   | 1   | 1   | 1   | x+1 | x + 1                   |        |
+| x   | y   | 1   | 1   | 0   | 1   | 1   | 1   | y+1 | y + 1                   |        |
+| x   | y   | 0   | 0   | 1   | 1   | 1   | 0   | x-1 | x - 1                   |        |
+| x   | y   | 1   | 1   | 0   | 0   | 1   | 0   | y-1 | y - 1                   |        |
+| x   | y   | 0   | 0   | 0   | 0   | 1   | 0   | x+y | x + y                   |        |
+| x   | y   | 0   | 1   | 0   | 0   | 1   | 1   | x-y | x - y                   |        |
+| x   | y   | 0   | 0   | 0   | 1   | 1   | 1   | y-x | y - x                   |        |
+| x   | y   | 0   | 0   | 0   | 0   | 0   | 0   | x&y | x AND y                 |        |
+| x   | y   | 0   | 1   | 0   | 1   | 0   | 1   | x   | y                       | x OR y |
+
+The Hack ALU operates on two $16$-bit two's complement integers denoted `x` and `y`, an on six $1$-bit inputs, called control bits. The control bits "tell" the ALU which function to compute. Each control bit effects a standalone conditional micro-action:
+
+```
+1. if (zx) then x = 0 else x = x
+
+2. if (nx) then x = !x else x = x
+
+3. if (zy) then y = 0 else y = y
+
+4. if (ny) then y = !y else y = y
+
+5. if (f) then out = x + y else out = x and y
+
+6. if (no) then out = !out else out = out
+```
+
+> It may be instructive to describe the thought process that led to the design of this particular ALU. First, we made a list of all the primitive operations that we wanted our computer to be able to perform (right column in figure 2.6). Next, we used backward reasoning to figure out how x, y, and out can be manipulated in binary fashion in order to carry out the desired operations. These processing requirements, along with our objective to keep the ALU logic as simple as possible, have led to the design decision to use six control bits, each associated with a straightforward binary operation.
 
 ```hdl
 /**
@@ -1111,7 +1155,6 @@ Add16(a = in, b[0] = true, b[1..15] = false, out = out);
 
 // if (no == 1) sets out = !out // bitwise not
 
-  
 
 CHIP ALU {
 
