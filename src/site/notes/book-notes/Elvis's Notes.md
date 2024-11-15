@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/book-notes/elvis-s-notes/","tags":["gardenEntry"],"updated":"2024-09-21T21:06:03.492+02:00"}
+{"dg-publish":true,"permalink":"/book-notes/elvis-s-notes/","tags":["gardenEntry"]}
 ---
 
 Hi 👋!

@@ -1,10 +1,9 @@
 ---
-{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","tags":["hardware","book-notes"],"updated":"2024-10-01T20:34:39.191+02:00"}
+{"dg-publish":true,"permalink":"/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/","tags":["hardware","book-notes"]}
 ---
 
 
 ## Chapter 1: Boolean logic
-### Binary variables
 
 Modern computers store and process information stored as two-valued signals — called `bits` (i.e. binary digits). Two-value signals were chosen because they can readily be represented, stored, and transmitted. For example, they can be represented as:
 * The presence or absence of a hole in a punched card,
@@ -19,6 +18,10 @@ A binary variable or a bit can represent two possible states: `0` and `1`; `off`
 | 0     | 0     | 1     |
 | 0     | 1     | 0     |
 | 0     | 1     | 1     |
+| 1     | 0     | 0     |
+| 1     | 0     | 1     |
+| 1     | 1     | 0     |
+| 1     | 1     | 1     |
 
 ### Boolean functions
 
