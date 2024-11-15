@@ -3,18 +3,17 @@
     <title>Elvis Chidera</title>
     <link href="https://elvischidera.com/notes/feed.xml" rel="self" />
     <link href="https://elvischidera.com/notes" />
-    <updated>2024-11-15T16:44:21Z</updated>
+    <updated>2024-11-15T16:54:05Z</updated>
     <id>https://elvischidera.com/notes</id>
         <entry>
             <title>
                 🧱 The Elements of Computing Systems – Building a Modern Computer from First Principles
                 
             </title>
-            <updated>2024-10-01T18:34:39.191Z</updated>
+            <updated>2024-11-15T16:53:56Z</updated>
             <id>https://elvischidera.com/notes/book-notes/the-elements-of-computing-systems-building-a-modern-computer-from-first-principles/</id>
             <content type="html">
                 &lt;h2 id=&quot;chapter-1-boolean-logic&quot; tabindex=&quot;-1&quot;&gt;Chapter 1: Boolean logic&lt;/h2&gt;
-&lt;h3 id=&quot;binary-variables&quot; tabindex=&quot;-1&quot;&gt;Binary variables&lt;/h3&gt;
 &lt;p&gt;Modern computers store and process information stored as two-valued signals — called &lt;code&gt;bits&lt;/code&gt; (i.e. binary digits). Two-value signals were chosen because they can readily be represented, stored, and transmitted. For example, they can be represented as:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;The presence or absence of a hole in a punched card,&lt;/li&gt;
@@ -48,6 +47,26 @@
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
 &lt;td&gt;1&lt;/td&gt;
 &lt;td&gt;1&lt;/td&gt;
 &lt;/tr&gt;
@@ -2166,7 +2185,7 @@ Not(in= zrLeftOrZrRight, out= zr);
                 Elvis&#39;s Notes
                 
             </title>
-            <updated>2024-09-21T19:06:03.492Z</updated>
+            <updated>2024-11-15T16:53:56Z</updated>
             <id>https://elvischidera.com/notes/</id>
             <content type="html">
                 &lt;p&gt;Hi 👋!&lt;/p&gt;
