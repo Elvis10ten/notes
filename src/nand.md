@@ -22,7 +22,7 @@ A binary variable or a bit can represent two possible states: `0` and `1`; `off`
 
 ---
 
-<em>Boolean algebra</em> is used to manipulate binary values. <mark>A boolean function (aka boolean operator) is a function that operates on binary inputs and returns binary outputs</mark>.
+<mark>Boolean algebra</mark> is used to manipulate binary values. <mark>A boolean function (aka boolean operator) is a function that operates on binary inputs and returns binary outputs</mark>.
 
 The total number of boolean functions for $n$ binary variables is $2^{2^n}$, because:
 
@@ -53,7 +53,7 @@ e.g. There are $16$ distinct boolean functions for $2$ binary variables.
 
 ---
 
-A <em>logic gate</em> <mark>(also called **chip** in the book) is a physical device that implements a boolean function</mark>. Every digital device is based on a set of chips designed to store and process binary information. These chips are all made of **elementary logic gates**. Elementary logic gates can be physically realized using many different hardware technologies, but their logical behavior, or abstraction, is consistent across implementations.
+A <mark>logic gate</mark> <mark>(also called **chip** in the book) is a physical device that implements a boolean function</mark>. Every digital device is based on a set of chips designed to store and process binary information. These chips are all made of **elementary logic gates**. Elementary logic gates can be physically realized using many different hardware technologies, but their logical behavior, or abstraction, is consistent across implementations.
 
 Since all logic gates have the same input and output data type (i.e. binary), they can be combined, creating composite gates of arbitrary complexity. e.g. `Xor = Or(And(a, Not(b)), And(Not(a), b))`.
 
@@ -63,7 +63,7 @@ Any given logic gate can be viewed from two perspective:
 
 ---
 
-A <em>hardware description language (HDL)</em> is a specialized computer language used to describe the structure and behavior of chips.
+A <mark>hardware description language (HDL)</mark> is a specialized computer language used to describe the structure and behavior of chips.
 
 > The designer specifies the chip logic by writing a HDL program, which is then subjected to a rigorous battery of tests. The tests are carried out virtually, using computer simulation: A special software tool, called a **hardware simulator**, takes the HDL program as input and creates a software representation of the chip logic. Next, the designer can instruct the simulator to test the virtual chip on various sets of inputs. The simulator computes the chip outputs, which are then compared to the desired outputs.
 
@@ -71,11 +71,11 @@ The hardware simulator can also simulate and quantify the performance characteri
 
 ---
 
-The <em>specifications of the logic gates</em> needed to build the chips of our computer system are given below.
+The <mark>specifications of the logic gates</mark> needed to build the chips of our computer system are given below.
 
 ---
 
-First, the **primitive** <em>NAND</em> gate, which is shorthand for **Not-And** because it’s equivalent to `Not(And(a, b))`.
+First, the **primitive** <mark>NAND</mark> gate, which is shorthand for **Not-And** because it’s equivalent to `Not(And(a, b))`.
 
 ![[nand_to_tetris_nand_gate.svg]]
 
@@ -110,7 +110,7 @@ The NAND gate is called a primitive gate because it can be used to implement any
 
 ---
 
-Next, we look at a set of four gates that implement **classical logical operators**. Starting with the <em>Not (aka inverter) gate</em>, which outputs the opposite value of its input’s value.
+Next, we look at a set of four gates that implement **classical logical operators**. Starting with the <mark>Not (aka inverter) gate</mark>, which outputs the opposite value of its input’s value.
 
 ![[nand_to_tetris_not_gate.svg]]
 
@@ -151,7 +151,7 @@ Nand(a= in, b= in, out= out);
 
 ---
 
-The next classical gate is the <em>AND gate</em>, which returns $1$ when both its inputs are $1$, and $0$ otherwise.
+The next classical gate is the <mark>AND gate</mark>, which returns $1$ when both its inputs are $1$, and $0$ otherwise.
 
 
 ![[nand_to_tetris_and_gate.svg]]
@@ -196,7 +196,7 @@ Not(in= nandout, out= out);
 
 ```
 ---
-The <em>Or gate</em> returns $1$ when at least one of its inputs is $1$, and $0$ otherwise.
+The <mark>Or gate</mark> returns $1$ when at least one of its inputs is $1$, and $0$ otherwise.
 
 ![[nand_to_tetris_or_gate.svg]]
 
@@ -249,7 +249,7 @@ Not(in= notaandnotb, out= out);
 ```
 
 ---
-The last classical gate we will build is the <em>Xor (aka exclusive or) gate</em> which returns $1$ when exactly one of its input is $1$, and $0$ otherwise.
+The last classical gate we will build is the <mark>Xor (aka exclusive or) gate</mark> which returns $1$ when exactly one of its input is $1$, and $0$ otherwise.
 
 ![[nand_to_tetris_xor_gate.svg]]
 
@@ -302,7 +302,7 @@ Or(a= aandnotb, b= bandnota, out= out);
 
 ---
 
-Next, we look at a set of <em>control flow gates</em>. These gates provide means for controlling flows of information. The first of such gate is the <em>multiplexer</em> which is a three-input gate. Two input bits, named `a` and `b`, are interpreted as **data bits**, and a third bit, named `sel`, is interpreted as a **selection bit**. The multiplexer uses `sel` to select and output the value of either `a` or `b`.
+Next, we look at a set of <mark>control flow gates</mark>. These gates provide means for controlling flows of information. The first of such gate is the <mark>multiplexer</mark> which is a three-input gate. Two input bits, named `a` and `b`, are interpreted as **data bits**, and a third bit, named `sel`, is interpreted as a **selection bit**. The multiplexer uses `sel` to select and output the value of either `a` or `b`.
 
 ![[multiplexer_gate.png]]
 
@@ -355,7 +355,7 @@ Or(a= aandnotsel, b= bandsel, out= out);
 ```
 ---
 
-Next is the <em>demultiplexer gate</em> which performs the opposite function of a multiplexer: it takes a single input value and routes it to one of two possible outputs, according to a selector bit that selects the destination output.
+Next is the <mark>demultiplexer gate</mark> which performs the opposite function of a multiplexer: it takes a single input value and routes it to one of two possible outputs, according to a selector bit that selects the destination output.
 
 ![[demultiplexer_gate.png]]
 
@@ -399,10 +399,10 @@ And(a= in, b= sel, out= b);
 
 ```
 ---
-Now, we explore <em>multi-bit versions of some of the basic gates</em> above. This section describes several 16-bit logic gates that will be needed for constructing our target computer platform. HDL programs treat multi-bit values like single-bit values, except that the values can be indexed in order to access individual bits. For example, if `in` and `out` represent 16-bit values, then `out [3] = in[5]` sets the 3rd bit of `out` to the value of the 5th bit of `in`. The bits are indexed from right to left, the rightmost bit being the 0’th bit and the leftmost bit being the 15’th bit (in a 16-bit setting).
+Now, we explore <mark>multi-bit versions of some of the basic gates</mark> above. This section describes several 16-bit logic gates that will be needed for constructing our target computer platform. HDL programs treat multi-bit values like single-bit values, except that the values can be indexed in order to access individual bits. For example, if `in` and `out` represent 16-bit values, then `out [3] = in[5]` sets the 3rd bit of `out` to the value of the 5th bit of `in`. The bits are indexed from right to left, the rightmost bit being the 0’th bit and the leftmost bit being the 15’th bit (in a 16-bit setting).
 
 ---
-The first multi-bit gate we will build is the <em>16-bit Not gate</em>, which applies the Boolean operation `Not` to every one of the input bits.
+The first multi-bit gate we will build is the <mark>16-bit Not gate</mark>, which applies the Boolean operation `Not` to every one of the input bits.
 
 API:
 
@@ -463,7 +463,7 @@ Not(in= in[15], out= out[15]);
 
 ```
 ---
-Next is the <em>16-bit And gate</em>, which applies the Boolean operation `And` to every one of the input bits.
+Next is the <mark>16-bit And gate</mark>, which applies the Boolean operation `And` to every one of the input bits.
 
 API:
 
@@ -525,7 +525,7 @@ And(a= a[15], b= b[15], out= out[15]);
 ```
 
 ---
-Followed by the <em>16-bit Or gate</em>, which applies the Boolean operation `Or` to every one of the input bits.
+Followed by the <mark>16-bit Or gate</mark>, which applies the Boolean operation `Or` to every one of the input bits.
 
 API:
 
@@ -587,7 +587,7 @@ Or(a= a[15], b= b[15], out= out[15]);
 ```
 
 ---
-Finally, the <em>16-bit Multiplexer gate</em>, which operates exactly as the basic multiplexer, except that its input and output are 16-bits wide.
+Finally, the <mark>16-bit Multiplexer gate</mark>, which operates exactly as the basic multiplexer, except that its input and output are 16-bits wide.
 
 API:
 
@@ -648,10 +648,10 @@ Mux(a= a[15], b= b[15], sel= sel, out= out[15]);
 
 ```  
 ---
-The last set of gates we will build are the <em>multi-way versions of basic gates</em>. Logic gates that operate on one or two inputs have natural generalization to multi-way variants that operate on more than two inputs.
+The last set of gates we will build are the <mark>multi-way versions of basic gates</mark>. Logic gates that operate on one or two inputs have natural generalization to multi-way variants that operate on more than two inputs.
 
 ---
-The first gate in this set is the <em>multi-way Or gate</em>. An $m$-way `Or` gate outputs `1` when at least one of its `m` input bits is `1`, and `0` otherwise. Our target computer will need an $8$-way variant of this gate:
+The first gate in this set is the <mark>multi-way Or gate</mark>. An $m$-way `Or` gate outputs `1` when at least one of its `m` input bits is `1`, and `0` otherwise. Our target computer will need an $8$-way variant of this gate:
 
 |           |                                      |
 | --------- | ------------------------------------ |
@@ -688,7 +688,7 @@ Or(a= in0123456, b= in[7], out= out);
 }
 ```
 ---
-Next, we build a <em>multi-way multi-bit multiplexer gate</em>. An $m$-way $n$-bit multiplexer selects one of its $m$ $n$-bit inputs, and outputs it to its $n$-bit output. The selection is specified by a set of $k$ selection bits, where $k = log_2{m}$.
+Next, we build a <mark>multi-way multi-bit multiplexer gate</mark>. An $m$-way $n$-bit multiplexer selects one of its $m$ $n$-bit inputs, and outputs it to its $n$-bit output. The selection is specified by a set of $k$ selection bits, where $k = log_2{m}$.
 
 Our target computer platform requires two variants of this chip: a $4$-way $16$-bit multiplexer and an $8$-way $16$-bit multiplexer.
 
@@ -760,7 +760,7 @@ Mux16(a= abcd, b= efgh, sel= sel[2], out= out);
 
 ------
 
-Finally, we build a <em>multi-way 16-bit demultiplexer gate</em>. An $m$-way $n$-bit demultiplexer routes its single $n$-bit input to one of its $m$ $n$-bit outputs. The other outputs are set to `0`. The selection is specified by a set of $k$ selection bits, where $k = log_2{m}$.
+Finally, we build a <mark>multi-way 16-bit demultiplexer gate</mark>. An $m$-way $n$-bit demultiplexer routes its single $n$-bit input to one of its $m$ $n$-bit outputs. The other outputs are set to `0`. The selection is specified by a set of $k$ selection bits, where $k = log_2{m}$.
 
 Our target computer platform requires two variants of this chip: a $4$-way $1$-bit demultiplexer and an $8$-way $1$-bit demultiplexer.
 
@@ -832,7 +832,7 @@ The ALU is the centerpiece chip that executes all the arithmetic and logical ope
 
 ---
 
-A <em>binary number</em> is a number expressed in the **base-2 positional numeral system**. Let $x = x_{n}x_{n − 1}x_{n − 2} ... x_{0}$ be a string of binary digits, the value of $x$ in the base-2 positional numeral system is defined as:  
+A <mark>binary number</mark> is a number expressed in the **base-2 positional numeral system**. Let $x = x_{n}x_{n − 1}x_{n − 2} ... x_{0}$ be a string of binary digits, the value of $x$ in the base-2 positional numeral system is defined as:  
 $$  
 x = \sum_{i=0}^{n} x_i \cdot b^i  
 $$
@@ -858,7 +858,7 @@ Computers represent numbers in binary. Any number can be represented by a sequen
 Integer numbers are unbounded: for any given number $x$, there are integers that are less than $x$ and integers greater than $x$. However, computers are finite machines that use a fixed word size for representing numbers. An 8-bit register can represent $2^8 = 256$ different things. Using $n$ bits, we can represent all the nonnegative integers ranging from $0$ to $2^n - 1$.
 
 ---
-The three common methods of extending the binary numeral system to represent <em>signed numbers</em> (i.e. positive, negative, and zero numbers) numbers are:
+The three common methods of extending the binary numeral system to represent <mark>signed numbers</mark> (i.e. positive, negative, and zero numbers) numbers are:
 * Sign–magnitude,
 * Ones' complement, and
 * Two's complement.
@@ -866,7 +866,7 @@ The three common methods of extending the binary numeral system to represent <em
 Of the three, two’s complement is the most commonly used today.
 
 ---
-A <em>two's complement number system</em> encodes positive and negative numbers in a binary number representation. The weight of each bit is a power of two, except for the **most significant bit** (aka **sign bit**), whose weight is the negative of the corresponding power of two. The value $w$ of an $N$-bit integer $a_{N-1} a_{N-2} ... a_0$ is given by the following formula:
+A <mark>two's complement number system</mark> encodes positive and negative numbers in a binary number representation. The weight of each bit is a power of two, except for the **most significant bit** (aka **sign bit**), whose weight is the negative of the corresponding power of two. The value $w$ of an $N$-bit integer $a_{N-1} a_{N-2} ... a_0$ is given by the following formula:
 
 $$
 w = -(a_{N-1} 2^{N-1}) + \sum_{i=0}^{N-2} a_i 2^i
@@ -891,7 +891,7 @@ $$
 $$
 
 ---
-<em>Calculation of the two's complement of a number</em> essentially means subtracting the number from $2^N$. But as can be seen from the 3-bit example above with the 4-bit $1000_2$, the number $2^N$ will not itself be representable in a system limited to $N$ bits, as it is just outside the $N$ bit space. Because of this, systems with maximally $N$-bit must break the subtraction into two operations:
+<mark>Calculation of the two's complement of a number</mark> essentially means subtracting the number from $2^N$. But as can be seen from the 3-bit example above with the 4-bit $1000_2$, the number $2^N$ will not itself be representable in a system limited to $N$ bits, as it is just outside the $N$ bit space. Because of this, systems with maximally $N$-bit must break the subtraction into two operations:
 
 1. First, subtract from the maximum number in the $N$-bit system, that is $2^N - 1$. This term in binary is actually a simple number consisting of 'all 1s', and a subtraction from it can be done by simply inverting all bits in the number. The number obtained in this step is called the **ones' complement** because summing it with the original number yields 'all 1s'.
 2. Secondly, add one to the result.
@@ -908,7 +908,7 @@ $$
 | 111  | 7              | -1                              |
 
 ---
-Here is <em>why the two's complement system works</em>. Given a set of all possible $N$-bit values, we can assign the lower (by the binary value) half to be the integers from $0$ to $(2^{N-1} - 1)$ inclusive and the upper half to be $-2^{N-1}$ to $-1$ inclusive. The upper half (again, by the binary value) can be used to represent negative integers from $-2^{N-1}$ to $-1$ because, under addition modulo $2^N$ they behave the same way as those negative integers. That is to say that, because $i + j \bmod 2^N = i + (j + 2^N) \bmod 2^N$, any value in the set $\{j + k2^N \space | \space k \space is \space an \space integer\}$ can be used in place of $j$. Fundamentally, the system counts negative numbers by counting backwards and wrapping around.
+Here is <mark>why the two's complement system works</mark>. Given a set of all possible $N$-bit values, we can assign the lower (by the binary value) half to be the integers from $0$ to $(2^{N-1} - 1)$ inclusive and the upper half to be $-2^{N-1}$ to $-1$ inclusive. The upper half (again, by the binary value) can be used to represent negative integers from $-2^{N-1}$ to $-1$ because, under addition modulo $2^N$ they behave the same way as those negative integers. That is to say that, because $i + j \bmod 2^N = i + (j + 2^N) \bmod 2^N$, any value in the set $\{j + k2^N \space | \space k \space is \space an \space integer\}$ can be used in place of $j$. Fundamentally, the system counts negative numbers by counting backwards and wrapping around.
 
 Given $2^N = 2^3$, these are some examples:
 
@@ -919,7 +919,7 @@ Given $2^N = 2^3$, these are some examples:
 | $-2 + 3 = 1$ (represented as $1$ in binary)  | $6 + 3 \bmod 8 = 1$ (the two's complement representation of $1$)  |
 
 ---
-The <em>two's complement system has the following advantages</em> over other systems for representing signed numbers:
+The <mark>two's complement system has the following advantages</mark> over other systems for representing signed numbers:
 
 
 1. The fundamental arithmetic operations of addition, subtraction, and multiplication are identical to those for unsigned binary numbers (as long as the inputs are represented in the same number of bits as the output, and any overflow beyond those bits are discarded from the result).
@@ -930,7 +930,7 @@ The material implications of these theoretical results are significant:
 * Subtraction can be treated as adding the complement of the subtrahend. Again, no dedicated hardware required.
 
 ---
-A <em>pair of binary numbers can be added</em> bitwise from right to left, using the same decimal addition algorithm learned in elementary school.
+A <mark>pair of binary numbers can be added</mark> bitwise from right to left, using the same decimal addition algorithm learned in elementary school.
 
 ```
 
@@ -950,10 +950,10 @@ When adding in the two's complement system, any extra carry bit is discarded, su
 
 ---
 
-An <em>adder</em> or summer is a digital circuit used in the ALU to perform addition on binary numbers. We saw (from the elementary school style addition) that computer hardware for binary addition of two $n$-bit numbers can be built from logic gates designed to calculate the sum of three bits (pair of bits plus carry bit). These are the following hierarchy of adders that will be built:
+An <mark>adder</mark> or summer is a digital circuit used in the ALU to perform addition on binary numbers. We saw (from the elementary school style addition) that computer hardware for binary addition of two $n$-bit numbers can be built from logic gates designed to calculate the sum of three bits (pair of bits plus carry bit). These are the following hierarchy of adders that will be built:
 
 ---
-A <em>half adder</em> is designed to add two bits.
+A <mark>half adder</mark> is designed to add two bits.
 
 |           |                                                    |
 | --------- | -------------------------------------------------- |
@@ -991,7 +991,7 @@ Xor(a = a, b = b, out = sum);
 }
 ```
 ---
-A <em>full adder</em> is designed to add three bits. Like the half-adder, the full-adder chip outputs two bits that, taken together, represents the addition of the three input bits.
+A <mark>full adder</mark> is designed to add three bits. Like the half-adder, the full-adder chip outputs two bits that, taken together, represents the addition of the three input bits.
 
 |           |                                                            |
 | --------- | ---------------------------------------------------------- |
@@ -1036,7 +1036,7 @@ Or(a= partialCarry, b= partialCarry2, out= carry);
 }
 ```
 ---
-An <em>adder</em> is designed to add two $n$-bit numbers.
+An <mark>adder</mark> is designed to add two $n$-bit numbers.
 
 |           |                              |
 | --------- | ---------------------------- |
@@ -1097,7 +1097,7 @@ FullAdder(a= a[15], b= b[15], c= carry14, sum= out[15], carry= carry15);
 }
 ```
 ---
-An <em>Incrementer</em> is designed to add `1` to a given number. Although, the `x + 1` operation can be realized with the general-purpose `Adder` chip, a dedicated `Incrementer` chip can do it more efficiently.
+An <mark>Incrementer</mark> is designed to add `1` to a given number. Although, the `x + 1` operation can be realized with the general-purpose `Adder` chip, a dedicated `Incrementer` chip can do it more efficiently.
  
 |           |                              |
 | --------- | ---------------------------- |
@@ -1126,7 +1126,7 @@ Add16(a = in, b[0] = true, b[1..15] = false, out = out);
 }
 ```
 ---
-The <em>Arithmetic logic unit (ALU)</em> is a chip designed to compute a set of arithmetic and logic operations. Unlike the generic chips discussed so far, the ALU described below is specific to the Hack computer:
+The <mark>Arithmetic logic unit (ALU)</mark> is a chip designed to compute a set of arithmetic and logic operations. Unlike the generic chips discussed so far, the ALU described below is specific to the Hack computer:
 * It only performs integer arithmetic (and not, for example, floating point arithmetic)
 * It computes only a set of 18 arithmetic-logical functions.
 
