@@ -1,0 +1,2155 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+        <title>The Elements of Computing Systems – Building a Modern Computer from First Principles</title>
+        <link rel="icon" type="image/png" href="assets/images/favicon.png">
+        <link href="assets/css/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>The Elements of Computing Systems – Building a Modern Computer from First Principles</h1>
+<h2>Chapter 1: Boolean logic</h2>
+<p>Modern computers store and process information stored as two-valued signals — called <code>bits</code> (i.e. binary digits). Two-value signals were chosen because they can readily be represented, stored, and transmitted. For example, they can be represented as:</p>
+<ul>
+<li>The presence or absence of a hole in a punched card,</li>
+<li>High or low voltage on a wire,</li>
+<li>A magnetic domain oriented clockwise or counterclockwise.</li>
+</ul>
+<p>A binary variable or a bit can represent two possible states: <code>0</code> and <code>1</code>; <code>off</code> and <code>on</code>; <code>false</code> and <code>true</code>; <code>no</code> and <code>yes</code>; etc. <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> binary variables can be used to represent <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">2^n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6644em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span></span></span></span> states. e.g.</p>
+<table>
+<thead>
+<tr>
+<th><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">b_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></th>
+<th><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">b_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></th>
+<th><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">b_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<hr>
+<p><mark>Boolean algebra</mark> is used to manipulate binary values. <mark>A boolean function (aka boolean operator) is a function that operates on binary inputs and returns binary outputs</mark>.</p>
+<p>The total number of boolean functions for <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> binary variables is <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><msup><mn>2</mn><mi>n</mi></msup></msup></mrow><annotation encoding="application/x-tex">2^{2^n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.88em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.88em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7385em;"><span style="top:-2.931em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span>, because:</p>
+<ul>
+<li>There are $2^n$ input combinations.</li>
+<li>Each of these input combinations can be mapped to either <code>0</code> or <code>1</code>.</li>
+<li>Therefore, the total number of boolean functions is: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><msup><mn>2</mn><mi>n</mi></msup></msup></mrow><annotation encoding="application/x-tex">2^{2^n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.88em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.88em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7385em;"><span style="top:-2.931em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></li>
+</ul>
+<p>e.g. There are <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>16</mn></mrow><annotation encoding="application/x-tex">16</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">16</span></span></span></span> distinct boolean functions for <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn></mrow><annotation encoding="application/x-tex">2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span> binary variables.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Expression</th>
+<th>A=0, B=0</th>
+<th>A=0, B=1</th>
+<th>A=1, B=0</th>
+<th>A=1, B=1</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>F0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>F1</td>
+<td>NOT A AND NOT B</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>F2</td>
+<td>NOT A AND B</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>F3</td>
+<td>NOT A</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>F4</td>
+<td>A AND NOT B</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>F5</td>
+<td>NOT B</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>F6</td>
+<td>XOR(A, B)</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>F7</td>
+<td>NAND(A, B)</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>F8</td>
+<td>A AND B</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>F9</td>
+<td>XNOR(A, B)</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>F10</td>
+<td>B</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>F11</td>
+<td>NOT A OR B</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>F12</td>
+<td>A</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>F13</td>
+<td>A OR NOT B</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>F14</td>
+<td>A OR B</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>F15</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<hr>
+<p>A <mark>logic gate</mark> <mark>(also called <strong>chip</strong> in the book) is a physical device that implements a boolean function</mark>. Every digital device is based on a set of chips designed to store and process binary information. These chips are all made of <strong>elementary logic gates</strong>. Elementary logic gates can be physically realized using many different hardware technologies, but their logical behavior, or abstraction, is consistent across implementations.</p>
+<p>Since all logic gates have the same input and output data type (i.e. binary), they can be combined, creating composite gates of arbitrary complexity. e.g. <code>Xor = Or(And(a, Not(b)), And(Not(a), b))</code>.</p>
+<p>Any given logic gate can be viewed from two perspective:</p>
+<ol>
+<li><strong>External</strong>: The interface of the gate, outlining its input pins, output pins, and its behavior.</li>
+<li><strong>Internal</strong>: The implementation of the gate. There can be multiple implementations of a gate’s interface. The goal is to find an implementation that is correct (functional requirement) and efficient (performance requirement).</li>
+</ol>
+<hr>
+<p>A <mark>hardware description language (HDL)</mark> is a specialized computer language used to describe the structure and behavior of chips.</p>
+<blockquote>
+<p>The designer specifies the chip logic by writing a HDL program, which is then subjected to a rigorous battery of tests. The tests are carried out virtually, using computer simulation: A special software tool, called a <strong>hardware simulator</strong>, takes the HDL program as input and creates a software representation of the chip logic. Next, the designer can instruct the simulator to test the virtual chip on various sets of inputs. The simulator computes the chip outputs, which are then compared to the desired outputs.</p>
+</blockquote>
+<p>The hardware simulator can also simulate and quantify the performance characteristics (energy consumption, computational speed, cost) of a chip.</p>
+<hr>
+<p>The <mark>specifications of the logic gates</mark> needed to build the chips of our computer system are given below.</p>
+<hr>
+<p>First, the <strong>primitive</strong> <mark>NAND</mark> gate, which is shorthand for <strong>Not-And</strong> because it’s equivalent to <code>Not(And(a, b))</code>.</p>
+<p><img src="assets/nand-images/nand_gate.svg" alt=""></p>
+<p>Truth table:</p>
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+<th>Nand(a, b)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody></table>
+<p>API:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>Nand</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>a</code>, <code>b</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>if ((a == 1) and (b==1)) then out = 0, else out = 1</code></td>
+</tr>
+</tbody></table>
+<p>The NAND gate is called a primitive gate because it can be used to implement any boolean function. Proof:</p>
+<ul>
+<li><p>Various subsets of logical operators can be used for expressing any boolean function, and <code>{ And, Or, Not }</code> is one such subset. NAND can be used to implement each member of the subset as demonstrated below.</p>
+</li>
+<li><p><code>NOT(a) = NAND(a, a)</code></p>
+</li>
+<li><p><code>AND(a, b) = NOT(NAND(a, b))</code></p>
+</li>
+<li><p><code>OR(a, b) = NOT(NOT(a) AND NOT(b))</code> (De morgan law); This is equivalent to: <code>OR(a, b) = NAND(NOT(a), NOT(b))</code></p>
+</li>
+</ul>
+<hr>
+<p>Next, we look at a set of four gates that implement <strong>classical logical operators</strong>. Starting with the <mark>Not (aka inverter) gate</mark>, which outputs the opposite value of its input’s value.</p>
+<p><img src="assets/nand-images/not_gate.svg" alt=""></p>
+<p>Truth table:</p>
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>Not(a)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody></table>
+<p>API:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>Not</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>in</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>if (in == 0) then out = 1, else out = 0</code></td>
+</tr>
+</tbody></table>
+<p>HDL:</p>
+<pre><code class="hljs language-hdl">
+CHIP Not {
+
+IN in;
+
+OUT out;
+
+  
+
+PARTS:
+
+Nand(a= in, b= in, out= out);
+
+}
+</code></pre><hr>
+<p>The next classical gate is the <mark>AND gate</mark>, which returns <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> when both its inputs are <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>, and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span> otherwise.</p>
+<p><img src="assets/nand-images/and_gate.svg" alt=""></p>
+<p>Truth table:  </p>
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+<th>And(a, b)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<p>API:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>And</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>a</code>, <code>b</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>if ((a == 1) and (b==1)) then out = 1, else out = 0</code></td>
+</tr>
+</tbody></table>
+<p>HDL:</p>
+<pre><code class="hljs language-hdl">
+CHIP And {
+
+IN a, b;
+
+OUT out;
+
+PARTS:
+
+Nand(a= a, b= b, out= nandout);
+
+Not(in= nandout, out= out);
+
+}
+</code></pre><hr>
+<p>The <mark>Or gate</mark> returns <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> when at least one of its inputs is <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>, and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span> otherwise.</p>
+<p><img src="assets/nand-images/or_gate.svg" alt=""></p>
+<p>Truth table:</p>
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+<th>Or(a, b)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<p>API:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>Or</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>a</code>, <code>b</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>if ((a == 0) and (b == 0)) then out = 0, else out = 1</code></td>
+</tr>
+</tbody></table>
+<p>HDL:</p>
+<pre><code class="hljs language-hdl">
+CHIP Or {
+
+IN a, b;
+
+OUT out;
+
+  
+
+PARTS:
+
+Not(in= a, out= nota);
+
+Not(in= b, out= notb);
+
+And(a= nota, b= notb, out= notaandnotb);
+
+Not(in= notaandnotb, out= out);
+
+}
+</code></pre><hr>
+<p>The last classical gate we will build is the <mark>Xor (aka exclusive or) gate</mark> which returns <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> when exactly one of its input is <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>, and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span> otherwise.</p>
+<p><img src="assets/nand-images/xor_gate.svg" alt=""></p>
+<p>Truth table:</p>
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+<th>Xor(a, b)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody></table>
+<p>API:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>Xor</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>a</code>, <code>b</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>if (a != b) then out = 1, else out = 0</code></td>
+</tr>
+</tbody></table>
+<p>HDL:</p>
+<pre><code class="hljs language-hdl">
+CHIP Xor {
+
+IN a, b;
+
+OUT out;
+
+  
+
+PARTS:
+
+Not(in= a, out= nota);
+
+Not(in= b, out= notb);
+
+And(a= a, b= notb, out= aandnotb);
+
+And(a= b, b= nota, out= bandnota);
+
+Or(a= aandnotb, b= bandnota, out= out);
+
+}
+</code></pre><hr>
+<p>Next, we look at a set of <mark>control flow gates</mark>. These gates provide means for controlling flows of information. The first of such gate is the <mark>multiplexer</mark> which is a three-input gate. Two input bits, named <code>a</code> and <code>b</code>, are interpreted as <strong>data bits</strong>, and a third bit, named <code>sel</code>, is interpreted as a <strong>selection bit</strong>. The multiplexer uses <code>sel</code> to select and output the value of either <code>a</code> or <code>b</code>.</p>
+<p><img src="assets/nand-images/multiplexer_gate.png" alt=""></p>
+<p>Truth table:</p>
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+<th>sel</th>
+<th>out</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<p>API:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>Mux</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>a</code>, <code>b</code>, <code>sel</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>if (sel == 0) then out = a, else out = b</code></td>
+</tr>
+</tbody></table>
+<p>HDL:</p>
+<pre><code class="hljs language-hdl">
+CHIP Mux {
+
+IN a, b, sel;
+
+OUT out;
+
+  
+
+PARTS:
+
+Not(in= sel, out= notsel);
+
+And(a= a, b= notsel, out= aandnotsel);
+
+And(a= b, b= sel, out= bandsel);
+
+Or(a= aandnotsel, b= bandsel, out= out);
+
+}
+</code></pre><hr>
+<p>Next is the <mark>demultiplexer gate</mark> which performs the opposite function of a multiplexer: it takes a single input value and routes it to one of two possible outputs, according to a selector bit that selects the destination output.</p>
+<p><img src="assets/nand-images/demultiplexer_gate.png" alt=""></p>
+<table>
+<thead>
+<tr>
+<th>in</th>
+<th>sel</th>
+<th>a</th>
+<th>b</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<p>API:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>DMux</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>in</code>, <code>sel</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>a</code>, <code>b</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>if (sel == 0) then {a, b} = {in, 0}, else {a, b} = {0, in} </code></td>
+</tr>
+</tbody></table>
+<p>HDL:</p>
+<pre><code class="hljs language-hdl">
+CHIP DMux {
+
+IN in, sel;
+
+OUT a, b;
+
+  
+
+PARTS:
+
+Not(in= sel, out= notsel);
+
+And(a= in, b= notsel, out= a);
+
+And(a= in, b= sel, out= b);
+
+}
+</code></pre><hr>
+<p>Now, we explore <mark>multi-bit versions of some of the basic gates</mark> above. This section describes several 16-bit logic gates that will be needed for constructing our target computer platform. HDL programs treat multi-bit values like single-bit values, except that the values can be indexed in order to access individual bits. For example, if <code>in</code> and <code>out</code> represent 16-bit values, then <code>out [3] = in[5]</code> sets the 3rd bit of <code>out</code> to the value of the 5th bit of <code>in</code>. The bits are indexed from right to left, the rightmost bit being the 0’th bit and the leftmost bit being the 15’th bit (in a 16-bit setting).</p>
+<hr>
+<p>The first multi-bit gate we will build is the <mark>16-bit Not gate</mark>, which applies the Boolean operation <code>Not</code> to every one of the input bits.</p>
+<p>API:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>Not16</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>in[16]</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out[16]</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>for i = 0..15 out[i] = Not(in[i])</code></td>
+</tr>
+</tbody></table>
+<p>HDL:</p>
+<pre><code class="hljs language-hdl">
+CHIP Not16 {
+
+IN in[16];
+
+OUT out[16];
+
+  
+
+PARTS:
+
+Not(in= in[0], out= out[0]);
+
+Not(in= in[1], out= out[1]);
+
+Not(in= in[2], out= out[2]);
+
+Not(in= in[3], out= out[3]);
+
+Not(in= in[4], out= out[4]);
+
+Not(in= in[5], out= out[5]);
+
+Not(in= in[6], out= out[6]);
+
+Not(in= in[7], out= out[7]);
+
+Not(in= in[8], out= out[8]);
+
+Not(in= in[9], out= out[9]);
+
+Not(in= in[10], out= out[10]);
+
+Not(in= in[11], out= out[11]);
+
+Not(in= in[12], out= out[12]);
+
+Not(in= in[13], out= out[13]);
+
+Not(in= in[14], out= out[14]);
+
+Not(in= in[15], out= out[15]);
+
+}
+</code></pre><hr>
+<p>Next is the <mark>16-bit And gate</mark>, which applies the Boolean operation <code>And</code> to every one of the input bits.</p>
+<p>API:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>And16</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>a[16]</code>, <code>b[16]</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out[16]</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>for i = 0..15 out[i] = And(a[i], b[i])</code></td>
+</tr>
+</tbody></table>
+<p>HDL:</p>
+<pre><code class="hljs language-hdl">
+CHIP And16 {
+
+IN a[16], b[16];
+
+OUT out[16];
+
+  
+
+PARTS:
+
+And(a= a[0], b= b[0], out= out[0]);
+
+And(a= a[1], b= b[1], out= out[1]);
+
+And(a= a[2], b= b[2], out= out[2]);
+
+And(a= a[3], b= b[3], out= out[3]);
+
+And(a= a[4], b= b[4], out= out[4]);
+
+And(a= a[5], b= b[5], out= out[5]);
+
+And(a= a[6], b= b[6], out= out[6]);
+
+And(a= a[7], b= b[7], out= out[7]);
+
+And(a= a[8], b= b[8], out= out[8]);
+
+And(a= a[9], b= b[9], out= out[9]);
+
+And(a= a[10], b= b[10], out= out[10]);
+
+And(a= a[11], b= b[11], out= out[11]);
+
+And(a= a[12], b= b[12], out= out[12]);
+
+And(a= a[13], b= b[13], out= out[13]);
+
+And(a= a[14], b= b[14], out= out[14]);
+
+And(a= a[15], b= b[15], out= out[15]);
+
+}
+</code></pre><hr>
+<p>Followed by the <mark>16-bit Or gate</mark>, which applies the Boolean operation <code>Or</code> to every one of the input bits.</p>
+<p>API:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>Or16</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>a[16]</code>, <code>b[16]</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out[16]</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>for i = 0..15 out[i] = Or(a[i], b[i])</code></td>
+</tr>
+</tbody></table>
+<p>HDL:</p>
+<pre><code class="hljs language-hdl">
+CHIP Or16 {
+
+IN a[16], b[16];
+
+OUT out[16];
+
+  
+
+PARTS:
+
+Or(a= a[0], b= b[0], out= out[0]);
+
+Or(a= a[1], b= b[1], out= out[1]);
+
+Or(a= a[2], b= b[2], out= out[2]);
+
+Or(a= a[3], b= b[3], out= out[3]);
+
+Or(a= a[4], b= b[4], out= out[4]);
+
+Or(a= a[5], b= b[5], out= out[5]);
+
+Or(a= a[6], b= b[6], out= out[6]);
+
+Or(a= a[7], b= b[7], out= out[7]);
+
+Or(a= a[8], b= b[8], out= out[8]);
+
+Or(a= a[9], b= b[9], out= out[9]);
+
+Or(a= a[10], b= b[10], out= out[10]);
+
+Or(a= a[11], b= b[11], out= out[11]);
+
+Or(a= a[12], b= b[12], out= out[12]);
+
+Or(a= a[13], b= b[13], out= out[13]);
+
+Or(a= a[14], b= b[14], out= out[14]);
+
+Or(a= a[15], b= b[15], out= out[15]);
+
+}
+</code></pre><hr>
+<p>Finally, the <mark>16-bit Multiplexer gate</mark>, which operates exactly as the basic multiplexer, except that its input and output are 16-bits wide.</p>
+<p>API:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>Mux16</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>a[16]</code>, <code>b[16]</code>, <code>sel</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out[16]</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>if (sel == 0) then for i = 0..15 out[i] = a[i], else for i = 0..15 out[i] = b[i]</code></td>
+</tr>
+</tbody></table>
+<p>HDL:</p>
+<pre><code class="hljs language-hdl">
+CHIP Mux16 {
+
+IN a[16], b[16], sel;
+
+OUT out[16];
+
+  
+
+PARTS:
+
+Mux(a= a[0], b= b[0], sel= sel, out= out[0]);
+
+Mux(a= a[1], b= b[1], sel= sel, out= out[1]);
+
+Mux(a= a[2], b= b[2], sel= sel, out= out[2]);
+
+Mux(a= a[3], b= b[3], sel= sel, out= out[3]);
+
+Mux(a= a[4], b= b[4], sel= sel, out= out[4]);
+
+Mux(a= a[5], b= b[5], sel= sel, out= out[5]);
+
+Mux(a= a[6], b= b[6], sel= sel, out= out[6]);
+
+Mux(a= a[7], b= b[7], sel= sel, out= out[7]);
+
+Mux(a= a[8], b= b[8], sel= sel, out= out[8]);
+
+Mux(a= a[9], b= b[9], sel= sel, out= out[9]);
+
+Mux(a= a[10], b= b[10], sel= sel, out= out[10]);
+
+Mux(a= a[11], b= b[11], sel= sel, out= out[11]);
+
+Mux(a= a[12], b= b[12], sel= sel, out= out[12]);
+
+Mux(a= a[13], b= b[13], sel= sel, out= out[13]);
+
+Mux(a= a[14], b= b[14], sel= sel, out= out[14]);
+
+Mux(a= a[15], b= b[15], sel= sel, out= out[15]);
+
+}
+</code></pre><hr>
+<p>The last set of gates we will build are the <mark>multi-way versions of basic gates</mark>. Logic gates that operate on one or two inputs have natural generalization to multi-way variants that operate on more than two inputs.</p>
+<hr>
+<p>The first gate in this set is the <mark>multi-way Or gate</mark>. An $m$-way <code>Or</code> gate outputs <code>1</code> when at least one of its <code>m</code> input bits is <code>1</code>, and <code>0</code> otherwise. Our target computer will need an $8$-way variant of this gate:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>Or8Way</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>in[8]</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>out = Or(in[0], in[1], ..., in[7])</code></td>
+</tr>
+</tbody></table>
+<pre><code class="hljs language-hdl">CHIP Or8Way {
+
+IN in[8];
+
+OUT out;
+
+  
+
+PARTS:
+
+Or(a= in[0], b= in[1], out= in01);
+
+Or(a= in01, b= in[2], out= in012);
+
+Or(a= in012, b= in[3], out= in0123);
+
+Or(a= in0123, b= in[4], out= in01234);
+
+Or(a= in01234, b= in[5], out= in012345);
+
+Or(a= in012345, b= in[6], out= in0123456);
+
+Or(a= in0123456, b= in[7], out= out);
+
+}
+</code></pre><hr>
+<p>Next, we build a <mark>multi-way multi-bit multiplexer gate</mark>. An <span class="katex-error" title="ParseError: KaTeX parse error: Can&#x27;t use function &#x27;<!-- output_content -->#x27; in math mode at position 2: m$̲-way $n$-bit mu…" style="color:#cc0000">m$-way $n$-bit multiplexer selects one of its $m</span> <span class="katex-error" title="ParseError: KaTeX parse error: Can&#x27;t use function &#x27;<!-- output_content -->#x27; in math mode at position 2: n$̲-bit inputs, an…" style="color:#cc0000">n$-bit inputs, and outputs it to its $n$-bit output. The selection is specified by a set of $k</span> selection bits, where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>=</mo><mi>l</mi><mi>o</mi><msub><mi>g</mi><mn>2</mn></msub><mi>m</mi></mrow><annotation encoding="application/x-tex">k = log_2{m}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">m</span></span></span></span></span>.</p>
+<p>Our target computer platform requires two variants of this chip: a $4$-way $16$-bit multiplexer and an $8$-way $16$-bit multiplexer.</p>
+<p>API:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>Mux4Way16</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>a[16]</code>, <code>b[16]</code>, <code>c[16]</code>, <code>d[16]</code>, <code>sel[2]</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out[16]</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>if (sel == 00) then out = a,</code><br><br><code>else if (sel == 01) then out = b,</code><br><br><code>else if (sel == 10) then out = c,</code><br><br><code>else if (sel == 11) then out = d</code></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>Mux8Way16</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>a[16]</code>, <code>b[16]</code>, <code>c[16]</code>, <code>d[16]</code>, <code>e[16]</code>, <code>f[16]</code>, <code>g[16]</code>, <code>h[16]</code>, <code>sel[3]</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out[16]</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>if (sel == 000) then out = a,</code><br><br><code>else if (sel == 001) then out = b,</code><br><br><code>else if (sel == 010) then out = c,</code><br><br><code>else if (sel == 011) then out = d</code><br><br><code>else if (sel == 100) then out = e,</code><br><br><code>else if (sel == 101) then out = f,</code><br><br><code>else if (sel == 110) then out = g,</code><br><br><code>else if (sel == 111) then out = h</code></td>
+</tr>
+</tbody></table>
+<p>HDL:</p>
+<pre><code class="hljs language-hdl">CHIP Mux4Way16 {
+
+IN a[16], b[16], c[16], d[16], sel[2];
+
+OUT out[16];
+
+PARTS:
+
+// First level: Select between a/b and c/d using sel[0]
+
+Mux16(a=a, b=b, sel=sel[0], out=ab); // ab is the output of first Mux16
+
+Mux16(a=c, b=d, sel=sel[0], out=cd); // cd is the output of second Mux16
+
+  
+
+// Second level: Select between ab and cd using sel[1]
+
+Mux16(a=ab, b=cd, sel=sel[1], out=out);
+
+}
+</code></pre><pre><code class="hljs language-hdl">CHIP Mux8Way16 {
+
+IN a[16], b[16], c[16], d[16],
+
+e[16], f[16], g[16], h[16],
+
+sel[3];
+
+OUT out[16];
+
+  
+
+PARTS:
+
+Mux4Way16(a= a, b= b, c= c, d= d, sel= sel[0..1], out= abcd);
+
+Mux4Way16(a= e, b= f, c= g, d= h, sel= sel[0..1], out= efgh);
+
+Mux16(a= abcd, b= efgh, sel= sel[2], out= out);
+
+}
+</code></pre><hr>
+<p>Finally, we build a <mark>multi-way 16-bit demultiplexer gate</mark>. An <span class="katex-error" title="ParseError: KaTeX parse error: Can&#x27;t use function &#x27;<!-- output_content -->#x27; in math mode at position 2: m$̲-way $n$-bit de…" style="color:#cc0000">m$-way $n$-bit demultiplexer routes its single $n$-bit input to one of its $m</span> <span class="katex-error" title="ParseError: KaTeX parse error: Can&#x27;t use function &#x27;<!-- output_content -->#x27; in math mode at position 2: n$̲-bit outputs. T…" style="color:#cc0000">n$-bit outputs. The other outputs are set to `0`. The selection is specified by a set of $k</span> selection bits, where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>=</mo><mi>l</mi><mi>o</mi><msub><mi>g</mi><mn>2</mn></msub><mi>m</mi></mrow><annotation encoding="application/x-tex">k = log_2{m}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">m</span></span></span></span></span>.</p>
+<p>Our target computer platform requires two variants of this chip: a $4$-way $1$-bit demultiplexer and an $8$-way $1$-bit demultiplexer.</p>
+<p>API:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>DMux4Way</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>in</code>, <code>sel[2]</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>a</code>, <code>b</code>, <code>c</code>, <code>d</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>if (sel == 00) then {a, b, c, d} = {in, 0, 0, 0},</code><br><br><code>else if (sel == 01) then {a, b, c, d} = {0, in, 0, 0},</code><br><br><code>else if (sel == 10) then {a, b, c, d} = {0, 0, in, 0},</code><br><br><code>else if (sel == 11) then {a, b, c, d} = {0, 0, 0, in}</code></td>
+</tr>
+</tbody></table>
+<p>HDL:</p>
+<pre><code class="hljs language-hdl">CHIP DMux4Way {
+
+IN in, sel[2];
+
+OUT a, b, c, d;
+
+  
+
+PARTS:
+
+DMux(in= in, sel= sel[1], a= first, b= second);
+
+DMux(in= first, sel= sel[0], a= a, b= b);
+
+DMux(in= second, sel= sel[0], a= c, b= d);
+
+}
+</code></pre><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>DMux8Way</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>in</code>, <code>sel[3]</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>a</code>, <code>b</code>, <code>c</code>, <code>d</code>, <code>e</code>, <code>f</code>, <code>g</code>, <code>h</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>if (sel == 000) then {a, b, c, …, h} = {1, 0, 0, 0, 0, 0, 0, 0},</code><br><br><code>else if (sel == 001) then {a, b, c, …, h} = {0, 1, 0, 0, 0, 0, 0, 0},</code><br><br><code>if (sel == 010) then {a, b, c, …, h} = {0, 0, 1, 0, 0, 0, 0, 0},</code><br><br>…<br><br><code>if (sel == 111) then {a, b, c, …, h} = {0, 0, 0, 0, 0, 0, 0, 1}</code></td>
+</tr>
+</tbody></table>
+<p>HDL:</p>
+<pre><code class="hljs language-hdl">CHIP DMux8Way {
+
+IN in, sel[3];
+
+OUT a, b, c, d, e, f, g, h;
+
+  
+
+PARTS:
+
+DMux(in= in, sel= sel[2], a= first, b= second);
+
+DMux4Way(in= first, sel= sel[0..1], a= a, b= b, c= c, d= d);
+
+DMux4Way(in= second, sel= sel[0..1], a= e, b= f, c= g, d= h);
+
+}
+</code></pre><h1>Chapter 2: Boolean arithmetic</h1>
+<p>🎯 Objective: Use the gates from chapter 1 to build an ALU (Arithmetic logic unit).</p>
+<p>The ALU is the centerpiece chip that executes all the arithmetic and logical operations performed by the computer.</p>
+<hr>
+<p>A <mark>binary number</mark> is a number expressed in the <strong>base-2 positional numeral system</strong>. Let <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><msub><mi>x</mi><mi>n</mi></msub><msub><mi>x</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><msub><mi>x</mi><mrow><mi>n</mi><mo>−</mo><mn>2</mn></mrow></msub><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><msub><mi>x</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">x = x_{n}x_{n − 1}x_{n − 2} ... x_{0}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6389em;vertical-align:-0.2083em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="mbin mtight">−</span><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span><span class="mord">...</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">0</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> be a string of binary digits, the value of <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span> in the base-2 positional numeral system is defined as:<br>$<br>x = \sum_{i=0}^{n} x_i \cdot b^i<br>$</p>
+<p>e.g.    </p>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>10010</mn><msub><mn>1</mn><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">100101_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7944em;vertical-align:-0.15em;"></span><span class="mord">10010</span><span class="mord"><span class="mord">1</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> = <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo><mo>×</mo><msup><mn>2</mn><mn>5</mn></msup><mo stretchy="false">]</mo><mo>+</mo><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>0</mn><mo stretchy="false">)</mo><mo>×</mo><msup><mn>2</mn><mn>4</mn></msup><mo stretchy="false">]</mo><mo>+</mo><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>0</mn><mo stretchy="false">)</mo><mo>×</mo><msup><mn>2</mn><mn>3</mn></msup><mo stretchy="false">]</mo><mo>+</mo><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo><mo>×</mo><msup><mn>2</mn><mn>2</mn></msup><mo stretchy="false">]</mo><mo>+</mo><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>0</mn><mo stretchy="false">)</mo><mo>×</mo><msup><mn>2</mn><mn>1</mn></msup><mo stretchy="false">]</mo><mo>+</mo><mo stretchy="false">[</mo><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo><mo>×</mo><msup><mn>2</mn><mn>0</mn></msup><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[ ( 1 ) × 2^5 ] + [ ( 0 ) × 2^4 ] + [ ( 0 ) × 2^3 ] + [ ( 1 ) × 2^2 ] + [ ( 0 ) × 2^1 ] + [ ( 1 ) × 2^0 ]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[(</span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[(</span><span class="mord">0</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[(</span><span class="mord">0</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[(</span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[(</span><span class="mord">0</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span></span></span></span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[(</span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span></span></span></span></span><span class="mclose">]</span></span></span></span></p>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>10010</mn><msub><mn>1</mn><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">100101_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7944em;vertical-align:-0.15em;"></span><span class="mord">10010</span><span class="mord"><span class="mord">1</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> = <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mn>1</mn><mo>×</mo><mn>32</mn><mo stretchy="false">]</mo><mo>+</mo><mo stretchy="false">[</mo><mn>0</mn><mo>×</mo><mn>16</mn><mo stretchy="false">]</mo><mo>+</mo><mo stretchy="false">[</mo><mn>0</mn><mo>×</mo><mn>8</mn><mo stretchy="false">]</mo><mo>+</mo><mo stretchy="false">[</mo><mn>1</mn><mo>×</mo><mn>4</mn><mo stretchy="false">]</mo><mo>+</mo><mo stretchy="false">[</mo><mn>0</mn><mo>×</mo><mn>2</mn><mo stretchy="false">]</mo><mo>+</mo><mo stretchy="false">[</mo><mn>1</mn><mo>×</mo><mn>1</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[ 1 × 32 ] + [ 0 × 16 ] + [ 0 × 8 ] + [ 1 × 4 ] + [ 0 × 2 ] + [ 1 × 1 ]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">32</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">16</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">8</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">4</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span></span></span></span></p>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>10010</mn><msub><mn>1</mn><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">100101_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7944em;vertical-align:-0.15em;"></span><span class="mord">10010</span><span class="mord"><span class="mord">1</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> = <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><msub><mn>7</mn><mn>10</mn></msub></mrow><annotation encoding="application/x-tex">37_{10}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7944em;vertical-align:-0.15em;"></span><span class="mord">3</span><span class="mord"><span class="mord">7</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">10</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></p>
+<blockquote>
+<p>[!faq]- What is a (positional) numeral system?</p>
+<p>A <strong>numeral system</strong> is a mathematical notation for representing numbers of a given set using digits or other symbols in a consistent manner.</p>
+<p>In a <strong>positional numeral system</strong>, the <strong>radix</strong> or <strong>base</strong> is the number of unique digits, including the digit zero, used to represent numbers.</p>
+</blockquote>
+<p>Computers represent numbers in binary. Any number can be represented by a sequence of bits (binary digits), which in turn may be represented by any mechanism capable of being in two mutually exclusive states.</p>
+<p>Integer numbers are unbounded: for any given number <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span>, there are integers that are less than <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span> and integers greater than <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span>. However, computers are finite machines that use a fixed word size for representing numbers. An 8-bit register can represent <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>8</mn></msup><mo>=</mo><mn>256</mn></mrow><annotation encoding="application/x-tex">2^8 = 256</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">8</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">256</span></span></span></span> different things. Using <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> bits, we can represent all the nonnegative integers ranging from <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span> to <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>n</mi></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2^n - 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7477em;vertical-align:-0.0833em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>.</p>
+<hr>
+<p>The three common methods of extending the binary numeral system to represent <mark>signed numbers</mark> (i.e. positive, negative, and zero numbers) numbers are:</p>
+<ul>
+<li>Sign–magnitude,</li>
+<li>Ones&#39; complement, and</li>
+<li>Two&#39;s complement.</li>
+</ul>
+<p>Of the three, two’s complement is the most commonly used today.</p>
+<hr>
+<p>A <mark>two&#39;s complement number system</mark> encodes positive and negative numbers in a binary number representation. The weight of each bit is a power of two, except for the <strong>most significant bit</strong> (aka <strong>sign bit</strong>), whose weight is the negative of the corresponding power of two. The value <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span></span></span></span> of an <span class="katex-error" title="ParseError: KaTeX parse error: Can&#x27;t use function &#x27;<!-- output_content -->#x27; in math mode at position 2: N$̲-bit integer $a…" style="color:#cc0000">N$-bit integer $a_{N-1} a_{N-2} ... a_0</span> is given by the following formula:</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>w</mi><mo>=</mo><mo>−</mo><mo stretchy="false">(</mo><msub><mi>a</mi><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow></msub><msup><mn>2</mn><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow></msup><mo stretchy="false">)</mo><mo>+</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>N</mi><mo>−</mo><mn>2</mn></mrow></munderover><msub><mi>a</mi><mi>i</mi></msub><msup><mn>2</mn><mi>i</mi></msup></mrow><annotation encoding="application/x-tex">w = -(a_{N-1} 2^{N-1}) + \sum_{i=0}^{N-2} a_i 2^i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1413em;vertical-align:-0.25em;"></span><span class="mord">−</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:3.106em;vertical-align:-1.2777em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8283em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">0</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span><span class="mbin mtight">−</span><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8747em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span></span></span></span></span></span></span></span></span>
+<p>The two&#39;s complement of an <span class="katex-error" title="ParseError: KaTeX parse error: Can&#x27;t use function &#x27;<!-- output_content -->#x27; in math mode at position 2: N$̲-bit number is …" style="color:#cc0000">N$-bit number is the complement of that number with respect to $2^N</span> (this is the property that gives this system its name). i.e. Given that <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span> is an <span class="katex-error" title="ParseError: KaTeX parse error: Can&#x27;t use function &#x27;<!-- output_content -->#x27; in math mode at position 2: N$̲-bit number and…" style="color:#cc0000">N$-bit number and $y</span> is its two&#39;s complement, then <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>+</mo><mi>y</mi><mo>=</mo><msup><mn>2</mn><mi>N</mi></msup></mrow><annotation encoding="application/x-tex">x + y = 2^N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span></span></span></span></span></span></span></span></span></span></span>. e.g.</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>N</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">N = 3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">3</span></span></span></span></span>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msup><mn>2</mn><mi>N</mi></msup><mo>=</mo><msup><mn>2</mn><mn>3</mn></msup><mo>=</mo><msub><mn>8</mn><mn>10</mn></msub><mo>=</mo><mn>100</mn><msub><mn>0</mn><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">2^N = 2^3 = 8_{10} = 1000_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8913em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8641em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7944em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord">8</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">10</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7944em;vertical-align:-0.15em;"></span><span class="mord">100</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>I</mi><mi>f</mi><mtext> </mtext><mi>x</mi><mo>=</mo><mn>01</mn><msub><mn>1</mn><mn>2</mn></msub><mtext> </mtext><mo stretchy="false">(</mo><msub><mn>3</mn><mn>10</mn></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">If \space x = 011_2 \space (3_{10})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mspace"> </span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">01</span><span class="mord"><span class="mord">1</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace"> </span><span class="mopen">(</span><span class="mord"><span class="mord">3</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">10</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span>
+<p>Then <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> ($x<!-- output_content -->#39;s two&#39;s complement) <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo><mn>10</mn><msub><mn>1</mn><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">= 101_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7944em;vertical-align:-0.15em;"></span><span class="mord">10</span><span class="mord"><span class="mord">1</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><msub><mn>5</mn><mn>10</mn></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(5_{10})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord">5</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">10</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> because:
+$
+011_2 + 101_2 = 1000_2 = 2^N
+$</p>
+<hr>
+<p><mark>Calculation of the two&#39;s complement of a number</mark> essentially means subtracting the number from <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>N</mi></msup></mrow><annotation encoding="application/x-tex">2^N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span></span></span></span></span></span></span></span></span></span></span>. But as can be seen from the 3-bit example above with the 4-bit <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><msub><mn>0</mn><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">1000_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7944em;vertical-align:-0.15em;"></span><span class="mord">100</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, the number <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>N</mi></msup></mrow><annotation encoding="application/x-tex">2^N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span></span></span></span></span></span></span></span></span></span></span> will not itself be representable in a system limited to <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span></span> bits, as it is just outside the <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span></span> bit space. Because of this, systems with maximally $N$-bit must break the subtraction into two operations:</p>
+<ol>
+<li>First, subtract from the maximum number in the <span class="katex-error" title="ParseError: KaTeX parse error: Can&#x27;t use function &#x27;<!-- output_content -->#x27; in math mode at position 2: N$̲-bit system, th…" style="color:#cc0000">N$-bit system, that is $2^N - 1</span>. This term in binary is actually a simple number consisting of &#39;all 1s&#39;, and a subtraction from it can be done by simply inverting all bits in the number. The number obtained in this step is called the <strong>ones&#39; complement</strong> because summing it with the original number yields &#39;all 1s&#39;.</li>
+<li>Secondly, add one to the result.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Bits</th>
+<th>Unsigned value</th>
+<th>Signed value (Two&#39;s complement)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>000</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>001</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>010</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td>011</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr>
+<td>100</td>
+<td>4</td>
+<td>-4</td>
+</tr>
+<tr>
+<td>101</td>
+<td>5</td>
+<td>-3</td>
+</tr>
+<tr>
+<td>110</td>
+<td>6</td>
+<td>-2</td>
+</tr>
+<tr>
+<td>111</td>
+<td>7</td>
+<td>-1</td>
+</tr>
+</tbody></table>
+<hr>
+<p>Here is <mark>why the two&#39;s complement system works</mark>. Given a set of all possible <span class="katex-error" title="ParseError: KaTeX parse error: Can&#x27;t use function &#x27;<!-- output_content -->#x27; in math mode at position 2: N$̲-bit values, we…" style="color:#cc0000">N$-bit values, we can assign the lower (by the binary value) half to be the integers from $0</span> to <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><msup><mn>2</mn><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow></msup><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(2^{N-1} - 1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0913em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span> inclusive and the upper half to be <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><msup><mn>2</mn><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">-2^{N-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9247em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span></span> to <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">1</span></span></span></span> inclusive. The upper half (again, by the binary value) can be used to represent negative integers from <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><msup><mn>2</mn><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">-2^{N-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9247em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span></span> to <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">1</span></span></span></span> because, under addition modulo <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>N</mi></msup></mrow><annotation encoding="application/x-tex">2^N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span></span></span></span></span></span></span></span></span></span></span> they behave the same way as those negative integers. That is to say that, because <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>+</mo><mi>j</mi><mtext> </mtext><mo lspace="0.22em" rspace="0.22em"><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow></mo><mtext> </mtext><msup><mn>2</mn><mi>N</mi></msup><mo>=</mo><mi>i</mi><mo>+</mo><mo stretchy="false">(</mo><mi>j</mi><mo>+</mo><msup><mn>2</mn><mi>N</mi></msup><mo stretchy="false">)</mo><mtext> </mtext><mo lspace="0.22em" rspace="0.22em"><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow></mo><mtext> </mtext><msup><mn>2</mn><mi>N</mi></msup></mrow><annotation encoding="application/x-tex">i + j \bmod 2^N = i + (j + 2^N) \bmod 2^N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7429em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mspace" style="margin-right:0.0556em;"></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin"><span class="mord"><span class="mord mathrm">mod</span></span></span><span class="mspace" style="margin-right:0.0556em;"></span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7429em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0913em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span></span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.0556em;"></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin"><span class="mord"><span class="mord mathrm">mod</span></span></span><span class="mspace" style="margin-right:0.0556em;"></span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span></span></span></span></span></span></span></span></span></span></span>, any value in the set <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">{</mo><mi>j</mi><mo>+</mo><mi>k</mi><msup><mn>2</mn><mi>N</mi></msup><mtext> </mtext><mi mathvariant="normal">∣</mi><mtext> </mtext><mi>k</mi><mtext> </mtext><mi>i</mi><mi>s</mi><mtext> </mtext><mi>a</mi><mi>n</mi><mtext> </mtext><mi>i</mi><mi>n</mi><mi>t</mi><mi>e</mi><mi>g</mi><mi>e</mi><mi>r</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{j + k2^N \space | \space k \space is \space an \space integer\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0913em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span></span></span></span></span></span></span></span><span class="mspace"> </span><span class="mord">∣</span><span class="mspace"> </span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace"> </span><span class="mord mathnormal">i</span><span class="mord mathnormal">s</span><span class="mspace"> </span><span class="mord mathnormal">an</span><span class="mspace"> </span><span class="mord mathnormal">in</span><span class="mord mathnormal">t</span><span class="mord mathnormal">e</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal" style="margin-right:0.02778em;">er</span><span class="mclose">}</span></span></span></span> can be used in place of <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span>. Fundamentally, the system counts negative numbers by counting backwards and wrapping around.</p>
+<p>Given <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>N</mi></msup><mo>=</mo><msup><mn>2</mn><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">2^N = 2^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span>, these are some examples:</p>
+<table>
+<thead>
+<tr>
+<th>Addition in the two&#39;s complement system</th>
+<th>Addition modulo <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">2^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>4</mn><mo>+</mo><mn>3</mn><mo>=</mo><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">-4 + 3 = -1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">4</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">1</span></span></span></span> (represented as <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>7</mn></mrow><annotation encoding="application/x-tex">7</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">7</span></span></span></span> in binary)</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mo>+</mo><mn>3</mn><mtext> </mtext><mo lspace="0.22em" rspace="0.22em"><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow></mo><mtext> </mtext><mn>8</mn><mo>=</mo><mn>7</mn></mrow><annotation encoding="application/x-tex">4 + 3 \bmod 8 = 7</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.0556em;"></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin"><span class="mord"><span class="mord mathrm">mod</span></span></span><span class="mspace" style="margin-right:0.0556em;"></span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">8</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">7</span></span></span></span> (the two&#39;s complement representation of $-1$)</td>
+</tr>
+<tr>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>3</mn><mo>+</mo><mn>3</mn><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">-3 + 3 = 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">3</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span> (represented as <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span> in binary)</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5</mn><mo>+</mo><mn>3</mn><mtext> </mtext><mo lspace="0.22em" rspace="0.22em"><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow></mo><mtext> </mtext><mn>8</mn><mo>=</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">5 + 3 \bmod 8 = 8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">5</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.0556em;"></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin"><span class="mord"><span class="mord mathrm">mod</span></span></span><span class="mspace" style="margin-right:0.0556em;"></span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">8</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">8</span></span></span></span> (the two&#39;s complement representation of $0$)</td>
+</tr>
+<tr>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>2</mn><mo>+</mo><mn>3</mn><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">-2 + 3 = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> (represented as <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> in binary)</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn><mo>+</mo><mn>3</mn><mtext> </mtext><mo lspace="0.22em" rspace="0.22em"><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow></mo><mtext> </mtext><mn>8</mn><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">6 + 3 \bmod 8 = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">6</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.0556em;"></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin"><span class="mord"><span class="mord mathrm">mod</span></span></span><span class="mspace" style="margin-right:0.0556em;"></span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">8</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> (the two&#39;s complement representation of $1$)</td>
+</tr>
+</tbody></table>
+<hr>
+<p>The <mark>two&#39;s complement system has the following advantages</mark> over other systems for representing signed numbers:</p>
+<ol>
+<li>The fundamental arithmetic operations of addition, subtraction, and multiplication are identical to those for unsigned binary numbers (as long as the inputs are represented in the same number of bits as the output, and any overflow beyond those bits are discarded from the result).</li>
+<li>It has no representation for negative zero (unlike the ones&#39; complement and sign-magnitude representations).</li>
+</ol>
+<p>The material implications of these theoretical results are significant:</p>
+<ul>
+<li>Dedicated hardware is not needed to handle arithmetic with signed numbers.</li>
+<li>Subtraction can be treated as adding the complement of the subtrahend. Again, no dedicated hardware required.</li>
+</ul>
+<hr>
+<p>A <mark>pair of binary numbers can be added</mark> bitwise from right to left, using the same decimal addition algorithm learned in elementary school.</p>
+<pre><code class="hljs">
+1 1 1 1 1 (carried bits )
+
+  0 1 1 0 1 (13_10)
+
++ 1 0 1 1 1 (23_10)
+
+-------------
+
+1 0 0 1 0 0 (36_10)
+</code></pre><p>When adding in the two&#39;s complement system, any extra carry bit is discarded, such that the result and the addends always have the same number of bits. This is effectively the same as applying the modulo operator. For any number <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span>, computing <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mtext> </mtext><mo lspace="0.22em" rspace="0.22em"><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow></mo><mtext> </mtext><msup><mn>2</mn><mi>N</mi></msup></mrow><annotation encoding="application/x-tex">x \bmod 2^N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.0556em;"></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin"><span class="mord"><span class="mord mathrm">mod</span></span></span><span class="mspace" style="margin-right:0.0556em;"></span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span></span></span></span></span></span></span></span></span></span></span> essentially results in keeping the lowest <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span></span> bits of the number <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span>. As explained in the two&#39;s complement section, this modulo operation is what makes the two&#39;s complement system work.</p>
+<hr>
+<p>An <mark>adder</mark> or summer is a digital circuit used in the ALU to perform addition on binary numbers. We saw (from the elementary school style addition) that computer hardware for binary addition of two $n$-bit numbers can be built from logic gates designed to calculate the sum of three bits (pair of bits plus carry bit). These are the following hierarchy of adders that will be built:</p>
+<hr>
+<p>A <mark>half adder</mark> is designed to add two bits.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>HalfAdder</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>a</code>, <code>b</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>sum</code>, <code>carry</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>sum = LSB of a + b</code><br><br><code>carry = MSB of a + b</code></td>
+</tr>
+</tbody></table>
+<p>An inspection of the truth table reveals that the outputs <code>sum(a, b)</code> and <code>carry(a, b)</code> are identical to those of two simple Boolean functions <code>Xor</code> and <code>And</code> respectively.</p>
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+<th>carry</th>
+<th>sum</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody></table>
+<pre><code class="hljs language-hdl">/**
+* Computes the sum of two bits.
+*/
+CHIP HalfAdder {
+
+IN a, b; // 1-bit inputs
+
+OUT sum, // Right bit of a + b
+
+carry; // Left bit of a + b
+
+PARTS:
+
+And(a= a, b= b, out= carry);
+
+Xor(a = a, b = b, out = sum);
+}
+</code></pre><hr>
+<p>A <mark>full adder</mark> is designed to add three bits. Like the half-adder, the full-adder chip outputs two bits that, taken together, represents the addition of the three input bits.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td>FullAdder`</td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>a</code>, <code>b</code>, <code>c</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>sum</code>, <code>carry</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>sum = LSB of a + b + c</code><br><br><code>carry = MSB of a + b + c</code></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+<th>c</th>
+<th>carry</th>
+<th>sum</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<p>The names <code>Half-adder</code> and <code>Full-adder</code> derive from the implementation detail that a full-adder chip can be realized from two half-adders (and one other basic chip).</p>
+<pre><code class="hljs language-hdl">/**
+* Computes the sum of three bits.
+*/
+
+CHIP FullAdder {
+
+IN a, b, c; // 1-bit inputs
+
+OUT sum, // Right bit of a + b + c
+
+carry; // Left bit of a + b + c
+
+PARTS:
+
+HalfAdder(a= a, b= b, sum= partialSum, carry= partialCarry);
+
+HalfAdder(a= partialSum, b= c, sum= sum, carry= partialCarry2);
+
+Or(a= partialCarry, b= partialCarry2, out= carry);
+}
+</code></pre><hr>
+<p>An <mark>adder</mark> is designed to add two $n$-bit numbers.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>Add16</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>a[16]</code>, <code>b[16]</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out[16]</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td>Adds two 16-bit numbers.</td>
+</tr>
+<tr>
+<td>Comment</td>
+<td>The overflow bit is ignored.</td>
+</tr>
+</tbody></table>
+<p>The addition of two $n$-bit numbers can be done bitwise, from right to left (from LSB pairs to MSB pairs). In each step, the resulting carry bit from the previous step is fed into the addition.</p>
+<pre><code class="hljs language-hdl">/**
+* 16-bit adder: Adds two 16-bit two&#x27;s complement values.
+* The most significant carry bit is ignored.
+*/
+
+CHIP Add16 {
+
+IN a[16], b[16];
+
+OUT out[16];
+
+  
+
+PARTS:
+
+FullAdder(a= a[0], b= b[0], c= false, sum= out[0], carry= carry0);
+
+FullAdder(a= a[1], b= b[1], c= carry0, sum= out[1], carry= carry1);
+
+FullAdder(a= a[2], b= b[2], c= carry1, sum= out[2], carry= carry2);
+
+FullAdder(a= a[3], b= b[3], c= carry2, sum= out[3], carry= carry3);
+
+FullAdder(a= a[4], b= b[4], c= carry3, sum= out[4], carry= carry4);
+
+FullAdder(a= a[5], b= b[5], c= carry4, sum= out[5], carry= carry5);
+
+FullAdder(a= a[6], b= b[6], c= carry5, sum= out[6], carry= carry6);
+
+FullAdder(a= a[7], b= b[7], c= carry6, sum= out[7], carry= carry7);
+
+FullAdder(a= a[8], b= b[8], c= carry7, sum= out[8], carry= carry8);
+
+FullAdder(a= a[9], b= b[9], c= carry8, sum= out[9], carry= carry9);
+
+FullAdder(a= a[10], b= b[10], c= carry9, sum= out[10], carry= carry10);
+
+FullAdder(a= a[11], b= b[11], c= carry10, sum= out[11], carry= carry11);
+
+FullAdder(a= a[12], b= b[12], c= carry11, sum= out[12], carry= carry12);
+
+FullAdder(a= a[13], b= b[13], c= carry12, sum= out[13], carry= carry13);
+
+FullAdder(a= a[14], b= b[14], c= carry13, sum= out[14], carry= carry14);
+
+FullAdder(a= a[15], b= b[15], c= carry14, sum= out[15], carry= carry15);
+}
+</code></pre><hr>
+<p>An <mark>Incrementer</mark> is designed to add <code>1</code> to a given number. Although, the <code>x + 1</code> operation can be realized with the general-purpose <code>Adder</code> chip, a dedicated <code>Incrementer</code> chip can do it more efficiently.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>Inc16</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>in[16]</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out[16]</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>out = in + 1</code></td>
+</tr>
+<tr>
+<td>Comment</td>
+<td>The overflow bit is ignored.</td>
+</tr>
+</tbody></table>
+<pre><code class="hljs language-hdl">/**
+* 16-bit incrementer:
+* out = in + 1
+*/
+
+CHIP Inc16 {
+
+IN in[16];
+
+OUT out[16];
+
+PARTS:
+
+Add16(a = in, b[0] = true, b[1..15] = false, out = out);
+
+}
+</code></pre><hr>
+<p>The <mark>Arithmetic logic unit (ALU)</mark> is a chip designed to compute a set of arithmetic and logic operations. Unlike the generic chips discussed so far, the ALU described below is specific to the Hack computer:</p>
+<ul>
+<li>It only performs integer arithmetic (and not, for example, floating point arithmetic)</li>
+<li>It computes only a set of 18 arithmetic-logical functions.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>x</th>
+<th>y</th>
+<th>zx</th>
+<th>nx</th>
+<th>zy</th>
+<th>ny</th>
+<th>f</th>
+<th>no</th>
+<th>out</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>y</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0 (constant zero)</td>
+</tr>
+<tr>
+<td>1</td>
+<td>y</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1 (constant one)</td>
+</tr>
+<tr>
+<td>-1</td>
+<td>y</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>-1</td>
+<td>-1 (constant minus one)</td>
+</tr>
+<tr>
+<td>x</td>
+<td>y</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>x</td>
+<td>x</td>
+</tr>
+<tr>
+<td>x</td>
+<td>y</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>y</td>
+<td>y</td>
+</tr>
+<tr>
+<td>x</td>
+<td>y</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>¬x</td>
+<td>NOT x</td>
+</tr>
+<tr>
+<td>x</td>
+<td>y</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>¬y</td>
+<td>NOT y</td>
+</tr>
+<tr>
+<td>x</td>
+<td>y</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>-x</td>
+<td>-x</td>
+</tr>
+<tr>
+<td>x</td>
+<td>y</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>-y</td>
+<td>-y</td>
+</tr>
+<tr>
+<td>x</td>
+<td>y</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>x+1</td>
+<td>x + 1</td>
+</tr>
+<tr>
+<td>x</td>
+<td>y</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>y+1</td>
+<td>y + 1</td>
+</tr>
+<tr>
+<td>x</td>
+<td>y</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>x-1</td>
+<td>x - 1</td>
+</tr>
+<tr>
+<td>x</td>
+<td>y</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>y-1</td>
+<td>y - 1</td>
+</tr>
+<tr>
+<td>x</td>
+<td>y</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>x+y</td>
+<td>x + y</td>
+</tr>
+<tr>
+<td>x</td>
+<td>y</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>x-y</td>
+<td>x - y</td>
+</tr>
+<tr>
+<td>x</td>
+<td>y</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>y-x</td>
+<td>y - x</td>
+</tr>
+<tr>
+<td>x</td>
+<td>y</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>x&amp;y</td>
+<td>x AND y</td>
+</tr>
+<tr>
+<td>x</td>
+<td>y</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>x|y</td>
+<td>x OR y</td>
+</tr>
+</tbody></table>
+<p>The Hack ALU operates on two $16$-bit two&#39;s complement integers denoted <code>x</code> and <code>y</code>, an on six $1$-bit inputs, called <strong>control bits</strong>. The control bits &quot;tell&quot; the ALU which function to compute. Each control bit effects a standalone conditional micro-action:</p>
+<pre><code class="hljs">1. if (zx) then x = 0 else x = x
+
+2. if (nx) then x = !x else x = x
+
+3. if (zy) then y = 0 else y = y
+
+4. if (ny) then y = !y else y = y
+
+5. if (f) then out = x + y else out = x and y
+
+6. if (no) then out = !out else out = out
+</code></pre><blockquote>
+<p>It may be instructive to describe the thought process that led to the design of this particular ALU. First, we made a list of all the primitive operations that we wanted our computer to be able to perform. Next, we used backward reasoning to figure out how x, y, and out can be manipulated in binary fashion in order to carry out the desired operations. These processing requirements, along with our objective to keep the ALU logic as simple as possible, have led to the design decision to use six control bits, each associated with a straightforward binary operation.</p>
+</blockquote>
+<pre><code class="hljs language-hdl">/**
+
+* ALU (Arithmetic Logic Unit):
+
+* Computes out = one of the following functions:
+
+* 0, 1, -1,
+
+* x, y, !x, !y, -x, -y,
+
+* x + 1, y + 1, x - 1, y - 1,
+
+* x + y, x - y, y - x,
+
+* x &amp; y, x | y
+
+* on the 16-bit inputs x, y,
+
+* according to the input bits zx, nx, zy, ny, f, no.
+
+* In addition, computes the two output bits:
+
+* if (out == 0) zr = 1, else zr = 0
+
+* if (out &lt; 0) ng = 1, else ng = 0
+
+*/
+
+// Implementation: Manipulates the x and y inputs
+
+// and operates on the resulting values, as follows:
+
+// if (zx == 1) sets x = 0 // 16-bit constant
+
+// if (nx == 1) sets x = !x // bitwise not
+
+// if (zy == 1) sets y = 0 // 16-bit constant
+
+// if (ny == 1) sets y = !y // bitwise not
+
+// if (f == 1) sets out = x + y // integer 2&#x27;s complement addition
+
+// if (f == 0) sets out = x &amp; y // bitwise and
+
+// if (no == 1) sets out = !out // bitwise not
+
+
+CHIP ALU {
+
+IN
+
+x[16], y[16], // 16-bit inputs
+
+zx, // zero the x input?
+
+nx, // negate the x input?
+
+zy, // zero the y input?
+
+ny, // negate the y input?
+
+f, // compute (out = x + y) or (out = x &amp; y)?
+
+no; // negate the out output?
+
+OUT
+
+out[16], // 16-bit output
+
+zr, // if (out == 0) equals 1, else 0
+
+ng; // if (out &lt; 0) equals 1, else 0
+
+  
+
+PARTS:
+
+// x&#x27;s pre-processing
+
+Mux16(a= x, sel= zx, out= x1);
+
+Not16(in= x1, out= x1Negated);
+
+Mux16(a= x1, b= x1Negated, sel= nx, out= x2);
+
+  
+
+// y&#x27;s pre-processing
+
+Mux16(a= y, sel= zy, out= y1);
+
+Not16(in= y1, out= y1Negated);
+
+Mux16(a= y1, b= y1Negated, sel= ny, out= y2);
+
+  
+
+// function
+
+Add16(a = x2, b = y2, out = summed);
+
+And16(a = x2, b = y2, out = andded);
+
+Mux16(a= andded, b= summed, sel= f, out= out1);
+
+  
+
+// output post-processing
+
+Not16(in= out1, out= out1Negated);
+
+Mux16(a= out1, b= out1Negated, sel= no, out= out, out[15]= outFirst, out[0..7]= outLeft, out[8..15]= outRight);
+
+  
+
+// ng status bit
+
+And(a= true, b= outFirst, out=ng);
+
+  
+
+// zr status bit
+
+Or8Way(in= outLeft, out= zrLeft);
+
+Or8Way(in= outRight, out= zrRight);
+
+Or(a= zrLeft, b= zrRight, out= zrLeftOrZrRight);
+
+Not(in= zrLeftOrZrRight, out= zr);
+
+}
+</code></pre>
+    </body>
+</html>
