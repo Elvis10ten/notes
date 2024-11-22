@@ -61,9 +61,16 @@ table {
     position: relative;
     left: +20px;
     width: 100%; /* Make the table fill the available width */
-    table-layout: auto; /* Allow columns to adjust based on content */
     overflow-x: auto; /* Enable horizontal scrolling */
     border-collapse: collapse; /* Ensures borders don't have double spacing */
+}
+
+/* Allow scrolling on smaller screens */
+@media (max-width: 768px) {
+    table {
+        display: block;
+        white-space: nowrap; /* Prevent content wrapping */
+    }
 }
 
 /* Style all table cells */
