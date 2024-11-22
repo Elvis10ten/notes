@@ -14,6 +14,7 @@ const __dirname = dirname(__filename);
 // The source directory is where the Markdown files are stored, and the destination directory is where the HTML files will be generated.
 const srcDir = resolve(__dirname, '../src');
 const destDir = resolve(__dirname, '../docs');
+const scaffoldHTML = await readFile(resolve(__dirname, 'scaffold.html'), 'utf8');
 
 // Configure the marked library to use the Katex and Highlight.js plugins.
 marked.use({
@@ -35,7 +36,6 @@ marked.use({
     })
 );
 
-const scaffoldHTML = await readFile(resolve(__dirname, 'scaffold.html'), 'utf8');
 const srcFiles = await readdir(srcDir);
 
 const notes = [];
@@ -50,10 +50,11 @@ for (const srcFile of srcFiles) {
         continue;
     }
 
-    notes.push(await convertFile(srcFile));
+    notes.push(await generateHTMLFile(srcFile));
 }
 
 console.log('Generating notes index...');
+// First, we group the notes by year.
 const notesMap = notes.reduce((acc, note) => {
     const year = note.fileName.substring(0, 4);
 
@@ -65,10 +66,11 @@ const notesMap = notes.reduce((acc, note) => {
     return acc;
 }, {})
 
+// Second, we create an index section for each year.
 const yearSections = [];
 for (const year in notesMap) {
     const yearNotes = notesMap[year];
-
+    // TODO: Remove subtraction of 1 from year. This was done so the 2025 notes are shown under 2024.
     let yearSection = `## ${year - 1}`;
     yearNotes.forEach(note => {
         yearSection += `\n- [${note.title}](${note.fileName})`;
@@ -77,11 +79,12 @@ for (const year in notesMap) {
     yearSections.push(yearSection);
 }
 
-await convertFile("index.md", yearSections.join("\n\n"));
+// Finally, we generate the index.html file.
+await generateHTMLFile("index.md", yearSections.join("\n\n"));
 
 console.log('HTML files built successfully!');
 
-async function convertFile(srcFile, contentReplacement) {
+async function generateHTMLFile(srcFile, contentReplacement) {
     console.log(`Converting '${srcFile}' file to HTML...`);
 
     let srcMarkdown = await readFile(resolve(srcDir, srcFile), 'utf8');
@@ -96,11 +99,12 @@ async function convertFile(srcFile, contentReplacement) {
     outputHTML = outputHTML.replace(/\/docs\/assets/g, 'assets');
 
     // Replace the title with the content of the first <h1> tag.
-    const title = outputHTML.match(/>(.*?)<\/h1>/)?.[1];
-    if (!title) {
+    let title = outputHTML.match(/>(.*?)<\/h1>/)?.[1];
+    if (!title && srcFile !== "index.md") {
         throw new Error(`No title found in '${srcFile}' file!`);
+    } else if (!title) {
+        outputHTML = outputHTML.replace(/<title>(.*?)<\/title>/, `<title>${title}</title>`);
     }
-    outputHTML = outputHTML.replace(/<title>(.*?)<\/title>/, `<title>${title}</title>`);
 
     const outputFile = srcFile.replace('.md', '.html');
     await writeFile(resolve(destDir, outputFile), outputHTML);
