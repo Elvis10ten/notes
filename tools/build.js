@@ -14,6 +14,7 @@ const __dirname = dirname(__filename);
 // The source directory is where the Markdown files are stored, and the destination directory is where the HTML files will be generated.
 const srcDir = resolve(__dirname, '../src');
 const destDir = resolve(__dirname, '../docs');
+const bannerDir = resolve(__dirname, '../docs', 'assets', 'banners');
 const scaffoldHTML = await readFile(resolve(__dirname, 'scaffold.html'), 'utf8');
 
 // Configure the marked library to use the Katex and Highlight.js plugins.
@@ -99,12 +100,11 @@ async function generateHTMLFile(srcFile, contentReplacement) {
     outputHTML = outputHTML.replace(/\/docs\/assets/g, 'assets');
 
     // Replace the title with the content of the first <h1> tag.
-    let title = outputHTML.match(/>(.*?)<\/h1>/)?.[1];
-    if (!title && srcFile !== "index.md") {
-        throw new Error(`No title found in '${srcFile}' file!`);
-    } else if (!title) {
-        outputHTML = outputHTML.replace(/<title>(.*?)<\/title>/, `<title>${title}</title>`);
-    }
+    let title = outputHTML.match(/>(.*?)<\/h1>/)?.[1] ?? "Elvis Chidera's Notes";
+    outputHTML = outputHTML.replace('<!-- output_title -->', `<title>${title}</title>`);
+
+    const bannerPath = resolve(bannerDir, `${srcFile}.jpg`);
+    outputHTML = outputHTML.replace('<!-- output_banner_path -->', bannerPath);
 
     const outputFile = srcFile.replace('.md', '.html');
     await writeFile(resolve(destDir, outputFile), outputHTML);
