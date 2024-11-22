@@ -1,5 +1,5 @@
 import {readdir, readFile, writeFile} from 'fs/promises';
-import {dirname, resolve} from 'path';
+import {dirname, resolve, relative} from 'path';
 import {fileURLToPath} from 'url';
 import {marked} from "marked";
 import markedKatex from "marked-katex-extension";
@@ -103,8 +103,8 @@ async function generateHTMLFile(srcFile, contentReplacement) {
     let title = outputHTML.match(/>(.*?)<\/h1>/)?.[1] ?? "Elvis Chidera's Notes";
     outputHTML = outputHTML.replace('<!-- output_title -->', `<title>${title}</title>`);
 
-    const bannerPath = resolve(bannerDir, `${srcFile}.jpg`);
-    outputHTML = outputHTML.replace('<!-- output_banner_path -->', bannerPath);
+    const bannerPath = resolve(bannerDir, srcFile.replace('.md', '.jpeg'));
+    outputHTML = outputHTML.replace('<!-- output_banner_path -->', relative(destDir, bannerPath));
 
     const outputFile = srcFile.replace('.md', '.html');
     await writeFile(resolve(destDir, outputFile), outputHTML);
