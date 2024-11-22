@@ -58,8 +58,6 @@ body > * {
 }
 
 table {
-    position: relative;
-    left: +20px;
     width: 100%; /* Make the table fill the available width */
     overflow-x: auto; /* Enable horizontal scrolling */
     border-collapse: collapse; /* Ensures borders don't have double spacing */
