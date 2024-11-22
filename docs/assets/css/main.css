@@ -14,7 +14,6 @@ body, html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
-    height: 100%;
 }
 
 body, button, p, ul {
@@ -59,6 +58,8 @@ body > * {
 }
 
 table {
+    position: relative;
+    left: +20px;
     width: 100%; /* Make the table fill the available width */
     table-layout: auto; /* Allow columns to adjust based on content */
     overflow-x: auto; /* Enable horizontal scrolling */
