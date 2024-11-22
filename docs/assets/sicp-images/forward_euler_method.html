@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <canvas id="myCanvas" width="200" height="100" style="border:1px solid #c3c3c3;">
+        Your browser does not support the canvas element.
+    </canvas>
+
+    <script>
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        var dt = 0.001;
+        ctx.fillStyle = "#FF0000";
+
+        function dawg(count, x, y) {
+            ctx.fillRect(x, y, 1, 1);
+            console.log("x: " + x + ", y: " + y + ", count: " + count);
+            if (count < 100000) {
+                dawg(
+                    ++count,
+                    x - (y * dt),
+                    y + (x * dt)
+                )
+            }
+        }
+
+        dawg(0, 100.0, 0.0)
+    </script>
+
+</body>
+
+</html>

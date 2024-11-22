@@ -1,4 +1,4 @@
-# The Elements of Computing Systems – Building a Modern Computer from First Principles
+# ▼ [WIP] The Elements of Computing Systems – Building a Modern Computer from First Principles
 
 ## Chapter 1: Boolean logic
 

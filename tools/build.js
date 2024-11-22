@@ -69,7 +69,7 @@ const yearSections = [];
 for (const year in notesMap) {
     const yearNotes = notesMap[year];
 
-    let yearSection = `## ${year}`;
+    let yearSection = `## ${year - 1}`;
     yearNotes.forEach(note => {
         yearSection += `\n- [${note.title}](${note.fileName})`;
     });

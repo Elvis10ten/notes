@@ -1,4 +1,4 @@
-# [WIP] The Algorithm Design Manual - Notes
+# [WIP] The Algorithm Design Manual
 
 > Pet Peeve: The author sometimes skips steps without an explaination (like the integer truncation in "stop and think: incremental correctness"). Some examples are hard to follow for an international student (like understanding the lottery system in "war story: pschic modeling").
 
