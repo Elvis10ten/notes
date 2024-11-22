@@ -55,7 +55,7 @@ alert but not dismissive for how the details of your applications differ from a 
 6. **Polygons** define regions in some geometric spaces.
 7. **Strings** represent sequences of characters, or patterns.
 
-![](assets/adm-images/fig1.8.png)
+![](/docs/assets/adm-images/fig1.8.png)
 <small> Modeling real-world structures with trees and graphs</small>
 
 #### Recursive Objects
@@ -72,7 +72,7 @@ alert but not dismissive for how the details of your applications differ from a 
 
 > Recursive descriptions of objects require both decomposition rules and basis cases, namely the specification of the smallest and simplest objects where the decomposition stops.
 
-![](assets/adm-images/fig1.9.png)
+![](/docs/assets/adm-images/fig1.9.png)
 <small>Recursive decompositions of combinatorial objects. (left column) Permutations, subsets, trees, and graphs. (right column) Point sets, polygons, and strings</small>
 
 An **algorithmic problem** is specified by describing the complete set of <mark>instances</mark> it must work on and of its output after running on one of these instances.
@@ -114,7 +114,7 @@ Three desirable properties for a good algorithm:
 
 
 An animation of the logical flow of this algorithm on a particular instance (the letters in the word `“INSERTIONSORT”`)
-![](assets/adm-images/fig1.1.png)
+![](/docs/assets/adm-images/fig1.1.png)
 
 ### Robot Tour Optimization
 > **Problem**: Robot Tour Optimization (aka: Traveling Salesman Problem [TSP]).<br/>
@@ -147,7 +147,7 @@ An animation of the logical flow of this algorithm on a particular instance (the
     - Reasonably efficient
 4. Cons: It's wrong — It always finds a tour, but it doesn’t necessarily find the shortest possible tour.
    E.g: A bad instance for the nearest-neighbor heuristic (top) & the optimal solution (bottom):
-   ![](assets/adm-images/fig1.3.png)
+   ![](/docs/assets/adm-images/fig1.3.png)
 
 #### Closest-pair heuristic
 1. English description:

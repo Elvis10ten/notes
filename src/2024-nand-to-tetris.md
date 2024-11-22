@@ -1,4 +1,4 @@
-## The Elements of Computing Systems – Building a Modern Computer from First Principles
+# The Elements of Computing Systems – Building a Modern Computer from First Principles
 
 ## Chapter 1: Boolean logic
 
@@ -77,7 +77,7 @@ The <mark>specifications of the logic gates</mark> needed to build the chips of 
 
 First, the **primitive** <mark>NAND</mark> gate, which is shorthand for **Not-And** because it’s equivalent to `Not(And(a, b))`.
 
-![[nand_to_tetris_nand_gate.svg]]
+![](/docs/assets/nand-images/nand_gate.svg)
 
 
 Truth table:
@@ -112,7 +112,7 @@ The NAND gate is called a primitive gate because it can be used to implement any
 
 Next, we look at a set of four gates that implement **classical logical operators**. Starting with the <mark>Not (aka inverter) gate</mark>, which outputs the opposite value of its input’s value.
 
-![[nand_to_tetris_not_gate.svg]]
+![](/docs/assets/nand-images/not_gate.svg)
 
 Truth table:
 
@@ -154,7 +154,7 @@ Nand(a= in, b= in, out= out);
 The next classical gate is the <mark>AND gate</mark>, which returns $1$ when both its inputs are $1$, and $0$ otherwise.
 
 
-![[nand_to_tetris_and_gate.svg]]
+![](/docs/assets/nand-images/and_gate.svg)
 
 
 Truth table:  
@@ -198,7 +198,7 @@ Not(in= nandout, out= out);
 ---
 The <mark>Or gate</mark> returns $1$ when at least one of its inputs is $1$, and $0$ otherwise.
 
-![[nand_to_tetris_or_gate.svg]]
+![](/docs/assets/nand-images/or_gate.svg)
 
 
 
@@ -251,7 +251,7 @@ Not(in= notaandnotb, out= out);
 ---
 The last classical gate we will build is the <mark>Xor (aka exclusive or) gate</mark> which returns $1$ when exactly one of its input is $1$, and $0$ otherwise.
 
-![[nand_to_tetris_xor_gate.svg]]
+![](/docs/assets/nand-images/xor_gate.svg)
 
   
 Truth table:
@@ -304,7 +304,7 @@ Or(a= aandnotb, b= bandnota, out= out);
 
 Next, we look at a set of <mark>control flow gates</mark>. These gates provide means for controlling flows of information. The first of such gate is the <mark>multiplexer</mark> which is a three-input gate. Two input bits, named `a` and `b`, are interpreted as **data bits**, and a third bit, named `sel`, is interpreted as a **selection bit**. The multiplexer uses `sel` to select and output the value of either `a` or `b`.
 
-![[multiplexer_gate.png]]
+![](/docs/assets/nand-images/multiplexer_gate.png)
 
 Truth table:
 
@@ -357,7 +357,7 @@ Or(a= aandnotsel, b= bandsel, out= out);
 
 Next is the <mark>demultiplexer gate</mark> which performs the opposite function of a multiplexer: it takes a single input value and routes it to one of two possible outputs, according to a selector bit that selects the destination output.
 
-![[demultiplexer_gate.png]]
+![](/docs/assets/nand-images/demultiplexer_gate.png)
 
 | in  | sel | a   | b   |
 | --- | --- | --- | --- |
