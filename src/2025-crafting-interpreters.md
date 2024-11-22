@@ -1,4 +1,4 @@
-# []WIP Crafting interpreters
+# [WIP] Crafting interpreters
 
 This is a book on implementing interpreters for programming languages with a focus on practicals (getting the language up and running) instead of theory (Formal reasoning on syntax and semantics).
 
