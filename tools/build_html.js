@@ -49,7 +49,7 @@ async function buildHTMLFile(noteFileName) {
     console.log(`Replacing '/docs/assets' paths in the generated HTML...`);
     outputHTML = outputHTML.replace(/\/docs\/assets/g, 'assets');
     console.log(`Replacing '/src/(.*).md' paths with '/$1.html' in the generated HTML...`);
-    outputHTML = outputHTML.replace(/\/src\/(.*?)\.md/, "$1.html");
+    outputHTML = outputHTML.replace(/\/src\/(.*?)\.md/g, "$1.html");
 
     console.log(`Setting the title...`);
     let firstH1Text = outputHTML.match(/>(.*?)<\/h1>/)?.[1] ?? "Elvis Chidera's Notes";
