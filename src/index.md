@@ -1,3 +1,9 @@
+<div class="circular-image-container">
+    <img src="/docs/assets/avatar.jpg" alt="Elvis Chidera" class="circular-image" />
+</div>
+
+<div class="center-container">
+
 Hi 👋!
 
 I'm [Elvis Chidera](https://elvischidera.com). This is a repository of some of my reading notes. I primarily create these notes for myself and later rewrite them to be accessible to the public. I enjoyed making them and I hope you find them useful.
@@ -11,3 +17,5 @@ I'm [Elvis Chidera](https://elvischidera.com). This is a repository of some of m
 - [[WIP] Structure and Interpretation of Computer Programs](/src/2025-6-sicp.md)
 - [[WIP] Crafting interpreters](/src/2025-7-crafting-interpreters.md)
 - [[WIP] Computer systems: A programmer’s perspective](/src/2025-8-computer-systems-programmers-perspective.md)
+
+</div>
