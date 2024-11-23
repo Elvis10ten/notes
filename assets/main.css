@@ -57,6 +57,19 @@ body > * {
     margin-right: auto;
 }
 
+.circular-image-container img {
+    width: 150px;  /* Set the desired width */
+    height: 150px; /* Set the desired height */
+    object-fit: cover; /* Ensures the image doesn't stretch */
+    border-radius: 50%; /* Makes it circular */
+    border: 2px solid #ccc; /* Optional: Add a border */
+}
+
+.center-container {
+    text-align: center;
+
+}
+
 table {
     width: 100%; /* Make the table fill the available width */
     overflow-x: auto; /* Enable horizontal scrolling */
