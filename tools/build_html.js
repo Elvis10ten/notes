@@ -4,7 +4,7 @@ import {marked} from "marked";
 import markedKatex from "marked-katex-extension";
 import {markedHighlight} from "marked-highlight";
 import highlightJS from 'highlight.js';
-import {__dirname, destDir, getDestPath, getNoteFileNames, getSrcPath, getToolsPath, readFileText} from "./utils.js";
+import {bannersDir, destDir, getDestPath, getNoteFileNames, getSrcPath, getToolsPath, readFileText} from "./utils.js";
 
 console.log('Building HTML files...');
 
@@ -23,13 +23,14 @@ marked.use(
             const language = highlightJS.getLanguage(lang) ? lang : 'plaintext';
             return highlightJS.highlight(
                 code,
-                {language}
+                {
+                    language: language
+                }
             ).value;
         }
     })
 );
 
-const bannersDir = resolve(__dirname, '..', 'docs', 'assets', 'banners');
 const scaffoldHTML = await readFileText(getToolsPath('note-scaffold.html'));
 
 const noteFileNames = await getNoteFileNames();

@@ -2,8 +2,8 @@
     <img src="/docs/assets/avatar.jpg" alt="Elvis Chidera" class="circular-image" />
 </div>
 
-<div class="text-center"><strong>Hi 👋!</strong></div>
+<div class="text-center"><strong>Hiii!</strong></div>
 
-I'm [Elvis Chidera](https://elvischidera.com). This is a repository of some of my reading notes. I primarily create these notes for myself and later rewrite them to be accessible to the public. I enjoyed making them and I hope you find them useful ❤️.
+I'm [Elvis Chidera](https://elvischidera.com) 👋. This is my collection of reading notes — originally for myself, but now shared for anyone to enjoy. I loved creating them, and I hope you find them just as useful! ❤️
 
 <!-- index_content -->

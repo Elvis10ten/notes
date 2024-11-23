@@ -1,4 +1,4 @@
-import {getNoteFileNames, getSrcPath, getToolsPath, projectDirName, readFileText, srcDir} from "./utils.js";
+import {getNoteFileNames, getSrcPath, getToolsPath, projectDirName, readFileText} from "./utils.js";
 import {writeFile} from "fs/promises";
 import {relative, sep} from "path";
 
@@ -13,7 +13,7 @@ const indexMap = await noteFileNames.reduce(async (accPromise, noteFileName) => 
 
     const acc = await accPromise;
     const markdownText = await readFileText(getSrcPath(noteFileName));
-    const title = markdownText.match(/^# (.*)$/m)[1];
+    const title = markdownText.match(/^# (.*)$/m)[1]; // Get the first '# ***' line in the markdown file (without the '#').
     const year = noteFileName.substring(0, 4);
 
     if (!acc[year]) {
