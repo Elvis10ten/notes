@@ -2,7 +2,7 @@
   "name": "notes-tools",
   "version": "1.0.0",
   "description": "Tools used to publish markdown notes",
-  "main": "build.js",
+  "main": "build_html.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
