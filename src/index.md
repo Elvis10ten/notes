@@ -2,9 +2,9 @@
     <img src="/docs/assets/avatar.jpg" alt="Elvis Chidera" class="circular-image" />
 </div>
 
-<div class="text-center"><strong>Hi 👋!</strong></div>
+<div class="text-center"><strong>Hiii!</strong></div>
 
-I'm [Elvis Chidera](https://elvischidera.com). This is a repository of some of my reading notes. I primarily create these notes for myself and later rewrite them to be accessible to the public. I enjoyed making them and I hope you find them useful.
+I'm [Elvis Chidera](https://elvischidera.com) 👋. This is my collection of reading notes — originally for myself, but now shared for anyone to enjoy. I loved creating them, and I hope you find them just as useful! ❤️
 
 ## 2024
 - [[WIP] The Elements of Computing Systems – Building a Modern Computer from First Principles](/src/2025-1-nand-to-tetris.md)
@@ -15,3 +15,4 @@ I'm [Elvis Chidera](https://elvischidera.com). This is a repository of some of m
 - [[WIP] Structure and Interpretation of Computer Programs](/src/2025-6-sicp.md)
 - [[WIP] Crafting interpreters](/src/2025-7-crafting-interpreters.md)
 - [[WIP] Computer systems: A programmer’s perspective](/src/2025-8-computer-systems-programmers-perspective.md)
+- [Against Bitrot (How & why I rebuilt my blog)](/src/2025-how.md)
