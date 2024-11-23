@@ -10,7 +10,7 @@ Modern computers store and process information stored as two-valued signals — 
 A binary variable or a bit can represent two possible states: `0` and `1`; `off` and `on`; `false` and `true`; `no` and `yes`; etc. $n$ binary variables can be used to represent $2^n$ states. e.g.
 
 | $b_2$ | $b_1$ | $b_0$ |
-| ----- | ----- | ----- |
+|-------|-------|-------|
 | 0     | 0     | 0     |
 | 0     | 0     | 1     |
 | 0     | 1     | 0     |
@@ -33,7 +33,7 @@ The total number of boolean functions for $n$ binary variables is $2^{2^n}$, bec
 e.g. There are $16$ distinct boolean functions for $2$ binary variables.
 
 | Function | Expression      | A=0, B=0 | A=0, B=1 | A=1, B=0 | A=1, B=1 |
-| -------- | --------------- | -------- | -------- | -------- | -------- |
+|----------|-----------------|----------|----------|----------|----------|
 | F0       | 0               | 0        | 0        | 0        | 0        |
 | F1       | NOT A AND NOT B | 1        | 0        | 0        | 0        |
 | F2       | NOT A AND B     | 0        | 1        | 0        | 0        |
@@ -82,17 +82,17 @@ First, the **primitive** <mark>NAND</mark> gate, which is shorthand for **Not-An
 
 Truth table:
 
-| a   | b   | Nand(a, b) |
-| --- | --- | ---------- |
-| 0   | 0   | 1          |
-| 0   | 1   | 1          |
-| 1   | 0   | 1          |
-| 1   | 1   | 0          |
+| a | b | Nand(a, b) |
+|---|---|------------|
+| 0 | 0 | 1          |
+| 0 | 1 | 1          |
+| 1 | 0 | 1          |
+| 1 | 1 | 0          |
 
 API:
 
 |           |                                                       |
-| --------- | ----------------------------------------------------- |
+|-----------|-------------------------------------------------------|
 | Chip name | `Nand`                                                |
 | Input     | `a`, `b`                                              |
 | Output    | `out`                                                 |
@@ -116,15 +116,15 @@ Next, we look at a set of four gates that implement **classical logical operator
 
 Truth table:
 
-| a   | Not(a) |
-| --- | ------ |
-| 0   | 1      |
-| 1   | 0      |
+| a | Not(a) |
+|---|--------|
+| 0 | 1      |
+| 1 | 0      |
 
 API:
 
 |           |                                           |
-| --------- | ----------------------------------------- |
+|-----------|-------------------------------------------|
 | Chip name | `Not`                                     |
 | Input     | `in`                                      |
 | Output    | `out`                                     |
@@ -159,17 +159,17 @@ The next classical gate is the <mark>AND gate</mark>, which returns $1$ when bot
 
 Truth table:  
 
-| a   | b   | And(a, b) |
-| --- | --- | --------- |
-| 0   | 0   | 0         |
-| 0   | 1   | 0         |
-| 1   | 0   | 0         |
-| 1   | 1   | 1         |
+| a | b | And(a, b) |
+|---|---|-----------|
+| 0 | 0 | 0         |
+| 0 | 1 | 0         |
+| 1 | 0 | 0         |
+| 1 | 1 | 1         |
 
 API:
 
 |           |                                                       |
-| --------- | ----------------------------------------------------- |
+|-----------|-------------------------------------------------------|
 | Chip name | `And`                                                 |
 | Input     | `a`, `b`                                              |
 | Output    | `out`                                                 |
@@ -204,19 +204,19 @@ The <mark>Or gate</mark> returns $1$ when at least one of its inputs is $1$, and
 
 Truth table:
 
-| a   | b   | Or(a, b) |
-| --- | --- | -------- |
-| 0   | 0   | 0        |
-| 0   | 1   | 1        |
-| 1   | 0   | 1        |
-| 1   | 1   | 1        |
+| a | b | Or(a, b) |
+|---|---|----------|
+| 0 | 0 | 0        |
+| 0 | 1 | 1        |
+| 1 | 0 | 1        |
+| 1 | 1 | 1        |
 
   
 
 API:
 
 |           |                                                         |
-| --------- | ------------------------------------------------------- |
+|-----------|---------------------------------------------------------|
 | Chip name | `Or`                                                    |
 | Input     | `a`, `b`                                                |
 | Output    | `out`                                                   |
@@ -256,17 +256,17 @@ The last classical gate we will build is the <mark>Xor (aka exclusive or) gate</
   
 Truth table:
 
-| a   | b   | Xor(a, b) |
-| --- | --- | --------- |
-| 0   | 0   | 0         |
-| 0   | 1   | 1         |
-| 1   | 0   | 1         |
-| 1   | 1   | 0         |
+| a | b | Xor(a, b) |
+|---|---|-----------|
+| 0 | 0 | 0         |
+| 0 | 1 | 1         |
+| 1 | 0 | 1         |
+| 1 | 1 | 0         |
 
 API:
 
 |           |                                          |
-| --------- | ---------------------------------------- |
+|-----------|------------------------------------------|
 | Chip name | `Xor`                                    |
 | Input     | `a`, `b`                                 |
 | Output    | `out`                                    |
@@ -308,21 +308,21 @@ Next, we look at a set of <mark>control flow gates</mark>. These gates provide m
 
 Truth table:
 
-| a   | b   | sel | out |
-| --- | --- | --- | --- |
-| 0   | 0   | 0   | 0   |
-| 0   | 0   | 1   | 0   |
-| 0   | 1   | 0   | 0   |
-| 0   | 1   | 1   | 1   |
-| 1   | 0   | 0   | 1   |
-| 1   | 0   | 1   | 0   |
-| 1   | 1   | 0   | 1   |
-| 1   | 1   | 1   | 1   |
+| a | b | sel | out |
+|---|---|-----|-----|
+| 0 | 0 | 0   | 0   |
+| 0 | 0 | 1   | 0   |
+| 0 | 1 | 0   | 0   |
+| 0 | 1 | 1   | 1   |
+| 1 | 0 | 0   | 1   |
+| 1 | 0 | 1   | 0   |
+| 1 | 1 | 0   | 1   |
+| 1 | 1 | 1   | 1   |
 
 API:
 
 |           |                                            |
-| --------- | ------------------------------------------ |
+|-----------|--------------------------------------------|
 | Chip name | `Mux`                                      |
 | Input     | `a`, `b`, `sel`                            |
 | Output    | `out`                                      |
@@ -359,17 +359,17 @@ Next is the <mark>demultiplexer gate</mark> which performs the opposite function
 
 ![](/docs/assets/nand-images/demultiplexer_gate.png)
 
-| in  | sel | a   | b   |
-| --- | --- | --- | --- |
-| 0   | 0   | 0   | 0   |
-| 0   | 1   | 0   | 0   |
-| 1   | 0   | 1   | 0   |
-| 1   | 1   | 0   | 1   |
+| in | sel | a | b |
+|----|-----|---|---|
+| 0  | 0   | 0 | 0 |
+| 0  | 1   | 0 | 0 |
+| 1  | 0   | 1 | 0 |
+| 1  | 1   | 0 | 1 |
 
 API:
 
 |           |                                                               |
-| --------- | ------------------------------------------------------------- |
+|-----------|---------------------------------------------------------------|
 | Chip name | `DMux`                                                        |
 | Input     | `in`, `sel`                                                   |
 | Output    | `a`, `b`                                                      |
@@ -407,7 +407,7 @@ The first multi-bit gate we will build is the <mark>16-bit Not gate</mark>, whic
 API:
 
 |           |                                     |
-| --------- | ----------------------------------- |
+|-----------|-------------------------------------|
 | Chip name | `Not16`                             |
 | Input     | `in[16]`                            |
 | Output    | `out[16]`                           |
@@ -468,7 +468,7 @@ Next is the <mark>16-bit And gate</mark>, which applies the Boolean operation `A
 API:
 
 |           |                                          |
-| --------- | ---------------------------------------- |
+|-----------|------------------------------------------|
 | Chip name | `And16`                                  |
 | Input     | `a[16]`, `b[16]`                         |
 | Output    | `out[16]`                                |
@@ -530,7 +530,7 @@ Followed by the <mark>16-bit Or gate</mark>, which applies the Boolean operation
 API:
 
 |           |                                         |
-| --------- | --------------------------------------- |
+|-----------|-----------------------------------------|
 | Chip name | `Or16`                                  |
 | Input     | `a[16]`, `b[16]`                        |
 | Output    | `out[16]`                               |
@@ -592,7 +592,7 @@ Finally, the <mark>16-bit Multiplexer gate</mark>, which operates exactly as the
 API:
 
 |           |                                                                                    |
-| --------- | ---------------------------------------------------------------------------------- |
+|-----------|------------------------------------------------------------------------------------|
 | Chip name | `Mux16`                                                                            |
 | Input     | `a[16]`, `b[16]`, `sel`                                                            |
 | Output    | `out[16]`                                                                          |
@@ -654,7 +654,7 @@ The last set of gates we will build are the <mark>multi-way versions of basic ga
 The first gate in this set is the <mark>multi-way Or gate</mark>. An $m$-way `Or` gate outputs `1` when at least one of its `m` input bits is `1`, and `0` otherwise. Our target computer will need an $8$-way variant of this gate:
 
 |           |                                      |
-| --------- | ------------------------------------ |
+|-----------|--------------------------------------|
 | Chip name | `Or8Way`                             |
 | Input     | `in[8]`                              |
 | Output    | `out`                                |
@@ -695,14 +695,14 @@ Our target computer platform requires two variants of this chip: a $4$-way $16$-
 API:
 
 |           |                                                                                                                                                                |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|-----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Chip name | `Mux4Way16`                                                                                                                                                    |
 | Input     | `a[16]`, `b[16]`, `c[16]`, `d[16]`, `sel[2]`                                                                                                                   |
 | Output    | `out[16]`                                                                                                                                                      |
 | Function  | `if (sel == 00) then out = a,`<br><br>`else if (sel == 01) then out = b,`<br><br>`else if (sel == 10) then out = c,`<br><br>`else if (sel == 11) then out = d` |
 
 |           |                                                                                                                                                                                                                                                                                                                                                   |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Chip name | `Mux8Way16`                                                                                                                                                                                                                                                                                                                                       |
 | Input     | `a[16]`, `b[16]`, `c[16]`, `d[16]`, `e[16]`, `f[16]`, `g[16]`, `h[16]`, `sel[3]`                                                                                                                                                                                                                                                                  |
 | Output    | `out[16]`                                                                                                                                                                                                                                                                                                                                         |
@@ -767,7 +767,7 @@ Our target computer platform requires two variants of this chip: a $4$-way $1$-b
 API:
 
 |           |                                                                                                                                                                                                                                                    |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|-----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Chip name | `DMux4Way`                                                                                                                                                                                                                                         |
 | Input     | `in`, `sel[2]`                                                                                                                                                                                                                                     |
 | Output    | `a`, `b`, `c`, `d`                                                                                                                                                                                                                                 |
@@ -796,7 +796,7 @@ DMux(in= second, sel= sel[0], a= c, b= d);
 ```
 
 |           |                                                                                                                                                                                                                                                                                                               |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Chip name | `DMux8Way`                                                                                                                                                                                                                                                                                                    |
 | Input     | `in`, `sel[3]`                                                                                                                                                                                                                                                                                                |
 | Output    | `a`, `b`, `c`, `d`, `e`, `f`, `g`, `h`                                                                                                                                                                                                                                                                        |
@@ -824,7 +824,7 @@ DMux4Way(in= second, sel= sel[0..1], a= e, b= f, c= g, d= h);
 }
 ```
 
-# Chapter 2: Boolean arithmetic
+## Chapter 2: Boolean arithmetic
 
 🎯 Objective: Use the gates from chapter 1 to build an ALU (Arithmetic logic unit).
 
@@ -845,13 +845,9 @@ $100101_2$ = $[ 1 × 32 ] + [ 0 × 16 ] + [ 0 × 8 ] + [ 1 × 4 ] + [ 0 × 2 ] +
 
 $100101_2$ = $37_{10}$
 
-> [!faq]- What is a (positional) numeral system?
-> 
-> A **numeral system** is a mathematical notation for representing numbers of a given set using digits or other symbols in a consistent manner.
-> 
->   
-> 
-> In a **positional numeral system**, the **radix** or **base** is the number of unique digits, including the digit zero, used to represent numbers.
+A **numeral system** is a mathematical notation for representing numbers of a given set using digits or other symbols in a consistent manner.
+
+In a **positional numeral system**, the **radix** or **base** is the number of unique digits, including the digit zero, used to represent numbers.
 
 Computers represent numbers in binary. Any number can be represented by a sequence of bits (binary digits), which in turn may be represented by any mechanism capable of being in two mutually exclusive states.
 
@@ -897,7 +893,7 @@ $$
 2. Secondly, add one to the result.
 
 | Bits | Unsigned value | Signed value (Two's complement) |
-| ---- | -------------- | ------------------------------- |
+|------|----------------|---------------------------------|
 | 000  | 0              | 0                               |
 | 001  | 1              | 1                               |
 | 010  | 2              | 2                               |
@@ -913,7 +909,7 @@ Here is <mark>why the two's complement system works</mark>. Given a set of all p
 Given $2^N = 2^3$, these are some examples:
 
 | Addition in the two's complement system      | Addition modulo $2^3$                                             |
-| -------------------------------------------- | ----------------------------------------------------------------- |
+|----------------------------------------------|-------------------------------------------------------------------|
 | $-4 + 3 = -1$ (represented as $7$ in binary) | $4 + 3 \bmod 8 = 7$ (the two's complement representation of $-1$) |
 | $-3 + 3 = 0$ (represented as $0$ in binary)  | $5 + 3 \bmod 8 = 8$ (the two's complement representation of $0$)  |
 | $-2 + 3 = 1$ (represented as $1$ in binary)  | $6 + 3 \bmod 8 = 1$ (the two's complement representation of $1$)  |
@@ -956,7 +952,7 @@ An <mark>adder</mark> or summer is a digital circuit used in the ALU to perform 
 A <mark>half adder</mark> is designed to add two bits.
 
 |           |                                                    |
-| --------- | -------------------------------------------------- |
+|-----------|----------------------------------------------------|
 | Chip name | `HalfAdder`                                        |
 | Input     | `a`, `b`                                           |
 | Output    | `sum`, `carry`                                     |
@@ -964,12 +960,12 @@ A <mark>half adder</mark> is designed to add two bits.
 
 An inspection of the truth table reveals that the outputs `sum(a, b)` and `carry(a, b)` are identical to those of two simple Boolean functions `Xor` and `And` respectively.
 
-| a   | b   | carry | sum |
-| --- | --- | ----- | --- |
-| 0   | 0   | 0     | 0   |
-| 0   | 1   | 0     | 1   |
-| 1   | 0   | 0     | 1   |
-| 1   | 1   | 1     | 0   |
+| a | b | carry | sum |
+|---|---|-------|-----|
+| 0 | 0 | 0     | 0   |
+| 0 | 1 | 0     | 1   |
+| 1 | 0 | 0     | 1   |
+| 1 | 1 | 1     | 0   |
 
 ```hdl
 /**
@@ -994,22 +990,22 @@ Xor(a = a, b = b, out = sum);
 A <mark>full adder</mark> is designed to add three bits. Like the half-adder, the full-adder chip outputs two bits that, taken together, represents the addition of the three input bits.
 
 |           |                                                            |
-| --------- | ---------------------------------------------------------- |
+|-----------|------------------------------------------------------------|
 | Chip name | FullAdder`                                                 |
 | Input     | `a`, `b`, `c`                                              |
 | Output    | `sum`, `carry`                                             |
 | Function  | `sum = LSB of a + b + c`<br><br>`carry = MSB of a + b + c` |
 
-| a   | b   | c   | carry | sum |
-| --- | --- | --- | ----- | --- |
-| 0   | 0   | 0   | 0     | 0   |
-| 0   | 0   | 1   | 0     | 1   |
-| 0   | 1   | 0   | 0     | 1   |
-| 0   | 1   | 1   | 1     | 0   |
-| 1   | 0   | 0   | 0     | 1   |
-| 1   | 0   | 1   | 1     | 0   |
-| 1   | 1   | 0   | 1     | 0   |
-| 1   | 1   | 1   | 1     | 1   |
+| a | b | c | carry | sum |
+|---|---|---|-------|-----|
+| 0 | 0 | 0 | 0     | 0   |
+| 0 | 0 | 1 | 0     | 1   |
+| 0 | 1 | 0 | 0     | 1   |
+| 0 | 1 | 1 | 1     | 0   |
+| 1 | 0 | 0 | 0     | 1   |
+| 1 | 0 | 1 | 1     | 0   |
+| 1 | 1 | 0 | 1     | 0   |
+| 1 | 1 | 1 | 1     | 1   |
 
 The names `Half-adder` and `Full-adder` derive from the implementation detail that a full-adder chip can be realized from two half-adders (and one other basic chip).
 
@@ -1039,7 +1035,7 @@ Or(a= partialCarry, b= partialCarry2, out= carry);
 An <mark>adder</mark> is designed to add two $n$-bit numbers.
 
 |           |                              |
-| --------- | ---------------------------- |
+|-----------|------------------------------|
 | Chip name | `Add16`                      |
 | Input     | `a[16]`, `b[16]`             |
 | Output    | `out[16]`                    |
@@ -1100,7 +1096,7 @@ FullAdder(a= a[15], b= b[15], c= carry14, sum= out[15], carry= carry15);
 An <mark>Incrementer</mark> is designed to add `1` to a given number. Although, the `x + 1` operation can be realized with the general-purpose `Adder` chip, a dedicated `Incrementer` chip can do it more efficiently.
  
 |           |                              |
-| --------- | ---------------------------- |
+|-----------|------------------------------|
 | Chip name | `Inc16`                      |
 | Input     | `in[16]`                     |
 | Output    | `out[16]`                    |
@@ -1130,26 +1126,26 @@ The <mark>Arithmetic logic unit (ALU)</mark> is a chip designed to compute a set
 * It only performs integer arithmetic (and not, for example, floating point arithmetic)
 * It computes only a set of 18 arithmetic-logical functions.
 
-| x   | y   | zx  | nx  | zy  | ny  | f   | no  | out  | Description             |
-| --- | --- | --- | --- | --- | --- | --- | --- | ---- | ----------------------- |
-| 0   | y   | 1   | 0   | 1   | 0   | 1   | 0   | 0    | 0 (constant zero)       |
-| 1   | y   | 1   | 1   | 1   | 1   | 1   | 1   | 1    | 1 (constant one)        |
-| -1  | y   | 1   | 1   | 1   | 0   | 1   | 0   | -1   | -1 (constant minus one) |
-| x   | y   | 0   | 0   | 1   | 1   | 0   | 0   | x    | x                       |
-| x   | y   | 1   | 1   | 0   | 0   | 0   | 0   | y    | y                       |
-| x   | y   | 0   | 0   | 1   | 1   | 0   | 1   | ¬x   | NOT x                   |
-| x   | y   | 1   | 1   | 0   | 0   | 0   | 1   | ¬y   | NOT y                   |
-| x   | y   | 0   | 0   | 1   | 1   | 1   | 1   | -x   | -x                      |
-| x   | y   | 1   | 1   | 0   | 0   | 1   | 1   | -y   | -y                      |
-| x   | y   | 0   | 1   | 1   | 1   | 1   | 1   | x+1  | x + 1                   |
-| x   | y   | 1   | 1   | 0   | 1   | 1   | 1   | y+1  | y + 1                   |
-| x   | y   | 0   | 0   | 1   | 1   | 1   | 0   | x-1  | x - 1                   |
-| x   | y   | 1   | 1   | 0   | 0   | 1   | 0   | y-1  | y - 1                   |
-| x   | y   | 0   | 0   | 0   | 0   | 1   | 0   | x+y  | x + y                   |
-| x   | y   | 0   | 1   | 0   | 0   | 1   | 1   | x-y  | x - y                   |
-| x   | y   | 0   | 0   | 0   | 1   | 1   | 1   | y-x  | y - x                   |
-| x   | y   | 0   | 0   | 0   | 0   | 0   | 0   | x&y  | x AND y                 |
-| x   | y   | 0   | 1   | 0   | 1   | 0   | 1   | x\|y | x OR y                  |
+| x  | y | zx | nx | zy | ny | f | no | out  | Description             |
+|----|---|----|----|----|----|---|----|------|-------------------------|
+| 0  | y | 1  | 0  | 1  | 0  | 1 | 0  | 0    | 0 (constant zero)       |
+| 1  | y | 1  | 1  | 1  | 1  | 1 | 1  | 1    | 1 (constant one)        |
+| -1 | y | 1  | 1  | 1  | 0  | 1 | 0  | -1   | -1 (constant minus one) |
+| x  | y | 0  | 0  | 1  | 1  | 0 | 0  | x    | x                       |
+| x  | y | 1  | 1  | 0  | 0  | 0 | 0  | y    | y                       |
+| x  | y | 0  | 0  | 1  | 1  | 0 | 1  | ¬x   | NOT x                   |
+| x  | y | 1  | 1  | 0  | 0  | 0 | 1  | ¬y   | NOT y                   |
+| x  | y | 0  | 0  | 1  | 1  | 1 | 1  | -x   | -x                      |
+| x  | y | 1  | 1  | 0  | 0  | 1 | 1  | -y   | -y                      |
+| x  | y | 0  | 1  | 1  | 1  | 1 | 1  | x+1  | x + 1                   |
+| x  | y | 1  | 1  | 0  | 1  | 1 | 1  | y+1  | y + 1                   |
+| x  | y | 0  | 0  | 1  | 1  | 1 | 0  | x-1  | x - 1                   |
+| x  | y | 1  | 1  | 0  | 0  | 1 | 0  | y-1  | y - 1                   |
+| x  | y | 0  | 0  | 0  | 0  | 1 | 0  | x+y  | x + y                   |
+| x  | y | 0  | 1  | 0  | 0  | 1 | 1  | x-y  | x - y                   |
+| x  | y | 0  | 0  | 0  | 1  | 1 | 1  | y-x  | y - x                   |
+| x  | y | 0  | 0  | 0  | 0  | 0 | 0  | x&y  | x AND y                 |
+| x  | y | 0  | 1  | 0  | 1  | 0 | 1  | x\|y | x OR y                  |
 
 The Hack ALU operates on two $16$-bit two's complement integers denoted `x` and `y`, an on six $1$-bit inputs, called **control bits**. The control bits "tell" the ALU which function to compute. Each control bit effects a standalone conditional micro-action:
 
@@ -1303,3 +1299,41 @@ Not(in= zrLeftOrZrRight, out= zr);
 
 }
 ```
+
+## Chapter 3: Memory
+There are two types of chips:
+1. <mark>Combinational chips</mark> compute functions that depend solely on combinations of their input values. They cannot maintain state. All the chips built thus far are combinational chips.
+2. <mark>Sequential chips</mark> compute functions that depend on both their input values and their previous state. They are used to build memory elements (like a register) that can preserve data over time.
+
+---
+ 
+A <mark>flip-flop</mark> is a basic building block of sequential chips. It has two stable states and can be used to store state information.
+
+A flip-flop encapsulates the intricate art of synchronization, clocking, and feedback loops that are essential for building sequential chips.
+
+Using these flip-flops as elementary building blocks, we will specify and build all the memory devices employed by a typical modern computer: registers, RAMs, and counters.
+
+This effort will complete the construction of the chip set needed to build an entire computer.
+
+---
+
+The act of "remembering something" is inherently time-dependent: You remember now what has been committed to memory before.
+Thus, in order to build chips that "remember" information, we must first develop some standard means for representing the progression of time.
+
+In most computers, the progression of time is regulated by a <mark>clock signal</mark>. This signal oscillates between two values, `0` (low/tick) and `1` (high/tock), at a regular pace.
+
+The clock hardware implementation is usually an oscillator that generates a square wave. The frequency of the clock signal is measured in **Hertz** (Hz), which is the number of oscillations per second.
+
+![Clock signal](/docs/assets/nand-images/hertz.webp)
+<em><a href="https://www.xtronical.com/6502computerep3/">Image source</a></em>
+
+The elapsed time between the beginning of a "tick" and the end of a subsequent "tick" is called a **clock cycle**.
+
+The clock is used to synchronize the sequential chips. Using the hardware’s circuitry, this signal is simultaneously broadcast to every sequential chip throughout the computer platform.
+
+---
+There are several variants of a flip-flop. We use a variant called the <mark>data flip-flop (DFF)</mark>.
+
+A DFF is a simple memory element that stores a single bit. It has a data input `in`, a clock input `load`, and an output `out`. When the clock input is `1`, the flip-flop copies the value of the data input to its output. When the clock input is `0`, the flip-flop holds its previous value.
+
+Taken together, both inputs enables the DFF to implement the behavior `out(t) = in(t-1)`, where `t` is the current clock cycle. In other words, the DFF outputs the input value from the previous clock cycle.
