@@ -58,16 +58,22 @@ body > * {
 }
 
 .circular-image-container img {
-    width: 150px;  /* Set the desired width */
-    height: 150px; /* Set the desired height */
+    width: 100px;
+    height: 100px;
     object-fit: cover; /* Ensures the image doesn't stretch */
     border-radius: 50%; /* Makes it circular */
-    border: 2px solid #ccc; /* Optional: Add a border */
+    /* Centers the image */
+    margin: 20px auto 0;
+    display: block;
 }
 
 .center-container {
     text-align: center;
+}
 
+.center-container ul {
+    text-align: center;
+    list-style: none;
 }
 
 table {
