@@ -63,8 +63,12 @@ body > * {
     object-fit: cover; /* Ensures the image doesn't stretch */
     border-radius: 50%; /* Makes it circular */
     /* Centers the image */
-    margin: 20px auto 0;
+    margin: 20px auto;
     display: block;
+}
+
+.text-center {
+    text-align: center;
 }
 
 table {
