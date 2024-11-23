@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>Against Bitrot (How &amp; why I rebuilt my blog)</title>
+        <meta property="og:image" content="assets/banners/2025-how.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+
+        <link href="assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>Against Bitrot (How &amp; why I rebuilt my blog)</h1>
+<blockquote>
+<p>The Jargon File, a compendium of hacker lore, defines &quot;bit rot&quot; as a jocular explanation for the degradation of a software program over time even if &quot;nothing has changed&quot;; the idea behind this is almost as if the bits that make up the program were subject to radioactive decay.</p>
+<p>— <a href="https://en.wikipedia.org/wiki/Software_rot">Wikipedia</a></p>
+</blockquote>
+<h2>Intro rant (the &#39;why&#39;)</h2>
+<p>I am writing this late at night, tired of our industry&#39;s acceptance of &quot;bit rot&quot;.</p>
+<p>I built my <a href="https://elvischidera.com">Gatsby based blog</a> using a template over 4 years ago. I haven&#39;t touched the codebase much since I published the blog. Content is king, so I focused on just writing markdown files.</p>
+<p>Fast forward to today. After a long while, I tried building my blog locally and it failed. There were so many warnings and errors to fill multiple pages.</p>
+<p>Last I checked markdown, HTML, CSS, Javascript hasn&#39;t changed significantly. So, what gives?</p>
+<p>I had a look at my local <code>node_modules</code> and there were over 1000 dependencies.</p>
+<p>Like bruv! I just want to write in markdown and have it show up on the internet. I don&#39;t want to be a &quot;professional engineer&quot; on my hobbies! If I want to do that, I&#39;ll go back to work.</p>
+<p>I was incurring the cost for things I don&#39;t give a fudge about. I saw Python in one of the error logs, why do I need Python to build the blog? Why do I need networking dependencies?</p>
+<h2>Blog setup (the &#39;how&#39;)</h2>
+<p>I was having an itch to move to different tooling. But I didn&#39;t want the same problem in the future. Unfortunately, I couldn&#39;t find a tool that was as simple as I wanted.</p>
+<p>There are only four features I care about:</p>
+<ol>
+<li>Markdown to HTML conversion.</li>
+<li>Syntax highlighting for code blocks.</li>
+<li>Support for Latex.</li>
+<li>A simple way to deploy this static blog.</li>
+</ol>
+<p>Whatever these other tools were selling, I wasn&#39;t buying. My requirements haven&#39;t changed in the last 4 years, and I don&#39;t think it will change in the next 10 years (unless there is a fundamental shift in how the internet works).</p>
+<p>I found this <a href="https://github.com/gordonnl/markdown-blog-template">blog template</a>. The last commit was 5 years ago. I pulled it and it still worked.</p>
+<p>Parfait! </p>
+
+    </body>
+</html>
