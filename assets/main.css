@@ -57,7 +57,7 @@ body > * {
     margin-right: auto;
 }
 
-.circular-image-container img {
+.circular-image {
     width: 100px;
     height: 100px;
     object-fit: cover; /* Ensures the image doesn't stretch */
@@ -65,10 +65,6 @@ body > * {
     /* Centers the image */
     margin: 20px auto 0;
     display: block;
-}
-
-.center-container {
-    text-align: center;
 }
 
 table {
