@@ -1,0 +1,1 @@
+cd tools && node update_index.js && node build_html.js && cd ..

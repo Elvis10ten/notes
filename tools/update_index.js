@@ -38,7 +38,7 @@ for (const year in indexMap) {
 
     notesMetadata.forEach(noteMetadata => {
         const path = sep + relative(projectDirName, getSrcPath(noteMetadata.noteFileName));
-        yearSection += `\n- [${noteMetadata.title}](${path})`;
+        yearSection += `\n- ‣ [${noteMetadata.title}](${path})`;
     });
 
     indexSections.push(yearSection);

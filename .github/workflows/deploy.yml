@@ -26,7 +26,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - run: cd tools && node update_index.js && node build_html.js && cd ..
+      - run: ./build.sh
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
