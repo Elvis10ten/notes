@@ -71,11 +71,6 @@ body > * {
     text-align: center;
 }
 
-.center-container ul {
-    text-align: center;
-    list-style: none;
-}
-
 table {
     width: 100%; /* Make the table fill the available width */
     overflow-x: auto; /* Enable horizontal scrolling */
