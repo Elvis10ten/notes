@@ -1351,9 +1351,12 @@ A DFF is edge-triggered. Our DFF will be rising edge-triggered, meaning it only 
 
 This reliable and predictable behavior of DFFs is crucial for data synchronization across the computer platform. There are physical delays in the propagation of signals through the computer’s hardware, e.g. It takes some time for the input into the ALU to stabilize and for the ALU to compute its output.
 
-We solve this problem by using <mark>discrete time</mark>. If we set the `cycle length` to be slightly greater than the `maximum propagation delay` in the computer, we can use the chip's output **only** at end of cycles, and ignore all the fluctuations that occur within cycles.
+We solve this problem by using <mark>discrete time</mark>:
+* First, the `cycle length` must be set to a value slightly greater than the `maximum propagation delay` in the computer
+* Secondly, we can ONLY use the chip's output at end of cycles, and ignore all the fluctuations that can occur within cycles. This is achieved by simply using a DFF (because it's edge-triggered) to store the output of the chip. In our ALU example, the output of the ALU is stored in a register, which ignores the unstable output of the ALU due to propagation delays.
 
 ![Discrete time](/docs/assets/nand-images/dff_sync.png)
+
 
 ---
 
@@ -1404,4 +1407,8 @@ A counter chip can be implemented by combining the input/output logic of a stand
 Typically, the counter will have to be equipped with some additional functionality, such as possibilities for resetting the count to zero, loading a new counting base, or decrementing instead of incrementing.
 
 ---
+
+Simply stated, a sequential chip is a chip that embeds one or more DFF gates, either directly or indirectly.
+
+![Sequential chip](/docs/assets/nand-images/combinational_vs_sequential.png)
 
