@@ -2159,7 +2159,7 @@ Not(in= zrLeftOrZrRight, out= zr);
 <p>There are two types of chips:</p>
 <ol>
 <li><mark>Combinational chips</mark> compute functions that depend solely on combinations of their input values. They cannot maintain state. All the chips built thus far are combinational chips.</li>
-<li><mark>Sequential chips</mark> compute functions that depend on both their input values and their previous state. They are used to build memory elements (like a register) that can preserve data over time.</li>
+<li><mark>Sequential chips</mark> compute functions that depend on both their input values and their previous state. They have &quot;memory&quot; and can preserve data over time.</li>
 </ol>
 <hr>
 <p>A <mark>flip-flop</mark> is a basic building block of sequential chips. It has two stable states and can be used to store state information.</p>
@@ -2169,16 +2169,27 @@ Not(in= zrLeftOrZrRight, out= zr);
 <hr>
 <p>The act of &quot;remembering something&quot; is inherently time-dependent: You remember now what has been committed to memory before.
 Thus, in order to build chips that &quot;remember&quot; information, we must first develop some standard means for representing the progression of time.</p>
-<p>In most computers, the progression of time is regulated by a <mark>clock signal</mark>. This signal oscillates between two values, <code>0</code> (low/tick) and <code>1</code> (high/tock), at a regular pace.</p>
+<p>In most computers, the progression of time is regulated by a <mark>clock signal</mark>. This signal oscillates between two values, <code>0</code> (called low/tick) and <code>1</code> (called high/tock), at a regular pace.</p>
 <p>The clock hardware implementation is usually an oscillator that generates a square wave. The frequency of the clock signal is measured in <strong>Hertz</strong> (Hz), which is the number of oscillations per second.</p>
 <p><img src="assets/nand-images/hertz.webp" alt="Clock signal">
 <em><a href="https://www.xtronical.com/6502computerep3/">Image source</a></em></p>
-<p>The elapsed time between the beginning of a &quot;tick&quot; and the end of a subsequent &quot;tick&quot; is called a <strong>clock cycle</strong>.</p>
+<p>The elapsed time between the beginning of a &quot;tick&quot; and the end of a subsequent &quot;tock&quot; is called a <strong>clock cycle</strong>.</p>
 <p>The clock is used to synchronize the sequential chips. Using the hardware’s circuitry, this signal is simultaneously broadcast to every sequential chip throughout the computer platform.</p>
 <hr>
 <p>There are several variants of a flip-flop. We use a variant called the <mark>data flip-flop (DFF)</mark>.</p>
 <p>A DFF is a simple memory element that stores a single bit. It has a data input <code>in</code>, a clock input <code>load</code>, and an output <code>out</code>. When the clock input is <code>1</code>, the flip-flop copies the value of the data input to its output. When the clock input is <code>0</code>, the flip-flop holds its previous value.</p>
 <p>Taken together, both inputs enables the DFF to implement the behavior <code>out(t) = in(t-1)</code>, where <code>t</code> is the current clock cycle. In other words, the DFF outputs the input value from the previous clock cycle.</p>
+<hr>
+<blockquote>
+<p>[...] When the clock input is <code>1</code>, the flip-flop copies the value of the data input to its output. When the clock input is <code>0</code>, the flip-flop holds its previous value.</p>
+</blockquote>
+<p>Actually, what we described previously is a latch: which is level-triggered.</p>
+<p>A DFF is edge-triggered. Our DFF will be rising edge-triggered, meaning it only copies the <code>in</code> data input when the clock signal transitions from <code>0</code> to <code>1</code>.</p>
+<hr>
+<p>This reliable and predictable behavior of DFFs is crucial for data synchronization across the computer platform. There are physical delays in the propagation of signals through the computer’s hardware, e.g. It takes some time for the input into the ALU to stabilize and for the ALU to compute its output.</p>
+<p>We solve this problem by using <mark>discrete time</mark>. If we set the <code>cycle length</code> to be slightly greater than the <code>maximum propagation delay</code> in the computer, we can use the chip&#39;s output <strong>only</strong> at end of cycles, and ignore all the fluctuations that occur within cycles.</p>
+<p><img src="assets/nand-images/dff_sync.png" alt="Discrete time"></p>
+<p><img src="assets/nand-images/dff_sync_instant.png" alt="Discrete time"></p>
 
     </body>
 </html>
