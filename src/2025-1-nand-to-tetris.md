@@ -1303,10 +1303,10 @@ Not(in= zrLeftOrZrRight, out= zr);
 ## Chapter 3: Memory
 There are two types of chips:
 1. <mark>Combinational chips</mark> compute functions that depend solely on combinations of their input values. They cannot maintain state. All the chips built thus far are combinational chips.
-2. <mark>Sequential chips</mark> compute functions that depend on both their input values and their previous state. They are used to build memory elements (like a register) that can preserve data over time.
+2. <mark>Sequential chips</mark> compute functions that depend on both their input values and their previous state. They have "memory" and can preserve data over time.
 
 ---
- 
+
 A <mark>flip-flop</mark> is a basic building block of sequential chips. It has two stable states and can be used to store state information.
 
 A flip-flop encapsulates the intricate art of synchronization, clocking, and feedback loops that are essential for building sequential chips.
@@ -1320,14 +1320,14 @@ This effort will complete the construction of the chip set needed to build an en
 The act of "remembering something" is inherently time-dependent: You remember now what has been committed to memory before.
 Thus, in order to build chips that "remember" information, we must first develop some standard means for representing the progression of time.
 
-In most computers, the progression of time is regulated by a <mark>clock signal</mark>. This signal oscillates between two values, `0` (low/tick) and `1` (high/tock), at a regular pace.
+In most computers, the progression of time is regulated by a <mark>clock signal</mark>. This signal oscillates between two values, `0` (called low/tick) and `1` (called high/tock), at a regular pace.
 
 The clock hardware implementation is usually an oscillator that generates a square wave. The frequency of the clock signal is measured in **Hertz** (Hz), which is the number of oscillations per second.
 
 ![Clock signal](/docs/assets/nand-images/hertz.webp)
 <em><a href="https://www.xtronical.com/6502computerep3/">Image source</a></em>
 
-The elapsed time between the beginning of a "tick" and the end of a subsequent "tick" is called a **clock cycle**.
+The elapsed time between the beginning of a "tick" and the end of a subsequent "tock" is called a **clock cycle**.
 
 The clock is used to synchronize the sequential chips. Using the hardware’s circuitry, this signal is simultaneously broadcast to every sequential chip throughout the computer platform.
 
@@ -1337,3 +1337,21 @@ There are several variants of a flip-flop. We use a variant called the <mark>dat
 A DFF is a simple memory element that stores a single bit. It has a data input `in`, a clock input `load`, and an output `out`. When the clock input is `1`, the flip-flop copies the value of the data input to its output. When the clock input is `0`, the flip-flop holds its previous value.
 
 Taken together, both inputs enables the DFF to implement the behavior `out(t) = in(t-1)`, where `t` is the current clock cycle. In other words, the DFF outputs the input value from the previous clock cycle.
+
+---
+
+> [...] When the clock input is `1`, the flip-flop copies the value of the data input to its output. When the clock input is `0`, the flip-flop holds its previous value.
+
+Actually, what we described previously is a latch: which is level-triggered.
+
+A DFF is edge-triggered. Our DFF will be rising edge-triggered, meaning it only copies the `in` data input when the clock signal transitions from `0` to `1`.
+
+---
+
+This reliable and predictable behavior of DFFs is crucial for data synchronization across the computer platform. There are physical delays in the propagation of signals through the computer’s hardware, e.g. It takes some time for the input into the ALU to stabilize and for the ALU to compute its output.
+
+We solve this problem by using <mark>discrete time</mark>. If we set the `cycle length` to be slightly greater than the `maximum propagation delay` in the computer, we can use the chip's output **only** at end of cycles, and ignore all the fluctuations that occur within cycles.
+
+![Discrete time](/docs/assets/nand-images/dff_sync.png)
+
+![Discrete time](/docs/assets/nand-images/dff_sync_instant.png)
