@@ -2187,7 +2187,11 @@ Thus, in order to build chips that &quot;remember&quot; information, we must fir
 <p>A DFF is edge-triggered. Our DFF will be rising edge-triggered, meaning it only copies the <code>in</code> data input when the clock signal transitions from <code>0</code> to <code>1</code>.</p>
 <h2><img src="assets/nand-images/dff.png" alt="DFF"></h2>
 <p>This reliable and predictable behavior of DFFs is crucial for data synchronization across the computer platform. There are physical delays in the propagation of signals through the computer’s hardware, e.g. It takes some time for the input into the ALU to stabilize and for the ALU to compute its output.</p>
-<p>We solve this problem by using <mark>discrete time</mark>. If we set the <code>cycle length</code> to be slightly greater than the <code>maximum propagation delay</code> in the computer, we can use the chip&#39;s output <strong>only</strong> at end of cycles, and ignore all the fluctuations that occur within cycles.</p>
+<p>We solve this problem by using <mark>discrete time</mark>:</p>
+<ul>
+<li>First, the <code>cycle length</code> must be set to a value slightly greater than the <code>maximum propagation delay</code> in the computer</li>
+<li>Secondly, we can ONLY use the chip&#39;s output at end of cycles, and ignore all the fluctuations that can occur within cycles. This is achieved by simply using a DFF (because it&#39;s edge-triggered) to store the output of the chip. In our ALU example, the output of the ALU is stored in a register, which ignores the unstable output of the ALU due to propagation delays.</li>
+</ul>
 <p><img src="assets/nand-images/dff_sync.png" alt="Discrete time"></p>
 <hr>
 <p>A <mark>register</mark> is a storage device that can &quot;store&quot; or &quot;remember&quot; a value over time, implementing the classical storage behavior <code>out = out(t-1)</code>.</p>
@@ -2228,6 +2232,8 @@ The address specifies which RAM register should be accessed in the current time 
 <p>A counter chip can be implemented by combining the input/output logic of a standard register with the combinatorial logic for adding a constant.</p>
 <p>Typically, the counter will have to be equipped with some additional functionality, such as possibilities for resetting the count to zero, loading a new counting base, or decrementing instead of incrementing.</p>
 <hr>
+<p>Simply stated, a sequential chip is a chip that embeds one or more DFF gates, either directly or indirectly.</p>
+<p><img src="assets/nand-images/combinational_vs_sequential.png" alt="Sequential chip"></p>
 
     </body>
 </html>
