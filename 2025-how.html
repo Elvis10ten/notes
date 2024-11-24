@@ -31,7 +31,7 @@
 <p>Fast-forward to two days ago: the last straw was that after a year or two, I couldn’t build my blog locally anymore. I was hit with numerous warnings and errors every time I tried.</p>
 <p>Why is this failing? Last I checked, Markdown, HTML, CSS, and Javascript haven’t changed significantly. My requirements from 4 years ago have stayed the same. So, what gives?</p>
 <p>I decided to have a look behind the veil. Lo and behold! I found my blog has <strong>1537</strong> dependencies!!! Why do I need <code>multicast-dns</code>? Or any one of the other 1500 dependencies?</p>
-<p>Bruv! I just want to write in Markdown and have it show up on the internet. I don’t want to be a “professional engineer” on a side project — if I wanted that, I’d return to work.</p>
+<p>Bruv! I just want to write in Markdown and have it show up on the internet. I don’t want to be an “enterprise engineer” on a side project.</p>
 <p>I was shouldering the maintenance burden of dependencies I didn’t actually need. This large surface area maximized my exposure to bit rot.</p>
 <h2>New blog setup (the ‘how’)</h2>
 <p>Let’s review my requirements from four years ago, which hasn’t changed:</p>
@@ -61,12 +61,13 @@
 <li>Created a simple script for deploying to GitHub Pages.</li>
 <li>Finally, I updated the <code>marked</code> and <code>highlight.js</code> libraries to the latest versions. I committed my <code>node_modules</code> to the repository to keep the dependencies local.</li>
 </ol>
-<p>The build script consists of ~100 lines of pure JavaScript. It is so simple that I could rewrite it in an hour if needed.</p>
+<p>The <a href="https://github.com/Elvis10ten/notes/blob/main/tools/build_html.js">build script</a> consists of ~100 lines of pure JavaScript. It is so simple that I could rewrite it in an hour if needed.</p>
 <p>I rely on standard features from Markdown, HTML, CSS, and Javascript, which will likely stay the same in the coming years. If any of my third-party dependencies rot, I can easily replace them with something else or choose not to update them.</p>
 <h2>Conclusion</h2>
-<p>I’m pleased with my new blog setup. It is simple, fast, and resilient to bit rot. Now, I can focus on creating content without incurring unnecessary maintenance costs.</p>
+<p>I’m pleased with my new blog setup. It is simple, fast, and resilient to bit rot.</p>
 <p>That starter pack or boilerplate template might help you start quickly, but it often conceals unnecessary complexity. You don’t need a rocket ship to go grocery shopping.</p>
-<p>Time is precious! Spend it on what truly matters.</p>
+<p>Time is precious! And I want to spend it on what truly matters to a product.</p>
+<p>PS: I ruled out third-party services because I don&#39;t want to pay and because the interest of these services usually deviates from yours overtime (cough cough Medium). If GitHub changes something about Pages, I can easily move my static files elsewhere.</p>
 
     </body>
 </html>
