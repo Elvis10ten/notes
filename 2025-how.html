@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
 
-        <title>Against Bit Rot (How &amp; why I rebuilt my blog)</title>
+        <title>Against Bit Rot (Why &amp; how I rebuilt my blog)</title>
         <meta property="og:image" content="assets/banners/2025-how.jpg">
         <meta property="og:type" content="article">
 
@@ -18,7 +18,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
     </head>
     <body>
-    <h1>Against Bit Rot (How &amp; why I rebuilt my blog)</h1>
+    <h1>Against Bit Rot (Why &amp; how I rebuilt my blog)</h1>
 <blockquote>
 <p>The Jargon File, a compendium of hacker lore, defines “bit rot” as a jocular explanation for the degradation of a software program over time even if “nothing has changed”; the idea behind this is almost as if the bits that make up the program were subject to radioactive decay.</p>
 <p>— <a href="https://en.wikipedia.org/wiki/Software_rot">Wikipedia</a></p>
@@ -28,12 +28,12 @@
 <p>The story started four years ago when I built my <a href="https://elvischidera.com">Gatsby-based blog</a>. It was based on a “minimalist” template, and the result was beautiful right out of the box.</p>
 <p>To this day, 99.9% of my changes were to the blog content written in Markdown. I didn’t touch the codebase because I didn’t need anything else.</p>
 <p>As the number of content grew, I noticed the build started to get slower. Well, this goes with the territory, and I didn’t care much as I could easily preview my changes in my code editor. Builds only need to run on Github actions, and I didn’t care how long that took.</p>
-<p>Fast-forward to two days ago: the last straw was that I couldn’t build my blog locally anymore. I was hit with numerous warnings and errors every time I tried.</p>
+<p>Fast-forward to two days ago: the last straw was that after a year or two, I couldn’t build my blog locally anymore. I was hit with numerous warnings and errors every time I tried.</p>
 <p>Why is this failing? Last I checked, Markdown, HTML, CSS, and Javascript haven’t changed significantly. My requirements from 4 years ago have stayed the same. So, what gives?</p>
 <p>I decided to have a look behind the veil. Lo and behold! I found my blog has <strong>1537</strong> dependencies!!! Why do I need <code>multicast-dns</code>? Or any one of the other 1500 dependencies?</p>
 <p>Bruv! I just want to write in Markdown and have it show up on the internet. I don’t want to be a “professional engineer” on a side project — if I wanted that, I’d return to work.</p>
 <p>I was shouldering the maintenance burden of dependencies I didn’t actually need. This large surface area maximized my exposure to bit rot.</p>
-<h2>New blog setup</h2>
+<h2>New blog setup (the ‘how’)</h2>
 <p>Let’s review my requirements from four years ago, which hasn’t changed:</p>
 <ol>
 <li>Convert Markdown (CommonMark) to HTML.</li>
