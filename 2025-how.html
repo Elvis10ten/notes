@@ -26,14 +26,15 @@
 <p>This post is a late-night rant that gives this new blog’s motivation and high-level details.</p>
 <h2>Rant (the ‘why’)</h2>
 <p>The story started four years ago when I built my <a href="https://elvischidera.com">Gatsby-based blog</a>. It was based on a “minimalist” template, and the result was beautiful right out of the box.</p>
-<p>To this day, 99.9% of my changes were to the blog content written in Markdown. I didn’t touch the codebase. I didn’t need to, as I didn’t need anything else.</p>
+<p>To this day, 99.9% of my changes were to the blog content written in Markdown. I didn’t touch the codebase because I didn’t need anything else.</p>
 <p>As the number of content grew, I noticed the build started to get slower. Well, this goes with the territory, and I didn’t care much as I could easily preview my changes in my code editor. Builds only need to run on Github actions, and I didn’t care how long that took.</p>
-<p>Fast forward to two days ago: the last straw was that I couldn’t longer build my blog locally. I was hit with numerous warnings and errors every time I tried.</p>
+<p>Fast-forward to two days ago: the last straw was that I couldn’t build my blog locally anymore. I was hit with numerous warnings and errors every time I tried.</p>
 <p>Why is this failing? Last I checked, Markdown, HTML, CSS, and Javascript haven’t changed significantly. My requirements from 4 years ago have stayed the same. So, what gives?</p>
 <p>I decided to have a look behind the veil. Lo and behold! I found my blog has <strong>1537</strong> dependencies!!! Why do I need <code>multicast-dns</code>? Or any one of the other 1500 dependencies?</p>
 <p>Bruv! I just want to write in Markdown and have it show up on the internet. I don’t want to be a “professional engineer” on a side project — if I wanted that, I’d return to work.</p>
 <p>I was shouldering the maintenance burden of dependencies I didn’t actually need. This large surface area maximized my exposure to bit rot.</p>
-<h2>New blog setup (th’ ‘h’w&#39;Let’s&#39;s review my requirements from four years ago, which hasn’t changed:</h2>
+<h2>New blog setup</h2>
+<p>Let’s review my requirements from four years ago, which hasn’t changed:</p>
 <ol>
 <li>Convert Markdown (CommonMark) to HTML.</li>
 <li>Provide syntax highlighting for code blocks.</li>
@@ -45,8 +46,8 @@
 <p>I am confident these requirements will remain unchanged for the next 5 years. Therefore, I just need to find a tool that is resilient to bit rot. Unfortunately, most Markdown blogging tools are more complex than I need. They often offer features I don’t need or sacrifice simplicity for flexibility.</p>
 <p>Fortunately, I stumbled upon this <a href="https://github.com/gordonnl/markdown-blog-template">blog template</a>. The last commit was five years ago (older than my blog), and when I pulled it, it worked locally without any hassle.</p>
 <p>Parfait! According to the Lindy Effect, this tool should last another five years. Here’s how it functions:</p>
-<p>It reads all the Markdown files in a <code>src</code> directory and converts them into HTML files in a <code>dest</code> directory. It comes with a simple CSS file in the <code>dest</code> directory for essential styling and uses the <code>marked</code> library for Markdown to HTML conversion, along with <code>hiIt’sght.js</code> for syntax highlighting.</p>
-<p>It’s that simple! This template was more resilient to bit rot because:</p>
+<p>It reads all the Markdown files in a <code>src</code> directory and converts them into HTML files in a <code>dest</code> directory. It comes with a simple CSS file in the <code>dest</code> directory for essential styling and uses the <code>marked</code> library for Markdown to HTML conversion, along with <code>highlight.js</code> for syntax highlighting.</p>
+<p>It’s that simple! I think, this template was more resilient to bit rot because:</p>
 <ol>
 <li>It has only two dependencies.</li>
 <li>Both are bundled locally.</li>
