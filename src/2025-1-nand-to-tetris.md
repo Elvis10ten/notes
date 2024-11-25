@@ -1423,13 +1423,13 @@ The basic design parameters of a RAM device are:
 1. Its data `width` — the width of each one of its words, and
 2. Its size — the number of words in the RAM.
 
-|           |                                                                                                                         |
-|-----------|-------------------------------------------------------------------------------------------------------------------------|
-| Chip name | `RAMn`                                                                                                                  |
-| Input     | `in[16]`, `address[k]`, `load`                                                                                          |
-| Output    | `out[16]`                                                                                                               |
-| Function  | `out(t) = RAM[address(t)](t)`<br/> `if (load(t-1) == 1) then RAM[address(t-1)](t) = in(t-1)`                            |
-| Comment   | $k = log_2{n}$ and we will build `RAM8`($n=8$),`RAM64`($n=64$),`RAM512`($n=512$),`RAM4K`($n=4096$),`RAM16K`($n=16384$), |
+|           |                                                                                                                                   |
+|-----------|-----------------------------------------------------------------------------------------------------------------------------------|
+| Chip name | `RAMn`                                                                                                                            |
+| Input     | `in[16]`, `address[k]`, `load`                                                                                                    |
+| Output    | `out[16]`                                                                                                                         |
+| Function  | `out(t) = RAM[address(t)](t)`<br/> `if (load(t-1) == 1) then RAM[address(t-1)](t) = in(t-1)`                                      |
+| Comment   | $k = log_2{n}$ and we will build `RAM8`( $n=8$ ),`RAM64`( $n=64$ ),`RAM512`( $n=512$ ),`RAM4K`( $n=4096$ ),`RAM16K`( $n=16384$ ), |
 
 ---
 
