@@ -1338,6 +1338,16 @@ A DFF is a simple memory element that stores a single bit. It has a data input `
 
 Taken together, both inputs enables the DFF to implement the behavior `out(t) = in(t-1)`, where `t` is the current clock cycle. In other words, the DFF outputs the input value from the previous clock cycle.
 
+![DFF](/docs/assets/nand-images/dff.png)
+
+|           |                                                                                            |
+|-----------|--------------------------------------------------------------------------------------------|
+| Chip name | `DFF`                                                                                      |
+| Input     | `in`, `load`                                                                               |
+| Output    | `out`                                                                                      |
+| Function  | `out(t) = in(t-1)`                                                                         |
+| Comment   | This clocked gate has a built-in implementation and thus there is no need to implement it. |
+
 ---
 
 > [...] When the clock input is `1`, the flip-flop copies the value of the data input to its output. When the clock input is `0`, the flip-flop holds its previous value.
@@ -1346,7 +1356,8 @@ Actually, what we described previously is a latch: which is level-triggered.
 
 A DFF is edge-triggered. Our DFF will be rising edge-triggered, meaning it only copies the `in` data input when the clock signal transitions from `0` to `1`.
 
-![DFF](/docs/assets/nand-images/dff.png)
+All DFFs in a computer are connected to the same clock signal.
+
 ---
 
 This reliable and predictable behavior of DFFs is crucial for data synchronization across the computer platform. There are physical delays in the propagation of signals through the computer’s hardware, e.g. It takes some time for the input into the ALU to stabilize and for the ALU to compute its output.
@@ -1372,12 +1383,26 @@ A natural way to build our register is to use a multiplexor: the "select bit" of
 
 ![Register](/docs/assets/nand-images/register.png)
 
+|           |                                                               |
+|-----------|---------------------------------------------------------------|
+| Chip name | `Bit` or `Binary cell` (Single bit register)                  |
+| Input     | `in`, `load`                                                  |
+| Output    | `out`                                                         |
+| Function  | `if (load(t-1) == 1) out(t) = in(t-1) else out(t) = out(t-1)` |
+
 A multi-bit register of **width** `w` can be constructed from an array of `w` 1-bit registers. The basic design parameter of such a register is its width — the number of bits that it holds — e.g., `16`, `32`, or `64`.
 The multi-bit contents of such registers are typically referred to as **words**.
 
+|           |                                                               |
+|-----------|---------------------------------------------------------------|
+| Chip name | `Register`                                                    |
+| Input     | `in[16]`, `load`                                              |
+| Output    | `out[16]`                                                     |
+| Function  | `if (load(t-1) == 1) out(t) = in(t-1) else out(t) = out(t-1)` |
+
 ---
 
-A <mark>RAM chip</mark> is a sequential chip that can store multiple data words. Each word is stored in a register, and the registers are indexed by an address.
+A <mark>RAM chip</mark> (aka direct access memory unit) is a sequential chip that can store multiple data words. Each word is stored in a register, and the registers are indexed by an address.
 
 ![RAM](/docs/assets/nand-images/ram.png)
 
@@ -1398,6 +1423,14 @@ The basic design parameters of a RAM device are:
 1. Its data `width` — the width of each one of its words, and
 2. Its size — the number of words in the RAM.
 
+|           |                                                                                                                         |
+|-----------|-------------------------------------------------------------------------------------------------------------------------|
+| Chip name | `RAMn`                                                                                                                  |
+| Input     | `in[16]`, `address[k]`, `load`                                                                                          |
+| Output    | `out[16]`                                                                                                               |
+| Function  | `out(t) = RAM[address(t)](t)`<br/> `if (load(t-1) == 1) then RAM[address(t-1)](t) = in(t-1)`                            |
+| Comment   | $k = log_2{n}$ and we will build `RAM8`($n=8$),`RAM64`($n=64$),`RAM512`($n=512$),`RAM4K`($n=4096$),`RAM16K`($n=16384$), |
+
 ---
 
 A <mark>counter</mark> is a sequential chip whose state is an integer number that increments every time unit, effecting the function `out = out(t - 1) + c`, where `c` is typically `1`.
@@ -1405,6 +1438,13 @@ A <mark>counter</mark> is a sequential chip whose state is an integer number tha
 A counter chip can be implemented by combining the input/output logic of a standard register with the combinatorial logic for adding a constant.
 
 Typically, the counter will have to be equipped with some additional functionality, such as possibilities for resetting the count to zero, loading a new counting base, or decrementing instead of incrementing.
+
+|           |                                                                                                                                                                                      |
+|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Chip name | `Counter`                                                                                                                                                                            |
+| Input     | `in[16]`, `load`, `inc`, `reset`                                                                                                                                                     |
+| Output    | `out[16]`                                                                                                                                                                            |
+| Function  | `if (reset(t-1) == 1) then out(t) = 0`<br/> `else if (load(t-1) == 1) then out(t) = in(t-1)`<br/> `else if (inc(t-1) == 1) then out(t) = out(t-1) + 1`<br/> `else out(t) = out(t-1)` |
 
 ---
 
