@@ -34,3 +34,5 @@ jspm_packages/
 .stylelintcache
 
 .idea
+
+docs/*.html
