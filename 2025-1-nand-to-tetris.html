@@ -2179,13 +2179,43 @@ Thus, in order to build chips that &quot;remember&quot; information, we must fir
 <p>There are several variants of a flip-flop. We use a variant called the <mark>data flip-flop (DFF)</mark>.</p>
 <p>A DFF is a simple memory element that stores a single bit. It has a data input <code>in</code>, a clock input <code>load</code>, and an output <code>out</code>. When the clock input is <code>1</code>, the flip-flop copies the value of the data input to its output. When the clock input is <code>0</code>, the flip-flop holds its previous value.</p>
 <p>Taken together, both inputs enables the DFF to implement the behavior <code>out(t) = in(t-1)</code>, where <code>t</code> is the current clock cycle. In other words, the DFF outputs the input value from the previous clock cycle.</p>
+<p><img src="assets/nand-images/dff.png" alt="DFF"></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>DFF</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>in</code>, <code>load</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>out(t) = in(t-1)</code></td>
+</tr>
+<tr>
+<td>Comment</td>
+<td>This clocked gate has a built-in implementation and thus there is no need to implement it.</td>
+</tr>
+</tbody></table>
 <hr>
 <blockquote>
 <p>[...] When the clock input is <code>1</code>, the flip-flop copies the value of the data input to its output. When the clock input is <code>0</code>, the flip-flop holds its previous value.</p>
 </blockquote>
 <p>Actually, what we described previously is a latch: which is level-triggered.</p>
 <p>A DFF is edge-triggered. Our DFF will be rising edge-triggered, meaning it only copies the <code>in</code> data input when the clock signal transitions from <code>0</code> to <code>1</code>.</p>
-<h2><img src="assets/nand-images/dff.png" alt="DFF"></h2>
+<p>All DFFs in a computer are connected to the same clock signal.</p>
+<hr>
 <p>This reliable and predictable behavior of DFFs is crucial for data synchronization across the computer platform. There are physical delays in the propagation of signals through the computer’s hardware, e.g. It takes some time for the input into the ALU to stabilize and for the ALU to compute its output.</p>
 <p>We solve this problem by using <mark>discrete time</mark>:</p>
 <ul>
@@ -2205,10 +2235,58 @@ Thus, in order to build chips that &quot;remember&quot; information, we must fir
 <p>If we want the register to start storing a new value, we can put this value in the <code>in</code> input and set the load bit to <code>1</code>; if we want the register to keep storing its internal value until further notice, we can set the load bit to <code>0</code>.</p>
 </blockquote>
 <p><img src="assets/nand-images/register.png" alt="Register"></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>Bit</code> or <code>Binary cell</code> (Single bit register)</td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>in</code>, <code>load</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>if (load(t-1) == 1) out(t) = in(t-1) else out(t) = out(t-1)</code></td>
+</tr>
+</tbody></table>
 <p>A multi-bit register of <strong>width</strong> <code>w</code> can be constructed from an array of <code>w</code> 1-bit registers. The basic design parameter of such a register is its width — the number of bits that it holds — e.g., <code>16</code>, <code>32</code>, or <code>64</code>.
 The multi-bit contents of such registers are typically referred to as <strong>words</strong>.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>Register</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>in[16]</code>, <code>load</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out[16]</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>if (load(t-1) == 1) out(t) = in(t-1) else out(t) = out(t-1)</code></td>
+</tr>
+</tbody></table>
 <hr>
-<p>A <mark>RAM chip</mark> is a sequential chip that can store multiple data words. Each word is stored in a register, and the registers are indexed by an address.</p>
+<p>A <mark>RAM chip</mark> (aka direct access memory unit) is a sequential chip that can store multiple data words. Each word is stored in a register, and the registers are indexed by an address.</p>
 <p><img src="assets/nand-images/ram.png" alt="RAM"></p>
 <p>The term random access memory derives from the requirement that any randomly chosen word in the memory — irrespective of its physical location — be accessed directly, in equal speed.</p>
 <p>This requirement can be satisfied as follows:</p>
@@ -2227,10 +2305,62 @@ The address specifies which RAM register should be accessed in the current time 
 <li>Its data <code>width</code> — the width of each one of its words, and</li>
 <li>Its size — the number of words in the RAM.</li>
 </ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>RAMn</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>in[16]</code>, <code>address[k]</code>, <code>load</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out[16]</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>out(t) = RAM[address(t)](t)</code><br/> <code>if (load(t-1) == 1) then RAM[address(t-1)](t) = in(t-1)</code></td>
+</tr>
+<tr>
+<td>Comment</td>
+<td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>=</mo><mi>l</mi><mi>o</mi><msub><mi>g</mi><mn>2</mn></msub><mi>n</mi></mrow><annotation encoding="application/x-tex">k = log_2{n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">n</span></span></span></span></span> and we will build <code>RAM8</code>($n=8$),<code>RAM64</code>($n=64$),<code>RAM512</code>($n=512$),<code>RAM4K</code>($n=4096$),<code>RAM16K</code>($n=16384$),</td>
+</tr>
+</tbody></table>
 <hr>
 <p>A <mark>counter</mark> is a sequential chip whose state is an integer number that increments every time unit, effecting the function <code>out = out(t - 1) + c</code>, where <code>c</code> is typically <code>1</code>.</p>
 <p>A counter chip can be implemented by combining the input/output logic of a standard register with the combinatorial logic for adding a constant.</p>
 <p>Typically, the counter will have to be equipped with some additional functionality, such as possibilities for resetting the count to zero, loading a new counting base, or decrementing instead of incrementing.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip name</td>
+<td><code>Counter</code></td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>in[16]</code>, <code>load</code>, <code>inc</code>, <code>reset</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>out[16]</code></td>
+</tr>
+<tr>
+<td>Function</td>
+<td><code>if (reset(t-1) == 1) then out(t) = 0</code><br/> <code>else if (load(t-1) == 1) then out(t) = in(t-1)</code><br/> <code>else if (inc(t-1) == 1) then out(t) = out(t-1) + 1</code><br/> <code>else out(t) = out(t-1)</code></td>
+</tr>
+</tbody></table>
 <hr>
 <p>Simply stated, a sequential chip is a chip that embeds one or more DFF gates, either directly or indirectly.</p>
 <p><img src="assets/nand-images/combinational_vs_sequential.png" alt="Sequential chip"></p>
