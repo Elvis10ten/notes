@@ -1390,6 +1390,17 @@ A natural way to build our register is to use a multiplexor: the "select bit" of
 | Output    | `out`                                                         |
 | Function  | `if (load(t-1) == 1) out(t) = in(t-1) else out(t) = out(t-1)` |
 
+```hdl
+CHIP Bit {
+    IN in, load;
+    OUT out;
+
+    PARTS:
+    DFF(in= dffIn, out= dffOut, out= out);
+    Mux(a= dffOut, b= in, sel= load, out= dffIn);
+}
+```
+
 A multi-bit register of **width** `w` can be constructed from an array of `w` 1-bit registers. The basic design parameter of such a register is its width — the number of bits that it holds — e.g., `16`, `32`, or `64`.
 The multi-bit contents of such registers are typically referred to as **words**.
 
@@ -1399,6 +1410,31 @@ The multi-bit contents of such registers are typically referred to as **words**.
 | Input     | `in[16]`, `load`                                              |
 | Output    | `out[16]`                                                     |
 | Function  | `if (load(t-1) == 1) out(t) = in(t-1) else out(t) = out(t-1)` |
+
+```hdl
+CHIP Register {
+    IN in[16], load;
+    OUT out[16];
+
+    PARTS:
+    Bit(in= in[0], load= load, out= out[0]);
+    Bit(in= in[1], load= load, out= out[1]);
+    Bit(in= in[2], load= load, out= out[2]);
+    Bit(in= in[3], load= load, out= out[3]);
+    Bit(in= in[4], load= load, out= out[4]);
+    Bit(in= in[5], load= load, out= out[5]);
+    Bit(in= in[6], load= load, out= out[6]);
+    Bit(in= in[7], load= load, out= out[7]);
+    Bit(in= in[8], load= load, out= out[8]);
+    Bit(in= in[9], load= load, out= out[9]);
+    Bit(in= in[10], load= load, out= out[10]);
+    Bit(in= in[11], load= load, out= out[11]);
+    Bit(in= in[12], load= load, out= out[12]);
+    Bit(in= in[13], load= load, out= out[13]);
+    Bit(in= in[14], load= load, out= out[14]);
+    Bit(in= in[15], load= load, out= out[15]);
+}
+```
 
 ---
 
@@ -1431,6 +1467,110 @@ The basic design parameters of a RAM device are:
 | Function  | `out(t) = RAM[address(t)](t)`<br/> `if (load(t-1) == 1) then RAM[address(t-1)](t) = in(t-1)`                                      |
 | Comment   | $k = log_2{n}$ and we will build `RAM8`( $n=8$ ),`RAM64`( $n=64$ ),`RAM512`( $n=512$ ),`RAM4K`( $n=4096$ ),`RAM16K`( $n=16384$ ), |
 
+```hdl
+CHIP RAM8 {
+    IN in[16], load, address[3];
+    OUT out[16];
+
+    PARTS:
+    CHIP RAM8 {
+    IN in[16], load, address[3];
+    OUT out[16];
+
+    PARTS:
+    DMux8Way(in= load, sel= address, a= loadA, b= loadB, c= loadC, d= loadD, e= loadE, f= loadF, g= loadG, h= loadH);
+    Register(in= in, load= loadA, out= out1);
+    Register(in= in, load= loadB, out= out2);
+    Register(in= in, load= loadC, out= out3);
+    Register(in= in, load= loadD, out= out4);
+    Register(in= in, load= loadE, out= out5);
+    Register(in= in, load= loadF, out= out6);
+    Register(in= in, load= loadG, out= out7);
+    Register(in= in, load= loadH, out= out8);
+    Mux8Way16(a= out1, b= out2, c= out3, d= out4, e= out5, f= out6, g= out7, h= out8, sel= address, out= out);
+}
+}
+```
+
+```hdl
+CHIP RAM64 {
+    IN in[16], load, address[6];
+    OUT out[16];
+
+    PARTS:
+    DMux8Way(in= load, sel= address[3..5], a= load1, b= load2, c= load3, d= load4, e= load5, f= load6, g= load7, h= load8);
+    RAM8(in= in, load= load1, address= address[0..2], out= out1);
+    RAM8(in= in, load= load2, address= address[0..2], out= out2);
+    RAM8(in= in, load= load3, address= address[0..2], out= out3);
+    RAM8(in= in, load= load4, address= address[0..2], out= out4);
+    RAM8(in= in, load= load5, address= address[0..2], out= out5);
+    RAM8(in= in, load= load6, address= address[0..2], out= out6);
+    RAM8(in= in, load= load7, address= address[0..2], out= out7);
+    RAM8(in= in, load= load8, address= address[0..2], out= out8);
+    Mux8Way16(a= out1, b= out2, c= out3, d= out4, e= out5, f= out6, g= out7, h= out8, sel= address[3..5], out= out);
+}
+```
+
+```hdl
+CHIP RAM512 {
+    IN in[16], load, address[9];
+    OUT out[16];
+
+    PARTS:
+    DMux8Way(in= load, sel= address[6..8], a= load1, b= load2, c= load3, d= load4, e= load5, f= load6, g= load7, h= load8);
+    RAM64(in= in, load= load1, address= address[0..5], out= out1);
+    RAM64(in= in, load= load2, address= address[0..5], out= out2);
+    RAM64(in= in, load= load3, address= address[0..5], out= out3);
+    RAM64(in= in, load= load4, address= address[0..5], out= out4);
+    RAM64(in= in, load= load5, address= address[0..5], out= out5);
+    RAM64(in= in, load= load6, address= address[0..5], out= out6);
+    RAM64(in= in, load= load7, address= address[0..5], out= out7);
+    RAM64(in= in, load= load8, address= address[0..5], out= out8);
+    Mux8Way16(a= out1, b= out2, c= out3, d= out4, e= out5, f= out6, g= out7, h= out8, sel= address[6..8], out= out);
+
+}
+```
+
+```hdl
+CHIP RAM4K {
+    IN in[16], load, address[12];
+    OUT out[16];
+
+    PARTS:
+    DMux8Way(in= load, sel= address[9..11], a= load1, b= load2, c= load3, d= load4, e= load5, f= load6, g= load7, h= load8);
+    RAM512(in= in, load= load1, address= address[0..8], out= out1);
+    RAM512(in= in, load= load2, address= address[0..8], out= out2);
+    RAM512(in= in, load= load3, address= address[0..8], out= out3);
+    RAM512(in= in, load= load4, address= address[0..8], out= out4);
+    RAM512(in= in, load= load5, address= address[0..8], out= out5);
+    RAM512(in= in, load= load6, address= address[0..8], out= out6);
+    RAM512(in= in, load= load7, address= address[0..8], out= out7);
+    RAM512(in= in, load= load8, address= address[0..8], out= out8);
+    Mux8Way16(a= out1, b= out2, c= out3, d= out4, e= out5, f= out6, g= out7, h= out8, sel= address[9..11], out= out);
+
+}
+```
+
+```hdl
+CHIP RAM16K {
+    IN in[16], load, address[14];
+    OUT out[16];
+
+    PARTS:
+    DMux8Way(in= load, sel= address[11..13], a= load1, b= load2, c= load3, d= load4, e= load5, f= load6, g= load7, h= load8);
+    RAM4K(in= in, load= load1, address= address[0..11], out= out1);
+    RAM4K(in= in, load= load2, address= address[0..11], out= out2);
+    RAM4K(in= in, load= load3, address= address[0..11], out= out3);
+    RAM4K(in= in, load= load4, address= address[0..11], out= out4);
+    RAM4K(in= in, load= load5, address= address[0..11], out= out5);
+    RAM4K(in= in, load= load6, address= address[0..11], out= out6);
+    RAM4K(in= in, load= load7, address= address[0..11], out= out7);
+    RAM4K(in= in, load= load8, address= address[0..11], out= out8);
+    Mux8Way16(a= out1, b= out2, c= out3, d= out4, e= out5, f= out6, g= out7, h= out8, sel= address[11..13], out= out);
+    
+}
+```
+
 ---
 
 A <mark>counter</mark> is a sequential chip whose state is an integer number that increments every time unit, effecting the function `out = out(t - 1) + c`, where `c` is typically `1`.
@@ -1445,6 +1585,20 @@ Typically, the counter will have to be equipped with some additional functionali
 | Input     | `in[16]`, `load`, `inc`, `reset`                                                                                                                                                     |
 | Output    | `out[16]`                                                                                                                                                                            |
 | Function  | `if (reset(t-1) == 1) then out(t) = 0`<br/> `else if (load(t-1) == 1) then out(t) = in(t-1)`<br/> `else if (inc(t-1) == 1) then out(t) = out(t-1) + 1`<br/> `else out(t) = out(t-1)` |
+
+```hdl
+CHIP PC {
+    IN in[16], reset, load, inc;
+    OUT out[16];
+    
+    PARTS:
+    Register(in= inRegister, load= true, out= outRegister, out= out);
+    Inc16(in= outRegister, out= outInc);
+    Mux16(a= outRegister, b= outInc, sel= inc, out= out1);
+    Mux16(a= out1, b= in, sel= load, out= out2);
+    Mux16(a= out2, b= false, sel= reset, out= inRegister);
+}
+```
 
 ---
 
