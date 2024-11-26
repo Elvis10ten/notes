@@ -2259,7 +2259,15 @@ Thus, in order to build chips that &quot;remember&quot; information, we must fir
 <td><code>if (load(t-1) == 1) out(t) = in(t-1) else out(t) = out(t-1)</code></td>
 </tr>
 </tbody></table>
-<p>A multi-bit register of <strong>width</strong> <code>w</code> can be constructed from an array of <code>w</code> 1-bit registers. The basic design parameter of such a register is its width — the number of bits that it holds — e.g., <code>16</code>, <code>32</code>, or <code>64</code>.
+<pre><code class="hljs language-hdl">CHIP Bit {
+    IN in, load;
+    OUT out;
+
+    PARTS:
+    DFF(in= dffIn, out= dffOut, out= out);
+    Mux(a= dffOut, b= in, sel= load, out= dffIn);
+}
+</code></pre><p>A multi-bit register of <strong>width</strong> <code>w</code> can be constructed from an array of <code>w</code> 1-bit registers. The basic design parameter of such a register is its width — the number of bits that it holds — e.g., <code>16</code>, <code>32</code>, or <code>64</code>.
 The multi-bit contents of such registers are typically referred to as <strong>words</strong>.</p>
 <table>
 <thead>
@@ -2285,7 +2293,29 @@ The multi-bit contents of such registers are typically referred to as <strong>wo
 <td><code>if (load(t-1) == 1) out(t) = in(t-1) else out(t) = out(t-1)</code></td>
 </tr>
 </tbody></table>
-<hr>
+<pre><code class="hljs language-hdl">CHIP Register {
+    IN in[16], load;
+    OUT out[16];
+
+    PARTS:
+    Bit(in= in[0], load= load, out= out[0]);
+    Bit(in= in[1], load= load, out= out[1]);
+    Bit(in= in[2], load= load, out= out[2]);
+    Bit(in= in[3], load= load, out= out[3]);
+    Bit(in= in[4], load= load, out= out[4]);
+    Bit(in= in[5], load= load, out= out[5]);
+    Bit(in= in[6], load= load, out= out[6]);
+    Bit(in= in[7], load= load, out= out[7]);
+    Bit(in= in[8], load= load, out= out[8]);
+    Bit(in= in[9], load= load, out= out[9]);
+    Bit(in= in[10], load= load, out= out[10]);
+    Bit(in= in[11], load= load, out= out[11]);
+    Bit(in= in[12], load= load, out= out[12]);
+    Bit(in= in[13], load= load, out= out[13]);
+    Bit(in= in[14], load= load, out= out[14]);
+    Bit(in= in[15], load= load, out= out[15]);
+}
+</code></pre><hr>
 <p>A <mark>RAM chip</mark> (aka direct access memory unit) is a sequential chip that can store multiple data words. Each word is stored in a register, and the registers are indexed by an address.</p>
 <p><img src="assets/nand-images/ram.png" alt="RAM"></p>
 <p>The term random access memory derives from the requirement that any randomly chosen word in the memory — irrespective of its physical location — be accessed directly, in equal speed.</p>
@@ -2333,7 +2363,96 @@ The address specifies which RAM register should be accessed in the current time 
 <td><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>=</mo><mi>l</mi><mi>o</mi><msub><mi>g</mi><mn>2</mn></msub><mi>n</mi></mrow><annotation encoding="application/x-tex">k = log_2{n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">n</span></span></span></span></span> and we will build <code>RAM8</code>( <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">n=8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">8</span></span></span></span> ),<code>RAM64</code>( <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>64</mn></mrow><annotation encoding="application/x-tex">n=64</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">64</span></span></span></span> ),<code>RAM512</code>( <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>512</mn></mrow><annotation encoding="application/x-tex">n=512</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">512</span></span></span></span> ),<code>RAM4K</code>( <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>4096</mn></mrow><annotation encoding="application/x-tex">n=4096</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">4096</span></span></span></span> ),<code>RAM16K</code>( <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>16384</mn></mrow><annotation encoding="application/x-tex">n=16384</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">16384</span></span></span></span> ),</td>
 </tr>
 </tbody></table>
-<hr>
+<pre><code class="hljs language-hdl">CHIP RAM8 {
+    IN in[16], load, address[3];
+    OUT out[16];
+
+    PARTS:
+    CHIP RAM8 {
+    IN in[16], load, address[3];
+    OUT out[16];
+
+    PARTS:
+    DMux8Way(in= load, sel= address, a= loadA, b= loadB, c= loadC, d= loadD, e= loadE, f= loadF, g= loadG, h= loadH);
+    Register(in= in, load= loadA, out= out1);
+    Register(in= in, load= loadB, out= out2);
+    Register(in= in, load= loadC, out= out3);
+    Register(in= in, load= loadD, out= out4);
+    Register(in= in, load= loadE, out= out5);
+    Register(in= in, load= loadF, out= out6);
+    Register(in= in, load= loadG, out= out7);
+    Register(in= in, load= loadH, out= out8);
+    Mux8Way16(a= out1, b= out2, c= out3, d= out4, e= out5, f= out6, g= out7, h= out8, sel= address, out= out);
+}
+}
+</code></pre><pre><code class="hljs language-hdl">CHIP RAM64 {
+    IN in[16], load, address[6];
+    OUT out[16];
+
+    PARTS:
+    DMux8Way(in= load, sel= address[3..5], a= load1, b= load2, c= load3, d= load4, e= load5, f= load6, g= load7, h= load8);
+    RAM8(in= in, load= load1, address= address[0..2], out= out1);
+    RAM8(in= in, load= load2, address= address[0..2], out= out2);
+    RAM8(in= in, load= load3, address= address[0..2], out= out3);
+    RAM8(in= in, load= load4, address= address[0..2], out= out4);
+    RAM8(in= in, load= load5, address= address[0..2], out= out5);
+    RAM8(in= in, load= load6, address= address[0..2], out= out6);
+    RAM8(in= in, load= load7, address= address[0..2], out= out7);
+    RAM8(in= in, load= load8, address= address[0..2], out= out8);
+    Mux8Way16(a= out1, b= out2, c= out3, d= out4, e= out5, f= out6, g= out7, h= out8, sel= address[3..5], out= out);
+}
+</code></pre><pre><code class="hljs language-hdl">CHIP RAM512 {
+    IN in[16], load, address[9];
+    OUT out[16];
+
+    PARTS:
+    DMux8Way(in= load, sel= address[6..8], a= load1, b= load2, c= load3, d= load4, e= load5, f= load6, g= load7, h= load8);
+    RAM64(in= in, load= load1, address= address[0..5], out= out1);
+    RAM64(in= in, load= load2, address= address[0..5], out= out2);
+    RAM64(in= in, load= load3, address= address[0..5], out= out3);
+    RAM64(in= in, load= load4, address= address[0..5], out= out4);
+    RAM64(in= in, load= load5, address= address[0..5], out= out5);
+    RAM64(in= in, load= load6, address= address[0..5], out= out6);
+    RAM64(in= in, load= load7, address= address[0..5], out= out7);
+    RAM64(in= in, load= load8, address= address[0..5], out= out8);
+    Mux8Way16(a= out1, b= out2, c= out3, d= out4, e= out5, f= out6, g= out7, h= out8, sel= address[6..8], out= out);
+
+}
+</code></pre><pre><code class="hljs language-hdl">CHIP RAM4K {
+    IN in[16], load, address[12];
+    OUT out[16];
+
+    PARTS:
+    DMux8Way(in= load, sel= address[9..11], a= load1, b= load2, c= load3, d= load4, e= load5, f= load6, g= load7, h= load8);
+    RAM512(in= in, load= load1, address= address[0..8], out= out1);
+    RAM512(in= in, load= load2, address= address[0..8], out= out2);
+    RAM512(in= in, load= load3, address= address[0..8], out= out3);
+    RAM512(in= in, load= load4, address= address[0..8], out= out4);
+    RAM512(in= in, load= load5, address= address[0..8], out= out5);
+    RAM512(in= in, load= load6, address= address[0..8], out= out6);
+    RAM512(in= in, load= load7, address= address[0..8], out= out7);
+    RAM512(in= in, load= load8, address= address[0..8], out= out8);
+    Mux8Way16(a= out1, b= out2, c= out3, d= out4, e= out5, f= out6, g= out7, h= out8, sel= address[9..11], out= out);
+
+}
+</code></pre><pre><code class="hljs language-hdl">CHIP RAM16K {
+    IN in[16], load, address[14];
+    OUT out[16];
+
+    PARTS:
+    DMux8Way(in= load, sel= address[11..13], a= load1, b= load2, c= load3, d= load4, e= load5, f= load6, g= load7, h= load8);
+    RAM4K(in= in, load= load1, address= address[0..11], out= out1);
+    RAM4K(in= in, load= load2, address= address[0..11], out= out2);
+    RAM4K(in= in, load= load3, address= address[0..11], out= out3);
+    RAM4K(in= in, load= load4, address= address[0..11], out= out4);
+    RAM4K(in= in, load= load5, address= address[0..11], out= out5);
+    RAM4K(in= in, load= load6, address= address[0..11], out= out6);
+    RAM4K(in= in, load= load7, address= address[0..11], out= out7);
+    RAM4K(in= in, load= load8, address= address[0..11], out= out8);
+    Mux8Way16(a= out1, b= out2, c= out3, d= out4, e= out5, f= out6, g= out7, h= out8, sel= address[11..13], out= out);
+    
+}
+</code></pre><hr>
 <p>A <mark>counter</mark> is a sequential chip whose state is an integer number that increments every time unit, effecting the function <code>out = out(t - 1) + c</code>, where <code>c</code> is typically <code>1</code>.</p>
 <p>A counter chip can be implemented by combining the input/output logic of a standard register with the combinatorial logic for adding a constant.</p>
 <p>Typically, the counter will have to be equipped with some additional functionality, such as possibilities for resetting the count to zero, loading a new counting base, or decrementing instead of incrementing.</p>
@@ -2361,7 +2480,18 @@ The address specifies which RAM register should be accessed in the current time 
 <td><code>if (reset(t-1) == 1) then out(t) = 0</code><br/> <code>else if (load(t-1) == 1) then out(t) = in(t-1)</code><br/> <code>else if (inc(t-1) == 1) then out(t) = out(t-1) + 1</code><br/> <code>else out(t) = out(t-1)</code></td>
 </tr>
 </tbody></table>
-<hr>
+<pre><code class="hljs language-hdl">CHIP PC {
+    IN in[16], reset, load, inc;
+    OUT out[16];
+    
+    PARTS:
+    Register(in= inRegister, load= true, out= outRegister, out= out);
+    Inc16(in= outRegister, out= outInc);
+    Mux16(a= outRegister, b= outInc, sel= inc, out= out1);
+    Mux16(a= out1, b= in, sel= load, out= out2);
+    Mux16(a= out2, b= false, sel= reset, out= inRegister);
+}
+</code></pre><hr>
 <p>Simply stated, a sequential chip is a chip that embeds one or more DFF gates, either directly or indirectly.</p>
 <p><img src="assets/nand-images/combinational_vs_sequential.png" alt="Sequential chip"></p>
 
