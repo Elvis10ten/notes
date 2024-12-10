@@ -1643,6 +1643,151 @@ Hence, a machine language instruction can be specified either directly using bin
 
 ---
 
+We can take the symbolic abstraction one step further, and create a programming language that allows the creation of programs using symbolic commands rather than binary instructions.
+This programming language is called an <mark>assembly language</mark>. And the symbolic mnemonics are just a component of the assembly language, specifically the symbols that
+represent machine instructions.
+
+---
+
+The Hack computer is a von Neumann platform. It's a simple computer with a $16$-bit architecture which has:
+1. A CPU
+2. A **read-only memory (ROM)** that stores the computer instructions. It is $16$-bit wide and have a $15$-bit address space (i.e. it can hold $32K (2^{15})$ $16$-bit instructions).
+3. A **random access memory (RAM)** that stores the computer data. It is also $16$-bit wide and have a $15$-bit address space.
+4. Two memory-mapped I/O devices: a screen and a keyboard.
+5. A $16$-bit instruction set.
+6. Two $16$-bit registers called `A` and `D`. These registers can be manipulated explicitly by arithmetic and logical instructions (e.g. `D=A+1`, `A=D&A`).
+The `D` register is used solely to store data values; while the `A` register is used to both store data values and memory addresses.
+So, depending on the context, the contents of `A` can be interpreted as:
+   * A data value
+   * A memory address in the data memory
+   * A memory address in the instruction memory
+
+> Why do we overload the `A` register with so many roles?
+> Since Hack instructions are 16-bit wide, and since addresses are specified using 15-bits, it's impossible to pack both an operation code and an address in one instruction.
+> Thus, the syntax of the Hack language mandates that memory access instructions operate on an implicit memory location labeled `M`, for example `D=M+1`.
+> In order to resolve this address, the convention is that `M` always refers to the memory word whose address is the current value of the `A` register.
+> **That is `M` is a synonym for `RAM[A]`**. This implies, we must first load the address into the `A` register before we can access the memory word at that address.
+>
+> This also applies to instruction memory access. To jump to a specific instruction, we must first load the address of that instruction into the `A` register.
+> 
+> In a nutshell, the `A` register's value is interpreted based on how it is used in subsequent instructions.
+> 
+> An alternative solution would be to have more registers, but this would have increased the complexity of the hardware.
+
+---
+
+The Hack language consists of two generic instructions:
+1. An address instruction (A-instruction) and
+2. A compute instruction (C-instruction).
+
+---
+
+The <mark>A-instruction</mark> is used to set the `A` register to a $15$-bit value:
+
+A-instruction's symbolic representation: `@value` (where `value` is a non-negative decimal number or a symbol referring to such a number).
+A-instruction's binary representation: `0value` (where `value` is a $15$-bit binary number).
+
+The leftmost bit is the A-instruction marker bit, which is always set to `0`.
+
+The A-instruction is used for three different purposes:
+1. It provides the only way to enter a constant into the computer under program control.
+2. It sets the stage for a subsequent C-instruction designed to access a specific location in the data memory.
+3. It sets the stage for a subsequent C-instruction designed to jump to a specific location in the instruction memory.
+
+---
+
+The <mark>C-instruction</mark> is used to perform a computation. The instruction code is a specification that answers three questions:
+1. What to compute?
+2. Where to store the computed value?
+3. What to do next?
+
+C-instruction's symbolic representation: `dest=comp;jump` (where `dest` is the destination register, `comp` is the computation, and `jump` is the jump condition). Both `dest=` and `;jump` are optional.
+C-instruction's binary representation: `1 1 1 a c_1 c_2 c_3 c_4 c_5 c_6 d_1 d_2 d_3 j_1 j_2 j_3` (where `a_n` & `c_n` specify the comp component; `d_n` specifies the dest component, and `j_n` specifies the jump component).
+
+The leftmost bit is the C-instruction marker bit, which is always set to `1`. The next wo bits are not used and are set to `1`.
+
+---
+
+The `dest` component of the C-instruction specifies where to store the computed value (the ALU output).
+
+The first and second bits specify whether to store the computed value in the `A` register and in the `D` register, respectively.
+The third bit specifies whether to store the computed value in the data memory location specified by the `A` register.
+
+| d1 | d2 | d3 | **dest** mnemonic | Destination (where to store the computed value)                                           |
+|----|----|----|-------------------|-------------------------------------------------------------------------------------------|
+| 0  | 0  | 0  | `null`            | Do not store the computed value                                                           |
+| 0  | 0  | 1  | `M`               | Store the computed value in the data memory                                               |
+| 0  | 1  | 0  | `D`               | Store the computed value in the `D` register                                              |
+| 0  | 1  | 1  | `MD`              | Store the computed value in the `D` register and in the data memory                       |
+| 1  | 0  | 0  | `A`               | Store the computed value in the `A` register                                              |
+| 1  | 0  | 1  | `AM`              | Store the computed value in the `A` register and in the data memory                       |
+| 1  | 1  | 0  | `AD`              | Store the computed value in the `A` register and in the `D` register                      |
+| 1  | 1  | 1  | `AMD`             | Store the computed value in the `A` register, in the `D` register, and in the data memory |
+
+---
+
+The `comp` component of the C-instruction specifies what the ALU should compute.
+We can compute a fixed set of functions on the `D`, `A`, and `M` registers.
+The a-bit specifies whether the `A` register or the `M` register should be used as the ALU's input.
+And the six c-bits specifies the function to be computed.
+All $7$-bit comprise the `comp` field. While this $7$-bit field can specify $128$ different possible operations, only $28$ are used in the Hack language.
+
+| (when a=0) **comp** mnemonic | c1  | c2  | c3  | c4  | c5  | c6  | (when a=1) **comp** mnemonic |
+|------------------------------|-----|-----|-----|-----|-----|-----|------------------------------|
+| `0`                          | `1` | `0` | `1` | `0` | `1` | `0` |                              |
+| `1`                          | `1` | `1` | `1` | `1` | `1` | `1` |                              |
+| `-1`                         | `1` | `1` | `1` | `0` | `1` | `0` |                              |
+| `D`                          | `0` | `0` | `1` | `1` | `0` | `0` |                              |
+| `A`                          | `1` | `1` | `0` | `0` | `0` | `0` | `M`                          |
+| `!D`                         | `0` | `0` | `1` | `1` | `0` | `1` |                              |
+| `!A`                         | `1` | `1` | `0` | `0` | `0` | `1` | `!M`                         |
+| `-D`                         | `0` | `0` | `1` | `1` | `1` | `1` |                              |
+| `-A`                         | `1` | `1` | `0` | `0` | `1` | `1` | `-M`                         |
+| `D+1`                        | `0` | `1` | `1` | `1` | `1` | `1` |                              |
+| `A+1`                        | `1` | `1` | `0` | `1` | `1` | `1` | `M+1`                        |
+| `D-1`                        | `0` | `0` | `1` | `1` | `1` | `0` |                              |
+| `A-1`                        | `1` | `1` | `0` | `0` | `1` | `0` | `M-1`                        |
+| `D+A`                        | `0` | `0` | `0` | `0` | `1` | `0` | `D+M`                        |
+| `D-A`                        | `0` | `1` | `0` | `0` | `1` | `1` | `D-M`                        |
+| `A-D`                        | `0` | `0` | `0` | `1` | `1` | `1` | `M-D`                        |
+| `D&A`                        | `0` | `0` | `0` | `0` | `0` | `0` | `D&M`                        |
+| `D\|A`                       | `0` | `1` | `0` | `1` | `0` | `1` | `D\|M`                       |
+
+---
+
+The `jump` component of the C-instruction specifies a jump condition, namely, which command to fetch and execute next.
+Whether a not a jump should actually materialize depends on the three j-bits of the jump component and the ALU's output value.
+It is a $3$-bit field that can specify one of $8$ different jump conditions.
+
+| j1 (`out < 0`)  | j2 (`out = 0`)  | j3 (`out > 0`)  | **jump** mnemonic | Effect                                                                    |
+|-----------------|-----------------|-----------------|-------------------|---------------------------------------------------------------------------|
+| `0`             | `0`             | `0`             | `null`            | No jump (this is the default, it simply proceeds to the next instruction) |
+| `0`             | `0`             | `1`             | `JGT`             | Jump if `out > 0`                                                         |
+| `0`             | `1`             | `0`             | `JEQ`             | Jump if `out = 0`                                                         |
+| `0`             | `1`             | `1`             | `JGE`             | Jump if `out >= 0`                                                        |
+| `1`             | `0`             | `0`             | `JLT`             | Jump if `out < 0`                                                         |
+| `1`             | `0`             | `1`             | `JNE`             | Jump if `out != 0`                                                        |
+| `1`             | `1`             | `0`             | `JLE`             | Jump if `out <= 0`                                                        |
+| `1`             | `1`             | `1`             | `JMP`             | Jump unconditionally                                                      |
+
+The `JMP` is used as `0;JMP`. This is because the C-instruction syntax requires that we always effect some computation, we instruct the ALU to compute $0$ (an arbitrary choice), which is ignored.
+
+---
+
+Example: We want the computer to increment the value of `DataMemory[7]` by $1$ and to also store the result in the `D` register. This can be achieved with the following instructions:
+
+```binary
+ 0000 0000 0000 0111 // @7
+ 1111 1101 1101 1000 // MD=M+1
+```
+
+The instruction is of the form `@value`, where `value` is a $15$-bit constant.
+
+3. <mark>Addressing instructions</mark> — These instructions manipulate the `A` register, which is used to address memory locations. The `A` register can be set to a constant value, to the value of the `D` register, or to the value of a memory location.
+2. <mark>Computation instructions</mark> — These instructions perform arithmetic and logical operations on the `A` and `D` registers, and store the result in the `D` register.
+3. <mark>Control instructions</mark> — These instructions control the flow of the program, by setting the program counter to a specific value, or by jumping to a specific location in the program.
+4. 
+
 A machine language can be viewed as an agreed-upon formalism, designed to manipulate a memory using a processor and a set of registers.
 
 The term <mark>memory</mark> refers loosely to the collection of hardware devices that store data and instructions in a computer. The memory is typically divided into two main parts:
@@ -1658,28 +1803,3 @@ The term <mark>registers</mark> refers to the hardware devices that store data a
 2. <mark>Instruction Register</mark> — the register that stores the instruction that is being executed by the processor.
 
 ---
-
-The Hack computer is a simple computer with a 16-bit architecture. It has a 16-bit data bus, a 16-bit address bus, and a 16-bit instruction set.
-
-The Hack computer has two types of memory:
-1. <mark>ROM</mark> (Read-Only Memory) — a memory unit that stores the computer’s firmware, which is the software that is permanently stored in the computer and is used to boot the computer.
-2. <mark>RAM</mark> (Random Access Memory) — a memory unit that stores the computer’s software, which is the software that is loaded into the computer when it is running.
-
-The Hack computer has two types of software:
-1. <mark>Operating System</mark> — the software that manages the computer’s hardware and software resources.
-2. <mark>Application Software</mark> — the software that is used to perform specific tasks.
-
-The Hack computer has two types of instructions:
-1. <mark>Machine Language Instructions</mark> — the instructions that are executed by the computer’s hardware.
-2. <mark>Assembly Language Instructions</mark> — the instructions that are used to write the computer’s software.
-
-The Hack computer has two types of programming languages:
-1. <mark>Machine Language</mark> — the language that is used to write the computer’s firmware.
-2. <mark>Assembly Language</mark> — the language that is used to write the computer’s software.
-
-The Hack computer has two types of programming paradigms:
-1. <mark>Imperative Programming</mark> — the programming paradigm that is used to write the computer’s firmware.
-2. <mark>Declarative Programming</mark> — the programming paradigm that is used to write the computer’s software.
-
-
-
