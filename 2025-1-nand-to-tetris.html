@@ -2494,6 +2494,84 @@ The address specifies which RAM register should be accessed in the current time 
 </code></pre><hr>
 <p>Simply stated, a sequential chip is a chip that embeds one or more DFF gates, either directly or indirectly.</p>
 <p><img src="assets/nand-images/combinational_vs_sequential.png" alt="Sequential chip"></p>
+<h2>Chapter 4: Machine Language</h2>
+<p>A <mark>machine language</mark> is an agreed-upon formalism, designed to code low-level programs as series of machine instructions. The primary goals of a machine language&#39;s design are:</p>
+<ol>
+<li>Direct execution in, and</li>
+<li>Total control of, a given hardware platform.</li>
+</ol>
+<p>A machine language is the fine line where hardware and software meet: it can be considered as both a programming tool and an integral part of the hardware platform.</p>
+<hr>
+<p>This chapter only focuses on the machine language and leaves the hardware details to the next chapter. To give a general description of machine languages, it&#39;s sufficient to only use three main hardware abstractions:</p>
+<ol>
+<li><p><strong>Processor</strong>: The processor, normally called the CPU (Central Processing Unit), is a device capable of performing a fixed set of elementary operations. These typically include:</p>
+<ul>
+<li>Arithmetic operations (<code>addition</code>, <code>subtraction</code>, <code>multiplication</code>, <code>division</code>)</li>
+<li>Logical operations (<code>AND</code>, <code>OR</code>, <code>NOT</code>)</li>
+<li>Memory access operations (<code>load</code>, <code>store</code>)</li>
+<li>Control/Branching operations (<code>jump</code>, <code>branch</code>). Branching is used to conditional or unconditional jump to selected locations in a program. Branching serves several purposes like: looping, conditional execution, and subroutine calls.</li>
+</ul>
+<p> The operands of these operations and their results/output are binary values that are read and stored in registers or selected memory locations.</p>
+</li>
+<li><p><strong>Memory</strong>: The term memory refers loosely to the collection of hardware devices that store data and instructions in a computer.</p>
+</li>
+<li><p><strong>Set of registers</strong>: Memory access is a relatively slow operation, requiring long instruction formats. For this reason, most processors are equipped with
+ several registers, each capable of holding a single value, allowing the processor to manipulate data and instructions quickly.</p>
+</li>
+</ol>
+<hr>
+<p>A machine language is a series of coded instructions. For example, an instruction in a 16-bit computer may be <code>1010001100011001</code>.
+In order to figure out what this instruction means, we must know the instruction set of the underlying hardware platform.
+For example, the language, may be such that each instruction consists of four 4-bit fields: The left-most field codes a CPU operation, and the remaining
+three fields code the operation&#39;s operands.</p>
+<p>Since binary codes are rather cryptic, machine languages are normally specified using both binary codes and symbolic mnemonics.
+A mnemonic is a short, easy-to-remember name for a binary code.
+For example, the binary code <code>1010001100011001</code> may be associated with the mnemonic <code>ADD R1, R2, R3</code>.</p>
+<p>Hence, a machine language instruction can be specified either directly using binary codes or indirectly using symbolic mnemonics.</p>
+<hr>
+<p>A machine language can be viewed as an agreed-upon formalism, designed to manipulate a memory using a processor and a set of registers.</p>
+<p>The term <mark>memory</mark> refers loosely to the collection of hardware devices that store data and instructions in a computer. The memory is typically divided into two main parts:</p>
+<ol>
+<li><mark>ROM</mark> (Read-Only Memory) — a memory unit that stores the computer’s firmware, which is the software that is permanently stored in the computer and is used to boot the computer.</li>
+<li><mark>RAM</mark> (Random Access Memory) — a memory unit that stores the computer’s software, which is the software that is loaded into the computer when it is running.</li>
+</ol>
+<p>The term <mark>processor</mark> refers to the hardware device that executes the machine instructions. The processor is typically divided into two main parts:</p>
+<ol>
+<li><mark>Control Unit</mark> — the part of the processor that controls the execution of the machine instructions.</li>
+<li><mark>Arithmetic Logic Unit (ALU)</mark> — the part of the processor that performs arithmetic and logical operations on the data.</li>
+</ol>
+<p>The term <mark>registers</mark> refers to the hardware devices that store data and instructions in the processor. The registers are typically divided into two main parts:</p>
+<ol>
+<li><mark>Data Registers</mark> — the registers that store the data that is being processed by the processor.</li>
+<li><mark>Instruction Register</mark> — the register that stores the instruction that is being executed by the processor.</li>
+</ol>
+<hr>
+<p>The Hack computer is a simple computer with a 16-bit architecture. It has a 16-bit data bus, a 16-bit address bus, and a 16-bit instruction set.</p>
+<p>The Hack computer has two types of memory:</p>
+<ol>
+<li><mark>ROM</mark> (Read-Only Memory) — a memory unit that stores the computer’s firmware, which is the software that is permanently stored in the computer and is used to boot the computer.</li>
+<li><mark>RAM</mark> (Random Access Memory) — a memory unit that stores the computer’s software, which is the software that is loaded into the computer when it is running.</li>
+</ol>
+<p>The Hack computer has two types of software:</p>
+<ol>
+<li><mark>Operating System</mark> — the software that manages the computer’s hardware and software resources.</li>
+<li><mark>Application Software</mark> — the software that is used to perform specific tasks.</li>
+</ol>
+<p>The Hack computer has two types of instructions:</p>
+<ol>
+<li><mark>Machine Language Instructions</mark> — the instructions that are executed by the computer’s hardware.</li>
+<li><mark>Assembly Language Instructions</mark> — the instructions that are used to write the computer’s software.</li>
+</ol>
+<p>The Hack computer has two types of programming languages:</p>
+<ol>
+<li><mark>Machine Language</mark> — the language that is used to write the computer’s firmware.</li>
+<li><mark>Assembly Language</mark> — the language that is used to write the computer’s software.</li>
+</ol>
+<p>The Hack computer has two types of programming paradigms:</p>
+<ol>
+<li><mark>Imperative Programming</mark> — the programming paradigm that is used to write the computer’s firmware.</li>
+<li><mark>Declarative Programming</mark> — the programming paradigm that is used to write the computer’s software.</li>
+</ol>
 
     </body>
 </html>
