@@ -2529,6 +2529,417 @@ A mnemonic is a short, easy-to-remember name for a binary code.
 For example, the binary code <code>1010001100011001</code> may be associated with the mnemonic <code>ADD R1, R2, R3</code>.</p>
 <p>Hence, a machine language instruction can be specified either directly using binary codes or indirectly using symbolic mnemonics.</p>
 <hr>
+<p>We can take the symbolic abstraction one step further, and create a programming language that allows the creation of programs using symbolic commands rather than binary instructions.
+This programming language is called an <mark>assembly language</mark>. And the symbolic mnemonics are just a component of the assembly language, specifically the symbols that
+represent machine instructions.</p>
+<hr>
+<p>The Hack computer is a von Neumann platform. It&#39;s a simple computer with a $16$-bit architecture which has:</p>
+<ol>
+<li>A CPU</li>
+<li>A <strong>read-only memory (ROM)</strong> that stores the computer instructions. It is <span class="katex-error" title="ParseError: KaTeX parse error: Can&#x27;t use function &#x27;<!-- output_content -->#x27; in math mode at position 3: 16$̲-bit wide and h…" style="color:#cc0000">16$-bit wide and have a $15$-bit address space (i.e. it can hold $32K (2^{15})</span> $16$-bit instructions).</li>
+<li>A <strong>random access memory (RAM)</strong> that stores the computer data. It is also $16$-bit wide and have a $15$-bit address space.</li>
+<li>Two memory-mapped I/O devices: a screen and a keyboard.</li>
+<li>A $16$-bit instruction set.</li>
+<li>Two $16$-bit registers called <code>A</code> and <code>D</code>. These registers can be manipulated explicitly by arithmetic and logical instructions (e.g. <code>D=A+1</code>, <code>A=D&amp;A</code>).
+The <code>D</code> register is used solely to store data values; while the <code>A</code> register is used to both store data values and memory addresses.
+So, depending on the context, the contents of <code>A</code> can be interpreted as:<ul>
+<li>A data value</li>
+<li>A memory address in the data memory</li>
+<li>A memory address in the instruction memory</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>Why do we overload the <code>A</code> register with so many roles?
+Since Hack instructions are 16-bit wide, and since addresses are specified using 15-bits, it&#39;s impossible to pack both an operation code and an address in one instruction.
+Thus, the syntax of the Hack language mandates that memory access instructions operate on an implicit memory location labeled <code>M</code>, for example <code>D=M+1</code>.
+In order to resolve this address, the convention is that <code>M</code> always refers to the memory word whose address is the current value of the <code>A</code> register.
+<strong>That is <code>M</code> is a synonym for <code>RAM[A]</code></strong>. This implies, we must first load the address into the <code>A</code> register before we can access the memory word at that address.</p>
+<p>This also applies to instruction memory access. To jump to a specific instruction, we must first load the address of that instruction into the <code>A</code> register.</p>
+<p>In a nutshell, the <code>A</code> register&#39;s value is interpreted based on how it is used in subsequent instructions.</p>
+<p>An alternative solution would be to have more registers, but this would have increased the complexity of the hardware.</p>
+</blockquote>
+<hr>
+<p>The Hack language consists of two generic instructions:</p>
+<ol>
+<li>An address instruction (A-instruction) and</li>
+<li>A compute instruction (C-instruction).</li>
+</ol>
+<hr>
+<p>The <mark>A-instruction</mark> is used to set the <code>A</code> register to a $15$-bit value:</p>
+<p>A-instruction&#39;s symbolic representation: <code>@value</code> (where <code>value</code> is a non-negative decimal number or a symbol referring to such a number).
+A-instruction&#39;s binary representation: <code>0value</code> (where <code>value</code> is a $15$-bit binary number).</p>
+<p>The leftmost bit is the A-instruction marker bit, which is always set to <code>0</code>.</p>
+<p>The A-instruction is used for three different purposes:</p>
+<ol>
+<li>It provides the only way to enter a constant into the computer under program control.</li>
+<li>It sets the stage for a subsequent C-instruction designed to access a specific location in the data memory.</li>
+<li>It sets the stage for a subsequent C-instruction designed to jump to a specific location in the instruction memory.</li>
+</ol>
+<hr>
+<p>The <mark>C-instruction</mark> is used to perform a computation. The instruction code is a specification that answers three questions:</p>
+<ol>
+<li>What to compute?</li>
+<li>Where to store the computed value?</li>
+<li>What to do next?</li>
+</ol>
+<p>C-instruction&#39;s symbolic representation: <code>dest=comp;jump</code> (where <code>dest</code> is the destination register, <code>comp</code> is the computation, and <code>jump</code> is the jump condition). Both <code>dest=</code> and <code>;jump</code> are optional.
+C-instruction&#39;s binary representation: <code>1 1 1 a c_1 c_2 c_3 c_4 c_5 c_6 d_1 d_2 d_3 j_1 j_2 j_3</code> (where <code>a_n</code> &amp; <code>c_n</code> specify the comp component; <code>d_n</code> specifies the dest component, and <code>j_n</code> specifies the jump component).</p>
+<p>The leftmost bit is the C-instruction marker bit, which is always set to <code>1</code>. The next wo bits are not used and are set to <code>1</code>.</p>
+<hr>
+<p>The <code>dest</code> component of the C-instruction specifies where to store the computed value (the ALU output).</p>
+<p>The first and second bits specify whether to store the computed value in the <code>A</code> register and in the <code>D</code> register, respectively.
+The third bit specifies whether to store the computed value in the data memory location specified by the <code>A</code> register.</p>
+<table>
+<thead>
+<tr>
+<th>d1</th>
+<th>d2</th>
+<th>d3</th>
+<th><strong>dest</strong> mnemonic</th>
+<th>Destination (where to store the computed value)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td><code>null</code></td>
+<td>Do not store the computed value</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td><code>M</code></td>
+<td>Store the computed value in the data memory</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td><code>D</code></td>
+<td>Store the computed value in the <code>D</code> register</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td><code>MD</code></td>
+<td>Store the computed value in the <code>D</code> register and in the data memory</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td><code>A</code></td>
+<td>Store the computed value in the <code>A</code> register</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td><code>AM</code></td>
+<td>Store the computed value in the <code>A</code> register and in the data memory</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td><code>AD</code></td>
+<td>Store the computed value in the <code>A</code> register and in the <code>D</code> register</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td><code>AMD</code></td>
+<td>Store the computed value in the <code>A</code> register, in the <code>D</code> register, and in the data memory</td>
+</tr>
+</tbody></table>
+<hr>
+<p>The <code>comp</code> component of the C-instruction specifies what the ALU should compute.
+We can compute a fixed set of functions on the <code>D</code>, <code>A</code>, and <code>M</code> registers.
+The a-bit specifies whether the <code>A</code> register or the <code>M</code> register should be used as the ALU&#39;s input.
+And the six c-bits specifies the function to be computed.
+All <span class="katex-error" title="ParseError: KaTeX parse error: Can&#x27;t use function &#x27;<!-- output_content -->#x27; in math mode at position 2: 7$̲-bit comprise t…" style="color:#cc0000">7$-bit comprise the `comp` field. While this $7$-bit field can specify $128</span> different possible operations, only <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>28</mn></mrow><annotation encoding="application/x-tex">28</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">28</span></span></span></span> are used in the Hack language.</p>
+<table>
+<thead>
+<tr>
+<th>(when a=0) <strong>comp</strong> mnemonic</th>
+<th>c1</th>
+<th>c2</th>
+<th>c3</th>
+<th>c4</th>
+<th>c5</th>
+<th>c6</th>
+<th>(when a=1) <strong>comp</strong> mnemonic</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>-1</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>D</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>A</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>M</code></td>
+</tr>
+<tr>
+<td><code>!D</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>!A</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>!M</code></td>
+</tr>
+<tr>
+<td><code>-D</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>-A</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>-M</code></td>
+</tr>
+<tr>
+<td><code>D+1</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>A+1</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>M+1</code></td>
+</tr>
+<tr>
+<td><code>D-1</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>A-1</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td><code>M-1</code></td>
+</tr>
+<tr>
+<td><code>D+A</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td><code>D+M</code></td>
+</tr>
+<tr>
+<td><code>D-A</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>D-M</code></td>
+</tr>
+<tr>
+<td><code>A-D</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>M-D</code></td>
+</tr>
+<tr>
+<td><code>D&amp;A</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>D&amp;M</code></td>
+</tr>
+<tr>
+<td><code>D|A</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>D|M</code></td>
+</tr>
+</tbody></table>
+<hr>
+<p>The <code>jump</code> component of the C-instruction specifies a jump condition, namely, which command to fetch and execute next.
+Whether a not a jump should actually materialize depends on the three j-bits of the jump component and the ALU&#39;s output value.
+It is a <span class="katex-error" title="ParseError: KaTeX parse error: Can&#x27;t use function &#x27;<!-- output_content -->#x27; in math mode at position 2: 3$̲-bit field that…" style="color:#cc0000">3$-bit field that can specify one of $8</span> different jump conditions.</p>
+<table>
+<thead>
+<tr>
+<th>j1 (<code>out &lt; 0</code>)</th>
+<th>j2 (<code>out = 0</code>)</th>
+<th>j3 (<code>out &gt; 0</code>)</th>
+<th><strong>jump</strong> mnemonic</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>null</code></td>
+<td>No jump (this is the default, it simply proceeds to the next instruction)</td>
+</tr>
+<tr>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>JGT</code></td>
+<td>Jump if <code>out &gt; 0</code></td>
+</tr>
+<tr>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td><code>JEQ</code></td>
+<td>Jump if <code>out = 0</code></td>
+</tr>
+<tr>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>JGE</code></td>
+<td>Jump if <code>out &gt;= 0</code></td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td><code>0</code></td>
+<td><code>JLT</code></td>
+<td>Jump if <code>out &lt; 0</code></td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td><code>1</code></td>
+<td><code>JNE</code></td>
+<td>Jump if <code>out != 0</code></td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>0</code></td>
+<td><code>JLE</code></td>
+<td>Jump if <code>out &lt;= 0</code></td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>1</code></td>
+<td><code>JMP</code></td>
+<td>Jump unconditionally</td>
+</tr>
+</tbody></table>
+<p>The <code>JMP</code> is used as <code>0;JMP</code>. This is because the C-instruction syntax requires that we always effect some computation, we instruct the ALU to compute <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span> (an arbitrary choice), which is ignored.</p>
+<hr>
+<p>Example: We want the computer to increment the value of <code>DataMemory[7]</code> by <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> and to also store the result in the <code>D</code> register. This can be achieved with the following instructions:</p>
+<pre><code class="hljs language-binary"> 0000 0000 0000 0111 // @7
+ 1111 1101 1101 1000 // MD=M+1
+</code></pre><p>The instruction is of the form <code>@value</code>, where <code>value</code> is a $15$-bit constant.</p>
+<ol start="3">
+<li><mark>Addressing instructions</mark> — These instructions manipulate the <code>A</code> register, which is used to address memory locations. The <code>A</code> register can be set to a constant value, to the value of the <code>D</code> register, or to the value of a memory location.</li>
+<li><mark>Computation instructions</mark> — These instructions perform arithmetic and logical operations on the <code>A</code> and <code>D</code> registers, and store the result in the <code>D</code> register.</li>
+<li><mark>Control instructions</mark> — These instructions control the flow of the program, by setting the program counter to a specific value, or by jumping to a specific location in the program.</li>
+<li></li>
+</ol>
 <p>A machine language can be viewed as an agreed-upon formalism, designed to manipulate a memory using a processor and a set of registers.</p>
 <p>The term <mark>memory</mark> refers loosely to the collection of hardware devices that store data and instructions in a computer. The memory is typically divided into two main parts:</p>
 <ol>
@@ -2546,32 +2957,6 @@ For example, the binary code <code>1010001100011001</code> may be associated wit
 <li><mark>Instruction Register</mark> — the register that stores the instruction that is being executed by the processor.</li>
 </ol>
 <hr>
-<p>The Hack computer is a simple computer with a 16-bit architecture. It has a 16-bit data bus, a 16-bit address bus, and a 16-bit instruction set.</p>
-<p>The Hack computer has two types of memory:</p>
-<ol>
-<li><mark>ROM</mark> (Read-Only Memory) — a memory unit that stores the computer’s firmware, which is the software that is permanently stored in the computer and is used to boot the computer.</li>
-<li><mark>RAM</mark> (Random Access Memory) — a memory unit that stores the computer’s software, which is the software that is loaded into the computer when it is running.</li>
-</ol>
-<p>The Hack computer has two types of software:</p>
-<ol>
-<li><mark>Operating System</mark> — the software that manages the computer’s hardware and software resources.</li>
-<li><mark>Application Software</mark> — the software that is used to perform specific tasks.</li>
-</ol>
-<p>The Hack computer has two types of instructions:</p>
-<ol>
-<li><mark>Machine Language Instructions</mark> — the instructions that are executed by the computer’s hardware.</li>
-<li><mark>Assembly Language Instructions</mark> — the instructions that are used to write the computer’s software.</li>
-</ol>
-<p>The Hack computer has two types of programming languages:</p>
-<ol>
-<li><mark>Machine Language</mark> — the language that is used to write the computer’s firmware.</li>
-<li><mark>Assembly Language</mark> — the language that is used to write the computer’s software.</li>
-</ol>
-<p>The Hack computer has two types of programming paradigms:</p>
-<ol>
-<li><mark>Imperative Programming</mark> — the programming paradigm that is used to write the computer’s firmware.</li>
-<li><mark>Declarative Programming</mark> — the programming paradigm that is used to write the computer’s software.</li>
-</ol>
 
     </body>
 </html>
