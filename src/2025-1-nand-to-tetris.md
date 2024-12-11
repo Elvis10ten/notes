@@ -1781,25 +1781,66 @@ Example: We want the computer to increment the value of `DataMemory[7]` by $1$ a
  1111 1101 1101 1000 // MD=M+1
 ```
 
+---
+
+Assembly commands can refer to memory addresses using either constants or symbols. Symbols are introduced into assembly programs in the following three ways:
+
+1. Predefined symbols: A subset of RAM addresses have predefined symbols:
+    * Virtual registers: The symbols `R0` to `R15` refer to RAM addresses `0` to `15`, respectively.
+    * Predefined pointers: The symbols `SP`, `LCL`, `ARG`, `THIS`, and `THAT` refer to RAM addresses `0`, `1`, `2`, `3`, and `4`, respectively.
+    * I/O pointers: The symbols `SCREEN` and `KBD` refer to RAM addresses `16384` (0x4000) and `24576` (0x6000), respectively, which are the base addresses of the screen and
+    keyboard memory maps.
+2. Label symbols: These are user-defined symbols serve to label destinations of goto commands. They are declared by the pseudo-command `(Xxx)`. This directive defines the symbol
+`Xxx` to refer to the ROM address holding the next command in the program.
+3. Variable symbols: Any user-defined symbol `Xxx` that appears in an assembly program without being predefined or declared as a label is treated as a variable.
+The assembler allocates a unique RAM address for each appearance of such a symbol and replaces the symbol with its RAM address in the assembly program.
 The instruction is of the form `@value`, where `value` is a $15$-bit constant.
 
-3. <mark>Addressing instructions</mark> — These instructions manipulate the `A` register, which is used to address memory locations. The `A` register can be set to a constant value, to the value of the `D` register, or to the value of a memory location.
-2. <mark>Computation instructions</mark> — These instructions perform arithmetic and logical operations on the `A` and `D` registers, and store the result in the `D` register.
-3. <mark>Control instructions</mark> — These instructions control the flow of the program, by setting the program counter to a specific value, or by jumping to a specific location in the program.
-4. 
+---
 
-A machine language can be viewed as an agreed-upon formalism, designed to manipulate a memory using a processor and a set of registers.
-
-The term <mark>memory</mark> refers loosely to the collection of hardware devices that store data and instructions in a computer. The memory is typically divided into two main parts:
-1. <mark>ROM</mark> (Read-Only Memory) — a memory unit that stores the computer’s firmware, which is the software that is permanently stored in the computer and is used to boot the computer.
-2. <mark>RAM</mark> (Random Access Memory) — a memory unit that stores the computer’s software, which is the software that is loaded into the computer when it is running.
-
-The term <mark>processor</mark> refers to the hardware device that executes the machine instructions. The processor is typically divided into two main parts:
-1. <mark>Control Unit</mark> — the part of the processor that controls the execution of the machine instructions.
-2. <mark>Arithmetic Logic Unit (ALU)</mark> — the part of the processor that performs arithmetic and logical operations on the data.
-
-The term <mark>registers</mark> refers to the hardware devices that store data and instructions in the processor. The registers are typically divided into two main parts:
-1. <mark>Data Registers</mark> — the registers that store the data that is being processed by the processor.
-2. <mark>Instruction Register</mark> — the register that stores the instruction that is being executed by the processor.
+The Hack platform can be connected to two peripheral devices: a screen and a keyboard.
+Both devices interact with the computer platform through memory maps.
+This means that drawing pixels on the screen is achieved by writing binary values into a memory segment associated with the screen.
+Likewise, listening to the keyboard is done by reading a memory location associated with the keyboard.
+The physical I/O devices and their memory maps are synchronized via continuous refresh loops.
 
 ---
+
+The Hack computer includes a black-and-white screen organized as $256$ rows of $512$ pixels per row.
+The screen’s contents are represented by an 8K memory map that starts at RAM address $16384$ ($0x4000$).
+Each row in the physical screen, starting at the screen’s top left corner, is represented in the RAM by $32$ consecutive $16$-bit words.
+Thus, the pixel at row `r` from the top and column `c` from the left is mapped on the `c%16` bit (counting from LSB to MSB) of the word located at `RAM[16384 + r * 32 + c/16]`.
+To write or read a pixel of the physical screen, one reads or writes the corresponding bit in the RAM-resident memory map (1 = black, 0 = white).
+
+Example:
+```hack
+// Draw a single black dot at the screen's top left corner:
+@SCREEN // Set the A register to point to the memory
+       // word that is mapped to the 16 left-most
+      // pixels of the top row of the screen.
+M=1 // Blacken the left-most pixel.
+```
+
+---
+
+The Hack computer interfaces with the physical keyboard via a single-word memory map located in RAM address $24576$ ($0x6000$).
+Whenever a key is pressed on the physical keyboard, its $16$-bit ASCII code appears in `RAM[24576]`.
+When no key is pressed, the code `0` appears in this location.
+In addition to the usual ASCII codes, the Hack keyboard recognizes the keys shown below.
+
+| Key pressed | Code    |
+|-------------|---------|
+| newline     | 128     |
+| backspace   | 129     |
+| left arrow  | 130     |
+| up arrow    | 131     |
+| right arrow | 132     |
+| down arrow  | 133     |
+| home        | 134     |
+| end         | 135     |
+| page up     | 136     |
+| page down   | 137     |
+| insert      | 138     |
+| delete      | 139     |
+| esc         | 140     |
+| f1-f2       | 141-152 |
