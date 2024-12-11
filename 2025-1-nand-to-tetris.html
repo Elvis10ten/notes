@@ -2933,30 +2933,109 @@ It is a <span class="katex-error" title="ParseError: KaTeX parse error: Can&#x27
 <p>Example: We want the computer to increment the value of <code>DataMemory[7]</code> by <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> and to also store the result in the <code>D</code> register. This can be achieved with the following instructions:</p>
 <pre><code class="hljs language-binary"> 0000 0000 0000 0111 // @7
  1111 1101 1101 1000 // MD=M+1
-</code></pre><p>The instruction is of the form <code>@value</code>, where <code>value</code> is a $15$-bit constant.</p>
-<ol start="3">
-<li><mark>Addressing instructions</mark> — These instructions manipulate the <code>A</code> register, which is used to address memory locations. The <code>A</code> register can be set to a constant value, to the value of the <code>D</code> register, or to the value of a memory location.</li>
-<li><mark>Computation instructions</mark> — These instructions perform arithmetic and logical operations on the <code>A</code> and <code>D</code> registers, and store the result in the <code>D</code> register.</li>
-<li><mark>Control instructions</mark> — These instructions control the flow of the program, by setting the program counter to a specific value, or by jumping to a specific location in the program.</li>
-<li></li>
-</ol>
-<p>A machine language can be viewed as an agreed-upon formalism, designed to manipulate a memory using a processor and a set of registers.</p>
-<p>The term <mark>memory</mark> refers loosely to the collection of hardware devices that store data and instructions in a computer. The memory is typically divided into two main parts:</p>
+</code></pre><hr>
+<p>Assembly commands can refer to memory addresses using either constants or symbols. Symbols are introduced into assembly programs in the following three ways:</p>
 <ol>
-<li><mark>ROM</mark> (Read-Only Memory) — a memory unit that stores the computer’s firmware, which is the software that is permanently stored in the computer and is used to boot the computer.</li>
-<li><mark>RAM</mark> (Random Access Memory) — a memory unit that stores the computer’s software, which is the software that is loaded into the computer when it is running.</li>
-</ol>
-<p>The term <mark>processor</mark> refers to the hardware device that executes the machine instructions. The processor is typically divided into two main parts:</p>
-<ol>
-<li><mark>Control Unit</mark> — the part of the processor that controls the execution of the machine instructions.</li>
-<li><mark>Arithmetic Logic Unit (ALU)</mark> — the part of the processor that performs arithmetic and logical operations on the data.</li>
-</ol>
-<p>The term <mark>registers</mark> refers to the hardware devices that store data and instructions in the processor. The registers are typically divided into two main parts:</p>
-<ol>
-<li><mark>Data Registers</mark> — the registers that store the data that is being processed by the processor.</li>
-<li><mark>Instruction Register</mark> — the register that stores the instruction that is being executed by the processor.</li>
+<li>Predefined symbols: A subset of RAM addresses have predefined symbols:<ul>
+<li>Virtual registers: The symbols <code>R0</code> to <code>R15</code> refer to RAM addresses <code>0</code> to <code>15</code>, respectively.</li>
+<li>Predefined pointers: The symbols <code>SP</code>, <code>LCL</code>, <code>ARG</code>, <code>THIS</code>, and <code>THAT</code> refer to RAM addresses <code>0</code>, <code>1</code>, <code>2</code>, <code>3</code>, and <code>4</code>, respectively.</li>
+<li>I/O pointers: The symbols <code>SCREEN</code> and <code>KBD</code> refer to RAM addresses <code>16384</code> (0x4000) and <code>24576</code> (0x6000), respectively, which are the base addresses of the screen and
+ keyboard memory maps.</li>
+</ul>
+</li>
+<li>Label symbols: These are user-defined symbols serve to label destinations of goto commands. They are declared by the pseudo-command <code>(Xxx)</code>. This directive defines the symbol
+<code>Xxx</code> to refer to the ROM address holding the next command in the program.</li>
+<li>Variable symbols: Any user-defined symbol <code>Xxx</code> that appears in an assembly program without being predefined or declared as a label is treated as a variable.
+The assembler allocates a unique RAM address for each appearance of such a symbol and replaces the symbol with its RAM address in the assembly program.
+The instruction is of the form <code>@value</code>, where <code>value</code> is a $15$-bit constant.</li>
 </ol>
 <hr>
+<p>The Hack platform can be connected to two peripheral devices: a screen and a keyboard.
+Both devices interact with the computer platform through memory maps.
+This means that drawing pixels on the screen is achieved by writing binary values into a memory segment associated with the screen.
+Likewise, listening to the keyboard is done by reading a memory location associated with the keyboard.
+The physical I/O devices and their memory maps are synchronized via continuous refresh loops.</p>
+<hr>
+<p>The Hack computer includes a black-and-white screen organized as <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>256</mn></mrow><annotation encoding="application/x-tex">256</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">256</span></span></span></span> rows of <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>512</mn></mrow><annotation encoding="application/x-tex">512</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">512</span></span></span></span> pixels per row.
+The screen’s contents are represented by an 8K memory map that starts at RAM address <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>16384</mn></mrow><annotation encoding="application/x-tex">16384</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">16384</span></span></span></span> ($0x4000$).
+Each row in the physical screen, starting at the screen’s top left corner, is represented in the RAM by <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>32</mn></mrow><annotation encoding="application/x-tex">32</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">32</span></span></span></span> consecutive $16$-bit words.
+Thus, the pixel at row <code>r</code> from the top and column <code>c</code> from the left is mapped on the <code>c%16</code> bit (counting from LSB to MSB) of the word located at <code>RAM[16384 + r * 32 + c/16]</code>.
+To write or read a pixel of the physical screen, one reads or writes the corresponding bit in the RAM-resident memory map (1 = black, 0 = white).</p>
+<p>Example:</p>
+<pre><code class="hljs language-hack">// Draw a single black dot at the screen&#x27;s top left corner:
+@SCREEN // Set the A register to point to the memory
+       // word that is mapped to the 16 left-most
+      // pixels of the top row of the screen.
+M=1 // Blacken the left-most pixel.
+</code></pre><hr>
+<p>The Hack computer interfaces with the physical keyboard via a single-word memory map located in RAM address <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>24576</mn></mrow><annotation encoding="application/x-tex">24576</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">24576</span></span></span></span> ($0x6000$).
+Whenever a key is pressed on the physical keyboard, its $16$-bit ASCII code appears in <code>RAM[24576]</code>.
+When no key is pressed, the code <code>0</code> appears in this location.
+In addition to the usual ASCII codes, the Hack keyboard recognizes the keys shown below.</p>
+<table>
+<thead>
+<tr>
+<th>Key pressed</th>
+<th>Code</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>newline</td>
+<td>128</td>
+</tr>
+<tr>
+<td>backspace</td>
+<td>129</td>
+</tr>
+<tr>
+<td>left arrow</td>
+<td>130</td>
+</tr>
+<tr>
+<td>up arrow</td>
+<td>131</td>
+</tr>
+<tr>
+<td>right arrow</td>
+<td>132</td>
+</tr>
+<tr>
+<td>down arrow</td>
+<td>133</td>
+</tr>
+<tr>
+<td>home</td>
+<td>134</td>
+</tr>
+<tr>
+<td>end</td>
+<td>135</td>
+</tr>
+<tr>
+<td>page up</td>
+<td>136</td>
+</tr>
+<tr>
+<td>page down</td>
+<td>137</td>
+</tr>
+<tr>
+<td>insert</td>
+<td>138</td>
+</tr>
+<tr>
+<td>delete</td>
+<td>139</td>
+</tr>
+<tr>
+<td>esc</td>
+<td>140</td>
+</tr>
+<tr>
+<td>f1-f2</td>
+<td>141-152</td>
+</tr>
+</tbody></table>
 
     </body>
 </html>
