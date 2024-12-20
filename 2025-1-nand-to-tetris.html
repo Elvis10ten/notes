@@ -2569,7 +2569,7 @@ In order to resolve this address, the convention is that <code>M</code> always r
 <p>The <mark>A-instruction</mark> is used to set the <code>A</code> register to a $15$-bit value:</p>
 <p>A-instruction&#39;s symbolic representation: <code>@value</code> (where <code>value</code> is a non-negative decimal number or a symbol referring to such a number).
 A-instruction&#39;s binary representation: <code>0value</code> (where <code>value</code> is a $15$-bit binary number).</p>
-<p>The leftmost bit is the A-instruction marker bit, which is always set to <code>0</code>.</p>
+<p>The leftmost bit is the A-instruction marker bit (aka opcode), which is always set to <code>0</code>.</p>
 <p>The A-instruction is used for three different purposes:</p>
 <ol>
 <li>It provides the only way to enter a constant into the computer under program control.</li>
@@ -2585,7 +2585,7 @@ A-instruction&#39;s binary representation: <code>0value</code> (where <code>valu
 </ol>
 <p>C-instruction&#39;s symbolic representation: <code>dest=comp;jump</code> (where <code>dest</code> is the destination register, <code>comp</code> is the computation, and <code>jump</code> is the jump condition). Both <code>dest=</code> and <code>;jump</code> are optional.
 C-instruction&#39;s binary representation: <code>1 1 1 a c_1 c_2 c_3 c_4 c_5 c_6 d_1 d_2 d_3 j_1 j_2 j_3</code> (where <code>a_n</code> &amp; <code>c_n</code> specify the comp component; <code>d_n</code> specifies the dest component, and <code>j_n</code> specifies the jump component).</p>
-<p>The leftmost bit is the C-instruction marker bit, which is always set to <code>1</code>. The next wo bits are not used and are set to <code>1</code>.</p>
+<p>The leftmost bit is the C-instruction marker bit (aka opcode), which is always set to <code>1</code>. The next wo bits are not used and are set to <code>1</code>.</p>
 <hr>
 <p>The <code>dest</code> component of the C-instruction specifies where to store the computed value (the ALU output).</p>
 <p>The first and second bits specify whether to store the computed value in the <code>A</code> register and in the <code>D</code> register, respectively.
@@ -3036,6 +3036,191 @@ In addition to the usual ASCII codes, the Hack keyboard recognizes the keys show
 <td>141-152</td>
 </tr>
 </tbody></table>
+<hr>
+<h2>Chapter 5: Computer Architecture</h2>
+<p>The computer is based on a fixed hardware platform, capable of executing a fixed repertoire of simple instructions.
+However, these instructions can be combined like building blocks, yielding arbitrarily sophisticated programs.</p>
+<p>The <mark>von Neumann architecture</mark>, shown below, is based on a central processing unit (CPU), interacting with a memory device,
+receiving data from some input device, and sending data to some output device.</p>
+<p>At the heart of this architecture lies the <mark>stored program concept</mark>: The computer&#39;s memory stores both the
+data that the computer manipulates and the instructions that tell the computer what to do.</p>
+<p><img src="assets/nand-images/von_neumann_architecture.svg" alt="Von Neumann architecture"></p>
+<p>A related stored program computer architecture is the <mark>Harvard architecture</mark>, which physically separates the memory devices used for storing data and instructions.</p>
+<p><img src="assets/nand-images/harvard_architecture.svg" alt="Harvard architecture"></p>
+<hr>
+<p>The CPU operation can be described as a repeated loop (aka fetch-decode-execute cycle):</p>
+<ol>
+<li>Fetches (i.e, reads) a binary machine instruction from a selected register in the instruction memory</li>
+<li>Decodes it</li>
+<li>Executes the specified instruction</li>
+<li>And figures out which instruction to fetch and execute next.</li>
+</ol>
+<p>(3) and (4) are based on the fetched instruction which tells the CPU:</p>
+<ul>
+<li>What calculation to perform</li>
+<li>Which registers to read or write to</li>
+<li>And which instruction to fetch and execute next</li>
+</ul>
+<p>The CPU executes these tasks using three main hardware elements:</p>
+<ul>
+<li>An ALU</li>
+<li>A set of registers and</li>
+<li>A control unit</li>
+</ul>
+<p>The first two elements were already introduced in the previous chapters.</p>
+<hr>
+<p>A computer instruction is represented as a binary code, typically 16, 32, or 64 bits wide.
+Before such an instruction can be executed, it must be decoded, and the information embedded in it must be used to signal
+various hardware devices (ALU, registers, memory) how to execute the instruction.</p>
+<p>The instruction decoding is done by some <mark>control unit</mark>, which is also responsible for figuring out which
+instruction to fetch and execute next.</p>
+<hr>
+<p>The set of registers used by the Hack computer are:</p>
+<ul>
+<li>Data register (<code>D</code>): A $16$-bit register used to store a data value. In principle, data values can just be stored in the RAM,
+ but the <code>D</code> register is used to speed up operations.</li>
+<li>Address register (<code>A</code>): A $16$-bit register used to store a memory address. The output of this register is connected
+ to the address input ot our memory devices (RAM and ROM). Therefore, placing a value in the address register has the
+ side effect of selecting a particular memory register, and this register makes itself available to subsequent instructions
+ designed to manipulate it. The <code>A</code> register&#39;s value can be read directly as a data value.</li>
+<li>Program counter (<code>PC</code>): A $16$-bit register used to store the address of the next instruction. The contents of the
+ PC is computed and updated as a side effect of executing the current instruction.</li>
+</ul>
+<hr>
+<p>The Hack computer is a 16-bit machine based on the Harvard architecture, designed to execute instructions written in the Hack machine language.</p>
+<hr>
+<p>The Hack CPU interface:</p>
+<pre><code class="hljs language-hack">/**
+	CHIP	CPU
+	
+	IN
+	    instruction[16],	//	Instruction	to	execute.
+	    inM[16],			//	Value	of	Mem[A],	the	instruction’s	M	input
+	    reset;				//	Signals	whether	to	continue	executing	the	current	program	(reset==0)	or	restart	the	current	program	(reset==1).
+	    
+	OUT
+	    outM[16],			//	Value	to	write	to	Mem[addressM],	the	instruction’s	M	output
+	    addressM[15],		//	In	which	address	to	write?
+	    writeM,				//	Write	to	the	Memory?
+	    pc[15];				//	address	of	next	instruction	
+</code></pre><p><img src="assets/nand-images/hack_cpu.png" alt="Hack CPU"></p>
+<p>Key points:</p>
+<ul>
+<li>The Hack Central Processing Unit consists of an <strong>ALU</strong>, two registers named <strong>A</strong> and <strong>D</strong>, and a program counter named <strong>PC</strong> (these	internal chip-parts	are	not	shown in the diagram). </li>
+<li>The <strong>inM</strong> input and <strong>outM</strong> output hold the values referred to as “<strong>M</strong>” in the Hack instruction syntax.</li>
+<li>The <strong>addressM</strong> output holds the memory address to which <strong>outM</strong> should be written.</li>
+<li>The CPU is designed to fetch and execute instructions written in the <strong>Hack machine language</strong>.</li>
+<li>If instruction is an <strong>A-instruction</strong>, the CPU loads the <strong>16-bit</strong> constant (including the <code>0</code> opcode) that the instruction represents into the <strong>A</strong> register.</li>
+<li>If instruction is a <strong>C-instruction</strong>, then:<ul>
+<li>The <strong>CPU</strong> causes the <strong>ALU</strong> to perform the computation specified by the instruction, and</li>
+<li>The <strong>CPU</strong> causes this value to be stored in the subset of {<strong>A</strong>,<strong>D</strong>,<strong>M</strong>} registers specified by the instruction.</li>
+<li>If one of these registers is <strong>M</strong>, the <strong>CPU</strong> asserts the <strong>writeM</strong> control bit output (when <strong>writeM</strong>    is    <code>0</code>, any value may appear in <strong>outM</strong>).</li>
+<li>When the reset    input    is    <code>0</code>, the <strong>CPU</strong> uses the <strong>ALU</strong> output and the <strong>jump directive</strong> specified by the instruction to compute the address of the next instruction, and emits this address to the <strong>pc</strong> output.</li>
+<li>If the reset    input    is    <code>1</code>, the CPU sets pc to <code>0</code>.</li>
+</ul>
+</li>
+<li>The <strong>outM</strong> and <strong>writeM</strong> outputs are combinational, and are affected instantaneously by the instruction’s execution.</li>
+<li>The <strong>addressM</strong> and <strong>pc</strong> outputs are clocked: although they are affected by the instruction’s execution, they commit to their new values only in the next time step.</li>
+</ul>
+<hr>
+<p>The Hack instruction memory interface:</p>
+<pre><code class="hljs language-hdl">CHIP	ROM32K
+
+    IN
+        address[15];
+    
+    OUT
+        out[16];	
+</code></pre><p><img src="assets/nand-images/hack_rom.png" alt="Hack instruction memory"></p>
+<p>Key points:</p>
+<ul>
+<li>The instruction memory of the Hack computer, implemented as a read-only memory of <strong>32K registers</strong>, each <strong>16-bit wide</strong>.</li>
+<li>Performs the operation <code>out = ROM32K[address]</code>.</li>
+<li>In words: outputs the <strong>16-bit value</strong> stored in the register selected by the <strong>address</strong> input.</li>
+<li>This value is taken to be the <strong>current instruction</strong>.</li>
+<li>It is assumed that the chip is <strong>preloaded</strong> with a program written in the Hack machine language. </li>
+<li>Software-based simulators of the Hack computer are expected to provide means for loading the chip with a Hack program, either interactively, or using a test script.</li>
+</ul>
+<hr>
+<p>The Hack data memory interface:</p>
+<pre><code class="hljs language-hdl">CHIP Memory
+
+    IN
+        in[16],	load,	address[15];
+    
+    OUT
+        out[16];
+</code></pre><p><img src="assets/nand-images/hack_data_memory.png" alt="Hack data memory"></p>
+<p>Key points:</p>
+<ul>
+<li>The complete address space of the Hack computer&#39;s data memory, including <strong>RAM</strong> and <strong>memory-mapped I/O</strong>.</li>
+<li>Facilitates read and write operations, as follows:<ul>
+<li>Read: <code>out(t) = Mem[address(t)](t)</code></li>
+<li>Write: <code>if load(t) then Mem[address(t)](t+1) = in(t)</code></li>
+</ul>
+</li>
+<li>In words: the chip always outputs the value stored at the memory location specified by address.</li>
+<li>If <strong>load==1</strong>, the <strong>in</strong> value is loaded into the register specified by address. This value becomes available through the <strong>out</strong> output from the next time step onward.</li>
+<li>The memory access rules are as follows:<ul>
+<li>Only the top <code>16K + 8K + 1</code> words of the address space are used.</li>
+<li><code>0x0000 - 0x5FFF</code>: accessing an address in this range results in accessing the <strong>RAM</strong>.</li>
+<li><code>0x4000 - 0x5FFF</code>: accessing an address in this range results in accessing the <strong>Screen</strong>.</li>
+<li><code>0x6000</code>: accessing this address results in accessing the <strong>Keyboard</strong>.</li>
+<li><code>0x6000</code>: accessing an address in this range is <strong>invalid</strong>.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>The interface of the topmost chip in the Hack hardware platform, named Computer:</p>
+<pre><code class="hljs language-hdl">CHIP Computer
+
+    IN
+        reset;	
+</code></pre><p><img src="assets/nand-images/hack_computer.png" alt="Hack computer"></p>
+<p>Key points:</p>
+<ul>
+<li>The HACK computer, consisting of <strong>CPU</strong>, <strong>ROM</strong> and <strong>Memory parts</strong> (these	internal chip-parts	are	not	shown in the diagram).</li>
+<li>When <code>reset==0</code>, the program stored in the computer&#39;s ROM executes.</li>
+<li>When <code>reset==1</code>, the execution of the program restarts.</li>
+<li>Thus, to start a program&#39;s execution, the reset input must be pushed &quot;up&quot; (signaling 1) and &quot;down&quot; (signaling 0).</li>
+<li>From this point onward, the user is at the mercy of the software.</li>
+<li>In particular, depending on the program&#39;s code, the screen may show some output, and the user may be able to interact with the computer via the keyboard.</li>
+</ul>
+<hr>
+<p>The Hack keyboard chip interface:</p>
+<pre><code class="hljs language-hdl">CHIP Keyboard
+
+    OUT
+        out[16]; //	The	scan-code	of	the	pressed	key, or	0	if	no	key	is	currently	pressed.
+</code></pre><p>Keypoint:</p>
+<ul>
+<li>The Keyboard (memory map) is connected to a standard, physical keyboard. </li>
+<li>It is made to output the <strong>16-bit scan-code</strong> associated with the key which is presently pressed on the physical keyboard, or <code>0</code> if no key is pressed.</li>
+</ul>
+<hr>
+<p>The Hack screen chip interface:</p>
+<pre><code class="hljs language-hdl">CHIP Screen
+
+    IN
+        in[16], //	what	to	write
+        address[13]; //	where	to	write	(or	read)
+        load, // write-enable	bit
+    
+    OUT
+        out[16]; //	Screen	value	at	the	given	address	
+</code></pre><p>Keypoint:</p>
+<ul>
+<li>The Screen (memory map) functions exactly like a <strong>16-bit</strong>, <strong>8K RAM</strong>:<ul>
+<li><code>out(t) = Screen[address(t)](t)</code></li>
+<li><code>if load(t) then Screen[address(t)](t+1) = in(t)</code></li>
+</ul>
+</li>
+<li>The chip implementation has the side effect of continuously refreshing a physical screen.</li>
+<li>The physical screen consists of 256 rows and 512 columns of black and white pixels (simulators of the Hack computer are expected to simulate this screen).</li>
+<li>Each row in the physical screen, starting at the top left corner, is represented in the Screen memory map by <strong>32 consecutive 16-bit words</strong>.</li>
+<li>Thus, the pixel at row <strong>r</strong> from the top and column <strong>c</strong> from the left (<strong>0 ≤ r ≤ 255</strong>, <strong>0 ≤ c ≤ 511</strong>) is mapped on the <code>c % 16</code> bit (counting from LSB to MSB) of the 16-bit word stored in <code>Screen[r * 32 + c / 16]</code>.</li>
+</ul>
+<hr>
 
     </body>
 </html>
