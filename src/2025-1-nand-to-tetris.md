@@ -1687,7 +1687,7 @@ The <mark>A-instruction</mark> is used to set the `A` register to a $15$-bit val
 A-instruction's symbolic representation: `@value` (where `value` is a non-negative decimal number or a symbol referring to such a number).
 A-instruction's binary representation: `0value` (where `value` is a $15$-bit binary number).
 
-The leftmost bit is the A-instruction marker bit, which is always set to `0`.
+The leftmost bit is the A-instruction marker bit (aka opcode), which is always set to `0`.
 
 The A-instruction is used for three different purposes:
 1. It provides the only way to enter a constant into the computer under program control.
@@ -1704,7 +1704,7 @@ The <mark>C-instruction</mark> is used to perform a computation. The instruction
 C-instruction's symbolic representation: `dest=comp;jump` (where `dest` is the destination register, `comp` is the computation, and `jump` is the jump condition). Both `dest=` and `;jump` are optional.
 C-instruction's binary representation: `1 1 1 a c_1 c_2 c_3 c_4 c_5 c_6 d_1 d_2 d_3 j_1 j_2 j_3` (where `a_n` & `c_n` specify the comp component; `d_n` specifies the dest component, and `j_n` specifies the jump component).
 
-The leftmost bit is the C-instruction marker bit, which is always set to `1`. The next wo bits are not used and are set to `1`.
+The leftmost bit is the C-instruction marker bit (aka opcode), which is always set to `1`. The next wo bits are not used and are set to `1`.
 
 ---
 
@@ -1844,3 +1844,220 @@ In addition to the usual ASCII codes, the Hack keyboard recognizes the keys show
 | delete      | 139     |
 | esc         | 140     |
 | f1-f2       | 141-152 |
+
+---
+
+## Chapter 5: Computer Architecture
+The computer is based on a fixed hardware platform, capable of executing a fixed repertoire of simple instructions.
+However, these instructions can be combined like building blocks, yielding arbitrarily sophisticated programs.
+
+The <mark>von Neumann architecture</mark>, shown below, is based on a central processing unit (CPU), interacting with a memory device,
+receiving data from some input device, and sending data to some output device.
+
+At the heart of this architecture lies the <mark>stored program concept</mark>: The computer's memory stores both the
+data that the computer manipulates and the instructions that tell the computer what to do.
+
+![Von Neumann architecture](/docs/assets/nand-images/von_neumann_architecture.svg)
+
+A related stored program computer architecture is the <mark>Harvard architecture</mark>, which physically separates the memory devices used for storing data and instructions.
+
+![Harvard architecture](/docs/assets/nand-images/harvard_architecture.svg)
+
+---
+
+The CPU operation can be described as a repeated loop (aka fetch-decode-execute cycle):
+1. Fetches (i.e, reads) a binary machine instruction from a selected register in the instruction memory
+2. Decodes it
+3. Executes the specified instruction
+4. And figures out which instruction to fetch and execute next.
+
+(3) and (4) are based on the fetched instruction which tells the CPU:
+* What calculation to perform
+* Which registers to read or write to
+* And which instruction to fetch and execute next
+
+The CPU executes these tasks using three main hardware elements:
+* An ALU
+* A set of registers and
+* A control unit
+
+The first two elements were already introduced in the previous chapters.
+
+---
+
+A computer instruction is represented as a binary code, typically 16, 32, or 64 bits wide.
+Before such an instruction can be executed, it must be decoded, and the information embedded in it must be used to signal
+various hardware devices (ALU, registers, memory) how to execute the instruction.
+
+The instruction decoding is done by some <mark>control unit</mark>, which is also responsible for figuring out which
+instruction to fetch and execute next.
+
+---
+
+The set of registers used by the Hack computer are:
+* Data register (`D`): A $16$-bit register used to store a data value. In principle, data values can just be stored in the RAM,
+ but the `D` register is used to speed up operations.
+* Address register (`A`): A $16$-bit register used to store a memory address. The output of this register is connected
+ to the address input ot our memory devices (RAM and ROM). Therefore, placing a value in the address register has the
+ side effect of selecting a particular memory register, and this register makes itself available to subsequent instructions
+ designed to manipulate it. The `A` register's value can be read directly as a data value.
+* Program counter (`PC`): A $16$-bit register used to store the address of the next instruction. The contents of the
+ PC is computed and updated as a side effect of executing the current instruction.
+
+---
+
+The Hack computer is a 16-bit machine based on the Harvard architecture, designed to execute instructions written in the Hack machine language.
+
+---
+
+The Hack CPU interface:
+
+```hack
+/**
+	CHIP	CPU
+	
+	IN
+	    instruction[16],	//	Instruction	to	execute.
+	    inM[16],			//	Value	of	Mem[A],	the	instruction’s	M	input
+	    reset;				//	Signals	whether	to	continue	executing	the	current	program	(reset==0)	or	restart	the	current	program	(reset==1).
+	    
+	OUT
+	    outM[16],			//	Value	to	write	to	Mem[addressM],	the	instruction’s	M	output
+	    addressM[15],		//	In	which	address	to	write?
+	    writeM,				//	Write	to	the	Memory?
+	    pc[15];				//	address	of	next	instruction	
+```
+
+![Hack CPU](/docs/assets/nand-images/hack_cpu.png)
+
+Key points:
+* The Hack Central Processing Unit consists of an **ALU**, two registers named **A** and **D**, and a program counter named **PC** (these	internal chip-parts	are	not	shown in the diagram). 
+* The **inM** input and **outM** output hold the values referred to as “**M**” in the Hack instruction syntax.
+* The **addressM** output holds the memory address to which **outM** should be written.
+* The CPU is designed to fetch and execute instructions written in the **Hack machine language**.
+* If instruction is an **A-instruction**, the CPU loads the **16-bit** constant (including the `0` opcode) that the instruction represents into the **A** register.
+* If instruction is a **C-instruction**, then:
+  * The **CPU** causes the **ALU** to perform the computation specified by the instruction, and
+  * The **CPU** causes this value to be stored in the subset of {**A**,**D**,**M**} registers specified by the instruction.
+  * If one of these registers is **M**, the **CPU** asserts the **writeM** control bit output (when **writeM**	is	`0`, any value may appear in **outM**).
+  * When the reset	input	is	`0`, the **CPU** uses the **ALU** output and the **jump directive** specified by the instruction to compute the address of the next instruction, and emits this address to the **pc** output.
+  * If the reset	input	is	`1`, the CPU sets pc to `0`.
+* The **outM** and **writeM** outputs are combinational, and are affected instantaneously by the instruction’s execution.
+* The **addressM** and **pc** outputs are clocked: although they are affected by the instruction’s execution, they commit to their new values only in the next time step.
+
+---
+
+The Hack instruction memory interface:
+
+```hdl
+CHIP	ROM32K
+
+    IN
+        address[15];
+    
+    OUT
+        out[16];	
+```
+
+![Hack instruction memory](/docs/assets/nand-images/hack_rom.png)
+
+Key points:
+* The instruction memory of the Hack computer, implemented as a read-only memory of **32K registers**, each **16-bit wide**.
+* Performs the operation `out = ROM32K[address]`.
+* In words: outputs the **16-bit value** stored in the register selected by the **address** input.
+* This value is taken to be the **current instruction**.
+* It is assumed that the chip is **preloaded** with a program written in the Hack machine language. 
+* Software-based simulators of the Hack computer are expected to provide means for loading the chip with a Hack program, either interactively, or using a test script.
+
+---
+
+The Hack data memory interface:
+
+```hdl
+CHIP Memory
+
+    IN
+        in[16],	load,	address[15];
+    
+    OUT
+        out[16];
+```
+
+![Hack data memory](/docs/assets/nand-images/hack_data_memory.png)
+
+Key points:
+* The complete address space of the Hack computer's data memory, including **RAM** and **memory-mapped I/O**.
+* Facilitates read and write operations, as follows:
+  * Read: `out(t) = Mem[address(t)](t)`
+  * Write: `if load(t) then Mem[address(t)](t+1) = in(t)`
+* In words: the chip always outputs the value stored at the memory location specified by address.
+* If **load==1**, the **in** value is loaded into the register specified by address. This value becomes available through the **out** output from the next time step onward.
+* The memory access rules are as follows:
+  * Only the top `16K + 8K + 1` words of the address space are used.
+  * `0x0000 - 0x5FFF`: accessing an address in this range results in accessing the **RAM**.
+  * `0x4000 - 0x5FFF`: accessing an address in this range results in accessing the **Screen**.
+  * `0x6000`: accessing this address results in accessing the **Keyboard**.
+  * `0x6000`: accessing an address in this range is **invalid**.
+
+---
+
+The interface of the topmost chip in the Hack hardware platform, named Computer:
+
+```hdl
+CHIP Computer
+
+    IN
+        reset;	
+```
+
+![Hack computer](/docs/assets/nand-images/hack_computer.png)
+
+Key points:
+* The HACK computer, consisting of **CPU**, **ROM** and **Memory parts** (these	internal chip-parts	are	not	shown in the diagram).
+* When `reset==0`, the program stored in the computer's ROM executes.
+* When `reset==1`, the execution of the program restarts.
+* Thus, to start a program's execution, the reset input must be pushed "up" (signaling 1) and "down" (signaling 0).
+* From this point onward, the user is at the mercy of the software.
+* In particular, depending on the program's code, the screen may show some output, and the user may be able to interact with the computer via the keyboard.
+
+---
+
+The Hack keyboard chip interface:
+
+```hdl
+CHIP Keyboard
+
+    OUT
+        out[16]; //	The	scan-code	of	the	pressed	key, or	0	if	no	key	is	currently	pressed.
+```
+
+Keypoint:
+* The Keyboard (memory map) is connected to a standard, physical keyboard. 
+* It is made to output the **16-bit scan-code** associated with the key which is presently pressed on the physical keyboard, or `0` if no key is pressed.
+
+---
+
+The Hack screen chip interface:
+
+```hdl
+CHIP Screen
+
+    IN
+        in[16], //	what	to	write
+        address[13]; //	where	to	write	(or	read)
+        load, // write-enable	bit
+    
+    OUT
+        out[16]; //	Screen	value	at	the	given	address	
+```
+
+Keypoint:
+* The Screen (memory map) functions exactly like a **16-bit**, **8K RAM**:
+  * `out(t) = Screen[address(t)](t)`
+  * `if load(t) then Screen[address(t)](t+1) = in(t)`
+* The chip implementation has the side effect of continuously refreshing a physical screen.
+* The physical screen consists of 256 rows and 512 columns of black and white pixels (simulators of the Hack computer are expected to simulate this screen).
+* Each row in the physical screen, starting at the top left corner, is represented in the Screen memory map by **32 consecutive 16-bit words**.
+* Thus, the pixel at row **r** from the top and column **c** from the left (**0 ≤ r ≤ 255**, **0 ≤ c ≤ 511**) is mapped on the `c % 16` bit (counting from LSB to MSB) of the 16-bit word stored in `Screen[r * 32 + c / 16]`.
+
+---
