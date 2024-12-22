@@ -2061,3 +2061,95 @@ Keypoint:
 * Thus, the pixel at row **r** from the top and column **c** from the left (**0 ≤ r ≤ 255**, **0 ≤ c ≤ 511**) is mapped on the `c % 16` bit (counting from LSB to MSB) of the 16-bit word stored in `Screen[r * 32 + c / 16]`.
 
 ---
+
+All the chips needed to build the Hack CPU have been built in the previous chapters, the key question is how to arrange and
+connect them in a way that effects the desired CPU operation.
+
+The architecture shown below is used to perform three classical CPU tasks:
+* Decoding the current instruction
+* Executing the current instruction, and
+* Deciding which instruction to fetch and execute next.
+
+![Hack CPU architecture](/docs/assets/nand-images/hack_cpu_arch.png)
+<em>Every `c` symbol entering a chip-part stands for some control bit, extracted from the instruction.
+In the case of the ALU, the `c's` input stands for the 6 control bits that instruct the ALU what to compute, and the `c's`
+output stands for its `zr` and `ng` outputs.
+Taken together, the distributed behaviors that these control bits effect throughout the CPU architecture end up executing the instruction.</em>
+
+```hack
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/5/CPU.hdl
+/**
+ * The Hack Central Processing unit (CPU).
+ * Parses the binary code in the instruction input and executes it according to the
+ * Hack machine language specification. In the case of a C-instruction, computes the
+ * function specified by the instruction. If the instruction specifies to read a memory
+ * value, the inM input is expected to contain this value. If the instruction specifies
+ * to write a value to the memory, sets the outM output to this value, sets the addressM
+ * output to the target address, and asserts the writeM output (when writeM = 0, any
+ * value may appear in outM).
+ * If the reset input is 0, computes the address of the next instruction and sets the
+ * pc output to that value. If the reset input is 1, sets pc to 0.
+ * Note: The outM and writeM outputs are combinational: they are affected by the
+ * instruction's execution during the current cycle. The addressM and pc outputs are
+ * clocked: although they are affected by the instruction's execution, they commit to
+ * their new values only in the next cycle.
+ */
+CHIP CPU {
+
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset==1) or continue executing
+                         // the current program (reset==0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write to M? 
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+
+    PARTS:
+    // Negate the opCode.
+    Not(in= instruction[15], out= notOpCode);
+    // If opCode == 0, we route the instruction into the A register. Else, we route the ALU input.
+    Mux16(a= outputOfALU, b= instruction, sel= notOpCode, out= inputToA);
+    // The A register is enabled for writing if we have an A-instruction or a C-instruction with the d_1 control bit asserted.
+    Or(a= notOpCode, b= instruction[5], out= writeToA);
+    ARegister(in= inputToA, load= writeToA, out= outputOfA, out[0..14]=addressM);
+
+    // Only select M, if we have an C-instruction and the a-bit is asserted
+    And(a= instruction[15], b= instruction[12], out= controlAOrM);
+    Mux16(a= outputOfA, b= inM, sel= controlAOrM, out= AOrM);
+    // Use the ALU.
+    ALU(x= outputOfD, y= AOrM, zx= instruction[11], nx= instruction[10], zy= instruction[9], ny= instruction[8], f= instruction[7], no= instruction[6], out= outputOfALU, out = outM, zr= isAluOutputZero, ng= isAluOutputNegative);
+
+    // Only write to the D register, if we have a C-instruction AND the d_2 bit is asserted.
+    And(a= instruction[15], b= instruction[4], out= writeToD);
+    DRegister(in= outputOfALU, load= writeToD, out= outputOfD);
+
+    // Only set writeM to true, if we have a C-instruction and the d_1 bit is asserted.
+    And(a= instruction[15], b= instruction[3], out= controlWriteM);
+    Mux(a= false, b= true, sel= controlWriteM, out= writeM);
+
+    // Derive if ALU output is positive (i.e, it's not negative or zero)
+    Or(a= isAluOutputNegative, b= isAluOutputZero, out= isAluOutputNegativeOrZero);
+    Not(in= isAluOutputNegativeOrZero, out= isAluOutputPositive);
+
+    // Check j_1 against ALU output is negative bit.
+    And(a= instruction[2], b= isAluOutputNegative, out= jumpCauseNegative);
+    // Check j_2 against ALU output is zero bit.
+    And(a= instruction[1], b= isAluOutputZero, out= jumpCauseZero);
+    // Check j_3 against ALU output is positive bit.
+    And(a= instruction[0], b= isAluOutputPositive, out= jumpCausePositive);
+    
+    // Combine: We jump if we have a C-instruction and any of the jump predicates matches.
+    Or(a= jumpCauseNegative, b= jumpCauseZero, out= jumpIntermediate);
+    Or(a= jumpIntermediate, b= jumpCausePositive, out= jumpIntermediate2);
+    And(a= instruction[15], b= jumpIntermediate2, out= controlJump);
+
+    PC(in= outputOfA, load= controlJump, inc= true, reset= reset, out[0..14]= pc);
+}
+```
+
