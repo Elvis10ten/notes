@@ -60,12 +60,91 @@ It repeats until no input elements remain.</p>
 <p>At the start of each iteration, the sub-array <code>input[0:i-1]</code> contains the same elements as the original sub-array <code>input[0:i-1]</code>, but in sorted order.</p>
 <p><strong>Proof</strong>:</p>
 <ul>
-<li>Initialization: Before the first iteration, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>. The sub-array <code>input[0:i-1]</code> contains just one element and is thus trivially sorted.</li>
+<li>Initialization: Before the first iteration, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>. The sub-array <code>input[0..i-1]</code> (an empty subarray) is trivially sorted.</li>
 <li>Maintenance: The body of the for loop works by moving the elements in <code>input[i - 1]</code>, <code>input[i - 2]</code>, <code>input[i - 3]</code>, ..., <code>input[0]</code> that are greater than <code>input[i]</code> one position to the right. This makes space for <code>input[i]</code> to be inserted in the correct position. 
-The <code>i</code> variable is incremented and the sub-array <code>input[0:i-1]</code> is still sorted.</li>
-<li>Termination: The loop terminates when <code>i = n</code>. At this point, the sub-array <code>input[0:n-1]</code> is sorted and the algorithm has finished.</li>
+The <code>i</code> variable is incremented and the sub-array <code>input[0..i-1]</code> is still sorted.</li>
+<li>Termination: The loop terminates when <code>i = n</code>. At this point, the sub-array <code>input[0..n-1]</code> is sorted and the algorithm has finished.</li>
 </ul>
 </blockquote>
+<p>Exercises:</p>
+<h4>2.1-1</h4>
+<p>[31, 41, 59, 26, 41, 58] (i = 1, current = 41, j = 1)</p>
+<p>[31, 41, 59, 26, 41, 58] (i = 2, current = 59, j = 2)</p>
+<p>[31, 41, 59, 26, 41, 58] (i = 3, current = 26, j = 3)
+[31, 41, 59, 59, 41, 58] (i = 3, current = 26, j = 2)
+[31, 41, 41, 59, 41, 58] (i = 3, current = 26, j = 1)
+[31, 31, 41, 59, 41, 58] (i = 3, current = 26, j = 0)
+[26, 31, 41, 59, 41, 58] (i = 3, current = 26, j = 0)</p>
+<p>[26, 31, 41, 59, 41, 58] (i = 4, current = 41, j = 4)
+[26, 31, 41, 59, 59, 58] (i = 4, current = 41, j = 3)
+[26, 31, 41, 41, 59, 58] (i = 4, current = 41, j = 2)</p>
+<p>[26, 31, 41, 41, 59, 58] (i = 5, current = 58, j = 5)
+[26, 31, 41, 41, 59, 59] (i = 5, current = 58, j = 4)
+[26, 31, 41, 41, 58, 59] (i = 5, current = 58, j = 4)</p>
+<h4>2.1-2</h4>
+<p>Loop invariant: At the start of each iteration, the <code>sum</code> variable holds the sum of the first <code>i-1</code> elements of the array.</p>
+<p><strong>Proof</strong>:</p>
+<ul>
+<li><strong>Initialization</strong>: Before the first iteration, <code>i = 0</code>. The sum of all elements in <code>input[0..(i-1)]</code> is trivially zero because that sub-array contains no elements.</li>
+<li><strong>Maintenance</strong>: The body of the for loop adds <code>input[i]</code> to the <code>sum</code>. The <code>i</code> variable is incremented and the <code>sum</code> is still the sum of all elements in <code>input[0..(i-1)]</code>.</li>
+<li><strong>Termination</strong>: When the loop terminates, <code>i = n</code>. <code>sum</code> is the sum of all elements in <code>input[0..(i-1)]</code> which equals <code>input[0..(n-1)]</code>, which is all the elements in <code>input</code>.</li>
+</ul>
+<h4>2.1-3</h4>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">insertion_sort_desc</span>(<span class="hljs-keyword">mut</span> input: <span class="hljs-type">Vec</span>&lt;<span class="hljs-type">i32</span>&gt;) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">Vec</span>&lt;<span class="hljs-type">i32</span>&gt; {
+    <span class="hljs-keyword">for</span> <span class="hljs-variable">i</span> <span class="hljs-keyword">in</span> <span class="hljs-number">1</span>..input.<span class="hljs-title function_ invoke__">len</span>() {
+        <span class="hljs-keyword">let</span> <span class="hljs-variable">current</span> = input[i];
+        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">j</span> = i;
 
+        <span class="hljs-keyword">while</span> j &gt; <span class="hljs-number">0</span> &amp;&amp; input[j - <span class="hljs-number">1</span>] &lt; current {
+            input[j] = input[j - <span class="hljs-number">1</span>];
+            j -= <span class="hljs-number">1</span>;
+        }
+
+        input[j] = current;
+    }
+
+    input
+}
+</code></pre><h4>2.1-4</h4>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">linear_search</span>(input: <span class="hljs-type">Vec</span>&lt;<span class="hljs-type">i32</span>&gt;, needle: <span class="hljs-type">i32</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">Option</span>&lt;<span class="hljs-type">usize</span>&gt; {
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">result</span> = <span class="hljs-type">Option</span>::<span class="hljs-literal">None</span>;
+
+    <span class="hljs-keyword">for</span> <span class="hljs-variable">i</span> <span class="hljs-keyword">in</span> <span class="hljs-number">0</span>..input.<span class="hljs-title function_ invoke__">len</span>() {
+        <span class="hljs-keyword">let</span> <span class="hljs-variable">number</span> = input[i];
+
+        <span class="hljs-keyword">if</span> number == needle {
+            result = <span class="hljs-type">Option</span>::<span class="hljs-title function_ invoke__">Some</span>(i);
+            <span class="hljs-keyword">break</span>;
+        }
+    }
+
+    result
+}
+</code></pre><p>Loop invariant: At the start of each iteration, the <code>result</code> variable holds any element in <code>input[0..(i-1)]</code> that equals <code>needle</code> (or empty if none matches).</p>
+<p><strong>Proof</strong>:</p>
+<ul>
+<li><strong>Initialization</strong>: Before the first iteration, <code>i = 0</code>. There are no elements in <code>input[0..(i-1)]</code>, hence, <code>result</code> is empty.</li>
+<li><strong>Maintenance</strong>: The body of the for loop sets <code>result</code> equal to <code>input[i]</code> if <code>input[i]</code> equals <code>needle</code>. The <code>i</code> variable is incremented and the <code>result</code> variable holds any element in <code>input[0..(i-1)]</code> that equals <code>needle</code></li>
+<li><strong>Termination</strong>: The loop terminates when <code>i = n</code> or when a match is found. In either, case the <code>result</code> variable holds any element in <code>input[0..(i-1)]</code> that equals <code>needle</code> (or empty if none matches).</li>
+</ul>
+<h4>2.1-5</h4>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">add_binary_integers</span>(a: <span class="hljs-type">Vec</span>&lt;<span class="hljs-type">u8</span>&gt;, b: <span class="hljs-type">Vec</span>&lt;<span class="hljs-type">u8</span>&gt;) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">Vec</span>&lt;<span class="hljs-type">u8</span>&gt; {
+    <span class="hljs-keyword">if</span> (a.<span class="hljs-title function_ invoke__">len</span>() != b.<span class="hljs-title function_ invoke__">len</span>()) {
+        <span class="hljs-built_in">panic!</span>(<span class="hljs-string">&quot;Both a and b must have the same length&quot;</span>)
+    }
+
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">result</span> = <span class="hljs-built_in">vec!</span>[<span class="hljs-number">0</span>; a.<span class="hljs-title function_ invoke__">len</span>() + <span class="hljs-number">1</span>];
+    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">overflow</span>: <span class="hljs-type">u8</span> = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">for</span> <span class="hljs-variable">i</span> <span class="hljs-keyword">in</span> (<span class="hljs-number">0</span>..a.<span class="hljs-title function_ invoke__">len</span>()).<span class="hljs-title function_ invoke__">rev</span>() {
+        <span class="hljs-keyword">let</span> <span class="hljs-variable">bit_sum</span> = a[i] + b[i] + overflow;
+        result[i+<span class="hljs-number">1</span>] = bit_sum % <span class="hljs-number">2</span>;
+        overflow = <span class="hljs-keyword">if</span> bit_sum &gt;= <span class="hljs-number">2</span> { <span class="hljs-number">1</span> } <span class="hljs-keyword">else</span> { <span class="hljs-number">0</span> }
+    }
+
+    result[<span class="hljs-number">0</span>] = overflow;
+    result
+}
+</code></pre>
     </body>
 </html>
