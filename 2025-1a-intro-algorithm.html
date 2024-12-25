@@ -27,26 +27,45 @@
 <p><strong>Output</strong>: A permutation (reordering) of the input such that <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>a</mi><mn>1</mn><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msubsup><mo>≤</mo><msubsup><mi>a</mi><mn>2</mn><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msubsup></mrow><annotation encoding="application/x-tex">a&#x27;_1 \leq a&#x27;_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.2481em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-2.4519em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2481em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.2481em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-2.4519em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2481em;"><span></span></span></span></span></span></span></span></span></span> ... <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>a</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msubsup><mo>≤</mo><msubsup><mi>a</mi><mi>n</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msubsup></mrow><annotation encoding="application/x-tex">a&#x27;_{n-1} \leq a&#x27;_n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0583em;vertical-align:-0.3064em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-2.4519em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3064em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.9989em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-2.453em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span></span></span></span>.</p>
 </blockquote>
 <h2>Chapter 2: Getting Started</h2>
+<h3>Loop invariants</h3>
+<p>A loop invariant is a property or condition that holds true before and after every iteration of a loop. It is a useful tool for understanding the correctness of an algorithm.</p>
+<p>It consists of three parts:</p>
+<ol>
+<li><strong>Initialization</strong>: Prove that the invariant is true <mark>before the first iteration</mark>.</li>
+<li><strong>Maintenance</strong>: Prove that if the invariant is true before an iteration, it remains true <mark>before the next iteration</mark>.</li>
+<li><strong>Termination</strong>: At the end of the loop, the <mark>invariant along with the termination condition should imply the correctness of the algorithm</mark>.</li>
+</ol>
 <h3>Insertion Sort</h3>
 <p>Insertion sort is a sorting algorithm that builds the final sorted array one item at a time.
 At each iteration, insertion sort removes one element from the input data, finds the location it belongs within the sorted list, and inserts it there.
 It repeats until no input elements remain.</p>
 <p><img src="assets/introduction-to-algorithms-images/insertion_sort.gif" alt="Insertion Sort"></p>
+<pre><code class="hljs language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">insertion_sort</span>(<span class="hljs-keyword">mut</span> input: <span class="hljs-type">Vec</span>&lt;<span class="hljs-type">i32</span>&gt;) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">Vec</span>&lt;<span class="hljs-type">i32</span>&gt; {
+    <span class="hljs-keyword">for</span> <span class="hljs-variable">i</span> <span class="hljs-keyword">in</span> <span class="hljs-number">1</span>..input.<span class="hljs-title function_ invoke__">len</span>() {
+        <span class="hljs-keyword">let</span> <span class="hljs-variable">current</span> = input[i];
+        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">j</span> = i;
+
+        <span class="hljs-keyword">while</span> j &gt; <span class="hljs-number">0</span> &amp;&amp; input[j - <span class="hljs-number">1</span>] &gt; current {
+            input[j] = input[j - <span class="hljs-number">1</span>];
+            j -= <span class="hljs-number">1</span>;
+        }
+
+        input[j] = current;
+    }
+
+    input
+}
+</code></pre><p>Correctness of the insertion sort algorithm can be proven using loop invariants:</p>
 <blockquote>
-<p><strong>Pseudocode</strong>:
-insertionSort(A)
-    for i = 1 to n
-       key = A[i]
-       // Insert A[i] into the sorted subarray A[0:i-1]
-      j = i - 1</p>
-</blockquote>
-<p>Loop invariant:</p>
+<p>At the start of each iteration, the sub-array <code>input[0:i-1]</code> contains the same elements as the original sub-array <code>input[0:i-1]</code>, but in sorted order.</p>
+<p><strong>Proof</strong>:</p>
 <ul>
 <li>Initialization: Before the first iteration, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>. The sub-array <code>input[0:i-1]</code> contains just one element and is thus trivially sorted.</li>
-<li>Maintenance: The body of the for loop works by moving the elements in <code>input[i - 1]</code>, <code>input[i - 2]</code>, <code>input[i - 3]</code>, ..., <code>input[0]</code> that are greater than <code>input[i]</code> one position to the right. This makes space for <code>input[i]</code> to be inserted in the correct position.
+<li>Maintenance: The body of the for loop works by moving the elements in <code>input[i - 1]</code>, <code>input[i - 2]</code>, <code>input[i - 3]</code>, ..., <code>input[0]</code> that are greater than <code>input[i]</code> one position to the right. This makes space for <code>input[i]</code> to be inserted in the correct position. 
 The <code>i</code> variable is incremented and the sub-array <code>input[0:i-1]</code> is still sorted.</li>
 <li>Termination: The loop terminates when <code>i = n</code>. At this point, the sub-array <code>input[0:n-1]</code> is sorted and the algorithm has finished.</li>
 </ul>
+</blockquote>
 
     </body>
 </html>
