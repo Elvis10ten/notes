@@ -28,14 +28,25 @@
 </blockquote>
 <h2>Chapter 2: Getting Started</h2>
 <h3>Insertion Sort</h3>
-<p>Insertion sort solves the sorting problem introduced in chapter 1.
-Insertion sort iterates, consuming one input element each repetition, and grows a sorted output list.
+<p>Insertion sort is a sorting algorithm that builds the final sorted array one item at a time.
 At each iteration, insertion sort removes one element from the input data, finds the location it belongs within the sorted list, and inserts it there.
 It repeats until no input elements remain.</p>
 <p><img src="assets/introduction-to-algorithms-images/insertion_sort.gif" alt="Insertion Sort"></p>
 <blockquote>
-<p><strong>Pseudocode</strong>:</p>
+<p><strong>Pseudocode</strong>:
+insertionSort(A)
+    for i = 1 to n
+       key = A[i]
+       // Insert A[i] into the sorted subarray A[0:i-1]
+      j = i - 1</p>
 </blockquote>
+<p>Loop invariant:</p>
+<ul>
+<li>Initialization: Before the first iteration, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>. The sub-array <code>input[0:i-1]</code> contains just one element and is thus trivially sorted.</li>
+<li>Maintenance: The body of the for loop works by moving the elements in <code>input[i - 1]</code>, <code>input[i - 2]</code>, <code>input[i - 3]</code>, ..., <code>input[0]</code> that are greater than <code>input[i]</code> one position to the right. This makes space for <code>input[i]</code> to be inserted in the correct position.
+The <code>i</code> variable is incremented and the sub-array <code>input[0:i-1]</code> is still sorted.</li>
+<li>Termination: The loop terminates when <code>i = n</code>. At this point, the sub-array <code>input[0:n-1]</code> is sorted and the algorithm has finished.</li>
+</ul>
 
     </body>
 </html>
