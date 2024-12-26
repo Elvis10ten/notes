@@ -150,3 +150,116 @@ fn add_binary_integers(a: Vec<u8>, b: Vec<u8>) -> Vec<u8> {
     result
 }
 ```
+
+### Analyzing algorithms
+Analyzing an algorithm has come to mean predicting the resources that the algorithm requires. Resources include (but not limited to):
+* Computational time
+* Memory
+* Communication bandwidth
+* Energy consumption
+
+To analyze algorithms, we need a model of the machine that it runs on, including the resources of that machine and
+a way to express their costs.
+
+A common model is the **random-access machine (RAM)**, which is a one-processor machine with the following properties:
+* Instructions execute one after the other.
+* Each primitive instruction takes a constant amount of time.
+* Primitive instructions include:
+  * Arithmetic operations,
+  * Data access (i.e. reading or writing to memory)
+  * Control operations (e.g. conditional and unconditional branch, subroutine call). Note: Calling a subroutine takes constant time,
+    whereas executing the subroutine might not.
+
+While simple, the RAM-model analyses are usually excellent predictors of performance on actual machines.
+
+---
+
+One way to analyze an algorithm is to run it on a particular computer given a specific input.
+However, the result of this type of analysis depends on variables that are not inherent to the algorithm like computer type, current resource utilization, etc.
+Hence, you can't simply extrapolate this data and use it to compare different algorithms generally.
+
+---
+
+A better form of analysis inspects features that are inherent to the algorithm and its input:
+* The **running time** of an algorithm on a particular input is the number of primitive instructions executed on the RAM.
+* An instruction that takes $c_k$ steps to execute and that executes $m$ times contributes $m \cdot c_k$ to the total running time.  
+* The running time of an algorithm is a function of its input.
+* There are many features of the input that can affect an algorithm's running time. It's typical to only consider the **input size** due to its dominant effect.
+* The best notion for **input size** depends on the problem being studied:
+  * For problems like searching or sorting, the natural measure is the number of items in the input.
+  * For problems like multiplication, the measure can be the total number of bits.
+  * For some graph problems, it might be appropriate to describe the size of the input with more than one number (e.g. for the number of vertices and edges).
+* Even for inputs of a given size, an algorithm can have different **best-case** and **worst-case** running times.
+
+---
+
+Performing this analysis on insertion sort:
+```rust
+fn insertion_sort(mut input: Vec<i32>) -> Vec<i32> {
+    for i in 1..input.len() { // Line 1
+        let current = input[i]; // Line 2
+        let mut j = i; // Line 3
+
+        while j > 0 && input[j - 1] > current { // Line 4
+            input[j] = input[j - 1]; // Line 5
+            j -= 1; // Line 6
+        }
+
+        input[j] = current; // Line 7
+    }
+
+    input // Line 8
+}
+```
+
+For each `i = 1, 2, ..., n`, let $t_i$ denote the number of times the while loop test in line 4 is executed for that value of `i`.
+Empty lines are ignored as we assume they take no time.
+
+| Line # | Cost  | Times executed                                                                                          |
+|--------|-------|---------------------------------------------------------------------------------------------------------|
+| Line 1 | $c_1$ | $n$ (this is not n-1 times, because the loop condition is evaluated one more time before terminating).  |
+| Line 2 | $c_2$ | $n-1$                                                                                                   |
+| Line 3 | $c_3$ | $n-1$                                                                                                   |
+| Line 4 | $c_4$ | $\sum_{i=2}^{n} t_i$                                                                                    |
+| Line 5 | $c_5$ | $\sum_{i=2}^{n} (t_i - 1)$ (subtracting $1$ because the loop body executes one less than its condition) |
+| Line 6 | $c_6$ | $\sum_{i=2}^{n} (t_i - 1)$ (^^^)                                                                        |
+| Line 7 | $c_7$ | $n-1$                                                                                                   |
+| Line 8 | $c_8$ | $1$                                                                                                     |
+
+$$$
+\begin{align*}
+T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)] \\ + [c_4 \cdot \sum_{i=2}^{n} t_i ] + [c_5 \cdot \sum_{i=2}^{n} (t_i - 1)] + [c_6 \cdot \sum_{i=2}^{n} (t_i - 1)]  \\ + [c_7 \cdot (n-1)] + [c_8]
+\end{align*}
+$$$
+
+For insertion sort on input of size $n$, the best-case runtime happens when the input is already sorted.
+In this case, the while loop condition is checked and the loop is immediately terminated.
+Hence, $t_i = 1$ in this case for all $i$.
+The best-case runtime is then given by:
+
+$$$
+\begin{align*}
+T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)] + [c_4 \cdot (n-1) ] + [c_7 \cdot (n-1)] + [c_8] \\
+= (c_1 + c_2 + c_3 + c_4 + c_7) \cdot n - (c_2 + c_3 + c_7 - c_8)
+\end{align*}
+$$$
+
+> The best-case runtime is a **linear function** of $n$ because it can be expressed as $an + b$, where $a$ and $b$ are the various constants
+of running the instructions on the various lines.
+
+For insertion sort, the worst case arises when the input is in reverse sorted order.
+In this case, the while loop is executed for all elements in `input[0..(i-1)]`.
+Hence, $t_i = i$ in this case for all $i$.
+The worst-case runtime is then given by:
+// TODO
+
+> The wost-case is a **quadratic function** of $n$ because it can be expressed as $an^2 + bn + c$, where $a$, $b$ and $c$ are the various constants
+of running the instructions on the various lines.
+
+---
+
+The **worst-case running time** is the longest running time for any input of size $n$. It is commonly used over other types of runtime because:
+* It gives the upper bound on the running time for any input. This is useful in software engineering.
+* The worst-case happens frequently in production.
+* The "average case" is often roughly as bad as the worst case. The other problem is determining what constitutes an "average" for a particular problem.
+  Assuming that all inputs of a given size are equally likely, is not usually true in practice.
