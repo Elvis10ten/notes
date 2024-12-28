@@ -12,6 +12,8 @@ A <mark>computational problem</mark> is a specification of a desired input-outpu
 
 
 ## Chapter 2: Getting Started
+> Objective: This chapter introduces the analysis of algorithms and algorithm design techniques like the
+> incremental method (using insertion sort) and design-and-conquer (using merge sort).
 
 ### Loop invariants
 A loop invariant is a property or condition that holds true before and after every iteration of a loop. It is a useful tool for understanding the correctness of an algorithm.
@@ -263,3 +265,93 @@ The **worst-case running time** is the longest running time for any input of siz
 * The worst-case happens frequently in production.
 * The "average case" is often roughly as bad as the worst case. The other problem is determining what constitutes an "average" for a particular problem.
   Assuming that all inputs of a given size are equally likely, is not usually true in practice.
+
+#### Divide-and-conquer method
+Divide-and-conquer is an algorithm design technique that uses <mark>recursion</mark> to find a solution to a problem by breaking the solution into two cases:
+1. The **base case**: The recursion stops at the **base case**, which is a small enough problem that can be solved directly without recursing.
+2. The **recursive case**:
+   * **Divide** the problem into smaller sub-problems.
+   * **Conquer** the sub-problems by solving them recursively (i.e. by further breaking them down into smaller sub-problems).
+   * **Combine** the sub-problem solutions to form a solution to the original problem.
+
+#### Merge sort algorithm
+Merge sort algorithm is a sorting algorithm based the divide-and-conquer technique:
+* **Divide** the subarray `A[p:r]` to be sorted into two adjacent sub-arrays, each of half the size.
+  To do so, compute the midpoint `q` of `[p:r]` (taking the average of `p` and `r`), and divide `A[p:r]` into sub-arrays of `A[p:q]` and `A[q + 1: r]`.
+* **Conquer** by sorting each ot the two sub-arrays `A[p:q]` and `A[q + 1:r]` recursively using merge sort.
+* **Combine** by merging the sorted sub-arrays `A[p:q]` and `A[q + 1:r]` back into `A[p:r]`, producing the sorted answer.
+
+The **base case** is reached when the subarray contains one element (which is trivially sorted).
+
+```rust
+fn merge_sort(input: &mut Vec<i32>, p: usize, r: usize) {
+    if p >= r {
+       return;
+    }
+
+    let q = (r + p) / 2;
+    merge_sort(input, p, q);
+    merge_sort(input, q + 1, r);
+    merge(input, p, q, r);
+}
+
+fn merge(input: &mut Vec<i32>, p: usize, q: usize, r: usize) {
+    let left_length = (q - p) + 1; // Explanation for the +1: Given that q >= p, there are two cases: when q == p, there is 1 element; and when q > p, e.g. q = 2 and p = 0, there are 3 elements.
+    let right_length = (r - q);
+    let mut left = vec![0;left_length];
+    let mut right = vec![0;right_length];
+
+    for i in 0..left_length {
+        left[i] = input[p + i]
+    }
+    for i in 0..right_length {
+        right[i] = input[q + i + 1]
+    }
+
+    println!("left: {:?}", left);
+    println!("right: {:?}", right);
+
+    let mut left_index = 0;
+    let mut right_index = 0;
+    let mut input_index = p;
+
+    while left_index < left_length && right_index < right_length {
+        if left[left_index] <= right[right_index] {
+            input[input_index] = left[left_index];
+            left_index += 1;
+        } else {
+            input[input_index] = right[right_index];
+            right_index += 1;
+        }
+
+        input_index += 1;
+    }
+
+    while left_index < left_length {
+        input[input_index] = left[left_index];
+        input_index += 1;
+        left_index += 1;
+    }
+
+    while right_index <right_length {
+        input[input_index] = right[right_index];
+        input_index += 1;
+        right_index += 1;
+    }
+}
+```
+
+---
+
+The `merge` procedure takes $\Theta(n)$ time. To demonstrate:
+* Take $n = r - p + 1$
+* The lines outside the loops takes constant time.
+* The first two `for` loops take $\Theta(left_length + right_length) = \Theta(n)$ time.
+* Each iteration of the bottom three `while` loops copy exactly one value from `left` or `right` back into `input`,
+  and each value is copied back into `input` exactly once. The total time spent in these three loops is $\Theta(n)$.
+
+The `merge_sort` procedure recursively splits the `input` into halves:
+* The first half contains $\lceil n / 2 \rceil$ elements.
+* And the second half contains $\lfloor n / 2 \rfloor$ elements. 
+* The above two statements can be proven by examining the four possible cases when $p$ or $r$ is odd or even.
+
