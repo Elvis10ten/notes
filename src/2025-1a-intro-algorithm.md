@@ -253,7 +253,17 @@ For insertion sort, the worst case arises when the input is in reverse sorted or
 In this case, the while loop is executed for all elements in `input[0..(i-1)]`.
 Hence, $t_i = i$ in this case for all $i$.
 The worst-case runtime is then given by:
-// TODO
+
+$$$
+\begin{align*}
+T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)]
+\\ + \left[ c_4 \cdot \left( \frac{n(n + 1)}{2} - 1 \right) \right]
+\\ + \left[ c_5 \cdot \left( \frac{n(n - 1)}{2} \right) \right]
+\\ + \left[ c_6 \cdot \left( \frac{n(n - 1)}{2} \right) \right]
+\\ + [c_7 \cdot (n-1)] + [c_8]
+\end{align*}
+$$$
+// todo
 
 > The wost-case is a **quadratic function** of $n$ because it can be expressed as $an^2 + bn + c$, where $a$, $b$ and $c$ are the various constants
 of running the instructions on the various lines.
@@ -265,6 +275,14 @@ The **worst-case running time** is the longest running time for any input of siz
 * The worst-case happens frequently in production.
 * The "average case" is often roughly as bad as the worst case. The other problem is determining what constitutes an "average" for a particular problem.
   Assuming that all inputs of a given size are equally likely, is not usually true in practice.
+
+---
+
+In the analysis of algorithms, it's the rate of growth or order of growth that matters.
+Therefore, only the leading term of the formula is considered, since the lower-order terms and constants are insignificant for large values of $n$.
+The leading term's constant coefficient is also ignored, since constant factors are less significant than the rate of growth.
+
+To highlight the order of growth of the running time, the theta notation $\Theta(n)$ is used.
 
 #### Divide-and-conquer method
 Divide-and-conquer is an algorithm design technique that uses <mark>recursion</mark> to find a solution to a problem by breaking the solution into two cases:
@@ -280,6 +298,8 @@ Merge sort algorithm is a sorting algorithm based the divide-and-conquer techniq
   To do so, compute the midpoint `q` of `[p:r]` (taking the average of `p` and `r`), and divide `A[p:r]` into sub-arrays of `A[p:q]` and `A[q + 1: r]`.
 * **Conquer** by sorting each ot the two sub-arrays `A[p:q]` and `A[q + 1:r]` recursively using merge sort.
 * **Combine** by merging the sorted sub-arrays `A[p:q]` and `A[q + 1:r]` back into `A[p:r]`, producing the sorted answer.
+
+![Merge Sort](/docs/assets/introduction-to-algorithms-images/merge_sort_operation.svg)
 
 The **base case** is reached when the subarray contains one element (which is trivially sorted).
 
@@ -355,3 +375,47 @@ The `merge_sort` procedure recursively splits the `input` into halves:
 * And the second half contains $\lfloor n / 2 \rfloor$ elements. 
 * The above two statements can be proven by examining the four possible cases when $p$ or $r$ is odd or even.
 
+#### Analyzing divide-and-conquer algorithms
+When an algorithm contains a recursive call, the running time can often be described by a **recurrence equation** or **recurrence**.
+A recurrence describes the overall running time on a problem of size $n$ in terms of the running time of the same algorithm on smaller inputs.
+
+Let $T(n)$ denote the worst-case running time on a problem of size $n$, the recurrence for a divide-and-conquer algorithm can be described using its structure:
+* **Base case**: The base case occurs when $n < n_0$ for some constant $n_0$. The running time of the algorithm on a problem of size $n_0$ is $\Theta(1)$.
+* **Recursive case**:
+    * **Divide**: The divide step takes $D(n)$ time.
+    * **Conquer**: The division of the problem yields $a$ sub-problems, each with size $n/b$ (i.e. $1/b$ the size of the original). It takes $a \cdot T(n / b)$ time to solve all $a$ problems.
+    * **Combine**: The combine step takes $C(n)$ time.
+
+This yields the following recurrence:
+$$
+T(n) = \begin{cases}
+\Theta(1) & \text{if } n < n_0 \\
+D(n) + a \cdot T(n / b) + C(n) & \text{if } n \geq n_0
+\end{cases}
+$$
+
+---
+
+For **merge sort**, $a = 2$, $b = 2$.
+While in some cases, the array is not divided exactly in half, we can ignore this because at most, the difference is one element.
+Also, to simply the equations, the base case is also ignored, because it takes $\Theta(1)$ time: <mark>the running time of an algorithm  on an input of constant size is constant</mark>.
+
+For merge sort, the recurrence can be described as:
+* **Divide**: The divide step just computes the middle of the subarray, which takes constant time.
+* **Conquer**: The two recursive calls on problems of size $n/2$ each take $T(n/2)$ time.
+* **Combine**: The `merge` procedure takes $\Theta(n)$ time.
+
+Hence, the running time of merge sort on a problem of size $n$ can be described as:
+$$
+T(n) = 2T(n/2) + \Theta(n)
+$$
+
+The solution to this recurrence is $\Theta(n \log_2 n)$. We can prove this intuitively:
+
+![Merge Sort Recurrence Tree](/docs/assets/introduction-to-algorithms-images/merge_sort_recursion_tree.png)
+
+1. For simplicity, assume $n = 2^k$ for some integer $k$.
+2. Each level has twice as many nodes as the level above, however, each node contributes half the cost of the node above.
+3. The doubling and halving cancel each other out, such that the total cost at any level is the same.
+4. There are $\log_2 n + 1$ levels in the tree. `+1` because the root level is level 0.
+5. The total cost is the sum of the costs at each level, which is $\Theta(n \log_2 n)$.

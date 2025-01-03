@@ -1,6 +1,16 @@
-# [WIP] Introduction to Linear Algebra by Gilbert Strang
+# [WIP] A concise introduction to linear algebra by Geza Schay
 
-## Chapter 1: Vectors and Matrices
+> Linear algebra is concerned with the study of vecto spaces.
+> It investigates and isolates mathematical structure and methods involving the concept of linearity.
+> Instances of linearity arise in many different contexts of mathematics and its applications, and linear algebra provides 
+> a uniform framework for their treatment.
+> 
+> As is typical in mathematics, the extraction of common key features that are observed in various seemingly unrelated
+> areas gives rise to an abstraction and simplification which allows the study of these crucial features in isolation.
+> The results of this investigation can then be carried back into all those areas where the underlying common feature arises,
+> with the benefit of a unifying perspective. -- Martin Otto
+
+## Chapter 1: Analytic geometry of Euclidean spaces
 
 The fundamental objects of Linear Algebra are **vectors** ( $v$ ) and **matrices** ( $A$ ).
 
