@@ -1,4 +1,4 @@
-# 2025 study plan
+# 2025 Study Plan
 
 ## Q1
 

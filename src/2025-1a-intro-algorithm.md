@@ -61,23 +61,23 @@ Correctness of the insertion sort algorithm can be proven using loop invariants:
 
 Exercises:
 #### 2.1-1
-`[31, 41, 59, 26, 41, 58]` (i = 1, current = 41, j = 1)
+* `[31, 41, 59, 26, 41, 58]` (i = 1, current = 41, j = 1)
 
-`[31, 41, 59, 26, 41, 58]` (i = 2, current = 59, j = 2)
+* `[31, 41, 59, 26, 41, 58]` (i = 2, current = 59, j = 2)
 
-`[31, 41, 59, 26, 41, 58]` (i = 3, current = 26, j = 3)
-`[31, 41, 59, 59, 41, 58]` (i = 3, current = 26, j = 2)
-`[31, 41, 41, 59, 41, 58]` (i = 3, current = 26, j = 1)
-`[31, 31, 41, 59, 41, 58]` (i = 3, current = 26, j = 0)
-`[26, 31, 41, 59, 41, 58]` (i = 3, current = 26, j = 0)
+* `[31, 41, 59, 26, 41, 58]` (i = 3, current = 26, j = 3)
+* `[31, 41, 59, 59, 41, 58]` (i = 3, current = 26, j = 2)
+* `[31, 41, 41, 59, 41, 58]` (i = 3, current = 26, j = 1)
+* `[31, 31, 41, 59, 41, 58]` (i = 3, current = 26, j = 0)
+* `[26, 31, 41, 59, 41, 58]` (i = 3, current = 26, j = 0)
 
-`[26, 31, 41, 59, 41, 58]` (i = 4, current = 41, j = 4)
-`[26, 31, 41, 59, 59, 58]` (i = 4, current = 41, j = 3)
-`[26, 31, 41, 41, 59, 58]` (i = 4, current = 41, j = 2)
+* `[26, 31, 41, 59, 41, 58]` (i = 4, current = 41, j = 4)
+* `[26, 31, 41, 59, 59, 58]` (i = 4, current = 41, j = 3)
+* `[26, 31, 41, 41, 59, 58]` (i = 4, current = 41, j = 2)
 
-`[26, 31, 41, 41, 59, 58]` (i = 5, current = 58, j = 5)
-`[26, 31, 41, 41, 59, 59]` (i = 5, current = 58, j = 4)
-`[26, 31, 41, 41, 58, 59]` (i = 5, current = 58, j = 4)
+* `[26, 31, 41, 41, 59, 58]` (i = 5, current = 58, j = 5)
+* `[26, 31, 41, 41, 59, 59]` (i = 5, current = 58, j = 4)
+* `[26, 31, 41, 41, 58, 59]` (i = 5, current = 58, j = 4)
 
 #### 2.1-2
 Loop invariant: At the start of each iteration, the `sum` variable holds the sum of the first `i-1` elements of the array.
@@ -229,9 +229,9 @@ Empty lines are ignored as we assume they take no time.
 | Line 8 | $c_8$ | $1$                                                                                                     |
 
 $$$
-\begin{align*}
+\begin{aligned}
 T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)] \\ + [c_4 \cdot \sum_{i=2}^{n} t_i ] + [c_5 \cdot \sum_{i=2}^{n} (t_i - 1)] + [c_6 \cdot \sum_{i=2}^{n} (t_i - 1)]  \\ + [c_7 \cdot (n-1)] + [c_8]
-\end{align*}
+\end{aligned}
 $$$
 
 For insertion sort on input of size $n$, the best-case runtime happens when the input is already sorted.
@@ -240,10 +240,10 @@ Hence, $t_i = 1$ in this case for all $i$.
 The best-case runtime is then given by:
 
 $$$
-\begin{align*}
+\begin{aligned}
 T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)] + [c_4 \cdot (n-1) ] + [c_7 \cdot (n-1)] + [c_8] \\
 = (c_1 + c_2 + c_3 + c_4 + c_7) \cdot n - (c_2 + c_3 + c_7 - c_8)
-\end{align*}
+\end{aligned}
 $$$
 
 > The best-case runtime is a **linear function** of $n$ because it can be expressed as $an + b$, where $a$ and $b$ are the various constants
@@ -255,13 +255,13 @@ Hence, $t_i = i$ in this case for all $i$.
 The worst-case runtime is then given by:
 
 $$$
-\begin{align*}
+\begin{aligned}
 T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)]
 \\ + \left[ c_4 \cdot \left( \frac{n(n + 1)}{2} - 1 \right) \right]
 \\ + \left[ c_5 \cdot \left( \frac{n(n - 1)}{2} \right) \right]
 \\ + \left[ c_6 \cdot \left( \frac{n(n - 1)}{2} \right) \right]
 \\ + [c_7 \cdot (n-1)] + [c_8]
-\end{align*}
+\end{aligned}
 $$$
 // todo
 

@@ -7,7 +7,7 @@
 I'm [Elvis Chidera](https://elvischidera.com) 👋. This is my collection of reading notes — originally for myself, but now shared for anyone to enjoy. I loved creating them, and I hope you find them just as useful! ❤️
 
 ## 2024
-- [[WIP] The Elements of Computing Systems – Building a Modern Computer from First Principles](/src/2025-1-nand-to-tetris.md)
+- [[WIP] The Elements of Computing Systems – Building a Modern Computer from First Principles](/src/2025-1a-nand-to-tetris)
 - [[WIP] The Algorithm Design Manual](/src/2025-2-algorithm-design-manual.md)
 - [[WIP] Computer Networking - A Top-Down Approach](/src/2025-3-computer-networking-top-down.md)
 - [[WIP] Mathematics for Computer Science](/src/2025-4-mathematics-for-computer-science.md)
