@@ -61,23 +61,23 @@ Correctness of the insertion sort algorithm can be proven using loop invariants:
 
 Exercises:
 #### 2.1-1
-[31, 41, 59, 26, 41, 58] (i = 1, current = 41, j = 1)
+`[31, 41, 59, 26, 41, 58]` (i = 1, current = 41, j = 1)
 
-[31, 41, 59, 26, 41, 58] (i = 2, current = 59, j = 2)
+`[31, 41, 59, 26, 41, 58]` (i = 2, current = 59, j = 2)
 
-[31, 41, 59, 26, 41, 58] (i = 3, current = 26, j = 3)
-[31, 41, 59, 59, 41, 58] (i = 3, current = 26, j = 2)
-[31, 41, 41, 59, 41, 58] (i = 3, current = 26, j = 1)
-[31, 31, 41, 59, 41, 58] (i = 3, current = 26, j = 0)
-[26, 31, 41, 59, 41, 58] (i = 3, current = 26, j = 0)
+`[31, 41, 59, 26, 41, 58]` (i = 3, current = 26, j = 3)
+`[31, 41, 59, 59, 41, 58]` (i = 3, current = 26, j = 2)
+`[31, 41, 41, 59, 41, 58]` (i = 3, current = 26, j = 1)
+`[31, 31, 41, 59, 41, 58]` (i = 3, current = 26, j = 0)
+`[26, 31, 41, 59, 41, 58]` (i = 3, current = 26, j = 0)
 
-[26, 31, 41, 59, 41, 58] (i = 4, current = 41, j = 4)
-[26, 31, 41, 59, 59, 58] (i = 4, current = 41, j = 3)
-[26, 31, 41, 41, 59, 58] (i = 4, current = 41, j = 2)
+`[26, 31, 41, 59, 41, 58]` (i = 4, current = 41, j = 4)
+`[26, 31, 41, 59, 59, 58]` (i = 4, current = 41, j = 3)
+`[26, 31, 41, 41, 59, 58]` (i = 4, current = 41, j = 2)
 
-[26, 31, 41, 41, 59, 58] (i = 5, current = 58, j = 5)
-[26, 31, 41, 41, 59, 59] (i = 5, current = 58, j = 4)
-[26, 31, 41, 41, 58, 59] (i = 5, current = 58, j = 4)
+`[26, 31, 41, 41, 59, 58]` (i = 5, current = 58, j = 5)
+`[26, 31, 41, 41, 59, 59]` (i = 5, current = 58, j = 4)
+`[26, 31, 41, 41, 58, 59]` (i = 5, current = 58, j = 4)
 
 #### 2.1-2
 Loop invariant: At the start of each iteration, the `sum` variable holds the sum of the first `i-1` elements of the array.

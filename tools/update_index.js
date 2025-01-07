@@ -33,8 +33,7 @@ for (const year in indexMap) {
     console.log(`Processing year '${year}'...`);
     const notesMetadata = indexMap[year];
 
-    // TODO: Remove subtraction of 1 from year. This was done so the 2025 notes are shown under 2024.
-    let yearSection = `## ${year - 1}`;
+    let yearSection = `## ${year}`;
 
     notesMetadata.forEach(noteMetadata => {
         const path = sep + relative(projectDirName, getSrcPath(noteMetadata.noteFileName));
