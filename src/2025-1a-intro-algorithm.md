@@ -174,14 +174,13 @@ A common model is the **random-access machine (RAM)**, which is a one-processor 
 
 While simple, the RAM-model analyses are usually excellent predictors of performance on actual machines.
 
----
+#### Why not empirical analysis?
 
 One way to analyze an algorithm is to run it on a particular computer given a specific input.
 However, the result of this type of analysis depends on variables that are not inherent to the algorithm like computer type, current resource utilization, etc.
 Hence, you can't simply extrapolate this data and use it to compare different algorithms generally.
 
----
-
+#### Analysis with the RAM model
 A better form of analysis inspects features that are inherent to the algorithm and its input:
 * The **running time** of an algorithm on a particular input is the number of primitive instructions executed on the RAM.
 * An instruction that takes $c_k$ steps to execute and that executes $m$ times contributes $m \cdot c_k$ to the total running time.  
@@ -193,9 +192,7 @@ A better form of analysis inspects features that are inherent to the algorithm a
   * For some graph problems, it might be appropriate to describe the size of the input with more than one number (e.g. for the number of vertices and edges).
 * Even for inputs of a given size, an algorithm can have different **best-case** and **worst-case** running times.
 
----
-
-Performing this analysis on insertion sort:
+##### Analyzing insertion sort
 ```rust
 fn insertion_sort(mut input: Vec<i32>) -> Vec<i32> {
     for i in 1..input.len() { // Line 1
@@ -228,23 +225,23 @@ Empty lines are ignored as we assume they take no time.
 | Line 7 | $c_7$ | $n-1$                                                                                                   |
 | Line 8 | $c_8$ | $1$                                                                                                     |
 
-$$$
+$$
 \begin{aligned}
 T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)] \\ + [c_4 \cdot \sum_{i=2}^{n} t_i ] + [c_5 \cdot \sum_{i=2}^{n} (t_i - 1)] + [c_6 \cdot \sum_{i=2}^{n} (t_i - 1)]  \\ + [c_7 \cdot (n-1)] + [c_8]
 \end{aligned}
-$$$
+$$
 
 For insertion sort on input of size $n$, the best-case runtime happens when the input is already sorted.
 In this case, the while loop condition is checked and the loop is immediately terminated.
 Hence, $t_i = 1$ in this case for all $i$.
 The best-case runtime is then given by:
 
-$$$
+$$
 \begin{aligned}
 T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)] + [c_4 \cdot (n-1) ] + [c_7 \cdot (n-1)] + [c_8] \\
 = (c_1 + c_2 + c_3 + c_4 + c_7) \cdot n - (c_2 + c_3 + c_7 - c_8)
 \end{aligned}
-$$$
+$$
 
 > The best-case runtime is a **linear function** of $n$ because it can be expressed as $an + b$, where $a$ and $b$ are the various constants
 of running the instructions on the various lines.
@@ -254,7 +251,7 @@ In this case, the while loop is executed for all elements in `input[0..(i-1)]`.
 Hence, $t_i = i$ in this case for all $i$.
 The worst-case runtime is then given by:
 
-$$$
+$$
 \begin{aligned}
 T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)]
 \\ + \left[ c_4 \cdot \left( \frac{n(n + 1)}{2} - 1 \right) \right]
@@ -262,7 +259,7 @@ T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)]
 \\ + \left[ c_6 \cdot \left( \frac{n(n - 1)}{2} \right) \right]
 \\ + [c_7 \cdot (n-1)] + [c_8]
 \end{aligned}
-$$$
+$$
 // todo
 
 > The wost-case is a **quadratic function** of $n$ because it can be expressed as $an^2 + bn + c$, where $a$, $b$ and $c$ are the various constants
