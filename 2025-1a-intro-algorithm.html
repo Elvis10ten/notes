@@ -72,19 +72,34 @@ The <code>i</code> variable is incremented and the sub-array <code>input[0..i-1]
 </blockquote>
 <p>Exercises:</p>
 <h4>2.1-1</h4>
-<p><code>[31, 41, 59, 26, 41, 58]</code> (i = 1, current = 41, j = 1)</p>
-<p><code>[31, 41, 59, 26, 41, 58]</code> (i = 2, current = 59, j = 2)</p>
-<p><code>[31, 41, 59, 26, 41, 58]</code> (i = 3, current = 26, j = 3)
-<code>[31, 41, 59, 59, 41, 58]</code> (i = 3, current = 26, j = 2)
-<code>[31, 41, 41, 59, 41, 58]</code> (i = 3, current = 26, j = 1)
-<code>[31, 31, 41, 59, 41, 58]</code> (i = 3, current = 26, j = 0)
-<code>[26, 31, 41, 59, 41, 58]</code> (i = 3, current = 26, j = 0)</p>
-<p><code>[26, 31, 41, 59, 41, 58]</code> (i = 4, current = 41, j = 4)
-<code>[26, 31, 41, 59, 59, 58]</code> (i = 4, current = 41, j = 3)
-<code>[26, 31, 41, 41, 59, 58]</code> (i = 4, current = 41, j = 2)</p>
-<p><code>[26, 31, 41, 41, 59, 58]</code> (i = 5, current = 58, j = 5)
-<code>[26, 31, 41, 41, 59, 59]</code> (i = 5, current = 58, j = 4)
-<code>[26, 31, 41, 41, 58, 59]</code> (i = 5, current = 58, j = 4)</p>
+<ul>
+<li><p><code>[31, 41, 59, 26, 41, 58]</code> (i = 1, current = 41, j = 1)</p>
+</li>
+<li><p><code>[31, 41, 59, 26, 41, 58]</code> (i = 2, current = 59, j = 2)</p>
+</li>
+<li><p><code>[31, 41, 59, 26, 41, 58]</code> (i = 3, current = 26, j = 3)</p>
+</li>
+<li><p><code>[31, 41, 59, 59, 41, 58]</code> (i = 3, current = 26, j = 2)</p>
+</li>
+<li><p><code>[31, 41, 41, 59, 41, 58]</code> (i = 3, current = 26, j = 1)</p>
+</li>
+<li><p><code>[31, 31, 41, 59, 41, 58]</code> (i = 3, current = 26, j = 0)</p>
+</li>
+<li><p><code>[26, 31, 41, 59, 41, 58]</code> (i = 3, current = 26, j = 0)</p>
+</li>
+<li><p><code>[26, 31, 41, 59, 41, 58]</code> (i = 4, current = 41, j = 4)</p>
+</li>
+<li><p><code>[26, 31, 41, 59, 59, 58]</code> (i = 4, current = 41, j = 3)</p>
+</li>
+<li><p><code>[26, 31, 41, 41, 59, 58]</code> (i = 4, current = 41, j = 2)</p>
+</li>
+<li><p><code>[26, 31, 41, 41, 59, 58]</code> (i = 5, current = 58, j = 5)</p>
+</li>
+<li><p><code>[26, 31, 41, 41, 59, 59]</code> (i = 5, current = 58, j = 4)</p>
+</li>
+<li><p><code>[26, 31, 41, 41, 58, 59]</code> (i = 5, current = 58, j = 4)</p>
+</li>
+</ul>
 <h4>2.1-2</h4>
 <p>Loop invariant: At the start of each iteration, the <code>sum</code> variable holds the sum of the first <code>i-1</code> elements of the array.</p>
 <p><strong>Proof</strong>:</p>
@@ -260,19 +275,19 @@ Empty lines are ignored as we assume they take no time.</p>
 </tr>
 </tbody></table>
 <p>$$
-\begin{align*}
+\begin{aligned}
 T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)] \ + [c_4 \cdot \sum_{i=2}^{n} t_i ] + [c_5 \cdot \sum_{i=2}^{n} (t_i - 1)] + [c_6 \cdot \sum_{i=2}^{n} (t_i - 1)]  \ + [c_7 \cdot (n-1)] + [c_8]
-\end{align*}
+\end{aligned}
 $$</p>
 <p>For insertion sort on input of size <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span>, the best-case runtime happens when the input is already sorted.
 In this case, the while loop condition is checked and the loop is immediately terminated.
 Hence, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>t</mi><mi>i</mi></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t_i = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7651em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> in this case for all <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span>.
 The best-case runtime is then given by:</p>
 <p>$$
-\begin{align*}
+\begin{aligned}
 T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)] + [c_4 \cdot (n-1) ] + [c_7 \cdot (n-1)] + [c_8] \
 = (c_1 + c_2 + c_3 + c_4 + c_7) \cdot n - (c_2 + c_3 + c_7 - c_8)
-\end{align*}
+\end{aligned}
 $$</p>
 <blockquote>
 <p>The best-case runtime is a <strong>linear function</strong> of <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> because it can be expressed as <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>n</mi><mo>+</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">an + b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">an</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span>, where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span> and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span> are the various constants
@@ -283,13 +298,13 @@ In this case, the while loop is executed for all elements in <code>input[0..(i-1
 Hence, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>t</mi><mi>i</mi></msub><mo>=</mo><mi>i</mi></mrow><annotation encoding="application/x-tex">t_i = i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7651em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span> in this case for all <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span>.
 The worst-case runtime is then given by:</p>
 <p>$$
-\begin{align*}
+\begin{aligned}
 T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)]
 \ + \left[ c_4 \cdot \left( \frac{n(n + 1)}{2} - 1 \right) \right]
 \ + \left[ c_5 \cdot \left( \frac{n(n - 1)}{2} \right) \right]
 \ + \left[ c_6 \cdot \left( \frac{n(n - 1)}{2} \right) \right]
 \ + [c_7 \cdot (n-1)] + [c_8]
-\end{align*}
+\end{aligned}
 $$
 // todo</p>
 <blockquote>
