@@ -284,6 +284,52 @@ The leading term's constant coefficient is also ignored, since constant factors 
 
 To highlight the order of growth of the running time, the theta notation $\Theta(n)$ is used.
 
+### Exercises
+
+#### 2.2-1
+$n^3/1000 - 100n^2 - 100n + 3$ is $\Theta(n^3)$.
+
+#### 2.2-2
+
+##### Code
+```rust
+fn selection_sort(mut input: Vec<i32>) -> Vec<i32> {
+    for i in 0..(input.len()-1) {
+        let mut smallest = input[i];
+        let mut smallest_index = i;
+        for j in i..input.len() {
+            if input[j] < smallest {
+                smallest = input[j];
+                smallest_index = j;
+            }
+        }
+        input[smallest_index] = input[i];
+        input[i] = smallest;
+    }
+
+    input
+}
+```
+
+##### Proof of correctness
+Loop invariant: At the start of each iteration of the outer loop, the sub-array `input[0..i]` contains the smallest `i` elements of the original array, in sorted order.
+Initialization: Before the first iteration, `i = 0`. The sub-array `input[0..i]` is empty and trivially sorted.
+Maintenance: The body of the outer loop works by finding the smallest element in `input[i..n]` and swapping it with `input[i]`. The `i` variable is incremented and the sub-array `input[0..i]` is still sorted.
+Termination: The loop terminates when `i = n-1`. At this point, the sub-array `input[0..n-1]` is sorted and the algorithm has finished.
+
+The loop only needs to run for the first `n-2` elements because at `n-1`, there is only one element left, and by the loop invariant above, it must be the largest element.
+
+##### Analysis
+Best case time and worst case times are both $\Theta(n^2)$. Even when the input is sorted (the best case), the inner loop still repeatedly checks every element.
+
+#### 2.2-3
+Assuming the element searched for is equally likely to be any element in the array, then on average $n/2$ elements need to be checked when using linear search.
+In the worst case, the element is either not in the list or at the end, so, $n$ elements need to be checked.
+Using the theta notation, both the worst and average case time for linear search is $\Theta(n)$.
+
+#### 2.2-4
+To improve the best-case running time for any sorting algorithm, we can introduce logic that checks if the input is already sorted.
+
 #### Divide-and-conquer method
 Divide-and-conquer is an algorithm design technique that uses <mark>recursion</mark> to find a solution to a problem by breaking the solution into two cases:
 1. The **base case**: The recursion stops at the **base case**, which is a small enough problem that can be solved directly without recursing.
