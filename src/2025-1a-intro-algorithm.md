@@ -214,20 +214,24 @@ fn insertion_sort(mut input: Vec<i32>) -> Vec<i32> {
 For each `i = 1, 2, ..., n`, let $t_i$ denote the number of times the while loop test in line 4 is executed for that value of `i`.
 Empty lines are ignored as we assume they take no time.
 
-| Line # | Cost  | Times executed                                                                                          |
-|--------|-------|---------------------------------------------------------------------------------------------------------|
-| Line 1 | $c_1$ | $n$ (this is not n-1 times, because the loop condition is evaluated one more time before terminating).  |
-| Line 2 | $c_2$ | $n-1$                                                                                                   |
-| Line 3 | $c_3$ | $n-1$                                                                                                   |
-| Line 4 | $c_4$ | $\sum_{i=2}^{n} t_i$                                                                                    |
-| Line 5 | $c_5$ | $\sum_{i=2}^{n} (t_i - 1)$ (subtracting $1$ because the loop body executes one less than its condition) |
-| Line 6 | $c_6$ | $\sum_{i=2}^{n} (t_i - 1)$ (^^^)                                                                        |
-| Line 7 | $c_7$ | $n-1$                                                                                                   |
-| Line 8 | $c_8$ | $1$                                                                                                     |
+| Line # | Cost  | Times executed                                                                                                                                                                                 |
+|--------|-------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Line 1 | $c_1$ | $n$ (this is not n-1 times, because the loop condition is evaluated one more time before terminating).                                                                                         |
+| Line 2 | $c_2$ | $n-1$                                                                                                                                                                                          |
+| Line 3 | $c_3$ | $n-1$                                                                                                                                                                                          |
+| Line 4 | $c_4$ | $\sum_{i=1}^{n-1} t_i$                                                                                                                                                                         |
+| Line 5 | $c_5$ | $\sum_{i=1}^{n-1} (t_i - 1)$ (subtracting $1$ because the loop body executes one less than its condition; remember, $t_i$ represent the number of times the while loop condition is evaluated) |
+| Line 6 | $c_6$ | $\sum_{i=1}^{n-1} (t_i - 1)$ (^^^)                                                                                                                                                             |
+| Line 7 | $c_7$ | $n-1$                                                                                                                                                                                          |
+| Line 8 | $c_8$ | $1$                                                                                                                                                                                            |
 
 $$
 \begin{aligned}
-T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)] \\ + [c_4 \cdot \sum_{i=2}^{n} t_i ] + [c_5 \cdot \sum_{i=2}^{n} (t_i - 1)] + [c_6 \cdot \sum_{i=2}^{n} (t_i - 1)]  \\ + [c_7 \cdot (n-1)] + [c_8]
+T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)]
+\\ + [c_4 \cdot \sum_{i=1}^{n-1} t_i ]
+\\ + [c_5 \cdot \sum_{i=1}^{n-1} (t_i - 1)]
+\\ + [c_6 \cdot \sum_{i=1}^{n-1} (t_i - 1)]
+\\ + [c_7 \cdot (n-1)] + [c_8]
 \end{aligned}
 $$
 
@@ -238,7 +242,8 @@ The best-case runtime is then given by:
 
 $$
 \begin{aligned}
-T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)] + [c_4 \cdot (n-1) ] + [c_7 \cdot (n-1)] + [c_8] \\
+T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)]
+\\ + [c_4 \cdot (n-1) ] + [c_7 \cdot (n-1)] + [c_8] \\
 = (c_1 + c_2 + c_3 + c_4 + c_7) \cdot n - (c_2 + c_3 + c_7 - c_8)
 \end{aligned}
 $$
@@ -254,27 +259,80 @@ The worst-case runtime is then given by:
 $$
 \begin{aligned}
 T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)]
-\\ + \left[ c_4 \cdot \left( \frac{n(n + 1)}{2} - 1 \right) \right]
-\\ + \left[ c_5 \cdot \left( \frac{n(n - 1)}{2} \right) \right]
-\\ + \left[ c_6 \cdot \left( \frac{n(n - 1)}{2} \right) \right]
+\\ + \left[ c_4 \cdot \left( \frac{n(n - 1)}{2} \right) \right]
+\\ + \left[ c_5 \cdot \left( \frac{(n - 1)(n - 2)}{2} \right) \right]
+\\ + \left[ c_6 \cdot \left( \frac{(n - 1)(n - 2)}{2} \right) \right]
 \\ + [c_7 \cdot (n-1)] + [c_8]
 \end{aligned}
 $$
-// todo
+
+<details>
+<summary>Explanation</summary>
+
+The sum of the first $m$ numbers is:
+$$
+\sum_{i=1}^{m} i = \frac{m(m + 1)}{2}
+$$
+
+This formula comes from adding the sequence forwards and backwards, aligning terms from opposite ends:
+
+$$
+\begin{aligned}
+S = 1 + 2 + 3 + ... + m \\
+S = m + (m - 1) + (m - 2) + ... + 1
+\end{aligned}
+$$
+
+* The first term of the forward sequence ($1$) added to the first term of the backward sequence ($m$) is: $m + 1$.
+* The second term of the forward sequence ($2$) added to the second term of the backward sequence ($m - 1$) is: $m + 1$.
+* This pattern continues for all pairs: $3 + (m - 2)$, ..., $m + 1$.
+* This then gives:
+
+$$
+2S = (m + 1) + (m + 1) + (m + 1) + ... + (m + 1)
+$$
+
+There are $m$ terms, so:
+
+$$
+\begin{aligned}
+2S = m (m + 1) \\
+S = \frac{m(m + 1)}{2}
+\end{aligned}
+$$
+
+The cost for the 4th line in the worst-case is $\sum_{i=1}^{n-1} i$. Here, $m = n - 1$, so:
+
+$$
+S = \frac{(n - 1) [(n - 1) + 1]}{2} = \frac{(n - 1) n}{2}
+$$
+
+---
+
+For the 5th and 6th lines:
+
+$$
+\begin{aligned}
+\sum_{i=1}^{n-1} (i - 1) = \sum_{i=1}^{n-1} i - \sum_{i=1}^{n-1} 1 \\
+= \frac{(n - 1) n}{2} - (n - 1)
+= \frac{(n - 1) (n - 2)}{2}
+\end{aligned}
+$$
+
+</details>
+
 
 > The wost-case is a **quadratic function** of $n$ because it can be expressed as $an^2 + bn + c$, where $a$, $b$ and $c$ are the various constants
 of running the instructions on the various lines.
 
----
-
+##### Worst-case running time
 The **worst-case running time** is the longest running time for any input of size $n$. It is commonly used over other types of runtime because:
 * It gives the upper bound on the running time for any input. This is useful in software engineering.
 * The worst-case happens frequently in production.
 * The "average case" is often roughly as bad as the worst case. The other problem is determining what constitutes an "average" for a particular problem.
   Assuming that all inputs of a given size are equally likely, is not usually true in practice.
 
----
-
+##### Order of growth
 In the analysis of algorithms, it's the rate of growth or order of growth that matters.
 Therefore, only the leading term of the formula is considered, since the lower-order terms and constants are insignificant for large values of $n$.
 The leading term's constant coefficient is also ignored, since constant factors are less significant than the rate of growth.
@@ -309,10 +367,13 @@ fn selection_sort(mut input: Vec<i32>) -> Vec<i32> {
 ```
 
 ##### Proof of correctness
-Loop invariant: At the start of each iteration of the outer loop, the sub-array `input[0..i]` contains the smallest `i` elements of the original array, in sorted order.
-Initialization: Before the first iteration, `i = 0`. The sub-array `input[0..i]` is empty and trivially sorted.
-Maintenance: The body of the outer loop works by finding the smallest element in `input[i..n]` and swapping it with `input[i]`. The `i` variable is incremented and the sub-array `input[0..i]` is still sorted.
-Termination: The loop terminates when `i = n-1`. At this point, the sub-array `input[0..n-1]` is sorted and the algorithm has finished.
+**Loop invariant**: At the start of each iteration of the outer loop, the sub-array `input[0..i]` contains the smallest `i` elements of the original array, in sorted order.
+
+**Initialization**: Before the first iteration, `i = 0`. The sub-array `input[0..i]` is empty and trivially sorted.
+
+**Maintenance**: The body of the outer loop works by finding the smallest element in `input[i..n]` and swapping it with `input[i]`. The `i` variable is incremented and the sub-array `input[0..i]` is still sorted.
+
+**Termination**: The loop terminates when `i = n-1`. At this point, the sub-array `input[0..n-1]` is sorted and the algorithm has finished.
 
 The loop only needs to run for the first `n-2` elements because at `n-1`, there is only one element left, and by the loop invariant above, it must be the largest element.
 
