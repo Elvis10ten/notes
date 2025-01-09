@@ -59,7 +59,8 @@ Correctness of the insertion sort algorithm can be proven using loop invariants:
 > The `i` variable is incremented and the sub-array `input[0..i-1]` is still sorted.
 > * Termination: The loop terminates when `i = n`. At this point, the sub-array `input[0..n-1]` is sorted and the algorithm has finished.
 
-Exercises:
+### Exercises
+
 #### 2.1-1
 * `[31, 41, 59, 26, 41, 58]` (i = 1, current = 41, j = 1)
 
@@ -523,3 +524,171 @@ The solution to this recurrence is $\Theta(n \log_2 n)$. We can prove this intui
 3. The doubling and halving cancel each other out, such that the total cost at any level is the same.
 4. There are $\log_2 n + 1$ levels in the tree. `+1` because the root level is level 0.
 5. The total cost is the sum of the costs at each level, which is $\Theta(n \log_2 n)$.
+
+### Exercises
+
+#### 2.3-5
+```rust
+fn insertion_sort_recursive(input: &mut Vec<i32>, r: usize) {
+    if (r == 0) {
+        return;
+    }
+
+    insertion_sort_recursive(input, r-1);
+    insert_into_sorted(input, r)
+}
+
+fn insert_into_sorted(input: &mut Vec<i32>, r: usize) {
+    let mut j = r;
+    let current = input[r];
+    while (j > 0 && current < input[j - 1]) {
+        input[j] = input[j - 1];
+        j -= 1;
+    }
+
+
+    input[j] = current;
+}
+```
+
+The recurrence relation for the recursive insertion sort is given below:
+$$
+T(n) = \begin{cases}
+\Theta(1) & \text{if } n = 1 \\
+T(n - 1) + O(n) & \text{if } n > 1
+\end{cases}
+$$
+
+The recurrence can be expanded step by step:
+$$
+\begin{aligned}
+T(n) = T(n - 1) + n \\
+T(n - 1) = T(n - 2) + (n - 1) \\
+T(n - 2) = T(n - 3) + (n - 2)
+\end{aligned}
+$$
+
+Adding these terms:
+
+$$
+\begin{aligned}
+T(n) = T(n - 1) + n
+\\ = T(n - 2) + (n - 1) + n
+\\ = ...
+\\ = T(1) + 2 + 3 + ... + n
+\end{aligned}
+$$
+
+The summation of the first $n$ integers is:
+$$
+1 + 2 + 3 + ... + n = \frac{n(n + 1)}{2}
+$$
+
+Thus, the complexity is still:
+$$
+T(n) = \theta(n^2)
+$$
+
+#### 2.3-6
+
+
+#### 2.3-7
+Using binary search in insertion sort won't improve its runtime.
+The inner while loop of insertion sort has two responsibilities:
+* Find the position to insert the ith element. Binary search can speed this up to $\theta(n \log_2 n)$.
+* Swap elements to create room for the ith element to be inserted. Binary search does not help in this domain.
+
+### Problems
+
+#### 2-1 Insertion sort on small arrays in merge sort
+a. It takes insertion sort $\theta(n^2)$ time to sort an array on length $n$.
+If $n = k$ and there are $n / k$ arrays to sort, the total time taken to sort all arrays is $\theta(nk)$.
+
+b. If we apply insertion sort when the elements in merge sort are smaller or equal to $k$, it means we will have $n / k$
+leaves, each of size $\leq k$ in the recursion tree of merge sort.
+This means we will have $log_2 (n / k)$ levels, with a total of $n$ elements per level.
+This implies it would take us $n \cdot \log_2 (n / k)$ time to merge all nodes in the recursion tree.
+
+c. The modified merge sort with insertion sort runs in $\theta(n \cdot k + n \cdot \log_2 (n/k))$ time.
+Where $nk$ is the time it takes to perform insertion sort for the bottom nodes.
+And $n \cdot \log_2 (n / k)$ is the time to merge the top nodes.
+$k$ must be greater than $1$, else, the running time devolves into the standard merge sort time.
+But $k$ must also be less than $log_2 (n)$,  else, the $nk$ part outgrows the other parts, and the runtime devolves also into the standard merge sort time.
+
+d. $k$ must be in the range specified by **(c)** above. In practice $k$ can be picked based on empirical tests that depend on
+the machine, type of data, etc.
+
+####  2-4 Inversions
+a. The five inversions of array `[2, 3, 8, 6, 1]` are `(2, 1)`, `(3, 1)`, `(8, 6)`, `(8, 1)`, and `(6, 1)`.
+
+b. The array with elements `[1, 2, ..., n]` that has the most inversions is a reverse sorted array.
+There are $(n - 1) + (n - 2) + ... + 2 + 1$ inversions in such array which can be calculated with the formula below:
+$$
+= \frac{n(n - 1)}{2}
+$$
+
+c. The notion of inversions is strongly related with the inner while loop of insertion sort.
+The inner while loop is responsible for swapping out of place elements.
+Each inversion represents an out-of-place element.
+
+d. The merge sort algorithm can be repurposed to count the number of inversions in an array in $\theta(nlog_2 n)$ time:
+
+```rust
+fn count_inversions(input: &mut Vec<i32>, p: usize, r: usize) -> usize {
+    if p >= r {
+       return 0;
+    }
+
+    let q = (r + p) / 2;
+    let mut inversions = count_inversions(input, p, q);
+    inversions += count_inversions(input, q + 1, r);
+    merge(input, p, q, r, inversions)
+}
+
+fn merge(input: &mut Vec<i32>, p: usize, q: usize, r: usize, inversions: usize) -> usize {
+    let left_length = (q - p) + 1; // Explanation for the +1: Given that q >= p, there are two cases: when q == p, there is 1 element; and when q > p, e.g. q = 2 and p = 0, there are 3 elements.
+    let right_length = (r - q);
+    let mut left = vec![0;left_length];
+    let mut right = vec![0;right_length];
+
+    for i in 0..left_length {
+        left[i] = input[p + i]
+    }
+    for i in 0..right_length {
+        right[i] = input[q + i + 1]
+    }
+
+    let mut left_index = 0;
+    let mut right_index = 0;
+    let mut input_index = p;
+
+    let mut right_inversion_count = inversions;
+
+    while left_index < left_length && right_index < right_length {
+        if left[left_index] <= right[right_index] {
+            input[input_index] = left[left_index];
+            left_index += 1;
+        } else {
+            input[input_index] = right[right_index];
+            right_index += 1;
+            right_inversion_count += left_length - left_index;
+        }
+
+        input_index += 1;
+    }
+
+    while left_index < left_length {
+        input[input_index] = left[left_index];
+        input_index += 1;
+        left_index += 1;
+    }
+
+    while right_index <right_length {
+        input[input_index] = right[right_index];
+        input_index += 1;
+        right_index += 1;
+    }
+
+    right_inversion_count
+}
+```
