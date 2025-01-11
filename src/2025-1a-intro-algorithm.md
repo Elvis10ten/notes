@@ -227,10 +227,10 @@ Empty lines are ignored as we assume they take no time.
 | Line 8 | $c_8$ | $1$                                                                                                                                                                                            |
 
 $$
-T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)]
-+ [c_4 \cdot \sum_{i=1}^{n-1} t_i ]
-+ [c_5 \cdot \sum_{i=1}^{n-1} (t_i - 1)]
-+ [c_6 \cdot \sum_{i=1}^{n-1} (t_i - 1)]
+T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)] \\
++ [c_4 \cdot \sum_{i=1}^{n-1} t_i ] \\
++ [c_5 \cdot \sum_{i=1}^{n-1} (t_i - 1)] \\
++ [c_6 \cdot \sum_{i=1}^{n-1} (t_i - 1)] \\
 + [c_7 \cdot (n-1)] + [c_8]
 $$
 
