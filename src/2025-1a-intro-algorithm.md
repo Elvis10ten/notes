@@ -227,13 +227,11 @@ Empty lines are ignored as we assume they take no time.
 | Line 8 | $c_8$ | $1$                                                                                                                                                                                            |
 
 $$
-\begin{aligned}
 T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)]
-\\ + [c_4 \cdot \sum_{i=1}^{n-1} t_i ]
-\\ + [c_5 \cdot \sum_{i=1}^{n-1} (t_i - 1)]
-\\ + [c_6 \cdot \sum_{i=1}^{n-1} (t_i - 1)]
-\\ + [c_7 \cdot (n-1)] + [c_8]
-\end{aligned}
+\\\\ + [c_4 \cdot \sum_{i=1}^{n-1} t_i ]
+\\\\ + [c_5 \cdot \sum_{i=1}^{n-1} (t_i - 1)]
+\\\\ + [c_6 \cdot \sum_{i=1}^{n-1} (t_i - 1)]
+\\\\ + [c_7 \cdot (n-1)] + [c_8]
 $$
 
 For insertion sort on input of size $n$, the best-case runtime happens when the input is already sorted.
@@ -560,8 +558,7 @@ that are greater than any element in the array that was exhausted.
 Taken together, the elements in `input[p..k-1]` represents all the elements in `left` and `right` merged together.
 
 #### 2.3-4
-
-
+TODO
 
 #### 2.3-5
 ```rust
@@ -702,6 +699,12 @@ But $k$ must also be less than $log_2 (n)$,  else, the $nk$ part outgrows the ot
 
 d. $k$ must be in the range specified by **(c)** above. In practice $k$ can be picked based on empirical tests that depend on
 the machine, type of data, etc.
+
+#### 2-2 Correctness of bubblesort
+TODO
+
+#### 2-3 Correctness of Horner's rule
+TODO
 
 ####  2-4 Inversions
 a. The five inversions of array `[2, 3, 8, 6, 1]` are `(2, 1)`, `(3, 1)`, `(8, 6)`, `(8, 1)`, and `(6, 1)`.
