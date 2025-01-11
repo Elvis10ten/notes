@@ -228,10 +228,10 @@ Empty lines are ignored as we assume they take no time.
 
 $$
 T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)]
-\\\\ + [c_4 \cdot \sum_{i=1}^{n-1} t_i ]
-\\\\ + [c_5 \cdot \sum_{i=1}^{n-1} (t_i - 1)]
-\\\\ + [c_6 \cdot \sum_{i=1}^{n-1} (t_i - 1)]
-\\\\ + [c_7 \cdot (n-1)] + [c_8]
++ [c_4 \cdot \sum_{i=1}^{n-1} t_i ]
++ [c_5 \cdot \sum_{i=1}^{n-1} (t_i - 1)]
++ [c_6 \cdot \sum_{i=1}^{n-1} (t_i - 1)]
++ [c_7 \cdot (n-1)] + [c_8]
 $$
 
 For insertion sort on input of size $n$, the best-case runtime happens when the input is already sorted.
@@ -241,8 +241,11 @@ The best-case runtime is then given by:
 
 $$
 T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)]
-\\\\ + [c_4 \cdot (n-1) ] + [c_7 \cdot (n-1)] + [c_8]
-\\\\ = (c_1 + c_2 + c_3 + c_4 + c_7) \cdot n - (c_2 + c_3 + c_7 - c_8)
++ [c_4 \cdot (n-1) ] + [c_7 \cdot (n-1)] + [c_8]
+$$
+
+$$
+= (c_1 + c_2 + c_3 + c_4 + c_7) \cdot n - (c_2 + c_3 + c_7 - c_8)
 $$
 
 > The best-case runtime is a **linear function** of $n$ because it can be expressed as $an + b$, where $a$ and $b$ are the various constants
