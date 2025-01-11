@@ -526,6 +526,42 @@ The solution to this recurrence is $\Theta(n \log_2 n)$. We can prove this intui
 5. The total cost is the sum of the costs at each level, which is $\Theta(n \log_2 n)$.
 
 ### Exercises
+#### 2.3-1
+Done with pen and paper.
+
+#### 2.3-2
+Assuming the first call to `merge_sort(input, p, r)`, where $r \geq p$, then the test `if p != r` suffices to ensure
+that no recursive call has $p > r$. Argument:
+* Given that both $p$ and $r$ are both integers and that initially $r \geq p$.
+* Also, given the definition of the mean as the balancing point between numbers. We can define the range of the mean for the two possible cases for the inputs:
+  * When $p = r$, then the mean (m) is given as: $m = p$.
+  * When $r > p$, then the mean (m) is given as: $p < m < r$. Given that we floor the mean to an integer, the true range is: $p \leq m < r$.
+* The first possible case for the inputs triggers the `if` conditional and stops further division.
+* The $\lfloor mean(p, r) \rfloor $ of two consecutive $p$ and $q$ integers is $p$.
+* This leaves us with two cases for the two recursive `merge_sort` calls:
+  * First recursive call:
+    * Case 1 (Consecutive integers): `merge_sort(input, p, q)`. Here, $q = p$, hence, this will trigger the `if` conditional.
+    * Case 2 (Non consecutive integers): `merge_sort(input, p, q)`. Here, $q > p$, thus, the important condition that $r > p$ is maintained.
+  * Second recursive call:
+    * Case 1 (Consecutive integers): `merge_sort(input, q + 1, r)`. Here, $q = p$, hence, $q + 1 = r$ and this will trigger the `if` conditional.
+    * Case 2 (Non consecutive integers): `merge_sort(input, q + 1, r)`. Here, $r > q + 1$, thus, the important condition that $r > p$ is maintained.
+
+#### 2.3-3
+Loop invariant: At the start of each iteration `i` and `j` points to the smallest element in the left and right arrays, respectively, that is greater than or equal to the last element in `input[p..k-1]`.
+Initialization: At the start of the loop, both `i` and `j` are set to `0`. Since both arrays are sorted, this is trivially the smallest element. Also, $k = 0$, and the elements in `input[p..k-1]` is zero.
+Maintenance: In the loop body, we merge the smallest element between `left[i]` and `right[j]` to `input[k]` and increment `i` or `j` (but not both) correspondingly. The `k` variable is incremented. The loop invariant still holds: `input[p..k-1]` is still sorted AND `left[i]` and `right[j]` are the smallest elements in left and right array that are greater than or equal to the last element of `input[p..k-1]`.
+Termination: The loop terminates when all elements of either `left` or `right` has been merged.
+
+When the loop terminates, based on the termination condition, either `left` or `right` has at least one element that hasn't been merged.
+The two while loop handles each case (only one case is possible at a time).
+It merges the leftover elements in the remaining array. Since, both arrays are sorted, the remaining array contains only leftover elements
+that are greater than any element in the array that was exhausted.
+
+Taken together, the elements in `input[p..k-1]` represents all the elements in `left` and `right` merged together.
+
+#### 2.3-4
+
+
 
 #### 2.3-5
 ```rust
@@ -590,13 +626,62 @@ T(n) = \theta(n^2)
 $$
 
 #### 2.3-6
+```rust
+fn binary_search(input: Vec<i32>, p: usize, q: usize, needle: i32) -> Option<usize> {
+    if q == p {
+        return if input[p] == needle {
+            Some(p)
+        } else {
+            None
+        }
+    }
 
+    let middle = (p + q) / 2;
+
+    if input[middle] == needle {
+        Some(middle)
+    } else if input[middle] < needle {
+        binary_search(input, middle+1, q, needle)
+    } else {
+        binary_search(input, p, middle.saturating_sub(1), needle)
+    }
+}
+```
+
+At each step of the recursion, the problem is halved. This continues until either the element is found early, or the
+input is left with only one element, and that one element either matches or doesn't (this is the worst case).
+It takes $log_2 n$ steps to get an $n$ element array to a size of $1$ through repeated halving.
+Hence, the worst case running time of binary search is $\theta(\log_2 n)$
 
 #### 2.3-7
 Using binary search in insertion sort won't improve its runtime.
 The inner while loop of insertion sort has two responsibilities:
 * Find the position to insert the ith element. Binary search can speed this up to $\theta(n \log_2 n)$.
 * Swap elements to create room for the ith element to be inserted. Binary search does not help in this domain.
+
+#### 2.3-8
+To solve the problem in $\theta(n \log_2 n)$ time, first sort the input with merge sort and then use the procedure below
+to determine if any element adds up to `x` in $\theta(n)$ time:
+
+```rust
+fn sums_up(sorted_input: Vec<i32>, x: i32) -> bool {
+    let mut i = 0;
+    let mut j = sorted_input.len()-1;
+
+    while (i != j) {
+        let sum = sorted_input[i] + sorted_input[j];
+        if sum == x {
+            return true
+        } else if sum > x {
+            j -= 1;
+        } else {
+            i += 1;
+        }
+    }
+
+    false
+}
+```
 
 ### Problems
 
