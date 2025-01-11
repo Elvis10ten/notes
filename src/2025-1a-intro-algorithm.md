@@ -240,11 +240,9 @@ Hence, $t_i = 1$ in this case for all $i$.
 The best-case runtime is then given by:
 
 $$
-\begin{aligned}
 T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)]
-\\ + [c_4 \cdot (n-1) ] + [c_7 \cdot (n-1)] + [c_8] \\
-= (c_1 + c_2 + c_3 + c_4 + c_7) \cdot n - (c_2 + c_3 + c_7 - c_8)
-\end{aligned}
+\\\\ + [c_4 \cdot (n-1) ] + [c_7 \cdot (n-1)] + [c_8]
+\\\\ = (c_1 + c_2 + c_3 + c_4 + c_7) \cdot n - (c_2 + c_3 + c_7 - c_8)
 $$
 
 > The best-case runtime is a **linear function** of $n$ because it can be expressed as $an + b$, where $a$ and $b$ are the various constants
@@ -256,13 +254,11 @@ Hence, $t_i = i$ in this case for all $i$.
 The worst-case runtime is then given by:
 
 $$
-\begin{aligned}
 T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)]
-\\ + \left[ c_4 \cdot \left( \frac{n(n - 1)}{2} \right) \right]
-\\ + \left[ c_5 \cdot \left( \frac{(n - 1)(n - 2)}{2} \right) \right]
-\\ + \left[ c_6 \cdot \left( \frac{(n - 1)(n - 2)}{2} \right) \right]
-\\ + [c_7 \cdot (n-1)] + [c_8]
-\end{aligned}
+\\\\ + \left[ c_4 \cdot \left( \frac{n(n - 1)}{2} \right) \right]
+\\\\ + \left[ c_5 \cdot \left( \frac{(n - 1)(n - 2)}{2} \right) \right]
+\\\\ + \left[ c_6 \cdot \left( \frac{(n - 1)(n - 2)}{2} \right) \right]
+\\\\ + [c_7 \cdot (n-1)] + [c_8]
 $$
 
 <details>
@@ -276,10 +272,8 @@ $$
 This formula comes from adding the sequence forwards and backwards, aligning terms from opposite ends:
 
 $$
-\begin{aligned}
-S = 1 + 2 + 3 + ... + m \\
+S = 1 + 2 + 3 + ... + m \\\\
 S = m + (m - 1) + (m - 2) + ... + 1
-\end{aligned}
 $$
 
 * The first term of the forward sequence ($1$) added to the first term of the backward sequence ($m$) is: $m + 1$.
