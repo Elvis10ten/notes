@@ -777,3 +777,17 @@ fn merge(input: &mut Vec<i32>, p: usize, q: usize, r: usize, inversions: usize) 
     right_inversion_count
 }
 ```
+
+## Chapter 3: Characterizing Running Times
+The <mark class="mark-blue">order of growth</mark> of the running time of an algorithm, gives a simple way to characterize the algorithm's efficiency
+and also allow us to compare it with alternative algorithms.
+
+The precision of an exact running time of an algorithm is rarely worth the effort because for large enough inputs,
+the multiplicative constants and lower-order terms are dominated by the effects of the input size itself.
+
+The <mark class="mark-blue">asymptotic</mark> efficiency of an algorithm is concerned with how the running time of an
+algorithm increases with the size of the input in the <mark class="mark-yellow">limit</mark>, as the size of the input increases without bound.
+
+Usually, an algorithm that is asymptotically more efficient is the best choice for all but <mark class="mark-pink">very small inputs</mark>.
+
+### The three common asymptotic notations
