@@ -791,3 +791,5 @@ algorithm increases with the size of the input in the <mark class="mark-yellow">
 Usually, an algorithm that is asymptotically more efficient is the best choice for all but <mark class="mark-pink">very small inputs</mark>.
 
 ### The three common asymptotic notations
+The asymptotic notations described below are designed to characterize functions in general. The function can denote
+the running time, space usage, etc.

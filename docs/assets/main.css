@@ -204,11 +204,6 @@ video {
     width: 100%;
 }
 
-mark {
-    background-color: #D0F0FD;
-    font-weight: bold;
-}
-
 /* Code */
 
 code, pre {
@@ -328,17 +323,22 @@ blockquote {
 
 /* Mark styles */
 
-.mark-yellow {
+mark {
+    background-color: #D0F0FD;
+    font-weight: bold;
+}
+
+mark.mark-yellow {
     background-color: #FFF9C4; /* Soft pastel yellow */
     font-weight: bold;
 }
 
-.mark-blue {
+mark.mark-blue {
     background-color: #B3E5FC; /* Light sky blue */
     font-weight: bold;
 }
 
-.mark-pink {
+mark.mark-pink {
     background-color: #F8BBD0; /* Pale pink */
     font-weight: bold;
 }
