@@ -797,9 +797,8 @@ the running time, space usage, etc.
 All the functions used in the notation must be <mark class="mark-yellow">asymptotically non-negative</mark>.
 An asymptotically positive function is one that is positive for all sufficiently large $n$.
 
-#### $O$-notation
-The $O$ notation specifies an <mark class="mark-blue">asymptotic upper bound</mark> on a function to within a constant factor.
-$O(g(n))$ is pronounced "big-oh of g of n" or just "oh of g of n".
+#### Big-oh $(O)$ notation
+The $O$ notation specifies an <mark class="mark-blue">asymptotic upper bound</mark> on a function to within a constant factor. $O(g(n))$ is pronounced "big-oh of g of n" or just "oh of g of n".
 
 ![O notation graph](/docs/assets/introduction-to-algorithms-images/big0.webp)
 
@@ -807,27 +806,27 @@ $O(g(n))$ is pronounced "big-oh of g of n" or just "oh of g of n".
 For a given function $g(n)$, we denote by $O(g(n))$ the set of functions:
 
 $$
-O(g(n)) = {f(n): 0 \leq f(n) \leq cg(n); \forall n \geq n_0 }
+O(g(n)) = \{f(n): 0 \leq f(n) \leq cg(n); \forall n \geq n_0 \}
 $$
 
 A function $f(n)$ belongs to the set $O(g(n))$ it there exists positive constants $c$ such that $f(n) \leq c \cdot g(n)$
 for sufficiently large $n$.
 
 ##### Example
-The demonstration below uses the formal definition to provide justification for the practice of discarding lower-order
-terms and ignoring the constant coefficient of the highest-order term:
+The example below uses the formal definition to provide justification for the practice of
+<mark class="mark-yellow">discarding lower-order terms</mark> and
+<mark class="mark-yellow">ignoring the constant coefficient of the highest-order term</mark>:
 
 * Given, $f(n) = 4n^2 + 100n + 500$
 * We say $f(n) = O(n^2)$
 * Because, we can find a $c$ and $n_0$ such that $4n^2 + 100n + 500 \leq c \cdot n^2$
 * First simplify the inequality to $4 + 100/n + 500/n^2 \leq c$
-* For $n_0 = 1$, then the inequality holds for $604$.
+* For $n_0 = 1$, then the inequality holds for $c = 604$.
 * Or, if $n_0 = 10$, then $c = 19$ works.
 * etc
 
 #### Omega $(\Omega)$ Notation
-$\Omega$-notation provides an <mark class="mark-blue">asymptotic lower bound</mark>.
-$\Omega(g(n))$ is pronounced "big-omega of g of n" or just "omega of g of n".
+The $\Omega$ notation provides an <mark class="mark-blue">asymptotic lower bound</mark>. $\Omega(g(n))$ is pronounced "big-omega of g of n" or just "omega of g of n".
 
 ![Omega notation graph](/docs/assets/introduction-to-algorithms-images/big0.webp)
 
@@ -835,7 +834,7 @@ $\Omega(g(n))$ is pronounced "big-omega of g of n" or just "omega of g of n".
 For a given function $g(n)$, we denote by $\Omega(g(n))$ the set of functions:
 
 $$
-\Omega(g(n)) = {f(n): 0 \leq c \cdot g(n) \leq f(n); \forall n \geq n_0 }
+\Omega(g(n)) = \{f(n): 0 \leq c \cdot g(n) \leq f(n); \forall n \geq n_0 \}
 $$
 
 ##### Example
@@ -846,8 +845,7 @@ $$
 * This inequality holds when $n_0$ is any positive integer and $c = 4$.
 
 #### $\theta$-notation
-The $\theta$-notation specifies <mark class="mark-blue">asymptotically tight bounds</mark>.
-$\theta(g(n))$ is pronounced "theta of g of n".
+The $\theta$ notation specifies <mark class="mark-blue">asymptotically tight bounds</mark>. $\theta(g(n))$ is pronounced "theta of g of n".
 
 ![Theta notation graph](/docs/assets/introduction-to-algorithms-images/big0.webp)
 
@@ -855,7 +853,7 @@ $\theta(g(n))$ is pronounced "theta of g of n".
 For a given function $g(n)$, we denote by $\theta(g(n))$ the set of functions:
 
 $$
-\theta(g(n)) = {f(n): 0 \leq c_1 \cdot g(n) \leq f(n) \leq c_2 g(n); \forall n \geq n_0 }
+\theta(g(n)) = \{f(n): 0 \leq c_1 \cdot g(n) \leq f(n) \leq c_2 g(n); \forall n \geq n_0 \}
 $$
 
 For all $n \geq n_0$, the function $f(n)$ is equal to $g(n)$ to within constant factors.
