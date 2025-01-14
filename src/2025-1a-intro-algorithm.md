@@ -794,11 +794,11 @@ Usually, an algorithm that is asymptotically more efficient is the best choice f
 The asymptotic notations described below are designed to characterize functions in general. The function can denote
 the running time, space usage, etc.
 
-All the functions used in the notation must be <mark class="mark-blue">asymptotically non-negative</mark>.
+All the functions used in the notation must be <mark class="mark-yellow">asymptotically non-negative</mark>.
 An asymptotically positive function is one that is positive for all sufficiently large $n$.
 
 #### $O$-notation
-The $O$-notation specifies an <mark class="mark-blue">asymptotic upper bound</mark> on a function to within a constant factor.
+The $O$ notation specifies an <mark class="mark-blue">asymptotic upper bound</mark> on a function to within a constant factor.
 $O(g(n))$ is pronounced "big-oh of g of n" or just "oh of g of n".
 
 ##### Formal definition
@@ -823,7 +823,7 @@ terms and ignoring the constant coefficient of the highest-order term:
 * Or, if $n_0 = 10$, then $c = 19$ works.
 * etc
 
-#### Omega ($\Omega$) Notation
+#### Omega $(\Omega)$ Notation
 $\Omega$-notation provides an <mark class="mark-blue">asymptotic lower bound</mark>.
 $\Omega(g(n))$ is pronounced "big-omega of g of n" or just "omega of g of n".
 
