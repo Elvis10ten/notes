@@ -788,7 +788,7 @@ the multiplicative constants and lower-order terms are dominated by the effects 
 The <mark class="mark-blue">asymptotic</mark> efficiency of an algorithm is concerned with how the running time of an
 algorithm increases with the size of the input in the <mark class="mark-yellow">limit</mark>, as the size of the input increases without bound.
 
-Usually, an algorithm that is asymptotically more efficient is the best choice for all but <mark class="mark-pink">very small inputs</mark>.
+Usually, an algorithm that is asymptotically more efficient is the best choice for all but <mark class="mark-purple">very small inputs</mark>.
 
 ### The three common asymptotic notations
 The asymptotic notations described below are designed to characterize functions in general. The function can denote
@@ -871,7 +871,7 @@ For all $n \geq n_0$, the function $f(n)$ is equal to $g(n)$ to within constant 
 > $f(n) = \Omega(g(n))$ and $f(n) = O(g(n))$.
 
 #### Correctness and precision
-The asymptotic notation used to describe an algorithm must be as <mark class="mark-yellow">precise</mark> as possible and must <mark class="mark-pink">correctly</mark> state the type
+The asymptotic notation used to describe an algorithm must be as <mark class="mark-yellow">precise</mark> as possible and must <mark class="mark-purple">correctly</mark> state the type
 of running time it applies to. Examples:
 
 * <mark class="mark-green">Correct</mark>: Insertion sort has a worst-case running time of $O(n^2)$, $\Omega(n^2)$, and $\theta(n^2)$. The $\theta(n^2)$ bound is the most precise and hence the most preferred.

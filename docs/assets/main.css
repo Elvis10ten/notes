@@ -328,18 +328,18 @@ mark {
     font-weight: bold;
 }
 
-mark.mark-yellow {
+.mark-yellow {
     background-color: #FFF9C4; /* Soft pastel yellow */
     font-weight: bold;
 }
 
-mark.mark-blue {
+.mark-blue {
     background-color: #B3E5FC; /* Light sky blue */
     font-weight: bold;
 }
 
-mark.mark-pink {
-    background-color: #F8BBD0; /* Pale pink */
+.mark-purple {
+    background-color: #E1BEE7; /* Soft pastel purple */
     font-weight: bold;
 }
 
