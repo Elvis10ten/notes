@@ -342,3 +342,13 @@ mark.mark-pink {
     background-color: #F8BBD0; /* Pale pink */
     font-weight: bold;
 }
+
+.mark-green {
+    background-color: #C8E6C9; /* Soft pastel green */
+    font-weight: bold;
+}
+
+.mark-red {
+    background-color: #FFCDD2; /* Soft pastel red */
+    font-weight: bold;
+}
