@@ -803,7 +803,7 @@ The $O$ notation specifies an <mark class="mark-blue">asymptotic upper bound</ma
 ![O notation graph](/docs/assets/introduction-to-algorithms-images/big0.webp)
 
 ##### Formal definition
-For a given function $g(n)$, we denote by $O(g(n))$ the set of functions:
+For a given function $g(n)$, we denote by $O(g(n))$ the <mark class="mark-yellow">set of functions</mark>:
 
 $$
 O(g(n)) = \{f(n): 0 \leq f(n) \leq cg(n); \forall n \geq n_0 \}
@@ -831,7 +831,7 @@ The $\Omega$ notation provides an <mark class="mark-blue">asymptotic lower bound
 ![Omega notation graph](/docs/assets/introduction-to-algorithms-images/big0.webp)
 
 ##### Formal definition
-For a given function $g(n)$, we denote by $\Omega(g(n))$ the set of functions:
+For a given function $g(n)$, we denote by $\Omega(g(n))$ the <mark class="mark-yellow">set of functions</mark>:
 
 $$
 \Omega(g(n)) = \{f(n): 0 \leq c \cdot g(n) \leq f(n); \forall n \geq n_0 \}
@@ -844,13 +844,13 @@ $$
 * First simplify the inequality to $4 + 100/n + 500/n^2 \geq c$
 * This inequality holds when $n_0$ is any positive integer and $c = 4$.
 
-#### $\theta$-notation
+#### Theta $(\theta)$ notation
 The $\theta$ notation specifies <mark class="mark-blue">asymptotically tight bounds</mark>. $\theta(g(n))$ is pronounced "theta of g of n".
 
 ![Theta notation graph](/docs/assets/introduction-to-algorithms-images/big0.webp)
 
 ##### Formal definition
-For a given function $g(n)$, we denote by $\theta(g(n))$ the set of functions:
+For a given function $g(n)$, we denote by $\theta(g(n))$ <mark class="mark-yellow">the set of functions</mark>:
 
 $$
 \theta(g(n)) = \{f(n): 0 \leq c_1 \cdot g(n) \leq f(n) \leq c_2 g(n); \forall n \geq n_0 \}
