@@ -797,6 +797,9 @@ the running time, space usage, etc.
 All the functions used in the notation must be <mark class="mark-yellow">asymptotically non-negative</mark>.
 An asymptotically positive function is one that is positive for all sufficiently large $n$.
 
+The goal of the asymptotic notations is to provide a <mark class="mark-yellow">simplified</mark> yet <mark class="mark-yellow">precise</mark> bound for the running time of an algorithm,
+so that algorithms can easily be compared.
+
 #### Big-oh $(O)$ notation
 The $O$ notation specifies an <mark class="mark-blue">asymptotic upper bound</mark> on a function to within a constant factor. $O(g(n))$ is pronounced "big-oh of g of n" or just "oh of g of n".
 
@@ -866,3 +869,21 @@ For all $n \geq n_0$, the function $f(n)$ is equal to $g(n)$ to within constant 
 > IFF
 > 
 > $f(n) = \Omega(g(n))$ and $f(n) = O(g(n))$.
+
+#### Correctness and precision
+The asymptotic notation used to describe an algorithm must be as <mark class="mark-yellow">precise</mark> as possible and must <mark class="mark-pink">correctly</mark> state the type
+of running time it applies to. Examples:
+
+* <mark class="mark-green">Correct</mark>: Insertion sort has a worst-case running time of $O(n^2)$, $\Omega(n^2)$, and $\theta(n^2)$. The $\theta(n^2)$ bound is the most precise and hence the most preferred.
+* <mark class="mark-green">Correct</mark>: Insertion sort has a best-case running time of $O(n)$, $\Omega(n)$, and $\theta(n)$. The $\theta(n)$ bound is also the most precise and the most preferred.
+* <mark class="mark-red">Wrong</mark>: Insertion sort has a running time of $\theta(n^2)$. This is wrong because without the qualification of "worst-case", the statement covers all running times (best and worst case).
+* <mark class="mark-green">Correct</mark>: We can however say that insertion sort has a running time of $O(n^2)$ because both the best-case and worst-case doesn't grow faster than $n^2$.
+* <mark class="mark-green">Correct</mark>: We can also say that insertion sort has a running time of $\Omega(n)$ because both the best-case and worst-case grows at least as fast as $n$.
+* <mark class="mark-green">Correct</mark>: Merge sort has a running time of $\theta(n \log_2 n)$ because this is true in all cases.
+
+#### Conflating $O$ with $\theta$
+The $O$ notation is occasionally used in scenarios where the $\theta$ notation will be more appropriate. e.g.
+
+* Saying that "an $O(n \lg_2 n)$ time algorithm is faster than an $O(n^2)$ time algorithm".
+* This is not necessarily true, because the $O$ notation only specifies an asymptotic upper bound.
+* Hence, the $O(n^2)$ might actually run in just $\theta(n)$ time.
