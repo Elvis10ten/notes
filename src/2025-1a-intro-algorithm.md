@@ -823,7 +823,7 @@ terms and ignoring the constant coefficient of the highest-order term:
 * Or, if $n_0 = 10$, then $c = 19$ works.
 * etc
 
-#### $\Omega$-notation
+#### Omega ($\Omega$) Notation
 $\Omega$-notation provides an <mark class="mark-blue">asymptotic lower bound</mark>.
 $\Omega(g(n))$ is pronounced "big-omega of g of n" or just "omega of g of n".
 
