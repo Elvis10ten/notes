@@ -801,6 +801,8 @@ An asymptotically positive function is one that is positive for all sufficiently
 The $O$ notation specifies an <mark class="mark-blue">asymptotic upper bound</mark> on a function to within a constant factor.
 $O(g(n))$ is pronounced "big-oh of g of n" or just "oh of g of n".
 
+![O notation graph](/docs/assets/introduction-to-algorithms-images/big0.webp)
+
 ##### Formal definition
 For a given function $g(n)$, we denote by $O(g(n))$ the set of functions:
 
@@ -827,6 +829,8 @@ terms and ignoring the constant coefficient of the highest-order term:
 $\Omega$-notation provides an <mark class="mark-blue">asymptotic lower bound</mark>.
 $\Omega(g(n))$ is pronounced "big-omega of g of n" or just "omega of g of n".
 
+![Omega notation graph](/docs/assets/introduction-to-algorithms-images/big0.webp)
+
 ##### Formal definition
 For a given function $g(n)$, we denote by $\Omega(g(n))$ the set of functions:
 
@@ -844,6 +848,8 @@ $$
 #### $\theta$-notation
 The $\theta$-notation specifies <mark class="mark-blue">asymptotically tight bounds</mark>.
 $\theta(g(n))$ is pronounced "theta of g of n".
+
+![Theta notation graph](/docs/assets/introduction-to-algorithms-images/big0.webp)
 
 ##### Formal definition
 For a given function $g(n)$, we denote by $\theta(g(n))$ the set of functions:
