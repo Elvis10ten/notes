@@ -2,7 +2,7 @@
 
 ## Chapter 1: The Role of Algorithms in Computing
 
-A <mark>computational problem</mark> is a specification of a desired input-output relationship. e.g.
+A <mark-blue>computational problem</mark-blue> is a specification of a desired input-output relationship. e.g.
 
 > **Computational problem**: Sorting
 >
@@ -19,9 +19,9 @@ A <mark>computational problem</mark> is a specification of a desired input-outpu
 A loop invariant is a property or condition that holds true before and after every iteration of a loop. It is a useful tool for understanding the correctness of an algorithm.
 
 It consists of three parts:
-1. **Initialization**: Prove that the invariant is true <mark>before the first iteration</mark>.
-2. **Maintenance**: Prove that if the invariant is true before an iteration, it remains true <mark>before the next iteration</mark>.
-3. **Termination**: At the end of the loop, the <mark>invariant along with the termination condition should imply the correctness of the algorithm</mark>.
+1. **Initialization**: Prove that the invariant is true <mark-blue>before the first iteration</mark-blue>.
+2. **Maintenance**: Prove that if the invariant is true before an iteration, it remains true <mark-blue>before the next iteration</mark-blue>.
+3. **Termination**: At the end of the loop, the <mark-blue>invariant along with the termination condition should imply the correctness of the algorithm</mark-blue>.
 
 ### Insertion Sort
 Insertion sort is a sorting algorithm that builds the final sorted array one item at a time.
@@ -385,7 +385,7 @@ Using the theta notation, both the worst and average case time for linear search
 To improve the best-case running time for any sorting algorithm, we can introduce logic that checks if the input is already sorted.
 
 #### Divide-and-conquer method
-Divide-and-conquer is an algorithm design technique that uses <mark>recursion</mark> to find a solution to a problem by breaking the solution into two cases:
+Divide-and-conquer is an algorithm design technique that uses <mark-blue>recursion</mark-blue> to find a solution to a problem by breaking the solution into two cases:
 1. The **base case**: The recursion stops at the **base case**, which is a small enough problem that can be solved directly without recursing.
 2. The **recursive case**:
    * **Divide** the problem into smaller sub-problems.
@@ -498,7 +498,7 @@ $$
 
 For **merge sort**, $a = 2$, $b = 2$.
 While in some cases, the array is not divided exactly in half, we can ignore this because at most, the difference is one element.
-Also, to simply the equations, the base case is also ignored, because it takes $\Theta(1)$ time: <mark>the running time of an algorithm  on an input of constant size is constant</mark>.
+Also, to simply the equations, the base case is also ignored, because it takes $\Theta(1)$ time: <mark-blue>the running time of an algorithm  on an input of constant size is constant</mark-blue>.
 
 For merge sort, the recurrence can be described as:
 * **Divide**: The divide step just computes the middle of the subarray, which takes constant time.
@@ -779,34 +779,34 @@ fn merge(input: &mut Vec<i32>, p: usize, q: usize, r: usize, inversions: usize) 
 ```
 
 ## Chapter 3: Characterizing Running Times
-The <mark class="mark-blue">order of growth</mark> of the running time of an algorithm, gives a simple way to characterize the algorithm's efficiency
+The <mark-blue>order of growth</mark-blue> of the running time of an algorithm, gives a simple way to characterize the algorithm's efficiency
 and also allow us to compare it with alternative algorithms.
 
 The precision of an exact running time of an algorithm is rarely worth the effort because for large enough inputs,
 the multiplicative constants and lower-order terms are dominated by the effects of the input size itself.
 
-The <mark class="mark-blue">asymptotic</mark> efficiency of an algorithm is concerned with how the running time of an
-algorithm increases with the size of the input in the <mark class="mark-yellow">limit</mark>, as the size of the input increases without bound.
+The <mark-blue>asymptotic</mark-blue> efficiency of an algorithm is concerned with how the running time of an
+algorithm increases with the size of the input in the <mark-yellow>limit</mark-yellow>, as the size of the input increases without bound.
 
-Usually, an algorithm that is asymptotically more efficient is the best choice for all but <mark class="mark-purple">very small inputs</mark>.
+Usually, an algorithm that is asymptotically more efficient is the best choice for all but <mark-purple>very small inputs</mark-purple>.
 
 ### The three common asymptotic notations
 The asymptotic notations described below are designed to characterize functions in general. The function can denote
 the running time, space usage, etc.
 
-All the functions used in the notation must be <mark class="mark-yellow">asymptotically non-negative</mark>.
+All the functions used in the notation must be <mark-yellow>asymptotically non-negative</mark-yellow>.
 An asymptotically positive function is one that is positive for all sufficiently large $n$.
 
-The goal of the asymptotic notations is to provide a <mark class="mark-yellow">simplified</mark> yet <mark class="mark-yellow">precise</mark> bound for the running time of an algorithm,
+The goal of the asymptotic notations is to provide a <mark-yellow>simplified</mark-yellow> yet <mark-yellow>precise</mark-yellow> bound for the running time of an algorithm,
 so that algorithms can easily be compared.
 
 #### Big-oh $(O)$ notation
-The $O$ notation specifies an <mark class="mark-blue">asymptotic upper bound</mark> on a function to within a constant factor. $O(g(n))$ is pronounced "big-oh of g of n" or just "oh of g of n".
+The $O$ notation specifies an <mark-blue>asymptotic upper bound</mark-blue> on a function to within a constant factor. $O(g(n))$ is pronounced "big-oh of g of n" or just "oh of g of n".
 
 ![O notation graph](/docs/assets/introduction-to-algorithms-images/big0.webp)
 
 ##### Formal definition
-For a given function $g(n)$, we denote by $O(g(n))$ the <mark class="mark-yellow">set of functions</mark>:
+For a given function $g(n)$, we denote by $O(g(n))$ the <mark-yellow>set of functions</mark-yellow>:
 
 $$
 O(g(n)) = \{f(n): 0 \leq f(n) \leq cg(n); \forall n \geq n_0 \}
@@ -817,8 +817,8 @@ for sufficiently large $n$.
 
 ##### Example
 The example below uses the formal definition to provide justification for the practice of
-<mark class="mark-yellow">discarding lower-order terms</mark> and
-<mark class="mark-yellow">ignoring the constant coefficient of the highest-order term</mark>:
+<mark-yellow>discarding lower-order terms</mark-yellow> and
+<mark-yellow>ignoring the constant coefficient of the highest-order term</mark-yellow>:
 
 * Given, $f(n) = 4n^2 + 100n + 500$
 * We say $f(n) = O(n^2)$
@@ -829,12 +829,12 @@ The example below uses the formal definition to provide justification for the pr
 * etc
 
 #### Omega $(\Omega)$ Notation
-The $\Omega$ notation provides an <mark class="mark-blue">asymptotic lower bound</mark>. $\Omega(g(n))$ is pronounced "big-omega of g of n" or just "omega of g of n".
+The $\Omega$ notation provides an <mark-blue>asymptotic lower bound</mark-blue>. $\Omega(g(n))$ is pronounced "big-omega of g of n" or just "omega of g of n".
 
 ![Omega notation graph](/docs/assets/introduction-to-algorithms-images/big0.webp)
 
 ##### Formal definition
-For a given function $g(n)$, we denote by $\Omega(g(n))$ the <mark class="mark-yellow">set of functions</mark>:
+For a given function $g(n)$, we denote by $\Omega(g(n))$ the <mark-yellow>set of functions</mark-yellow>:
 
 $$
 \Omega(g(n)) = \{f(n): 0 \leq c \cdot g(n) \leq f(n); \forall n \geq n_0 \}
@@ -848,12 +848,12 @@ $$
 * This inequality holds when $n_0$ is any positive integer and $c = 4$.
 
 #### Theta $(\theta)$ notation
-The $\theta$ notation specifies <mark class="mark-blue">asymptotically tight bounds</mark>. $\theta(g(n))$ is pronounced "theta of g of n".
+The $\theta$ notation specifies <mark-blue>asymptotically tight bounds</mark-blue>. $\theta(g(n))$ is pronounced "theta of g of n".
 
 ![Theta notation graph](/docs/assets/introduction-to-algorithms-images/big0.webp)
 
 ##### Formal definition
-For a given function $g(n)$, we denote by $\theta(g(n))$ <mark class="mark-yellow">the set of functions</mark>:
+For a given function $g(n)$, we denote by $\theta(g(n))$ <mark-yellow>the set of functions</mark-yellow>:
 
 $$
 \theta(g(n)) = \{f(n): 0 \leq c_1 \cdot g(n) \leq f(n) \leq c_2 g(n); \forall n \geq n_0 \}
@@ -871,15 +871,15 @@ For all $n \geq n_0$, the function $f(n)$ is equal to $g(n)$ to within constant 
 > $f(n) = \Omega(g(n))$ and $f(n) = O(g(n))$.
 
 #### Correctness and precision
-The asymptotic notation used to describe an algorithm must be as <mark class="mark-yellow">precise</mark> as possible and must <mark class="mark-purple">correctly</mark> state the type
+The asymptotic notation used to describe an algorithm must be as <mark-yellow>precise</mark-yellow> as possible and must <mark-purple>correctly</mark-purple> state the type
 of running time it applies to. Examples:
 
-* <mark class="mark-green">Correct</mark>: Insertion sort has a worst-case running time of $O(n^2)$, $\Omega(n^2)$, and $\theta(n^2)$. The $\theta(n^2)$ bound is the most precise and hence the most preferred.
-* <mark class="mark-green">Correct</mark>: Insertion sort has a best-case running time of $O(n)$, $\Omega(n)$, and $\theta(n)$. The $\theta(n)$ bound is also the most precise and the most preferred.
-* <mark class="mark-red">Wrong</mark>: Insertion sort has a running time of $\theta(n^2)$. This is wrong because without the qualification of "worst-case", the statement covers all running times (best and worst case).
-* <mark class="mark-green">Correct</mark>: We can however say that insertion sort has a running time of $O(n^2)$ because both the best-case and worst-case doesn't grow faster than $n^2$.
-* <mark class="mark-green">Correct</mark>: We can also say that insertion sort has a running time of $\Omega(n)$ because both the best-case and worst-case grows at least as fast as $n$.
-* <mark class="mark-green">Correct</mark>: Merge sort has a running time of $\theta(n \log_2 n)$ because this is true in all cases.
+* <mark-green>Correct</mark-green>: Insertion sort has a worst-case running time of $O(n^2)$, $\Omega(n^2)$, and $\theta(n^2)$. The $\theta(n^2)$ bound is the most precise and hence the most preferred.
+* <mark-green>Correct</mark-green>: Insertion sort has a best-case running time of $O(n)$, $\Omega(n)$, and $\theta(n)$. The $\theta(n)$ bound is also the most precise and the most preferred.
+* <mark-red>Wrong</mark-red>: Insertion sort has a running time of $\theta(n^2)$. This is wrong because without the qualification of "worst-case", the statement covers all running times (best and worst case).
+* <mark-green>Correct</mark-green>: We can however say that insertion sort has a running time of $O(n^2)$ because both the best-case and worst-case doesn't grow faster than $n^2$.
+* <mark-green>Correct</mark-green>: We can also say that insertion sort has a running time of $\Omega(n)$ because both the best-case and worst-case grows at least as fast as $n$.
+* <mark-green>Correct</mark-green>: Merge sort has a running time of $\theta(n \log_2 n)$ because this is true in all cases.
 
 #### Conflating $O$ with $\theta$
 The $O$ notation is occasionally used in scenarios where the $\theta$ notation will be more appropriate. e.g.
