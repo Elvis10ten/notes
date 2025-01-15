@@ -329,27 +329,27 @@ mark {
     font-weight: bold;
 }
 
-mark-yellow {
+ymark {
     background-color: #FFF9C4; /* Soft pastel yellow */
     font-weight: bold;
 }
 
-mark-blue {
+bmark {
     background-color: #B3E5FC; /* Light sky blue */
     font-weight: bold;
 }
 
-mark-purple {
+pmark {
     background-color: #E1BEE7; /* Soft pastel purple */
     font-weight: bold;
 }
 
-mark-green {
+gmark {
     background-color: #C8E6C9; /* Soft pastel green */
     font-weight: bold;
 }
 
-mark-red {
+rmark {
     background-color: #FFCDD2; /* Soft pastel red */
     font-weight: bold;
 }
