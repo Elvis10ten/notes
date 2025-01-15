@@ -4,22 +4,22 @@
 
 ### Book #1: Introduction to Algorithms (Chapters 1-25)
 
-| **Week** | **Dates**       | **Chapters Covered**                                                                | **Done** |
-|----------|-----------------|-------------------------------------------------------------------------------------|----------|
-| Week 1   | Jan 7 - Jan 13  | Chapter 1: The Role of Algorithms <br> Chapter 2: Getting Started                   | [ ]      |
-| Week 2   | Jan 14 - Jan 20 | Chapter 3: Growth of Functions <br> Chapter 4: Recurrences                          | [ ]      |
-| Week 3   | Jan 21 - Jan 27 | Chapter 5: Probabilistic Analysis <br> Chapter 6: Heapsort                          | [ ]      |
-| Week 4   | Jan 28 - Feb 3  | Chapter 7: Quicksort <br> Chapter 8: Sorting in Linear Time                         | [ ]      |
-| Overflow | Feb 4 - Feb 6   | Review Chapters 1-8, solve exercises                                                | [ ]      |
-| Week 5   | Feb 7 - Feb 13  | Chapter 9: Medians and Order Statistics <br> Chapter 10: Elementary Data Structures | [ ]      |
-| Week 6   | Feb 14 - Feb 20 | Chapter 11: Hash Tables <br> Chapter 12: Binary Search Trees                        | [ ]      |
-| Week 7   | Feb 21 - Feb 27 | Chapter 13: Red-Black Trees <br> Chapter 14: Augmenting Data Structures             | [ ]      |
-| Week 8   | Feb 28 - Mar 6  | Review Chapters 9-14, solve exercises                                               | [ ]      |
-| Week 9   | Mar 7 - Mar 13  | Chapter 15: Dynamic Programming <br> Chapter 16: Greedy Algorithms                  | [ ]      |
-| Week 10  | Mar 14 - Mar 20 | Chapter 17: Amortized Analysis <br> Chapter 18: Elementary Graph Algorithms         | [ ]      |
-| Week 11  | Mar 21 - Mar 27 | Chapter 19: Minimum Spanning Trees <br> Chapter 20: Shortest Paths                  | [ ]      |
-| Week 12  | Mar 28 - Apr 3  | Chapter 21: Maximum Flow <br> Chapter 22: Multi-threaded Algorithms                 | [ ]      |
-| Overflow | Apr 4 - Apr 6   | Chapter 23: String Matching <br> Review Chapters 15-23                              | [ ]      |
+| **Week** | **Dates**       | **Chapters Covered**                                                                                                       | **Done** |
+|----------|-----------------|----------------------------------------------------------------------------------------------------------------------------|----------|
+| Week 1   | Jan 14 - Jan 20 | Chapter 1: The Role of Algorithms in computing<br/> Chapter 2: Getting Started<br/>Chapter 3: Characterizing running times | []       |
+| Week 2   | Jan 21 - Jan 27 | Chapter 4: Divide-and-conquer                                                                                              | [ ]      |
+| Week 3   | Jan 28 - Feb 3  | Chapter 5: Probabilistic Analysis and Randomized Algorithms <br/> Chapter 6: Heapsort                                      | [ ]      |
+| Week 4   | Feb 4 - Feb 10  | Chapter 7: Quicksort <br/> Chapter 8: Sorting in Linear Time                                                               | [ ]      |
+| Overflow | Feb 11 - Feb 13 | Review Chapters 1-8, solve exercises                                                                                       | [ ]      |
+| Week 5   | Feb 14 - Feb 20 | Chapter 9: Medians and Order Statistics <br/> Chapter 10: Elementary Data Structures                                       | [ ]      |
+| Week 6   | Feb 21 - Feb 27 | Chapter 11: Hash Tables                                                                                                    | [ ]      |
+| Week 7   | Feb 28 - Mar 5  | Chapter 12: Binary Search Trees<br/>Chapter 13: Red-Black Trees                                                            | [ ]      |
+| Week 8   | Mar 6 - Mar 12  | Chapter 14: Dynamic Programming<br/>Review Chapters 9-14, solve exercises                                                  | [ ]      |
+| Week 9   | Mar 13 - Mar 19 | Chapter 15: Greedy Algorithms                                                                                              | [ ]      |
+| Week 10  | Mar 20 - Mar 26 | Chapter 16: Amortized Analysis <br/> Chapter 17: Augmenting data structures                                                | [ ]      |
+| Week 11  | Mar 27 - Apr 2  | Chapter 18: B-Trees <br/> Chapter 19: Data Structures for Disjoint Sets                                                    | [ ]      |
+| Week 12  | Apr 3 - Apr 9   | Chapter 20: Elementary Graph Algorithms <br/> Chapter 21: Minimum Spanning Trees                                           | [ ]      |
+| Week 13  | Apr 10 - Apr 12 | Chapter 22: Single-Source Shortest Paths                                                                                   | [ ]      |
 
 ### Nand to Tetris Study Plan (Chapters 6–12)
 
