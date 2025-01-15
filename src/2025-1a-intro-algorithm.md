@@ -14,7 +14,8 @@ An <mark-yellow>instance of a problem</mark-yellow> is all the inputs needed to 
 
 > To sort the permutation {8, 3, 6, 7} is an instance of the general sorting problem and {3, 6, 7, 8} is the desired output.
 
-An <mark-blue>algorithm</mark-blue> is a <mark-yellow>well-defined</mark-yellow> <mark-purple>computational procedure</mark-purple> that takes some <mark-yellow>input</mark-yellow> and produces an <mark-yellow>output</mark-yellow> in <mark-green>finite amount of time</mark-green>
+An <mark-blue>algorithm</mark-blue> is a <mark-yellow>well-defined</mark-yellow> <mark-purple>computational procedure</mark-purple> that takes some <mark-yellow>input</mark-yellow> and produces an <mark-yellow>output</mark-yellow> in <mark-purple>finite amount of time</mark-purple>.
+A correct algorithm solves a computational problem by transforming to input into the desired output.
 
 ## Chapter 2: Getting Started
 > Objective: This chapter introduces the analysis of algorithms and algorithm design techniques like the
