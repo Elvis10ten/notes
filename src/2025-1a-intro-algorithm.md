@@ -10,6 +10,11 @@ A <mark-blue>computational problem</mark-blue> is a specification of a desired i
 >
 > **Output**: A permutation (reordering) of the input such that $a'_1 \leq a'_2$ ... $a'_{n-1} \leq a'_n$.
 
+An <mark-yellow>instance of a problem</mark-yellow> is all the inputs needed to compute a solution to the problem. Alternatively, a computational problem is the set of all (problem) instances and the desired output. e.g.
+
+> To sort the permutation {8, 3, 6, 7} is an instance of the general sorting problem and {3, 6, 7, 8} is the desired output.
+
+An <mark-blue>algorithm</mark-blue> is a <mark-yellow>well-defined</mark-yellow> <mark-purple>computational procedure</mark-purple> that takes some <mark-yellow>input</mark-yellow> and produces an <mark-yellow>output</mark-yellow> in <mark-green>finite amount of time</mark-green>
 
 ## Chapter 2: Getting Started
 > Objective: This chapter introduces the analysis of algorithms and algorithm design techniques like the
