@@ -6,7 +6,7 @@ A <mark-blue>computational problem</mark-blue> is a specification of a desired i
 
 > **Computational problem**: Sorting
 >
-> **Input**: A sequence of $n$ values ($a_1$, ..., $a_n$).
+> **Input**: A sequence of $n$ values $(a_1$, ..., $a_n)$.
 >
 > **Output**: A permutation (reordering) of the input such that $a'_1 \leq a'_2$ ... $a'_{n-1} \leq a'_n$.
 
@@ -16,6 +16,8 @@ An <mark-yellow>instance of a problem</mark-yellow> is all the inputs needed to 
 
 An <mark-blue>algorithm</mark-blue> is a <mark-yellow>well-defined</mark-yellow> <mark-purple>computational procedure</mark-purple> that takes some <mark-yellow>input</mark-yellow> and produces an <mark-yellow>output</mark-yellow> in <mark-purple>finite amount of time</mark-purple>.
 A correct algorithm solves a computational problem by transforming to input into the desired output.
+
+A <mark-blue>data structure</mark-blue> is a way to store and organize data in order to facilitate access and modifications. 
 
 ## Chapter 2: Getting Started
 > Objective: This chapter introduces the analysis of algorithms and algorithm design techniques like the
