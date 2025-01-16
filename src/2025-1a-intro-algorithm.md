@@ -14,7 +14,7 @@ An <ymark>instance of a problem</ymark> is all the inputs needed to compute a so
 
 > To sort the permutation {8, 3, 6, 7} is an instance of the general sorting problem and {3, 6, 7, 8} is the desired output.
 
-An <bmark>algorithm</bmark> is a <ymark>well-defined</ymark> <pmark>computational procedure</pmark> that takes some <ymark>input</ymark> and produces an <ymark>output</ymark> in <pmark>finite amount of time</pmark>.
+An <bmark>algorithm</bmark> is a <ymark>well-defined</ymark> <pmark>computational procedure</pmark> that takes some <ymark>input</ymark> and produces an <ymark>output</ymark> in <pmark>finite amount of time</pmark> (i.e. it <pmark>halts</pmark>).
 A correct algorithm solves a computational problem by transforming to input into the desired output.
 
 A <bmark>data structure</bmark> is a way to store and organize data in order to facilitate access and modifications. 
@@ -24,12 +24,12 @@ A <bmark>data structure</bmark> is a way to store and organize data in order to 
 > incremental method (using insertion sort) and design-and-conquer (using merge sort).
 
 ### Loop invariants
-A loop invariant is a property or condition that holds true before and after every iteration of a loop. It is a useful tool for understanding the correctness of an algorithm.
+A <bmark>loop invariant</bmark> is a <pmark>property</pmark> or <pmark>condition</pmark> that holds true <ymark>before and after every iteration</ymark> of a loop. It is a useful tool for understanding the correctness of an algorithm.
 
 It consists of three parts:
-1. **Initialization**: Prove that the invariant is true <bmark>before the first iteration</bmark>.
-2. **Maintenance**: Prove that if the invariant is true before an iteration, it remains true <bmark>before the next iteration</bmark>.
-3. **Termination**: At the end of the loop, the <bmark>invariant along with the termination condition should imply the correctness of the algorithm</bmark>.
+1. **Initialization**: Prove that the invariant is true <ymark>before the first iteration</ymark>.
+2. **Maintenance**: Prove that if the invariant is true before an iteration, it remains true <ymark>before the next iteration</ymark>.
+3. **Termination**: At the end of the loop, the invariant along with the termination condition should imply the correctness of the algorithm.
 
 ### Insertion Sort
 Insertion sort is a sorting algorithm that builds the final sorted array one item at a time.
@@ -58,14 +58,13 @@ fn insertion_sort(mut input: Vec<i32>) -> Vec<i32> {
 
 Correctness of the insertion sort algorithm can be proven using loop invariants:
 
-> At the start of each iteration, the sub-array `input[0:i-1]` contains the same elements as the original sub-array `input[0:i-1]`, but in sorted order.
-> 
-> **Proof**:
-> 
-> * Initialization: Before the first iteration, $i = 1$. The sub-array `input[0..i-1]` (an empty subarray) is trivially sorted.
-> * Maintenance: The body of the for loop works by moving the elements in `input[i - 1]`, `input[i - 2]`, `input[i - 3]`, ..., `input[0]` that are greater than `input[i]` one position to the right. This makes space for `input[i]` to be inserted in the correct position. 
-> The `i` variable is incremented and the sub-array `input[0..i-1]` is still sorted.
-> * Termination: The loop terminates when `i = n`. At this point, the sub-array `input[0..n-1]` is sorted and the algorithm has finished.
+> Invariant: At the start of each iteration, the sub-array `input[0:i-1]` contains the same elements as the original sub-array `input[0:i-1]`, but in sorted order.
+
+**Proof**:
+* **Initialization**: Before the first iteration, $i = 1$. The sub-array `input[0..i-1]` (an empty subarray) is trivially sorted.
+* **Maintenance**: The body of the for loop works by moving the elements in `input[i - 1]`, `input[i - 2]`, `input[i - 3]`, ..., `input[0]` that are greater than `input[i]` one position to the right. This makes space for `input[i]` to be inserted in the correct position. 
+The `i` variable is incremented and the sub-array `input[0..i-1]` is still sorted.
+* **Termination**: The loop terminates when `i = n`. At this point, the sub-array `input[0..n-1]` is sorted and the algorithm has finished.
 
 ### Exercises
 
@@ -163,7 +162,7 @@ fn add_binary_integers(a: Vec<u8>, b: Vec<u8>) -> Vec<u8> {
 ```
 
 ### Analyzing algorithms
-Analyzing an algorithm has come to mean predicting the resources that the algorithm requires. Resources include (but not limited to):
+<bmark>Analyzing an algorithm</bmark> has come to mean predicting the resources that the algorithm requires. Resources include (but not limited to):
 * Computational time
 * Memory
 * Communication bandwidth
@@ -172,7 +171,7 @@ Analyzing an algorithm has come to mean predicting the resources that the algori
 To analyze algorithms, we need a model of the machine that it runs on, including the resources of that machine and
 a way to express their costs.
 
-A common model is the **random-access machine (RAM)**, which is a one-processor machine with the following properties:
+A common model is the <bmark>random-access machine (RAM)</bmark>, which is a one-processor machine with the following properties:
 * Instructions execute one after the other.
 * Each primitive instruction takes a constant amount of time.
 * Primitive instructions include:
@@ -186,12 +185,12 @@ While simple, the RAM-model analyses are usually excellent predictors of perform
 #### Why not empirical analysis?
 
 One way to analyze an algorithm is to run it on a particular computer given a specific input.
-However, the result of this type of analysis depends on variables that are not inherent to the algorithm like computer type, current resource utilization, etc.
+However, the result of this type of analysis depends on variables that are not <ymark>inherent to the algorithm</ymark> like computer type, current resource utilization, etc.
 Hence, you can't simply extrapolate this data and use it to compare different algorithms generally.
 
 #### Analysis with the RAM model
 A better form of analysis inspects features that are inherent to the algorithm and its input:
-* The **running time** of an algorithm on a particular input is the number of primitive instructions executed on the RAM.
+* The <bmark>running time</bmark> of an algorithm on a particular input is the <ymark>number of primitive instructions</ymark> executed on the RAM.
 * An instruction that takes $c_k$ steps to execute and that executes $m$ times contributes $m \cdot c_k$ to the total running time.  
 * The running time of an algorithm is a function of its input.
 * There are many features of the input that can affect an algorithm's running time. It's typical to only consider the **input size** due to its dominant effect.
@@ -199,7 +198,7 @@ A better form of analysis inspects features that are inherent to the algorithm a
   * For problems like searching or sorting, the natural measure is the number of items in the input.
   * For problems like multiplication, the measure can be the total number of bits.
   * For some graph problems, it might be appropriate to describe the size of the input with more than one number (e.g. for the number of vertices and edges).
-* Even for inputs of a given size, an algorithm can have different **best-case** and **worst-case** running times.
+* Even for inputs of a given size, an algorithm can have different <pmark>best-case</pmark> and <pmark>worst-case</pmark> running times.
 
 ##### Analyzing insertion sort
 ```rust
@@ -242,24 +241,24 @@ T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)] \\
 + [c_7 \cdot (n-1)] + [c_8]
 $$
 
-For insertion sort on input of size $n$, the best-case runtime happens when the input is already sorted.
+For <ymark>insertion sort on input of size $n$ </ymark>, the best-case runtime happens when the input is already sorted.
 In this case, the while loop condition is checked and the loop is immediately terminated.
 Hence, $t_i = 1$ in this case for all $i$.
 The best-case runtime is then given by:
 
 $$
 T(n) = [c_1 \cdot n] + [c_2 \cdot (n-1)] + [c_3 \cdot (n-1)]
-+ [c_4 \cdot (n-1) ] + [c_7 \cdot (n-1)] + [c_8]
+\\\\ + [c_4 \cdot (n-1) ] + [c_7 \cdot (n-1)] + [c_8]
 $$
 
 $$
 = (c_1 + c_2 + c_3 + c_4 + c_7) \cdot n - (c_2 + c_3 + c_7 - c_8)
 $$
 
-> The best-case runtime is a **linear function** of $n$ because it can be expressed as $an + b$, where $a$ and $b$ are the various constants
+> The <pmark>best-case runtime is a linear function of $n$</pmark> because it can be expressed as $an + b$, where $a$ and $b$ are the various constants
 of running the instructions on the various lines.
 
-For insertion sort, the worst case arises when the input is in reverse sorted order.
+For insertion sort, <ymark>the worst case</ymark> arises when the input is in reverse sorted order.
 In this case, the while loop is executed for all elements in `input[0..(i-1)]`.
 Hence, $t_i = i$ in this case for all $i$.
 The worst-case runtime is then given by:
@@ -276,6 +275,7 @@ $$
 <summary>Explanation</summary>
 
 The sum of the first $m$ numbers is:
+
 $$
 \sum_{i=1}^{m} i = \frac{m(m + 1)}{2}
 $$
@@ -287,8 +287,8 @@ S = 1 + 2 + 3 + ... + m \\\\
 S = m + (m - 1) + (m - 2) + ... + 1
 $$
 
-* The first term of the forward sequence ($1$) added to the first term of the backward sequence ($m$) is: $m + 1$.
-* The second term of the forward sequence ($2$) added to the second term of the backward sequence ($m - 1$) is: $m + 1$.
+* The first term of the forward sequence $(1)$ added to the first term of the backward sequence $(m)$ is: $m + 1$.
+* The second term of the forward sequence $(2)$ added to the second term of the backward sequence $(m - 1)$ is: $m + 1$.
 * This pattern continues for all pairs: $3 + (m - 2)$, ..., $m + 1$.
 * This then gives:
 
