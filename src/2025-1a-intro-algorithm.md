@@ -255,7 +255,7 @@ $$
 = (c_1 + c_2 + c_3 + c_4 + c_7) \cdot n - (c_2 + c_3 + c_7 - c_8)
 $$
 
-> The <pmark>best-case runtime is a linear function of $n$</pmark> because it can be expressed as $an + b$, where $a$ and $b$ are the various constants
+> The <pmark>best-case runtime is a linear function of $n$ </pmark> because it can be expressed as $an + b$, where $a$ and $b$ are the various constants
 of running the instructions on the various lines.
 
 For insertion sort, <ymark>the worst case</ymark> arises when the input is in reverse sorted order.
