@@ -395,18 +395,18 @@ To improve the best-case running time for any sorting algorithm, we can introduc
 
 #### Divide-and-conquer method
 <bmark>Divide-and-conquer</bmark> is an algorithm design technique that uses <pmark>recursion</pmark> to find a solution to a problem by breaking the solution into two cases:
-1. The <pmark>base case</pmark>: The recursion stops at the **base case**, which is a small enough problem that can be solved directly without recursing.
-2. The <pmark>recursive case</pmark>:
+1. The <bmark>base case</bmark>: The recursion stops at the **base case**, which is a small enough problem that can be solved directly without recursing.
+2. The <bmark>recursive case</bmark>:
    * <gmark>Divide</gmark> the problem into smaller sub-problems.
    * <pmark>Conquer</pmark> the sub-problems by solving them recursively (i.e. by further breaking them down into smaller sub-problems).
    * <ymark>Combine</ymark> the sub-problem solutions to form a solution to the original problem.
 
 #### Merge sort algorithm
-Merge sort algorithm is a sorting algorithm based the divide-and-conquer technique:
-* **Divide** the subarray `A[p:r]` to be sorted into two adjacent sub-arrays, each of half the size.
+Merge sort algorithm is a sorting algorithm based on the divide-and-conquer technique:
+* <gmark>Divide</gmark> the subarray `A[p:r]` to be sorted into two adjacent sub-arrays, each of half the size.
   To do so, compute the midpoint `q` of `[p:r]` (taking the average of `p` and `r`), and divide `A[p:r]` into sub-arrays of `A[p:q]` and `A[q + 1: r]`.
-* **Conquer** by sorting each ot the two sub-arrays `A[p:q]` and `A[q + 1:r]` recursively using merge sort.
-* **Combine** by merging the sorted sub-arrays `A[p:q]` and `A[q + 1:r]` back into `A[p:r]`, producing the sorted answer.
+* <pmark>Conquer</pmark> by sorting each ot the two sub-arrays `A[p:q]` and `A[q + 1:r]` recursively using merge sort.
+* <ymark>Combine</ymark> by merging the sorted sub-arrays `A[p:q]` and `A[q + 1:r]` back into `A[p:r]`, producing the sorted answer.
 
 ![Merge Sort](/docs/assets/introduction-to-algorithms-images/merge_sort_operation.svg)
 
@@ -475,7 +475,7 @@ fn merge(input: &mut Vec<i32>, p: usize, q: usize, r: usize) {
 The `merge` procedure takes $\Theta(n)$ time. To demonstrate:
 * Take $n = r - p + 1$
 * The lines outside the loops takes constant time.
-* The first two `for` loops take $\Theta(left_length + right_length) = \Theta(n)$ time.
+* The first two `for` loops take $\Theta(left\_length + right\_length) = \Theta(n)$ time.
 * Each iteration of the bottom three `while` loops copy exactly one value from `left` or `right` back into `input`,
   and each value is copied back into `input` exactly once. The total time spent in these three loops is $\Theta(n)$.
 
@@ -496,6 +496,7 @@ Let $T(n)$ denote the worst-case running time on a problem of size $n$, the recu
     * **Combine**: The combine step takes $C(n)$ time.
 
 This yields the following recurrence:
+
 $$
 T(n) = \begin{cases}
 \Theta(1) & \text{if } n < n_0 \\
@@ -515,6 +516,7 @@ For merge sort, the recurrence can be described as:
 * **Combine**: The `merge` procedure takes $\Theta(n)$ time.
 
 Hence, the running time of merge sort on a problem of size $n$ can be described as:
+
 $$
 T(n) = 2T(n/2) + \Theta(n)
 $$
