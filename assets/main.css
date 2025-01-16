@@ -353,3 +353,7 @@ rmark {
     background-color: #FFCDD2; /* Soft pastel red */
     font-weight: bold;
 }
+
+.katex-display {
+    overflow: auto hidden
+}
