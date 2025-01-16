@@ -331,7 +331,7 @@ $$
 of running the instructions on the various lines.
 
 ##### Worst-case running time
-The **worst-case running time** is the longest running time for any input of size $n$. It is commonly used over other types of runtime because:
+The <bmark>worst-case running time</bmark> is the longest running time for any input of size $n$. It is commonly used over other types of runtime because:
 * It gives the upper bound on the running time for any input. This is useful in software engineering.
 * The worst-case happens frequently in production.
 * The "average case" is often roughly as bad as the worst case. The other problem is determining what constitutes an "average" for a particular problem.
@@ -394,12 +394,12 @@ Using the theta notation, both the worst and average case time for linear search
 To improve the best-case running time for any sorting algorithm, we can introduce logic that checks if the input is already sorted.
 
 #### Divide-and-conquer method
-Divide-and-conquer is an algorithm design technique that uses <bmark>recursion</bmark> to find a solution to a problem by breaking the solution into two cases:
-1. The **base case**: The recursion stops at the **base case**, which is a small enough problem that can be solved directly without recursing.
-2. The **recursive case**:
-   * **Divide** the problem into smaller sub-problems.
-   * **Conquer** the sub-problems by solving them recursively (i.e. by further breaking them down into smaller sub-problems).
-   * **Combine** the sub-problem solutions to form a solution to the original problem.
+<bmark>Divide-and-conquer</bmark> is an algorithm design technique that uses <pmark>recursion</pmark> to find a solution to a problem by breaking the solution into two cases:
+1. The <pmark>base case</pmark>: The recursion stops at the **base case**, which is a small enough problem that can be solved directly without recursing.
+2. The <pmark>recursive case</pmark>:
+   * <gmark>Divide</gmark> the problem into smaller sub-problems.
+   * <pmark>Conquer</pmark> the sub-problems by solving them recursively (i.e. by further breaking them down into smaller sub-problems).
+   * <ymark>Combine</ymark> the sub-problem solutions to form a solution to the original problem.
 
 #### Merge sort algorithm
 Merge sort algorithm is a sorting algorithm based the divide-and-conquer technique:
