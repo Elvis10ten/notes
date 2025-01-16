@@ -273,8 +273,9 @@ $$
 
 <details>
 <summary>Explanation</summary>
+<ymark>For the 4th line</ymark>
 
-The sum of the first $m$ numbers is:
+The sum of the first $m$ integers is:
 
 $$
 \sum_{i=1}^{m} i = \frac{m(m + 1)}{2}
@@ -313,7 +314,7 @@ $$
 
 ---
 
-For the 5th and 6th lines:
+<ymark>For the 5th and 6th lines</ymark>:
 
 $$
 \begin{aligned}
@@ -326,7 +327,7 @@ $$
 </details>
 
 
-> The wost-case is a **quadratic function** of $n$ because it can be expressed as $an^2 + bn + c$, where $a$, $b$ and $c$ are the various constants
+> The <ymark>wost-case is a quadratic function</ymark> of $n$ because it can be expressed as $an^2 + bn + c$, where $a$, $b$ and $c$ are the various constants
 of running the instructions on the various lines.
 
 ##### Worst-case running time
