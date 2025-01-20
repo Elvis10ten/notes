@@ -898,3 +898,68 @@ The $O$ notation is occasionally used in scenarios where the $\theta$ notation w
 * Saying that "an $O(n \lg_2 n)$ time algorithm is faster than an $O(n^2)$ time algorithm".
 * This is not necessarily true, because the $O$ notation only specifies an asymptotic upper bound.
 * Hence, the $O(n^2)$ might actually run in just $\theta(n)$ time.
+
+#### Proper abuses of asymptotic notation
+Although, asymptotic notation are defined in terms of sets, the equal sign $(=)$ is typically used instead of the set membership sign $(\in)$ within formulas.
+This is an accepted abuse of the equality/inequality symbol, which has a precise mathematical interpretation:
+* When the asymptotic notation stands alone on the right-hand side of the equation (or inequality), as in $4n^2 + 100n + 500 = c \cdot n^2$, the
+equal sign means set membership: $4n^2 + 100n + 500 \geq c \in O(n^2)1$.
+* In general, when asymptotic notation appears in a formula, we interpret it as standing for some anonymous function that we do not care to name.
+e.g. $4n^2 + 100n + 500 \geq c = 2n^ + n^2$ is interpreted as $4n^2 + 100n + 500 \geq c = 2n^2 + f(n)$ where $f(n) \in \theta(n)$.
+
+> "In mathematics, it's okay -- and often desirable -- to abuse a notation, as long as we don't misuse it. If we understand precisely what is meant by the abuse and don't draw incorrect conclusions,
+> it can simplify our mathematical language, contribute to our higher-level understanding, and hel us focus on what really matters."
+
+#### The $o$ notation
+The $o$ notation is used to denote an upper bound that is not asymptotically tight.
+$o(g(n))$ is pronounced "little-oh of $g$ of $n$" and it's formally defined as the set:
+
+$o(g(n)) = \{f(n):$ for any positive constant $c > 0$, there exists a constant $n_0 > 0$ such that $0 \leq f(n) < c \cdot g(n)$ for all $n \geq n_0\}$.
+
+The definitions of $O$ notation and $o$ notation are similar. The main difference is that in $f(n) = O(g(n))$, the bound
+$0 \leq f(n) \leq c \cdot g(n)$ holds for some constant $c > 0$, but in $f(n) = o(g(n))$, the bound $0 \leq f(n) < c \cdot g(n)$ holds for all constants $c > 0$.
+
+#### The $\omega$ notation
+The $\omega$ notation denotes a lower bound that is not asymptotically tight.
+$\omega(g(n))$ is pronounced "little-omega of $g$ of $n$" and one way to define it is by:
+
+$f(n) \in \omega(g(n))$ IFF $g(n) \in o(f(n))$
+
+However, it's formally defined as the set:
+
+$\omega(g(n)) = \{f(n) : $ for any positive constant $c > 0$, there exists a constant $n_0 > 0$ such that $0 \leq c \cdot g(n) < f(n)$ for all $n \geq n_0\}$
+
+The $\omega$ notation is to $\Omega$ as $o$ is to $O$ notation.
+
+#### Comparing functions
+Many of the relational properties of real numbers apply to asymptotic comparisons as well.
+
+##### 1. **Big-O Notation ($O$)**
+- **Transitivity**: If $f(n) = O(g(n))$ and $g(n) = O(h(n))$, then $f(n) = O(h(n))$.  
+- **Reflexivity**: $f(n) = O(f(n))$.
+- **Symmetry**: Big-O is **not symmetric**. If $f(n) = O(g(n))$, it does not imply $g(n) = O(f(n))$.
+- **Transpose Symmetry**: $f(n) = O(g(n))$ IFF $g(n) = \Omega(f(n))$.
+
+##### 2. **Big-Omega Notation ($\Omega$)**
+- **Transitivity**: If $f(n) = \Omega(g(n))$ and $g(n) = \Omega(h(n))$, then $f(n) = \Omega(h(n))$.
+- **Reflexivity**: $f(n) = \Omega(f(n))$.  
+- **Symmetry**: Big-Omega is **not symmetric**. If $f(n) = \Omega(g(n))$, it does not imply $g(n) = \Omega(f(n))$.
+- **Transpose Symmetry**: Does not apply to $\Omega$.
+
+##### 3. **Theta Notation ($\Theta$)**
+- **Transitivity**: If $f(n) = \Theta(g(n))$ and $g(n) = \Theta(h(n))$, then $f(n) = \Theta(h(n))$.  
+- **Reflexivity**: $f(n) = \Theta(f(n))$.  
+- **Symmetry**: Theta is **symmetric**. If $f(n) = \Theta(g(n))$, then $g(n) = \Theta(f(n))$.  
+- **Transpose Symmetry**: Does not apply to $\Theta$.
+
+##### 4. **Little-O Notation ($o$)**
+- **Transitivity**: If $f(n) = o(g(n))$ and $g(n) = o(h(n))$, then $f(n) = o(h(n))$.  
+- **Reflexivity**: Little-O is **not reflexive**. $f(n) \neq o(f(n))$.
+- **Symmetry**: Little-O is **not symmetric**. If $f(n) = o(g(n))$, it does not imply $g(n) = o(f(n))$.
+- **Transpose Symmetry**: $f(n) = o(g(n))$ IFF $g(n) = \omega(f(n))$.
+
+##### 5. **Little-Omega Notation ($\omega$)**
+- **Transitivity**: If $f(n) = \omega(g(n))$ and $g(n) = \omega(h(n))$, then $f(n) = \omega(h(n))$.  
+- **Reflexivity**: Little-Omega is **not reflexive**. $f(n) \neq \omega(f(n))$.
+- **Symmetry**: Little-Omega is **not symmetric**. If $f(n) = \omega(g(n))$, it does not imply $g(n) = \omega(f(n))$.
+- **Transpose Symmetry**: Does not apply to $\omega$.

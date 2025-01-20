@@ -35,20 +35,20 @@
 
 ### Inside the Machine: An Illustrated Introduction to Microprocessors and Computer Architecture
 
-| **Week** | **Dates**        | **Chapter Covered**                                                | **Done** |
-|----------|------------------|--------------------------------------------------------------------|----------|
-| Week 1   | Jan 21 - Jan 27  | Chapter 1: Basic Computing Concepts                               | [ ]      |
-| Week 2   | Jan 28 - Feb 3   | Chapter 2: The Mechanics of Program Execution                     | [ ]      |
-| Week 3   | Feb 4 - Feb 10   | Chapter 3: Pipelined Execution                                    | [ ]      |
-| Week 4   | Feb 11 - Feb 17  | Chapter 4: Superscalar Execution                                  | [ ]      |
-| Week 5   | Feb 18 - Feb 24  | Chapter 5: The Intel Pentium and Pentium Pro                     | [ ]      |
-| Week 6   | Feb 25 - Mar 2   | Chapter 6: PowerPC Processors: 600 Series, 700 Series, and 7400  | [ ]      |
-| Week 7   | Mar 3 - Mar 9    | Chapter 7: Intel’s Pentium 4 vs. Motorola’s G4e: Approaches and Design Philosophies | [ ]      |
-| Week 8   | Mar 10 - Mar 16  | Chapter 8: Intel’s Pentium 4 vs. Motorola’s G4e: The Back End     | [ ]      |
-| Week 9   | Mar 17 - Mar 23  | Chapter 9: 64-Bit Computing and x86-64                           | [ ]      |
-| Week 10  | Mar 24 - Mar 30  | Chapter 10: The G5: IBM’s PowerPC 970                            | [ ]      |
-| Week 11  | Mar 31 - Apr 6   | Chapter 11: Understanding Caching and Performance                | [ ]      |
-| Week 12  | Apr 7 - Apr 13   | Chapter 12: Intel’s Pentium M, Core Duo, and Core 2 Duo           | [ ]      |
+| **Week** | **Dates**       | **Chapter Covered**                                                                 | **Done** |
+|----------|-----------------|-------------------------------------------------------------------------------------|----------|
+| Week 1   | Jan 21 - Jan 27 | Chapter 1: Basic Computing Concepts                                                 | [ ]      |
+| Week 2   | Jan 28 - Feb 3  | Chapter 2: The Mechanics of Program Execution                                       | [ ]      |
+| Week 3   | Feb 4 - Feb 10  | Chapter 3: Pipelined Execution                                                      | [ ]      |
+| Week 4   | Feb 11 - Feb 17 | Chapter 4: Superscalar Execution                                                    | [ ]      |
+| Week 5   | Feb 18 - Feb 24 | Chapter 5: The Intel Pentium and Pentium Pro                                        | [ ]      |
+| Week 6   | Feb 25 - Mar 2  | Chapter 6: PowerPC Processors: 600 Series, 700 Series, and 7400                     | [ ]      |
+| Week 7   | Mar 3 - Mar 9   | Chapter 7: Intel’s Pentium 4 vs. Motorola’s G4e: Approaches and Design Philosophies | [ ]      |
+| Week 8   | Mar 10 - Mar 16 | Chapter 8: Intel’s Pentium 4 vs. Motorola’s G4e: The Back End                       | [ ]      |
+| Week 9   | Mar 17 - Mar 23 | Chapter 9: 64-Bit Computing and x86-64                                              | [ ]      |
+| Week 10  | Mar 24 - Mar 30 | Chapter 10: The G5: IBM’s PowerPC 970                                               | [ ]      |
+| Week 11  | Mar 31 - Apr 6  | Chapter 11: Understanding Caching and Performance                                   | [ ]      |
+| Week 12  | Apr 7 - Apr 13  | Chapter 12: Intel’s Pentium M, Core Duo, and Core 2 Duo                             | [ ]      |
 
 
 ### Six Easy Pieces by Richard P. Feynman
