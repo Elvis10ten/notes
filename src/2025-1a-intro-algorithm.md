@@ -963,3 +963,34 @@ Many of the relational properties of real numbers apply to asymptotic comparison
 - **Reflexivity**: Little-Omega is **not reflexive**. $f(n) \neq \omega(f(n))$.
 - **Symmetry**: Little-Omega is **not symmetric**. If $f(n) = \omega(g(n))$, it does not imply $g(n) = \omega(f(n))$.
 - **Transpose Symmetry**: Does not apply to $\omega$.
+
+#### Standard notations and common functions
+
+##### Monotonicity
+* A function $f(n)$ is <bmark>monotonically increasing</bmark> if $m \leq n$ implies $f(m) \leq f(n)$.
+* A function $f(n)$ is <pmark>monotonically decreasing</pmark> if $m \leq n$ implies $f(m) \geq f(n)$.
+* A function $f(n)$ is <ymark>strictly increasing</ymark> if $m \leq n$ implies $f(m) < f(n)$.
+* A function $f(n)$ is <gmark>strictly increasing</gmark> if $m \leq n$ implies $f(m) > f(n)$.
+
+##### Floors and ceilings
+* <bmark>Floor function</bmark>: For any real number $x$, we denote the greatest integer less than or equal to $x$ by $\lfloor x \rfloor$.
+* <pmark>Ceil function</pmark>: For any real number $x$, we denote the least integer greater than or equal to $x$ by $\lceil x \rceil$.
+* Both functions are monotonically increasing.
+
+##### Modular arithmetic
+For any integer $a$ and any positive integer $n$, the value $a$ mod $n$is the <ymark>remainder</ymark> (or <ymark>residue</ymark>) of the quotient $a / n$.
+
+##### Polynomials
+Given a non-negative integer $d$, a <bmark>polynomial in $n$ of degree $d$ </bmark> is a function $p(n)$ of the form:
+
+$$
+p(n) = \sum_{i=0}^{d} a_i n_i
+$$
+
+Where the constants $a_0$, $a_1$, ..., $a_d$ are the <ymark>coefficients</ymark> of the polynomial and $a_d \neq 0$
+
+Some properties of polynomials:
+* A polynomial is asymptotically positive IFF $a_d > 0$
+* For an asymptotically positive polynomial $p(n)$ of degree $d$, we have $p(n) = \theta(n^d)$.
+* For any real constant $a \geq 0$, the function $n^a$ is monotonically increasing, and for any real constant $a \leq 0$, the function $n^a$ is monotonically decreasing.
+* A function is <pmark>polynomially bounded</pmark> if $f(n) = O(n^k)$ for some constant $k$.
