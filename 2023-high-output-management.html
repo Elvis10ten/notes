@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>High output management</title>
+        <meta property="og:image" content="assets/banners/2023-high-output-management.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+
+        <link href="assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>High output management</h1>
+<p>This is my summary of &quot;<a href="https://amzn.to/3taWfis">High output management</a>&quot; written by Andrew Grove (Former chairman and CEO of Intel).</p>
+<hr>
+<h2>Chapter 1: The basics of production</h2>
+<blockquote>
+<p> The key to optimizing all types of productive work is to find the <code>most cost-effective</code> way to deploy your resources.</p>
+</blockquote>
+<ol>
+<li>The basic requirement of production is to build and deliver products in response to the demands of the customer at a <code>scheduled</code> delivery time, at an <code>acceptable</code> quality level, and at the <code>lowest</code> possible cost.</li>
+<li>A <strong>production flow</strong> is all the steps taken to build and deliver a product to a customer.</li>
+<li>Production flow should be constructed by starting with the longest (or most difficult, or most sensitive, or most expensive) step (called a <strong>limiting step</strong>) and working our way back.</li>
+<li>The limiting step determines the overall shape of the flow. Optimizations include:<ul>
+<li>Minimizing the need to execute the limiting step by batching or introducing (short) heuristics.</li>
+<li>Parallelizing shorter steps over the limiting step with some offsets.</li>
+</ul>
+</li>
+<li>Fundamental types of production operations:<ul>
+<li><strong>Process manufacturing</strong> — which is an activity that physically or chemically changes material(s).</li>
+<li><strong>Assembly</strong> — where the components are put together to constitute a new entity.</li>
+<li><strong>Test</strong> — which subjects the components or the total to an examination of its characteristics.</li>
+</ul>
+</li>
+<li>Equipment capacity, manpower, and inventory can be traded off against each other and then balanced against delivery time. Each alternative costs money.</li>
+<li>The right solution is the one that can give you the best delivery time and product quality at the lowest possible cost.</li>
+<li>To find the right answer, you must develop a clear understanding of the trade-offs between the various factors — manpower, capacity, and inventory — and you must reduce the understanding to a quantifiable set of relationships.</li>
+<li>A raw material inventory creates supply resiliency. The principle to be applied is that you should have enough to cover your consumption rate for the length of time it takes to replace your raw material.</li>
+<li>Every decision should be evaluated based on:<ul>
+<li>Benefits of decision;</li>
+<li>Cost of decision e.g. cost of money;</li>
+<li>Opportunity at risk e.g. what do you lose without supply resilience and how much does it cost to recover?</li>
+</ul>
+</li>
+<li>All production flows have a basic characteristic: the material becomes more valuable as it moves through the process.</li>
+<li>Because of this characteristic, problems in the production process should be detected and fixed at the <code>lowest-value</code> stage possible.</li>
+</ol>
+<h2>Chapter 2: Managing the breakfast factory</h2>
+<blockquote>
+<p> Unless you are prepared to act on what your <strong>leading indicators</strong> are telling you, all you will get from monitoring them is anxiety.</p>
+</blockquote>
+<ol>
+<li><strong>Indicators</strong>/measurements are a key tool for running operations well.</li>
+<li>To be useful, each indicator must be focused on a specific operational goal.</li>
+<li>Indicators direct your attention towards what they are measuring.</li>
+<li>You should guard against overreacting on an indicator by pairing indicators so that together both <code>effect</code> and <code>counter-effect</code> are measured. E.g. monitoring both inventory levels and the incidence of shortages.</li>
+<li><strong>Joint monitoring</strong> is likely to keep things in the optimum middle ground.</li>
+<li>Criteria for an effective indicator:<ul>
+<li>Covers the output of the work unit and not simply the activity involved.</li>
+<li>What is measured should be a physical, countable thing.</li>
+</ul>
+</li>
+<li>The team working on a step should be given the task of prediction so that they are responsible for performing against their own predictions. Don’t delegate predictions to a manager / third party.</li>
+<li>A balance should exist between the desired result of the inspection, improved quality, and minimum disturbance to the production process itself.</li>
+<li>The <strong>productivity</strong> of any function is the output divided by the labor required to generate the output.</li>
+<li>Ways to improve productivity:<ul>
+<li>Work faster / harder</li>
+<li>Change the nature of the work performed — what we do, not how fast we do it.</li>
+</ul>
+</li>
+<li><strong>Leverage</strong> is the output generated by a specific type of work activity.</li>
+<li>An activity with high leverage will generate a high level of output; and vice versa.</li>
+<li>Ways to increase leverage:<ul>
+<li>Automation</li>
+<li>Work simplification — question why each step is performed. Often useless steps are only in your workflow because of tradition or because formal procedure ordains it;  nothing practical requires their inclusion.</li>
+</ul>
+</li>
+</ol>
+<h2>Chapter 3: Managerial leverage</h2>
+<blockquote>
+<p>The art of management lies in the capacity to select from the many activities of seemingly comparable significance the one or two or three that provide leverage well beyond the others and concentrate on them.</p>
+</blockquote>
+<ol>
+<li>The output of a manager is a result achieved by a group either under her supervision or influence.</li>
+<li>The manager’s own work does not create output, her organization does.</li>
+<li>A <strong>managers output</strong> = The output of his organization + The output of the neighboring organizations under his influence</li>
+<li>The definition of a “manager” should be broadened: individual contributors who gather and disseminate know-how and information should be seen as middle managers because they exert great power within the organization.</li>
+<li>A manager&#39;s work is never done.</li>
+<li>Major kinds of managerial activities:<ul>
+<li>Information gathering — from verbal exchanges, reports, and first-hand experience.</li>
+<li>Information dissemination — This includes communicating his objectives, priorities, and preferences so that his subordinates can arrive at acceptable decisions themselves.</li>
+<li>Decision-making — Managers participate in decision-making often, but they rarely make a decision themselves.</li>
+<li>Nudging people in the direction you like.</li>
+<li>Being a role model for your subordinates. Nothing leads as well as example.</li>
+</ul>
+</li>
+<li>Information gathering is the basis of all other managerial work.</li>
+<li><strong>Meetings</strong> provide an occasion for managerial activities. Getting together with others is a <code>medium</code> and should not be regarded as part of a manager’s activity.</li>
+<li>A manager must choose the most effective medium for what they are trying to accomplish.</li>
+<li><strong>Leverage</strong> is the measure of the output generated by any given managerial activity.</li>
+<li>Managerial output = Output of organization
+= L₁ * A₁ + L₂ * A₂ + …</li>
+<li>A manager’s output is the sum of the results of individual activities having varying degrees of leverage.</li>
+<li><strong>Managerial productivity</strong> — that is, the output of a manager per unit of time worked — can be increased in three ways:<ul>
+<li>Increasing the rate with which a manager performs his activities.</li>
+<li>Increasing the leverage associated with the various managerial activities.</li>
+<li>Shifting the mix of a manager’s activities from those with lower to those with higher leverage.</li>
+</ul>
+</li>
+<li>High leverage activities:<ul>
+<li>When many people are affected by one manager</li>
+<li>When a person’s activity or behavior over a long period of time is affected by a manager’s brief, well-focused set of words or actions.</li>
+<li>When a large group’s work is affected by an individual supplying a unique, key piece of knowledge or information.</li>
+</ul>
+</li>
+<li>Timeliness is usually important in maximizing the leverage of a manager’s activity.</li>
+<li>Negative leverage activities:<ul>
+<li>Managerial meddling — when a supervisor uses his superior knowledge and experience of a subordinate’s responsibilities to assume command of a situation rather than letting the subordinate work things through himself.</li>
+<li>Waffling — when a manager puts off a decision that will affect the work of other people.</li>
+</ul>
+</li>
+<li><strong>Delegation</strong> is an essential aspect of management and can provide managerial leverage.</li>
+<li>The “delegator” and “delegatee” must share a common information base and a common set of operational ideas on how to go about solving problems.</li>
+<li>Insincere delegation can produce negative managerial leverage.</li>
+<li>Delegation without follow-through is abdication — you can never wash your hands off a task.</li>
+<li>If you have a choice, you should delegate those activities you know best as it’s easier to monitor something you are familiar with.</li>
+<li><strong>Monitoring</strong> is not meddling. Monitoring means checking to make sure an activity is proceeding in line with expectations.</li>
+<li>We can apply quality assurance principles to monitoring the results of delegation:<ul>
+<li>Monitor at the lowest-added-value stage of the process.</li>
+<li>The frequency of monitoring should be variable. Monitoring should not be based on what you believe your subordinate can do in general but on his experience with a specific task and his prior performance with it.</li>
+</ul>
+</li>
+<li>Monitoring decision-making delegated to subordinates can be done by monitoring their decision-making process. This can be achieved by having them go through an exercise that checks that they have considered certain factors or thought critically about the decision.</li>
+<li>Time management techniques from production principles:<ul>
+<li>Determine the limiting step (i.e. what is immovable) and manipulate the more yielding activities around it</li>
+<li>Batch similar tasks together.</li>
+<li>Say “no” if you have a full capacity.</li>
+<li>Allow slack — a bit of looseness in your scheduling.</li>
+<li>A manager should carry a raw material inventory in terms of projects that they need to do but don’t need to finish right away. Without such an inventory, a manager will most probably use his free time meddling in his subordinate’s work.</li>
+<li>Avoid repeatedly reinventing the wheel — Follow well-established procedures that have been shown to work before.</li>
+<li>Strive towards regularity — reduce interruptions with batching, documentation and preemptively identifying sources of emergencies.</li>
+</ul>
+</li>
+<li>To gain better control of his time, the manager should use his calendar as a “production” planning tool, taking a firm initiative to schedule work that is not time-critical between those “limiting steps” in the day.</li>
+<li>As a rule of thumb, a manager whose work is largely supervisory should have six to eight subordinates.</li>
+<li>This range comes from a guidance that a manager should allocate about a half day per week to each of his subordinates.</li>
+</ol>
+<h2>Chapter 4: Meetings — The medium of managerial work</h2>
+<blockquote>
+<p>A meeting called to make a specific decision is hard to keep moving if more than six or seven people attend. Eight people should be the absolute cutoff. Decision-making is not a spectator sport, because onlookers get in the way of what needs to be done.</p>
+</blockquote>
+<ol>
+<li>Types of meetings:<ul>
+<li>Process-oriented meeting: The purpose is information exchange. It’s usually scheduled on a regular basis.</li>
+<li>Mission-oriented meeting: The purpose is to solve a specific problem. They frequently produce a decision and are usually ad hoc.</li>
+</ul>
+</li>
+<li>One-on-ones are a type of process-oriented meeting between a supervisor and his subordinate where the subordinate provides his concerns and detailed information about what he is doing and the supervisor teaches his skills and know-how by talking about specific problems and situations.</li>
+<li>One-on-ones frequency depends on:<ul>
+<li>Task-relevant maturity of the subordinate. The most effective management style in a specific instance varies from very close to very loose supervision as a subordinate’s task maturity increases.</li>
+<li>How quickly things change in a job arena.</li>
+</ul>
+</li>
+<li>One-on-ones should last long enough for the subordinate to feel they can broach and get into thorny issues. Too short and they will confine themselves to simple things. The author says they should last at least one hour.</li>
+<li>One-on-ones should happen in or near the subordinate’s work area if possible.</li>
+<li>One-on-ones should be regarded as the subordinate’s meeting, with its agenda and tone set by him.</li>
+<li>Things that should be covered in one-on-ones:<ul>
+<li>Performance figures and indicators used by the subordinate.</li>
+<li>Anything important that has happened since the last meeting.</li>
+<li>Any issue that preoccupies and nags the subordinate.</li>
+</ul>
+</li>
+<li>The supervisor&#39;s role in a one-on-one is to facilitate the subordinate&#39;s expression of what’s going on and what’s bothering him.</li>
+<li>A staff meeting is one in which a supervisor and all of his subordinates participate, and which therefore presents an opportunity for interaction among peers.</li>
+<li>Anything that affects more than two people present at the staff meeting can be discussed there.</li>
+<li>Staff meetings should be controlled with an agenda issued far enough in advance that the subordinates will have had the chance to prepare their thoughts for the meeting. It should include an “open session” for the staff to bring up anything they want.</li>
+<li>The role of the supervisor in a staff meeting is leading, observing, expediting, questioning, and making decisions.</li>
+<li>Operation review meetings are a medium of interaction for people who don’t otherwise have much opportunity to deal with one another.</li>
+<li>Before calling a meeting, ask yourself:<ul>
+<li>What am I trying to accomplish?</li>
+<li>Is a meeting necessary? Or desirable? Or justifiable?
+Don’t call a meeting if all the answers aren’t “yes”.</li>
+</ul>
+</li>
+<li>Determine the purpose of a meeting before committing your time and your company’s resources.</li>
+</ol>
+<h2>Chapter 5: Decisions, Decisions</h2>
+<blockquote>
+<p>A journalist puzzled by our management style once asked me, &quot;Mr. Grove, isn&#39;t your company&#39;s emphasis on visible signs of egalitarianism such as informal dress, partitions instead of offices... just so much affectation?&quot; My answer was that this is not an affectation, but a matter of survival. In our business, we have to mix knowledge-power people with position-power people daily, and together they make decisions that could affect us for years to come.</p>
+</blockquote>
+<ol>
+<li>There is usually a divergence between power based on position vs power based on knowledge.</li>
+<li>Peers tend to look for a more senior manager, even if he is not the most competent or knowledgeable person involved, to take over and shape the meeting.</li>
+<li>Not everyone needs to agree on a decision, but everyone needs to agree to support the decision.</li>
+</ol>
+<h2>Chapter 6: Planning — Today’s actions for tomorrow’s output</h2>
+<blockquote>
+<p>I have seen far too many people who upon recognizing today’s gap try very hard to determine what decision has to be made to close it. But today’s gap represents a failure of planning sometime in the past. By analogy, forcing ourselves to concentrate on the decisions needed to fix today’s problem is like scurrying after our car has already run out of gas.</p>
+</blockquote>
+<ol>
+<li>Strategy is an abstract and general summary of the actions you plan to do.</li>
+<li>Tactics are what you do to implement a strategy.</li>
+<li>General planning process:<ul>
+<li>Establish projected need or demand. Figure out what your customers want now and sometime in the future.</li>
+<li>Establish your present status and express it in the same terms as step 1. Figure out where you will be if you do nothing different from what you are now doing.</li>
+<li>Compare and reconcile steps 1 and 2. What do you need to close the gap? What can you do to close the gap?</li>
+</ul>
+</li>
+<li>The output of the planning process is the decisions made and actions taken as a result of the process.</li>
+<li>You implement only the portion of a plan that lies within the time window between now and the next time you go through the planning exercise. Everything else you can look at again.</li>
+<li>Each time you make a commitment, you forfeit your chance to commit to something else.</li>
+<li>The idea that planners can be people apart from those implementing the plan simply does not work.</li>
+<li>A successful management by objective (MBO) system needs to answer two questions:<ul>
+<li>Where do I want to go? (The answer provides the objective)</li>
+<li>How do I pace myself to see that I am getting there? (The answer gives us milestones or key results)</li>
+</ul>
+</li>
+<li>The MBO system should set objectives for a relatively short period (like a quarter).</li>
+<li>Keep the number of objectives small. If you try to focus on everything, you focus on nothing.</li>
+<li>To be useful, a key result must contain very specific wording and dates so that there is no ambiguity when the deadline arrives.</li>
+<li>MBO should be applied with judgment and common sense. It should not be applied mechanically.</li>
+</ol>
+<h2>Chapter 8: Hybrid organizations</h2>
+<blockquote>
+<p>All large organizations with a common business purpose end up in a hybrid organizational form.</p>
+</blockquote>
+<ol>
+<li>In a large organization, the desire to give autonomy to teams to respond to local conditions moves the organization towards decentralization.</li>
+<li>Conversely, the desire to take advantage of the obvious economies of scale and to increase the leverage of the expertise held in each operational area across the entire corporation moves the organization towards centralization (with functional teams).</li>
+<li>Good management rests on a balancing act to get the best combination of responsiveness and leverage.</li>
+</ol>
+<h2>Chapter 9: Dual reporting</h2>
+<blockquote>
+<p>A dual reporting system makes a manager&#39;s life ambiguous, and most people don&#39;t like ambiguity. Nevertheless, the system is needed to make hybrid organizations work, and while people will strive to find something simpler, the reality is that it doesn&#39;t exist. A strictly functional organization, which is clear conceptually, tends to remove engineering and manufacturing (or the equivalent groups in your firm) from the marketplace, leaving them with no idea of what the customers want. A highly mission-oriented organization, in turn, may have definite crisp reporting relationships and clear and unambiguous objectives at all times. However, the fragmented state of affairs that results causes inefficiency and poor overall performance.</p>
+</blockquote>
+<ol>
+<li>Hybrid organizations are inevitable and dual reporting is needed to make hybrid organizations work.</li>
+</ol>
+<h2>Chapter 10: Modes of control</h2>
+<blockquote>
+<p>When the environment changes more rapidly than one can change rules, or when a set of circumstances is ambiguous and unclear that a contract between the parties that attempted to cover all possibilities would be prohibitively complicated, we need another mode of control, which is based on cultural values. Its most important characteristic is that the interest of the larger group to which an individual belongs takes precedence over the interest of the individual himself.</p>
+</blockquote>
+<ol>
+<li>Our behavior in a work environment can be controlled by three invisible and pervasive means:<ul>
+<li>Free-market forces which are based on price — goods and services are exchanged between two entities, with each seeking only to enrich himself or herself.</li>
+<li>Contractual obligations</li>
+<li>Cultural values</li>
+</ul>
+</li>
+<li>It’s the manager’s task to identify which mode of control is most appropriate.</li>
+<li>The manager can use two variables to determine this:<ul>
+<li>The nature of a person’s motivation</li>
+<li>The nature of the environment in which he works (complex, uncertain, ambiguous)</li>
+</ul>
+</li>
+</ol>
+<h2>Chapter 11: The sports analogy</h2>
+<blockquote>
+<p> At the upper level of the need hierarchy, when one is self-actualized, money in itself is no longer a source of motivation but rather a measure of achievement.</p>
+</blockquote>
+<ol>
+<li>Management is a team activity and teams only perform as well as the individuals on it.</li>
+<li>There are two reasons why a person isn’t doing their job:<ul>
+<li>Incapable — i.e. They can’t do it.</li>
+<li>Unmotivated — i.e. They won’t do it.</li>
+</ul>
+</li>
+<li>A simple mental test can identify which one of the two reasons:<blockquote>
+<p>If the person’s life depended on doing the work, could he do it?</p>
+</blockquote>
+</li>
+<li>A manager can tackle each reason respectively with:<ul>
+<li>Training and</li>
+<li>Motivation</li>
+</ul>
+</li>
+<li>For Maslow, motivation is closely tied to the idea of needs, which cause people to have drives, which in turn results in motivation.</li>
+<li>Safety benefits (like medical insurance) are rarely a dominant source of employee motivation, but if benefits were absent and employees had to worry about such concerns, performance would be badly affected.</li>
+<li>Money in the physiological and security-driven modes only motivates until the need is satisfied, but money as a measure of achievement will motivate without limit.</li>
+<li>Creating an environment where employees can engage in healthy competition with each other can be a good source of motivation. The competition has to be connected with one of the company’s objectives.</li>
+</ol>
+<h2>Chapter 12: Task-relevant maturity</h2>
+<blockquote>
+<p>The age-old question of whether friendship between supervisor and subordinate is a good thing
+[…]
+Everyone must decide for himself what is professional and appropriate here. A test might be to imagine yourself delivering a tough performance review to your friend. Do you cringe at the thought? If so, don&#39;t make friends at work. If your stomach remains unaffected, you are likely to be someone whose personal relationships will strengthen work relationships.</p>
+</blockquote>
+<ol>
+<li>A manager’s most important responsibility is eliciting top performance from his subordinates.</li>
+<li>High output is associated with particular combinations of certain managers and certain groups of workers. This suggests that a given managerial approach is not equally effective under all conditions.</li>
+<li>As a manager, be aware that your subordinates might take your suggestions as marching orders.</li>
+<li>Task-relevant maturity (TRM) is the experience, training, and education that a person has with a specific task.</li>
+<li>The fundamental variable that determines the effective management style is the task-relevant maturity of the subordinate:<ul>
+<li>When the TRM is low, the most effective approach is one that offers very precise and detailed instructions, wherein the supervisor tells the subordinate what needs to be done, when, and how: in other words, a highly structured approach.</li>
+<li>As the TRM of the subordinate grows, the most effective style moves from the structured to one more given to communication, emotional support, and encouragement, in which the manager pays more attention to the subordinate as an individual than to the task at hand.</li>
+<li>As the TRM becomes even greater, the effective management style changes again. Here the manager&#39;s involvement should be kept to a minimum, and should primarily consist of making sure that the objectives toward which the subordinate is working are mutually agreed upon.</li>
+</ul>
+</li>
+<li>But regardless of what the TRM may be, the manager should always monitor a subordinate&#39;s work closely enough to avoid surprises.</li>
+<li>The responsibility for teaching the subordinate must be assumed by his supervisor, and not paid for by the customers of his organization, internal or external:<blockquote>
+<p>An associate of mine who had always done an outstanding job hired a junior person to handle some old tasks, while he himself took on some new ones. The subordinate did poor work. My associate&#39;s reaction: &quot;He has to make his own mistakes. That&#39;s how he learns!&quot; The problem with this is that the subordinate&#39;s tuition is paid by his customers. And that is absolutely wrong.</p>
+</blockquote>
+</li>
+</ol>
+<h2>Chapter 14: Two difficult tasks</h2>
+<blockquote>
+<p>In the end, careful interviewing doesn’t guarantee you anything, it merely increases your odds of getting lucky.</p>
+</blockquote>
+<ol>
+<li>Two other emotionally charged tasks a manager must perform:<ul>
+<li>Interviewing a potential employee and</li>
+<li>Trying to talk a valued employee out of quitting</li>
+</ul>
+</li>
+<li>The purpose of an interview is to:<ul>
+<li>Select a good performer</li>
+<li>Educate him as to who you and the company are</li>
+<li>Determine if a mutual match exists</li>
+<li>Sell him on the job</li>
+</ul>
+</li>
+<li>Reference checking hardly exempts you from getting as much as you can out of the interview. Even if a reference comments freely about the candidate, what he says won’t have much meaning to you without some knowledge of how his company does business and what values it works by.</li>
+<li>The applicant should do most of the talking during an interview.</li>
+<li>The interview is yours to control: when things go off the track, get them back quickly.</li>
+<li>An interview produces the most insight if you steer the discussion toward subjects familiar to both you and the candidates.</li>
+<li>The information to be gained in an interview tends to fall into four distinct categories:<ul>
+<li>The candidate’s technical knowledge— i.e. his skill level or what he knows about performing the job he wants.</li>
+<li>How the candidate performed in an earlier job using his skills and technical knowledge — i.e. what they did with what they knew.</li>
+<li>The reasons why there may be any discrepancy between what they knew and what they did — i.e. between his capabilities and performance.</li>
+<li>Getting a feel for his set of operational values.</li>
+</ul>
+</li>
+<li>The ultimate purpose of interviewing is to make a judgment about how the candidate would perform in your company&#39;s environment.</li>
+<li>The end of chapter 14 goes into some details about handling a valued employee who has decided to quit:<ul>
+<li>What to do when initially informed — Reschedule other items immediately and initiate a meeting.</li>
+<li>How to have the initial conversation — Listen to the employee, and ask questions. Don’t argue, lecture, or panic.</li>
+<li>How to formulate a plan — Either moving to a different department or whatever the employee feels is more valuable.</li>
+<li>How to have a follow-up conversation — Sharing the plan and reassuring the employee that they are not “blackmailing” the company.</li>
+<li>How to handle that the employee already accepted an offer from another company — Emphasize that commitments with the people they know (current company) are stronger than commitments with people they don’t know yet (new company).</li>
+</ul>
+</li>
+</ol>
+<h2>Chapter 15: Compensation as task-relevant feedback</h2>
+<blockquote>
+<p>Merit-based compensation simply cannot work unless we understand that if someone is going to be first, somebody else has to be last.</p>
+</blockquote>
+<ol>
+<li>Money has significance at all levels of Maslow’s motivation hierarchy.</li>
+<li>At higher levels of compensation, an incremental amount of money gradually will have less and less material utility to the person who gets it.</li>
+<li>If we are going to consider promotions, we have to consider the <strong>Peter Principle</strong>, which says that when someone is good at his job, he is promoted; he keeps getting promoted until he reaches his level of incompetence and then stays there.</li>
+<li>An achiever will alternate between “meets requirements” and “exceeds requirements” ratings throughout his career.</li>
+</ol>
+<h2>Chapter 16: Why training is the boss’s job</h2>
+<blockquote>
+<p>If you accept that training, along with motivation, is the way to improve the performance of your subordinates, that what you teach must be closely tied to what you practice, and that training needs to be a continuing process rather than a one-time event, it is clear that the <code>who</code> of the training is <code>you</code>, the manager.</p>
+</blockquote>
+<ol>
+<li>Insufficiently trained employees, in spite of their best intentions, produce inefficiencies, excess costs, unhappy customers, and sometimes even dangerous situations.</li>
+<li>Training should be a process not an event.</li>
+<li>Much deeper knowledge of a task is required to teach it than to simply do it.</li>
+</ol>
+
+    </body>
+</html>
