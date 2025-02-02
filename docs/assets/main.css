@@ -396,7 +396,7 @@ body {
 .book-gallery {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 8px 8px; /* Reduce gap to minimize vertical spacing */
+    gap: 6px 12px; /* Reduce gap to minimize vertical spacing */
     padding: 20px;
     max-width: 900px;
     margin: 0 auto;
@@ -407,8 +407,8 @@ body {
     aspect-ratio: 2 / 3; /* Keeps a standard book cover proportion */
     object-fit: cover; /* Ensures images fill the frame */
     border-radius: 8px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out;
+    margin: 0;
 }
 
 .book-gallery img:hover {
@@ -423,4 +423,5 @@ body {
 
 .book-gallery p {
     margin: 0;
+    padding: 0;
 }
