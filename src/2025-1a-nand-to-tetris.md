@@ -1,8 +1,12 @@
 # [WIP] The Elements of Computing Systems – Building a Modern Computer from First Principles
 
-## Chapter 1: Boolean logic
+> Verdict: I highly recommend this [book](https://amzn.to/3CnFJRp). It literally starts from nothing and builds a computer from first principles.
+> It's a great way to understand how computers work and has changed the way I think about computers.
 
-Modern computers store and process information stored as two-valued signals — called `bits` (i.e. binary digits). Two-value signals were chosen because they can readily be represented, stored, and transmitted. For example, they can be represented as:
+## Chapter 1: Boolean logic
+;
+Modern computers store and process information stored as two-valued signals — called <bmark>bits</bmark> (i.e. binary digits).
+Two-value signals were chosen because they can readily be represented, stored, and transmitted. For example, they can be represented as:
 * The presence or absence of a hole in a punched card,
 * High or low voltage on a wire,
 * A magnetic domain oriented clockwise or counterclockwise.
