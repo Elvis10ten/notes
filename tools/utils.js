@@ -1,5 +1,5 @@
 import {readdir, readFile} from 'fs/promises';
-import {dirname, resolve} from 'path';
+import {dirname, relative, resolve} from 'path';
 import {fileURLToPath} from 'url';
 
 // The ES module version of Node.js does not have the __dirname and __filename variables. So, we need to define them manually.
@@ -30,4 +30,8 @@ export function getToolsPath(fileName) {
 
 export async function readFileText(filePath) {
     return await readFile(filePath, 'utf8');
+}
+
+export function getBannerPath(noteFileName) {
+    return relative(destDir, resolve(bannersDir, noteFileName.replace('.md', '.jpg')));
 }
