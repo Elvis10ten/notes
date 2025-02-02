@@ -414,3 +414,9 @@ body {
 .book-gallery img:hover {
     transform: scale(1.05); /* Slight zoom on hover */
 }
+
+@media (max-width: 600px) {
+    .book-gallery {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+}
