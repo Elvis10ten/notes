@@ -964,6 +964,43 @@ Many of the relational properties of real numbers apply to asymptotic comparison
 - **Symmetry**: Little-Omega is **not symmetric**. If $f(n) = \omega(g(n))$, it does not imply $g(n) = \omega(f(n))$.
 - **Transpose Symmetry**: Does not apply to $\omega$.
 
+#### Exercises
+
+##### 3.2-1
+To prove that $max(f(n), g(n)) = \theta(f(n) + g(n))$, based on the theta notation definition, we have to prove that:
+
+$$
+c_1 \cdot [f(n) + g(n)] \leq max(f(n), g(n)) \leq c_2 \cdot [f(n) + g(n)]
+$$
+
+For some $c_1 > 0$, some $c_2 > 0$ and some $n_0 \geq 0$
+
+**Step 1**:
+
+Show that: $c_1 \cdot [f(n) + g(n)] \leq max(f(n), g(n))$
+
+* Since $max(f(n), g(n))$ is at least as large as each of $f(n)$ and $g(n)$, we know that: $max(f(n), g(n)) \geq f(n)$ and $max(f(n), g(n)) \geq g(n)$
+* Combining both inequality, we get: $max(f(n), g(n)) + max(f(n), g(n)) \geq f(n) + g(n)$
+* Simplify: $2 \cdot max(f(n), g(n)) \geq f(n) + g(n)$
+* Divide through by two: $max(f(n), g(n)) \geq \frac{1}{2} \cdot f(n) + g(n)$
+* Thus, we can choose $c_1 = \frac{1}{2}$ such that the initial statement holds.
+
+**Step 2**:
+
+Show that: $max(f(n), g(n)) \leq c_2 \cdot [f(n) + g(n)]$
+
+* The function $max$ is always going to return the value of either $f(n)$ or $g(n)$ depending on which is greater. Thus: $max(f(n), g(n)) \leq f(n) + g(n)$
+* Thus, we can choose $c_2 = 1$ such that the initial statement holds.
+
+**Conclusion**:
+Both preceding steps combined is sufficient to prove the original statement.
+
+##### 3.2-2
+The statement "The running time of Algorithm A is at least $O(n^2)$ " is useless because:
+* The $O$ notation provides an upper-bound.
+  * Saying that the running time is at least $O(n^2)$ means that the runtime could be upper-bounded by any function $f(n)$ such that $f(n) \geq n^2$.
+  * This is not useful because it doesn't provide a precise bound.
+
 #### Standard notations and common functions
 
 ##### Monotonicity
