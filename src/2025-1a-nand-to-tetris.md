@@ -6,12 +6,14 @@
 ## Chapter 1: Boolean logic
 ;
 Modern computers store and process information stored as two-valued signals — called <bmark>bits</bmark> (i.e. binary digits).
-Two-value signals were chosen because they can readily be represented, stored, and transmitted. For example, they can be represented as:
+Two-value signals were chosen because they can readily be represented, stored, and transmitted.
+For example, they can be represented as:
 * The presence or absence of a hole in a punched card,
 * High or low voltage on a wire,
 * A magnetic domain oriented clockwise or counterclockwise.
 
-A binary variable or a bit can represent two possible states: `0` and `1`; `off` and `on`; `false` and `true`; `no` and `yes`; etc. $n$ binary variables can be used to represent $2^n$ states. e.g.
+A binary variable or a bit can represent two possible states: `0` and `1`; `off` and `on`; `false` and `true`; `no` and `yes`; etc.
+$n$ binary variables can be used to represent $2^n$ states. e.g.
 
 | $b_2$ | $b_1$ | $b_0$ |
 |-------|-------|-------|
@@ -26,11 +28,12 @@ A binary variable or a bit can represent two possible states: `0` and `1`; `off`
 
 ---
 
-<mark>Boolean algebra</mark> is used to manipulate binary values. <mark>A boolean function (aka boolean operator) is a function that operates on binary inputs and returns binary outputs</mark>.
+<bmark>Boolean algebra</bmark> is used to manipulate binary values.
+A <bmark>boolean function</bmark> (aka <pmark>boolean operator</pmark>) is a function that operates on binary inputs and returns binary outputs.
 
 The total number of boolean functions for $n$ binary variables is $2^{2^n}$, because:
 
-* There are $2^n$ input combinations.
+* There are $2^n$ input combinations.
 * Each of these input combinations can be mapped to either `0` or `1`.
 * Therefore, the total number of boolean functions is: $2^{2^n}$
 
@@ -57,7 +60,10 @@ e.g. There are $16$ distinct boolean functions for $2$ binary variables.
 
 ---
 
-A <mark>logic gate</mark> <mark>(also called **chip** in the book) is a physical device that implements a boolean function</mark>. Every digital device is based on a set of chips designed to store and process binary information. These chips are all made of **elementary logic gates**. Elementary logic gates can be physically realized using many different hardware technologies, but their logical behavior, or abstraction, is consistent across implementations.
+A <bmark>logic gate</bmark> (also called **chip** in the book) is a physical device that implements a boolean function.
+Every digital device is based on a set of chips designed to store and process binary information.
+These chips are all made of <pmark>elementary logic gates</pmark>.
+Elementary logic gates can be physically realized using many different hardware technologies, but their logical behavior, or abstraction, is consistent across implementations.
 
 Since all logic gates have the same input and output data type (i.e. binary), they can be combined, creating composite gates of arbitrary complexity. e.g. `Xor = Or(And(a, Not(b)), And(Not(a), b))`.
 
@@ -67,19 +73,21 @@ Any given logic gate can be viewed from two perspective:
 
 ---
 
-A <mark>hardware description language (HDL)</mark> is a specialized computer language used to describe the structure and behavior of chips.
+A <bmark>hardware description language(HDL)</bmark> is a specialized computer language used to describe the structure and behavior of chips.
 
-> The designer specifies the chip logic by writing a HDL program, which is then subjected to a rigorous battery of tests. The tests are carried out virtually, using computer simulation: A special software tool, called a **hardware simulator**, takes the HDL program as input and creates a software representation of the chip logic. Next, the designer can instruct the simulator to test the virtual chip on various sets of inputs. The simulator computes the chip outputs, which are then compared to the desired outputs.
+> The designer specifies the chip logic by writing a HDL program, which is then subjected to a rigorous battery of tests.
+> The tests are carried out virtually, using computer simulation: A special software tool, called a **hardware simulator**, takes the HDL program as input and creates a software representation of the chip logic.
+> Next, the designer can instruct the simulator to test the virtual chip on various sets of inputs. The simulator computes the chip outputs, which are then compared to the desired outputs.
 
 The hardware simulator can also simulate and quantify the performance characteristics (energy consumption, computational speed, cost) of a chip.
 
 ---
 
-The <mark>specifications of the logic gates</mark> needed to build the chips of our computer system are given below.
+The <bmark>specifications of the logic gates</bmark> needed to build the chips of our computer system are given below.
 
 ---
 
-First, the **primitive** <mark>NAND</mark> gate, which is shorthand for **Not-And** because it’s equivalent to `Not(And(a, b))`.
+First, the **primitive** <bmark>NAND</bmark> gate, which is shorthand for **Not-And** because it’s equivalent to `Not(And(a, b))`.
 
 ![](/docs/assets/nand-images/nand_gate.svg)
 
@@ -114,7 +122,7 @@ The NAND gate is called a primitive gate because it can be used to implement any
 
 ---
 
-Next, we look at a set of four gates that implement **classical logical operators**. Starting with the <mark>Not (aka inverter) gate</mark>, which outputs the opposite value of its input’s value.
+Next, we look at a set of four gates that implement <pmark>classical logical operators</pmark>. Starting with the <bmark>Not (aka inverter) gate</bmark>, which outputs the opposite value of its input’s value.
 
 ![](/docs/assets/nand-images/not_gate.svg)
 
@@ -155,7 +163,7 @@ Nand(a= in, b= in, out= out);
 
 ---
 
-The next classical gate is the <mark>AND gate</mark>, which returns $1$ when both its inputs are $1$, and $0$ otherwise.
+The next classical gate is the <bmark>AND gate</bmark>, which returns $1$ when both its inputs are $1$, and $0$ otherwise.
 
 
 ![](/docs/assets/nand-images/and_gate.svg)
@@ -200,7 +208,7 @@ Not(in= nandout, out= out);
 
 ```
 ---
-The <mark>Or gate</mark> returns $1$ when at least one of its inputs is $1$, and $0$ otherwise.
+The <bmark>Or gate</bmark> returns $1$ when at least one of its inputs is $1$, and $0$ otherwise.
 
 ![](/docs/assets/nand-images/or_gate.svg)
 
@@ -253,7 +261,7 @@ Not(in= notaandnotb, out= out);
 ```
 
 ---
-The last classical gate we will build is the <mark>Xor (aka exclusive or) gate</mark> which returns $1$ when exactly one of its input is $1$, and $0$ otherwise.
+The last classical gate we will build is the <bmark>Xor (aka exclusive or) gate</bmark> which returns $1$ when exactly one of its input is $1$, and $0$ otherwise.
 
 ![](/docs/assets/nand-images/xor_gate.svg)
 
@@ -306,7 +314,7 @@ Or(a= aandnotb, b= bandnota, out= out);
 
 ---
 
-Next, we look at a set of <mark>control flow gates</mark>. These gates provide means for controlling flows of information. The first of such gate is the <mark>multiplexer</mark> which is a three-input gate. Two input bits, named `a` and `b`, are interpreted as **data bits**, and a third bit, named `sel`, is interpreted as a **selection bit**. The multiplexer uses `sel` to select and output the value of either `a` or `b`.
+Next, we look at a set of <bmark>control flow gates</bmark>. These gates provide means for controlling flows of information. The first of such gate is the <bmark>multiplexer</bmark> which is a three-input gate. Two input bits, named `a` and `b`, are interpreted as **data bits**, and a third bit, named `sel`, is interpreted as a **selection bit**. The multiplexer uses `sel` to select and output the value of either `a` or `b`.
 
 ![](/docs/assets/nand-images/multiplexer_gate.png)
 
@@ -359,7 +367,7 @@ Or(a= aandnotsel, b= bandsel, out= out);
 ```
 ---
 
-Next is the <mark>demultiplexer gate</mark> which performs the opposite function of a multiplexer: it takes a single input value and routes it to one of two possible outputs, according to a selector bit that selects the destination output.
+Next is the <bmark>demultiplexer gate</bmark> which performs the opposite function of a multiplexer: it takes a single input value and routes it to one of two possible outputs, according to a selector bit that selects the destination output.
 
 ![](/docs/assets/nand-images/demultiplexer_gate.png)
 
@@ -403,10 +411,10 @@ And(a= in, b= sel, out= b);
 
 ```
 ---
-Now, we explore <mark>multi-bit versions of some of the basic gates</mark> above. This section describes several 16-bit logic gates that will be needed for constructing our target computer platform. HDL programs treat multi-bit values like single-bit values, except that the values can be indexed in order to access individual bits. For example, if `in` and `out` represent 16-bit values, then `out [3] = in[5]` sets the 3rd bit of `out` to the value of the 5th bit of `in`. The bits are indexed from right to left, the rightmost bit being the 0’th bit and the leftmost bit being the 15’th bit (in a 16-bit setting).
+Now, we explore <bmark>multi-bit versions of some of the basic gates</bmark> above. This section describes several 16-bit logic gates that will be needed for constructing our target computer platform. HDL programs treat multi-bit values like single-bit values, except that the values can be indexed in order to access individual bits. For example, if `in` and `out` represent 16-bit values, then `out [3] = in[5]` sets the 3rd bit of `out` to the value of the 5th bit of `in`. The bits are indexed from right to left, the rightmost bit being the 0’th bit and the leftmost bit being the 15’th bit (in a 16-bit setting).
 
 ---
-The first multi-bit gate we will build is the <mark>16-bit Not gate</mark>, which applies the Boolean operation `Not` to every one of the input bits.
+The first multi-bit gate we will build is the <bmark>16-bit Not gate</bmark>, which applies the Boolean operation `Not` to every one of the input bits.
 
 API:
 
@@ -467,7 +475,7 @@ Not(in= in[15], out= out[15]);
 
 ```
 ---
-Next is the <mark>16-bit And gate</mark>, which applies the Boolean operation `And` to every one of the input bits.
+Next is the <bmark>16-bit And gate</bmark>, which applies the Boolean operation `And` to every one of the input bits.
 
 API:
 
@@ -529,7 +537,7 @@ And(a= a[15], b= b[15], out= out[15]);
 ```
 
 ---
-Followed by the <mark>16-bit Or gate</mark>, which applies the Boolean operation `Or` to every one of the input bits.
+Followed by the <bmark>16-bit Or gate</bmark>, which applies the Boolean operation `Or` to every one of the input bits.
 
 API:
 
@@ -591,7 +599,7 @@ Or(a= a[15], b= b[15], out= out[15]);
 ```
 
 ---
-Finally, the <mark>16-bit Multiplexer gate</mark>, which operates exactly as the basic multiplexer, except that its input and output are 16-bits wide.
+Finally, the <bmark>16-bit Multiplexer gate</bmark>, which operates exactly as the basic multiplexer, except that its input and output are 16-bits wide.
 
 API:
 
@@ -652,10 +660,10 @@ Mux(a= a[15], b= b[15], sel= sel, out= out[15]);
 
 ```  
 ---
-The last set of gates we will build are the <mark>multi-way versions of basic gates</mark>. Logic gates that operate on one or two inputs have natural generalization to multi-way variants that operate on more than two inputs.
+The last set of gates we will build are the <bmark>multi-way versions of basic gates</bmark>. Logic gates that operate on one or two inputs have natural generalization to multi-way variants that operate on more than two inputs.
 
 ---
-The first gate in this set is the <mark>multi-way Or gate</mark>. An $m$-way `Or` gate outputs `1` when at least one of its `m` input bits is `1`, and `0` otherwise. Our target computer will need an $8$-way variant of this gate:
+The first gate in this set is the <bmark>multi-way Or gate</bmark>. An m-way `Or` gate outputs `1` when at least one of its `m` input bits is `1`, and `0` otherwise. Our target computer will need an 8-way variant of this gate:
 
 |           |                                      |
 |-----------|--------------------------------------|
@@ -692,9 +700,9 @@ Or(a= in0123456, b= in[7], out= out);
 }
 ```
 ---
-Next, we build a <mark>multi-way multi-bit multiplexer gate</mark>. An $m$-way $n$-bit multiplexer selects one of its $m$ $n$-bit inputs, and outputs it to its $n$-bit output. The selection is specified by a set of $k$ selection bits, where $k = log_2{m}$.
+Next, we build a <bmark>multi-way multi-bit multiplexer gate</bmark>. An m-way n-bit multiplexer selects one of its $m$ n-bit inputs, and outputs it to its n-bit output. The selection is specified by a set of $k$ selection bits, where $k = log_2{m}$.
 
-Our target computer platform requires two variants of this chip: a $4$-way $16$-bit multiplexer and an $8$-way $16$-bit multiplexer.
+Our target computer platform requires two variants of this chip: a 4-way 16-bit multiplexer and an 8-way 16-bit multiplexer.
 
 API:
 
@@ -764,9 +772,9 @@ Mux16(a= abcd, b= efgh, sel= sel[2], out= out);
 
 ------
 
-Finally, we build a <mark>multi-way 16-bit demultiplexer gate</mark>. An $m$-way $n$-bit demultiplexer routes its single $n$-bit input to one of its $m$ $n$-bit outputs. The other outputs are set to `0`. The selection is specified by a set of $k$ selection bits, where $k = log_2{m}$.
+Finally, we build a <bmark>multi-way 16-bit demultiplexer gate</bmark>. An m-way n-bit demultiplexer routes its single n-bit input to one of its $m$ n-bit outputs. The other outputs are set to `0`. The selection is specified by a set of $k$ selection bits, where $k = log_2{m}$.
 
-Our target computer platform requires two variants of this chip: a $4$-way $1$-bit demultiplexer and an $8$-way $1$-bit demultiplexer.
+Our target computer platform requires two variants of this chip: a 4-way 1-bit demultiplexer and an 8-way 1-bit demultiplexer.
 
 API:
 
@@ -836,7 +844,7 @@ The ALU is the centerpiece chip that executes all the arithmetic and logical ope
 
 ---
 
-A <mark>binary number</mark> is a number expressed in the **base-2 positional numeral system**. Let $x = x_{n}x_{n − 1}x_{n − 2} ... x_{0}$ be a string of binary digits, the value of $x$ in the base-2 positional numeral system is defined as:  
+A <bmark>binary number</bmark> is a number expressed in the **base-2 positional numeral system**. Let $x = x_{n}x_{n − 1}x_{n − 2} ... x_{0}$ be a string of binary digits, the value of $x$ in the base-2 positional numeral system is defined as:  
 $$  
 x = \sum_{i=0}^{n} x_i \cdot b^i  
 $$
@@ -858,7 +866,7 @@ Computers represent numbers in binary. Any number can be represented by a sequen
 Integer numbers are unbounded: for any given number $x$, there are integers that are less than $x$ and integers greater than $x$. However, computers are finite machines that use a fixed word size for representing numbers. An 8-bit register can represent $2^8 = 256$ different things. Using $n$ bits, we can represent all the nonnegative integers ranging from $0$ to $2^n - 1$.
 
 ---
-The three common methods of extending the binary numeral system to represent <mark>signed numbers</mark> (i.e. positive, negative, and zero numbers) numbers are:
+The three common methods of extending the binary numeral system to represent <bmark>signed numbers</bmark> (i.e. positive, negative, and zero numbers) numbers are:
 * Sign–magnitude,
 * Ones' complement, and
 * Two's complement.
@@ -866,7 +874,7 @@ The three common methods of extending the binary numeral system to represent <ma
 Of the three, two’s complement is the most commonly used today.
 
 ---
-A <mark>two's complement number system</mark> encodes positive and negative numbers in a binary number representation. The weight of each bit is a power of two, except for the **most significant bit** (aka **sign bit**), whose weight is the negative of the corresponding power of two. The value $w$ of an $N$-bit integer $a_{N-1} a_{N-2} ... a_0$ is given by the following formula:
+A <bmark>two's complement number system</bmark> encodes positive and negative numbers in a binary number representation. The weight of each bit is a power of two, except for the **most significant bit** (aka **sign bit**), whose weight is the negative of the corresponding power of two. The value $w$ of an N-bit integer $a_{N-1} a_{N-2} ... a_0$ is given by the following formula:
 
 $$
 w = -(a_{N-1} 2^{N-1}) + \sum_{i=0}^{N-2} a_i 2^i
@@ -874,7 +882,7 @@ $$
 
   
 
-The two's complement of an $N$-bit number is the complement of that number with respect to $2^N$ (this is the property that gives this system its name). i.e. Given that $x$ is an $N$-bit number and $y$ is its two's complement, then $x + y = 2^N$. e.g.
+The two's complement of an N-bit number is the complement of that number with respect to $2^N$ (this is the property that gives this system its name). i.e. Given that $x$ is an N-bit number and $y$ is its two's complement, then $x + y = 2^N$. e.g.
 
 $$
 N = 3
@@ -891,9 +899,9 @@ $$
 $$
 
 ---
-<mark>Calculation of the two's complement of a number</mark> essentially means subtracting the number from $2^N$. But as can be seen from the 3-bit example above with the 4-bit $1000_2$, the number $2^N$ will not itself be representable in a system limited to $N$ bits, as it is just outside the $N$ bit space. Because of this, systems with maximally $N$-bit must break the subtraction into two operations:
+<bmark>Calculation of the two's complement of a number</bmark> essentially means subtracting the number from $2^N$. But as can be seen from the 3-bit example above with the 4-bit $1000_2$, the number $2^N$ will not itself be representable in a system limited to $N$ bits, as it is just outside the $N$ bit space. Because of this, systems with maximally N-bit must break the subtraction into two operations:
 
-1. First, subtract from the maximum number in the $N$-bit system, that is $2^N - 1$. This term in binary is actually a simple number consisting of 'all 1s', and a subtraction from it can be done by simply inverting all bits in the number. The number obtained in this step is called the **ones' complement** because summing it with the original number yields 'all 1s'.
+1. First, subtract from the maximum number in the N-bit system, that is $2^N - 1$. This term in binary is actually a simple number consisting of 'all 1s', and a subtraction from it can be done by simply inverting all bits in the number. The number obtained in this step is called the **ones' complement** because summing it with the original number yields 'all 1s'.
 2. Secondly, add one to the result.
 
 | Bits | Unsigned value | Signed value (Two's complement) |
@@ -908,7 +916,7 @@ $$
 | 111  | 7              | -1                              |
 
 ---
-Here is <mark>why the two's complement system works</mark>. Given a set of all possible $N$-bit values, we can assign the lower (by the binary value) half to be the integers from $0$ to $(2^{N-1} - 1)$ inclusive and the upper half to be $-2^{N-1}$ to $-1$ inclusive. The upper half (again, by the binary value) can be used to represent negative integers from $-2^{N-1}$ to $-1$ because, under addition modulo $2^N$ they behave the same way as those negative integers. That is to say that, because $i + j \bmod 2^N = i + (j + 2^N) \bmod 2^N$, any value in the set $\{j + k2^N \space | \space k \space is \space an \space integer\}$ can be used in place of $j$. Fundamentally, the system counts negative numbers by counting backwards and wrapping around.
+Here is <bmark>why the two's complement system works</bmark>. Given a set of all possible N-bit values, we can assign the lower (by the binary value) half to be the integers from $0$ to $(2^{N-1} - 1)$ inclusive and the upper half to be $-2^{N-1}$ to $-1$ inclusive. The upper half (again, by the binary value) can be used to represent negative integers from $-2^{N-1}$ to $-1$ because, under addition modulo $2^N$ they behave the same way as those negative integers. That is to say that, because $i + j \bmod 2^N = i + (j + 2^N) \bmod 2^N$, any value in the set $\{j + k2^N \space | \space k \space is \space an \space integer\}$ can be used in place of $j$. Fundamentally, the system counts negative numbers by counting backwards and wrapping around.
 
 Given $2^N = 2^3$, these are some examples:
 
@@ -919,7 +927,7 @@ Given $2^N = 2^3$, these are some examples:
 | $-2 + 3 = 1$ (represented as $1$ in binary)  | $6 + 3 \bmod 8 = 1$ (the two's complement representation of $1$)  |
 
 ---
-The <mark>two's complement system has the following advantages</mark> over other systems for representing signed numbers:
+The <bmark>two's complement system has the following advantages</bmark> over other systems for representing signed numbers:
 
 
 1. The fundamental arithmetic operations of addition, subtraction, and multiplication are identical to those for unsigned binary numbers (as long as the inputs are represented in the same number of bits as the output, and any overflow beyond those bits are discarded from the result).
@@ -930,7 +938,7 @@ The material implications of these theoretical results are significant:
 * Subtraction can be treated as adding the complement of the subtrahend. Again, no dedicated hardware required.
 
 ---
-A <mark>pair of binary numbers can be added</mark> bitwise from right to left, using the same decimal addition algorithm learned in elementary school.
+A <bmark>pair of binary numbers can be added</bmark> bitwise from right to left, using the same decimal addition algorithm learned in elementary school.
 
 ```
 
@@ -950,10 +958,10 @@ When adding in the two's complement system, any extra carry bit is discarded, su
 
 ---
 
-An <mark>adder</mark> or summer is a digital circuit used in the ALU to perform addition on binary numbers. We saw (from the elementary school style addition) that computer hardware for binary addition of two $n$-bit numbers can be built from logic gates designed to calculate the sum of three bits (pair of bits plus carry bit). These are the following hierarchy of adders that will be built:
+An <bmark>adder</bmark> or summer is a digital circuit used in the ALU to perform addition on binary numbers. We saw (from the elementary school style addition) that computer hardware for binary addition of two n-bit numbers can be built from logic gates designed to calculate the sum of three bits (pair of bits plus carry bit). These are the following hierarchy of adders that will be built:
 
 ---
-A <mark>half adder</mark> is designed to add two bits.
+A <bmark>half adder</bmark> is designed to add two bits.
 
 |           |                                                    |
 |-----------|----------------------------------------------------|
@@ -991,7 +999,7 @@ Xor(a = a, b = b, out = sum);
 }
 ```
 ---
-A <mark>full adder</mark> is designed to add three bits. Like the half-adder, the full-adder chip outputs two bits that, taken together, represents the addition of the three input bits.
+A <bmark>full adder</bmark> is designed to add three bits. Like the half-adder, the full-adder chip outputs two bits that, taken together, represents the addition of the three input bits.
 
 |           |                                                            |
 |-----------|------------------------------------------------------------|
@@ -1036,7 +1044,7 @@ Or(a= partialCarry, b= partialCarry2, out= carry);
 }
 ```
 ---
-An <mark>adder</mark> is designed to add two $n$-bit numbers.
+An <bmark>adder</bmark> is designed to add two n-bit numbers.
 
 |           |                              |
 |-----------|------------------------------|
@@ -1046,7 +1054,7 @@ An <mark>adder</mark> is designed to add two $n$-bit numbers.
 | Function  | Adds two 16-bit numbers.     |
 | Comment   | The overflow bit is ignored. |
 
-The addition of two $n$-bit numbers can be done bitwise, from right to left (from LSB pairs to MSB pairs). In each step, the resulting carry bit from the previous step is fed into the addition.
+The addition of two n-bit numbers can be done bitwise, from right to left (from LSB pairs to MSB pairs). In each step, the resulting carry bit from the previous step is fed into the addition.
 ```hdl
 /**
 * 16-bit adder: Adds two 16-bit two's complement values.
@@ -1097,7 +1105,7 @@ FullAdder(a= a[15], b= b[15], c= carry14, sum= out[15], carry= carry15);
 }
 ```
 ---
-An <mark>Incrementer</mark> is designed to add `1` to a given number. Although, the `x + 1` operation can be realized with the general-purpose `Adder` chip, a dedicated `Incrementer` chip can do it more efficiently.
+An <bmark>Incrementer</bmark> is designed to add `1` to a given number. Although, the `x + 1` operation can be realized with the general-purpose `Adder` chip, a dedicated `Incrementer` chip can do it more efficiently.
  
 |           |                              |
 |-----------|------------------------------|
@@ -1126,7 +1134,7 @@ Add16(a = in, b[0] = true, b[1..15] = false, out = out);
 }
 ```
 ---
-The <mark>Arithmetic logic unit (ALU)</mark> is a chip designed to compute a set of arithmetic and logic operations. Unlike the generic chips discussed so far, the ALU described below is specific to the Hack computer:
+The <bmark>Arithmetic logic unit (ALU)</bmark> is a chip designed to compute a set of arithmetic and logic operations. Unlike the generic chips discussed so far, the ALU described below is specific to the Hack computer:
 * It only performs integer arithmetic (and not, for example, floating point arithmetic)
 * It computes only a set of 18 arithmetic-logical functions.
 
@@ -1151,7 +1159,7 @@ The <mark>Arithmetic logic unit (ALU)</mark> is a chip designed to compute a set
 | x  | y | 0  | 0  | 0  | 0  | 0 | 0  | x&y  | x AND y                 |
 | x  | y | 0  | 1  | 0  | 1  | 0 | 1  | x\|y | x OR y                  |
 
-The Hack ALU operates on two $16$-bit two's complement integers denoted `x` and `y`, an on six $1$-bit inputs, called **control bits**. The control bits "tell" the ALU which function to compute. Each control bit effects a standalone conditional micro-action:
+The Hack ALU operates on two 16-bit two's complement integers denoted `x` and `y`, an on six 1-bit inputs, called **control bits**. The control bits "tell" the ALU which function to compute. Each control bit effects a standalone conditional micro-action:
 
 ```
 1. if (zx) then x = 0 else x = x
@@ -1306,12 +1314,12 @@ Not(in= zrLeftOrZrRight, out= zr);
 
 ## Chapter 3: Memory
 There are two types of chips:
-1. <mark>Combinational chips</mark> compute functions that depend solely on combinations of their input values. They cannot maintain state. All the chips built thus far are combinational chips.
-2. <mark>Sequential chips</mark> compute functions that depend on both their input values and their previous state. They have "memory" and can preserve data over time.
+1. <bmark>Combinational chips</bmark> compute functions that depend solely on combinations of their input values. They cannot maintain state. All the chips built thus far are combinational chips.
+2. <bmark>Sequential chips</bmark> compute functions that depend on both their input values and their previous state. They have "memory" and can preserve data over time.
 
 ---
 
-A <mark>flip-flop</mark> is a basic building block of sequential chips. It has two stable states and can be used to store state information.
+A <bmark>flip-flop</bmark> is a basic building block of sequential chips. It has two stable states and can be used to store state information.
 
 A flip-flop encapsulates the intricate art of synchronization, clocking, and feedback loops that are essential for building sequential chips.
 
@@ -1324,7 +1332,7 @@ This effort will complete the construction of the chip set needed to build an en
 The act of "remembering something" is inherently time-dependent: You remember now what has been committed to memory before.
 Thus, in order to build chips that "remember" information, we must first develop some standard means for representing the progression of time.
 
-In most computers, the progression of time is regulated by a <mark>clock signal</mark>. This signal oscillates between two values, `0` (called low/tick) and `1` (called high/tock), at a regular pace.
+In most computers, the progression of time is regulated by a <bmark>clock signal</bmark>. This signal oscillates between two values, `0` (called low/tick) and `1` (called high/tock), at a regular pace.
 
 The clock hardware implementation is usually an oscillator that generates a square wave. The frequency of the clock signal is measured in **Hertz** (Hz), which is the number of oscillations per second.
 
@@ -1336,7 +1344,7 @@ The elapsed time between the beginning of a "tick" and the end of a subsequent "
 The clock is used to synchronize the sequential chips. Using the hardware’s circuitry, this signal is simultaneously broadcast to every sequential chip throughout the computer platform.
 
 ---
-There are several variants of a flip-flop. We use a variant called the <mark>data flip-flop (DFF)</mark>.
+There are several variants of a flip-flop. We use a variant called the <bmark>data flip-flop (DFF)</bmark>.
 
 A DFF is a simple memory element that stores a single bit. It has a data input `in`, a clock input `load`, and an output `out`. When the clock input is `1`, the flip-flop copies the value of the data input to its output. When the clock input is `0`, the flip-flop holds its previous value.
 
@@ -1366,7 +1374,7 @@ All DFFs in a computer are connected to the same clock signal.
 
 This reliable and predictable behavior of DFFs is crucial for data synchronization across the computer platform. There are physical delays in the propagation of signals through the computer’s hardware, e.g. It takes some time for the input into the ALU to stabilize and for the ALU to compute its output.
 
-We solve this problem by using <mark>discrete time</mark>:
+We solve this problem by using <bmark>discrete time</bmark>:
 * First, the `cycle length` must be set to a value slightly greater than the `maximum propagation delay` in the computer
 * Secondly, we can ONLY use the chip's output at end of cycles, and ignore all the fluctuations that can occur within cycles. This is achieved by simply using a DFF (because it's edge-triggered) to store the output of the chip. In our ALU example, the output of the ALU is stored in a register, which ignores the unstable output of the ALU due to propagation delays.
 
@@ -1375,7 +1383,7 @@ We solve this problem by using <mark>discrete time</mark>:
 
 ---
 
-A <mark>register</mark> is a storage device that can "store" or "remember" a value over time, implementing the classical storage behavior `out = out(t-1)`.
+A <bmark>register</bmark> is a storage device that can "store" or "remember" a value over time, implementing the classical storage behavior `out = out(t-1)`.
 
 A DFF, on the other hand, can only output its previous input, namely, `out = in(t-1)`. We can build a register from a DFF, however, we must consider the following:
 1. The rules of chip design dictate that internal pins must have a fan-in of 1, meaning that they can be fed from a single source only.
@@ -1442,7 +1450,7 @@ CHIP Register {
 
 ---
 
-A <mark>RAM chip</mark> (aka direct access memory unit) is a sequential chip that can store multiple data words. Each word is stored in a register, and the registers are indexed by an address.
+A <bmark>RAM chip</bmark> (aka direct access memory unit) is a sequential chip that can store multiple data words. Each word is stored in a register, and the registers are indexed by an address.
 
 ![RAM](/docs/assets/nand-images/ram.png)
 
@@ -1577,7 +1585,7 @@ CHIP RAM16K {
 
 ---
 
-A <mark>counter</mark> is a sequential chip whose state is an integer number that increments every time unit, effecting the function `out = out(t - 1) + c`, where `c` is typically `1`.
+A <bmark>counter</bmark> is a sequential chip whose state is an integer number that increments every time unit, effecting the function `out = out(t - 1) + c`, where `c` is typically `1`.
 
 A counter chip can be implemented by combining the input/output logic of a standard register with the combinatorial logic for adding a constant.
 
@@ -1611,7 +1619,7 @@ Simply stated, a sequential chip is a chip that embeds one or more DFF gates, ei
 ![Sequential chip](/docs/assets/nand-images/combinational_vs_sequential.png)
 
 ## Chapter 4: Machine Language
-A <mark>machine language</mark> is an agreed-upon formalism, designed to code low-level programs as series of machine instructions. The primary goals of a machine language's design are:
+A <bmark>machine language</bmark> is an agreed-upon formalism, designed to code low-level programs as series of machine instructions. The primary goals of a machine language's design are:
 1. Direct execution in, and
 2. Total control of, a given hardware platform.
 
@@ -1648,18 +1656,18 @@ Hence, a machine language instruction can be specified either directly using bin
 ---
 
 We can take the symbolic abstraction one step further, and create a programming language that allows the creation of programs using symbolic commands rather than binary instructions.
-This programming language is called an <mark>assembly language</mark>. And the symbolic mnemonics are just a component of the assembly language, specifically the symbols that
+This programming language is called an <bmark>assembly language</bmark>. And the symbolic mnemonics are just a component of the assembly language, specifically the symbols that
 represent machine instructions.
 
 ---
 
-The Hack computer is a von Neumann platform. It's a simple computer with a $16$-bit architecture which has:
+The Hack computer is a von Neumann platform. It's a simple computer with a 16-bit architecture which has:
 1. A CPU
-2. A **read-only memory (ROM)** that stores the computer instructions. It is $16$-bit wide and have a $15$-bit address space (i.e. it can hold $32K (2^{15})$ $16$-bit instructions).
-3. A **random access memory (RAM)** that stores the computer data. It is also $16$-bit wide and have a $15$-bit address space.
+2. A **read-only memory (ROM)** that stores the computer instructions. It is 16-bit wide and have a 15-bit address space (i.e. it can hold $32K (2^{15})$ 16-bit instructions).
+3. A **random access memory (RAM)** that stores the computer data. It is also 16-bit wide and have a 15-bit address space.
 4. Two memory-mapped I/O devices: a screen and a keyboard.
-5. A $16$-bit instruction set.
-6. Two $16$-bit registers called `A` and `D`. These registers can be manipulated explicitly by arithmetic and logical instructions (e.g. `D=A+1`, `A=D&A`).
+5. A 16-bit instruction set.
+6. Two 16-bit registers called `A` and `D`. These registers can be manipulated explicitly by arithmetic and logical instructions (e.g. `D=A+1`, `A=D&A`).
 The `D` register is used solely to store data values; while the `A` register is used to both store data values and memory addresses.
 So, depending on the context, the contents of `A` can be interpreted as:
    * A data value
@@ -1686,10 +1694,10 @@ The Hack language consists of two generic instructions:
 
 ---
 
-The <mark>A-instruction</mark> is used to set the `A` register to a $15$-bit value:
+The <bmark>A-instruction</bmark> is used to set the `A` register to a 15-bit value:
 
 A-instruction's symbolic representation: `@value` (where `value` is a non-negative decimal number or a symbol referring to such a number).
-A-instruction's binary representation: `0value` (where `value` is a $15$-bit binary number).
+A-instruction's binary representation: `0value` (where `value` is a 15-bit binary number).
 
 The leftmost bit is the A-instruction marker bit (aka opcode), which is always set to `0`.
 
@@ -1700,7 +1708,7 @@ The A-instruction is used for three different purposes:
 
 ---
 
-The <mark>C-instruction</mark> is used to perform a computation. The instruction code is a specification that answers three questions:
+The <bmark>C-instruction</bmark> is used to perform a computation. The instruction code is a specification that answers three questions:
 1. What to compute?
 2. Where to store the computed value?
 3. What to do next?
@@ -1734,7 +1742,7 @@ The `comp` component of the C-instruction specifies what the ALU should compute.
 We can compute a fixed set of functions on the `D`, `A`, and `M` registers.
 The a-bit specifies whether the `A` register or the `M` register should be used as the ALU's input.
 And the six c-bits specifies the function to be computed.
-All $7$-bit comprise the `comp` field. While this $7$-bit field can specify $128$ different possible operations, only $28$ are used in the Hack language.
+All 7-bit comprise the `comp` field. While this 7-bit field can specify $128$ different possible operations, only $28$ are used in the Hack language.
 
 | (when a=0) **comp** mnemonic | c1  | c2  | c3  | c4  | c5  | c6  | (when a=1) **comp** mnemonic |
 |------------------------------|-----|-----|-----|-----|-----|-----|------------------------------|
@@ -1761,7 +1769,7 @@ All $7$-bit comprise the `comp` field. While this $7$-bit field can specify $128
 
 The `jump` component of the C-instruction specifies a jump condition, namely, which command to fetch and execute next.
 Whether a not a jump should actually materialize depends on the three j-bits of the jump component and the ALU's output value.
-It is a $3$-bit field that can specify one of $8$ different jump conditions.
+It is a 3-bit field that can specify one of $8$ different jump conditions.
 
 | j1 (`out < 0`)  | j2 (`out = 0`)  | j3 (`out > 0`)  | **jump** mnemonic | Effect                                                                    |
 |-----------------|-----------------|-----------------|-------------------|---------------------------------------------------------------------------|
@@ -1798,7 +1806,7 @@ Assembly commands can refer to memory addresses using either constants or symbol
 `Xxx` to refer to the ROM address holding the next command in the program.
 3. Variable symbols: Any user-defined symbol `Xxx` that appears in an assembly program without being predefined or declared as a label is treated as a variable.
 The assembler allocates a unique RAM address for each appearance of such a symbol and replaces the symbol with its RAM address in the assembly program.
-The instruction is of the form `@value`, where `value` is a $15$-bit constant.
+The instruction is of the form `@value`, where `value` is a 15-bit constant.
 
 ---
 
@@ -1812,7 +1820,7 @@ The physical I/O devices and their memory maps are synchronized via continuous r
 
 The Hack computer includes a black-and-white screen organized as $256$ rows of $512$ pixels per row.
 The screen’s contents are represented by an 8K memory map that starts at RAM address $16384$ ($0x4000$).
-Each row in the physical screen, starting at the screen’s top left corner, is represented in the RAM by $32$ consecutive $16$-bit words.
+Each row in the physical screen, starting at the screen’s top left corner, is represented in the RAM by $32$ consecutive 16-bit words.
 Thus, the pixel at row `r` from the top and column `c` from the left is mapped on the `c%16` bit (counting from LSB to MSB) of the word located at `RAM[16384 + r * 32 + c/16]`.
 To write or read a pixel of the physical screen, one reads or writes the corresponding bit in the RAM-resident memory map (1 = black, 0 = white).
 
@@ -1828,7 +1836,7 @@ M=1 // Blacken the left-most pixel.
 ---
 
 The Hack computer interfaces with the physical keyboard via a single-word memory map located in RAM address $24576$ ($0x6000$).
-Whenever a key is pressed on the physical keyboard, its $16$-bit ASCII code appears in `RAM[24576]`.
+Whenever a key is pressed on the physical keyboard, its 16-bit ASCII code appears in `RAM[24576]`.
 When no key is pressed, the code `0` appears in this location.
 In addition to the usual ASCII codes, the Hack keyboard recognizes the keys shown below.
 
@@ -1855,15 +1863,15 @@ In addition to the usual ASCII codes, the Hack keyboard recognizes the keys show
 The computer is based on a fixed hardware platform, capable of executing a fixed repertoire of simple instructions.
 However, these instructions can be combined like building blocks, yielding arbitrarily sophisticated programs.
 
-The <mark>von Neumann architecture</mark>, shown below, is based on a central processing unit (CPU), interacting with a memory device,
+The <bmark>von Neumann architecture</bmark>, shown below, is based on a central processing unit (CPU), interacting with a memory device,
 receiving data from some input device, and sending data to some output device.
 
-At the heart of this architecture lies the <mark>stored program concept</mark>: The computer's memory stores both the
+At the heart of this architecture lies the <bmark>stored program concept</bmark>: The computer's memory stores both the
 data that the computer manipulates and the instructions that tell the computer what to do.
 
 ![Von Neumann architecture](/docs/assets/nand-images/von_neumann_architecture.svg)
 
-A related stored program computer architecture is the <mark>Harvard architecture</mark>, which physically separates the memory devices used for storing data and instructions.
+A related stored program computer architecture is the <bmark>Harvard architecture</bmark>, which physically separates the memory devices used for storing data and instructions.
 
 ![Harvard architecture](/docs/assets/nand-images/harvard_architecture.svg)
 
@@ -1893,19 +1901,19 @@ A computer instruction is represented as a binary code, typically 16, 32, or 64 
 Before such an instruction can be executed, it must be decoded, and the information embedded in it must be used to signal
 various hardware devices (ALU, registers, memory) how to execute the instruction.
 
-The instruction decoding is done by some <mark>control unit</mark>, which is also responsible for figuring out which
+The instruction decoding is done by some <bmark>control unit</bmark>, which is also responsible for figuring out which
 instruction to fetch and execute next.
 
 ---
 
 The set of registers used by the Hack computer are:
-* Data register (`D`): A $16$-bit register used to store a data value. In principle, data values can just be stored in the RAM,
+* Data register (`D`): A 16-bit register used to store a data value. In principle, data values can just be stored in the RAM,
  but the `D` register is used to speed up operations.
-* Address register (`A`): A $16$-bit register used to store a memory address. The output of this register is connected
+* Address register (`A`): A 16-bit register used to store a memory address. The output of this register is connected
  to the address input ot our memory devices (RAM and ROM). Therefore, placing a value in the address register has the
  side effect of selecting a particular memory register, and this register makes itself available to subsequent instructions
  designed to manipulate it. The `A` register's value can be read directly as a data value.
-* Program counter (`PC`): A $16$-bit register used to store the address of the next instruction. The contents of the
+* Program counter (`PC`): A 16-bit register used to store the address of the next instruction. The contents of the
  PC is computed and updated as a side effect of executing the current instruction.
 
 ---
