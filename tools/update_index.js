@@ -33,6 +33,7 @@ let scaffoldMarkdown = await readFileText(getToolsPath('index-scaffold.md'));
 scaffoldMarkdown = scaffoldMarkdown.replace('<!-- index_books_content -->', bookLinks.join('\n\n'));
 scaffoldMarkdown = scaffoldMarkdown.replace('<!-- index_essays_content -->', essayLinks.join('\n\n'));
 await writeFile(getSrcPath('index.md'), scaffoldMarkdown);
+await writeFile(getSrcPath('404.md'), scaffoldMarkdown);
 
 console.log('Notes index.md updated successfully!');
 
