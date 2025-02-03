@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>[WIP] Computer Networking - A Top-Down Approach</title>
+        <meta property="og:image" content="assets/banners/2025-3-computer-networking-top-down.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+
+        <link href="assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>[WIP] Computer Networking - A Top-Down Approach</h1>
+<h2>Chapter 3: Transport Layer</h2>
+<h3>Definition</h3>
+<p>The <strong>transport layer</strong> is between the <strong>application</strong> and <strong>network layer</strong>.</p>
+<p>A <strong>transport-layer protocol</strong> provides for <strong>logical communication</strong> between application processes running on different hosts. <strong>Logical communication</strong> here means that from an application’s perspective, it is as if the hosts running the processes were directly connected.</p>
+<h3>High level: How it works</h3>
+<ol>
+<li>On the sending side, the <strong>transport layer</strong> converts the application-layer messages it receives from a sending application process into <strong>transport-layer packets</strong>, known as <strong>transport-layer segments</strong> in Internet terminology.</li>
+<li>This is done by (possibly) breaking the application messages into smaller chunks and adding a <strong>transport-layer header</strong> to each chunk to create the <strong>transport-layer segment</strong>.</li>
+<li>The <strong>transport layer</strong> then passes the segment to the <strong>network layer</strong> at the sending end system, where the segment is encapsulated within a <strong>network-layer packet (a datagram)</strong> and sent to the destination.</li>
+<li>It’s important to note that <strong>network routers</strong> act only on the <strong>network-layer fields</strong> of the
+<strong>datagram</strong>; that is, they do not examine the fields of the <strong>transport-layer segment</strong> encapsulated with the <strong>datagram</strong>.</li>
+<li>On the receiving side, the <strong>network layer</strong> extracts the <strong>transport-layer segment</strong> from the
+<strong>datagram</strong> and passes the <strong>segment</strong> up to the <strong>transport layer</strong>. The <strong>transport layer</strong> then processes the received segment, making the data in the <strong>segment</strong> available to the receiving application.</li>
+</ol>
+<h3>Relationship Between Transport and Network Layers</h3>
+<ol>
+<li><strong>Transport-layer protocol</strong> provides <strong>logical communication</strong> between processes running on different hosts, a <strong>network-layer protocol</strong> provides logical-communication between hosts.</li>
+<li>A critical function of the <strong>transport layer</strong> is to extend the <strong>network layer</strong> delivery service between two end systems to a delivery service between two <strong>application-layer</strong> processes running on the end systems.</li>
+<li><strong>Transport-layer protocols</strong> are implemented in the end systems but not in network routers.</li>
+<li><strong>Transport protocols</strong> can add certain services not provided by the <strong>network-layer</strong>, eg: reliable delivery, encryption, etc.
+Moreover, the services offered by the <strong>transport protocol</strong> are constrained by the <strong>network-layer</strong>, eg: If the network-layer can&#39;t make bandwidth or delay guarantees, the transport-layer cannot too.</li>
+</ol>
+<h3>Multiplexing &amp; Demultiplexing</h3>
+<ol>
+<li><p>A process can have multiple open sockets.</p>
+</li>
+<li><p>Sockets have unique identifier on a system.</p>
+</li>
+<li><p>At the receiving end system, the transport layer examines a set of fields that identifies the receiving socket and then directs the segment to that socket.</p>
+</li>
+<li><p>This job of delivering the data in a <strong>transport-layer segment</strong> to the correct socket
+is called <strong>demultiplexing</strong>.</p>
+</li>
+<li><p>The job of gathering data chunks at the source host from different sockets,
+encapsulating each data chunk with header information (that will later be used in <strong>demultiplexing</strong>) to create segments, and passing the segments to the network layer is called <strong>multiplexing</strong>.</p>
+</li>
+<li><p><strong>Transport-layer multiplexing</strong> requires:
+i. That sockets have unique identifiers, and
+ii. That each segment have special fields that indicate the socket to which the segment is to be delivered</p>
+</li>
+<li><p>These special fields are the <strong>source port number field</strong> and the <strong>destination port number field</strong>.</p>
+<p> <img src="Computer%20Networking%20-%20A%20Top-Down%20Approach%20f9a8b5e3d8804737bd92cc1381c718aa/Untitled.png" alt="Computer%20Networking%20-%20A%20Top-Down%20Approach%20f9a8b5e3d8804737bd92cc1381c718aa/Untitled.png"></p>
+</li>
+<li><p>Each port number is a 16-bit number, ranging from 0 to 65535.</p>
+</li>
+<li><p>The port numbers ranging from <strong>0</strong> to <strong>1023</strong> are called <strong>well-known port numbers</strong> and are restricted.</p>
+</li>
+<li><p>Typically, the client side of the application lets the transport layer automatically (and transparently) assign the port number, whereas the server side of the application assigns a specific port number.</p>
+</li>
+</ol>
+<h3>Connectionless Multiplexing &amp; Demultiplexing</h3>
+<p>A <strong>UDP socket</strong> is fully identified by a two-tuple consisting of a <strong>destination IP
+address</strong> and a <strong>destination port number</strong>.</p>
+<p><img src="Computer%20Networking%20-%20A%20Top-Down%20Approach%20f9a8b5e3d8804737bd92cc1381c718aa/Untitled%201.png" alt="Computer%20Networking%20-%20A%20Top-Down%20Approach%20f9a8b5e3d8804737bd92cc1381c718aa/Untitled%201.png"></p>
+<p>As shown in above, in the <strong>A-to-B segment</strong> the source port number serves as part of a <strong>“return address”</strong>—when <strong>B</strong> wants to send a segment back to <strong>A</strong>, the destination port in the <strong>B-to-A segment</strong> will take its value from the source port value of the <strong>A-to-B segment</strong>. (The complete return address is <strong>A’s IP address</strong> and the <strong>source port number</strong>).</p>
+<h3>Connection-Oriented Multiplexing &amp; Demultiplexing</h3>
+<p>A TCP socket is identified by a four-tuple: (source IP address, source port number, destination IP address, destination port number).</p>
+<p>An example TCP connection flow:</p>
+<ol>
+<li>The TCP server application has a “welcoming socket,” that waits for connection-establishment requests from TCP clients on port number 12000.</li>
+<li>The TCP client creates a socket and sends a connection establishment request <strong>segment</strong>.</li>
+<li>A connection-establishment request is nothing more than a <strong>TCP segment</strong> with destination port number 12000 and a special connection-establishment bit set in the <strong>TCP header</strong>. The segment also includes a <strong>source port number</strong> that was chosen by the client.</li>
+<li>When the host operating system of the computer running the server process receives the incoming connection-request segment with destination port 12000, it locates the server process that is waiting to accept a connection on port number 12000. The server process then creates a new socket (by accepting it.</li>
+<li>Also, the transport layer at the server notes the following four values in the connection-request segment: <strong>(1)</strong> the source port number in the segment, <strong>(2)</strong> the IP address of the source host, <strong>(3)</strong> the destination port number in the segment, and <strong>(4)</strong> its own IP address.
+The newly created connection socket is identified by these four values; all subsequently arriving segments whose source port, source IP address, destination port, and destination IP address match these four values will be demultiplexed to this socket. With the TCP connection now in place, the client and server can now send data to each other.</li>
+</ol>
+<p><img src="Computer%20Networking%20-%20A%20Top-Down%20Approach%20f9a8b5e3d8804737bd92cc1381c718aa/Untitled%202.png" alt="Computer%20Networking%20-%20A%20Top-Down%20Approach%20f9a8b5e3d8804737bd92cc1381c718aa/Untitled%202.png"></p>
+<p>Note: If the client and server are using persistent HTTP, then throughout the duration of the persistent connection the client and server exchange HTTP messages via the same server socket (after initial connection).</p>
+<p>However, if the client and server use non-persistent HTTP, then a new TCP connection is created and closed for every request/response, and hence a new socket is created and later closed for every request/response.</p>
+<h2>Connectionless Transport: UDP</h2>
+<p><strong>UDP</strong> does just about as little as a transport protocol can do. Aside from the <strong>multiplexing/demultiplexing</strong> function and some light error checking, it adds nothing to <strong>IP</strong>.</p>
+<p><strong>UDP</strong> takes messages from the application process, attaches <strong>source</strong> and <strong>destination</strong> port number fields for the <strong>multiplexing/demultiplexing</strong> service, adds two other small fields, and passes the resulting segment to the network layer.</p>
+<p>The network layer encapsulates the <strong>transport-layer segment</strong> into an <strong>IP datagram</strong> and then makes a <strong>best-effort</strong> attempt to deliver the segment to the receiving host.</p>
+<p>If the segment arrives at the receiving host, <strong>UDP</strong> uses the <strong>destination port number</strong> to deliver the <strong>segment’s data</strong> to the correct application process.</p>
+<p><strong>UDP</strong> is connectionless because there is no handshaking between sending and receiving transport-layer entities before sending a segment.</p>
+<p>Applications can build reliability/congestion control or any other services provided by TCP on top of UDP (as needed).</p>
+<p><strong>Benefits over TCP</strong></p>
+<ol>
+<li><strong>Finer application-level control over what data is sent, and when</strong>: UDP is suitable for real-time applications as it has no congestion control and doesn&#39;t repeatedly retry transmission until acknowledgment.</li>
+<li><strong>No connection establishment:</strong> Unlike TCP with its 3-way handshake before data transfer, UDP just sends its data immediately, thereby introducing no connection establishment delays.</li>
+<li><strong>No connection state:</strong> TCP maintains connection states in the end-systems like: receive and send buffers, congestion-control parameters, and sequence and acknowledgment number parameters.
+UDP has no such connection state. Typically a UDP server devoted to a particular application can support more active clients than a TCP server because of this.</li>
+<li><strong>Small packet header overhead:</strong> The <strong>TCP segment</strong> has <strong>20 bytes</strong> of header overhead in every
+<strong>segment</strong>, whereas <strong>UDP</strong> has only <strong>8 bytes</strong> of overhead.</li>
+</ol>
+<p><img src="Computer%20Networking%20-%20A%20Top-Down%20Approach%20f9a8b5e3d8804737bd92cc1381c718aa/Untitled%203.png" alt="Computer%20Networking%20-%20A%20Top-Down%20Approach%20f9a8b5e3d8804737bd92cc1381c718aa/Untitled%203.png"></p>
+<h3>UDP Segment Structure</h3>
+<p>The UDP segment has 4 <strong>headers</strong> and a <strong>data field</strong> containing application layer data.</p>
+<p>Each header field consist of only <strong>2 bytes</strong>.</p>
+<p><img src="Computer%20Networking%20-%20A%20Top-Down%20Approach%20f9a8b5e3d8804737bd92cc1381c718aa/Untitled%204.png" alt="Computer%20Networking%20-%20A%20Top-Down%20Approach%20f9a8b5e3d8804737bd92cc1381c718aa/Untitled%204.png"></p>
+<p><strong>Destination port:</strong> Used for demultiplexing, ie, the port numbers allow the destination host to pass the application data to the correct process running on the destination end system.</p>
+<p><strong>Length:</strong> Number of bytes in the UDP segment (data + headers).</p>
+<p><strong>Checksum:</strong> Used for error detection.</p>
+<h3>UDP Checksum</h3>
+<p>UDP uses checksum to detect if bits within the segment has been altered (eg: By noise in the links or when stored on the routers).</p>
+<p>UDP at the sender side performs the <strong>1s complement</strong> of the <strong>sum of all the 16-bit words in the segment</strong>, with any <strong>overflow</strong> encountered during the sum being <strong>wrapped around</strong>.</p>
+<p>This result is put in the checksum field of the UDP segment.</p>
+<p><strong>Example</strong></p>
+<p>Suppose that we have the following three <strong>16-bit words</strong>:</p>
+<p><img src="Computer%20Networking%20-%20A%20Top-Down%20Approach%20f9a8b5e3d8804737bd92cc1381c718aa/Untitled%205.png" alt="Computer%20Networking%20-%20A%20Top-Down%20Approach%20f9a8b5e3d8804737bd92cc1381c718aa/Untitled%205.png"></p>
+<p>Note that this last addition had overflow, which was wrapped around. The <strong>1s complement</strong> is obtained by converting all the <strong>0s to 1s</strong> and converting all the <strong>1s to 0s</strong>.</p>
+<p>Thus the <strong>1s complemen</strong>t of the sum <strong>0100101011000010</strong> is <strong>1011010100111101</strong>, which becomes the checksum.</p>
+<p>At the receiver, all four <strong>16-bit words</strong> are added, <strong>including the checksum</strong>. If no errors are introduced into the packet, then clearly the sum at the receiver will be <strong>1111111111111111</strong>.</p>
+<p>If one of the bits is a <strong>0</strong>, then we know that errors have been introduced into the packet.</p>
+<p><strong>Actions when error detected</strong></p>
+<p>When an error is detected, UDP does nothing to recover from it. Some implementation discard the segment, while others deliver the segment to the application with a warning.</p>
+<p>Why detect errors</p>
+<p>IP is supposed to run over any <strong>layer-2 protocol</strong>, some of which do not offer error-checks. Furthermore, even if segments are correctly transferred across a link, it’s possible that bit errors could be introduced when a segment is stored in a router’s memory.</p>
+<p>Given that neither <strong>link-by-link reliability</strong> nor <strong>in-memory error detection</strong> is guaranteed, UDP must apply the <strong>end-to-end principle</strong> and provide error detection on an end-to-end basis.</p>
+<h2>Principles of Reliable Data Transfer</h2>
+<p>With a reliable channel, no transferred data bits are corrupted (flipped from 0 to 1, or vice versa) or lost, and all are delivered in the order in which they were sent.</p>
+<p>TCP is a reliable data transfer protocol that is implemented on top of an unreliable (IP) end-to-end network layer.</p>
+<p><img src="Computer%20Networking%20-%20A%20Top-Down%20Approach%20f9a8b5e3d8804737bd92cc1381c718aa/Untitled%206.png" alt="Computer%20Networking%20-%20A%20Top-Down%20Approach%20f9a8b5e3d8804737bd92cc1381c718aa/Untitled%206.png"></p>
+<p><img src="Computer%20Networking%20-%20A%20Top-Down%20Approach%20f9a8b5e3d8804737bd92cc1381c718aa/Untitled%207.png" alt="Computer%20Networking%20-%20A%20Top-Down%20Approach%20f9a8b5e3d8804737bd92cc1381c718aa/Untitled%207.png"></p>
+<p>In this section, an assumption is made that packets cannot be reordered. Also, only <strong>unidirectional data transfer</strong> is considered.</p>
+<p><strong>Unidirectional data transfer</strong>: data transfer from the sending to the receiving side.</p>
+<p><strong>Bidirectional (that is, full-duplex) data transfer:</strong> Both sides.</p>
+<p>RDT = Reliable data transfer protocol</p>
+<p>UDT = Unreliable data transfer protocol</p>
+<h3>Incrementally building a Reliable Data Transfer Protocol</h3>
+<p><strong>Reliable Data Transfer over a Perfectly Reliable Channel: (RDT 1.0)</strong></p>
+<p><strong>Reliable Data Transfer over a Channel with Bit Errors: (RDT 2.0):</strong></p>
+
+    </body>
+</html>

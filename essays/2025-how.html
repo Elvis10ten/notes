@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>Against Bit Rot (Why &amp; how I rebuilt my blog)</title>
+        <meta property="og:image" content="assets/banners/2025-how.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+
+        <link href="assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>Against Bit Rot (Why &amp; how I rebuilt my blog)</h1>
+<blockquote>
+<p>The Jargon File, a compendium of hacker lore, defines “bit rot” as a jocular explanation for the degradation of a software program over time even if “nothing has changed”; the idea behind this is almost as if the bits that make up the program were subject to radioactive decay.</p>
+<p>— <a href="https://en.wikipedia.org/wiki/Software_rot">Wikipedia</a></p>
+</blockquote>
+<p>This post is a late-night rant that gives this new blog’s motivation and high-level details.</p>
+<h2>Rant (the ‘why’)</h2>
+<p>The story started four years ago when I built my <a href="https://elvischidera.com">Gatsby-based blog</a>. It was based on a “minimalist” template, and the result was beautiful right out of the box.</p>
+<p>To this day, 99.9% of my changes were to the blog content written in Markdown. I didn’t touch the codebase because I didn’t need anything else.</p>
+<p>As the number of content grew, I noticed the build started to get slower. Well, this goes with the territory, and I didn’t care much as I could easily preview my changes in my code editor. Builds only need to run on Github actions, and I didn’t care how long that took.</p>
+<p>Fast-forward to two days ago: the last straw was that after a year or two, I couldn’t build my blog locally anymore. I was hit with numerous warnings and errors every time I tried.</p>
+<p>Why is this failing? Last I checked, Markdown, HTML, CSS, and Javascript haven’t changed significantly. My requirements from 4 years ago have stayed the same. So, what gives?</p>
+<p>I decided to have a look behind the veil. Lo and behold! I found my blog has <strong>1537</strong> dependencies!!! Why do I need <code>multicast-dns</code>? Or any one of the other 1500 dependencies?</p>
+<p>Bruv! I just want to write in Markdown and have it show up on the internet. I don’t want to be an “enterprise engineer” on a side project.</p>
+<p>I was shouldering the maintenance burden of dependencies I didn’t actually need. This large surface area maximized my exposure to bit rot.</p>
+<h2>New blog setup (the ‘how’)</h2>
+<p>Let’s review my requirements from four years ago, which hasn’t changed:</p>
+<ol>
+<li>Convert Markdown (CommonMark) to HTML.</li>
+<li>Provide syntax highlighting for code blocks.</li>
+<li>Support for LaTeX.</li>
+<li>A simple method for deploying the static blog.</li>
+<li>A minimalist design (content is king).</li>
+<li>I don’t want to tinker with the codebase unless necessary.</li>
+</ol>
+<p>I am confident these requirements will remain unchanged for the next 5 years. Therefore, I just need to find a tool that is resilient to bit rot. Unfortunately, most Markdown blogging tools are more complex than I need. They often offer features I don’t need or sacrifice simplicity for flexibility.</p>
+<p>Fortunately, I stumbled upon this <a href="https://github.com/gordonnl/markdown-blog-template">blog template</a>. The last commit was five years ago (older than my blog), and when I pulled it, it worked locally without any hassle.</p>
+<p>Parfait! According to the Lindy Effect, this tool should last another five years. Here’s how it functions:</p>
+<p>It reads all the Markdown files in a <code>src</code> directory and converts them into HTML files in a <code>dest</code> directory. It comes with a simple CSS file in the <code>dest</code> directory for essential styling and uses the <code>marked</code> library for Markdown to HTML conversion, along with <code>highlight.js</code> for syntax highlighting.</p>
+<p>It’s that simple! I think, this template was more resilient to bit rot because:</p>
+<ol>
+<li>It has only two dependencies.</li>
+<li>Both are bundled locally.</li>
+<li>The setup is incredibly simple.</li>
+</ol>
+<p>I decided to use this as the basis for my new blog with the following changes:</p>
+<ol>
+<li>Added LaTeX support using <code>Katex</code>.</li>
+<li>Implemented functionality to list all blog posts on the index page by year.</li>
+<li>Updated the CSS to match my preferences.</li>
+<li>Created a simple script for deploying to GitHub Pages.</li>
+<li>Finally, I updated the <code>marked</code> and <code>highlight.js</code> libraries to the latest versions. I committed my <code>node_modules</code> to the repository to keep the dependencies local.</li>
+</ol>
+<p>The <a href="https://github.com/Elvis10ten/notes/blob/main/tools/build_html.js">build script</a> consists of ~100 lines of pure JavaScript. It is so simple that I could rewrite it in an hour if needed.</p>
+<p>I rely on standard features from Markdown, HTML, CSS, and Javascript, which will likely stay the same in the coming years. If any of my third-party dependencies rot, I can easily replace them with something else or choose not to update them.</p>
+<h2>Conclusion</h2>
+<p>I’m pleased with my new blog setup. It is simple, fast, and resilient to bit rot.</p>
+<p>That starter pack or boilerplate template might help you start quickly, but it often conceals unnecessary complexity. You don’t need a rocket ship to go grocery shopping.</p>
+<p>Time is precious! And I want to spend it on what truly matters to a product.</p>
+<p>PS: I ruled out third-party services because I don&#39;t want to pay and because the interest of these services usually deviates from yours overtime (cough cough Medium). If GitHub changes something about Pages, I can easily move my static files elsewhere.</p>
+
+    </body>
+</html>

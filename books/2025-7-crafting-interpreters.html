@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>[WIP] Crafting interpreters</title>
+        <meta property="og:image" content="assets/banners/2025-7-crafting-interpreters.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+
+        <link href="assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>[WIP] Crafting interpreters</h1>
+<p>This is a book on implementing interpreters for programming languages with a focus on practicals (getting the language up and running) instead of theory (Formal reasoning on syntax and semantics).</p>
+<h3>Chapter 2: A map of the territory</h3>
+<h3>Chapter 3: The Lox Language</h3>
+<p>The Lox language is a high-level language with a C syntax style.</p>
+<p>Lox is dynamically typed. Variables can store values of any type. Implementing a statically typed language would have taken more time and effort.</p>
+<p>There are two main techniques for managing memory: <strong>reference counting</strong> and <strong>tracing garbage collection</strong> (aka <strong>garbage collection</strong>). A garbage collector will be implemented for Lox.</p>
+<h4>Data types</h4>
+<p>Lox has the following data types:</p>
+<ol>
+<li>Booleans</li>
+<li>Numbers (Double-precision floating point)</li>
+<li>Strings</li>
+<li>Nil</li>
+</ol>
+<h4>Expressions</h4>
+<p>Lox has the following types of expressions:</p>
+<ol>
+<li><p><strong>Arithmetic</strong>: Lox features basic arithmetic operators like</p>
+<ul>
+<li><code>add + me</code></li>
+<li><code>subtract - me</code></li>
+<li><code>multiply * me</code></li>
+<li><code>divide / me</code></li>
+</ul>
+<blockquote>
+<p>The subexpressions on either side of the operator are <strong>operands</strong>. </p>
+<p>Because there are two operands, the operators are called <strong>binary operators</strong>.</p>
+<p>Because the operator is fixed in the middle of the operands, these are also called <strong>infix operators</strong>.</p>
+<p>A <strong>prefix operator</strong> comes before the operand like <code>-negateMe</code> .</p>
+<p> A <strong>postfix operator</strong> comes after the operand like <code>increaseMe++</code> .</p>
+</blockquote>
+</li>
+<li><p><strong>Comparison and equality</strong>: These operators always return a boolean result. e.g.</p>
+<ul>
+<li><code>less &lt; than</code></li>
+<li><code>lessThan &lt;= orEqual</code></li>
+<li><code>greater &gt; than</code></li>
+<li><code>greaterThan &gt;= orEqual</code></li>
+<li><code>is == equal</code></li>
+<li><code>is != notEqual</code></li>
+</ul>
+</li>
+<li><p><strong>Logical operators</strong>:</p>
+<ul>
+<li><code>!notOperator</code></li>
+<li><code>firstBoolean and secondBooleanMustBeTrue</code></li>
+<li><code>firstBoolean or secondMustBeTrue</code><blockquote>
+<p>The <code>and</code> and <code>or</code> are like control flow structures because they <strong>short-circuit</strong>. The right operand is not evaluated if not necessary.</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p><strong>Precedence and grouping</strong>: <code>()</code> can be used to group operations. e.g. <code>var average = (min + max) / 2;</code>.</p>
+</li>
+</ol>
+<h4>Statements</h4>
+<p>An expression’s main job is to produce a value, a statement’s job is to produce an effect (e.g. modifying some state, reading input, or producing output). e.g.</p>
+<pre><code class="hljs language-javascript"><span class="hljs-comment">// A print statement evaluated a single expression</span>
+<span class="hljs-comment">// and displays the result to the user.</span>
+print <span class="hljs-string">&quot;Hello world!&quot;</span>;
+</code></pre><p>An <strong>expression statement</strong> is an expression used in a place where a statement is expected. The expression is evaluated and its result is discarded — therefore, it makes sense only for expressions that have side effects, such as executing a function or updating a variable.</p>
+<h4>Variables</h4>
+<p>Variables are declared using <code>var</code> statements. If the initializer is omitted, the variable’s value defaults to <code>nil</code>.</p>
+<pre><code class="hljs language-javascript"><span class="hljs-keyword">var</span> imAVariable = <span class="hljs-string">&quot;here is my value&quot;</span>;
+<span class="hljs-keyword">var</span> iAmNil;
+</code></pre><h4>Control flow</h4>
+<p><code>and</code> and <code>or</code> can be used for branching, and recursion can be used to repeat code. Lox introduces <code>if</code>…<code>else</code>, <code>while</code> loop, and <code>for</code> loop as control flow statements.</p>
+<h4>Functions</h4>
+<p>Functions are first class in Lox, which means they are real values that you can get a reference to, store in variables, pass around, etc.</p>
+<p>A <strong>closure</strong> is the combination of a function bundled together (enclosed) with references to its surrounding state (the lexical environment). In other words, a closure gives you access to an outer function&#39;s scope from an inner function.</p>
+<h4>Classes</h4>
+<p>For a dynamically typed language, objects are handy because they serve the need for some way to define compound data types to bundle blobs of stuff together.</p>
+<p>There are two approaches to objects:</p>
+<ol>
+<li><strong>Classes</strong>: “In class-based languages, there are two core concepts: <strong>instances</strong> and <strong>classes</strong>. <strong>Instances</strong> store the state for each object and have a reference to the instance’s class. <strong>Classes</strong> contain the methods and inheritance chain. To call a method on an instance, there is always a level of indirection: Look up the instance’s class and find the method there.”</li>
+<li><strong>Prototypes</strong>: “Prototype-based languages merge these two concepts. There are only objects — no classes— and each individual object may contain state and methods. Objects can directly inherit from each other”.
+Learn more <a href="https://stackoverflow.com/questions/2800964/benefits-of-prototypal-inheritance-over-classical">here</a>.</li>
+</ol>
+<p>Lox is class based. It supports object instantiation (i.e. creating an object from a class) and initialization (i.e. class constructor/initializers). It also supports single inheritance.</p>
+<h2>A tree-walk interpreter</h2>
+<h3>Chapter 4: Scanning</h3>
+<p>The first step in any compiler or interpreter is <strong>scanning</strong> (aka <strong>lexing</strong> [short for lexical analysis]). The scanner takes in raw source code as a series of characters and groups it into a series of tokens.</p>
+
+    </body>
+</html>
