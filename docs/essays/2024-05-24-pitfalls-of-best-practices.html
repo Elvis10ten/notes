@@ -9,12 +9,12 @@
         <meta property="og:image" content="assets/banners/2024-05-24-pitfalls-of-best-practices.jpg">
         <meta property="og:type" content="article">
 
-        <link rel="icon" type="image/png" href="assets/favicon.ico">
-        <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
 
-        <link href="assets/main.css" rel="stylesheet">
+        <link href="/assets/main.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
     </head>
     <body>
@@ -29,7 +29,7 @@
 <blockquote>
 <p>Nonlinear thinking means which way you should go depends on where you already are — <a href="https://amzn.to/3yeskID~">Jordan Ellenburg</a></p>
 </blockquote>
-<p><img src="assets/pitfalls-of-best-practices-images/false_linearity.png" alt="">
+<p><img src="/assets/pitfalls-of-best-practices-images/false_linearity.png" alt="">
 <small>Not every curve is a straight line.</small></p>
 <p>The relationship between two things is <a href="https://www.lesswrong.com/posts/dgvTCGS5egCdZ6uJF/linearity-fallacies-1">seldom linear</a>. A linearity fallacy is committed when you incorrectly assume a linear relationship relates two variables. There is such a thing as “too much of a good thing”. I will expand on this point with test coverage in the following paragraphs.</p>
 <p>Engineering teams often get presented with a fait accompli to increase their (unit) test coverage to X% (where <code>X</code> is some arbitrary number like 80%). Whenever I hear this, I like to troll by asking why 80%? Why not 81%? The point of my question is to point out the absurdity of such a number that is typically obtained on a questionable basis.</p>
@@ -73,10 +73,10 @@
 </blockquote>
 <p>Conflation is harmful because it produces a double whammy of wastefulness and stagnation. e.g. A (more) useful way <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi></mrow><annotation encoding="application/x-tex">X</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span></span></span></span> of doing <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi></mrow><annotation encoding="application/x-tex">Y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span></span></span></span> emerges, but the people indoctrinated in practice <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Z</mi></mrow><annotation encoding="application/x-tex">Z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">Z</span></span></span></span> resist it as “not following best practices”. These arguments typically boil down to a non sequitur like <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo stretchy="false">!</mo><mo>=</mo><mi>Z</mi></mrow><annotation encoding="application/x-tex">X != Z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="mclose">!</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">Z</span></span></span></span> (of course! It doesn’t!). When these people are the loud majority, they can have a (temporary) chilling effect on a sector.</p>
 <p>Of course, not everything old needs to be changed, and not everything new needs to be adopted (and vice versa). It’s usually a mistake to change something before understanding why it was there in the first place (see <a href="https://fs.blog/chestertons-fence/">Chesterton’s fence</a>). However, familiarity can also hinder us from seeing a new idea independently in its own light.</p>
-<p><img src="assets/pitfalls-of-best-practices-images/tweet.png" alt=""></p>
+<p><img src="/assets/pitfalls-of-best-practices-images/tweet.png" alt=""></p>
 <p>Facebook faced this resistance during the early days of React. Pete Hunt responded to the React critics in this <a href="https://www.youtube.com/watch?v=x7cQ3mrcKaY">talk</a>. He distinguished between “Separation of concerns” and “Separation of technologies”. The former gives you the desired outcome of <a href="https://en.wikipedia.org/wiki/Coupling_(computer_programming)">low coupling and high cohesion</a>. The latter tends to result in high coupling and low cohesion.</p>
 <p>Another example that comes to mind is the adoption of Agile. I have worked in many teams that strongly conflate “acting small” with “thinking small”. If, for example, you are designing a product in an established space, there are features you can almost certainly know you will need. You don’t need to build them! But not considering how they will at least fit in your architecture is a recipe for future pain (unless you plan on doing a rewrite).</p>
-<p><a href="https://jchyip.medium.com/the-age-of-cargo-cult-agile-must-end-9408e1d13e1d"><img src="assets/pitfalls-of-best-practices-images/agile.webp" alt=""></a>
+<p><a href="https://jchyip.medium.com/the-age-of-cargo-cult-agile-must-end-9408e1d13e1d"><img src="/assets/pitfalls-of-best-practices-images/agile.webp" alt=""></a>
 <small>Think big, work small</small></p>
 <h2>Out of context</h2>
 <blockquote>

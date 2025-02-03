@@ -9,12 +9,12 @@
         <meta property="og:image" content="assets/banners/2025-6-sicp.jpg">
         <meta property="og:type" content="article">
 
-        <link rel="icon" type="image/png" href="assets/favicon.ico">
-        <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
 
-        <link href="assets/main.css" rel="stylesheet">
+        <link href="/assets/main.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
     </head>
     <body>
@@ -232,7 +232,7 @@ y² = x and y &gt;= 0</p>
 <pre><code class="hljs language-scheme">(<span class="hljs-name"><span class="hljs-built_in">*</span></span> (<span class="hljs-name"><span class="hljs-built_in">+</span></span> <span class="hljs-number">2</span>
       (<span class="hljs-name"><span class="hljs-built_in">*</span></span> <span class="hljs-number">4</span> <span class="hljs-number">6</span>))
    (<span class="hljs-name"><span class="hljs-built_in">+</span></span> <span class="hljs-number">3</span> <span class="hljs-number">5</span> <span class="hljs-number">7</span>))
-</code></pre><p><img src="assets/sicp-images/figure1.1.png" alt="Tree representation of example"></p>
+</code></pre><p><img src="/assets/sicp-images/figure1.1.png" alt="Tree representation of example"></p>
 <h5>Lisp evaluation rule</h5>
 <ol>
 <li>If self-evaluating, return value (base case).</li>
@@ -684,7 +684,7 @@ counter = (<span class="hljs-name"><span class="hljs-built_in">+</span></span> c
 <h4>1.2.2 Tree Recursion — Finding Fibonacci Numbers</h4>
 <p>With tree recursion, the procedure invokes itself more than once, causing the process to evolve in the shape of a tree.</p>
 <p>Fibonacci numbers can be defined by the rule:</p>
-<p><img src="assets/sicp-images/fibonacci_forumula.png" alt="Fibonacci formula"></p>
+<p><img src="/assets/sicp-images/fibonacci_forumula.png" alt="Fibonacci formula"></p>
 <blockquote>
 <p>E.g: 0, 1, 1, 2, 3, 5, 8, 13, 21, ...</p>
 </blockquote>
@@ -697,7 +697,7 @@ counter = (<span class="hljs-name"><span class="hljs-built_in">+</span></span> c
    )
 )
 </code></pre><p>The diagram below shows the tree-recursive process generated in computing <code>(fib 5)</code>. Notice that the branches split into two at each level (except at the bottom); this reflects the fact that the <code>fib</code> procedure calls itself twice each time it is invoked.</p>
-<p><img src="assets/sicp-images/figure1.5.png" alt="Figure 1.5"></p>
+<p><img src="/assets/sicp-images/figure1.5.png" alt="Figure 1.5"></p>
 <ol>
 <li>The number of times the procedure will compute <code>(fib 1)</code> or <code>(fib 0)</code> (the number of leaves in the above tree, in general) is precisely <code>Fib(n + 1)</code>.</li>
 <li>The process uses a number of steps that grows exponentially with the input.</li>

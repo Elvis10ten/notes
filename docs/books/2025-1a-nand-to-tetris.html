@@ -9,12 +9,12 @@
         <meta property="og:image" content="assets/banners/2025-1a-nand-to-tetris.jpg">
         <meta property="og:type" content="article">
 
-        <link rel="icon" type="image/png" href="assets/favicon.ico">
-        <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
 
-        <link href="assets/main.css" rel="stylesheet">
+        <link href="/assets/main.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
     </head>
     <body>
@@ -257,7 +257,7 @@ Next, the designer can instruct the simulator to test the virtual chip on variou
 <p>The <bmark>specifications of the logic gates</bmark> needed to build the chips of our computer system are given below.</p>
 <hr>
 <p>First, the <strong>primitive</strong> <bmark>NAND</bmark> gate, which is shorthand for <strong>Not-And</strong> because it’s equivalent to <code>Not(And(a, b))</code>.</p>
-<p><img src="assets/nand-images/nand_gate.svg" alt=""></p>
+<p><img src="/assets/nand-images/nand_gate.svg" alt=""></p>
 <p>Truth table:</p>
 <table>
 <thead>
@@ -326,7 +326,7 @@ Next, the designer can instruct the simulator to test the virtual chip on variou
 </ul>
 <hr>
 <p>Next, we look at a set of four gates that implement <pmark>classical logical operators</pmark>. Starting with the <bmark>Not (aka inverter) gate</bmark>, which outputs the opposite value of its input’s value.</p>
-<p><img src="assets/nand-images/not_gate.svg" alt=""></p>
+<p><img src="/assets/nand-images/not_gate.svg" alt=""></p>
 <p>Truth table:</p>
 <table>
 <thead>
@@ -386,7 +386,7 @@ Nand(a= in, b= in, out= out);
 }
 </code></pre><hr>
 <p>The next classical gate is the <bmark>AND gate</bmark>, which returns <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> when both its inputs are <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>, and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span> otherwise.</p>
-<p><img src="assets/nand-images/and_gate.svg" alt=""></p>
+<p><img src="/assets/nand-images/and_gate.svg" alt=""></p>
 <p>Truth table:  </p>
 <table>
 <thead>
@@ -459,7 +459,7 @@ Not(in= nandout, out= out);
 }
 </code></pre><hr>
 <p>The <bmark>Or gate</bmark> returns <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> when at least one of its inputs is <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>, and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span> otherwise.</p>
-<p><img src="assets/nand-images/or_gate.svg" alt=""></p>
+<p><img src="/assets/nand-images/or_gate.svg" alt=""></p>
 <p>Truth table:</p>
 <table>
 <thead>
@@ -538,7 +538,7 @@ Not(in= notaandnotb, out= out);
 }
 </code></pre><hr>
 <p>The last classical gate we will build is the <bmark>Xor (aka exclusive or) gate</bmark> which returns <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> when exactly one of its input is <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>, and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span> otherwise.</p>
-<p><img src="assets/nand-images/xor_gate.svg" alt=""></p>
+<p><img src="/assets/nand-images/xor_gate.svg" alt=""></p>
 <p>Truth table:</p>
 <table>
 <thead>
@@ -619,7 +619,7 @@ Or(a= aandnotb, b= bandnota, out= out);
 }
 </code></pre><hr>
 <p>Next, we look at a set of <bmark>control flow gates</bmark>. These gates provide means for controlling flows of information. The first of such gate is the <bmark>multiplexer</bmark> which is a three-input gate. Two input bits, named <code>a</code> and <code>b</code>, are interpreted as <strong>data bits</strong>, and a third bit, named <code>sel</code>, is interpreted as a <strong>selection bit</strong>. The multiplexer uses <code>sel</code> to select and output the value of either <code>a</code> or <code>b</code>.</p>
-<p><img src="assets/nand-images/multiplexer_gate.png" alt=""></p>
+<p><img src="/assets/nand-images/multiplexer_gate.png" alt=""></p>
 <p>Truth table:</p>
 <table>
 <thead>
@@ -727,7 +727,7 @@ Or(a= aandnotsel, b= bandsel, out= out);
 }
 </code></pre><hr>
 <p>Next is the <bmark>demultiplexer gate</bmark> which performs the opposite function of a multiplexer: it takes a single input value and routes it to one of two possible outputs, according to a selector bit that selects the destination output.</p>
-<p><img src="assets/nand-images/demultiplexer_gate.png" alt=""></p>
+<p><img src="/assets/nand-images/demultiplexer_gate.png" alt=""></p>
 <table>
 <thead>
 <tr>
@@ -2185,7 +2185,7 @@ Not(in= zrLeftOrZrRight, out= zr);
 Thus, in order to build chips that &quot;remember&quot; information, we must first develop some standard means for representing the progression of time.</p>
 <p>In most computers, the progression of time is regulated by a <bmark>clock signal</bmark>. This signal oscillates between two values, <code>0</code> (called low/tick) and <code>1</code> (called high/tock), at a regular pace.</p>
 <p>The clock hardware implementation is usually an oscillator that generates a square wave. The frequency of the clock signal is measured in <strong>Hertz</strong> (Hz), which is the number of oscillations per second.</p>
-<p><img src="assets/nand-images/hertz.webp" alt="Clock signal">
+<p><img src="/assets/nand-images/hertz.webp" alt="Clock signal">
 <em><a href="https://www.xtronical.com/6502computerep3/">Image source</a></em></p>
 <p>The elapsed time between the beginning of a &quot;tick&quot; and the end of a subsequent &quot;tock&quot; is called a <strong>clock cycle</strong>.</p>
 <p>The clock is used to synchronize the sequential chips. Using the hardware’s circuitry, this signal is simultaneously broadcast to every sequential chip throughout the computer platform.</p>
@@ -2193,7 +2193,7 @@ Thus, in order to build chips that &quot;remember&quot; information, we must fir
 <p>There are several variants of a flip-flop. We use a variant called the <bmark>data flip-flop (DFF)</bmark>.</p>
 <p>A DFF is a simple memory element that stores a single bit. It has a data input <code>in</code>, a clock input <code>load</code>, and an output <code>out</code>. When the clock input is <code>1</code>, the flip-flop copies the value of the data input to its output. When the clock input is <code>0</code>, the flip-flop holds its previous value.</p>
 <p>Taken together, both inputs enables the DFF to implement the behavior <code>out(t) = in(t-1)</code>, where <code>t</code> is the current clock cycle. In other words, the DFF outputs the input value from the previous clock cycle.</p>
-<p><img src="assets/nand-images/dff.png" alt="DFF"></p>
+<p><img src="/assets/nand-images/dff.png" alt="DFF"></p>
 <table>
 <thead>
 <tr>
@@ -2236,7 +2236,7 @@ Thus, in order to build chips that &quot;remember&quot; information, we must fir
 <li>First, the <code>cycle length</code> must be set to a value slightly greater than the <code>maximum propagation delay</code> in the computer</li>
 <li>Secondly, we can ONLY use the chip&#39;s output at end of cycles, and ignore all the fluctuations that can occur within cycles. This is achieved by simply using a DFF (because it&#39;s edge-triggered) to store the output of the chip. In our ALU example, the output of the ALU is stored in a register, which ignores the unstable output of the ALU due to propagation delays.</li>
 </ul>
-<p><img src="assets/nand-images/dff_sync.png" alt="Discrete time"></p>
+<p><img src="/assets/nand-images/dff_sync.png" alt="Discrete time"></p>
 <hr>
 <p>A <bmark>register</bmark> is a storage device that can &quot;store&quot; or &quot;remember&quot; a value over time, implementing the classical storage behavior <code>out = out(t-1)</code>.</p>
 <p>A DFF, on the other hand, can only output its previous input, namely, <code>out = in(t-1)</code>. We can build a register from a DFF, however, we must consider the following:</p>
@@ -2248,7 +2248,7 @@ Thus, in order to build chips that &quot;remember&quot; information, we must fir
 <blockquote>
 <p>If we want the register to start storing a new value, we can put this value in the <code>in</code> input and set the load bit to <code>1</code>; if we want the register to keep storing its internal value until further notice, we can set the load bit to <code>0</code>.</p>
 </blockquote>
-<p><img src="assets/nand-images/register.png" alt="Register"></p>
+<p><img src="/assets/nand-images/register.png" alt="Register"></p>
 <table>
 <thead>
 <tr>
@@ -2331,7 +2331,7 @@ The multi-bit contents of such registers are typically referred to as <strong>wo
 }
 </code></pre><hr>
 <p>A <bmark>RAM chip</bmark> (aka direct access memory unit) is a sequential chip that can store multiple data words. Each word is stored in a register, and the registers are indexed by an address.</p>
-<p><img src="assets/nand-images/ram.png" alt="RAM"></p>
+<p><img src="/assets/nand-images/ram.png" alt="RAM"></p>
 <p>The term random access memory derives from the requirement that any randomly chosen word in the memory — irrespective of its physical location — be accessed directly, in equal speed.</p>
 <p>This requirement can be satisfied as follows:</p>
 <ul>
@@ -2507,7 +2507,7 @@ The address specifies which RAM register should be accessed in the current time 
 }
 </code></pre><hr>
 <p>Simply stated, a sequential chip is a chip that embeds one or more DFF gates, either directly or indirectly.</p>
-<p><img src="assets/nand-images/combinational_vs_sequential.png" alt="Sequential chip"></p>
+<p><img src="/assets/nand-images/combinational_vs_sequential.png" alt="Sequential chip"></p>
 <h2>Chapter 4: Machine Language</h2>
 <p>A <bmark>machine language</bmark> is an agreed-upon formalism, designed to code low-level programs as series of machine instructions. The primary goals of a machine language&#39;s design are:</p>
 <ol>
@@ -3058,9 +3058,9 @@ However, these instructions can be combined like building blocks, yielding arbit
 receiving data from some input device, and sending data to some output device.</p>
 <p>At the heart of this architecture lies the <bmark>stored program concept</bmark>: The computer&#39;s memory stores both the
 data that the computer manipulates and the instructions that tell the computer what to do.</p>
-<p><img src="assets/nand-images/von_neumann_architecture.svg" alt="Von Neumann architecture"></p>
+<p><img src="/assets/nand-images/von_neumann_architecture.svg" alt="Von Neumann architecture"></p>
 <p>A related stored program computer architecture is the <bmark>Harvard architecture</bmark>, which physically separates the memory devices used for storing data and instructions.</p>
-<p><img src="assets/nand-images/harvard_architecture.svg" alt="Harvard architecture"></p>
+<p><img src="/assets/nand-images/harvard_architecture.svg" alt="Harvard architecture"></p>
 <hr>
 <p>The CPU operation can be described as a repeated loop (aka fetch-decode-execute cycle):</p>
 <ol>
@@ -3117,7 +3117,7 @@ instruction to fetch and execute next.</p>
 	    addressM[15],		//	In	which	address	to	write?
 	    writeM,				//	Write	to	the	Memory?
 	    pc[15];				//	address	of	next	instruction	
-</code></pre><p><img src="assets/nand-images/hack_cpu.png" alt="Hack CPU"></p>
+</code></pre><p><img src="/assets/nand-images/hack_cpu.png" alt="Hack CPU"></p>
 <p>Key points:</p>
 <ul>
 <li>The Hack Central Processing Unit consists of an <strong>ALU</strong>, two registers named <strong>A</strong> and <strong>D</strong>, and a program counter named <strong>PC</strong> (these	internal chip-parts	are	not	shown in the diagram). </li>
@@ -3145,7 +3145,7 @@ instruction to fetch and execute next.</p>
     
     OUT
         out[16];	
-</code></pre><p><img src="assets/nand-images/hack_rom.png" alt="Hack instruction memory"></p>
+</code></pre><p><img src="/assets/nand-images/hack_rom.png" alt="Hack instruction memory"></p>
 <p>Key points:</p>
 <ul>
 <li>The instruction memory of the Hack computer, implemented as a read-only memory of <strong>32K registers</strong>, each <strong>16-bit wide</strong>.</li>
@@ -3164,7 +3164,7 @@ instruction to fetch and execute next.</p>
     
     OUT
         out[16];
-</code></pre><p><img src="assets/nand-images/hack_data_memory.png" alt="Hack data memory"></p>
+</code></pre><p><img src="/assets/nand-images/hack_data_memory.png" alt="Hack data memory"></p>
 <p>Key points:</p>
 <ul>
 <li>The complete address space of the Hack computer&#39;s data memory, including <strong>RAM</strong> and <strong>memory-mapped I/O</strong>.</li>
@@ -3190,7 +3190,7 @@ instruction to fetch and execute next.</p>
 
     IN
         reset;	
-</code></pre><p><img src="assets/nand-images/hack_computer.png" alt="Hack computer"></p>
+</code></pre><p><img src="/assets/nand-images/hack_computer.png" alt="Hack computer"></p>
 <p>Key points:</p>
 <ul>
 <li>The HACK computer, consisting of <strong>CPU</strong>, <strong>ROM</strong> and <strong>Memory parts</strong> (these	internal chip-parts	are	not	shown in the diagram).</li>
@@ -3243,7 +3243,7 @@ connect them in a way that effects the desired CPU operation.</p>
 <li>Executing the current instruction, and</li>
 <li>Deciding which instruction to fetch and execute next.</li>
 </ul>
-<p><img src="assets/nand-images/hack_cpu_arch.png" alt="Hack CPU architecture">
+<p><img src="/assets/nand-images/hack_cpu_arch.png" alt="Hack CPU architecture">
 <em>Every <code>c</code> symbol entering a chip-part stands for some control bit, extracted from the instruction.
 In the case of the ALU, the <code>c&#39;s</code> input stands for the 6 control bits that instruct the ALU what to compute, and the <code>c&#39;s</code>
 output stands for its <code>zr</code> and <code>ng</code> outputs.

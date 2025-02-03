@@ -63,7 +63,7 @@ async function buildHTMLFile(dir, markdownFileName) {
     let outputHTML = scaffoldHTML.replace('<!-- output_content -->', srcHTML);
 
     console.log(`Replacing '/docs/assets' paths in the generated HTML...`);
-    outputHTML = outputHTML.replace(/\/docs\/assets/g, 'assets');
+    outputHTML = outputHTML.replace(/\/docs\/assets/g, '/assets');
     console.log(`Replacing '/src/(.*).md' paths with '/$1.html' in the generated HTML...`);
     outputHTML = outputHTML.replace(/\/src\/(.*?)\.md/g, "$1.html");
 
