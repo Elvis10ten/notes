@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>[WIP] Operating Systems: Three Easy Pieces</title>
+        <meta property="og:image" content="assets/banners/2025-5-os-three-easy-pieces.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+
+        <link href="assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>[WIP] Operating Systems: Three Easy Pieces</h1>
+<h2>Piece 1: Virtualization</h2>
+<h2>Introduction</h2>
+<ol>
+<li>Von Neumann model of computing</li>
+<li>Virtualization: The OS takes a physical resource (such as
+the processor, or memory, or a disk) and transforms it into a more general,
+powerful, and easy-to-use virtual form of itself.</li>
+<li>System call: In computing, a system call is the programmatic way in which a computer program requests a service from the kernel of the operating system on which it is executed.</li>
+<li>The OS as a resource manager</li>
+<li>The OS standard libraries</li>
+<li>Virtualizing the CPU</li>
+<li>OS policies</li>
+<li>Virtual address space</li>
+<li>Address-space randomization</li>
+<li>Stack-smashing attacks</li>
+<li>An OS takes physical resources, such as a CPU, memory, or disk, and virtualizes them. It handles tough and tricky issues related to concurrency. And it stores files persistently, thus making them safe over the long-term.</li>
+<li>Procedure calls vs system calls.</li>
+<li>Kernel mode/User mode.</li>
+</ol>
+<h1>The Abstraction: The Process</h1>
+<ol>
+<li>A process is a running program</li>
+<li>CPU time sharing</li>
+<li>OS Mechanism: Low-level methods or protocols that implement a needed piece of functionality.</li>
+<li>Context switch</li>
+<li><strong>Time sharing:</strong> is a basic technique used by an OS to share a resource. By
+allowing the resource to be used for a little while by one entity, and then
+a little while by another, and so forth, the resource in question (e.g., the
+CPU, or a network link) can be shared by many.</li>
+<li><strong>Space sharing:</strong> The counterpart of time sharing is space sharing, where a resource is divided (in space) among those who wish to use it.</li>
+</ol>
+<p>For example, disk space is naturally a space shared resource; once a block is assigned to a file, it is normally not assigned to another file until the user deletes the original file.
+7. Scheduling policy
+8. Process machine state
+9. Process address space
+10. Instruction pointer/Program pointer
+11. Stack and frame pointer
+12.</p>
+<p><img src="Operating%20Systems%20Three%20easy%20steps%2055daca293631414e801ceb1b1b9097d1/Untitled.png" alt="Operating%20Systems%20Three%20easy%20steps%2055daca293631414e801ceb1b1b9097d1/Untitled.png"></p>
+<ol start="13">
+<li><p>Modern operating systems provide Process interfaces to do the following:
+i. <strong>Create</strong>: Create a new Process.
+ii. <strong>Destroy</strong>: Forcefully, stop a Process.
+iii. <strong>Wait</strong>: Wait for a Process to stop running.
+iv. <strong>Miscellaneous control</strong>: Additional control over a process like suspending/resuming a Process.
+v. <strong>Status</strong>: Status info about a process like how long it has run, current state, etc.</p>
+</li>
+<li><p>Process Creation Details:</p>
+<p><strong>Loading:</strong>
+i. The OS loads the code and any static data (e.g, initialized variables) into memory, into the address space of the process.
+ii. Programs initially reside on disk (HDD or SSD) in some executable format.
+iii. The process of loading code and static data requires disk IO.
+iv. Early or simple OS load programs <strong>eagerly</strong> (all at once before running the program). Modern OS performs the process <strong>lazily</strong>, ie, by loading pieces of code or data only as they are needed during program execution.</p>
+<p><strong>Initialization:</strong></p>
+<ol>
+<li><p>The OS allocates memory for the process <strong>runtime stack</strong>. C programs use the stack for local variables, function parameters, &amp; return addresses.</p>
+</li>
+<li><p>The OS will also likely initialize the stack with <strong>arguments</strong>; specifically, it will fill in the parameters to the <strong>main()</strong> function, i.e., <strong>argc</strong> and the <strong>argv</strong> array.</p>
+</li>
+<li><p>The OS may also allocate some memory for the program’s <strong>heap</strong>. In C
+programs, the heap is used for explicitly requested dynamically-allocated
+data; programs request such space by calling <strong>malloc()</strong> and free it explicitly
+by calling <strong>free()</strong>.</p>
+</li>
+</ol>
+<p>The heap will be small at first; as the program runs, and requests more memory
+via the <strong>malloc()</strong> library API, the OS may get involved and allocate
+more memory to the process to help satisfy such calls.</p>
+<ol start="4">
+<li>The OS may do some IO initialization.</li>
+</ol>
+<p>For example, in <strong>UNIX systems</strong>, each process by default has <strong>three open file descriptors</strong>, for <strong>standard input</strong>, <strong>output</strong>, &amp; <strong>error</strong>; these descriptors let programs easily read input from the terminal and print output to the screen.</p>
+<p><img src="Operating%20Systems%20Three%20easy%20steps%2055daca293631414e801ceb1b1b9097d1/Untitled%201.png" alt="Operating%20Systems%20Three%20easy%20steps%2055daca293631414e801ceb1b1b9097d1/Untitled%201.png"></p>
+</li>
+<li><p>Primary process states:
+i. <strong>Running</strong>: a process is running on a processor.
+ii. <strong>Ready</strong>: a process is ready to run but for some reason, the OS has chosen not to run it at this given moment.
+iii. <strong>Blocked</strong>: a process has performed some kind of operation that makes it not ready to run until some other event takes place.</p>
+</li>
+</ol>
+<p>A common example: when a process initiates an I/O request to a disk, it becomes blocked and thus some other process can use the processor.
+16. A process can be moved between the ready and running states at the discretion of the OS.</p>
+<p>Being moved from ready to running means the process has been <strong>scheduled</strong>;</p>
+<pre><code class="hljs">Being moved from running to ready means the process has been
+**de-scheduled**.
+
+Once a process has become **blocked** (e.g., by initiating an
+I/O operation), the OS will keep it as such until some event occurs (e.g.,
+I/O completion); at that point, the process moves to the **ready** state again.
+
+![Operating%20Systems%20Three%20easy%20steps%2055daca293631414e801ceb1b1b9097d1/Untitled%202.png](Operating%20Systems%20Three%20easy%20steps%2055daca293631414e801ceb1b1b9097d1/Untitled%202.png)
+</code></pre><ol start="17">
+<li>Resource utilization</li>
+<li>A process list</li>
+<li>The <strong>register context</strong> will hold, for a stopped process, the contents of its <strong>registers</strong>. When a process is stopped, its <strong>registers</strong> will be saved to this memory location;</li>
+</ol>
+<p>By restoring these <strong>registers</strong> (i.e., placing their values back into the actual <strong>physical registers</strong>), the OS can <strong>resume</strong> running the process.
+20. <strong>The xv6 Proc Structure</strong></p>
+<pre><code class="hljs language-c">
+<span class="hljs-comment">// the information xv6 tracks about each process</span>
+<span class="hljs-comment">// including its register context and state</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proc</span> {</span>
+	<span class="hljs-type">char</span> *mem; <span class="hljs-comment">// Start of process memory</span>
+	uint sz; <span class="hljs-comment">// Size of process memory</span>
+	<span class="hljs-type">char</span> *kstack; <span class="hljs-comment">// Bottom of kernel stack</span>
+	<span class="hljs-comment">// for this process</span>
+	<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">proc_state</span> <span class="hljs-title">state</span>;</span> <span class="hljs-comment">// Process state</span>
+	<span class="hljs-type">int</span> pid; <span class="hljs-comment">// Process ID</span>
+	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proc</span> *<span class="hljs-title">parent</span>;</span> <span class="hljs-comment">// Parent process</span>
+	<span class="hljs-type">void</span> *chan; <span class="hljs-comment">// If !zero, sleeping on chan</span>
+	<span class="hljs-type">int</span> killed; <span class="hljs-comment">// If !zero, has been killed</span>
+	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">file</span> *<span class="hljs-title">ofile</span>[<span class="hljs-title">NOFILE</span>];</span> <span class="hljs-comment">// Open files</span>
+	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">inode</span> *<span class="hljs-title">cwd</span>;</span> <span class="hljs-comment">// Current directory</span>
+	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">context</span> <span class="hljs-title">context</span>;</span> <span class="hljs-comment">// Switch here to run process</span>
+	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">trapframe</span> *<span class="hljs-title">tf</span>;</span> <span class="hljs-comment">// Trap frame for the</span>
+	<span class="hljs-comment">// current interrupt</span>
+};
+</code></pre><pre><code class="hljs language-c"><span class="hljs-comment">// the different states a process can be in</span>
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">proc_state</span> {</span>
+	UNUSED, EMBRYO, SLEEPING, RUNNABLE, RUNNING, ZOMBIE
+};
+</code></pre><pre><code class="hljs language-c"><span class="hljs-comment">// the registers xv6 will save and restore</span>
+<span class="hljs-comment">// to stop and subsequently restart a process</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">context</span> {</span>
+	<span class="hljs-type">int</span> eip;
+	<span class="hljs-type">int</span> esp;
+	<span class="hljs-type">int</span> ebx;
+	<span class="hljs-type">int</span> ecx;
+	<span class="hljs-type">int</span> edx;
+	<span class="hljs-type">int</span> esi;
+	<span class="hljs-type">int</span> edi;
+	<span class="hljs-type">int</span> ebp;
+};
+</code></pre><ol start="21">
+<li><p><strong>Process Control Block (PCB)</strong>, a fancy way of talking about a C structure that contains information about each process (also sometimes called a <strong>process descriptor</strong>).</p>
+</li>
+<li><p>An OS can have additional process states as evident from the xv6 structure.</p>
+</li>
+</ol>
+<p>Sometimes an OS will have an <strong>initial</strong> state that the process is in when it is being created.</p>
+<p>Also, a process could be placed in a <strong>final</strong> state where it has <strong>exited</strong> but has not yet been cleaned up (in UNIX-based systems, this is called the <strong>zombie</strong> state).</p>
+<p>This final state can be useful as it allows other processes (usually the <strong>parent</strong> that created the process) to examine the <strong>return code</strong> of the process and see if the just-finished process executed successfully (usually, programs return <strong>zero</strong> in <strong>UNIX-based systems</strong> when they have
+accomplished a task successfully, and <strong>non-zero</strong> otherwise).</p>
+<p>When finished, the <strong>parent</strong> will make one final call (e.g., <strong>wait()</strong>) to wait for the
+completion of the <strong>child</strong>, and to also indicate to the OS that it can clean up
+any relevant data structures that referred to the <strong>now-extinct process</strong>.</p>
+<ol start="23">
+<li><p>Mechanisms and Policies</p>
+</li>
+<li><p>The <strong>process</strong> is the major OS <strong>abstraction</strong> of a running program. At
+any point in time, the process can be described by its state: the contents
+of memory in its <strong>address space</strong>, the contents of <strong>CPU registers</strong>
+(including the <strong>program counter</strong> and <strong>stack pointer</strong>, among others),
+and information about I/O (such as open files which can be read or
+written).</p>
+</li>
+<li><p>A <strong>process list</strong> contains information about all processes in the system.</p>
+</li>
+</ol>
+<p>Each entry is found in a <strong>process control block (PCB)</strong>, which is just a structure that contains
+information about each process (also sometimes called a <strong>process descriptor</strong>).</p>
+<h1>Interlude: Process API</h1>
+<ol>
+<li>Unix <strong>fork</strong> system call</li>
+<li>The <strong>child</strong> process created by the fork system call is almost an exact copy of the calling <strong>parent</strong> process.</li>
+<li>The <strong>wait()</strong> system call waits for the <strong>child process</strong> to exit.</li>
+<li>The <strong>exec()</strong> system call is useful to run programs different from the <strong>calling program</strong>.</li>
+<li>Lampson law: Neither abstraction or simplicity is a substitute for getting it right.</li>
+</ol>
+<h1>Mechanism: Limited Direct Execution</h1>
+<p><img src="Operating%20Systems%20Three%20easy%20steps%2055daca293631414e801ceb1b1b9097d1/Untitled%203.png" alt="Operating%20Systems%20Three%20easy%20steps%2055daca293631414e801ceb1b1b9097d1/Untitled%203.png"></p>
+<ol>
+<li>Trap instructions.</li>
+<li><strong>User mode:</strong> code that runs in user mode is restricted in what it can do.</li>
+<li><strong>Kernel mode:</strong> which the operating system (or kernel) runs in. In this mode, code that runs can do what it likes, including privileged operations such as issuing I/O requests and executing
+all types of restricted instructions.</li>
+<li>System calls allow the kernel to carefully expose certain key pieces of functionality to user programs.</li>
+<li>To execute a <strong>system call</strong>, a program must execute a special <strong>trap instruction</strong>.</li>
+</ol>
+<p>This instruction simultaneously jumps into the <strong>kernel</strong> and raises the privilege level to <strong>kernel mode</strong>; Once in the <strong>kernel</strong>, the system can now perform whatever privileged operations are needed (if allowed) and thus do the required work for the calling process.</p>
+<p>When finished, the <strong>OS</strong> calls a special <strong>return-from-trap instruction</strong>, which, returns
+into the calling u<strong>ser program</strong> while simultaneously reducing the <strong>privilege</strong>
+level back to <strong>user mode</strong>.
+6. Trap table
+7. The OS configures the trap table at boot time. Instructing the hardware what code to run when certain events occur (system calls, hard disk interrupts, etc).
+8. Trap handlers
+9. fs</p>
+<p>   <img src="Operating%20Systems%20Three%20easy%20steps%2055daca293631414e801ceb1b1b9097d1/Untitled%204.png" alt="Operating%20Systems%20Three%20easy%20steps%2055daca293631414e801ceb1b1b9097d1/Untitled%204.png"></p>
+<p>   <img src="Operating%20Systems%20Three%20easy%20steps%2055daca293631414e801ceb1b1b9097d1/Untitled%205.png" alt="Operating%20Systems%20Three%20easy%20steps%2055daca293631414e801ceb1b1b9097d1/Untitled%205.png"></p>
+<ol start="10">
+<li>System-call number</li>
+<li>The user code places the desired <strong>system-call number</strong> in a register or on a specified location on the stack;</li>
+</ol>
+<p>the <strong>OS</strong>, when handling the system call inside the <strong>trap handler</strong>, examines this number, ensures it is valid, and, if it is, executes the corresponding code.</p>
+<p>This level of <strong>indirection</strong> serves as a form of <strong>protection</strong>; user code cannot specify an <strong>exact address</strong> to jump to, but rather must request a particular <strong>service</strong> via <strong>number</strong>.
+12. Kernel stack
+13. Corporative approach of process switching: Using system calls or the yield() system call. The OS gains control of the system by waiting for a system call from the process or for an illegal operation from the process.
+14. Timer interrupts
+15. A <strong>timer device</strong> is configured to raise an <strong>interrupt</strong> every <strong>x milliseconds</strong>; when the interrupt is raised, the currently running process is halted, and a pre-configured <strong>interrupt handler</strong> in the OS runs.</p>
+<p>An OS regains control of the CPU this way.
+16. During boot, the OS configures what code to run during a timer interrupt, and starts the timer.
+17. A <strong>context switch</strong> is conceptually simple: the OS saves a few <strong>register values</strong> for the currently-executing process (onto its kernel stack, for example) and restore a few for the soon-to-be-executing process (from its kernel stack).
+18.</p>
+<p><img src="Operating%20Systems%20Three%20easy%20steps%2055daca293631414e801ceb1b1b9097d1/Untitled%206.png" alt="Operating%20Systems%20Three%20easy%20steps%2055daca293631414e801ceb1b1b9097d1/Untitled%206.png"></p>
+<h3>KEY CPU VIRTUALIZATION TERMS (MECHANISMS)</h3>
+<ol>
+<li>The CPU should support at least two modes of execution: a restricted <strong>user mode</strong> and a privileged (non-restricted) <strong>kernel mode</strong>.</li>
+<li>Typical user applications run in <strong>user mode</strong>, and use a <strong>system call</strong> to trap into the kernel to request operating system services.</li>
+<li>The <strong>trap instruction</strong> saves the register state carefully, changes the hardware status to <strong>kernel mode</strong>, and jumps into the OS to a pre-specified destination: <strong>the trap table</strong>.</li>
+<li>When the OS finishes servicing a system call, it returns to the user program via another special <strong>return-from-trap instruction</strong>, which reduces privilege and returns control to the instruction after the trap that jumped into the OS.</li>
+<li>The <strong>trap tables</strong> must be set up by the OS at boot time, and make sure that they cannot be readily modified by user programs. All of this is part of the <strong>limited direct execution protocol</strong> which runs programs efficiently but without loss of OS control.</li>
+<li>Once a program is running, the OS must use hardware mechanisms to ensure the user program does not run forever, namely the <strong>timer interrupt</strong>. This approach is a <strong>non-cooperative approach</strong> to <strong>CPU</strong> scheduling.</li>
+<li>Sometimes the OS, during a <strong>timer interrupt</strong> or <strong>system call</strong>, might wish to switch from running the current process to a different one, a low-level technique is known as a <strong>context switch</strong>.</li>
+</ol>
+<h1>Scheduling: Introduction</h1>
+<ol>
+<li>Turnaround time = Time of completion - Time of arrival</li>
+<li>Scheduling metric</li>
+<li>Performance metric</li>
+<li>Fairness metric; As measured (for example) by Jain&#39;s fairness index.</li>
+<li>Performance and fairness are often at odds in scheduling.</li>
+<li>FIFO Scheduling Algorithm</li>
+<li>Convoy effect: where a number of relatively-short potential consumers of a resource get queued, behind a heavyweight resource consumer.</li>
+<li>Shortest Job First (SJF) Scheduling Algorithm</li>
+<li>Shortest Time To Completion First (STCF) Scheduling Algorithm: A preemptive SJF. Any time a new job enters the system, the STCF scheduler determines which of the remaining jobs (including the new job) has the least time left, and schedules that one.</li>
+<li>Response time metric.
+Response time = Time of first run - Time of arrival</li>
+<li>Round Robin Scheduling Algorithm: Instead of running jobs to completion, RR runs a job for a
+time slice (sometimes called a scheduling quantum) and then switches to the next job in the run queue.</li>
+</ol>
+<h3>Chapter 4 — The abstraction: The process</h3>
+<p>A <strong>process</strong> is one of the most fundamental abstraction that an OS provides. A <strong>process</strong> is informally defined as a <strong>running program</strong>. A program is a lifeless suite of instructions and static data, residing on disk (or flash-based SSD). The OS is responsible for running a program.</p>
+<p>At any point in time, the process can be described by its state:</p>
+<ul>
+<li>The contents of memory in its <strong>address space</strong>,</li>
+<li>The contents of CPU registers (including the <strong>program counter</strong> and <strong>stack pointer</strong>, among others),</li>
+<li>and information about I/O (such as open files which can be read or written).</li>
+</ul>
+<p>The OS <strong>virtualizes</strong> the physical CPU, creating the illusion of many CPUs and allowing multiple processes to be run concurrently. It does this by <strong>time sharing</strong> the CPU: running one process, then stopping it, running another, and so forth.</p>
+<p>To implement virtualization of the CPU, the OS needs:</p>
+<ol>
+<li>Low-level machinery (aka <strong>Mechanisms</strong>): Mechanisms are low-level methods or protocol that implement a needed piece of functionality. e.g. A <strong>context switch</strong> gives the OS the ability to stop and start different processes on a given CPU.</li>
+<li>High-level intelligence: These resides in the OS as <strong>policies</strong>. Policies are algorithms for making decisions within the OS. e.g. A <strong>scheduling policy</strong> makes the decision of which process to run typically using historical information.</li>
+</ol>
+<h4>Process API</h4>
+<p>Modern operating systems provide p rocess interfaces to do the following:</p>
+<ol>
+<li><strong>Create</strong>: Create a new process.</li>
+<li><strong>Destroy</strong>: Forcefully, stop a process.</li>
+<li><strong>Wait</strong>: Wait for a process to stop running.</li>
+<li><strong>Miscellaneous control</strong>: Additional control over a process like suspending/resuming a process.</li>
+<li><strong>Status</strong>: Status info about a process like how long it has run, current state, etc.</li>
+</ol>
+<h4>Process creation: A little more detail</h4>
+<p>Here is roughly how programs are transformed into processes by the OS:</p>
+<ol>
+<li>Load the program’s code and any static data into memory. In early (or simple) OSes, the loading process is done eagerly, i.e., all at once before running the program; modern OSes perform the process lazily, i.e., by loading pieces of code or data only as they are needed during program execution.</li>
+<li>Allocate memory for the program’s run-time stack.</li>
+<li>May allocate memory for the program’s heap. In C programs, the heap is used for explicitly requested dynamically-allocated data; programs requests such space by calling <code>malloc()</code> and free it by calling <code>free()</code>. The heap grows as the program requests more space.</li>
+<li>Some other initialization tasks, particularly as related to input/output (I/O). e.g. In UNIX systems, each process by default has three open file descriptors, for standard input, output and error; these descriptors let programs easily read input from the terminal and print output to the screen.</li>
+<li>The OS starts the program running at the entry point, namely <code>main()</code>. The OS transfers control of the CPU to the newly created process.</li>
+</ol>
+<h4>Process states</h4>
+<p>In a simplified view, a process can be in one of three states:</p>
+<ol>
+<li><strong>Running</strong>: A process is running on a processor, i.e., it&#39;s executing instructions.</li>
+<li><strong>Ready</strong>: A process is ready to run but the OS has chosen not to run it at this given moment.</li>
+<li><strong>Blocked</strong>: A process has performed some operation that makes it not ready to run until some other event takes place. e.g. A process is blocked pending an I/O request.</li>
+</ol>
+<p>A process can be moved between the ready and running state at the discretion of the OS. Being moved from ready to running means the process has been <strong>scheduled</strong>. Being moved from running to ready means the process has been <strong>descheduled</strong>.</p>
+<p>Sometimes an OS will have an initial state that the process is in when it is being created.</p>
+<p>Also, a process could be placed in a final state where it has exited but has not yet been cleaned up (in UNIX-based systems, this is called the <strong>zombie</strong> state).</p>
+<h4>Process list: Data structure</h4>
+<p>A <strong>process list</strong> (also called a <strong>task list</strong>) contains information about all processes in the system. Each entry in the list is called a <strong>process control block</strong> (<strong>PCB</strong>), which is just a structure that contains information about each process (also called a <strong>process descriptor</strong>)</p>
+<p>The snippet below shows what type of information an OS needs to track about each process in the <code>xv6</code> kernel.</p>
+<pre><code class="hljs language-c">
+<span class="hljs-comment">// the information xv6 tracks about each process</span>
+<span class="hljs-comment">// including its register context and state</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proc</span> {</span>
+    <span class="hljs-type">char</span> *mem; <span class="hljs-comment">// Start of process memory</span>
+    uint sz; <span class="hljs-comment">// Size of process memory</span>
+    <span class="hljs-type">char</span> *kstack; <span class="hljs-comment">// Bottom of kernel stack</span>
+    <span class="hljs-comment">// for this process</span>
+    <span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">proc_state</span> <span class="hljs-title">state</span>;</span> <span class="hljs-comment">// Process state</span>
+    <span class="hljs-type">int</span> pid; <span class="hljs-comment">// Process ID</span>
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proc</span> *<span class="hljs-title">parent</span>;</span> <span class="hljs-comment">// Parent process</span>
+    <span class="hljs-type">void</span> *chan; <span class="hljs-comment">// If !zero, sleeping on chan</span>
+    <span class="hljs-type">int</span> killed; <span class="hljs-comment">// If !zero, has been killed</span>
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">file</span> *<span class="hljs-title">ofile</span>[<span class="hljs-title">NOFILE</span>];</span> <span class="hljs-comment">// Open files</span>
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">inode</span> *<span class="hljs-title">cwd</span>;</span> <span class="hljs-comment">// Current directory</span>
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">context</span> <span class="hljs-title">context</span>;</span> <span class="hljs-comment">// Switch here to run process</span>
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">trapframe</span> *<span class="hljs-title">tf</span>;</span> <span class="hljs-comment">// Trap frame for the</span>
+    <span class="hljs-comment">// current interrupt</span>
+};
+
+<span class="hljs-comment">// the different states a process can be in</span>
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">proc_state</span> {</span>
+    UNUSED, EMBRYO, SLEEPING, RUNNABLE, RUNNING, ZOMBIE
+};
+
+<span class="hljs-comment">// the registers xv6 will save and restore</span>
+<span class="hljs-comment">// to stop and subsequently restart a process.</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">context</span> {</span>
+    <span class="hljs-type">int</span> eip;
+    <span class="hljs-type">int</span> esp;
+    <span class="hljs-type">int</span> ebx;
+    <span class="hljs-type">int</span> ecx;
+    <span class="hljs-type">int</span> edx;
+    <span class="hljs-type">int</span> esi;
+    <span class="hljs-type">int</span> edi;
+    <span class="hljs-type">int</span> ebp;
+};
+</code></pre><p><small>The xv6 proc structure</small>
+Add</p>
+<p>The <strong>register context</strong> will hold, for a stopped process, the contents of its registers. When a process is stopped, its registers will be saved to this memory location; By restoring these registers (i.e., placing their values back into the actual physical registers), the OS can resume running the process.</p>
+<h3>Chapter 5 — Interlude: Process API</h3>
+<p>This chapter explores the interfaces for process creation and control in UNIX systems.</p>
+<h4>The <code>fork()</code> system call</h4>
+<p>The <code>fork()</code> system call is used to create a new process. The process that is created is an almost exact copy of the calling process.</p>
+<pre><code class="hljs language-c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span>
+
+<span class="hljs-type">int</span>
+<span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span>
+{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;hello world (pid:%d)\n&quot;</span>, (<span class="hljs-type">int</span>) getpid());
+    <span class="hljs-type">int</span> rc = fork();
+    <span class="hljs-keyword">if</span> (rc &lt; <span class="hljs-number">0</span>) {
+        <span class="hljs-comment">// fork failed; exit</span>
+        <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;fork failed\n&quot;</span>);
+        <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (rc == <span class="hljs-number">0</span>) {
+        <span class="hljs-comment">// child (new process)</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;hello, I am child (pid:%d)\n&quot;</span>, (<span class="hljs-type">int</span>) getpid());
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-comment">// parent goes down this path (original process)</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;hello, I am parent of %d (pid:%d)\n&quot;</span>,
+	       rc, (<span class="hljs-type">int</span>) getpid());
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre><p><small>Calling fork() (p1.c)</small></p>
+<p>Running <code>p1.c</code> produces an output like:</p>
+<pre><code class="hljs language-shell"><span class="hljs-meta prompt_">prompt&gt;</span><span class="language-bash">./p1</span>
+hello (pid: 29146)
+parent of 29147 (pid: 29146)
+child (pid:29147)
+<span class="hljs-meta prompt_">prompt&gt;</span>
+</code></pre><p>The output of <code>p1.c</code> is non-deterministic as the CPU scheduler can pick either the child or parent process to run first.</p>
+<h4>The <code>wait()</code> system call</h4>
+<p>The <code>wait()</code> system call is used by the parent ￼ process to wait for a child process to complete execution.￼</p>
+<pre><code class="hljs language-c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/wait.h&gt;</span></span>
+
+<span class="hljs-type">int</span>
+<span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span>
+{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;hello world (pid:%d)\n&quot;</span>, (<span class="hljs-type">int</span>) getpid());
+    <span class="hljs-type">int</span> rc = fork();
+    <span class="hljs-keyword">if</span> (rc &lt; <span class="hljs-number">0</span>) {
+        <span class="hljs-comment">// fork failed; exit</span>
+        <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;fork failed\n&quot;</span>);
+        <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (rc == <span class="hljs-number">0</span>) {
+        <span class="hljs-comment">// child (new process)</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;hello, I am child (pid:%d)\n&quot;</span>, (<span class="hljs-type">int</span>) getpid());
+	sleep(<span class="hljs-number">1</span>);
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-comment">// parent goes down this path (original process)</span>
+        <span class="hljs-type">int</span> wc = wait(<span class="hljs-literal">NULL</span>);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;hello, I am parent of %d (wc:%d) (pid:%d)\n&quot;</span>,
+	       rc, wc, (<span class="hljs-type">int</span>) getpid());
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre><p><small>Calling fork() and wait() (p2.c)</small></p>
+<p>The <code>wait()</code> call makes the output of <code>p2.c</code> deterministic because the child always runs first.</p>
+<pre><code class="hljs">prompt&gt; ./p2 hello (pid:29266) child (pid:29267)
+parent of 29267 (IC_wait:29267) (pid:29266)
+prompt&gt;
+</code></pre><h3>The <code>exec()</code> system call</h3>
+<p>This system call is useful when you want to run a program that is different from the calling program.</p>
+<pre><code class="hljs language-c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/wait.h&gt;</span></span>
+
+<span class="hljs-type">int</span>
+<span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span>
+{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;hello world (pid:%d)\n&quot;</span>, (<span class="hljs-type">int</span>) getpid());
+    <span class="hljs-type">int</span> rc = fork();
+    <span class="hljs-keyword">if</span> (rc &lt; <span class="hljs-number">0</span>) {
+        <span class="hljs-comment">// fork failed; exit</span>
+        <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;fork failed\n&quot;</span>);
+        <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (rc == <span class="hljs-number">0</span>) {
+        <span class="hljs-comment">// child (new process)</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;hello, I am child (pid:%d)\n&quot;</span>, (<span class="hljs-type">int</span>) getpid());
+        <span class="hljs-type">char</span> *myargs[<span class="hljs-number">3</span>];
+        myargs[<span class="hljs-number">0</span>] = strdup(<span class="hljs-string">&quot;wc&quot;</span>);   <span class="hljs-comment">// program: &quot;wc&quot; (word count)</span>
+        myargs[<span class="hljs-number">1</span>] = strdup(<span class="hljs-string">&quot;p3.c&quot;</span>); <span class="hljs-comment">// argument: file to count</span>
+        myargs[<span class="hljs-number">2</span>] = <span class="hljs-literal">NULL</span>;           <span class="hljs-comment">// marks end of array</span>
+        execvp(myargs[<span class="hljs-number">0</span>], myargs);  <span class="hljs-comment">// runs word count</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;this shouldn&#x27;t print out&quot;</span>);
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-comment">// parent goes down this path (original process)</span>
+        <span class="hljs-type">int</span> wc = wait(<span class="hljs-literal">NULL</span>);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;hello, I am parent of %d (wc:%d) (pid:%d)\n&quot;</span>,
+	       rc, wc, (<span class="hljs-type">int</span>) getpid());
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre><p><small>Calling fork(), wait() and exec() (p2.c)</small></p>
+<blockquote>
+<p>What it does: given the name of an executable (e.g., <code>wc</code>), and some arguments (e.g., <code>p3.c</code>), it loads code (and static data) from that executable and overwrites its current code segment (and current static data) with it; the heap and stack and other parts of the memory space of the program are re-initialized. Then the OS simply runs that program, passing in any arguments as the argv of that process. Thus, it does not create a new process; rather, it transforms the currently running program (formerly <code>p3</code>) into a different running program (<code>wc</code>).</p>
+</blockquote>
+<h4>Why? Motivating the API</h4>
+<p>The separation of <code>fork()</code> and <code>exec()</code> is essential in building a UNIX shell, because it lets the shell run code after the call to <code>fork()</code> but before the call to <code>exec()</code>; this code can alter the environment of the about-to-be-run program, and thus enables a variety of interesting features to be readily built.</p>
+<blockquote>
+<p>The shell is just a user program. It shows you a prompt and then waits for you to type something into it. You then type a command (i.e., the name of an executable program, plus any arguments) into it; in most cases, the shell then figures out where in the file system the executable resides, calls <code>fork()</code> to create a new child process to run the command, calls some variant of <code>exec()</code> to run the command, and then waits for the command to complete by calling <code>wait()</code>. When the child completes, the shell returns from <code>wait()</code> and prints out a prompt again, ready for your next command.</p>
+</blockquote>
+<h2>Chapter 6 — Mechanism: Limited Direct Execution</h2>
+<p>The OS must virtualize the CPU in an <strong>efficient</strong> manner while retaining <strong>control</strong> over the system. <strong>Limited direct execution</strong> is a technique used to achieve both goals of performance and control. It does this by running programs directly on the CPU but with a few limitations from the hardware that gives the OS control on allowed operations and process switching.</p>
+<h3>Problem #1: Restricted operations</h3>
+<p>A process must be able to perform I/O and some other restricted operations, but without giving the process complete control over the system.</p>
+<p>This problem is addressed by introducing two processor modes:</p>
+<ol>
+<li><strong>User mode</strong>: Code that runs in user mode is restricted in what it can do. e.g. It can’t issue I/O requests.</li>
+<li><strong>Kernel mode</strong>: Which the OS (or kernel) runs in. There are no restrictions in this mode.</li>
+</ol>
+<p>User process that wants to make a privileged operation (such as disk I/O) do so via a <strong>system call</strong>. System calls allow the kernel to carefully expose certain key pieces of functionality to user programs such as:</p>
+<ul>
+<li>Accessing the file system</li>
+<li>Creating and destroying processes</li>
+<li>Communicating with other processes</li>
+<li>Allocating more memory</li>
+<li>Etc</li>
+</ul>
+<blockquote>
+<p>To execute a system call, a program must execute a special <strong>trap</strong> instruction. This instruction simultaneously jumps into the kernel and raises the privilege level to kernel mode; once in the kernel, the system can now perform whatever privileged operations are needed (if allowed), and thus do the required work for the calling process. When finished, the OS calls a special <strong>return-from-trap</strong> instruction, which returns into the calling process while simultaneously reducing the privilege level back to user mode.</p>
+</blockquote>
+<p>To specify the exact system call, a <strong>system-call number</strong> is usually assigned to each system call. The user code is thus responsible for placing the desired system-call number in a register or at a specified location on the stack; the OS, when handling the system call inside the trap handler, examines this number, ensures it is valid, and, if it is, executes the corresponding code.</p>
+<h3>Problem #2: Switching between processes</h3>
+<p>Given that the OS is not running while a process is directly executing on the CPU, how can the OS switch between processes?</p>
+<p>One approach is the cooperative approach where processes yield back control to the OS explicitly or implicitly through system calls.</p>
+<p>A non-cooperative approach involves the OS taking control by eliciting the help of the hardware. This is done by utilizing <strong>timer interrupts</strong>. A timer device can be programmed to raise an interrupt every so many milliseconds; when the interrupt is raised, the currently running process is halted, and a pre-configured interrupt handler in the OS runs.</p>
+<blockquote>
+<p>Note that the hardware has some responsibility when an interrupt oc-curs, in particular to save enough of the state of the program that was running when the interrupt occurred such that a subsequent return-from-trap instruction will be able to resume the running program correctly. This set of actions is quite similar to the behavior of the hardware during an explicit system-call trap into the kernel, with various registers thus getting saved (e.g., onto a kernel stack) and thus easily restored by the return-from-trap instruction.</p>
+</blockquote>
+<h3>Saving and Restoring Context</h3>
+<p>After the OS regains control, a decision has to be made: whether to continue running the currently-running process, or switch to a different one. This decision is made by a part of the operating system known as the <strong>scheduler</strong>.</p>
+<p>If the decision is made to switch, the OS then executes a low-level piece of code called a <strong>context switch</strong>. A context switch is conceptually simple: all the OS has to do is save a few register values for the currently-executing process (onto its kernel stack, for example) and restore a few for the soon-to-be-executing process (from its kernel stack). By doing so, the OS thus ensures that when the return-from-trap instruction is finally executed, instead of returning to the process that was running, the system resumes execution of another process.</p>
+<h2>Chapter 7 — Scheduling: Introduction</h2>
+<p>This chapter explores various scheduling policies. There are two important scheduling metrics that each policy is evaluated on:</p>
+<ol>
+<li><strong>Turnaround time</strong>: Is a performance metric that measures the time at which a job completes minus the time at which the job arrived in the system.
+$$
+T_{turnaround} = T_{completion} - T_{arrival}
+$$</li>
+<li><strong>Response time</strong>: Is an interactivity metric that measures the time from when the job arrives in a system to the first time it’s scheduled. This is a simplified definition that assumes jobs produces a response instantaneously.</li>
+</ol>
+<p>$$
+T_{response} = T_{first-run} - T_{arrival}
+$$</p>
+<p>These are a few scheduling policies:</p>
+<ol>
+<li><strong>First in, first out (FIFO)</strong>: Is a non-preemptive scheduling policy that is conceptually simple and easy to implement. However, it susceptible to the <strong>convoy effect</strong>, where a number of relatively-short potential consumers of a resource get queued behind a heavyweight resource consumer.</li>
+<li><strong>Shortest job first (SJF)</strong>: Is a non-preemptive scheduling policy that runs the shortest job first, then the next shortest, and so on. A pure SJF scheduler can still suffer from the convoy effect if the heavyweight resource consumer arrives before the shorter jobs.</li>
+<li><strong>Shortest time-to-completion first (STCF)</strong>: Is a preemptive scheduling policy, that improves SJF with preemption. Any time a new job enters the system, the STCF scheduler determines which of the remaining jobs (including the new job) has the least time left, and schedules that one.</li>
+<li><strong>Round robin</strong>:</li>
+</ol>
+
+    </body>
+</html>
