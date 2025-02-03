@@ -2,12 +2,30 @@
     <img src="/docs/assets/avatar.jpg" alt="Elvis Chidera" class="circular-image" />
 </div>
 
-<div class="text-center"><strong>Hiii!</strong><span class="blinking">.</span></div>
+<div class="text-center">
+    <strong>Hiii!<span class="blinking">.</span></strong>
+</div>
 
-I'm [Elvis Chidera](https://elvischidera.com) 👋. This is my collection of reading notes — originally for myself, but now shared for anyone to enjoy. I loved creating them, and I hope you find them just as useful! ❤️
+<div class="text-center">
+    I'm Elvis Chidera 👋
+</div>
+
+<div class="text-center">
+    Welcome to my blog. I'm software engineer, athlete, writer, entrepreneur, and amateur chef. I love building things and sharing what I learn.
+</div>
+
+<div class="text-center">
+    <a href="https://github.com/elvis10ten"><img src="/docs/assets/github-mark.svg" alt="GitHub" class="social-icon" /></a>
+    <a href="https://linkedin.com/elvischidera"><img src="/docs/assets/linkedin.png" alt="LikedIn" class="social-icon" /></a>
+</div>
+
+> "I believe in human agency. Extreme optimism and extreme pessimism are both excuses for laziness." - Peter Thiel
+
+## Books
+Notes and summary on some of the books I've read.
 
 <div class="book-gallery">
-  <!-- index_books_content -->
+<!-- index_books_content -->
 </div>
 
 <!-- index_content -->

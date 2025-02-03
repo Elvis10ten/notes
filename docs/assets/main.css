@@ -396,10 +396,8 @@ body {
 .book-gallery {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 6px 12px; /* Reduce gap to minimize vertical spacing */
+    gap: 6px 12px;
     padding: 20px;
-    max-width: 900px;
-    margin: 0 auto;
 }
 
 .book-gallery img {
@@ -428,12 +426,16 @@ body {
 }
 
 .blinking {
-    font-size: 24px;
-    font-weight: bold;
     animation: blink 1s infinite;
 }
 
 @keyframes blink {
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
+}
+
+.social-icon {
+    width: 24px;
+    height: 24px;
+    margin: 2px;
 }
