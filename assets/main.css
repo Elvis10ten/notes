@@ -427,20 +427,13 @@ body {
     padding: 0;
 }
 
-.blinking-dot {
-    width: 10px;
-    height: 10px;
-    background-color: red;
-    border-radius: 50%;
-    display: inline-block;
+.blinking {
+    font-size: 24px;
+    font-weight: bold;
     animation: blink 1s infinite;
 }
 
 @keyframes blink {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0;
-    }
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }
