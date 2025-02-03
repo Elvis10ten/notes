@@ -4,7 +4,6 @@
 > It's a great way to understand how computers work and has changed the way I think about computers.
 
 ## Chapter 1: Boolean logic
-;
 Modern computers store and process information stored as two-valued signals — called <bmark>bits</bmark> (i.e. binary digits).
 Two-value signals were chosen because they can readily be represented, stored, and transmitted.
 For example, they can be represented as:
@@ -12,8 +11,7 @@ For example, they can be represented as:
 * High or low voltage on a wire,
 * A magnetic domain oriented clockwise or counterclockwise.
 
-A binary variable or a bit can represent two possible states: `0` and `1`; `off` and `on`; `false` and `true`; `no` and `yes`; etc.
-$n$ binary variables can be used to represent $2^n$ states. e.g.
+A binary variable or a bit can represent two possible states: `0` and `1`; `off` and `on`; `false` and `true`; `no` and `yes`; etc. $n$ binary variables can be used to represent $2^n$ states. e.g.
 
 | $b_2$ | $b_1$ | $b_0$ |
 |-------|-------|-------|
@@ -63,7 +61,8 @@ e.g. There are $16$ distinct boolean functions for $2$ binary variables.
 A <bmark>logic gate</bmark> (also called **chip** in the book) is a physical device that implements a boolean function.
 Every digital device is based on a set of chips designed to store and process binary information.
 These chips are all made of <pmark>elementary logic gates</pmark>.
-Elementary logic gates can be physically realized using many different hardware technologies, but their logical behavior, or abstraction, is consistent across implementations.
+
+<bmark>Elementary logic gates</bmark> can be physically realized using many different hardware technologies, but their logical behavior, or abstraction, is consistent across implementations.
 
 Since all logic gates have the same input and output data type (i.e. binary), they can be combined, creating composite gates of arbitrary complexity. e.g. `Xor = Or(And(a, Not(b)), And(Not(a), b))`.
 
@@ -83,7 +82,7 @@ The hardware simulator can also simulate and quantify the performance characteri
 
 ---
 
-The <bmark>specifications of the logic gates</bmark> needed to build the chips of our computer system are given below.
+The **specifications of the logic gates** needed to build the chips of our computer system are given below.
 
 ---
 
@@ -314,7 +313,7 @@ Or(a= aandnotb, b= bandnota, out= out);
 
 ---
 
-Next, we look at a set of <bmark>control flow gates</bmark>. These gates provide means for controlling flows of information. The first of such gate is the <bmark>multiplexer</bmark> which is a three-input gate. Two input bits, named `a` and `b`, are interpreted as **data bits**, and a third bit, named `sel`, is interpreted as a **selection bit**. The multiplexer uses `sel` to select and output the value of either `a` or `b`.
+Next, we look at a set of <pmark>control flow gates</pmark>. These gates provide means for controlling flows of information. The first of such gate is the <bmark>multiplexer</bmark> which is a three-input gate. Two input bits, named `a` and `b`, are interpreted as **data bits**, and a third bit, named `sel`, is interpreted as a **selection bit**. The multiplexer uses `sel` to select and output the value of either `a` or `b`.
 
 ![](/docs/assets/nand-images/multiplexer_gate.png)
 
@@ -713,6 +712,7 @@ API:
 | Output    | `out[16]`                                                                                                                                                      |
 | Function  | `if (sel == 00) then out = a,`<br><br>`else if (sel == 01) then out = b,`<br><br>`else if (sel == 10) then out = c,`<br><br>`else if (sel == 11) then out = d` |
 
+
 |           |                                                                                                                                                                                                                                                                                                                                                   |
 |-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Chip name | `Mux8Way16`                                                                                                                                                                                                                                                                                                                                       |
@@ -806,6 +806,7 @@ DMux(in= second, sel= sel[0], a= c, b= d);
 
 }
 ```
+
 
 |           |                                                                                                                                                                                                                                                                                                               |
 |-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
