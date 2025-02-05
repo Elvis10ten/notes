@@ -451,7 +451,6 @@ body {
 a {
     color: #007BFF; /* Soft blue color */
     text-decoration: none; /* Remove underline */
-    font-weight: 600; /* Slightly bolder */
     transition: color 0.3s ease, transform 0.3s ease; /* Smooth transition */
 }
 
