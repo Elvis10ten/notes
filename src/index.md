@@ -24,105 +24,85 @@
 
 <!-- placeholder_404_error -->
 
-## <span id="essays">My Essays</span>
-[object Promise]
-[object Promise]
+## ✒️ <span id="essays">Essays</span>
+- [Pitfalls of best practices](/src/essays/2024-05-24-pitfalls-of-best-practices.md)
+- [Against Bit Rot (Why & how I rebuilt my blog)](/src/essays/2025-how.md)
 
-## <span id="books">Compendium (Books)</span>
+## 📚 <span id="books">Compendium (Books)</span>
 <div class="book-gallery">
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
+<a href="/src/books/2022-a-philosophy-software-design.md"><img src="assets/banners/2022-a-philosophy-software-design.jpg" alt="A Philosophy of Software Design" loading="lazy" /></a>
+<a href="/src/books/2022-design-of-everyday-things.md"><img src="assets/banners/2022-design-of-everyday-things.jpg" alt="The Design of Everyday Things" loading="lazy" /></a>
+<a href="/src/books/2023-coaching-habit.md"><img src="assets/banners/2023-coaching-habit.jpg" alt="The Coaching Habit: Say Less, Ask More & Change the Way You Lead Forever" loading="lazy" /></a>
+<a href="/src/books/2023-critical-thinking.md"><img src="assets/banners/2023-critical-thinking.jpg" alt="Critical Thinking (The MIT Press Essential Knowledge series)" loading="lazy" /></a>
+<a href="/src/books/2023-fooled-by-randomness.md"><img src="assets/banners/2023-fooled-by-randomness.jpg" alt="Fooled by Randomness: The Hidden Role of Chance in Life and in the Markets" loading="lazy" /></a>
+<a href="/src/books/2023-high-output-management.md"><img src="assets/banners/2023-high-output-management.jpg" alt="High output management" loading="lazy" /></a>
+<a href="/src/books/2023-how-to-lie-with-statistics.md"><img src="assets/banners/2023-how-to-lie-with-statistics.jpg" alt="How to lie with statistics — Book summary" loading="lazy" /></a>
+<a href="/src/books/2023-sapiens.md"><img src="assets/banners/2023-sapiens.jpg" alt="Sapiens: A Brief History of Humankind" loading="lazy" /></a>
+<a href="/src/books/2023-so-good-they-cant-ignore-you.md"><img src="assets/banners/2023-so-good-they-cant-ignore-you.jpg" alt="So Good They Can't Ignore You: Why Skills Trump Passion in the Quest for Work You Love" loading="lazy" /></a>
+<a href="/src/books/2025-1a-intro-algorithm.md"><img src="assets/banners/2025-1a-intro-algorithm.jpg" alt="[WIP] Introduction to Algorithms" loading="lazy" /></a>
+<a href="/src/books/2025-1a-nand-to-tetris.md"><img src="assets/banners/2025-1a-nand-to-tetris.jpg" alt="[WIP] The Elements of Computing Systems – Building a Modern Computer from First Principles" loading="lazy" /></a>
+<a href="/src/books/2025-1b-intro-linear-algebra.md"><img src="assets/banners/2025-1b-intro-linear-algebra.jpg" alt="[WIP] A concise introduction to linear algebra by Geza Schay" loading="lazy" /></a>
+<a href="/src/books/2025-1c-designing-data-intensive-applications.md"><img src="assets/banners/2025-1c-designing-data-intensive-applications.jpg" alt="[WIP] Designing Data-Intensive Applications" loading="lazy" /></a>
+<a href="/src/books/2025-2-algorithm-design-manual.md"><img src="assets/banners/2025-2-algorithm-design-manual.jpg" alt="[WIP] The Algorithm Design Manual" loading="lazy" /></a>
+<a href="/src/books/2025-3-computer-networking-top-down.md"><img src="assets/banners/2025-3-computer-networking-top-down.jpg" alt="[WIP] Computer Networking - A Top-Down Approach" loading="lazy" /></a>
+<a href="/src/books/2025-4-mathematics-for-computer-science.md"><img src="assets/banners/2025-4-mathematics-for-computer-science.jpg" alt="[WIP] Mathematics for Computer Science" loading="lazy" /></a>
+<a href="/src/books/2025-5-os-three-easy-pieces.md"><img src="assets/banners/2025-5-os-three-easy-pieces.jpg" alt="[WIP] Operating Systems: Three Easy Pieces" loading="lazy" /></a>
+<a href="/src/books/2025-6-sicp.md"><img src="assets/banners/2025-6-sicp.jpg" alt="[WIP] Structure and Interpretation of Computer Programs" loading="lazy" /></a>
+<a href="/src/books/2025-7-crafting-interpreters.md"><img src="assets/banners/2025-7-crafting-interpreters.jpg" alt="[WIP] Crafting interpreters" loading="lazy" /></a>
+<a href="/src/books/2025-8-computer-systems-programmers-perspective.md"><img src="assets/banners/2025-8-computer-systems-programmers-perspective.jpg" alt="[WIP] Computer systems: A programmer’s perspective" loading="lazy" /></a>
 </div>
 
-## <span id="papers">Compendium (Papers)</span>
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
-[object Promise]
+## 📜 <span id="papers">Compendium (Papers)</span>
+- [Your computer is already a distributed system. Why isn’t your OS? — Paper Summary](/src/papers/2022-04-06-your-computer-already-distributed-system-why-isnt-your-os.md)
+- [The Design of Everyday Things — Book Summary & Notes](/src/papers/2022-06-24-design-everyday-things.md)
+- [Structure and Interpretation of Computer Programs — Book + MIT 6.001 + Berkeley CS61A Summary & Notes [WIP]](/src/papers/2022-07-31-sicp.md)
+- [Hardware is the new Software — Paper Summary](/src/papers/2022-09-08-hardware-new-software.md)
+- [Bitcoin: A Peer-to-Peer Electronic Cash System — Paper Summary](/src/papers/2022-09-09-bitcoin.md)
+- [How Complex Systems Fail — Paper Summary](/src/papers/2022-09-10-how-complex-systems-fail.md)
+- [Omega-3 fatty acids and exercise: a review of their combined effects on body composition and physical performance — Paper Summary](/src/papers/2022-09-11-omega-3-fatty-acids-and-exercise-a-review-of-their-combined-effects-on-body-composition-and-physical-performance.md)
+- [The underappreciated role of muscle in health and disease — Paper Summary](/src/papers/2022-09-12-the-underappreciated-role-of-muscle-in-health-and-disease.md)
+- [What Satoshi Did Not Know — Paper Summary](/src/papers/2022-09-13-what-satoshi-did-not-know.md)
+- [How to Explain Zero-Knowledge Protocols to Your Children — Paper Summary](/src/papers/2022-09-14-how-to-explain-zero-knowledge-protocols-to-your-children.md)
+- [Software Engineering at Google — Paper Summary](/src/papers/2022-09-15-software-engineering-at-google.md)
+- [The Problem of Thinking Too Much — Paper Summary](/src/papers/2022-09-16-the-problem-of-thinking-too-much.md)
+- [Blockchains from a Distributed Computing Perspective — Paper Summary](/src/papers/2022-09-17-blockchains-from-a-distributed-computing-perspective.md)
+- [On Being Smart — Paper Summary](/src/papers/2022-09-18-on-being-smart.md)
+- [The Value of Science — Paper Summary](/src/papers/2022-09-19-the-value-of-science.md)
+- [The Peril of Politicizing Science — Essay Summary](/src/papers/2022-09-20-the-peril-of-politicizing-science.md)
+- [Modernity is incompatible with planetary limits: Developing a PLAN for the future — Paper Summary](/src/papers/2022-09-21-modernity-is-incompatible-with-planetary-limits-developing-a-plan-for-the-future.md)
+- [In Praise of Idleness — Paper Summary](/src/papers/2022-09-22-in-praise-of-idleness.md)
+- [The Erdós Paradox — Paper Summary](/src/papers/2022-09-23-the-erds-paradox.md)
+- [Invent More, Toil Less — Paper Summary](/src/papers/2022-09-24-invent-more-toil-less.md)
+- [Why Events Are A Bad Idea (for high-concurrency servers) — Paper Summary](/src/papers/2022-09-25-why-events-are-a-bad-idea-for-high-concurrency-servers.md)
+- [The Night Watch — Essay Summary](/src/papers/2022-09-26-the-night-watch.md)
+- [Why Threads Are A Bad Idea (for most purposes) — Paper Summary](/src/papers/2022-09-27-why-threads-are-a-bad-idea-for-most-purposes.md)
+- [On the Relevance of IP Address in the Tracking Ecosystem — Paper Summary](/src/papers/2022-09-28-on-the-relevance-of-ip-address-in-the-tracking-ecosystem.md)
+- [Predictability: Does the Flap of a Butterfly’s Wings in Brazil Set Off a Tornado in Texas? — Summary](/src/papers/2022-09-29-predictability-does-the-flap-of-a-butterflys-wings-in-brazil-set-off-a-tornado-in-texas.md)
+- [Reflections on Trusting Trust — Paper Summary](/src/papers/2022-09-30-reflections-on-trusting-trust.md)
+- [Go To Statement Considered Harmful — Paper Summary](/src/papers/2022-10-01-go-to-statement-considered-harmful.md)
+- [End-to-end arguments in system design — Paper Summary](/src/papers/2022-10-02-end-to-end-arguments-in-system-design.md)
+- [A Note on the Confinement Problem — Paper Summary](/src/papers/2022-10-03-a-note-on-the-confinement-problem.md)
+- [It’s Time to Replace TCP in the Datacenter — Paper Summary](/src/papers/2022-10-04-its-time-to-replace-tcp-in-the-datacenter.md)
+- [Thirty Years Later: Lessons from the Multics Security Evaluation — Paper Summary](/src/papers/2022-10-05-thirty-years-later-lessons-from-the-multics-security-evaluation.md)
+- [Password Security: A Case History — Paper Summary](/src/papers/2022-10-06-password-security-a-case-history.md)
+- [The importance of stupidity in scientific research — Paper Summary](/src/papers/2022-10-07-the-importance-of-stupidity-in-scientific-research.md)
+- [How the Hidden Hand Shapes the Market for Software Reliability — Paper Summary](/src/papers/2022-10-08-how-the-hidden-hand-shapes-the-market-for-software-reliability.md)
+- [The Design Philosophy of the DARPA Internet Protocols — Paper Summary](/src/papers/2022-10-09-the-design-philosophy-of-the-darpa-internet-protocols.md)
+- [Fast key-value stores An idea whose time has come and gone — Paper Summary](/src/papers/2022-10-10-fast-key-value-stores-an-idea-whose-time-has-come-and-gone.md)
+- [Untraceable Electronic Mail, Return Addresses, and Digital Pseudonyms — Paper Summary](/src/papers/2022-10-11-untraceable-electronic-mail-return-addresses-and-digital-pseudonyms.md)
+- [A Wandering Mind Is an Unhappy Mind — Paper Summary](/src/papers/2022-10-12-a-wandering-mind-is-an-unhappy-mind.md)
+- [On the Criteria To Be Used in Decomposing Systems into Modules — Paper Summary](/src/papers/2022-10-13-on-the-criteria-to-be-used-in-decomposing-systems-into-modules.md)
+- [Computers Then and Now — Paper Summary](/src/papers/2022-10-14-computers-then-and-now.md)
+- [The Emperor's Old Clothes — Paper Summary](/src/papers/2022-10-15-the-emperors-old-clothes.md)
+- [Why the Internet only just works — Paper Summary](/src/papers/2022-10-16-why-the-internet-only-just-works.md)
+- [A Method for Obtaining Digital Signatures and Public-Key Cryptosystems — Paper Summary](/src/papers/2022-10-17-a-method-for-obtaining-digital-signatures-and-public-key-cryptosystems.md)
+- [Cassandra - A Decentralized Structured Storage System — Paper Summary](/src/papers/2022-10-18-cassandra-a-decentralized-structured-storage-system.md)
+- [A lightweight design for serverless Function-as-a- Service — Paper Summary](/src/papers/2022-10-19-a-lightweight-design-for-serverless-function-as-a-service.md)
+- [Identity-based Cryptosystems and Signature Schemes — Paper Summary](/src/papers/2022-10-20-identity-based-cryptosystems-and-signature-schemes.md)
+- [Minimal Key Lengths for Symmetric Ciphers to Provide Adequate Commercial Security — Paper Summary](/src/papers/2022-10-21-minimal-key-lengths-for-symmetric-ciphers-to-provide-adequate-commercial-security.md)
+- [Kafka: a Distributed Messaging System for Log Processing — Paper Summary](/src/papers/2022-10-22-kafka-a-distributed-messaging-system-for-log-processing.md)
+- [How do committees invent? — Paper Summary](/src/papers/2022-10-23-how-do-committees-invent.md)
+- [How to Share a Secret — Paper Summary](/src/papers/2022-10-24-how-to-share-a-secret.md)
+- [How to Expose an Eavesdropper — Paper Summary](/src/papers/2022-10-25-how-to-expose-an-eavesdropper.md)
+- [Don’t Thrash: How to Cache your Hash on Flash — Paper Summary](/src/papers/2022-10-26-dont-thrash-how-to-cache-your-hash-on-flash.md)
+- [Blue Zones: Lessons From the World’s Longest Lived — Paper Summary](/src/papers/2022-10-27-blue-zones-lessons-from-the-worlds-longest-lived.md)

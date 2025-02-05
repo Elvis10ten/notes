@@ -179,10 +179,6 @@ img + em {
     line-height: 1em;
 }
 
-a {
-    color: inherit;
-}
-
 ul {
     margin-top: 30px;
 }
@@ -449,4 +445,30 @@ body {
     max-width: 400px;
     margin: 20px auto;
     text-align: center;
+}
+
+/* Default link styling */
+a {
+    color: #007BFF; /* Soft blue color */
+    text-decoration: none; /* Remove underline */
+    font-weight: 600; /* Slightly bolder */
+    transition: color 0.3s ease, transform 0.3s ease; /* Smooth transition */
+}
+
+/* Hover effect for the link */
+a:hover {
+    color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+/* Active state for when the link is clicked */
+a:active {
+    color: #004085; /* Even darker blue */
+    transform: translateY(1px); /* Slightly pressed effect */
+}
+
+/* Focus state for accessibility */
+a:focus {
+    outline: 3px solid #80bdff; /* Light blue outline for focus */
+    outline-offset: 2px;
 }
