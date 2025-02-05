@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>Why Threads Are A Bad Idea (for most purposes) — Paper Summary</title>
+        <meta property="og:image" content="assets/banners/2022-09-27-why-threads-are-a-bad-idea-for-most-purposes.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>Why Threads Are A Bad Idea (for most purposes) — Paper Summary</h1>
+<p>Today&#39;s summary is about a  <a href="https://web.stanford.edu/~ouster/cgi-bin/papers/threads.pdf">paper</a> written by John Ousterhout in 1995. This is technically not a paper, but a presentation given by the author at a Usenix conference.</p>
+<hr>
+<ol>
+<li>Threads are independent execution streams that shared state (memory) and are often preemptively scheduled by the OS/runtime.</li>
+<li>Threads are too hard for most programmers because:<ul>
+<li><strong>Synchronization</strong>: access to shared data must be coordinated with locks.</li>
+<li><strong>Deadlock</strong>: Circular dependencies among locks.</li>
+<li><strong>Hard to debug</strong>: data dependencies, timing dependencies.</li>
+<li><strong>Threads break abstraction</strong>: can&#39;t design modules independently.</li>
+<li>Callbacks don&#39;t work with locks.</li>
+<li><strong>Locks trade-off</strong>: Coarse-grain locking yields low concurrency; Fine-grain locking increases complexity and locking overhead.</li>
+<li><strong>OSes limit performance</strong>: scheduling, context switches.</li>
+</ul>
+</li>
+<li>Event-driven programming:<ul>
+<li>One execution stream: no CPU concurrency.</li>
+<li>Register interest in events (callbacks).</li>
+<li>Event loop waits for events and invokes handlers.</li>
+<li>No preemption of event handlers.</li>
+<li>Handlers are generally short-lived.</li>
+</ul>
+</li>
+<li>Events are used in most GUIs:<ul>
+<li>One handler for each event (press button, invoke menu entry, etc.).</li>
+<li>Handler implements behavior (undo, delete a file, etc.).</li>
+</ul>
+</li>
+<li>Problems with events:<ul>
+<li>Long-running handlers make the application non-responsive.</li>
+<li>Can&#39;t maintain local state across events (handler must return).</li>
+<li>No CPU concurrency.</li>
+<li>Event-driven I/O not always well supported (e.g. poor write buffering).</li>
+</ul>
+</li>
+<li>Events vs Threads:<ul>
+<li>Events avoid concurrency as much as possible, threads embrace.</li>
+<li>Debugging is easier with events.</li>
+<li>Events are faster than threads on a single CPU because of no context switching or locking overhead.</li>
+<li>Threads provide true concurrency.</li>
+</ul>
+</li>
+<li>The conclusion is to avoid threads wherever possible:<ul>
+<li>Use events, not threads, for GUIs, distributed systems, low-end servers, etc.</li>
+<li>Only use threads where true CPU concurrency is needed.</li>
+<li>Where threads are needed, isolate usage in threaded application kernel: keep most of the code single-threaded.</li>
+</ul>
+</li>
+</ol>
+
+    </body>
+</html>

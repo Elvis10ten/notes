@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>Identity-based Cryptosystems and Signature Schemes — Paper Summary</title>
+        <meta property="og:image" content="assets/banners/2022-10-20-identity-based-cryptosystems-and-signature-schemes.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>Identity-based Cryptosystems and Signature Schemes — Paper Summary</h1>
+<p>Author: Adi Shamir.</p>
+<p>Date: 1985</p>
+<p>Link: <a href="https://link.springer.com/content/pdf/10.1007/3-540-39568-7_5.pdf">PDF</a></p>
+<hr>
+<ol>
+<li>The author introduces a novel type of cryptographic scheme, which enables any pair of users to communicate securely and to verify each other&#39;s signatures without exchanging private or public keys, without keeping key directories, and without using the services of a third party.</li>
+<li>The scheme is based on a public key cryptosystem with an extra twist: Instead of generating a random pair of public/private keys and publishing one of these keys, the user chooses a combination of identifiers as their <strong>public key</strong>. Example identifier combination: name and network address.</li>
+<li>The identifiers chosen must satisfy two conditions:<ul>
+<li>It uniquely identifies the user in a way they cannot later deny.</li>
+<li>It’s readily available to the other party.</li>
+</ul>
+</li>
+<li>The scheme assumes the existence of trusted key generation centers, whose sole purpose is to give each user their <strong>private key</strong> when they first join the network.</li>
+<li>When <code>user A</code> wants to send a message to <code>user B</code>:<ul>
+<li>He signs the message with his secret key.</li>
+<li>Adds his <code>own identifier</code> (e.g: name and network address) to the result.</li>
+<li>Encrypts the result by using <code>B&#39;s identifier</code>.</li>
+<li>Sends it to <code>B</code>.</li>
+<li>When <code>B</code> receives the message, he decrypts it using his secret key.</li>
+<li>Then verifies the signature by using the sender&#39;s identifier as a verification key.</li>
+</ul>
+</li>
+<li>The secret keys must be computed by a key generation center rather than by the users since there is nothing special about a user&#39;s identity: If <code>user A</code> could compute the secret key that corresponds to the <code>public key &quot;A&quot;</code>, he could also compute the secret keys that correspond to the <code>public keys &quot;B&quot;</code>, <code>&quot;C&quot;</code>, etc.</li>
+<li>The overall security of the scheme depends on the following points:<ul>
+<li>The security of the underlying cryptographic functions.</li>
+<li>The secrecy of the privileged information stored at the key generation centers.</li>
+<li>The thoroughness of the identity checks performed by the centers before they issue keys.</li>
+<li>The precautions taken by users to prevent the unauthorized use of their keys.</li>
+</ul>
+</li>
+<li>In identity-based schemes, the encryption key is the user&#39;s identity, and the decryption key is derived from the user&#39;s identity and a random seed.</li>
+</ol>
+
+    </body>
+</html>

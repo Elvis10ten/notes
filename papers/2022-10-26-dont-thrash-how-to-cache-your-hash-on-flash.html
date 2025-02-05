@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>Don’t Thrash: How to Cache your Hash on Flash — Paper Summary</title>
+        <meta property="og:image" content="assets/banners/2022-10-26-dont-thrash-how-to-cache-your-hash-on-flash.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>Don’t Thrash: How to Cache your Hash on Flash — Paper Summary</h1>
+<p>Authors:  Michael A. Bender, Martin Farach-Colton, Rob Johnson, Russell Kraner, Bradley C. Kuszmaul, Dzejla Medjedovic, Pablo Montes, Pradeep Shetty, Richard P. Spillane, Erez Zadok</p>
+<p>Date: 2012</p>
+<p>Link: <a href="http://supertech.csail.mit.edu/papers/BenderFaJo12.pdf">PDF</a></p>
+<hr>
+<ol>
+<li>This paper describes the <strong>Cascade Filter</strong>, an <strong>approximate-membership-query</strong> (AMQ) data structure that scales beyond main memory, supporting over half a million insertions/deletions per second and over 500 lookups per second on a commodity flash-based SSD.</li>
+<li>An AMQ data structure is a dictionary that trades off space for a false positive rate on membership queries.</li>
+<li>The Bloom filter is a well-known example of an AMQ; but it doesn’t scale beyond main memory.</li>
+<li>An AMQ data structure supports the following dictionary operations on a set of keys:<ul>
+<li>Insert</li>
+<li>Lookup</li>
+<li>Optionally delete.</li>
+</ul>
+</li>
+<li>For a key in the set, lookup returns <code>present</code>.</li>
+<li>For a key not in the set, lookup returns <code>absent</code> with probability at least <code>1 − ε</code>, where <code>ε</code> is a tunable false-positive rate. There is a tradeoff between <code>ε</code> and space consumption.</li>
+<li>Bloom filters require about one byte per stored data item.</li>
+<li>A <strong>quotient Filter</strong> (QF) is an in-memory AMQ data structure that is functionally similar to a Bloom filter, but lookups incur a single cache miss, as opposed to at least two in expectation for a Bloom filter.</li>
+<li>The <strong>Cascade Filter</strong> (CF) comprises a collection of QFs organized into a data structure inspired by the Cache-Oblivious Lookahead Array (COLA).</li>
+<li>A rotational disk performs only <code>100–200</code> (random) I/Os per second.</li>
+<li>The Cascade Filter supports insertions at rates 40 times faster than a Bloom filter with buffering and 3,200 times faster than a traditional Bloom filter. Lookup throughput is 3 times slower than that of a Bloom filter or about the cost of 6 times random reads on flash.</li>
+</ol>
+
+    </body>
+</html>

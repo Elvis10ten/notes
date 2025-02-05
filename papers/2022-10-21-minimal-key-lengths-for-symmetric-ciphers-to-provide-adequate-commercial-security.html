@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>Minimal Key Lengths for Symmetric Ciphers to Provide Adequate Commercial Security — Paper Summary</title>
+        <meta property="og:image" content="assets/banners/2022-10-21-minimal-key-lengths-for-symmetric-ciphers-to-provide-adequate-commercial-security.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>Minimal Key Lengths for Symmetric Ciphers to Provide Adequate Commercial Security — Paper Summary</h1>
+<p>Authors: Matt Blaze, Whitfield Diffie, Ronald L Rivest, Bruce Schneier, Tsutomu Shimomura, Eric Thompson, Michael Wiener</p>
+<p>Date: 1996</p>
+<p>Link: <a href="https://evervault.com/papers/key-length.pdf">PDF</a></p>
+<hr>
+<ol>
+<li>Modern cryptography employs a combination of:<ul>
+<li>Conventional or <strong>symmetric cryptographic</strong> systems for encrypting data and</li>
+<li>Public key or <strong>asymmetric systems</strong> for managing the keys used by the symmetric systems.</li>
+</ul>
+</li>
+<li>Encryption is accomplished by scrambling data using mathematical procedures that make it extremely difficult and time-consuming for anyone other than authorized recipients — those with the correct decryption keys — to recover the plain text.</li>
+<li>A cryptographic algorithm is considered strong if:<ul>
+<li>No shortcut allows the opponent to recover the plain text without using brute force to test keys until the correct one is found and</li>
+<li>The number of possible keys is sufficiently large to make such an attack infeasible.</li>
+</ul>
+</li>
+<li>The sizes of encryption keys are measured in bits and the difficulty of trying all possible keys grows exponentially with the number of bits used.</li>
+<li>Public key or <strong>asymmetric cryptosystems</strong> have the property that the ability to encrypt does not imply the ability to decrypt.</li>
+<li>Conventional or <strong>symmetric cryptosystems</strong> — those in which an entity with the ability to encrypt also can decrypt and vice versa — are the systems under consideration in this paper.</li>
+<li>It’s a property of computer encryption that modest increases in computational cost can produce vast increases in security: Encrypting information very securely (e.g with 128-bit keys) typically requires little more computing than encrypting it weakly (e.g with 40-bit key keys)</li>
+<li>It is the nature of brute-force attacks that they can be parallelized indefinitely.</li>
+<li>FPGAs function as programmable hardware and allow faster implementations of such tasks as encryption and decryption than conventional processors.</li>
+<li>There are smarter avenues of attack than brute force: There is no need to break the window of a house to get in if the front door is unlocked. Calculations regarding the strength of encryption against brute-force attacks are <strong>worst-case scenarios</strong>.</li>
+<li>The authors&#39; recommendation at the time the paper was written (1996):<blockquote>
+<p>To provide adequate protection against the most serious threats — well-funded commercial enterprises or government intelligence agencies — keys used to protect data today should be at least <code>75 bits long</code>. To protect information adequately for the next <code>20 years</code> in<br>the face of expected advances in computing, keys in newly-developed systems should be at-least <code>90 bits long</code>.</p>
+</blockquote>
+</li>
+</ol>
+
+    </body>
+</html>

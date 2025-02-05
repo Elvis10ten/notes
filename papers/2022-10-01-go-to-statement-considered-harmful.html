@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>Go To Statement Considered Harmful — Paper Summary</title>
+        <meta property="og:image" content="assets/banners/2022-10-01-go-to-statement-considered-harmful.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>Go To Statement Considered Harmful — Paper Summary</h1>
+<p>Author: Edsger W. Dijkstra</p>
+<p>Date: 1968</p>
+<p>Link: <a href="https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf">PDF</a> </p>
+<hr>
+<ol>
+<li>GOTO performs a <strong>one-way transfer</strong> of control to another line of code; in contrast a  <a href="https://en.m.wikipedia.org/wiki/Subroutine">function call</a>  normally returns control.</li>
+<li>Dijkstra argued that unrestricted GOTO statements should be abolished from higher-level languages because they complicated the task of analyzing and verifying the correctness of programs.</li>
+<li>A process runs on a machine and is directed by a program written by a programmer.</li>
+<li>It’s this process that in its dynamic behavior has to satisfy the desired specifications.</li>
+<li>Our intellectual powers are rather geared to master static relations and that our powers to visualize processes evolving in time are relatively poorly developed.</li>
+<li><blockquote>
+<p>For that reason we should do (as wise programmers aware of our limitations) our utmost to shorten the conceptual gap between the static program and the dynamic process, to make the correspondence between the program (spread out in text space) and the process (spread out in time) as trivial as possible.</p>
+</blockquote>
+</li>
+<li>Consider how we can characterize the progress of a process:<ul>
+<li>If the program text is a pure concatenation of assignment statements, it‘a sufficient to point in the program text to a point (textual index) between two successive statements.</li>
+<li>When conditionals are included, the progress of the process is still characterized by a single textual index.</li>
+<li>When procedures or looping is included, a single textual index is insufficient. Dynamic indices are needed to track the procedure call stack or the loop iteration count.</li>
+</ul>
+</li>
+<li>The value of a variable can only be interpreted with respect to the progress of the process.</li>
+<li>The unbridled use of the GOTO statement has an immediate consequence that it becomes terribly hard to find a meaningful set of coordinates in which to describe the process progress.</li>
+<li>The author concludes with:<blockquote>
+<p>The GOTO statement as it stands is just too primitive; it is too much an invitation to make a mess of one&#39;s program.</p>
+</blockquote>
+</li>
+</ol>
+
+    </body>
+</html>

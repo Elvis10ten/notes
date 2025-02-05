@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>It’s Time to Replace TCP in the Datacenter — Paper Summary</title>
+        <meta property="og:image" content="assets/banners/2022-10-04-its-time-to-replace-tcp-in-the-datacenter.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>It’s Time to Replace TCP in the Datacenter — Paper Summary</h1>
+<p>Authors: John Ousterhout</p>
+<p>Date: 2022</p>
+<p>Link: <a href="https://arxiv.org/pdf/2210.00714.pdf">PDF</a></p>
+<hr>
+<ol>
+<li>Requirements for transport protocol used in data centers:<ul>
+<li>Reliable delivery</li>
+<li>Low latency</li>
+<li>High throughput: Data throughput and message throughput.</li>
+<li>Congestion control: This aids in low latency.</li>
+<li>Efficient load balancing across server cores.</li>
+<li>NIC offload: In the future, transport protocols will need to move to special-purpose NIC hardware. The best software protocol implementations have end-to-end latency more than 3x as high as implementations where applications communicate directly with the NIC via kernel bypass.</li>
+</ul>
+</li>
+<li>The following properties which represent most of the TCP design are the wrong decisions for a data center transport:<ul>
+<li><strong>Stream orientation</strong>:<ul>
+<li>When messages are serialized in a TCP stream, TCP does not know about message boundaries.</li>
+<li>The fundamental problem with streaming is that the units in which data is received (ranges of bytes) do not correspond to dispatchable units of work (messages).</li>
+<li>Messages have one disadvantage relative to streams: it is difficult to pipeline the implementation of a single large message.</li>
+<li>Memcached load balances by dividing a collection of streams statically among threads. This approach is prone to hot spots, where one thread receives a disproportionate share of incoming requests.</li>
+<li>RAMCloud load balances by dedicating one thread to read all incoming messages from all streams and then dispatch messages to other threads for service. This allows better load balancing across worker threads, but the dispatcher thread becomes a throughput bottleneck and the need for each request to pass through two separate threads adds significant software overhead.</li>
+</ul>
+</li>
+<li><strong>Connection orientation</strong>: <ul>
+<li>Connections result in overheads in space and/or time. For example, the Linux kernel keeps about 2000 bytes of state for each TCP socket, excluding packet buffers.</li>
+<li>Another problem with connections is that they require a setup phase before any data can be transmitted.</li>
+<li>To reduce these overheads, application threads communicate through a collection of proxy threads that manage single connections to each server. This adds overhead in complexity and performance.</li>
+</ul>
+</li>
+<li><strong>Bandwidth sharing</strong>:<ul>
+<li>In TCP, when a host’s link is overloaded (either for incoming or outgoing traffic), TCP attempts to share the available bandwidth equally among the active connections.</li>
+<li>When receiving several large messages, bandwidth sharing causes all of them to finish slowly.</li>
+<li>Run-to-completion approaches provide better overall response time, but can’t be used since TCP doesn’t know message boundaries.</li>
+</ul>
+</li>
+<li><strong>Sender-driven congestion control</strong>:<ul>
+<li>TCP drives congestion control from senders, which voluntarily slow their rate of packet transmission when they detect congestion.</li>
+<li>TCP congestion control is reactionary — it takes about 1 RTT for a sender to find out about traffic changes.</li>
+</ul>
+</li>
+<li><strong>In-order packet delivery</strong>:<ul>
+<li>TCP assumes that packets will arrive at a receiver in the same order they were transmitted by the sender, and it assumes that out-of-order arrivals indicate packet drops.</li>
+<li>In data center networks, the most effective way to perform load balancing is to perform packet spraying, where each packet is independently routed through the switching fabric to balance loads on links.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>TCP is beyond repair</strong> — there are simply too many problems, and they are too deeply embedded in the design of TCP.</li>
+<li><strong>Homa</strong> is a clean-slate redesign of network transport for the data center that provides proof that all of TCP’s problems are solvable:<ul>
+<li><strong>Homa is message-based</strong>: This enables run-to-completion scheduling; more efficient load balancing because multiple threads can safely read from a single socket and; a more powerful congestion signal.</li>
+<li><strong>Homa is connectionless</strong>: Despite its lack of connections, Homa ensures end-to-end reliability for RPCs.</li>
+<li><strong>Bandwidth sharing</strong>: Homa implements an SRPT scheduling policy to favor shorter messages.<blockquote>
+<p>Homa’s use of priority queues eliminates the “pick your poison” tradeoff between latency and bandwidth. Homa intentionally allows some buffers from longer messages to accumulate in low-priority queues (over-commitment); these ensure high link utilization. Short messages still achieve low latency since they use higher priority queues.</p>
+</blockquote>
+</li>
+<li><strong>Receiver-driven congestion control</strong>.</li>
+<li><strong>Out-of-order packets</strong>.</li>
+</ul>
+</li>
+<li>Besides Homa, one of the best-known alternatives to TCP is Infiniband. However, it has some similar problems to TCP.</li>
+<li>The best way to bring Homa into widespread usage is to integrate it with the RPC frameworks that underly most large-scale data center applications.</li>
+</ol>
+
+    </body>
+</html>

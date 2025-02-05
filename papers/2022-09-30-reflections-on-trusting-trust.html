@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>Reflections on Trusting Trust — Paper Summary</title>
+        <meta property="og:image" content="assets/banners/2022-09-30-reflections-on-trusting-trust.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>Reflections on Trusting Trust — Paper Summary</h1>
+<p>Author: Ken Thompson</p>
+<p>Date: 1984</p>
+<p>Link: <a href="https://users.ece.cmu.edu/~ganger/712.fall02/papers/p761-thompson.pdf">PDF</a></p>
+<hr>
+<blockquote>
+<p>To what extent should one trust a statement that a program is free of Trojan horses? Perhaps it is more important to trust the people who wrote the software.  </p>
+</blockquote>
+<ol>
+<li>Third party code cannot be trusted.</li>
+<li>No amount of source-level verification or scrutiny can protect against using untrusted code. </li>
+<li>Ken shows this with a Trojan horse:<ul>
+<li>He modified the C compiler so that it inserts a back door when it compiles the <code>login</code> program.</li>
+<li>And when the C compiler compiles the C compiler, it will insert the code that inserts the code into both the login program and the C compiler. [See <a href="https://en.wikipedia.org/wiki/Quine_(computing)">Quine</a>].</li>
+<li>When the infected compiler binary is used to produce a new version of the compiler from the source, it will insert the back-door code into the new version.</li>
+<li>This works because of the chicken and egg problem: The C compiler is written in C, thus you need a C compiler binary to create future versions of the C compiler.</li>
+<li>If the base compiler binary is infected, any source code analysis would yield no joy. This is because the infection can be deleted from the compiler source code — it only needs to exist in the compiler binary.</li>
+</ul>
+</li>
+<li>When the paper was published, compiling source code in the Unix world was commonplace. However in today’s world, making changes to the compiler source code feels overkill when you can infect binaries directly (in the software supply chain).</li>
+</ol>
+<pre><code class="hljs language-c">compile (code)
+{
+  <span class="hljs-comment">/* If the code we&#x27;re compiling is code for the Unix login command */</span>
+  <span class="hljs-keyword">if</span> (match (code, login_code_pattern))
+  {
+    compile (backdoor);
+    <span class="hljs-keyword">return</span>;
+  }
+
+  <span class="hljs-comment">/* If the code we&#x27;re compiling is similar to the compiler source code */</span>
+  <span class="hljs-keyword">if</span> (match (code, compiler_code_pattern))
+  {
+    compile (compiler_code_with_both_if_statements_inserted);
+    <span class="hljs-keyword">return</span>;
+  }
+
+  <span class="hljs-keyword">else</span>
+  {
+    <span class="hljs-comment">/* Do regular compilation things */</span>
+    ...
+  }
+}
+</code></pre><p>— <a href="https://mananshah99.github.io/blog/2020/07/01/trusting-trust/">Malicious compiler code</a></p>
+
+    </body>
+</html>

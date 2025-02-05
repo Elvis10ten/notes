@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>How to Expose an Eavesdropper — Paper Summary</title>
+        <meta property="og:image" content="assets/banners/2022-10-25-how-to-expose-an-eavesdropper.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>How to Expose an Eavesdropper — Paper Summary</h1>
+<p>Authors: Ronald L. Rivest and Adi Shamir</p>
+<p>Date: 1984</p>
+<p>Link: <a href="https://dl.acm.org/doi/pdf/10.1145/358027.358053">PDF</a></p>
+<hr>
+<ol>
+<li>The paper present a protocol for establishing <strong>secure communications</strong> over an <strong>insecure communications channel</strong> in the absence of trusted third parties or <a href="https://en.wikipedia.org/wiki/Key_authentication">authenticated keys</a>.</li>
+<li><strong>Key authentication</strong> is the process of assuring that the key of <strong><font color="#0B8BAA">person A</font></strong> held by <strong><font color="#ac28f6">person B</font></strong> does in fact belong to&quot;<strong><font color="#0B8BAA">person A</font></strong> and vice versa.</li>
+<li><strong><font color="#d53032">Eavesdropper</font></strong>: someone who wants to monitor the communication between two parties without <strong>tampering</strong> with the data and without exposing his <strong>existence</strong>.</li>
+<li>The protocol forces a potential <strong><font color="#d53032">eavesdropper</font></strong> — if they want to understand the communication — to reveal their existence by modifying the communication.</li>
+<li>An <strong><font color="#d53032">eavesdropper</font></strong> has to be as <strong>transparent</strong> as possible to minimize detection: They can tamper with the the <strong>ciphertext</strong> stream (by deleting, delaying, substituting, or inserting ciphertexts), but they can’t tamper with the <strong>cleartext</strong> received by the communicating parties.</li>
+<li>In the context of a public-key crypto-system, a successful <strong><font color="#d53032">eavesdropper</font></strong> must actively participate in the key exchange protocol.</li>
+<li>A well-known and serious problem with <strong>unauthenticated public-key exchange protocols</strong> is that the communication between two parties, <strong><font color="#0B8BAA">A</font></strong> and <strong><font color="#ac28f6">B</font></strong>, can be <strong>transparently</strong> monitored by an eavesdropper, <strong><font color="#d53032">C</font></strong>, who inserts into the communication line an encryption/decryption device as follows:<blockquote>
+<ul>
+<li>When <strong><font color="#0B8BAA">A</font></strong> wants to communicate with <strong><font color="#ac28f6">B</font></strong>, <strong><font color="#d53032">C</font></strong> replaces both the public key, <strong><font color="#0B8BAA">KA</font></strong>, that <strong><font color="#0B8BAA">A</font></strong> sends to <strong><font color="#ac28f6">B</font></strong> and the public key, <strong><font color="#ac28f6">KB</font></strong>, that <strong><font color="#ac28f6">B</font></strong> sends to <strong><font color="#0B8BAA">A</font></strong> by his own public key, <strong><font color="#d53032">KC</font></strong> (or by a pair of keys, <strong><font color="#d53032">KC&#39;</font></strong> and <strong><font color="#d53032">KC&#39;&#39;</font></strong>, if the keys contain an identifying prefix).
+Whenever <strong><font color="#0B8BAA">A</font></strong> sends an encrypted message <strong><font color="#d53032">EKC(</font><font color="#0B8BAA">MA</font><font color="#d53032">)</font></strong> to <strong><font color="#ac28f6">B</font></strong>, <strong><font color="#d53032">C</font></strong> intercepts it, decrypts it in order to read <strong><font color="#0B8BAA">MA</font></strong>, and then reencrypts it as <strong><font color="#ac28f6">EKB(</font><font color="#0B8BAA">MA</font><font color="#ac28f6">)</font></strong> before sending it to <strong><font color="#ac28f6">B</font></strong>.</li>
+<li>Messages, <strong><font color="#ac28f6">MB</font></strong>, sent by <strong><font color="#ac28f6">B</font></strong> to <strong><font color="#0B8BAA">A</font></strong> are handled in a similar way.</li>
+</ul>
+</blockquote>
+</li>
+<li>The protocol proposed in this paper forces the eavesdropper <strong><font color="#d53032">C</font></strong> to act in a <strong>non-transparent way</strong> — i.e: modifying the cleartext. Thus, it only works (i.e: capable of exposing an eavesdropper) if <strong><font color="#0B8BAA">A</font></strong> and <strong><font color="#ac28f6">B</font></strong> share knowledge of each other that <strong><font color="#d53032">C</font></strong> is not able to emulate. E.g. Tone of voice in a video call app, patterns in text in a text app, etc.</li>
+<li><strong>The &quot;Interlock&quot; protocol</strong>: After <strong><font color="#0B8BAA">A</font></strong> and <strong><font color="#ac28f6">B</font></strong> have exchanged their public keys, they exchange a pair of data blocks, <strong><font color="#0B8BAA">MA</font></strong> and <strong><font color="#ac28f6">MB</font></strong>, as follows:<ul>
+<li><strong><font color="#0B8BAA">A</font></strong> encrypts <strong><font color="#0B8BAA">MA</font></strong> under <strong><font color="#ac28f6">KB</font></strong> but sends <strong><font color="#ac28f6">B</font></strong> only the first half of the bits of the resulting ciphertext <strong><font color="#ac28f6">EKB(</font><font color="#0B8BAA">MA</font><font color="#ac28f6">)</font></strong>.</li>
+<li><strong><font color="#ac28f6">B</font></strong> encrypts <strong><font color="#ac28f6">MB</font></strong> under <strong><font color="#0B8BAA">KA</font></strong> and sends <strong><font color="#0B8BAA">A</font></strong> the first half of <strong><font color="#0B8BAA">EKA(</font><font color="#ac28f6">MB</font><font color="#0B8BAA">)</font></strong>.</li>
+<li><strong><font color="#0B8BAA">A</font></strong> sends <strong><font color="#ac28f6">B</font></strong> the second half <strong><font color="#ac28f6">EKB(</font><font color="#0B8BAA">MA</font><font color="#ac28f6">)</font></strong>.</li>
+<li><strong><font color="#ac28f6">B</font></strong> sends <strong><font color="#0B8BAA">A</font></strong> the second half of <strong><font color="#0B8BAA">EKA(</font><font color="#ac28f6">MB</font><font color="#0B8BAA">)</font></strong>.</li>
+<li><strong><font color="#0B8BAA">A</font></strong> and <strong><font color="#ac28f6">B</font></strong> concatenate the two halves of <strong><font color="#0B8BAA">EKA(</font><font color="#ac28f6">MB</font><font color="#0B8BAA">)</font></strong> and <strong><font color="#ac28f6">EKB(</font><font color="#0B8BAA">MA</font><font color="#ac28f6">)</font></strong>, respectively, and use their secret decryption keys to read the messages.</li>
+</ul>
+</li>
+<li>Each side performs a step in this protocol only after they receives the information sent by the other side in the previous step.</li>
+<li>Any attempt by <strong><font color="#d53032">C</font></strong> to read <strong><font color="#0B8BAA">MA</font></strong> and <strong><font color="#ac28f6">MB</font></strong> will either garble or completely change the communication between <strong><font color="#0B8BAA">A</font></strong> and <strong><font color="#ac28f6">B</font></strong>:<ul>
+<li>If <strong><font color="#d53032">C</font></strong> tries to use the relay attack described in (7), they can’t decrypt half of <strong><font color="#0B8BAA">MA</font></strong>. They have to wait until the end to get the full <strong><font color="#0B8BAA">MA</font></strong> to decrypt. But</li>
+<li>Because the protocol wouldn’t proceed without each previous step (11), <strong><font color="#d53032">C</font></strong> is forced to commit to the first half of the ciphertexts before they know the full message. They have two options:<ul>
+<li>Send the message <strong><font color="#0B8BAA">MA</font></strong> as-is to <strong><font color="#ac28f6">B</font></strong> and <strong><font color="#ac28f6">MB</font></strong> as-is to <strong><font color="#0B8BAA">A</font></strong>: However, since the eavesdropper has intercepted and changed the public keys on both sides as described in (7), neither side will be able to decrypt the message using their private keys.</li>
+<li>Invent a new <strong><font color="#0B8BAA">MA&#39;</font></strong> and <strong><font color="#ac28f6">MB&#39;</font></strong>: By the time he discovers the true values of <strong><font color="#0B8BAA">MA</font></strong> and MB in Steps 3 and 4, it is too late to change <strong><font color="#0B8BAA">MA&#39;</font></strong> and <strong><font color="#ac28f6">MB&#39;</font></strong>, since they are already committed to the first halves of their ciphertexts.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>The key is that the transmission of the first part effectively commits the sender to the final cleartext although the cleartext cannot be computed without the use of the second half as well.</li>
+<li>Hence, other two-part methods can be used instead of transmitting the two halves of the cipher-text separately as proposed above. E.g: the first part could be a &quot;<strong>cryptographic checksum</strong>&quot; or &quot;<strong>one-way function</strong>&quot; of the ciphertext, and the second part could be the ciphertext itself.</li>
+<li>If <strong><font color="#0B8BAA">A</font></strong> and <strong><font color="#ac28f6">B</font></strong> want to exchange <code>n</code> blocks of information, they can repeat the interlock protocol for each pair of blocks. While a delayed relay attack can be successful in this scenario, <strong><font color="#d53032">C</font></strong> will be forced to deliver messages out of phase, and hence, wouldn’t be transparent to <strong><font color="#0B8BAA">A</font></strong> and <strong><font color="#ac28f6">B</font></strong>.</li>
+<li>One mode of operation in which the existence of an eavesdropper cannot be exposed is a one-way communication between <strong><font color="#0B8BAA">A</font></strong> and <strong><font color="#ac28f6">B</font></strong>.</li>
+</ol>
+
+    </body>
+</html>

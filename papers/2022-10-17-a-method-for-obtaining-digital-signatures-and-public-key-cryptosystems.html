@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>A Method for Obtaining Digital Signatures and Public-Key Cryptosystems — Paper Summary</title>
+        <meta property="og:image" content="assets/banners/2022-10-17-a-method-for-obtaining-digital-signatures-and-public-key-cryptosystems.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>A Method for Obtaining Digital Signatures and Public-Key Cryptosystems — Paper Summary</h1>
+<p>Authors: R.L. Rivest, A. Shamir, and L. Adleman</p>
+<p>Date: 1978</p>
+<p>Link: <a href="https://people.csail.mit.edu/rivest/Rsapaper.pdf">PDF</a></p>
+<hr>
+<ol>
+<li>The authors present an encryption method with the novel property that publicly revealing an encryption key does not thereby reveal the corresponding decryption key. This has two important consequences:<ul>
+<li>Alice can publicly reveal her encryption key, and Bob can use the key to encrypt messages that ONLY Alice can read.</li>
+<li>Alice can “sign” a message using her privately held decryption key. Anyone can verify this signature using the corresponding publicly revealed encryption key.</li>
+</ul>
+</li>
+<li>A <strong>trapdoor function</strong> is a function that is easy to compute in one direction, yet difficult to compute in the opposite direction (finding its inverse ) without special information, called the &quot;trapdoor&quot;.</li>
+<li>A <strong>one-way function</strong> is a  function that is easy to compute on every input, but hard to invert given the image of a random input.</li>
+<li><blockquote>
+<p>An encryption (or decryption) procedure typically consists of a <strong>general method</strong> and an <strong>encryption key</strong>. The <strong>general method</strong>, under the control of the <strong>key</strong>, enciphers a message <code>M</code> to obtain the enciphered form of the message, called the ciphertext <code>C</code>. Everyone can use the same general method; the security of a given procedure will rest on the security of the key.</p>
+</blockquote>
+</li>
+<li>Encryption is the standard means of rendering a communication private.</li>
+<li>How user <strong>Bob</strong> can send <strong>Alice</strong> a “signed” message <code>M</code>:<ul>
+<li>He first computes his “signature” <code>S</code> for the message <code>M</code> using his decryption key <code>DB</code>: <code>S = DB(M)</code> . (Deciphering an unenciphered message: each message is the ciphertext for some other message.)</li>
+<li>He then encrypts <code>S</code> using <strong>Alice’s</strong> public encryption key <code>EA</code> (for privacy), and sends the result <code>EA(S)</code> to <strong>Alice</strong>.</li>
+<li>He need not send <code>M</code> as well; it can be computed from <code>S</code>.</li>
+<li><strong>Alice</strong> first decrypts the ciphertext with <code>DA</code> to obtain <code>S</code>.</li>
+<li>She then extracts the message with the public encryption procedure of the sender, in this case, <code>EB</code>: <code>M = EB(S) </code>.</li>
+<li>Alice cannot modify <code>M</code> to a different version <code>M′</code>, since then she would have to create the corresponding signature <code>S′ = DB(M′)</code> as well.</li>
+</ul>
+</li>
+<li>Users can fetch the other users&#39; public keys from a public directory. To prevent an attacker from injecting their keys into the directory, all message from the public directory is signed. The public key for the public directory can be given to the user when they join the network — so they don’t have to look it up again.</li>
+<li><strong>Proposed encryption method</strong>:<ul>
+<li><code>M</code> = Message to encrypt</li>
+<li>(<code>e</code>, <code>n</code>) = Pair of positive integers = the public encryption key.</li>
+<li>Represent the message <code>M</code> as an integer between <code>0</code> and <code>n − 1</code>. (Break a long message into a series of blocks, and represent each block as such an integer.)</li>
+<li>The ciphertext <code>C</code> = Raise the numeric representation of the message to the <code>eth</code> power modulo <code>n</code>.</li>
+<li><code>C ≡ E(M) ≡ Mᵉ (mod n)</code>, for a message <code>M</code> .</li>
+</ul>
+</li>
+<li>Encryption does not increase the size of a message; both the message and the ciphertext are integers in the range <code>0</code> to <code>n − 1</code>.</li>
+<li><strong>Proposed decryption method</strong>:<ul>
+<li>To decrypt the ciphertext <code>C</code>, raise it to another power <code>d</code>, modulo <code>n</code>.</li>
+<li><ul>
+<li>(<code>d</code>, <code>n</code>) = Pair of positive integers = the private decryption key.</li>
+</ul>
+</li>
+<li><code>D(C) ≡ Cᵈ (mod n)</code>, for a ciphertext <code>C</code> .</li>
+</ul>
+</li>
+<li><code>n = p · q</code>; where:<ul>
+<li><code>p</code> and <code>q</code> are private, “random” and very large primes.</li>
+<li>These numbers must be large so that it is not computationally feasible for anyone to factor <code>n = p · q</code>.</li>
+<li>The authors recommend that <code>p</code> and <code>q</code> have 100 digits; hence <code>n</code> will have 200 digits.</li>
+<li>Longer or shorter lengths can be used depending on the relative importance of encryption speed and security in the application at hand.</li>
+<li>As at the time of writing, factoring a 200-digit number using the best factoring algorithm will take about <code>3.8 × 10⁹</code> years.</li>
+</ul>
+</li>
+<li><code>d</code> = large, random integer which is relatively prime to <code>(p − 1) · (q − 1)</code>. That is, check that <code>d</code> satisfies:
+<code>gcd(d, (p − 1) · (q − 1)) = 1</code></li>
+<li>The integer <code>e</code> is finally computed from <code>p</code>, <code>q</code>, and <code>d</code> to be the “multiplicative inverse” of <code>d</code>, modulo <code>(p−1)·(q−1)</code>. That is:
+<code>e·d≡1 (mod(p−1)·(q−1))</code>.</li>
+<li>The security of the system rests in part on the difficulty of factoring the published divisor, <code>n</code>.</li>
+<li>The authors have this to say about breaking the system:<blockquote>
+<p>Although this problem of “computing <code>e-th </code>roots modulo <code>n</code> without factoring <code>n</code>” is not a well-known difficult problem like <strong>factoring</strong>, we feel reasonably confident that it is computationally <strong>intractable</strong>.<br>It may be possible to prove that any general method of breaking our scheme yields an efficient factoring algorithm. This would establish that any way of breaking our scheme must be as difficult as factoring. We have not been able to prove this conjecture, however.<br>Our method <strong>should be certified by having the above conjecture of intractability withstand a concerted attempt to disprove it</strong>.</p>
+</blockquote>
+</li>
+</ol>
+
+    </body>
+</html>

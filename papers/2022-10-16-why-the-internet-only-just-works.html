@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>Why the Internet only just works — Paper Summary</title>
+        <meta property="og:image" content="assets/banners/2022-10-16-why-the-internet-only-just-works.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>Why the Internet only just works — Paper Summary</h1>
+<p>Author: M Handley
+Date: 2006
+Link: <a href="http://www0.cs.ucl.ac.uk/staff/m.handley/papers/only-just-works.pdf">PDF</a></p>
+<hr>
+<ol>
+<li>Historically and currently, the Internet only just works — not every issue is a cause for concern.</li>
+<li>While things on the internet change rapidly, the lower level stacks change rarely.</li>
+<li>The first large-scale packet switching network was the ARPAnet, which was used to come to grips with the main architectural issues that would go on to be the basis of the Internet.</li>
+<li>The general-purpose successor to the ARPAnet, had to be more flexible: Reliability was separated from addressing and packet transfer in the design of the Internet protocol suite, with IP being separated from <code>TCP</code>.</li>
+<li>Changing a large network is difficult, but possible if there is a strong motivation:<ul>
+<li><code>DNS</code> was rolled out to address a scaling problem and enable decentralized administration. Prior to <code>DNS</code>, host name mappings were maintained in a hosts.txt file managed centrally and manually.</li>
+</ul>
+</li>
+<li>Congestion is essentially a network-level problem rather than a transport-level problem, as both <code>UDP</code> and <code>TCP</code> flows can cause congestion.</li>
+<li><code>TCP’s</code> congestion control mechanism was introduced because it was a simple solution:<ul>
+<li>It’s backwards compatible,</li>
+<li>Incrementally deployable, and</li>
+<li>Adequately solved the immediate problem at hand.</li>
+</ul>
+</li>
+<li><code>TCP’s</code> congestion control mechanism is insufficient as it’s not the only protocol (albeit being the most used).</li>
+<li>Technologies get deployed in the core of the Internet when they solve an immediate problem or when money can be made:<ul>
+<li>Money-making changes to the core of the network are rare indeed — in part this is because changes to the core need to be interoperable with other providers to make money, and changes that are interoperable will not differentiate an <code>ISP</code> from its competitors.</li>
+<li>Historically changes have been driven by the need to fix an immediate issue (just in time).<blockquote>
+<p>What do IP Multicast, Mobile IP, quality of service, and Explicit Congestion Notification (<code>ECN</code>) have in common? They are all core network technologies that solve real problems that are not immediately pressing [and hence were not widely deployed].</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>The primary reason for Network address translators (<code>NATs</code>) is not a shortage of <code>IPv4</code> addresses but tiered pricing — whereby ISPs charge more for additional IP addresses, even though IP addresses do not in fact cost the <code>ISP</code> in any significant way.</li>
+<li>In businesses, <code>NATs</code> are frequently cited as a security solution. <code>NATs</code> are a poor firewall but have an advantage over traditional firewalls because they fail closed.</li>
+<li>NATs are unlikely to go away, even if <code>IPv6</code> eventually sees widespread deployment.</li>
+<li>Given ops challenges, a new transport protocol is not going to become widespread on a time-scale shorter than a decade, if ever.</li>
+<li>The internet’s short-term (i.e: current-term) problems:<ul>
+<li>Spam</li>
+<li>Security</li>
+<li>Denial-of-service attacks</li>
+<li>Application deployment: Things like firewalls and <code>NATs</code> impedes the deployment of certain types of apps (e.g: Skype)</li>
+</ul>
+</li>
+<li>The internet’s middle-term (i.e: near-term) problems:<ul>
+<li>Congestion control: <code>TCP’s</code> congestion control mechanism is quite minimal, basically probing the network repeatedly to see how much traffic can be in flight at a time, and then backing off when overload is detected via packet loss. One issue with <code>TCP’s</code> congestion control is <code>TCP’s</code> limited dynamic range.</li>
+<li>Inter-domain routing: For over fifteen years <code>BGP</code> has provided inter-domain routing for the Internet. BGP is conceptually very simple — routes to subnets are advertised together with attributes of the path to that subnet. <code>BGP</code> is slow to converge; error-prone and easy to misconfigure; and difficult to debug and insecure.</li>
+<li>Mobility</li>
+<li>Multi-homing</li>
+<li>Architectural ossification</li>
+</ul>
+</li>
+<li>The internet’s middle-term (i.e: near-term) problems:<ul>
+<li>Address space depletion:<ul>
+<li><blockquote>
+<p>In the early 1990s it became clear that the Internet would run out of IP addresses. <code>CIDR</code> was an interim solution to this, and has been quite successful. The rise of <code>NATs</code>, from being considered an ugly hack to being nearly ubiquitous, has also reduced the problem somewhat.</p>
+</blockquote>
+</li>
+<li>The long-term solution to the problem of address space depletion is supposed to be IPv6 — but this hasn’t been widely deployed.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>The author concludes with:<blockquote>
+<p>The Internet was never designed to be optimal for any particular problem — its great strength is that it is a general-purpose network that can support a wide range of applications and a wide range of link technologies. The Internet is also a cost-effective network — it does not make great promises about the quality of service that it provides. It is good enough for a wide range of applications, but anyone considering telesurgery or remote-control of a nuclear power station might well be advised to look somewhere else.</p>
+</blockquote>
+</li>
+</ol>
+
+    </body>
+</html>
