@@ -66,7 +66,7 @@ The Android team introduced [ConstraintLayout](https://developer.android.com/ref
 
 If we had capitulated to the pressure to follow this “best practice” blindly, the ROI would have been a net negative: the performance claim was false (because the UI we had wasn’t amenable to the instances where ConstraintLayout is more performant), and we would have had more production defects (because of the complexity of constraints).
 
-Herein lies the rub with the everyday use of the phrase “best practices”: “The best way to do $X$ in $Y$ context” gets lossy compressed into “the best way to do $X$”. Eventually, people start applying the “best way” everywhere. They incur all the cost of the “best way” without reaping any of its benefits because the context was never relevant to them.
+Herein lies the rub with the everyday use of the phrase “best practices”: “The best way to do $X$ in $Y$ context” gets lossy compressed into “the best way to do $X$ ”. Eventually, people start applying the “best way” everywhere. They incur all the cost of the “best way” without reaping any of its benefits because the context was never relevant to them.
 
 ### Example 2
 

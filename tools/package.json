@@ -4,7 +4,8 @@
   "description": "Tools used to publish markdown notes",
   "main": "build_html.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node update_index.js && node build_html.js"
   },
   "author": "Elvis Chidera",
   "license": "MIT",

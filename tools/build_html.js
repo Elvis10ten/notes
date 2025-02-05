@@ -1,20 +1,18 @@
 import {writeFile} from 'fs/promises';
-import {relative, resolve} from 'path';
+import {resolve} from 'path';
 import {marked} from "marked";
 import markedKatex from "marked-katex-extension";
 import {markedHighlight} from "marked-highlight";
 import highlightJS from 'highlight.js';
 import {
-    bannersDir,
-    destDir,
     srcDir,
     srcBooksDir,
     srcEssayDir,
-    getDestPath,
-    getMarkdownFiles,
+    getDestHTMLPath,
+    getMarkdownFileNames,
     getToolsPath,
     readFileText,
-    getBannerPath
+    getBannerRelativePath, srcPapersDir
 } from "./utils.js";
 
 console.log('Configuring the marked library...');
@@ -43,12 +41,12 @@ marked.use(
 
 console.log('Building HTML files...');
 const scaffoldHTML = await readFileText(getToolsPath('markdown-scaffold.html'));
-const srcDirs = [srcDir, srcBooksDir, srcEssayDir];
+const srcDirs = [srcDir, srcBooksDir, srcEssayDir, srcPapersDir];
 
 for (const dir of srcDirs) {
-    const markdownFiles = await getMarkdownFiles(dir);
-    for (const fileName of markdownFiles) {
-        await buildHTMLFile(dir, fileName);
+    const markdownFileNames = await getMarkdownFileNames(dir);
+    for (const markdownFileName of markdownFileNames) {
+        await buildHTMLFile(dir, markdownFileName);
     }
 }
 
@@ -72,10 +70,10 @@ async function buildHTMLFile(dir, markdownFileName) {
     outputHTML = outputHTML.replace('<!-- output_title -->', firstH1Text);
 
     console.log(`Setting the banner path...`);
-    outputHTML = outputHTML.replace('<!-- output_banner_path -->', getBannerPath(markdownFileName));
+    outputHTML = outputHTML.replace('<!-- output_banner_path -->', getBannerRelativePath(markdownFileName));
 
     console.log(`Writing the output HTML file...`);
-    const outputFilePath = await getDestPath(dir, markdownFileName)
+    const outputFilePath = await getDestHTMLPath(dir, markdownFileName)
     await writeFile(outputFilePath, outputHTML);
 
     console.log(`Built 'file://${outputFilePath}'!`);

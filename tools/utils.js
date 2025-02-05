@@ -14,22 +14,19 @@ export const destDir = resolve(projectDirName, 'docs');
 
 export const srcBooksDir = resolve(srcDir, 'books');
 export const srcEssayDir = resolve(srcDir, 'essays');
-export const bannersDir = resolve(destDir, 'assets', 'banners');
+export const srcPapersDir = resolve(srcDir, 'papers');
+export const destBannersDir = resolve(destDir, 'assets', 'banners');
 
-export async function getMarkdownFiles(dir) {
-    const notes = await readdir(dir);
-    return notes.filter(note => note.endsWith('.md'));
+export async function getMarkdownFileNames(dir) {
+    const fileNames = await readdir(dir);
+    return fileNames.filter(fileName => fileName.endsWith('.md'));
 }
 
-export function getSrcPath(markdownFileName) {
-    return resolve(srcDir, markdownFileName);
-}
-
-export async function getDestPath(dir, markdownFileName) {
+export async function getDestHTMLPath(dir, markdownFileName) {
     const fileDir = resolve(destDir, basename(relative(srcDir, dir)));
 
     // Create dir if not exists.
-    await mkdir(fileDir, {recursive: true });
+    await mkdir(fileDir, { recursive: true });
 
     return resolve(fileDir, markdownFileName.replace('.md', '.html'));
 }
@@ -42,6 +39,6 @@ export async function readFileText(filePath) {
     return await readFile(filePath, 'utf8');
 }
 
-export function getBannerPath(markdownFileName) {
-    return relative(destDir, resolve(bannersDir, markdownFileName.replace('.md', '.jpg')));
+export function getBannerRelativePath(markdownFileName) {
+    return relative(destDir, resolve(destBannersDir, markdownFileName.replace('.md', '.jpg')));
 }

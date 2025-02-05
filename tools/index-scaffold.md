@@ -3,7 +3,7 @@
 </div>
 
 <div class="text-center">
-    <strong>Hiii!<span class="blinking">.</span></strong>
+    <strong>Hiii!</strong>
 </div>
 
 <div class="text-center">
@@ -11,10 +11,10 @@
 </div>
 
 <div class="text-center">
-    Welcome to my blog. I'm software engineer, athlete, writer, entrepreneur, and amateur chef. I love building things and sharing what I learn.
+    Welcome to my blog. I'm software engineer, athlete, writer, entrepreneur, and amateur chef. I love building things and sharing what I learn<span class="blinking">.</span>
 </div>
 
-<div class="text-center" style="margin-top: 2px;">
+<div class="text-center" style="margin-top: 4px;">
     <a href="https://github.com/elvis10ten"><img src="/docs/assets/github-mark.svg" alt="GitHub" class="social-icon" /></a>
     <a href="https://linkedin.com/elvischidera"><img src="/docs/assets/linkedin.png" alt="LikedIn" class="social-icon" /></a>
     <a href="https://instagram.com/elvischidera"><img src="/docs/assets/instagram.svg" alt="Instagram" class="social-icon" /></a>
@@ -22,13 +22,15 @@
 
 > "I believe in human agency. Extreme optimism and extreme pessimism are both excuses for laziness." - Peter Thiel
 
-## <span id="essays">Essays</span>
-<!-- index_essays_content -->
+<!-- placeholder_404_error -->
 
-## <span id="books">Books</span>
-Notes and summaries on some of the books I've read.
+## <span id="essays">My Essays</span>
+<!-- placeholder_essays_index -->
 
+## <span id="books">Compendium (Books)</span>
 <div class="book-gallery">
-<!-- index_books_content -->
+<!-- placeholder_books_index -->
 </div>
 
+## <span id="papers">Compendium (Papers)</span>
+<!-- placeholder_papers_index -->

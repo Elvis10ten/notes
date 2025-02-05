@@ -24,8 +24,7 @@
 It&#39;s a great way to understand how computers work and has changed the way I think about computers.</p>
 </blockquote>
 <h2>Chapter 1: Boolean logic</h2>
-<p>;
-Modern computers store and process information stored as two-valued signals — called <bmark>bits</bmark> (i.e. binary digits).
+<p>Modern computers store and process information stored as two-valued signals — called <bmark>bits</bmark> (i.e. binary digits).
 Two-value signals were chosen because they can readily be represented, stored, and transmitted.
 For example, they can be represented as:</p>
 <ul>
@@ -33,8 +32,7 @@ For example, they can be represented as:</p>
 <li>High or low voltage on a wire,</li>
 <li>A magnetic domain oriented clockwise or counterclockwise.</li>
 </ul>
-<p>A binary variable or a bit can represent two possible states: <code>0</code> and <code>1</code>; <code>off</code> and <code>on</code>; <code>false</code> and <code>true</code>; <code>no</code> and <code>yes</code>; etc.
-$n$ binary variables can be used to represent <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">2^n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6644em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span></span></span></span> states. e.g.</p>
+<p>A binary variable or a bit can represent two possible states: <code>0</code> and <code>1</code>; <code>off</code> and <code>on</code>; <code>false</code> and <code>true</code>; <code>no</code> and <code>yes</code>; etc. <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> binary variables can be used to represent <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">2^n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6644em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span></span></span></span> states. e.g.</p>
 <table>
 <thead>
 <tr>
@@ -237,8 +235,8 @@ A <bmark>boolean function</bmark> (aka <pmark>boolean operator</pmark>) is a fun
 <hr>
 <p>A <bmark>logic gate</bmark> (also called <strong>chip</strong> in the book) is a physical device that implements a boolean function.
 Every digital device is based on a set of chips designed to store and process binary information.
-These chips are all made of <pmark>elementary logic gates</pmark>.
-Elementary logic gates can be physically realized using many different hardware technologies, but their logical behavior, or abstraction, is consistent across implementations.</p>
+These chips are all made of <pmark>elementary logic gates</pmark>.</p>
+<p><bmark>Elementary logic gates</bmark> can be physically realized using many different hardware technologies, but their logical behavior, or abstraction, is consistent across implementations.</p>
 <p>Since all logic gates have the same input and output data type (i.e. binary), they can be combined, creating composite gates of arbitrary complexity. e.g. <code>Xor = Or(And(a, Not(b)), And(Not(a), b))</code>.</p>
 <p>Any given logic gate can be viewed from two perspective:</p>
 <ol>
@@ -254,7 +252,7 @@ Next, the designer can instruct the simulator to test the virtual chip on variou
 </blockquote>
 <p>The hardware simulator can also simulate and quantify the performance characteristics (energy consumption, computational speed, cost) of a chip.</p>
 <hr>
-<p>The <bmark>specifications of the logic gates</bmark> needed to build the chips of our computer system are given below.</p>
+<p>The <strong>specifications of the logic gates</strong> needed to build the chips of our computer system are given below.</p>
 <hr>
 <p>First, the <strong>primitive</strong> <bmark>NAND</bmark> gate, which is shorthand for <strong>Not-And</strong> because it’s equivalent to <code>Not(And(a, b))</code>.</p>
 <p><img src="/assets/nand-images/nand_gate.svg" alt=""></p>
@@ -618,7 +616,7 @@ Or(a= aandnotb, b= bandnota, out= out);
 
 }
 </code></pre><hr>
-<p>Next, we look at a set of <bmark>control flow gates</bmark>. These gates provide means for controlling flows of information. The first of such gate is the <bmark>multiplexer</bmark> which is a three-input gate. Two input bits, named <code>a</code> and <code>b</code>, are interpreted as <strong>data bits</strong>, and a third bit, named <code>sel</code>, is interpreted as a <strong>selection bit</strong>. The multiplexer uses <code>sel</code> to select and output the value of either <code>a</code> or <code>b</code>.</p>
+<p>Next, we look at a set of <pmark>control flow gates</pmark>. These gates provide means for controlling flows of information. The first of such gate is the <bmark>multiplexer</bmark> which is a three-input gate. Two input bits, named <code>a</code> and <code>b</code>, are interpreted as <strong>data bits</strong>, and a third bit, named <code>sel</code>, is interpreted as a <strong>selection bit</strong>. The multiplexer uses <code>sel</code> to select and output the value of either <code>a</code> or <code>b</code>.</p>
 <p><img src="/assets/nand-images/multiplexer_gate.png" alt=""></p>
 <p>Truth table:</p>
 <table>
