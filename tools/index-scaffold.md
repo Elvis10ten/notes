@@ -24,13 +24,13 @@
 
 <!-- placeholder_404_error -->
 
-## <span id="essays">My Essays</span>
+## ✒️ <span id="essays">Essays</span>
 <!-- placeholder_essays_index -->
 
-## <span id="books">Compendium (Books)</span>
+## 📚 <span id="books">Compendium (Books)</span>
 <div class="book-gallery">
 <!-- placeholder_books_index -->
 </div>
 
-## <span id="papers">Compendium (Papers)</span>
+## 📜 <span id="papers">Compendium (Papers)</span>
 <!-- placeholder_papers_index -->

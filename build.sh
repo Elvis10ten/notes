@@ -1,1 +1,1 @@
-cd tools && npm run buetild
+cd tools && npm run build
