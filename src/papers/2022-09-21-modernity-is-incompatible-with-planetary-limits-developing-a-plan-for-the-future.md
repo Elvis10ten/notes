@@ -1,4 +1,4 @@
-#Modernity is incompatible with planetary limits: Developing a PLAN for the future — Paper Summary
+# Modernity is incompatible with planetary limits: Developing a PLAN for the future — Paper Summary
 
 
 Today's summary is about a [paper](https://www.sciencedirect.com/science/article/pii/S2214629621003327) written in 2021 by T.W. Murphy Jr., D.J. Murphy, T.F. Love, M.L.A. LeHew, & B.J. McCall .

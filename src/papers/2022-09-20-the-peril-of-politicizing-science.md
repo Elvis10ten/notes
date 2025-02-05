@@ -1,4 +1,4 @@
-#The Peril of Politicizing Science — Essay Summary
+# The Peril of Politicizing Science — Essay Summary
 
 
 Today's summary is about an [essay](http://iopenshell.usc.edu/pubs/pdf/jpcl_opinion_2021.pdf) written in 2021 by Anna I. Krylov.

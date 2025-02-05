@@ -1,4 +1,4 @@
-#End-to-end arguments in system design — Paper Summary
+# End-to-end arguments in system design — Paper Summary
 
 
 Authors: J.H. Saltzer, D.P. Reed and D.D. Clark

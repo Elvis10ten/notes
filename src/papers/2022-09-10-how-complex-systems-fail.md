@@ -1,4 +1,4 @@
-#How Complex Systems Fail — Paper Summary
+# How Complex Systems Fail — Paper Summary
 
 
 Today's summary is about a  [paper](https://www.adaptivecapacitylabs.com/HowComplexSystemsFail.pdf) written by Richard I. Cook (MD) in 2002.

@@ -1,4 +1,4 @@
-#How the Hidden Hand Shapes the Market for Software Reliability — Paper Summary
+# How the Hidden Hand Shapes the Market for Software Reliability — Paper Summary
 
 
 Authors: Ken Birman, Coimbatore Chandersekaran, Danny Dolev, Robbert van Renesse

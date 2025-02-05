@@ -1,4 +1,4 @@
-#Thirty Years Later: Lessons from the Multics Security Evaluation — Paper Summary
+# Thirty Years Later: Lessons from the Multics Security Evaluation — Paper Summary
 
 
 Authors: Paul Karger & Roger Schell

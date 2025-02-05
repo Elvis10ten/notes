@@ -1,4 +1,4 @@
-#Why Events Are A Bad Idea (for high-concurrency servers) — Paper Summary
+# Why Events Are A Bad Idea (for high-concurrency servers) — Paper Summary
 
 
 Today's summary is about a  [paper](https://www.usenix.org/legacy/events/hotos03/tech/full_papers/vonbehren/vonbehren.pdf) written in 2003 by Rob von Behren, Jeremy Condit and Eric Brewer.

@@ -1,4 +1,4 @@
-#Invent More, Toil Less — Paper Summary
+# Invent More, Toil Less — Paper Summary
 
 
 Today's summary is about a  [paper](https://www.usenix.org/system/files/login/articles/login_fall16_08_beyer.pdf)  written by four Google employees in 2016.

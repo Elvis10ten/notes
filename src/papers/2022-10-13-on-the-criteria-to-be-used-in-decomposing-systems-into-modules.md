@@ -1,4 +1,4 @@
-#On the Criteria To Be Used in Decomposing Systems into Modules — Paper Summary
+# On the Criteria To Be Used in Decomposing Systems into Modules — Paper Summary
 
 
 Author: D.L. Parnas

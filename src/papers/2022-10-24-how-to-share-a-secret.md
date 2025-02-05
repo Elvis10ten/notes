@@ -1,4 +1,4 @@
-#How to Share a Secret — Paper Summary
+# How to Share a Secret — Paper Summary
 
 
 Author: Adi Shamir

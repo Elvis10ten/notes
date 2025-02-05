@@ -42,7 +42,7 @@ function getH1Text(markdownText) {
 
 async function getListString(dir, isImage) {
     return (await getMarkdownFileNames(dir)).map(async fileName => {
-        console.log(`Processing '${fileName}' essay...`);
+        console.log(`Processing '${dir}/${fileName}' essay...`);
 
         const path = resolve(dir, fileName);
         const markdownText = await readFileText(path);

@@ -1,4 +1,4 @@
-#The underappreciated role of muscle in health and disease — Paper Summary
+# The underappreciated role of muscle in health and disease — Paper Summary
 
 
 Today's summary is about a [paper](https://pubmed.ncbi.nlm.nih.gov/16960159/) written by Robert R Wolfe in 2006.

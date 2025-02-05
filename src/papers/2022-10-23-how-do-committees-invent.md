@@ -1,4 +1,4 @@
-#How do committees invent? — Paper Summary
+# How do committees invent? — Paper Summary
 
 
 Author: Melvin Conway

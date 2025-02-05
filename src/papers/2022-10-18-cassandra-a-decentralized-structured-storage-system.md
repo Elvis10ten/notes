@@ -1,4 +1,4 @@
-#Cassandra - A Decentralized Structured Storage System — Paper Summary
+# Cassandra - A Decentralized Structured Storage System — Paper Summary
 
 
 Authors: Avinash Lakshman &

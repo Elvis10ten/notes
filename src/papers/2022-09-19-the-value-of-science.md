@@ -1,4 +1,4 @@
-#The Value of Science — Paper Summary
+# The Value of Science — Paper Summary
 
 
 Today's summary is about a  [paper](https://calteches.library.caltech.edu/1575/1/Science.pdf)  written by RP Feynman in 1955.

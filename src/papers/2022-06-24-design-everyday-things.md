@@ -1,4 +1,4 @@
-#The Design of Everyday Things — Book Summary & Notes
+# The Design of Everyday Things — Book Summary & Notes
 
 
 This is my summary and notes from [The Design of Everyday Things](https://amzn.to/3AYrJdG) by Don Norman. Please use the link if you decide to buy the book after reading this as it contains my affiliate code. Thanks.

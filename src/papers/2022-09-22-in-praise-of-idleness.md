@@ -1,4 +1,4 @@
-#In Praise of Idleness — Paper Summary
+# In Praise of Idleness — Paper Summary
 
 
 Today's summary is about an  [essay](https://files.libcom.org/files/Bertrand%20Russell%20-%20In%20Praise%20of%20Idleness.pdf) written by Bertrand Russell in 1932.

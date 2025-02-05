@@ -1,4 +1,4 @@
-#Computers Then and Now — Paper Summary
+# Computers Then and Now — Paper Summary
 
 
 Author: Maurice Wilkes

@@ -1,4 +1,4 @@
-#The importance of stupidity in scientific research — Paper Summary
+# The importance of stupidity in scientific research — Paper Summary
 
 
 Author: Martin A. Schwartz

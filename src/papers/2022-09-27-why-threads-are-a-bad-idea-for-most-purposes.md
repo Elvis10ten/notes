@@ -1,4 +1,4 @@
-#Why Threads Are A Bad Idea (for most purposes) — Paper Summary
+# Why Threads Are A Bad Idea (for most purposes) — Paper Summary
 
 
 Today's summary is about a  [paper](https://web.stanford.edu/~ouster/cgi-bin/papers/threads.pdf) written by John Ousterhout in 1995. This is technically not a paper, but a presentation given by the author at a Usenix conference.

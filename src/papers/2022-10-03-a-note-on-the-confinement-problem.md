@@ -1,4 +1,4 @@
-#A Note on the Confinement Problem — Paper Summary
+# A Note on the Confinement Problem — Paper Summary
 
 
 Authors: Butler W. Lampson

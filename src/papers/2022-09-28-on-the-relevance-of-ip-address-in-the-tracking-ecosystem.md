@@ -1,4 +1,4 @@
-#On the Relevance of IP Address in the Tracking Ecosystem — Paper Summary
+# On the Relevance of IP Address in the Tracking Ecosystem — Paper Summary
 
 
 Today's summary is about a  [paper](https://hal.inria.fr/hal-02435622/document) written in 2020.

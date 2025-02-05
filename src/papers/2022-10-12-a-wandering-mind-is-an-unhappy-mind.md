@@ -1,4 +1,4 @@
-#A Wandering Mind Is an Unhappy Mind — Paper Summary
+# A Wandering Mind Is an Unhappy Mind — Paper Summary
 
 
 Authors: Matthew A. Killingsworth and Daniel T. Gilbert

@@ -1,4 +1,4 @@
-#On Being Smart — Paper Summary
+# On Being Smart — Paper Summary
 
 
 Today's summary is about a  [paper](https://kam.mff.cuni.cz/~matousek/mustafa-onbeingsmart.pdf)  written by Nabil H. Mustafa.

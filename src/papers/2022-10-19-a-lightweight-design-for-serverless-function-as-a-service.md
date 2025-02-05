@@ -1,4 +1,4 @@
-#A lightweight design for serverless Function-as-a- Service — Paper Summary
+# A lightweight design for serverless Function-as-a- Service — Paper Summary
 
 
 Authors: Ju Long, Hung-Ying Tai, Shen-Ta Hsieh, and Michael Juntao Yuan.

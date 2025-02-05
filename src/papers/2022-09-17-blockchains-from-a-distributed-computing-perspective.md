@@ -1,4 +1,4 @@
-#Blockchains from a Distributed Computing Perspective — Paper Summary
+# Blockchains from a Distributed Computing Perspective — Paper Summary
 
 
 Today's summary is about a draft  [paper](https://cs.brown.edu/courses/csci2952-a/papers/perspective.pdf) written by Maurice Herlihy in 2019.
