@@ -12,9 +12,9 @@ import {writeFile} from "fs/promises";
 import {relative, resolve, sep} from "path";
 
 console.log('Building indices...');
-const essayIndices  = await getListString(srcEssayDir, false);
-const papersIndices = await getListString(srcPapersDir, false);
-const bookIndices = await getListString(srcBooksDir, true);
+const essayIndices  = await createIndices(srcEssayDir, false);
+const papersIndices = await createIndices(srcPapersDir, false);
+const bookIndices = await createIndices(srcBooksDir, true);
 
 console.log('Updating index.md file...');
 let scaffoldMarkdown = await readFileText(getToolsPath('index-scaffold.md'));
@@ -40,10 +40,11 @@ function getH1Text(markdownText) {
     return markdownText.match(/^# (.*)$/m)[1]; // Get the first '# ***' line in the markdown file (without the '#').
 }
 
-async function getListString(dir, isImage) {
-    return (await getMarkdownFileNames(dir)).map(async fileName => {
-        console.log(`Processing '${dir}/${fileName}' essay...`);
+async function createIndices(dir, isImage) {
+    const fileNames = await getMarkdownFileNames(dir);
+    const indices = [];
 
+    for (const fileName of fileNames) {
         const path = resolve(dir, fileName);
         const markdownText = await readFileText(path);
         const title = getH1Text(markdownText);
@@ -51,9 +52,11 @@ async function getListString(dir, isImage) {
 
         if (isImage) {
             const bannerPath = getBannerRelativePath(fileName);
-            return `<a href="${linkPath}"><img src="${bannerPath}" alt="${title}" loading="lazy" /></a>`;
+            indices.push(`<a href="${linkPath}"><img src="${bannerPath}" alt="${title}" loading="lazy" /></a>`);
         } else {
-            return `- [${title}](${linkPath})`;
+            indices.push(`- [${title}](${linkPath})`);
         }
-    }).join('\n');
+    }
+
+    return indices.join('\n');
 }
