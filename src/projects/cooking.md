@@ -1,4 +1,4 @@
-# From my stove to the screen 👨‍🍳
+# 🧑🏽‍🍳 From my stove to the screen
 
 <div class="food-grid">
 

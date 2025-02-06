@@ -34,7 +34,7 @@ await writeFile(resolve(srcDir, '404.md'), scaffoldMarkdown);
 
 console.log('Index files updated!');
 
-function getLinkPath(path) {
+function getLinkRelativePath(path) {
     return sep + relative(projectDirName, path);
 }
 
@@ -50,7 +50,7 @@ async function createIndices(dir, isImage) {
         const path = resolve(dir, fileName);
         const markdownText = await readFileText(path);
         const title = getH1Text(markdownText);
-        const linkPath = getLinkPath(path);
+        const linkPath = getLinkRelativePath(path);
 
         if (isImage) {
             const bannerPath = getBannerRelativePath(fileName);

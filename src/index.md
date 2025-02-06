@@ -32,30 +32,30 @@
 ## <span id="essays">My projects</span>
 - [Rebuilding Apple Seamless Headphone Switch Feature with Kotlin MultiPlatform](/src/projects/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform.md)
 - [Building a Distributed Android Remote Testing Platform - An Attempt to Make Real GUI Testing Affordable & Comprehensive](/src/projects/2020-11-23-building-distributed-android-remote-testing-platform.md)
-- [From my stove to the screen 👨‍🍳](/src/projects/cooking.md)
+- [🧑🏽‍🍳 From my stove to the screen](/src/projects/cooking.md)
 
 ## <span id="books">Books digest</span>
 <div class="book-gallery">
-<a href="/src/books/2022-a-philosophy-software-design.md"><img src="assets/banners/2022-a-philosophy-software-design.jpg" alt="A Philosophy of Software Design" loading="lazy" /></a>
-<a href="/src/books/2022-design-of-everyday-things.md"><img src="assets/banners/2022-design-of-everyday-things.jpg" alt="The Design of Everyday Things" loading="lazy" /></a>
-<a href="/src/books/2023-coaching-habit.md"><img src="assets/banners/2023-coaching-habit.jpg" alt="The Coaching Habit: Say Less, Ask More & Change the Way You Lead Forever" loading="lazy" /></a>
-<a href="/src/books/2023-critical-thinking.md"><img src="assets/banners/2023-critical-thinking.jpg" alt="Critical Thinking (The MIT Press Essential Knowledge series)" loading="lazy" /></a>
-<a href="/src/books/2023-fooled-by-randomness.md"><img src="assets/banners/2023-fooled-by-randomness.jpg" alt="Fooled by Randomness: The Hidden Role of Chance in Life and in the Markets" loading="lazy" /></a>
-<a href="/src/books/2023-high-output-management.md"><img src="assets/banners/2023-high-output-management.jpg" alt="High output management" loading="lazy" /></a>
-<a href="/src/books/2023-how-to-lie-with-statistics.md"><img src="assets/banners/2023-how-to-lie-with-statistics.jpg" alt="How to lie with statistics — Book summary" loading="lazy" /></a>
-<a href="/src/books/2023-sapiens.md"><img src="assets/banners/2023-sapiens.jpg" alt="Sapiens: A Brief History of Humankind" loading="lazy" /></a>
-<a href="/src/books/2023-so-good-they-cant-ignore-you.md"><img src="assets/banners/2023-so-good-they-cant-ignore-you.jpg" alt="So Good They Can't Ignore You: Why Skills Trump Passion in the Quest for Work You Love" loading="lazy" /></a>
-<a href="/src/books/2025-1a-intro-algorithm.md"><img src="assets/banners/2025-1a-intro-algorithm.jpg" alt="[WIP] Introduction to Algorithms" loading="lazy" /></a>
-<a href="/src/books/2025-1a-nand-to-tetris.md"><img src="assets/banners/2025-1a-nand-to-tetris.jpg" alt="[WIP] The Elements of Computing Systems – Building a Modern Computer from First Principles" loading="lazy" /></a>
-<a href="/src/books/2025-1b-intro-linear-algebra.md"><img src="assets/banners/2025-1b-intro-linear-algebra.jpg" alt="[WIP] A concise introduction to linear algebra by Geza Schay" loading="lazy" /></a>
-<a href="/src/books/2025-1c-designing-data-intensive-applications.md"><img src="assets/banners/2025-1c-designing-data-intensive-applications.jpg" alt="[WIP] Designing Data-Intensive Applications" loading="lazy" /></a>
-<a href="/src/books/2025-2-algorithm-design-manual.md"><img src="assets/banners/2025-2-algorithm-design-manual.jpg" alt="[WIP] The Algorithm Design Manual" loading="lazy" /></a>
-<a href="/src/books/2025-3-computer-networking-top-down.md"><img src="assets/banners/2025-3-computer-networking-top-down.jpg" alt="[WIP] Computer Networking - A Top-Down Approach" loading="lazy" /></a>
-<a href="/src/books/2025-4-mathematics-for-computer-science.md"><img src="assets/banners/2025-4-mathematics-for-computer-science.jpg" alt="[WIP] Mathematics for Computer Science" loading="lazy" /></a>
-<a href="/src/books/2025-5-os-three-easy-pieces.md"><img src="assets/banners/2025-5-os-three-easy-pieces.jpg" alt="[WIP] Operating Systems: Three Easy Pieces" loading="lazy" /></a>
-<a href="/src/books/2025-6-sicp.md"><img src="assets/banners/2025-6-sicp.jpg" alt="[WIP] Structure and Interpretation of Computer Programs" loading="lazy" /></a>
-<a href="/src/books/2025-7-crafting-interpreters.md"><img src="assets/banners/2025-7-crafting-interpreters.jpg" alt="[WIP] Crafting interpreters" loading="lazy" /></a>
-<a href="/src/books/2025-8-computer-systems-programmers-perspective.md"><img src="assets/banners/2025-8-computer-systems-programmers-perspective.jpg" alt="[WIP] Computer systems: A programmer’s perspective" loading="lazy" /></a>
+<a href="/src/books/2022-a-philosophy-software-design.md"><img src="/assets/banners/2022-a-philosophy-software-design.jpg" alt="A Philosophy of Software Design" loading="lazy" /></a>
+<a href="/src/books/2022-design-of-everyday-things.md"><img src="/assets/banners/2022-design-of-everyday-things.jpg" alt="The Design of Everyday Things" loading="lazy" /></a>
+<a href="/src/books/2023-coaching-habit.md"><img src="/assets/banners/2023-coaching-habit.jpg" alt="The Coaching Habit: Say Less, Ask More & Change the Way You Lead Forever" loading="lazy" /></a>
+<a href="/src/books/2023-critical-thinking.md"><img src="/assets/banners/2023-critical-thinking.jpg" alt="Critical Thinking (The MIT Press Essential Knowledge series)" loading="lazy" /></a>
+<a href="/src/books/2023-fooled-by-randomness.md"><img src="/assets/banners/2023-fooled-by-randomness.jpg" alt="Fooled by Randomness: The Hidden Role of Chance in Life and in the Markets" loading="lazy" /></a>
+<a href="/src/books/2023-high-output-management.md"><img src="/assets/banners/2023-high-output-management.jpg" alt="High output management" loading="lazy" /></a>
+<a href="/src/books/2023-how-to-lie-with-statistics.md"><img src="/assets/banners/2023-how-to-lie-with-statistics.jpg" alt="How to lie with statistics — Book summary" loading="lazy" /></a>
+<a href="/src/books/2023-sapiens.md"><img src="/assets/banners/2023-sapiens.jpg" alt="Sapiens: A Brief History of Humankind" loading="lazy" /></a>
+<a href="/src/books/2023-so-good-they-cant-ignore-you.md"><img src="/assets/banners/2023-so-good-they-cant-ignore-you.jpg" alt="So Good They Can't Ignore You: Why Skills Trump Passion in the Quest for Work You Love" loading="lazy" /></a>
+<a href="/src/books/2025-1a-intro-algorithm.md"><img src="/assets/banners/2025-1a-intro-algorithm.jpg" alt="[WIP] Introduction to Algorithms" loading="lazy" /></a>
+<a href="/src/books/2025-1a-nand-to-tetris.md"><img src="/assets/banners/2025-1a-nand-to-tetris.jpg" alt="[WIP] The Elements of Computing Systems – Building a Modern Computer from First Principles" loading="lazy" /></a>
+<a href="/src/books/2025-1b-intro-linear-algebra.md"><img src="/assets/banners/2025-1b-intro-linear-algebra.jpg" alt="[WIP] A concise introduction to linear algebra by Geza Schay" loading="lazy" /></a>
+<a href="/src/books/2025-1c-designing-data-intensive-applications.md"><img src="/assets/banners/2025-1c-designing-data-intensive-applications.jpg" alt="[WIP] Designing Data-Intensive Applications" loading="lazy" /></a>
+<a href="/src/books/2025-2-algorithm-design-manual.md"><img src="/assets/banners/2025-2-algorithm-design-manual.jpg" alt="[WIP] The Algorithm Design Manual" loading="lazy" /></a>
+<a href="/src/books/2025-3-computer-networking-top-down.md"><img src="/assets/banners/2025-3-computer-networking-top-down.jpg" alt="[WIP] Computer Networking - A Top-Down Approach" loading="lazy" /></a>
+<a href="/src/books/2025-4-mathematics-for-computer-science.md"><img src="/assets/banners/2025-4-mathematics-for-computer-science.jpg" alt="[WIP] Mathematics for Computer Science" loading="lazy" /></a>
+<a href="/src/books/2025-5-os-three-easy-pieces.md"><img src="/assets/banners/2025-5-os-three-easy-pieces.jpg" alt="[WIP] Operating Systems: Three Easy Pieces" loading="lazy" /></a>
+<a href="/src/books/2025-6-sicp.md"><img src="/assets/banners/2025-6-sicp.jpg" alt="[WIP] Structure and Interpretation of Computer Programs" loading="lazy" /></a>
+<a href="/src/books/2025-7-crafting-interpreters.md"><img src="/assets/banners/2025-7-crafting-interpreters.jpg" alt="[WIP] Crafting interpreters" loading="lazy" /></a>
+<a href="/src/books/2025-8-computer-systems-programmers-perspective.md"><img src="/assets/banners/2025-8-computer-systems-programmers-perspective.jpg" alt="[WIP] Computer systems: A programmer’s perspective" loading="lazy" /></a>
 </div>
 
 ## <span id="papers">Papers digest</span>

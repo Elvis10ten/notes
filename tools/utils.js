@@ -1,5 +1,5 @@
 import {readdir, readFile, mkdir} from 'fs/promises';
-import {dirname, relative, resolve, basename} from 'path';
+import {dirname, relative, resolve, basename, sep} from 'path';
 import {fileURLToPath} from 'url';
 
 // The ES module version of Node.js does not have the __dirname and __filename variables. So, we need to define them manually.
@@ -43,5 +43,5 @@ export async function readFileText(filePath) {
 }
 
 export function getBannerRelativePath(markdownFileName) {
-    return relative(destDir, resolve(destBannersDir, markdownFileName.replace('.md', '.jpg')));
+    return sep + relative(destDir, resolve(destBannersDir, markdownFileName.replace('.md', '.jpg')));
 }
