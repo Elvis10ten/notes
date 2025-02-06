@@ -2,6 +2,8 @@
 
 <div class="food-grid">
 
+<img class="food-grid-item" src="/docs/assets/cooking/image_22.jpg" loading="lazy" alt="" />
+
 <img class="food-grid-item" src="/docs/assets/cooking/image_1.jpg" loading="lazy" alt="" />
 
 <img class="food-grid-item" src="/docs/assets/cooking/image_2.jpg" loading="lazy" alt="" />
