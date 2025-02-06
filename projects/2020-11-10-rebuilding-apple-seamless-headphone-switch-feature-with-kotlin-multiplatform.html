@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>Rebuilding Apple Seamless Headphone Switch Feature with Kotlin MultiPlatform</title>
+        <meta property="og:image" content="assets/banners/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>Rebuilding Apple Seamless Headphone Switch Feature with Kotlin MultiPlatform</h1>
+<p>The inspiration for this project came from this tweet.</p>
+<blockquote class="twitter-tweet" data-theme="dark"><p lang="en" dir="ltr">AirPods will now automatically switch between devices by recognizing if you put down your phone and pick up your iPad. Or if you’re on your iPad and you get a phone call, it’ll switch back to the phone. That’s the type of experience only a complete ecosystem can create.</p>&mdash; Marques Brownlee (@MKBHD) <a href="https://twitter.com/MKBHD/status/1275122690618261511?ref_src=twsrc%5Etfw">June 22, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>A core tenet of the Apple camp is that their complete ecosystem makes every product &quot;just work&quot;. This is a truism: Apple isn&#39;t plagued with fragmentation issues like other platforms. But replicating these functionalities on other platforms isn&#39;t rocket science.</p>
+<blockquote>
+<p>Fun fact: There are 1,300 brands with over 24,000 distinct Android devices (<a href="https://www.android.com/everyone/">source</a>).
+<img src="/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/android_device_fragmentation.png" alt="Android device fragmentation"></p>
+</blockquote>
+<h2>Terminology</h2>
+<ol>
+<li><strong>Peripheral</strong>: Refers to Bluetooth audio devices, keyboards, mice. Eg: headphones, headsets, earbuds, etc.</li>
+<li><strong>Host</strong>: Refers to a machine capable of connecting to a peripheral. Eg: phones, tablets, laptops, etc.</li>
+</ol>
+<p><img src="/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/hosts_and_periherals.svg" alt="Hosts & Peripherals"></p>
+<h2>Overview</h2>
+<p><strong>PCAS (Peripheral Connection Augmentation System)</strong> artificially augments a Bluetooth peripheral maximum number of concurrent connections. Based on user-initiated events and hardware configurations PCAS automatically connects/disconnects a profile on a peripheral. PCAS can also multiplex to a single sink: For example, on Android, this brings the theoretical maximum audio connections to 30 (<a href="https://groups.google.com/g/android-platform/c/_tmA8DRg8q4">the maximum allowed AudioTrack instances</a>).</p>
+<p>A single user with multiple hosts no longer has to manually connect/disconnect each peripheral. PCAS does this automatically. This works even on cheap peripherals that don&#39;t support multiple concurrent connections natively. Example scenarios:</p>
+<ol>
+<li>When a call comes in on your phone while watching a movie on your tablet. The movie is automatically paused and your phone is connected.</li>
+<li>When playing music from multiple devices, the output could be muxed to the same audio sink in realtime.</li>
+<li>Putting your laptop to sleep while powering on your desktop will connect your keyboard/mouse to your desktop.</li>
+</ol>
+<p>...</p>
+<p><img src="/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/multiplatform_modules.svg" alt="Multiplatform modules"></p>
+<h3>Building</h3>
+<ol>
+<li><code>pcas-libs</code>: This is a KMP Gradle project. The clients use the artifacts generated from this project. Run the <code>publish_local.sh</code> script to publish the library artifacts to your maven local repository.</li>
+<li><code>pcas-clients/pcas-android-client</code>: This is an Android Gradle project.</li>
+</ol>
+<p>You can find prebuilt binaries in the <a href="https://github.com/Elvis10ten/pcas/releases">repo releases section</a>.</p>
+<h3>Design Goals</h3>
+<ol>
+<li><strong>Multi-platform</strong> (Windows, Mac, iOS, Android).</li>
+<li>Supports <strong>most</strong> Bluetooth peripheral (including and especially low-end peripherals).</li>
+<li>Average switching latency should be <strong>&lt; 1s</strong>.</li>
+<li>Can support at least <strong>10 devices</strong> without any service degradation.</li>
+<li><strong>Secure zero-config offline P2P</strong> communication.</li>
+<li>Negligible <strong>power consumption</strong>.</li>
+</ol>
+<h3>Product</h3>
+<p>PCAS is designed to be simple and &quot;just work&quot;. The only initial setup required is selecting a peripheral for each service of interest.</p>
+<p><img src="/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/screen_home_and_select_peripheral.png" alt="Home and select peripheral screenshots"></p>
+<p>All hosts <strong>must</strong> be on the same LAN. E2E encryption is provided but optional (disabled by default). To enable E2E encryption, a key needs to be created and shared with the relevant hosts.</p>
+<p><img src="/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/screen_encryption_setup_and_code_share.png" alt="Encyrption setup and codeshare screenshots"></p>
+<h4>Assumptions</h4>
+<ol>
+<li>Users have at most one peripheral per service. This assumption simplifies the UX and technical design.</li>
+</ol>
+<h4>Demo</h4>
+<p><a href="https://www.youtube.com/watch?v=WMmtQLNYF-g/"><img src="/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/demo_preview_with_play.png" alt="Watch demo"></a></p>
+<h2>Architecture</h2>
+<p>Building PCAS for all platforms is hard, but the underlying concept is quite simple:</p>
+<ol>
+<li>Each host observes local state changes.</li>
+<li>When a local change occurs, a host broadcasts it to a closed network of peers.</li>
+<li>Each host listens for broadcasts from peers.</li>
+<li>Each host writes all state information to its local ledger.</li>
+<li>Each host independently makes a decision to connect/disconnect/stream based on the content of its ledger.</li>
+</ol>
+<p><img src="/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/architecture_highlevel.svg" alt="High level architecture"></p>
+<h3>Unreliable Zero-Config Transport</h3>
+<p>This base layer provides a framework for fast, best-effort, <a href="https://en.wikipedia.org/wiki/Zero-configuration_networking">zero-configuration</a>, &amp; E2E encrypted communication among devices within proximity.</p>
+<p>This allows a host to be able to efficiently &amp; securely send and receive messages from other nearby devices without any upfront configuration.</p>
+<p>The &quot;unreliable&quot; prefix is misleading, just like when people say UDP is unreliable. This layer is just as reliable as the network stack below it; No additional reliability guarantees are provided.</p>
+<p>The transport data unit is a <code>parcel</code>. Parcels are just opaque byte buffers.</p>
+<p>This layer is made of three core components:</p>
+<h4>i. MulticastChannel</h4>
+<p>This channel uses <a href="https://en.wikipedia.org/wiki/IP_multicast">IP multicast</a> to efficiently deliver parcels to multiple devices.</p>
+<p><img src="/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/multicast.svg" alt="./PCAS1.svg"></p>
+<pre><code class="hljs language-kotlin:title=MulticastChannel.kt">internal interface MulticastChannel {
+
+    @Throws(Exception::class)
+    fun init(receiver: MessageReceiver)
+
+    @Throws(Exception::class)
+    fun send(parcel: ByteArray, size: Int)
+
+    fun close()
+}
+</code></pre><p>All hosts can send a parcel to the PCAS multicast group and can join the group to receive parcels. The local IP addresses of discrete hosts are not required. The multicast configs can be found in the <code>TransportConfig</code> class:</p>
+<pre><code class="hljs language-kotlin:title=TransportConfig.kt">internal object TransportConfig {
+
+    // Max possible TTL value: Parcels could potentially leak to the internet.
+    const val MULTICAST_TTL = 255
+    const val MULTICAST_PORT = 49137
+    val MULTICAST_ADDRESS = Address.Ipv4(&quot;225.139.089.176&quot;)
+
+    const val OFFSET_ZERO = 0
+
+    const val MAX_PARCEL_SIZE_BYTES = 24 * 1024 // 24KB
+    const val PARCEL_POOL_CAPACITY = 24
+}
+</code></pre><h4>ii. UnicastChannel</h4>
+<p>This channel uses <a href="https://en.wikipedia.org/wiki/Unicast">IP unicast</a> to offer a high-bandwidth point-to-point communication. This is used for data streaming as multicast has a lower data transfer rate.</p>
+<p><img src="/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/unicast.svg" alt="./PCAS1.svg"></p>
+<pre><code class="hljs language-kotlin:title=UnicastChannel.kt">internal interface UnicastChannel {
+
+    @Throws(Exception::class)
+    fun init(receiver: MessageReceiver)
+
+    @Throws(Exception::class)
+    fun send(recipient: HostInfo, parcel: ByteArray, size: Int)
+
+    @Throws(Exception::class)
+    fun getPort(): Port
+
+    fun close()
+}
+</code></pre><h4>iii. Parceler</h4>
+<p>This component adds E2E encryption to the two channels above. Encryption is optional and is only activated when an encryption key is generated or shared.</p>
+<p>Data is encrypted with AES in GCM mode with no padding. A random initialization vector is used once per message and prepended to the head of a parcel. I won&#39;t go into details here as there are lots of good material on AES encryption on the internet: <a href="https://levelup.gitconnected.com/doing-aes-gcm-in-android-adventures-in-the-field-72617401269d">like this one</a>.</p>
+<p><img src="/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/transport_data_flow.svg" alt="Transport data flow"></p>
+<p>An interface is created for the 3 components above in the common module which is implemented natively on each platform.</p>
+<h3>Immutable Distributed Ledger</h3>
+<p>This layer is broadly split into two:</p>
+<h4>i. Storage</h4>
+<p>A ledger is just a simple in-memory local database made up of blocks. Blocks represent the current state of the active hosts in a network. Each block is uniquely identified by a <code>4-tuple (service, profile, owner, peripheral)</code>.</p>
+<p><img src="/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/example_ledger.svg" alt="Example local ledger"></p>
+<pre><code class="hljs language-kotlin:title=Ledger.kt">data class Ledger(
+    val self: HostInfo,
+    val blocks: Set&lt;Block&gt; = emptySet()
+)
+</code></pre><pre><code class="hljs language-kotlin:title=Block.kt">data class Block(
+    val service: Service,
+    val profile: Service.Profile,
+    val peripheral: Peripheral,
+    val priority: Int,
+    val timestamp: Long,
+    val bondSteadyState: PeripheralBond.State,
+    val owner: HostInfo,
+    val canStreamData: Boolean,
+    val canHandleDataStream: Boolean
+)
+</code></pre><p>&quot;immutable&quot; isn&#39;t technically correct. Blocks can be overwritten ONLY by their <strong>owner</strong>. Any host can prune their ledgers to remove blocks from inactive hosts.</p>
+<h4>ii. Network Protocol</h4>
+<p><img src="/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/network.jpeg" alt="Host Network">
+A resilient multicast protocol is built on top of the transport layer. There are three types of messages:</p>
+<ol>
+<li><strong>Genesis</strong>: The first message a host sends, requesting other hosts to send their current blocks.</li>
+<li><strong>Update</strong>: This is sent each time the blocks on a host changes.</li>
+<li><strong>Heartbeat</strong>: This is periodically sent. After multiple missed heartbeats, a host is deemed dead by its peers and all its block could be independently deleted on each ledger.</li>
+</ol>
+<p>Each host maintains its local ledger. The network protocol guarantees that eventually, all ledgers will be consistent.</p>
+<h5>Multicast Reliability</h5>
+<p>Currently, only <strong>Update</strong> messages are classified as essential.</p>
+<p><strong>Heartbeat</strong> messages are used as a form of <a href="https://en.wikipedia.org/wiki/Acknowledgement_(data_networks)">NACK</a>. A host detects synchronization issues from heartbeats and resends its current blocks.</p>
+<p>While heartbeats are effective, the interval is too long to be relied on primarily for a highly interactive system like PCAS.</p>
+<p>Reliable multicasting is an interesting problem. I explored two strategies:</p>
+<h6>a. Using redundancy</h6>
+<p>Blindly resend essential messages <code>x</code> times with a delay of <code>y + random jitter</code> on each attempt.</p>
+<p>Let&#39;s consider a simple model. If the probability of successfully delivering a message is fixed at 0.50. Assuming each attempt is independent, there is a 0.97 probability that at least one message gets delivered in 5 attempts.</p>
+<blockquote>
+<p><strong>Napkin math</strong></p>
+<p>Let b = 1 on success; 0 on failure</p>
+<p>Pr(b = 1) = 0.50</p>
+<p>Pr(b = 0) = 1 - Pr(b = 1) = 0.50</p>
+<p>(b is a Bernoulli random variable)</p>
+<hr>
+<p>n = 5</p>
+<p>z = n tries of b</p>
+<p>(z is a Binomial random variable)</p>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>r</mi><mo stretchy="false">(</mo><mn>1</mn><mo>≤</mo><mi>z</mi><mo>≤</mo><mi>n</mi><mo stretchy="false">)</mo><mo>=</mo><mstyle scriptlevel="0" displaystyle="true"><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mo fence="true">(</mo><mstyle displaystyle="false" scriptlevel="0"><mfrac linethickness="0px"><mi>n</mi><mi>i</mi></mfrac></mstyle><mo fence="true">)</mo></mrow><mi>P</mi><mi>r</mi><mo stretchy="false">(</mo><mi>b</mi><mo>=</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mi>i</mi></msup><mi>P</mi><mi>r</mi><mo stretchy="false">(</mo><mi>b</mi><mo>=</mo><mn>0</mn><msup><mo stretchy="false">)</mo><mrow><mi>n</mi><mo>−</mo><mi>i</mi></mrow></msup></mstyle></mrow><annotation encoding="application/x-tex">Pr(1 \leq z \leq n) = \displaystyle\sum_{i=1}^n \tbinom{n}{i} Pr(b = 1)^i Pr(b = 0)^{n - i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.9291em;vertical-align:-1.2777em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.6514em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7454em;"><span style="top:-2.355em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span style="top:-3.144em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mopen">(</span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1247em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8747em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mopen">(</span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1247em;vertical-align:-0.25em;"></span><span class="mord">0</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8747em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight">i</span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p>Could also be calculated as 1 - Pr(z = 0)</p>
+</blockquote>
+<p>In practice, delivery probabilities aren&#39;t fixed and attempts are not independent. Despite the shortcoming of this strategy, it has the following benefits:</p>
+<ol>
+<li>It isn&#39;t dependent on the size of the network. Whether there are 2 or 10,000 peers, a host will only send its messages at a rate of <code>c / second</code>.</li>
+<li>Peers that are just entering the network could benefit from these redundant messages.</li>
+</ol>
+<h6>b. Using ACKs</h6>
+<p>Essential messages have a monotonically increasing sequence number. The initial sequence number is <code>0</code>. All hosts are expected to send an <code>Ack</code> message with the sequence number of the essential message. Retries are done with a truncated exponential backoff with jitter.</p>
+<p>This strategy only sends fewer messages (more efficient) than the redundant strategy when the number of peers in a network is less than <code>x</code>. Some issues with this strategy:</p>
+<ol>
+<li>Using <code>ACKs</code> like TCP isn&#39;t scalable and runs the risk of <a href="https://courses.cs.washington.edu/courses/cse561/01sp/lectures/568.multicast2.pdf">ACKs implosion</a>.</li>
+<li>The number of messages sent is dependent on the size of the network. A single rogue peer can cause the network to be spammed with ACKs and messages.</li>
+<li>Figuring out which peer to expect ACKs from is complex.</li>
+</ol>
+<p>I initially went with ACKs but will be using the simple redundant strategy instead.</p>
+<p>The network protocol data unit is a <code>Message</code>. Messages are marshaled to the <code>Protobuf</code> format and passed to the transport layer. The inverse happens when a message is received.</p>
+<h3>Resource Allocation</h3>
+<p>When two or more hosts use the same <code>3-tuple(service, profile, peripheral)</code>, a contention occurs. Even if a host doesn&#39;t actively require a profile, it can still contend with another host for that profile.</p>
+<p>This is the meat or vegetable (for my vegetarian friends) of the system.</p>
+<h4>Bluetooth Profiles</h4>
+<blockquote>
+<p>A Bluetooth profile is a specification regarding an aspect of Bluetooth-based wireless communication between devices. It resides on top of the Bluetooth Core Specification and (optionally) additional protocols - <a href="https://en.wikipedia.org/wiki/List_of_Bluetooth_profiles">source</a></p>
+</blockquote>
+<ol>
+<li><strong>A2DP (Advanced Audio Distribution Profile)</strong>: This is a uni-directional audio profile and provides better audio quality than the headset profiles.
+<a href="https://www.slideshare.net/Thenmurugeshwari/bluetooth-profile"><img src="/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/a2dp_profile.jpg" alt="A2DP profile"></a></li>
+<li><strong>Headset (Headset Profile/Hands-Free Profile)</strong>: These are bi-directional audio profiles usually used for phone calls.
+<a href="https://www.slideshare.net/Thenmurugeshwari/bluetooth-profile"><img src="/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/hfp_profile.jpg" alt="A2DP profile"></a></li>
+<li><strong>HID (Human Interface Device Profile)</strong>: Provides support for devices such as mice, keyboards, etc. PlayStation 3 controllers and Wii remotes also use Bluetooth HID.</li>
+</ol>
+<blockquote>
+<p>Recap: With A2DP you can only listen but with higher audio quality. With headset profiles, you can talk and listen, but at a lower quality. Next time you are playing a song while a call comes in, observe how the audio quality drops.</p>
+</blockquote>
+<p>Each time a change is made to the ledger, a resolver looks at all the current contentions and resolves them.</p>
+<h4>Type of resolutions</h4>
+<ol>
+<li><strong>Connect</strong>: The host should connect to the profile on the peripheral if disconnected.</li>
+<li><strong>Disconnect</strong>: The host should disconnect from the profile on the peripheral if connected.</li>
+<li><strong>Stream</strong>: The host should start sending all its data to the specified remote host.</li>
+<li><strong>Ambiguous</strong>: No resolution was arrived at. The system should be kept as-is.</li>
+</ol>
+<p>Resolutions are derived using a rank associated with each block.</p>
+<h4>Calculating ranks</h4>
+<pre><code class="hljs language-kotlin:title=Ranking.kt">    val isConnected = bondSteadyState == PeripheralBond.State.CONNECTED
+
+    val hasPriority = priority != NO_PRIORITY
+
+    val maxPossibleConnectionAndInteractiveScore = 4 + 2
+    // Any device with a higher priority should always rank higher.
+    val priorityScore = (maxPossibleConnectionAndInteractiveScore + 1.0).pow(priority)
+
+    private val connectionScore: Int get() {
+        // Connection should contribute more if we can&#x27;t stream
+        val trueValue = if(canStreamData) 2 else 4
+        return if(isConnected) trueValue else 1
+    }
+
+    val interactiveScore = if(owner.isInteractive) 2 else 1
+
+    val timestampScore = log10(timestamp.toDouble())
+
+    val rank = priorityScore + connectionScore + interactiveScore + timestampScore
+</code></pre><p>The rank is an estimate of the current importance of a block. Based on ranks, a contention object is created for each block a host has.</p>
+<pre><code class="hljs language-kotlin:title=Contention.kt">data class Contention(
+    val selfBlock: Block,
+    // This is another block with the same service, peripheral, and profile but a different owner that is deemed the apex based on its rank
+    val peersApexBlock: Block?
+)
+</code></pre><p>The contention object is then used to derive a resolution.</p>
+<pre><code class="hljs language-kotlin:title=Resolution.kt">fun getResolution(contention: Contention): Resolution {
+    return when {
+        // No contenders found yet.
+        contention.peersApexBlock == null -&gt; {
+            Resolution.Connect(contention.selfBlock, contention.selfBlock.rank)
+        }
+
+        // I have a higher rank: So connect to profile
+        contention.selfBlock.rank &gt; contention.peersApexBlock.rank -&gt; {
+            Resolution.Connect(contention.selfBlock, contention.selfBlock.rank)
+        }
+
+        // I have a lower rank: So disconnect from profile - If connected
+        contention.selfBlock.rank &lt; contention.peersApexBlock.rank -&gt; {
+            val rank = contention.peersApexBlock.rank
+            // If possible stream data to the apex host
+            if(contention.shouldStreamToApex()) {
+                Resolution.Stream(contention.selfBlock, rank, contention.peersApexBlock.owner)
+            } else {
+                Resolution.Disconnect(contention.selfBlock, rank)
+            }
+        }
+
+        // Nothing decided: Keep the system as-is.
+        contention.selfBlock.rank == contention.peersApexBlock.rank -&gt; {
+            Resolution.Ambiguous(contention.selfBlock, contention.selfBlock.rank)
+        }
+
+        else -&gt; throw IllegalStateException(&quot;Impossible!&quot;)
+    }
+}
+</code></pre><h3>User Services</h3>
+<p>Currently, only audio services are supported. Provision has been made to easily add other types of services.</p>
+<h4>Audio</h4>
+<p>All services have two key integrants:</p>
+<h5>i. Blocks Emission</h5>
+<p>Blocks are built from host state information. The relevant audio states are the current audio usages and the current peripheral bond state.</p>
+<pre><code class="hljs language-kotlin:title=AudioProperty.kt">data class AudioProperty(val usages: Set&lt;Usage&gt;) {
+
+    enum class Usage(
+        val priority: Int,
+        val profile: PeripheralProfile
+    ) {
+        UNKNOWN(1, PeripheralProfile.A2DP),
+        // Unknown media playback. It could be music, movie soundtracks, etc.
+        MEDIA_UNKNOWN(2, PeripheralProfile.A2DP),
+        // Music playback, eg: Music streaming, local audio playback, etc.
+        MUSIC(2, PeripheralProfile.A2DP),
+        // Speech playback, eg: Podcasts, Audiobooks, etc
+        SPEECH(2, PeripheralProfile.A2DP),
+        // Soundtrack, typically accompanying a movie or TV program.
+        MOVIE(4, PeripheralProfile.A2DP),
+        // Game audio playback
+        GAME(4, PeripheralProfile.A2DP),
+        // Such as VoIP.
+        VOICE_COMMUNICATION(5, PeripheralProfile.HEADSET),
+        // Telephony call
+        TELEPHONY_CALL(6, PeripheralProfile.HEADSET)
+    }
+}
+</code></pre><pre><code class="hljs language-kotlin:title=PeripheralBond.kt">data class PeripheralBond(
+    val profile: PeripheralProfile,
+    val hotState: State
+) {
+
+    enum class State {
+        CONNECTED,
+        CONNECTING,
+        DISCONNECTED,
+        DISCONNECTING;
+
+        fun getSteadyState(): State {
+            return when(this) {
+                CONNECTED -&gt; CONNECTED
+                CONNECTING -&gt; DISCONNECTED
+                DISCONNECTED -&gt; DISCONNECTED
+                DISCONNECTING -&gt; CONNECTED
+            }
+        }
+    }
+}
+</code></pre><p>Each time a host state changes, a new block is created. The ledger layer listens for these changes and automatically updates the local ledger and sends the blocks to remote peers.</p>
+<p><img src="/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/PCASBlocksEmitter.svg" alt="Audio blocks sequence"></p>
+<p>ii. <strong>Resolution Handler</strong></p>
+<p>Each service gets to handle all resolutions from the resource allocation layer. For audio, this is actually where we connect or disconnect the audio profiles on a peripheral. A service can also choose to support streaming, in which case it will also handle that resolution here.</p>
+<h2>FAQ</h2>
+<h3>Why use IP Multicast?</h3>
+<p>Multicast has issues: It requires all devices to be on the same network and it&#39;s blocked by some routers. PCAS was designed to be used in a &quot;home network&quot; where these issues are usually nonexistent.</p>
+<p>I explored 2 other possible technologies:</p>
+<blockquote>
+<p><a href="https://www.wi-fi.org/discover-wi-fi/wi-fi-aware">Wi-Fi Aware</a> and <a href="https://www.wi-fi.org/discover-wi-fi/wi-fi-direct">Wi-Fi Direct</a> were not considered due to power consumption concerns. Google Nearby service was considered but quickly eliminated due to some unacceptable limitations.</p>
+</blockquote>
+<h4>1. Push Messaging</h4>
+<p><img src="/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/fcm.gif" alt="./image1.gif"></p>
+<p>This is easy using a service like <a href="https://firebase.google.com/docs/cloud-messaging">FCM</a> (it would be similar to Google <a href="https://developers.google.com/nearby/messages/overview">Nearby Messaging API</a> without the proximity part).</p>
+<p>FCM and other push messaging services work using long-lived TCP sockets. A TCP socket on the device waits in accept mode on a Google server.</p>
+<h5>Pros:</h5>
+<ol>
+<li>Simple.</li>
+<li>Efficient: Delivery is only made to specific hosts.</li>
+<li>Works well on Android in the background.</li>
+</ol>
+<h5>Cons:</h5>
+<ol>
+<li>Not P2P: Depends on a central server.</li>
+<li>Not offline: Requires the internet.</li>
+<li>Higher latency.</li>
+<li>Increased attack surface: A local-only solution limits who can initiate an attack.</li>
+</ol>
+<h3>2. BLE (Bluetooth Low Energy) Advertisement</h3>
+<p>BLE devices can broadcast advertisement packets unidirectionally. I will do a quick overview of BLE advertisement. You can read the <a href="https://www.bluetooth.org/docman/handlers/downloaddoc.ashx?doc_id=229737">Bluetooth Core Specification v4.0</a> for more, or scroll to the pros &amp; cons section to understand why it wasn&#39;t picked.</p>
+<p><strong>Physical Layer</strong></p>
+<p>BLE uses the same <a href="https://en.wikipedia.org/wiki/ISM_band">2.4Ghz ISM band</a> as classic Bluetooth and WiFi.</p>
+<p>It operates in the same spectrum range (<code>2.400–2.4835 GHz</code>) as Classic Bluetooth but has <code>40 2-Mhz channels</code> as opposed to the classic <code>79 1-Mhz channels</code>.</p>
+<p>Data is transmitted within a channel using <a href="https://en.wikipedia.org/wiki/Frequency-shift_keying#Gaussian_frequency-shift_keying">Frequency Shift Keying</a>.</p>
+<p>The data rate is <code>1 Mbps</code> (supporting 2Mbps on Bluetooth 5.0).</p>
+<p><strong>Advertisement Packet</strong></p>
+<p><img src="/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/ble-advertising-packet.png" alt="./ble-advertising-packet.png"></p>
+<p><strong>Advertising &amp; Interference</strong></p>
+<p>BLE is robust, using <a href="https://en.wikipedia.org/wiki/Frequency-hopping_spread_spectrum">frequency hopping</a> to work around interference.</p>
+<p>BLE uses 3 dedicated channels for advertising: 37, 38, 39 (channels are zero-indexed). As can be seen in the image below, these channels are spread across the 2.4GHz band to minimize interference problems.</p>
+<p><a href="https://www.argenox.com/library/bluetooth-low-energy/ble-advertising-primer/"><img src="/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/ble-advertising-channels-spectrum.png" alt="./ble-advertising-channels-spectrum.png"></a></p>
+<p>A relevant study: <a href="https://www.researchgate.net/publication/265602069_Coexistence_and_Interference_Tests_on_a_Bluetooth_Low_Energy_Front-End">Coexistence and Interference Tests on a Bluetooth Low Energy Front-End</a>.</p>
+<p>In a nutshell: A peripheral device broadcast advertisement packets on at least 1 of the 3 channels, with a repetition period called the <code>advertisement interval</code>.</p>
+<p>A scanning central device listens on these channels to detect advertisement packets.</p>
+<p><strong>Advertisement Interval &amp; Scanning</strong></p>
+<p>Page 2223 of the <a href="https://www.bluetooth.org/docman/handlers/downloaddoc.ashx?doc_id=229737">Bluetooth Core Specification v4.0</a> explains advertisement intervals perfectly.</p>
+<p><img src="/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/bluetooth_core_specs_page_2223.png" alt="Bluetooth Core Specs Page 2223"></p>
+<p>A scanning device listens on the advertisement channels for a duration called the <code>scan window</code>, which is repeated every <code>scan interval</code>.</p>
+<p><strong>Discovery latency</strong></p>
+<p>We can use the three parameters: advertising interval, scan interval, and scan window to build a probabilistic model for discovery latency. Any such model will be practically flawed without considering the environment where devices will likely be used in.</p>
+<p>Shorter intervals and a higher scan window lead to faster discovery times while consuming more power.</p>
+<p><strong>Power consumption</strong></p>
+<p>Ignore the general belief that advertisements are power-hungry. BLE advertisement is power efficient.</p>
+<p>Have a look at this <a href="https://developer.radiusnetworks.com/2015/12/09/battery-friendly-beacon-transmission.html">Android power consumption test</a>.</p>
+<p>A study by beacon software company Aislelabs reported that peripherals such as proximity beacons usually function for 1–2 years powered by a <code>1,000mAh coin cell battery</code>.</p>
+<p><img src="/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/BLE_Chipsets_Power.png" alt="./BLE_Chipsets_Power.png"></p>
+<h3>Pros</h3>
+<ol>
+<li>Local &amp; standalone: No LAN requirements.</li>
+<li>Fast, reliable and power-efficient.</li>
+</ol>
+<h3>Cons</h3>
+<ol>
+<li>Shorter distance: WiFi usually has 10x more range.</li>
+<li>Unidirectional flow.</li>
+<li>Scanning is expensive.</li>
+</ol>
+
+    </body>
+</html>
