@@ -35,7 +35,7 @@
 - [Cooking](/src/projects/cooking.md)
 
 ## <span id="books">Books digest</span>
-<div class="gallery">
+<div class="book-gallery">
 <a href="/src/books/2022-a-philosophy-software-design.md"><img src="assets/banners/2022-a-philosophy-software-design.jpg" alt="A Philosophy of Software Design" loading="lazy" /></a>
 <a href="/src/books/2022-design-of-everyday-things.md"><img src="assets/banners/2022-design-of-everyday-things.jpg" alt="The Design of Everyday Things" loading="lazy" /></a>
 <a href="/src/books/2023-coaching-habit.md"><img src="assets/banners/2023-coaching-habit.jpg" alt="The Coaching Habit: Say Less, Ask More & Change the Way You Lead Forever" loading="lazy" /></a>

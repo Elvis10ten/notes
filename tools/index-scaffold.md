@@ -32,7 +32,7 @@
 <!-- placeholder_projects_index -->
 
 ## <span id="books">Books digest</span>
-<div class="gallery">
+<div class="book-gallery">
 <!-- placeholder_books_index -->
 </div>
 
