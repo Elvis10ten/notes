@@ -32,7 +32,7 @@
 ## <span id="essays">My projects</span>
 - [Rebuilding Apple Seamless Headphone Switch Feature with Kotlin MultiPlatform](/src/projects/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform.md)
 - [Building a Distributed Android Remote Testing Platform - An Attempt to Make Real GUI Testing Affordable & Comprehensive](/src/projects/2020-11-23-building-distributed-android-remote-testing-platform.md)
-- [👨‍🍳 Chef time](/src/projects/cooking.md)
+- [From my stove to the screen 👨‍🍳](/src/projects/cooking.md)
 
 ## <span id="books">Books digest</span>
 <div class="book-gallery">

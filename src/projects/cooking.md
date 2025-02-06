@@ -1,4 +1,4 @@
-# 👨‍🍳 Chef time
+# From my stove to the screen 👨‍🍳
 
 <div class="food-grid">
 
@@ -8,7 +8,7 @@
 
 <img class="food-grid-item" src="/docs/assets/cooking/image_2.jpg" loading="lazy" alt="" />
 
-<img class="food-grid-item" src="/docs/assets/cooking/image_3.jpg" loading="lazy" alt="" />
+<img class="food-grid-item" src="/docs/assets/banners/cooking.jpg" loading="lazy" alt="" />
 
 <img class="food-grid-item" src="/docs/assets/cooking/image_4.jpg" loading="lazy" alt="" />
 
