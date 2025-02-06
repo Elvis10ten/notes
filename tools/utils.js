@@ -11,11 +11,14 @@ export const projectDirName = resolve(__dirname, '..');
 // The source directory is where the Markdown files are stored, and the destination directory is where the HTML files will be generated.
 export const srcDir = resolve(projectDirName, 'src');
 export const destDir = resolve(projectDirName, 'docs');
+export const toolsDir = resolve(__dirname);
 
 export const srcBooksDir = resolve(srcDir, 'books');
 export const srcEssayDir = resolve(srcDir, 'essays');
 export const srcPapersDir = resolve(srcDir, 'papers');
+export const srcProjectsDir = resolve(srcDir, 'projects');
 export const destBannersDir = resolve(destDir, 'assets', 'banners');
+export const allInnerSrcDirs = [srcBooksDir, srcEssayDir, srcPapersDir, srcProjectsDir];
 
 export async function getMarkdownFileNames(dir) {
     const fileNames = await readdir(dir);

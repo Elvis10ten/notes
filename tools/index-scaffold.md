@@ -1,3 +1,6 @@
+<!-- placeholder_404_error -->
+
+
 <div class="circular-image-container">
     <img src="/docs/assets/avatar.jpg" alt="Elvis Chidera" class="circular-image" />
 </div>
@@ -22,15 +25,16 @@
 
 > "I believe in human agency. Extreme optimism and extreme pessimism are both excuses for laziness." - Peter Thiel
 
-<!-- placeholder_404_error -->
-
-## ✒️ <span id="essays">Essays</span>
+## <span id="essays">My essays</span>
 <!-- placeholder_essays_index -->
 
-## 📚 <span id="books">Compendium (Books)</span>
-<div class="book-gallery">
+## <span id="essays">My projects</span>
+<!-- placeholder_projects_index -->
+
+## <span id="books">Books digest</span>
+<div class="gallery">
 <!-- placeholder_books_index -->
 </div>
 
-## 📜 <span id="papers">Compendium (Papers)</span>
+## <span id="papers">Papers digest</span>
 <!-- placeholder_papers_index -->

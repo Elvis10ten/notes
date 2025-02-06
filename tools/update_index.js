@@ -6,7 +6,7 @@ import {
     getToolsPath,
     projectDirName,
     readFileText,
-    srcDir, srcPapersDir,
+    srcDir, srcPapersDir, srcProjectsDir,
 } from "./utils.js";
 import {writeFile} from "fs/promises";
 import {relative, resolve, sep} from "path";
@@ -14,6 +14,7 @@ import {relative, resolve, sep} from "path";
 console.log('Building indices...');
 const essayIndices  = await createIndices(srcEssayDir, false);
 const papersIndices = await createIndices(srcPapersDir, false);
+const projectIndices = await createIndices(srcProjectsDir, false);
 const bookIndices = await createIndices(srcBooksDir, true);
 
 console.log('Updating index.md file...');
@@ -21,12 +22,13 @@ let scaffoldMarkdown = await readFileText(getToolsPath('index-scaffold.md'));
 scaffoldMarkdown = scaffoldMarkdown.replace('<!-- placeholder_books_index -->', bookIndices);
 scaffoldMarkdown = scaffoldMarkdown.replace('<!-- placeholder_essays_index -->', essayIndices);
 scaffoldMarkdown = scaffoldMarkdown.replace('<!-- placeholder_papers_index -->', papersIndices);
+scaffoldMarkdown = scaffoldMarkdown.replace('<!-- placeholder_projects_index -->', projectIndices);
 await writeFile(resolve(srcDir, 'index.md'), scaffoldMarkdown);
 
 console.log('Updating 404.md file...');
 scaffoldMarkdown = scaffoldMarkdown.replace(
     '<!-- placeholder_404_error -->',
-    `<div class="error-container">⚠️ Uh-oh! The content you were looking for couldn't be found. You've been redirected to the index page.</div>`
+    `<div class="error-container"><strong>⚠️ Uh-oh!</strong> The content you were looking for couldn't be found. You've been redirected to the index page.</div>`
 );
 await writeFile(resolve(srcDir, '404.md'), scaffoldMarkdown);
 

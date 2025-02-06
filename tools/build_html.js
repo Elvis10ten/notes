@@ -12,7 +12,7 @@ import {
     getMarkdownFileNames,
     getToolsPath,
     readFileText,
-    getBannerRelativePath, srcPapersDir
+    getBannerRelativePath, srcPapersDir, allInnerSrcDirs
 } from "./utils.js";
 
 console.log('Configuring the marked library...');
@@ -41,7 +41,7 @@ marked.use(
 
 console.log('Building HTML files...');
 const scaffoldHTML = await readFileText(getToolsPath('markdown-scaffold.html'));
-const srcDirs = [srcDir, srcBooksDir, srcEssayDir, srcPapersDir];
+const srcDirs = allInnerSrcDirs.concat(srcDir);
 
 for (const dir of srcDirs) {
     const markdownFileNames = await getMarkdownFileNames(dir);

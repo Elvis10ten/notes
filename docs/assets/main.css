@@ -389,14 +389,14 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-.book-gallery {
+.gallery {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 6px 12px;
     padding: 20px;
 }
 
-.book-gallery img {
+.gallery img {
     width: 100%;
     aspect-ratio: 2 / 3; /* Keeps a standard book cover proportion */
     object-fit: cover; /* Ensures images fill the frame */
@@ -406,17 +406,17 @@ body {
     margin: 0;
 }
 
-.book-gallery img:hover {
+.gallery img:hover {
     transform: scale(1.05);
 }
 
 @media (max-width: 600px) {
-    .book-gallery {
+    .gallery {
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     }
 }
 
-.book-gallery p {
+.gallery p {
     margin: 0;
     padding: 0;
 }
@@ -436,38 +436,14 @@ body {
     margin: 2px;
 }
 
-.error-message {
-    background-color: #f8d7da; /* Light red background */
-    color: #721c24; /* Dark red text */
-    border: 1px solid #f5c6cb; /* Slightly darker border */
+.error-container {
+    background-color: #fde8eb;
+    color: #a94442;
     padding: 12px 16px;
-    border-radius: 5px;
-    max-width: 400px;
-    margin: 20px auto;
+    border-radius: 8px;
     text-align: center;
 }
 
-/* Default link styling */
 a {
-    color: #007BFF; /* Soft blue color */
-    text-decoration: none; /* Remove underline */
-    transition: color 0.3s ease, transform 0.3s ease; /* Smooth transition */
-}
-
-/* Hover effect for the link */
-a:hover {
-    color: #0056b3; /* Darker blue on hover */
-    transform: translateY(-2px); /* Slight lift effect */
-}
-
-/* Active state for when the link is clicked */
-a:active {
-    color: #004085; /* Even darker blue */
-    transform: translateY(1px); /* Slightly pressed effect */
-}
-
-/* Focus state for accessibility */
-a:focus {
-    outline: 3px solid #80bdff; /* Light blue outline for focus */
-    outline-offset: 2px;
+    color: inherit;
 }
