@@ -16,6 +16,8 @@
 
 <img class="food-grid-item" src="/docs/assets/cooking/image_7.jpg" loading="lazy" alt="" />
 
+<img class="food-grid-item" src="/docs/assets/cooking/image_21.jpg" loading="lazy" alt="" />
+
 <img class="food-grid-item" src="/docs/assets/cooking/image_8.jpg" loading="lazy" alt="" />
 
 <img class="food-grid-item" src="/docs/assets/cooking/image_9.jpg" loading="lazy" alt="" />
