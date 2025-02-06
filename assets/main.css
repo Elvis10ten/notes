@@ -389,14 +389,14 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-.gallery {
+.book-gallery {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 6px 12px;
     padding: 20px;
 }
 
-.gallery img {
+.book-gallery img {
     width: 100%;
     aspect-ratio: 2 / 3; /* Keeps a standard book cover proportion */
     object-fit: cover; /* Ensures images fill the frame */
@@ -406,17 +406,17 @@ body {
     margin: 0;
 }
 
-.gallery img:hover {
+.book-gallery img:hover {
     transform: scale(1.05);
 }
 
 @media (max-width: 600px) {
-    .gallery {
+    .book-gallery {
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     }
 }
 
-.gallery p {
+.book-gallery p {
     margin: 0;
     padding: 0;
 }
@@ -446,4 +446,40 @@ body {
 
 a {
     color: inherit;
+}
+
+/* Grid setup */
+.food-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 8px;
+}
+
+/* Individual grid item */
+.food-grid-item {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Make images fit and adjust */
+.food-grid-item {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensure the image fully covers the area without stretching */
+    display: block; /* Ensure the image behaves as a block-level element, removing any space below */
+}
+
+/* Stagger the grid items */
+.food-grid-item:nth-child(odd) {
+    grid-row-end: span 2;  /* These items will take up two rows */
+}
+
+.food-grid-item:nth-child(even) {
+    grid-row-end: span 3;  /* These items will take up three rows */
+}
+
+/* Hover effect */
+.food-grid-item:hover {
+    transform: scale(1.03);
+    transition: transform 0.3s ease;
 }
