@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
 
-        <title>Kafka: a Distributed Messaging System for Log Processing</title>
+        <title><a href="/" class="back-link">Home</a></div><h1>Kafka: a Distributed Messaging System for Log Processing</title>
         <meta property="og:image" content="/assets/banners/2022-10-22-kafka-a-distributed-messaging-system-for-log-processing.jpg">
         <meta property="og:type" content="article">
 
@@ -19,11 +19,7 @@
     </head>
     <body>
 
-    <div>
-        <a href="/">Home</a>
-    </div>
-
-    <h1>Kafka: a Distributed Messaging System for Log Processing</h1>
+    <div><a href="/" class="back-link">Home</a></div><h1>Kafka: a Distributed Messaging System for Log Processing</h1>
 <p>Authors: Jay Kreps, Neha Narkhede, Jun Rao (LinkedIn folks)</p>
 <p>Date: 2011</p>
 <p>Link: <a href="http://notes.stephenholiday.com/Kafka.pdf">PDF</a></p>
@@ -117,6 +113,7 @@ producer.send(“topic1”, set);
 <li>To avoid log corruption, Kafka stores a <strong>CRC</strong> for each message in the log.</li>
 <li>The authors performed a benchmark against ActiveMQ and RabbitMQ and found out that Kafka producers and consumers are faster for the use cases they were designed for — thanks to the design decisions outlined above.</li>
 </ol>
+
 
     </body>
 </html>
