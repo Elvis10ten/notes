@@ -561,6 +561,11 @@ a {
     color: #fefefe;
 }
 
+.card:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
+
 /* Responsive Support: Single-column layout on small screens */
 @media (max-width: 768px) {
     .grid-group {
