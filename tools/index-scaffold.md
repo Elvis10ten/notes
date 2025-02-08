@@ -34,35 +34,30 @@
     <!-- Card 1: Background image, spans two rows -->
     <a class="card" style="background-image: url('/docs/assets/banners/pcas.jpg');" href="/src/projects/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform.md">
         <div class="card-content">
-            <strong>PCAS</strong>
-            <p>Rebuilding Apple seamless headphone switch feature with Kotlin multi-platform.</p>
+            <p><strong>PCAS</strong> attempts to recreate Apple seamless headphone switch feature with Kotlin multi-platform.</p>
         </div>
     </a>
     <!-- Card 2 -->
     <a class="card" style="background-image: url('/docs/assets/banners/cooking2.jpg');" href="/src/projects/cooking.md">
         <div class="card-content">
-            <strong>Food</strong>
-            <p>Photos of my meal prep and some events where I cooked 😋.</p>
+            <p>Photos of my <strong>meal prep</strong> and some events where I cooked 😋.</p>
         </div>
     </a>
     <!-- Card 3 -->
     <a class="card" style="background-image: url('/docs/assets/banners/fluentbuild.jpg');" href="/src/projects/2020-11-23-building-distributed-android-remote-testing-platform.md">
         <div class="card-content">
-            <strong>DART</strong>
-            <p>Building an expansive distributed Android testing platform.</p>
+            <p><strong>DART</strong> attempts to build an expansive distributed Android testing platform.</p>
         </div>
     </a>
     <!-- Card 4 -->
     <a class="card" style="background: #2A9D8F;" href="https://www.youtube.com/embed/WUGaB5e83wg?start=58">
         <div class="card-content">
-            <strong class="mobile-only">Prepup</strong>
             <p><strong>Prepup</strong> is an app that helped ~120k high-school students in west africa prepare for exams 🌿.</p>
         </div>
     </a>
     <!-- Card 5 -->
     <a class="card" style="background: #2D1B42;" href="https://tech.deliveryhero.com/primer-on-delivery-heros-server-driven-ui-platform/">
         <div class="card-content">
-            <strong class="mobile-only">Fluid</strong>
             <p><strong>Fluid</strong> is a server-driven UI (SDUI) platform I helped conceptualized and build at Deliveryhero.</p>
         </div>
     </a>
