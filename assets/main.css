@@ -434,7 +434,7 @@ a {
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    color: #fff;
+    color: #f0f0f0;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -470,7 +470,6 @@ a {
 .card .card-content p {
     font-size: 1rem;
     line-height: 1.4;
-    color: #fefefe;
 }
 
 .card:hover {
