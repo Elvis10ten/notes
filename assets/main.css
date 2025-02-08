@@ -1,23 +1,29 @@
-/* Typography */
-
-body {
-    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
-}
-
 /* Reset */
 
-* {
+*, *::before, *::after {
     box-sizing: border-box;
 }
 
-body, html {
+/* Styling */
+
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: "Georgia", "Times New Roman", serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.7;
+    letter-spacing: -0.005em;
+    color: #333;
+    background-color: #fafafa;
+    text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
     position: relative;
 }
 
-body, button, p, ul {
+button, p, ul {
     margin: 0;
     padding: 0;
 }
@@ -33,27 +39,10 @@ a, button, input, select, textarea {
     -webkit-tap-highlight-color: transparent;
 }
 
-:root {
-    overflow-x: hidden;
-    height: 100%;
-}
-
-
-/* Styling */
-
-body {
-    font-size: 20px;
-    line-height: 1.6em;
-    letter-spacing: -0.005em;
-    color: rgba(0, 0, 0, 0.84);
-    font-weight: normal;
-    padding-bottom: 100px;
-}
-
 body > * {
     width: 100%;
     max-width: 740px;
-    padding: 0px 20px;
+    padding: 0 20px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -113,47 +102,23 @@ table tr:hover {
     background-color: #f0f0f0; /* Light grey on hover */
 }
 
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Merriweather", "Georgia", serif;
+    color: #222;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    line-height: 1.3;
+}
+
 h1 {
-    font-size: 40px;
+    font-size: 36px;
     letter-spacing: -0.02em;
-    line-height: 1.1em;
-    margin: 50px auto 0px;
-    font-weight: normal;
 }
-
-h2, h3, h4, h5, h6 {
-    letter-spacing: -0.01em;
-    line-height: 1.3em;
-    font-weight: 500;
-}
-
-h2 {
-    font-size: 34px;
-    margin: 60px auto 0px;
-}
-
-h3 {
-    font-size: 26px;
-    margin: 40px auto 0px;
-    color: rgba(0, 0, 0, .5);
-    font-weight: 400;
-}
-
-h1 + h3 {
-    margin-top: 10px;
-}
-
-h4 {
-    font-size: 19px;
-}
-
-h5 {
-    font-size: 16px;
-}
-
-h6 {
-    font-size: 13px;
-}
+h2 { font-size: 30px; }
+h3 { font-size: 24px; }
+h4 { font-size: 20px; }
+h5 { font-size: 18px; }
+h6 { font-size: 16px; font-weight: 600; }
 
 p {
     margin-top: 30px;
@@ -234,7 +199,7 @@ blockquote {
     font-style: italic;
     position: relative;
     padding-right: 40px;
-    left: +20px;
+    left: 20px;
 }
 
 /* Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-license.org/ */
@@ -354,41 +319,6 @@ rmark {
     overflow: auto hidden
 }
 
-/* Base font settings for readability */
-body {
-    font-family: "Georgia", "Times New Roman", serif;
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 1.7;
-    color: #333; /* Dark gray for easy reading */
-    background-color: #fafafa; /* Soft background */
-    margin: 0;
-    padding: 20px;
-}
-
-/* Headings: distinct but not overpowering */
-h1, h2, h3, h4, h5, h6 {
-    font-family: "Merriweather", "Georgia", serif;
-    font-weight: 700;
-    color: #222; /* Slightly darker than body text */
-    margin-top: 1.5em;
-    margin-bottom: 0.5em;
-    line-height: 1.3;
-}
-
-h1 { font-size: 36px; }
-h2 { font-size: 30px; }
-h3 { font-size: 24px; }
-h4 { font-size: 20px; }
-h5 { font-size: 18px; }
-h6 { font-size: 16px; font-weight: 600; }
-
-/* Optional: Improve text rendering */
-body {
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-}
-
 .book-gallery {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -455,14 +385,10 @@ a {
     gap: 8px;
 }
 
-/* Individual grid item */
+/* Make images fit and adjust */
 .food-grid-item {
     border-radius: 8px;
     overflow: hidden;
-}
-
-/* Make images fit and adjust */
-.food-grid-item {
     width: 100%;
     height: 100%;
     object-fit: cover; /* Ensure the image fully covers the area without stretching */
@@ -484,7 +410,7 @@ a {
     transition: transform 0.3s ease;
 }
 
-.card h4, h3 {
+.card h4 {
     color: #fff;
     margin: 0;
 }
@@ -527,12 +453,6 @@ a {
     z-index: 0;
 }
 
-/* Ensure text appears above the overlay and add text shadow */
-.card .card-content {
-    position: relative;
-    z-index: 1;
-}
-
 /* Special styling for dark cards (no background image) */
 .card.dark {
     background: #333;
@@ -550,10 +470,9 @@ a {
     position: relative;
     z-index: 1;
 }
-.card .card-content h4 {
+.card .card-content strong {
     margin-bottom: 0.5rem;
     line-height: 1.2;
-    color: #fff;
 }
 .card .card-content p {
     font-size: 1rem;
