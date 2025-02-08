@@ -57,7 +57,7 @@
     <a class="card" style="background: #2A9D8F;" href="https://www.youtube.com/embed/WUGaB5e83wg?start=58">
         <div class="card-content">
             <h4 class="mobile-only">Prepup</h4>
-            <p><strong>Prepup</strong> is an app that helped ~120k high-school students in west africa prepare for exams.</p>
+            <p><strong>Prepup</strong> is an app that helped ~120k high-school students in west africa prepare for exams 🌿.</p>
         </div>
     </a>
     <!-- Card 5 -->
