@@ -1,6 +1,6 @@
 /* Reset */
 
-*, *::before, *::after {
+* {
     box-sizing: border-box;
 }
 
@@ -449,27 +449,20 @@ a {
     content: "";
     position: absolute;
     top: 0; right: 0; bottom: 0; left: 0;
-    background: rgba(0, 0, 0, 0.4); /* Increased opacity for better text contrast */
-    z-index: 0;
+    background: rgba(0, 0, 0, 0.5); /* Increased opacity for better text contrast */
+    z-index: 1;
 }
 
-/* Special styling for dark cards (no background image) */
-.card.dark {
-    background: #333;
-    min-height: 80px;
-}
-.card.dark::after {
-    background: #37474F;
+/* Ensure text appears above the overlay and add text shadow */
+.card .card-content {
+    position: relative;
+    z-index: 2;
 }
 
 .grid-group .card:first-child {
     grid-row: span 2;
 }
 
-.card .card-content {
-    position: relative;
-    z-index: 1;
-}
 .card .card-content strong {
     margin-bottom: 0.5rem;
     line-height: 1.2;
