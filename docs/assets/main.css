@@ -410,95 +410,6 @@ a {
     transition: transform 0.3s ease;
 }
 
-.card h4 {
-    color: #fff;
-    margin: 0;
-}
-
-.card p {
-    margin: 0;
-}
-
-/* Grid Container */
-.grid-group {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: repeat(2, 200px);
-    gap: 12px;
-    margin-bottom: 40px;
-}
-
-/* Card Base Styles */
-.card {
-    position: relative;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    color: #f0f0f0;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    display: flex;
-    align-items: flex-end;
-    padding: 20px;
-    text-decoration: none;
-}
-
-/* Dark overlay on image cards for added contrast */
-.card::after {
-    content: "";
-    position: absolute;
-    top: 0; right: 0; bottom: 0; left: 0;
-    background: rgba(0, 0, 0, 0.5); /* Increased opacity for better text contrast */
-    z-index: 1;
-}
-
-/* Ensure text appears above the overlay and add text shadow */
-.card .card-content {
-    position: relative;
-    z-index: 2;
-}
-
-.grid-group .card:first-child {
-    grid-row: span 2;
-}
-
-.card .card-content strong {
-    margin-bottom: 0.5rem;
-    line-height: 1.2;
-}
-.card .card-content p {
-    font-size: 1rem;
-    line-height: 1.4;
-}
-
-.card:hover {
-    transform: scale(1.05);
-    transition: transform 0.3s ease;
-}
-
-/* Responsive Support: Single-column layout on small screens */
-@media (max-width: 768px) {
-    .mobile-only {
-        display: block; /* or flex, grid, etc. */
-    }
-    .grid-group {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
-    }
-    /* Reset any row spanning for mobile */
-    .grid-group .card {
-        grid-row: auto !important;
-        min-height: 200px;
-    }
-}
-
-@media (min-width: 769px) {
-    .mobile-only {
-        display: none;
-    }
-}
-
 /* Dark Mode Overrides – auto-applied when system prefers dark mode */
 @media (prefers-color-scheme: dark) {
     /* Base background and text */
@@ -583,11 +494,6 @@ a {
     .error-container {
         background-color: #5a1e24;
         color: #f8d7da;
-    }
-
-    /* Card components: enhance shadows for a deeper look */
-    .card {
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
     }
 
     /* If you have any other components that use light backgrounds or dark text,

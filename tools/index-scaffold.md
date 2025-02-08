@@ -29,40 +29,13 @@
 <!-- placeholder_essays_index -->
 
 ## <span id="essays">My projects</span>
-<!-- First Grid Group: Left card spans two rows -->
-  <div class="grid-group">
-    <!-- Card 1: Background image, spans two rows -->
-    <a class="card" style="background-image: url('/docs/assets/banners/pcas.jpg');" href="/src/projects/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform.md">
-        <div class="card-content">
-            <p><strong>PCAS</strong> attempts to recreate Apple seamless headphone switch feature with Kotlin multi-platform.</p>
-        </div>
-    </a>
-    <!-- Card 2 -->
-    <a class="card" style="background-image: url('/docs/assets/banners/cooking2.jpg');" href="/src/projects/cooking.md">
-        <div class="card-content">
-            <p>Photos of my <strong>meal prep</strong> and some events where I cooked 😋.</p>
-        </div>
-    </a>
-    <!-- Card 3 -->
-    <a class="card" style="background-image: url('/docs/assets/banners/fluentbuild.jpg');" href="/src/projects/2020-11-23-building-distributed-android-remote-testing-platform.md">
-        <div class="card-content">
-            <p><strong>DART</strong> attempts to build an expansive distributed Android testing platform.</p>
-        </div>
-    </a>
-    <!-- Card 4 -->
-    <a class="card" style="background: #2A9D8F;" href="https://www.youtube.com/embed/WUGaB5e83wg?start=58">
-        <div class="card-content">
-            <p><strong>Prepup</strong> is an app that helped ~120k high-school students in west africa prepare for exams 🌿.</p>
-        </div>
-    </a>
-    <!-- Card 5 -->
-    <a class="card" style="background: #2D1B42;" href="https://tech.deliveryhero.com/primer-on-delivery-heros-server-driven-ui-platform/">
-        <div class="card-content">
-            <p><strong>Fluid</strong> is a server-driven UI (SDUI) platform I helped conceptualized and build at Deliveryhero.</p>
-        </div>
-    </a>
-    <!-- More colors: F4A261, F4E04D, 264653, E63946 -->
-</div>
+<ol>
+<li><a href="/src/projects/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform.md"><strong>Peripheral connection augmentation system (PCAS)</strong></a>: I recreated the Apple seamless headphone switch feature on Android using Kotlin multi-platform.</li>
+<li><a href="/src/projects/2020-11-23-building-distributed-android-remote-testing-platform.md"><strong>Distributed android remote testing (DART)</strong></a>: I took a stab at making real device testing cheaper, more realistic and comprehensive.</li>
+<li><a href="/src/projects/cooking.md"><strong>Kitchen IO</strong></a>: A collection of my meal prep photos and cooking events.</li>
+<li><a href="https://www.youtube.com/embed/WUGaB5e83wg?start=58"><strong>Prepup</strong></a>: An app I co-created with <a href="https://www.oziomaogbe.com/">Ozioma Ogbe</a>, assisting <gmark>~120K students</gmark> across West Africa in preparing for local exams.</li>
+<li><a href="https://tech.deliveryhero.com/primer-on-delivery-heros-server-driven-ui-platform/"><strong>Fluid</strong></a>: A <pmark>server-driven UI (SDUI)</pmark> platform I helped conceptualized and build at Delivery Hero.</li>
+</ol>
 
 ## <span id="books">Books digest</span>
 <div class="book-gallery">
