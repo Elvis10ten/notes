@@ -484,8 +484,8 @@ a {
     transition: transform 0.3s ease;
 }
 
-.card a {
-    text-decoration: none;
+.link-no-underline {
+    text-decoration: none; !important;
 }
 
 .card h4, h3 {
@@ -534,10 +534,6 @@ a {
 .card .card-content {
     position: relative;
     z-index: 1;
-}
-.card .card-content h2,
-.card .card-content p {
-    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
 }
 
 /* Special styling for dark cards (no background image) */
