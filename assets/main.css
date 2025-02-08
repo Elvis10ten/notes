@@ -566,5 +566,6 @@ a {
     /* Reset any row spanning for mobile */
     .grid-group .card {
         grid-row: auto !important;
+        min-height: 250px; /* Increase minimum height for mobile */
     }
 }
