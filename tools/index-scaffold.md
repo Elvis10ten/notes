@@ -32,14 +32,14 @@
 <!-- First Grid Group: Left card spans two rows -->
   <div class="grid-group group1">
     <!-- Card 1: Background image, spans two rows -->
-    <div class="card" style="background-image: url('/docs/assets/banners/pcas.png');">
+    <div class="card" style="background-image: url('/docs/assets/banners/pcas.jpg');">
       <div class="card-content">
         <h3>Nature</h3>
         <p>Explore the beauty of nature</p>
       </div>
     </div>
     <!-- Card 2: Background image -->
-    <div class="card" style="background-image: url('/docs/assets/banners/cooking.jpg');">
+    <div class="card" style="background-image: url('/docs/assets/banners/cooking2.jpg');">
       <div class="card-content">
         <h3>Water</h3>
         <p>Feel the calmness</p>
