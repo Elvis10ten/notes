@@ -568,6 +568,9 @@ a {
 
 /* Responsive Support: Single-column layout on small screens */
 @media (max-width: 768px) {
+    .mobile-only {
+        display: block; /* or flex, grid, etc. */
+    }
     .grid-group {
         grid-template-columns: 1fr;
         grid-template-rows: auto;
@@ -576,5 +579,11 @@ a {
     .grid-group .card {
         grid-row: auto !important;
         min-height: 200px;
+    }
+}
+
+@media (min-width: 769px) {
+    .mobile-only {
+        display: none;
     }
 }
