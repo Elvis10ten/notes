@@ -34,21 +34,21 @@
     <!-- Card 1: Background image, spans two rows -->
     <div class="card" style="background-image: url('/docs/assets/banners/pcas.png');">
       <div class="card-content">
-        <h2>Nature</h2>
+        <h3>Nature</h3>
         <p>Explore the beauty of nature</p>
       </div>
     </div>
     <!-- Card 2: Background image -->
     <div class="card" style="background-image: url('/docs/assets/banners/cooking.jpg');">
       <div class="card-content">
-        <h2>Water</h2>
+        <h3>Water</h3>
         <p>Feel the calmness</p>
       </div>
     </div>
     <!-- Card 3: Dark card (no image) -->
     <div class="card dark">
       <div class="card-content">
-        <h2>Dark Mode</h2>
+        <h3>Dark Mode</h3>
         <p>Sleek and modern</p>
       </div>
     </div>
@@ -59,21 +59,21 @@
     <!-- Card 1: Background image -->
     <div class="card" style="background-image: url('https://source.unsplash.com/random/600x400?city');">
       <div class="card-content">
-        <h2>City Lights</h2>
+        <h3>City Lights</h3>
         <p>Urban exploration</p>
       </div>
     </div>
     <!-- Card 2: Background image -->
     <div class="card" style="background-image: url('https://source.unsplash.com/random/600x400?forest');">
       <div class="card-content">
-        <h2>Forest</h2>
+        <h3>Forest</h3>
         <p>Deep and mysterious</p>
       </div>
     </div>
     <!-- Card 3: Dark card (spans two rows) -->
     <div class="card dark">
       <div class="card-content">
-        <h2>Contrast</h2>
+        <h3>Contrast</h3>
         <p>Bold statement</p>
       </div>
     </div>
