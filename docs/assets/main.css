@@ -488,7 +488,7 @@ a {
     text-decoration: none;
 }
 
-.card h2, h3 {
+.card h4, h3 {
     color: #fff;
     margin: 0;
 }
@@ -543,6 +543,7 @@ a {
 /* Special styling for dark cards (no background image) */
 .card.dark {
     background: #333;
+    min-height: 80px;
 }
 .card.dark::after {
     background: #37474F;

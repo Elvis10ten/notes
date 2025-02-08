@@ -29,52 +29,40 @@
 <!-- placeholder_essays_index -->
 
 ## <span id="essays">My projects</span>
+
 <!-- First Grid Group: Left card spans two rows -->
   <div class="grid-group group1">
     <!-- Card 1: Background image, spans two rows -->
     <div class="card" style="background-image: url('/docs/assets/banners/pcas.jpg');">
       <div class="card-content">
-        <h3>Nature</h3>
-        <p>Explore the beauty of nature</p>
+        <h4>PCAS</h4>
+        <p>Rebuilding Apple seamless headphone switch feature with Kotlin MultiPlatform.</p>
       </div>
     </div>
     <!-- Card 2: Background image -->
     <div class="card" style="background-image: url('/docs/assets/banners/cooking2.jpg');">
       <div class="card-content">
-        <h3>Water</h3>
-        <p>Feel the calmness</p>
+        <h4>Food 😋</h4>
+        <p>Photos of my meal prep and some events where I cooked.</p>
       </div>
     </div>
-    <!-- Card 3: Dark card (no image) -->
-    <div class="card dark">
+    <!-- Card 3: Background image -->
+    <div class="card" style="background-image: url('/docs/assets/banners/fluentbuild.jpg');">
       <div class="card-content">
-        <h3>Dark Mode</h3>
-        <p>Sleek and modern</p>
+        <h4>Fluentbuild</h4>
+        <p>Building a distributed Android remote testing platform.</p>
+      </div>es
+    </div>
+    <!-- Card 4: Background image -->
+    <div class="card" style="background-image: url('/docs/assets/banners/prepup.jpg');">
+      <div class="card-content">
+        <p><strong>Prepup</strong> helped ~120k high-school students in west africa prepare for exams.</p>
       </div>
     </div>
-  </div>
-
-  <!-- Second Grid Group: Right card spans two rows -->
-  <div class="grid-group group2">
-    <!-- Card 1: Background image -->
-    <div class="card" style="background-image: url('https://source.unsplash.com/random/600x400?city');">
+    <!-- Card 5: Background image -->
+    <div class="card" style="background-image: url('/docs/assets/banners/prepup.jpg');">
       <div class="card-content">
-        <h3>City Lights</h3>
-        <p>Urban exploration</p>
-      </div>
-    </div>
-    <!-- Card 2: Background image -->
-    <div class="card" style="background-image: url('https://source.unsplash.com/random/600x400?forest');">
-      <div class="card-content">
-        <h3>Forest</h3>
-        <p>Deep and mysterious</p>
-      </div>
-    </div>
-    <!-- Card 3: Dark card (spans two rows) -->
-    <div class="card dark">
-      <div class="card-content">
-        <h3>Contrast</h3>
-        <p>Bold statement</p>
+        <p><strong>Fluid</strong> is a server-driven UI (SDUI) platform I helped conceptualized at Deliveryhero.</p>
       </div>
     </div>
   </div>
