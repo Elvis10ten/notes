@@ -1,4 +1,4 @@
-# Your computer is already a distributed system. Why isn’t your OS? — Paper Summary
+# Your computer is already a distributed system. Why isn’t your OS?
 
 
 This post summarizes the key topics in this very accessible [paper](https://barrelfish.org/publications/barrelfish_hotos09.pdf) published in 2009.

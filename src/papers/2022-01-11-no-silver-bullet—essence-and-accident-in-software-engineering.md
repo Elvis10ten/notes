@@ -1,4 +1,4 @@
-# No Silver Bullet — Essence and Accident in Software Engineering — Paper Summary
+# No Silver Bullet — Essence and Accident in Software Engineering
 
 
 ["No Silver Bullet — Essence and Accident in Software Engineering” [PDF]](https://www.researchgate.net/publication/220477127_No_Silver_Bullet_Essence_and_Accidents_of_Software_Engineering) is a famous software engineering paper written by Turing Award winner Fred Brooks in 1987. This post summarizes the key ideas.

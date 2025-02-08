@@ -1,4 +1,4 @@
-# Don’t Thrash: How to Cache your Hash on Flash — Paper Summary
+# Don’t Thrash: How to Cache your Hash on Flash
 
 
 Authors:  Michael A. Bender, Martin Farach-Colton, Rob Johnson, Russell Kraner, Bradley C. Kuszmaul, Dzejla Medjedovic, Pablo Montes, Pradeep Shetty, Richard P. Spillane, Erez Zadok

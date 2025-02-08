@@ -1,4 +1,4 @@
-# How to Expose an Eavesdropper — Paper Summary
+# How to Expose an Eavesdropper
 
 
 Authors: Ronald L. Rivest and Adi Shamir

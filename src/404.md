@@ -30,47 +30,42 @@
 - [Against Bit Rot (Why & how I rebuilt my blog)](/src/essays/2025-how.md)
 
 ## <span id="essays">My projects</span>
-
 <!-- First Grid Group: Left card spans two rows -->
-  <div class="grid-group group1">
+  <div class="grid-group">
     <!-- Card 1: Background image, spans two rows -->
-    <div class="card" style="background-image: url('/docs/assets/banners/pcas.jpg');">
-      <div class="card-content">
-        <h4>PCAS</h4>
-        <p>Rebuilding Apple seamless headphone switch feature with Kotlin multi-platform.</p>
-      </div>
-    </div>
-    <!-- Card 2: Background image -->
-    <div class="card" style="background-image: url('/docs/assets/banners/cooking2.jpg');">
-      <div class="card-content">
-        <h4>Food 😋</h4>
-        <p>Photos of my meal prep and some events where I cooked.</p>
-      </div>
-    </div>
-    <!-- Card 3: Background image -->
-    <div class="card" style="background-image: url('/docs/assets/banners/fluentbuild.jpg');">
-      <div class="card-content">
-        <h4>Fluentbuild</h4>
-        <p>Building an expansive distributed Android testing platform.</p>
-      </div>
-    </div>
+    <a class="card" style="background-image: url('/docs/assets/banners/pcas.jpg');" href="/src/projects/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform.md">
+        <div class="card-content">
+            <h4>PCAS</h4>
+            <p>Rebuilding Apple seamless headphone switch feature with Kotlin multi-platform.</p>
+        </div>
+    </a>
+    <!-- Card 2 -->
+    <a class="card" style="background-image: url('/docs/assets/banners/cooking2.jpg');" href="/src/projects/cooking.md">
+        <div class="card-content">
+            <h4>Food 😋</h4>
+            <p>Photos of my meal prep and some events where I cooked.</p>
+        </div>
+    </a>
+    <!-- Card 3 -->
+    <a class="card" style="background-image: url('/docs/assets/banners/fluentbuild.jpg');" href="/src/projects/2020-11-23-building-distributed-android-remote-testing-platform.md">
+        <div class="card-content">
+            <h4>Fluentbuild</h4>
+            <p>Building an expansive distributed Android testing platform.</p>
+        </div>
+    </a>
     <!-- Card 4 -->
-    <a class="link-no-underline" href="https://www.youtube.com/embed/WUGaB5e83wg?start=58">
-        <div class="card" style="background: #F4A261;">
-            <div class="card-content">
-                <p><strong>Prepup</strong> helped ~120k high-school students in west africa prepare for exams.</p>
-            </div>
+    <a class="card" style="background: #2A9D8F;" href="https://www.youtube.com/embed/WUGaB5e83wg?start=58">
+        <div class="card-content">
+            <p><strong>Prepup</strong> is an app that helped ~120k high-school students in west africa prepare for exams.</p>
         </div>
     </a>
     <!-- Card 5 -->
-    <a class="link-no-underline" href="https://tech.deliveryhero.com/primer-on-delivery-heros-server-driven-ui-platform/">
-        <div class="card" style="background: #2D1B42;">
-            <div class="card-content">
-                <p><strong>Fluid</strong> is a server-driven UI (SDUI) platform I helped conceptualized and build at Deliveryhero.</p>
-            </div>
+    <a class="card" style="background: #2D1B42;" href="https://tech.deliveryhero.com/primer-on-delivery-heros-server-driven-ui-platform/">
+        <div class="card-content">
+            <p><strong>Fluid</strong> is a server-driven UI (SDUI) platform I helped conceptualized and build at Deliveryhero.</p>
         </div>
     </a>
-    <!-- More colors: F4E04D, 2A9D8F, 264653, E63946 -->
+    <!-- More colors: F4A261, F4E04D, 264653, E63946 -->
 </div>
 
 ## <span id="books">Books digest</span>
@@ -98,56 +93,56 @@
 </div>
 
 ## <span id="papers">Papers digest</span>
-- [Out Of The Tar Pit — Paper Summary](/src/papers/2022-01-02-summary-out-of-the-tar-pit.md)
-- [No Silver Bullet — Essence and Accident in Software Engineering — Paper Summary](/src/papers/2022-01-11-no-silver-bullet—essence-and-accident-in-software-engineering.md)
-- [Your computer is already a distributed system. Why isn’t your OS? — Paper Summary](/src/papers/2022-04-06-your-computer-already-distributed-system-why-isnt-your-os.md)
-- [Hardware is the new Software — Paper Summary](/src/papers/2022-09-08-hardware-new-software.md)
-- [Bitcoin: A Peer-to-Peer Electronic Cash System — Paper Summary](/src/papers/2022-09-09-bitcoin.md)
-- [How Complex Systems Fail — Paper Summary](/src/papers/2022-09-10-how-complex-systems-fail.md)
-- [Omega-3 fatty acids and exercise: a review of their combined effects on body composition and physical performance — Paper Summary](/src/papers/2022-09-11-omega-3-fatty-acids-and-exercise-a-review-of-their-combined-effects-on-body-composition-and-physical-performance.md)
-- [The underappreciated role of muscle in health and disease — Paper Summary](/src/papers/2022-09-12-the-underappreciated-role-of-muscle-in-health-and-disease.md)
-- [What Satoshi Did Not Know — Paper Summary](/src/papers/2022-09-13-what-satoshi-did-not-know.md)
-- [How to Explain Zero-Knowledge Protocols to Your Children — Paper Summary](/src/papers/2022-09-14-how-to-explain-zero-knowledge-protocols-to-your-children.md)
-- [Software Engineering at Google — Paper Summary](/src/papers/2022-09-15-software-engineering-at-google.md)
-- [The Problem of Thinking Too Much — Paper Summary](/src/papers/2022-09-16-the-problem-of-thinking-too-much.md)
-- [Blockchains from a Distributed Computing Perspective — Paper Summary](/src/papers/2022-09-17-blockchains-from-a-distributed-computing-perspective.md)
-- [On Being Smart — Paper Summary](/src/papers/2022-09-18-on-being-smart.md)
-- [The Value of Science — Paper Summary](/src/papers/2022-09-19-the-value-of-science.md)
+- [Out Of The Tar Pit](/src/papers/2022-01-02-summary-out-of-the-tar-pit.md)
+- [No Silver Bullet — Essence and Accident in Software Engineering](/src/papers/2022-01-11-no-silver-bullet—essence-and-accident-in-software-engineering.md)
+- [Your computer is already a distributed system. Why isn’t your OS?](/src/papers/2022-04-06-your-computer-already-distributed-system-why-isnt-your-os.md)
+- [Hardware is the new Software](/src/papers/2022-09-08-hardware-new-software.md)
+- [Bitcoin: A Peer-to-Peer Electronic Cash System](/src/papers/2022-09-09-bitcoin.md)
+- [How Complex Systems Fail](/src/papers/2022-09-10-how-complex-systems-fail.md)
+- [Omega-3 fatty acids and exercise: a review of their combined effects on body composition and physical performance](/src/papers/2022-09-11-omega-3-fatty-acids-and-exercise-a-review-of-their-combined-effects-on-body-composition-and-physical-performance.md)
+- [The underappreciated role of muscle in health and disease](/src/papers/2022-09-12-the-underappreciated-role-of-muscle-in-health-and-disease.md)
+- [What Satoshi Did Not Know](/src/papers/2022-09-13-what-satoshi-did-not-know.md)
+- [How to Explain Zero-Knowledge Protocols to Your Children](/src/papers/2022-09-14-how-to-explain-zero-knowledge-protocols-to-your-children.md)
+- [Software Engineering at Google](/src/papers/2022-09-15-software-engineering-at-google.md)
+- [The Problem of Thinking Too Much](/src/papers/2022-09-16-the-problem-of-thinking-too-much.md)
+- [Blockchains from a Distributed Computing Perspective](/src/papers/2022-09-17-blockchains-from-a-distributed-computing-perspective.md)
+- [On Being Smart](/src/papers/2022-09-18-on-being-smart.md)
+- [The Value of Science](/src/papers/2022-09-19-the-value-of-science.md)
 - [The Peril of Politicizing Science — Essay Summary](/src/papers/2022-09-20-the-peril-of-politicizing-science.md)
-- [Modernity is incompatible with planetary limits: Developing a PLAN for the future — Paper Summary](/src/papers/2022-09-21-modernity-is-incompatible-with-planetary-limits-developing-a-plan-for-the-future.md)
-- [In Praise of Idleness — Paper Summary](/src/papers/2022-09-22-in-praise-of-idleness.md)
-- [The Erdós Paradox — Paper Summary](/src/papers/2022-09-23-the-erds-paradox.md)
-- [Invent More, Toil Less — Paper Summary](/src/papers/2022-09-24-invent-more-toil-less.md)
-- [Why Events Are A Bad Idea (for high-concurrency servers) — Paper Summary](/src/papers/2022-09-25-why-events-are-a-bad-idea-for-high-concurrency-servers.md)
+- [Modernity is incompatible with planetary limits: Developing a PLAN for the future](/src/papers/2022-09-21-modernity-is-incompatible-with-planetary-limits-developing-a-plan-for-the-future.md)
+- [In Praise of Idleness](/src/papers/2022-09-22-in-praise-of-idleness.md)
+- [The Erdós Paradox](/src/papers/2022-09-23-the-erds-paradox.md)
+- [Invent More, Toil Less](/src/papers/2022-09-24-invent-more-toil-less.md)
+- [Why Events Are A Bad Idea (for high-concurrency servers)](/src/papers/2022-09-25-why-events-are-a-bad-idea-for-high-concurrency-servers.md)
 - [The Night Watch — Essay Summary](/src/papers/2022-09-26-the-night-watch.md)
-- [Why Threads Are A Bad Idea (for most purposes) — Paper Summary](/src/papers/2022-09-27-why-threads-are-a-bad-idea-for-most-purposes.md)
-- [On the Relevance of IP Address in the Tracking Ecosystem — Paper Summary](/src/papers/2022-09-28-on-the-relevance-of-ip-address-in-the-tracking-ecosystem.md)
+- [Why Threads Are A Bad Idea (for most purposes)](/src/papers/2022-09-27-why-threads-are-a-bad-idea-for-most-purposes.md)
+- [On the Relevance of IP Address in the Tracking Ecosystem](/src/papers/2022-09-28-on-the-relevance-of-ip-address-in-the-tracking-ecosystem.md)
 - [Predictability: Does the Flap of a Butterfly’s Wings in Brazil Set Off a Tornado in Texas? — Summary](/src/papers/2022-09-29-predictability-does-the-flap-of-a-butterflys-wings-in-brazil-set-off-a-tornado-in-texas.md)
-- [Reflections on Trusting Trust — Paper Summary](/src/papers/2022-09-30-reflections-on-trusting-trust.md)
-- [Go To Statement Considered Harmful — Paper Summary](/src/papers/2022-10-01-go-to-statement-considered-harmful.md)
-- [End-to-end arguments in system design — Paper Summary](/src/papers/2022-10-02-end-to-end-arguments-in-system-design.md)
-- [A Note on the Confinement Problem — Paper Summary](/src/papers/2022-10-03-a-note-on-the-confinement-problem.md)
-- [It’s Time to Replace TCP in the Datacenter — Paper Summary](/src/papers/2022-10-04-its-time-to-replace-tcp-in-the-datacenter.md)
-- [Thirty Years Later: Lessons from the Multics Security Evaluation — Paper Summary](/src/papers/2022-10-05-thirty-years-later-lessons-from-the-multics-security-evaluation.md)
-- [Password Security: A Case History — Paper Summary](/src/papers/2022-10-06-password-security-a-case-history.md)
-- [The importance of stupidity in scientific research — Paper Summary](/src/papers/2022-10-07-the-importance-of-stupidity-in-scientific-research.md)
-- [How the Hidden Hand Shapes the Market for Software Reliability — Paper Summary](/src/papers/2022-10-08-how-the-hidden-hand-shapes-the-market-for-software-reliability.md)
-- [The Design Philosophy of the DARPA Internet Protocols — Paper Summary](/src/papers/2022-10-09-the-design-philosophy-of-the-darpa-internet-protocols.md)
-- [Fast key-value stores An idea whose time has come and gone — Paper Summary](/src/papers/2022-10-10-fast-key-value-stores-an-idea-whose-time-has-come-and-gone.md)
-- [Untraceable Electronic Mail, Return Addresses, and Digital Pseudonyms — Paper Summary](/src/papers/2022-10-11-untraceable-electronic-mail-return-addresses-and-digital-pseudonyms.md)
-- [A Wandering Mind Is an Unhappy Mind — Paper Summary](/src/papers/2022-10-12-a-wandering-mind-is-an-unhappy-mind.md)
-- [On the Criteria To Be Used in Decomposing Systems into Modules — Paper Summary](/src/papers/2022-10-13-on-the-criteria-to-be-used-in-decomposing-systems-into-modules.md)
-- [Computers Then and Now — Paper Summary](/src/papers/2022-10-14-computers-then-and-now.md)
-- [The Emperor's Old Clothes — Paper Summary](/src/papers/2022-10-15-the-emperors-old-clothes.md)
-- [Why the Internet only just works — Paper Summary](/src/papers/2022-10-16-why-the-internet-only-just-works.md)
-- [A Method for Obtaining Digital Signatures and Public-Key Cryptosystems — Paper Summary](/src/papers/2022-10-17-a-method-for-obtaining-digital-signatures-and-public-key-cryptosystems.md)
-- [Cassandra - A Decentralized Structured Storage System — Paper Summary](/src/papers/2022-10-18-cassandra-a-decentralized-structured-storage-system.md)
-- [A lightweight design for serverless Function-as-a- Service — Paper Summary](/src/papers/2022-10-19-a-lightweight-design-for-serverless-function-as-a-service.md)
-- [Identity-based Cryptosystems and Signature Schemes — Paper Summary](/src/papers/2022-10-20-identity-based-cryptosystems-and-signature-schemes.md)
-- [Minimal Key Lengths for Symmetric Ciphers to Provide Adequate Commercial Security — Paper Summary](/src/papers/2022-10-21-minimal-key-lengths-for-symmetric-ciphers-to-provide-adequate-commercial-security.md)
-- [Kafka: a Distributed Messaging System for Log Processing — Paper Summary](/src/papers/2022-10-22-kafka-a-distributed-messaging-system-for-log-processing.md)
-- [How do committees invent? — Paper Summary](/src/papers/2022-10-23-how-do-committees-invent.md)
-- [How to Share a Secret — Paper Summary](/src/papers/2022-10-24-how-to-share-a-secret.md)
-- [How to Expose an Eavesdropper — Paper Summary](/src/papers/2022-10-25-how-to-expose-an-eavesdropper.md)
-- [Don’t Thrash: How to Cache your Hash on Flash — Paper Summary](/src/papers/2022-10-26-dont-thrash-how-to-cache-your-hash-on-flash.md)
-- [Blue Zones: Lessons From the World’s Longest Lived — Paper Summary](/src/papers/2022-10-27-blue-zones-lessons-from-the-worlds-longest-lived.md)
+- [Reflections on Trusting Trust](/src/papers/2022-09-30-reflections-on-trusting-trust.md)
+- [Go To Statement Considered Harmful](/src/papers/2022-10-01-go-to-statement-considered-harmful.md)
+- [End-to-end arguments in system design](/src/papers/2022-10-02-end-to-end-arguments-in-system-design.md)
+- [A Note on the Confinement Problem](/src/papers/2022-10-03-a-note-on-the-confinement-problem.md)
+- [It’s Time to Replace TCP in the Datacenter](/src/papers/2022-10-04-its-time-to-replace-tcp-in-the-datacenter.md)
+- [Thirty Years Later: Lessons from the Multics Security Evaluation](/src/papers/2022-10-05-thirty-years-later-lessons-from-the-multics-security-evaluation.md)
+- [Password Security: A Case History](/src/papers/2022-10-06-password-security-a-case-history.md)
+- [The importance of stupidity in scientific research](/src/papers/2022-10-07-the-importance-of-stupidity-in-scientific-research.md)
+- [How the Hidden Hand Shapes the Market for Software Reliability](/src/papers/2022-10-08-how-the-hidden-hand-shapes-the-market-for-software-reliability.md)
+- [The Design Philosophy of the DARPA Internet Protocols](/src/papers/2022-10-09-the-design-philosophy-of-the-darpa-internet-protocols.md)
+- [Fast key-value stores An idea whose time has come and gone](/src/papers/2022-10-10-fast-key-value-stores-an-idea-whose-time-has-come-and-gone.md)
+- [Untraceable Electronic Mail, Return Addresses, and Digital Pseudonyms](/src/papers/2022-10-11-untraceable-electronic-mail-return-addresses-and-digital-pseudonyms.md)
+- [A Wandering Mind Is an Unhappy Mind](/src/papers/2022-10-12-a-wandering-mind-is-an-unhappy-mind.md)
+- [On the Criteria To Be Used in Decomposing Systems into Modules](/src/papers/2022-10-13-on-the-criteria-to-be-used-in-decomposing-systems-into-modules.md)
+- [Computers Then and Now](/src/papers/2022-10-14-computers-then-and-now.md)
+- [The Emperor's Old Clothes](/src/papers/2022-10-15-the-emperors-old-clothes.md)
+- [Why the Internet only just works](/src/papers/2022-10-16-why-the-internet-only-just-works.md)
+- [A Method for Obtaining Digital Signatures and Public-Key Cryptosystems](/src/papers/2022-10-17-a-method-for-obtaining-digital-signatures-and-public-key-cryptosystems.md)
+- [Cassandra - A Decentralized Structured Storage System](/src/papers/2022-10-18-cassandra-a-decentralized-structured-storage-system.md)
+- [A lightweight design for serverless Function-as-a- Service](/src/papers/2022-10-19-a-lightweight-design-for-serverless-function-as-a-service.md)
+- [Identity-based Cryptosystems and Signature Schemes](/src/papers/2022-10-20-identity-based-cryptosystems-and-signature-schemes.md)
+- [Minimal Key Lengths for Symmetric Ciphers to Provide Adequate Commercial Security](/src/papers/2022-10-21-minimal-key-lengths-for-symmetric-ciphers-to-provide-adequate-commercial-security.md)
+- [Kafka: a Distributed Messaging System for Log Processing](/src/papers/2022-10-22-kafka-a-distributed-messaging-system-for-log-processing.md)
+- [How do committees invent?](/src/papers/2022-10-23-how-do-committees-invent.md)
+- [How to Share a Secret](/src/papers/2022-10-24-how-to-share-a-secret.md)
+- [How to Expose an Eavesdropper](/src/papers/2022-10-25-how-to-expose-an-eavesdropper.md)
+- [Don’t Thrash: How to Cache your Hash on Flash](/src/papers/2022-10-26-dont-thrash-how-to-cache-your-hash-on-flash.md)
+- [Blue Zones: Lessons From the World’s Longest Lived](/src/papers/2022-10-27-blue-zones-lessons-from-the-worlds-longest-lived.md)

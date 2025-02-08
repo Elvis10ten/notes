@@ -1,4 +1,4 @@
-# The Design Philosophy of the DARPA Internet Protocols — Paper Summary
+# The Design Philosophy of the DARPA Internet Protocols
 
 
 Author: David D. Clark

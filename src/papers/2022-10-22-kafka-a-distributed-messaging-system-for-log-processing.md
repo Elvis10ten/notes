@@ -1,4 +1,4 @@
-# Kafka: a Distributed Messaging System for Log Processing — Paper Summary
+# Kafka: a Distributed Messaging System for Log Processing
 
 
 Authors: Jay Kreps, Neha Narkhede, Jun Rao (LinkedIn folks)

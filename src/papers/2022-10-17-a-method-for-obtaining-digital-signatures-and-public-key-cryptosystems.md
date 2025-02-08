@@ -1,4 +1,4 @@
-# A Method for Obtaining Digital Signatures and Public-Key Cryptosystems — Paper Summary
+# A Method for Obtaining Digital Signatures and Public-Key Cryptosystems
 
 
 Authors: R.L. Rivest, A. Shamir, and L. Adleman

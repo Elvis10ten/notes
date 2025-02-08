@@ -1,4 +1,4 @@
-# How to Explain Zero-Knowledge Protocols to Your Children — Paper Summary
+# How to Explain Zero-Knowledge Protocols to Your Children
 
 
 Today's summary is about a [paper](https://pages.cs.wisc.edu/~mkowalcz/628.pdf) written by  [Jean-Jacques Quisquater](https://en.m.wikipedia.org/wiki/Jean-Jacques_Quisquater) and others in 1990.

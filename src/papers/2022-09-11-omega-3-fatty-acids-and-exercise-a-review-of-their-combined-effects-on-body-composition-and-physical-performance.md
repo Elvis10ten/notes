@@ -1,4 +1,4 @@
-# Omega-3 fatty acids and exercise: a review of their combined effects on body composition and physical performance — Paper Summary
+# Omega-3 fatty acids and exercise: a review of their combined effects on body composition and physical performance
 
 
 Today's summary is about a non-CS  [paper](http://www.lookgreatnaked.com/articles/omega-3_fatty_acids_and_exercise.pdf)  written in 2011.

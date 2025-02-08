@@ -1,4 +1,4 @@
-# The Emperor's Old Clothes — Paper Summary
+# The Emperor's Old Clothes
 
 
 Author: Charles Antony Richard Hoare

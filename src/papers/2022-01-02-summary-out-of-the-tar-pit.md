@@ -1,4 +1,4 @@
-# Out Of The Tar Pit — Paper Summary
+# Out Of The Tar Pit
 
 
 Authors: Ben Moseley & Peter Mark

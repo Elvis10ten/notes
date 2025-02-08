@@ -1,4 +1,4 @@
-# Fast key-value stores An idea whose time has come and gone — Paper Summary
+# Fast key-value stores An idea whose time has come and gone
 
 
 Authors: Atul Adya, Robert Grandl, Daniel Myers, Henry Qin

@@ -1,4 +1,4 @@
-# Minimal Key Lengths for Symmetric Ciphers to Provide Adequate Commercial Security — Paper Summary
+# Minimal Key Lengths for Symmetric Ciphers to Provide Adequate Commercial Security
 
 
 Authors: Matt Blaze, Whitfield Diffie, Ronald L Rivest, Bruce Schneier, Tsutomu Shimomura, Eric Thompson, Michael Wiener

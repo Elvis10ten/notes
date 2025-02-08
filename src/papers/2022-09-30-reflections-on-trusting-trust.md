@@ -1,4 +1,4 @@
-# Reflections on Trusting Trust — Paper Summary
+# Reflections on Trusting Trust
 
 
 Author: Ken Thompson

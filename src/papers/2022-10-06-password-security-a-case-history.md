@@ -1,4 +1,4 @@
-# Password Security: A Case History — Paper Summary
+# Password Security: A Case History
 
 
 Authors: Robert Morris and Ken Thompson

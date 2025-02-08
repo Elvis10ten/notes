@@ -1,4 +1,4 @@
-# The Problem of Thinking Too Much — Paper Summary
+# The Problem of Thinking Too Much
 
 
 Today's summary is about a  [paper](https://statweb.stanford.edu/~cgates/PERSI/papers/thinking.pdf)  written by Persi Diaconis in 2003.

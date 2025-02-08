@@ -1,4 +1,4 @@
-# Untraceable Electronic Mail, Return Addresses, and Digital Pseudonyms — Paper Summary
+# Untraceable Electronic Mail, Return Addresses, and Digital Pseudonyms
 
 
 Authors: David L. Chaum

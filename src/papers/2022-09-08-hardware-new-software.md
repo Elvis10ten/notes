@@ -1,4 +1,4 @@
-# Hardware is the new Software — Paper Summary
+# Hardware is the new Software
 
 
 Today's summary is about a [paper](https://www.microsoft.com/en-us/research/wp-content/uploads/2017/05/baumann-hotos17.pdf) written by Andrew Baumann (Microsoft Research) in 2017.

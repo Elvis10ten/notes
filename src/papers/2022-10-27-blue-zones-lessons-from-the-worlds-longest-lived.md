@@ -1,4 +1,4 @@
-# Blue Zones: Lessons From the World’s Longest Lived — Paper Summary
+# Blue Zones: Lessons From the World’s Longest Lived
 
 
 Author: D Buettner

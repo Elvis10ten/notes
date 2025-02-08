@@ -1,4 +1,4 @@
-# Why the Internet only just works — Paper Summary
+# Why the Internet only just works
 
 
 Author: M Handley

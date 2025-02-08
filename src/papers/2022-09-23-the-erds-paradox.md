@@ -1,4 +1,4 @@
-# The Erdós Paradox — Paper Summary
+# The Erdós Paradox
 
 
 Today's summary is about a  [paper](https://arxiv.org/pdf/1812.11935.pdf)  written by Melvyn B. Nathanson in 2018.

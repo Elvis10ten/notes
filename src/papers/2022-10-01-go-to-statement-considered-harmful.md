@@ -1,4 +1,4 @@
-# Go To Statement Considered Harmful — Paper Summary
+# Go To Statement Considered Harmful
 
 
 Author: Edsger W. Dijkstra
