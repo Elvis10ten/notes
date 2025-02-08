@@ -587,3 +587,98 @@ a {
         display: none;
     }
 }
+
+/* Dark Mode Overrides – auto-applied when system prefers dark mode */
+@media (prefers-color-scheme: dark) {
+    /* Base background and text */
+    body {
+        background-color: #121212; /* A deep dark background */
+        color: #e0e0e0;           /* Light text for readability */
+    }
+
+    /* Headings: making them bright */
+    h1, h2, h3, h4, h5, h6 {
+        color: #ffffff;
+    }
+
+    /* Links: using an accent color for dark backgrounds */
+    a {
+        color: #bb86fc;
+    }
+
+    /* Tables – adjust borders, header and row backgrounds */
+    table th,
+    table td {
+        border: 1px solid #444;
+    }
+    table tr:nth-child(even) {
+        background-color: #1e1e1e;
+    }
+    table tr:nth-child(odd) {
+        background-color: #121212;
+    }
+    table th {
+        background-color: #333;
+        color: #eee;
+    }
+    table tr:hover {
+        background-color: #333;
+    }
+
+    /* Blockquotes: lighter text and adjusted border */
+    blockquote {
+        border-left: 3px solid #888;
+        color: #ccc;
+    }
+
+    /* Code blocks and inline code – keep a monokai-like dark style */
+    code,
+    pre {
+        background: #2d2d2d;
+        color: #f8f8f2;
+    }
+    /* (If using highlight.js, adjust its container background too) */
+    .hljs {
+        background: #2d2d2d;
+    }
+
+    /* Marked text: adjust background and text for contrast */
+    mark {
+        background-color: #264653;
+        color: #fff;
+    }
+    ymark {
+        background-color: #2a9d8f;
+        color: #fff;
+    }
+    bmark {
+        background-color: #e9c46a;
+        color: #000;
+    }
+    pmark {
+        background-color: #f4a261;
+        color: #000;
+    }
+    gmark {
+        background-color: #2a9d8f;
+        color: #fff;
+    }
+    rmark {
+        background-color: #e76f51;
+        color: #fff;
+    }
+
+    /* Error message container: darken the background and adjust text */
+    .error-container {
+        background-color: #5a1e24;
+        color: #f8d7da;
+    }
+
+    /* Card components: enhance shadows for a deeper look */
+    .card {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
+    }
+
+    /* If you have any other components that use light backgrounds or dark text,
+       add similar overrides here so they match the dark mode palette. */
+}
