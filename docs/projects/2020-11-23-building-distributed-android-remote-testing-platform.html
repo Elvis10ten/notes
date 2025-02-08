@@ -19,8 +19,7 @@
     </head>
     <body>
     <h1>Building a Distributed Android Remote Testing Platform - An Attempt to Make Real GUI Testing Affordable &amp; Comprehensive</h1>
-<img class="fit_image" src="/assets/2020-11-20-distributed-android-remote-testing/dart_work_flow.svg" />
-
+<p><img src="/assets/2020-11-20-distributed-android-remote-testing/dart_work_flow.svg" alt=""></p>
 <p>There are currently ~2.5 billion Android devices — consisting of ~1,300 discrete brands and ~24,000 unique device models. I&#39;m exploring tapping into this latent resource pool to make automated testing affordable &amp; unlock a more comprehensive configuration coverage.</p>
 <p>The goal of DART (Distributed Android Remote Testing) is to enable any Android device to run automated tests — without ADB or complex setups/maintenance. A commercial product could pay people per hour of device use, allowing anyone to utilize idle device time. Each device is subsumed to provide a distributed testbed.</p>
 <p>DART is orthogonal to <a href="https://en.wikipedia.org/wiki/Crowdsourced_testing">crowdsourced testing</a> — the latter requires active human participation.</p>
@@ -33,8 +32,7 @@
 <h3>1.1. 💪 Motivation</h3>
 <p>The following problems motivated the development of DART.</p>
 <h5>i. 🧩 Android Device Fragmentation</h5>
-<img class="fit_image" src="/assets/2020-11-20-distributed-android-remote-testing/android_fragmentation.gif" alt="Android device fragmentation" />
-
+<p>![Android device fragmentation](/assets/2020-11-20-distributed-android-remote-testing/android_fragmentation.gif]</p>
 <p>The top device farms barely cover 1% of the total number of Android device models. Nondistributed device farms favor depth instead of breadth — maintenance cost increases as more diverse devices are added.</p>
 <p>Testing on flagship devices alone doesn&#39;t always suffice.</p>
 <blockquote>
@@ -44,8 +42,7 @@
 <p><img src="/assets/2020-11-20-distributed-android-remote-testing/android_os_distribution.png" alt="Android OS Distribution"></p>
 <p><a href="https://www.headspin.io/">Headspin</a> aims to alleviate some of these issues. They claim to have a global infrastructure of more than 22,000 SIM-enabled (similar) devices in 150 locations. A big plus as traditional services (like Firebase Testlabs) can&#39;t handle geographical concerns. At Headspin&#39;s core is the <a href="https://github.com/DeviceFarmer/stf">DeviceFarmer STF</a> open-source library. But like its predecessors, Headspin only supports a limited set of device models.</p>
 <h5>ii. 💸 Expensive Physical Devices</h5>
-<img class="fit_image" src="/assets/2020-11-20-distributed-android-remote-testing/real_device_pricing_chart.svg" />
-
+<p><img src="/assets/2020-11-20-distributed-android-remote-testing/real_device_pricing_chart.svg" alt=""></p>
 <p>Real device test farms have an initial cost and require periodic maintenance, hence why they are more expensive than virtual device farms.</p>
 <blockquote>
 <p>Running 10 hours of test daily on real devices costs <strong>$1000/month</strong> (assuming 20 working days of equal levels of productivity).</p>
@@ -57,8 +54,7 @@
 In our experience, the system runs just fine most of the time, and any issues are mostly USB-related. You&#39;ll usually have to do something about once a week.&quot;</p>
 </blockquote>
 <p>Organizations can decide what type of tests are ideal for DART and if the network is made-up of single nodes or clusters of nodes. The simple taxonomy of android testing below should be helpful. [1]</p>
-<img class="full_width_image" src="/assets/2020-11-20-distributed-android-remote-testing/taxonomy_android_testing.svg" alt="Taxonomy of Android testing" />
-
+<p><img src="/assets/2020-11-20-distributed-android-remote-testing/taxonomy_android_testing.svg" alt="Taxonomy of Android testing"></p>
 <p>The network can be internal to an organization. An example: <code>X</code> devices stored in HQ, each employee can remotely contribute their test device into the system.</p>
 <p>It can also be external to an organization. Imagine paying people <code>$1.5/hour</code> of device time. Assuming a device runs test overnight (thanks to timezone differences), the estimated monthly earning is <code>$240</code> (<code>$1.5 * 8 hours * 20 working days</code>).</p>
 <blockquote>
@@ -109,7 +105,7 @@ In our experience, the system runs just fine most of the time, and any issues ar
 <img src="/assets/2020-11-20-distributed-android-remote-testing/split_compat_source.png" alt="Splitcompat source"></p>
 </blockquote>
 <p>This plugin approach adds cruft that is nonexistent on a regular device. An alternative is using the <a href="https://developer.android.com/work/managed-profiles">Android work profile</a>. Work profile creates a separate, self-contained profile on Android devices that isolates corporate data from personal apps and data. [3]</p>
-<p><a href="https://blog.google/products/android-enterprise/work-profile-new-standard-employee-privacy/"><img class="fit_image" src="/assets/2020-11-20-distributed-android-remote-testing/android_work_profiles.gif" alt="Android work profile" /></a></p>
+<p><a href="https://blog.google/products/android-enterprise/work-profile-new-standard-employee-privacy/"><img src="/assets/2020-11-20-distributed-android-remote-testing/android_work_profiles.gif" alt="Android work profile" /></a></p>
 <p>Work profiles also provide always-on VPN configuration, control of runtime permissions, extra security, etc. Work profiles are a great fit, only deviating slightly from the operating mode used by the average user.</p>
 <blockquote>
 <p>Android allows apps signed with the same key to run in the same process, if the apps so request, so that the system treats them as a single application. [3]</p>
@@ -127,8 +123,7 @@ In our experience, the system runs just fine most of the time, and any issues ar
 <p>iv. <code>Dashboard</code>: React project for the web dashboard.</p>
 <p>All projects are still a work in progress and lack adequate documentation.</p>
 <h2>2. 🏗️ System Overview</h2>
-<img class="fit_image" src="/assets/2020-11-20-distributed-android-remote-testing/dart_work_flow.svg" />
-
+<p><img src="/assets/2020-11-20-distributed-android-remote-testing/dart_work_flow.svg" alt=""></p>
 <p>As shown above, multiple components must work in tandem to run tests on a device. The sequence diagram below shows the component interactions at a high-level.</p>
 <pre><code class="hljs language-mermaid">sequenceDiagram
     participant Worker as Worker (Device)

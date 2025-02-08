@@ -1,7 +1,7 @@
 # Building a Distributed Android Remote Testing Platform - An Attempt to Make Real GUI Testing Affordable & Comprehensive
 
 
-<img class="fit_image" src="/docs/assets/2020-11-20-distributed-android-remote-testing/dart_work_flow.svg" />
+![](/docs/assets/2020-11-20-distributed-android-remote-testing/dart_work_flow.svg)
 
 There are currently ~2.5 billion Android devices — consisting of ~1,300 discrete brands and ~24,000 unique device models. I'm exploring tapping into this latent resource pool to make automated testing affordable & unlock a more comprehensive configuration coverage.
 
@@ -23,7 +23,7 @@ The following problems motivated the development of DART.
 
 ##### i. 🧩 Android Device Fragmentation
 
-<img class="fit_image" src="/docs/assets/2020-11-20-distributed-android-remote-testing/android_fragmentation.gif" alt="Android device fragmentation" />
+![Android device fragmentation](/docs/assets/2020-11-20-distributed-android-remote-testing/android_fragmentation.gif]
 
 The top device farms barely cover 1% of the total number of Android device models. Nondistributed device farms favor depth instead of breadth — maintenance cost increases as more diverse devices are added.
 
@@ -38,7 +38,7 @@ The Android version distribution exacerbates this problem.
 
 ##### ii. 💸 Expensive Physical Devices
 
-<img class="fit_image" src="/docs/assets/2020-11-20-distributed-android-remote-testing/real_device_pricing_chart.svg" />
+![](/docs/assets/2020-11-20-distributed-android-remote-testing/real_device_pricing_chart.svg)
 
 Real device test farms have an initial cost and require periodic maintenance, hence why they are more expensive than virtual device farms.
 
@@ -53,7 +53,7 @@ In our experience, the system runs just fine most of the time, and any issues ar
 
 Organizations can decide what type of tests are ideal for DART and if the network is made-up of single nodes or clusters of nodes. The simple taxonomy of android testing below should be helpful. [1]
 
-<img class="full_width_image" src="/docs/assets/2020-11-20-distributed-android-remote-testing/taxonomy_android_testing.svg" alt="Taxonomy of Android testing" />
+![Taxonomy of Android testing](/docs/assets/2020-11-20-distributed-android-remote-testing/taxonomy_android_testing.svg)
 
 The network can be internal to an organization. An example: `X` devices stored in HQ, each employee can remotely contribute their test device into the system.
 
@@ -129,7 +129,7 @@ Tests need to run in an isolated environment. A plugin framework like [VirtualAP
 
 This plugin approach adds cruft that is nonexistent on a regular device. An alternative is using the [Android work profile](https://developer.android.com/work/managed-profiles). Work profile creates a separate, self-contained profile on Android devices that isolates corporate data from personal apps and data. [3]
 
-<a href="https://blog.google/products/android-enterprise/work-profile-new-standard-employee-privacy/"><img class="fit_image" src="/docs/assets/2020-11-20-distributed-android-remote-testing/android_work_profiles.gif" alt="Android work profile" /></a>
+<a href="https://blog.google/products/android-enterprise/work-profile-new-standard-employee-privacy/"><img src="/docs/assets/2020-11-20-distributed-android-remote-testing/android_work_profiles.gif" alt="Android work profile" /></a>
 
 Work profiles also provide always-on VPN configuration, control of runtime permissions, extra security, etc. Work profiles are a great fit, only deviating slightly from the operating mode used by the average user.
 
@@ -158,7 +158,7 @@ All projects are still a work in progress and lack adequate documentation.
 
 ## 2. 🏗️ System Overview
 
-<img class="fit_image" src="/docs/assets/2020-11-20-distributed-android-remote-testing/dart_work_flow.svg" />
+![](/docs/assets/2020-11-20-distributed-android-remote-testing/dart_work_flow.svg)
 
 As shown above, multiple components must work in tandem to run tests on a device. The sequence diagram below shows the component interactions at a high-level.
 
