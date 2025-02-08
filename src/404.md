@@ -2,7 +2,7 @@
 
 
 <div class="circular-image-container">
-    <img src="/docs/assets/avatar.jpg" alt="Elvis Chidera" class="circular-image" />
+    <img src="/docs/assets/banners/index.jpg" alt="Elvis Chidera" class="circular-image" />
 </div>
 
 <div class="text-center">
