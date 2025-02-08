@@ -41,8 +41,8 @@
     <!-- Card 2 -->
     <a class="card" style="background-image: url('/docs/assets/banners/cooking2.jpg');" href="/src/projects/cooking.md">
         <div class="card-content">
-            <strong>Food 😋</strong>
-            <p>Photos of my meal prep and some events where I cooked.</p>
+            <strong>Food</strong>
+            <p>Photos of my meal prep and some events where I cooked 😋.</p>
         </div>
     </a>
     <!-- Card 3 -->
