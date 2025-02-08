@@ -12,7 +12,7 @@ import {
     getMarkdownFileNames,
     getToolsPath,
     readFileText,
-    getBannerRelativePath, srcPapersDir, allInnerSrcDirs
+    getBannerRelativePath, srcPapersDir, allInnerSrcDirs, indexFileNames
 } from "./utils.js";
 
 console.log('Configuring the marked library...');
@@ -57,7 +57,12 @@ async function buildHTMLFile(dir, markdownFileName) {
 
     console.log(`Reading and parsing the source Markdown file...`);
     const srcMarkdown = await readFileText(resolve(dir, markdownFileName));
-    const srcHTML = await marked(srcMarkdown);
+    let srcHTML = await marked(srcMarkdown);
+
+    if (!indexFileNames.includes(markdownFileName)) {
+        srcHTML = `<div><a href="/" class="back-link">Home</a></div>` + srcHTML;
+    }
+
     let outputHTML = scaffoldHTML.replace('<!-- output_content -->', srcHTML);
 
     console.log(`Replacing '/docs/assets' paths in the generated HTML...`);

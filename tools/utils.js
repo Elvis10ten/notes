@@ -45,3 +45,5 @@ export async function readFileText(filePath) {
 export function getBannerRelativePath(markdownFileName) {
     return sep + relative(destDir, resolve(destBannersDir, markdownFileName.replace('.md', '.jpg')));
 }
+
+export const indexFileNames = ['index.md', '404.md'];
