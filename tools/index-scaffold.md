@@ -36,7 +36,7 @@
     <div class="card" style="background-image: url('/docs/assets/banners/pcas.jpg');">
       <div class="card-content">
         <h4>PCAS</h4>
-        <p>Rebuilding Apple seamless headphone switch feature with Kotlin MultiPlatform.</p>
+        <p>Rebuilding Apple seamless headphone switch feature with Kotlin multi-platform.</p>
       </div>
     </div>
     <!-- Card 2: Background image -->
@@ -50,22 +50,27 @@
     <div class="card" style="background-image: url('/docs/assets/banners/fluentbuild.jpg');">
       <div class="card-content">
         <h4>Fluentbuild</h4>
-        <p>Building a distributed Android remote testing platform.</p>
-      </div>es
-    </div>
-    <!-- Card 4: Background image -->
-    <div class="card" style="background-image: url('/docs/assets/banners/prepup.jpg');">
-      <div class="card-content">
-        <p><strong>Prepup</strong> helped ~120k high-school students in west africa prepare for exams.</p>
+        <p>Building an expansive distributed Android testing platform.</p>
       </div>
     </div>
-    <!-- Card 5: Background image -->
-    <div class="card" style="background-image: url('/docs/assets/banners/prepup.jpg');">
-      <div class="card-content">
-        <p><strong>Fluid</strong> is a server-driven UI (SDUI) platform I helped conceptualized at Deliveryhero.</p>
-      </div>
-    </div>
-  </div>
+    <!-- Card 4 -->
+    <a class="link-no-underline" href="https://www.youtube.com/embed/WUGaB5e83wg?start=58">
+        <div class="card" style="background: #F4A261;">
+            <div class="card-content">
+                <p><strong>Prepup</strong> helped ~120k high-school students in west africa prepare for exams.</p>
+            </div>
+        </div>
+    </a>
+    <!-- Card 5 -->
+    <a class="link-no-underline" href="https://tech.deliveryhero.com/primer-on-delivery-heros-server-driven-ui-platform/">
+        <div class="card" style="background: #2D1B42;">
+            <div class="card-content">
+                <p><strong>Fluid</strong> is a server-driven UI (SDUI) platform I helped conceptualized and build at Deliveryhero.</p>
+            </div>
+        </div>
+    </a>
+    <!-- More colors: F4E04D, 2A9D8F, 264653, E63946 -->
+</div>
 
 ## <span id="books">Books digest</span>
 <div class="book-gallery">
