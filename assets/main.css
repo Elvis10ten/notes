@@ -521,23 +521,23 @@ a {
     padding: 15px;
 }
 
-/* Scrim / Blur Overlay for better text readability */
+/* Dark overlay on image cards for added contrast */
 .card::after {
     content: "";
     position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.1); /* increased opacity for better contrast */
-    backdrop-filter: blur(1px); /* adds a subtle blur to the background */
+    top: 0; right: 0; bottom: 0; left: 0;
+    background: rgba(0, 0, 0, 0.4); /* Increased opacity for better text contrast */
     z-index: 0;
 }
 
-/* Make sure text appears above the overlay */
+/* Ensure text appears above the overlay and add text shadow */
 .card .card-content {
     position: relative;
     z-index: 1;
+}
+.card .card-content h2,
+.card .card-content p {
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
 }
 
 /* Special styling for dark cards (no background image) */
@@ -545,8 +545,7 @@ a {
     background: #333;
 }
 .card.dark::after {
-    background: none;
-    backdrop-filter: none;
+    background: #37474F;
 }
 
 /* Group 1: Left card spans two rows */
@@ -556,4 +555,16 @@ a {
 /* Group 2: Right card spans two rows */
 .grid-group.group2 .card:last-child {
     grid-row: span 2;
+}
+
+/* Responsive Support: Single-column layout on small screens */
+@media (max-width: 768px) {
+    .grid-group {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+    /* Reset any row spanning for mobile */
+    .grid-group .card {
+        grid-row: auto !important;
+    }
 }
