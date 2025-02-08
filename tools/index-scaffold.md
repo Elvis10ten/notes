@@ -14,7 +14,7 @@
 </div>
 
 <div class="text-center">
-    Welcome to my blog. I'm software engineer, athlete, writer, entrepreneur, and amateur chef. I love building things and sharing what I learn<span class="blinking">.</span>
+    Welcome to my blog! I'm a software engineer, athlete, writer, entrepreneur, and amateur chef. I love building things and sharing what I learn<span class="blinking">.</span>
 </div>
 
 <div class="text-center" style="margin-top: 4px;">
@@ -29,7 +29,55 @@
 <!-- placeholder_essays_index -->
 
 ## <span id="essays">My projects</span>
-<!-- placeholder_projects_index -->
+<!-- First Grid Group: Left card spans two rows -->
+  <div class="grid-group group1">
+    <!-- Card 1: Background image, spans two rows -->
+    <div class="card" style="background-image: url('/docs/assets/banners/pcas.png');">
+      <div class="card-content">
+        <h2>Nature</h2>
+        <p>Explore the beauty of nature</p>
+      </div>
+    </div>
+    <!-- Card 2: Background image -->
+    <div class="card" style="background-image: url('/docs/assets/banners/cooking.jpg');">
+      <div class="card-content">
+        <h2>Water</h2>
+        <p>Feel the calmness</p>
+      </div>
+    </div>
+    <!-- Card 3: Dark card (no image) -->
+    <div class="card dark">
+      <div class="card-content">
+        <h2>Dark Mode</h2>
+        <p>Sleek and modern</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Second Grid Group: Right card spans two rows -->
+  <div class="grid-group group2">
+    <!-- Card 1: Background image -->
+    <div class="card" style="background-image: url('https://source.unsplash.com/random/600x400?city');">
+      <div class="card-content">
+        <h2>City Lights</h2>
+        <p>Urban exploration</p>
+      </div>
+    </div>
+    <!-- Card 2: Background image -->
+    <div class="card" style="background-image: url('https://source.unsplash.com/random/600x400?forest');">
+      <div class="card-content">
+        <h2>Forest</h2>
+        <p>Deep and mysterious</p>
+      </div>
+    </div>
+    <!-- Card 3: Dark card (spans two rows) -->
+    <div class="card dark">
+      <div class="card-content">
+        <h2>Contrast</h2>
+        <p>Bold statement</p>
+      </div>
+    </div>
+  </div>
 
 ## <span id="books">Books digest</span>
 <div class="book-gallery">

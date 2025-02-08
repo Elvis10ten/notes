@@ -14,7 +14,7 @@
 </div>
 
 <div class="text-center">
-    Welcome to my blog. I'm software engineer, athlete, writer, entrepreneur, and amateur chef. I love building things and sharing what I learn<span class="blinking">.</span>
+    Welcome to my blog! I'm a software engineer, athlete, writer, entrepreneur, and amateur chef. I love building things and sharing what I learn<span class="blinking">.</span>
 </div>
 
 <div class="text-center" style="margin-top: 4px;">
@@ -30,9 +30,55 @@
 - [Against Bit Rot (Why & how I rebuilt my blog)](/src/essays/2025-how.md)
 
 ## <span id="essays">My projects</span>
-- [Rebuilding Apple Seamless Headphone Switch Feature with Kotlin MultiPlatform](/src/projects/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform.md)
-- [Building a Distributed Android Remote Testing Platform - An Attempt to Make Real GUI Testing Affordable & Comprehensive](/src/projects/2020-11-23-building-distributed-android-remote-testing-platform.md)
-- [🧑🏽‍🍳 From my stove to the screen](/src/projects/cooking.md)
+<!-- First Grid Group: Left card spans two rows -->
+  <div class="grid-group group1">
+    <!-- Card 1: Background image, spans two rows -->
+    <div class="card" style="background-image: url('/docs/assets/banners/pcas.png');">
+      <div class="card-content">
+        <h2>Nature</h2>
+        <p>Explore the beauty of nature</p>
+      </div>
+    </div>
+    <!-- Card 2: Background image -->
+    <div class="card" style="background-image: url('/docs/assets/banners/cooking.jpg');">
+      <div class="card-content">
+        <h2>Water</h2>
+        <p>Feel the calmness</p>
+      </div>
+    </div>
+    <!-- Card 3: Dark card (no image) -->
+    <div class="card dark">
+      <div class="card-content">
+        <h2>Dark Mode</h2>
+        <p>Sleek and modern</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Second Grid Group: Right card spans two rows -->
+  <div class="grid-group group2">
+    <!-- Card 1: Background image -->
+    <div class="card" style="background-image: url('https://source.unsplash.com/random/600x400?city');">
+      <div class="card-content">
+        <h2>City Lights</h2>
+        <p>Urban exploration</p>
+      </div>
+    </div>
+    <!-- Card 2: Background image -->
+    <div class="card" style="background-image: url('https://source.unsplash.com/random/600x400?forest');">
+      <div class="card-content">
+        <h2>Forest</h2>
+        <p>Deep and mysterious</p>
+      </div>
+    </div>
+    <!-- Card 3: Dark card (spans two rows) -->
+    <div class="card dark">
+      <div class="card-content">
+        <h2>Contrast</h2>
+        <p>Bold statement</p>
+      </div>
+    </div>
+  </div>
 
 ## <span id="books">Books digest</span>
 <div class="book-gallery">

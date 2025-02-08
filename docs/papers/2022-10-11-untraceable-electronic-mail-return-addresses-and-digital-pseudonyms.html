@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>Untraceable Electronic Mail, Return Addresses, and Digital Pseudonyms — Paper Summary</title>
+        <meta property="og:image" content="/assets/banners/2022-10-11-untraceable-electronic-mail-return-addresses-and-digital-pseudonyms.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>Untraceable Electronic Mail, Return Addresses, and Digital Pseudonyms — Paper Summary</h1>
+<p>Authors: David L. Chaum</p>
+<p>Date: 1981</p>
+<p>Link: <a href="https://dl.acm.org/doi/pdf/10.1145/358549.358563">PDF</a></p>
+<hr>
+<blockquote>
+<p>A technique based on public key cryptography is presented that allows an electronic mail system to hide who a participant communicates with as well as the content of the communication--in spite of an unsecured underlying telecommunication system.  </p>
+<p>The technique does not require a universally trusted authority. One correspondent can remain anonymous to a second, while allowing the second to respond via an untraceble return address.  </p>
+</blockquote>
+<ol>
+<li>Cryptology is the science of secret communication.</li>
+<li>Public key cryptography is a solution to the <strong>key distribution problem</strong> — the problem of providing each communicant with a secret key.</li>
+<li>Another cryptographic problem is the <strong>traffic analysis problem</strong> — the problem of keeping confidential who converses with whom, and when they converse.</li>
+<li>This paper presents a solution to the <strong>traffic analysis problem</strong> that is based on public key cryptography.</li>
+<li>A pair of keys <code>K</code> and <code>K⁻¹</code> is created from a suitable randomly generated seed:<ul>
+<li><code>K</code> = Public key.</li>
+<li><code>K⁻¹</code> = Private key.</li>
+</ul>
+</li>
+<li><code>K(X)</code> = The encryption of <code>X</code> with key <code>K</code> — It&#39;s just the image of <code>X</code> under the mapping implemented by the cryptographic algorithm using key <code>K</code>.</li>
+<li>Keys are inverses:<blockquote>
+<p><font color="#178e34">K⁻¹(</font><font color="#fd345a">K(</font>X<font color="#fd345a">)</font><font color="#178e34">)</font> = <font color="#fd345a">K(</font><font color="#178e34">K⁻¹(</font>X<font color="#178e34">)</font><font color="#fd345a">)</font> = X</p>
+</blockquote>
+</li>
+<li>A message <code>X</code> is sealed with a public key <code>K</code> so that only the holder of the private key <code>K⁻¹</code> can discover its content.</li>
+<li>If <code>X</code> is simply encrypted with <code>K</code>, then anyone could verify a guess that <code>Y = X</code> by checking whether <code>K(Y) = K(X)</code>:<ul>
+<li>This threat can be eliminated by attaching a large string of random bits <code>R</code> to <code>X</code> before encrypting.</li>
+<li>The sealing of <code>X</code> with <code>K</code> is then denoted by <code>K(R, X)</code>.</li>
+</ul>
+</li>
+<li>Assumptions:<ul>
+<li>No one can determine anything about the correspondences between a set of sealed items and the corresponding set of unsealed items, or create forgeries without the appropriate random string <code>R</code> or private key <code>K⁻¹</code>.</li>
+<li>Anyone may learn the origin, destination(s), and representation of all messages in the underlying telecommunication system and anyone may inject, remove, or modify messages.</li>
+</ul>
+</li>
+<li>Mails are sent to a <strong>mix</strong>, instead of directly to the recipient:<ul>
+<li>Let <code>Kₙ</code> represent a mix&#39;s public key; Where <code>ₙ</code> is an integer denoting the position of a mix.</li>
+<li>Let <code>Kₐ</code> represent a recipient&#39;s (named <code>A</code>) public key.</li>
+<li>A participant prepares a message <code>M</code> for delivery to a participant at address <code>A</code> by sealing it with the public key of <code>A</code> (<code>Kₐ</code>), appending the address <code>A</code>, and then sealing the result with the <strong>mix&#39;s</strong> public key (<code>K₁</code>).</li>
+</ul>
+</li>
+<li>One mix protocol:<ul>
+<li><code>Sender</code> -&gt; Packet { <font color="#178e34">K₁(R₁,</font> <font color="#01a4a5">Kₐ(R₀,</font> M<font color="#01a4a5">)</font><font color="#178e34">, A)</font> } -&gt; <code>Mix₁</code></li>
+<li>The mix decrypts its input with its private key, throws away the random string <code>R₁</code>, and outputs the remainder:<ul>
+<li><code>Mix₁</code> peels off one layer of encryption and discovers a forwarding address.</li>
+<li>Even if <code>Mix₁</code> is malicious, it can&#39;t read <code>Kₐ(R₀, M)</code> because it&#39;s encrypted with <code>A</code> public key.</li>
+<li><code>Mix₁</code> -&gt; Packet { <font color="#01a4a5">Kₐ(R₀,</font> M<font color="#01a4a5">)</font> } -&gt; <code>A</code></li>
+<li><code>A</code> decrypts its input with its private key and obtains the message <code>M</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Cascade mix protocol:<ul>
+<li><code>Sender</code> -&gt; Packet { <font color="#178e34">Kₙ(Rₙ,</font> <font color="#5b1498">Kₙ₋₁(Rₙ₋₂,</font> ..., <font color="#01a4a5">K₁(R₁,</font> <font color="#fd345a">Kₐ(R₀,</font> M<font color="#fd345a">)</font><font color="#01a4a5">, A)</font> ... <font color="#5b1498">Aₙ₋₂)</font><font color="#178e34">, Aₙ₋₁)</font> } -&gt; <code>Mixₙ</code></li>
+<li><code>Mixₙ</code> -&gt; Pakcet { <font color="#5b1498">Kₙ₋₁(Rₙ₋₂,</font> ..., <font color="#01a4a5">K₁(R₁,</font> <font color="#fd345a">Kₐ(R₀,</font> M<font color="#fd345a">)</font><font color="#01a4a5">, A)</font> ... <font color="#5b1498">Aₙ₋₂)</font> } -&gt; <code>Mixₙ₋₁</code></li>
+<li>...</li>
+<li><code>Mix₂</code> -&gt; Packet { <font color="#01a4a5">K₁(R₁,</font> <font color="#fd345a">Kₐ(R₀,</font> M<font color="#fd345a">)</font><font color="#01a4a5">, A)</font> } -&gt; <code>Mix₁</code></li>
+<li><code>Mix₁</code> -&gt; Packet { <font color="#fd345a">Kₐ(R₀,</font> M<font color="#fd345a">)</font> } -&gt; <code>A</code></li>
+<li>At each step in the cascade, the current mix:<ul>
+<li>Peels off one layer of encryption.</li>
+<li>Discovers a forwarding address</li>
+<li>Passes message along.</li>
+</ul>
+</li>
+<li>Each mix only knows where a messae came from and where its going.</li>
+<li>The use of a cascade, or series of mixes, offers the advantage that <strong>any single constituent mix is able to provide the secrecy of the correspondence</strong> between the inputs and the outputs of the entire cascade.</li>
+</ul>
+</li>
+<li>The purpose of a mix is to hide the correspondences between the items in its input and those in its output:<ul>
+<li>The order of arrival is hidden by outputting the uniformly sized items in lexicographically ordered batches.</li>
+<li>Redundant copies (i.e: duplicate input) has to be removed before outputing a batch because this reveals correspondance for that item.</li>
+</ul>
+</li>
+<li>A mix can change its public key by announcing the new key in a statement signed with its old private key.</li>
+<li>A solution for the <code>recipient</code> (named <code>x</code>) to respond to the <code>sender</code> (named <code>y</code>) while keeping the identity of the <code>x</code> a secret from the <code>y</code>:<ul>
+<li>The sender forms an untraceable return address <code>K₁(R₁, Aₓ), Kₓ</code>; where:<ul>
+<li><code>Aₓ</code> is its own real address,</li>
+<li><code>Kₓ</code> is a public key chosen for the occasion, and</li>
+<li><code>R₁</code> is a key that will also act as a random string for purposes of sealing.</li>
+</ul>
+</li>
+<li>Then, <code>x</code> can send this return address to <code>y</code> as part of a message sent by the techniques already described.</li>
+<li>The following indicates how <code>y</code> uses this untraceable return address to form a response to <code>x</code>, via a new kind of mix:<ul>
+<li><font color="#5b1498">K₁(R₁,</font> <font color="#fd345a">Aₓ</font><font color="#5b1498">)</font>, <font color="#178e34">Kₓ(R₀,</font> M<font color="#178e34">)</font> -&gt; <font color="#fd345a">Aₓ</font>, <font color="#5b1498">R₁(</font><font color="#178e34">Kₓ(R₀,</font> M<font color="#178e34">)</font><font color="#5b1498">)</font></li>
+<li>This mix uses the string of bits <code>R₁</code> that it finds after decrypting the address part <font color="#5b1498">K₁(R₁,</font> <font color="#fd345a">Aₓ</font><font color="#5b1498">)</font> as a key to re-encrypt the message part <font color="#178e34">Kₓ(R₀,</font> M<font color="#178e34">)</font>.</li>
+<li>Only the addressee <code>x</code> can decrypt the resulting output because x created both <code>R₁</code> and <code>Kₓ</code>.</li>
+</ul>
+</li>
+<li><code>x</code> must supply <code>y</code> with a return address for each item of mail <code>x</code> wishes to receive.</li>
+<li>Untraceable return addresses provide the sender of an anonymous letter with a receipt attesting to the fact that the letter appeared intact in the final output batch.</li>
+<li>Return addresses can be cascaded just like messages.</li>
+</ul>
+</li>
+<li>Digital Pseudonyms:<blockquote>
+<p>A digital pseudonym is a public key used to verify signatures made by the anonymous holder of the corresponding private key.
+A roster, or list of pseudonyms, is created by an authority that decides which applications for pseudonyms to accept, but is unable to trace the pseudonyms in the completed roster.<br>The applications may be sent to the authority anonymously, by untraceable mail, for example, or they may be provided in some other way.</p>
+</blockquote>
+</li>
+<li>Solutions to potential issues:<ul>
+<li><strong>Frequency-based correlation</strong>: In order to hide the number of messages sent, each participant supplies the same number of messages to each batch (some of which might be randomly addressed dummies).</li>
+<li>In order to hide the number of messages received, each participant privately searches the entire output for messages directed to it.</li>
+<li><strong>Size-based correlation</strong>: Send in fixed size blocks.</li>
+<li>Timing-based correlation: Send messages at intervals (even if it means sending randomly addressed dummies).</li>
+</ul>
+</li>
+<li>The rest of the paper focuses on how the performance of the mailing system can be optimized/improved.</li>
+</ol>
+
+    </body>
+</html>

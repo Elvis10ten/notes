@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>No Silver Bullet — Essence and Accident in Software Engineering — Paper Summary</title>
+        <meta property="og:image" content="/assets/banners/2022-01-11-no-silver-bullet—essence-and-accident-in-software-engineering.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>No Silver Bullet — Essence and Accident in Software Engineering — Paper Summary</h1>
+<p><a href="https://www.researchgate.net/publication/220477127_No_Silver_Bullet_Essence_and_Accidents_of_Software_Engineering">&quot;No Silver Bullet — Essence and Accident in Software Engineering” [PDF]</a> is a famous software engineering paper written by Turing Award winner Fred Brooks in 1987. This post summarizes the key ideas.</p>
+<ol>
+<li>Brooks likens software projects to <a href="https://en.wikipedia.org/wiki/Werewolf">werewolves</a> (to the non-technical manager) — they usually start innocent and straightforward, but can morph into a monster of missed schedules, blown budgets, and flawed products.</li>
+<li>There has been no <a href="https://en.wikipedia.org/wiki/Silver_bullet">silver bullet</a> (despite cries for it) over the decades — There is no single development, in either technology or management technique, that offers even one <a href="https://en.wikipedia.org/wiki/Order_of_magnitude">order-of-magnitude</a> improvement in productivity, reliability, or simplicity.</li>
+<li>This paper, attempts to show why, by examining both the nature of the software problem and the properties of the bullets proposed.</li>
+</ol>
+<h2>Does It Have to Be Hard? — Essential Difficulties</h2>
+<ol>
+<li>The very nature of software makes it unlikely that there will be any silver bullet.</li>
+<li>Computer hardware progress is so fast (<a href="https://en.wikipedia.org/wiki/Moore%27s_law">Moore&#39;s law</a>) — making software progress seem so slow in comparison.</li>
+<li>Following <a href="https://en.wikipedia.org/wiki/Aristotle">Aristotle</a>, Brooks divides software difficulties into two kinds:<ul>
+<li><strong>Essence</strong>: the difficulties inherent in the nature of software.</li>
+<li><strong>Accidents</strong>: those difficulties that today attend its production but are not inherent.</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>The essence of a software entity is a construct of interlocking concepts: data sets, relationships among data items, algorithms, &amp; invocations of functions.
+This essence is abstract in that such a conceptual construct is the same under many different representations.</p>
+</blockquote>
+<blockquote>
+<p>I believe the hard part of building software to be the specification, design, and testing of this conceptual construct, not the labor of representing it and testing the fidelity of the representation. [Syntax errors are fuzz compared to conceptual errors in most systems.]
+<strong>If this is true, building software will always be hard — there is inherently no silver bullet.</strong></p>
+</blockquote>
+<p>The following are inherent properties of this irreducible essence of modern software systems:</p>
+<h3>i. Complexity</h3>
+<ol>
+<li>Software differs from other industries where repeated elements abound. Usually, no two software parts are alike (at least above the statement level).</li>
+<li>Scaling-up of a software entity is not merely a repetition of the same elements in larger sizes, it&#39;s necessarily an increase in the number of different elements. In most cases, the elements interact with each other in some nonlinear fashion, and the complexity of the whole increases much more than linearly.</li>
+<li>The complexity of software is an essential property, not an accidental one. Many of the classic problems of developing software products derive from complexity and its nonlinear increases with size:<ul>
+<li>Difficulty of communication among team members, which leads to product flaws, cost overruns, schedule delays.</li>
+<li>Difficulty of enumerating, much less understanding, all the possible states of the program, and from that comes unreliability.</li>
+<li>It makes overview hard, thus impeding conceptual integrity.</li>
+</ul>
+</li>
+</ol>
+<h3>ii. Conformity</h3>
+<ol>
+<li>Software unlike objects in physics usually have no unifying principles because it wasn&#39;t created by some capricious God.</li>
+<li>Much of the complexity that a software engineer must master is arbitrary complexity, forced without rhyme or reason by the many human institutions and systems to which her interfaces must conform.</li>
+<li>This complexity cannot be simplified out by any redesign of the software alone.</li>
+</ol>
+<h3>iii. Changeability</h3>
+<ol>
+<li>Software is frequently modified compared to other objects because:<ul>
+<li>The software of a system embodies its function, and the function is the part that most feels the pressures of change.</li>
+<li>Software is infinitely malleable — it&#39;s pure thought-stuff.</li>
+</ul>
+</li>
+<li>Buildings do get changed, but the high costs of change, understood by all, serve to dampen the whims of the changers.</li>
+<li>The software product is embedded in a cultural matrix of evolving applications, users, laws, and machine vehicles.</li>
+</ol>
+<h3>iv. Invisibility</h3>
+<ol>
+<li>Diagramming software structures is hard — they constitute several superimposed general directed graphs — for things like control flow, data flow, patterns of dependency, time sequence, name-space relationships.</li>
+<li>Software structures are inherently unvisualizable. Thus, they do not permit the mind to use some of its most powerful conceptual tools.</li>
+</ol>
+<h2>Past Breakthroughs Solved Accidental Difficulties</h2>
+<h3>i. High-level languages</h3>
+<ol>
+<li>High-level languages frees a program from a lot of a machine&#39;s accidental complexity.</li>
+<li><strong>Limit</strong>: At some point, the elaboration of a high-level language creates a tool-mastery burden that increases, not reduces, the intellectual task of the user who rarely uses the esoteric constructs.</li>
+</ol>
+<h3>ii. Time-sharing</h3>
+<ol>
+<li><a href="https://en.wikipedia.org/wiki/Time-sharing">Time-sharing</a> (as opposed to batch processing) preserves immediacy, and hence enables one to maintain an overview of complexity.</li>
+<li><strong>Limit</strong>: As this response time goes to zero, at some point, it passes the human threshold of noticeability, about <code>100 milliseconds</code>. Beyond that threshold, no benefits are to be expected.</li>
+</ol>
+<h3>iii. Unified programming environments</h3>
+<ol>
+<li>A unified environment stimulates the development of whole tool benches since each new tool could be applied to any program that uses the standard formats.</li>
+</ol>
+<h2>Hopes for the Silver</h2>
+<h3>i. Ada and other high-level language advances</h3>
+<ol>
+<li>Ada philosophy provided an advancement — it&#39;s the philosophy of modularization, of abstract data types, of hierarchical structuring.</li>
+<li>The biggest payoff from high-level languages comes from the transition from the accidental complexities of the machine into a more abstract statement of step-by-step solutions.</li>
+</ol>
+<h3>ii. Object-oriented programming</h3>
+<ol>
+<li>The concept of the abstract data type is that an object&#39;s type should be defined by a name, a set of proper values, and a set of proper operations rather than by its storage structure, which should be hidden.</li>
+<li>Hierarchical types, allow one to define general interfaces that can be further refined by providing subordinate types. The two concepts are orthogonal — one may have hierarchies without hiding and hiding without hierarchies.</li>
+<li>Each only removes yet another accidental difficulty from the process, allowing the designer to express the essence of the design without having to express large amounts of syntactic material that add no information content.</li>
+</ol>
+<h3>iii. Artificial intelligence</h3>
+<ol>
+<li>Two quite different definitions of AI are in common use today.<ul>
+<li>The use of computers to solve problems that previously could only be solved by applying human intelligence.</li>
+<li>The use of a specific set of programming techniques known as heuristics or rule-based programming (aka <strong>expert systems</strong>).</li>
+</ul>
+</li>
+<li>Most of the work is problem-specific, and some abstraction or creativity is required to see how to transfer it.</li>
+<li>The hard thing about building software is deciding what one wants to say, not saying it. No facilitation of expression can give more than marginal gains.</li>
+</ol>
+<h3>iv. Expert systems</h3>
+<ol>
+<li>An expert system is a program that contains a generalized inference engine and a rule base, takes input data and assumptions, explores the inferences derivable from the rule base, yields conclusions, and advice, and offers to explain its results by retracing its reasoning for the user.</li>
+<li>Such a system can be applied to the software engineering task in many ways: suggesting interface rules, advising on testing strategies, remembering bug-type frequencies, and offering optimization hints. </li>
+<li>The most powerful contribution by expert systems will surely be to put at the service of the inexperienced programmer the experience and accumulated wisdom of the best programmers.</li>
+</ol>
+<h3>v. &quot;Automatic&quot; programming</h3>
+<ol>
+<li>The generation of a program for solving a problem from a statement of the problem specifications.</li>
+<li>This only works well for applications with the following favorable properties:<ul>
+<li>The problems are readily characterized by relatively few parameters.</li>
+<li>There are many known methods of solution to provide a library of alternatives.</li>
+<li>Extensive analysis has led to explicit rules for selecting solution techniques, given problem parameters.</li>
+</ul>
+</li>
+</ol>
+<h3>vi. Graphical programming</h3>
+<ol>
+<li>The application of computer graphics to software design.</li>
+<li>As noted earlier, software structures are hard to visualize. Diagrams usually only capture one dimension at a time and eventually becomes too large.</li>
+</ol>
+<h3>vii. Program verification</h3>
+<ol>
+<li>Verifications are so much work that only a few substantial programs have ever been verified.</li>
+<li>Perfect program verification can only establish that a program meets its specification. The hardest part of the software task is arriving at a complete and consistent specification, and much of the essence of building a program is the debugging of the specification.</li>
+</ol>
+<h3>viii. Environments and tools</h3>
+<ol>
+<li>Most of the low-hanging fruits have been plucked — things like hierarchical file systems, uniform file formats to make possible uniform program interfaces, and generalized tools.<blockquote>
+<p>Perhaps the biggest gain yet to be realized from programming environments is the use of integrated database systems to keep track of the myriad details that must be recalled accurately by the individual programmer and kept current for a group of collaborators on a single system.</p>
+</blockquote>
+</li>
+</ol>
+<h3>ix. Workstations</h3>
+<blockquote>
+<p>The composition and editing of programs and documents are fully supported by today&#39;s speeds.
+Compiling could stand a boost, but a factor of 10 in machine speed would surely leave think time the dominant activity in the programmer&#39;s day.</p>
+</blockquote>
+<h2>Promising Attacks on the Conceptual Essence</h2>
+<ol>
+<li>All of the technological attacks on the accidents of the software process are fundamentally limited by the productivity equation:<blockquote>
+<p>Zhongmin wang time of task = Sum(Frequency * Time)</p>
+</blockquote>
+</li>
+<li>Brooks believes that the conceptual components of the task are now taking most of the time. (The paper was written in 1987)</li>
+</ol>
+<h3>i. Buy versus build</h3>
+<ol>
+<li>The most radical possible solution for constructing software is not to construct it at all.</li>
+<li>The use of <code>n</code> copies of a software system effectively multiplies the productivity of its developers by <code>n</code> (cutting down the per-user development cost).</li>
+<li>Even for one hundred thousand dollars, a purchased piece of software is costing only about as much as one programmer year. And delivery is immediate!</li>
+</ol>
+<h3>ii. Requirements refinement and rapid prototyping</h3>
+<ol>
+<li>The hardest single part of building a software system is deciding precisely what to build.</li>
+<li>The client does not know what he wants.</li>
+<li>It&#39;s impossible for a client, even working with a software engineer, to specify completely, precisely, and correctly the exact requirements of a modern software product before trying some versions of the product.</li>
+</ol>
+<blockquote>
+<p> Systems should first be made to run, even if it does nothing useful except call the proper set of dummy subprograms.
+Then, bit by bit, it should be fleshed out, with the subprograms, in turn, being developed — into actions or calls to empty stubs in the level below.
+[...] Enthusiasm jumps when there is a running system, even a simple one.</p>
+</blockquote>
+<h3>iii. Great designers</h3>
+<ol>
+<li>We can get good designs by following good practices instead of poor ones. Good design practices can be taught.</li>
+<li>Nevertheless, Brooks does not believe we can make the next step upward this way:</li>
+</ol>
+<blockquote>
+<p>Whereas the difference between poor conceptual designs and good ones may lie in the soundness of the design method, the difference between good designs and great ones surely does not.
+Great designs come from great designers. Software construction is a creative process.
+Sound methodology can empower and liberate the creative mind; it cannot inflame or inspire the drudge.</p>
+</blockquote>
+
+    </body>
+</html>

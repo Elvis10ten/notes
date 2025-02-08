@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>Designing Data Intensive Applications — Book Notes</title>
+        <meta property="og:image" content="assets/banners/2022-01-20-designing-data-intensive-applications.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>Designing Data Intensive Applications — Book Notes</h1>
+<h2>Chapter 1 - Reliable, Scalable, and Maintainable Applications</h2>
+<blockquote>
+<p>The Internet was done so well that most people think of it as a natural resource like the Pacific Ocean, rather than something that was man-made. When was the last time a technology with a scale like that was so error-free?
+— Alan Kay, in interview with Dr Dobb&#39;s Journal (2012)</p>
+</blockquote>
+<ol>
+<li>Many modern apps are data-intensive as opposed to compute-intensive.</li>
+<li>Data-intensive apps problems:<ul>
+<li>Amount of data</li>
+<li>Complexity of data</li>
+<li>Speed at which it&#39;s changing</li>
+</ul>
+</li>
+<li>Common data systems of data-intensive apps:<ul>
+<li><strong>Databases</strong> — Store data for later retrieval.</li>
+<li><strong>Caches</strong> — Speed up subsequent reads of an expensive operation.</li>
+<li><strong>Search indexes</strong> — Search/filter data in various ways.</li>
+<li><strong>Stream processing</strong> — Asynchronous inter-process messaging.</li>
+<li><strong>Batch processing</strong> — Periodically crunch accumulated data.</li>
+</ul>
+</li>
+</ol>
+<h3>Thinking About Data Systems</h3>
+<ol>
+<li>While traditionally databases, queues, caches, etc are considered distinct category of tools, new tools blur the boundaries between these categories:<ul>
+<li><strong><a href="https://redis.io/">Redis</a></strong> is a datastore also used as a message queue.</li>
+<li><strong><a href="https://kafka.apache.org/">Apache Kafka</a></strong> is a message queue with database-like durability gurantees.</li>
+</ul>
+</li>
+<li>Modern apps have wide-ranging data storage &amp; processing requirements that can&#39;t be satified by a single tool
+<img src="assets/fig1.1.png" alt="Fig 1.1"></li>
+<li>Modern apps are also (composite) data-systems made up of general-purpose data systems; they can offer certain gurantees &amp; hide the foundational components behind an API.</li>
+</ol>
+<p>This book focuses on three concerns that are important in most software systems:</p>
+<h4>i. Reliability</h4>
+<ol>
+<li>Reliability means continuing to <strong>work correctly</strong> at the <strong>desired level of performance</strong> under the <strong>expected load</strong> even in the face of <strong>adversities</strong> like hardware &amp; software faults; human error; etc.</li>
+<li>Fault is when one component of a system deviates from its spec.</li>
+<li>Failure is when the system as a whole stops providing the required service to the user.<blockquote>
+<p>PNote: Based on this definition, it&#39;s impossible to distinguish between a fault and a failure without context — as a component could also be a composite system itself.</p>
+</blockquote>
+</li>
+<li>Systems that can anticipate and cope with faults are called fault tolerant or resilient.</li>
+<li>Faults could <a href="https://en.wikipedia.org/wiki/Chaos_engineering">deliberately be introduced into systems</a> to test its fault tolerance.</li>
+<li>It&#39;s impossible to reduce the probability of a fault to zero.</li>
+</ol>
+<h5>Hardware Faults</h5>
+<ol>
+<li>Examples:<ul>
+<li>Hard disk crash</li>
+<li>Faulty RAM</li>
+<li>Power blackout</li>
+<li>Accidental detachment of a network cable</li>
+</ul>
+</li>
+<li>Hardware faults are random &amp; independent: One machine&#39;s disk failing does not imply that another machine&#39;s disk is going to fail. There may be weak correlations, e.g: due to a common cause like the temperature in the server rack.</li>
+<li><strong>Solutions</strong>: Redundancies.</li>
+<li>In the past, single machines sufficed for most apps as their hardware components already have redundancies.</li>
+<li>Multi-machine redundancies are gaining more usage as they offer additional benefits like rolling upgrades — where one node/machine can be patched at a time without downtime to the entire system.</li>
+<li>Hard disks are reported as having a mean time to failure (MTTF) of ~10-50 years. Thus, on a storage cluster with 10,000 disks, there should be an average of 1 failure per day.</li>
+</ol>
+<h5>Software Errors</h5>
+<ol>
+<li>Software faults are systematic errors within a system. They are hard to anticipate and are correlated across nodes, leading to more system failures than hardware faults.</li>
+<li>Software faults often lie dormant until the false assumption about their environment suddenly stops being true.</li>
+<li><strong>Solutions</strong>: No quick solution. A few small helpful tec:<ul>
+<li>Carefully thinking about the assumptions &amp; interactions in the system</li>
+<li>Thorough testing</li>
+<li>Process isolation</li>
+<li>Allowing processes to crash and restart</li>
+<li>Measuring, monitoring &amp; analyzing system behavior in production</li>
+</ul>
+</li>
+</ol>
+<h5>Human Errors</h5>
+<ol>
+<li>(Unreliably) Humans are both the builders and operators of software systems.</li>
+<li><a href="https://www.usenix.org/conference/usits-03/why-do-internet-services-fail-and-what-can-be-done-about-it">A study</a> on large internet services found that configuration errors by operators were the leading cause of outages, whereas hardware faults played a role in only 10–25% of outages.</li>
+<li><strong>Solutions</strong>:<ul>
+<li>Fool proof design</li>
+<li>Isolation — Sandbox environments that decouple the places where people make the most mistakes from the places where they can cause failures.</li>
+<li>Unit &amp; Integration testing</li>
+<li>Failsafe/Reversability</li>
+<li>Staged rollout</li>
+<li>Telemetry</li>
+</ul>
+</li>
+</ol>
+<h4>i. Scalability</h4>
+<p>Scalability is used to describe a system’s ability to cope with increased load (data volume, traffic volume, complexity).</p>
+<blockquote>
+<p>If the system grows in a particular way, what are our options for coping with the growth?</p>
+</blockquote>
+<p>In order to discuss scalability, we first need ways of describing load and performance quantitatively.</p>
+<h5>Describing Load</h5>
+<ol>
+<li>Load parameters are numbers describing the current load on the system.</li>
+<li>The best choice of parameters depends on the system&#39;s architecture:<ul>
+<li>Web server — requests per second</li>
+<li>Database — ratio of reads to writes</li>
+<li>App — concurrent users</li>
+<li>Cache — hit rate</li>
+</ul>
+</li>
+</ol>
+<h6>Case study — Twitter</h6>
+<p>Using <a href="https://www.infoq.com/presentations/Twitter-Timeline-Scalability/">data</a> published in November 2012. Two of Twitter’s main operations are:</p>
+<ol>
+<li><strong>Post tweet</strong> — A user can publish a new message to their followers (4.6k requests/sec on average, over 12k requests/sec at peak).</li>
+<li><strong>Home timeline</strong> — A user can view tweets posted by the people they follow (300k requests/sec).</li>
+</ol>
+<hr>
+<p>Two ways of implementing these two operations:
+<em>Approach A</em></p>
+<ul>
+<li><strong>Post tweet</strong> — inserts the new tweet into a global collection of tweets.</li>
+<li><strong>Home timeline</strong> — Look up all the people they follow, find all the tweets for each of those users, and merge them (sorted by time).</li>
+</ul>
+<pre><code class="hljs language-sql"><span class="hljs-keyword">SELECT</span> tweets.<span class="hljs-operator">*</span>, users.<span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> tweets
+<span class="hljs-keyword">JOIN</span> users <span class="hljs-keyword">ON</span> tweets.sender_id <span class="hljs-operator">=</span> users.id
+<span class="hljs-keyword">JOIN</span> follows <span class="hljs-keyword">ON</span> follows.followee_id <span class="hljs-operator">=</span> users.id
+<span class="hljs-keyword">WHERE</span> follows.follower_id <span class="hljs-operator">=</span> <span class="hljs-built_in">current_user</span>
+</code></pre><p><img src="assets/fig1.2.png" alt="Fig1.2"></p>
+<p><em>Approach B</em>
+Maintain a cache for each user’s home timeline — like a mailbox of tweets for each recipient user.</p>
+<ul>
+<li><strong>Post tweet</strong> — look up all the people who follow that user, and insert the new tweet into each of their home timeline caches.</li>
+<li><strong>Home timeline</strong> — read from the user&#39;s home timeline cache (cheap).
+<img src="assets/fig1.3.png" alt="Fig1.3"></li>
+</ul>
+<hr>
+<p>Twitter used a hybrid solution of <em>Approach A</em> &amp; <em>Approach B</em>:</p>
+<ol>
+<li>It&#39;s preferable to do more work at write time and less at read time (<em>Approach B</em>) — given that the average rate of published tweets is almost two orders of magnitude lower than the rate of home timeline reads.</li>
+<li>For users with millions of followers, <em>Approach B</em> is slow as it leads to millions of writes. Twitter uses <em>Approach A</em> for these users.</li>
+</ol>
+<h5>Describing Performance</h5>
+<ol>
+<li>Two ways to look at performance:<ul>
+<li>When a load parameter is increased and the system resources is kept unchanged, how is the performance of the system affected?</li>
+<li>When a load parameter is increased, by how much should the resources be increased to keep performance unchanged?</li>
+</ul>
+</li>
+<li>Response time = the time between a client sending a request and receiving a response = time to process the request (the service time) + latency.</li>
+<li>Latency is the duration that a request is waiting to be handled during which it is <em>latent</em>, awaiting service. E.g: network delays, queueing delays, etc.</li>
+<li>Systems&#39; important performance metric (usually):<ul>
+<li><strong>Batch processing</strong>: Throughput — the number of records that can be processed per second.</li>
+<li><strong>Online systems</strong>: Response time.</li>
+</ul>
+</li>
+<li>Satisfying a request involves multiple disparate systems that can introduce random latencies — leading to random response time. Thus, response time is best thought of as a distribution of values that can be measured, instead of a single number.
+<img src="assets/fig1.4.png" alt="Fig1.4"></li>
+<li>The mean is not a very good metric to know the “typical” response time, because it doesn’t tell how many users actually experienced that delay.</li>
+<li>Percentiles are preferred.<ul>
+<li>50th percentile = Median = p50</li>
+<li>95th percentile = p95</li>
+<li>99th percentile = p99</li>
+<li>99.9th percentile = p999</li>
+</ul>
+</li>
+<li>An <code>X</code>-th percentile is the response time thresholds at which <code>X%</code> of requests are faster than that particular threshold.<blockquote>
+<p>E.g: if the 95th percentile response time is 1.5 seconds, that means 95 out of 100 requests take less than 1.5 seconds.</p>
+</blockquote>
+</li>
+<li>High percentiles of response times, also known as <code>tail latencies</code> are used to figure out how bad the outliers are.</li>
+<li><a href="http://glinden.blogspot.com/2006/12/slides-from-my-talk-at-stanford.html">Amazon</a> observed that a 100 ms increase in response time reduces sales by 1%. <a href="https://ai.googleblog.com/2009/06/speed-matters.html">Others</a> report that a 1-second slowdown reduces a customer satisfaction metric by 16%.</li>
+<li>It only takes a small number of slow requests to hold up the processing of subsequent requests — an effect sometimes known as <code>head-of-line blocking</code>.<blockquote>
+<p>When generating load artificially in order to test the scalability of a system, the load generating client needs to keep sending requests independently of the response time.
+If the client waits for the previous request to complete before sending the next one, that behavior has the effect of artificially keeping the queues shorter in the test than they would be in reality, which skews the measurements
+<a href="https://bravenewgeek.com/everything-you-know-about-latency-is-wrong/">Everything You Know About Latency Is Wrong</a></p>
+</blockquote>
+</li>
+<li>Even if only a small percentage of backend calls are slow, the chance of getting a slow call increases if an end-user request requires multiple backend calls, and so a higher proportion of end-user requests end up being slow — an effect known as <code>tail latency amplification</code>.
+<img src="assets/fig1.5.png" alt="Fig1.5"></li>
+</ol>
+<h5>Percentiles in Practice</h5>
+<p>To add response time percentiles to the monitoring dashboards, they need to be efficiently calculated on an ongoing basis.</p>
+<p><em>Example:</em></p>
+<ol>
+<li>Keep a rolling window of response times of requests in the last 10 minutes.</li>
+<li>Every minute, calculate the median and various percentiles over the values in that window and plot those metrics on a graph.</li>
+<li>Calculation implementation:<ul>
+<li><strong>Naïvely</strong> — keep a list of response times for all requests within the time window and sort that list every minute.</li>
+<li><strong>Efficiently</strong> — there are algorithms that can calculate a good approximation of percentiles at minimal CPU and memory cost, such as:<ul>
+<li><a href="https://ieeexplore.ieee.org/document/4812398">Forward decay</a></li>
+<li><a href="https://www.sciencedirect.com/science/article/pii/S2665963820300403">t-digest</a></li>
+<li><a href="http://hdrhistogram.org/">HdrHistogram</a><blockquote>
+<p>Beware that averaging percentiles, e.g., to reduce the time resolution or to combine data from several machines, is mathematically meaningless — the right way of aggregating response time data is to add the histograms [28].</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h5>Approaches for Coping with Load</h5>
+<blockquote>
+<p>how do we maintain good performance even when our load parameters increase by some amount?</p>
+</blockquote>
+<ol>
+<li>How to scale machines:<ul>
+<li><strong>Scale up</strong> — Scale vertically, i.e: moving to a more powerful machine. A system that can run on a single machine is often simpler, but there is a limit to how powerful a single machine can be.</li>
+<li><strong>Scale out</strong> — Scale horizontally, i.e: distributing the load across multiple smaller machines. Distributing load across multiple machines is aka a <code>shared-nothing architecture</code>.</li>
+</ul>
+</li>
+<li>How to scale out machines:<ul>
+<li><strong>Elasticly</strong> — automatically add computing resources when load increase is detected. Useful when load is highly unpredictable.</li>
+<li><strong>Manually</strong> — a human analyzes the capacity and decides to add more machines to the system. This is simpler and may have fewer operational surprises.</li>
+</ul>
+</li>
+<li>An architecture that scales well for a particular app is built around assumptions of which operations will be common and which will be rare — the load parameters. This means that the architecture of systems that operate at large scale is usually highly specific to the application.</li>
+</ol>
+<h4>iii. Maintainability</h4>
+<ol>
+<li>It is well known that the majority of the cost of software is not in its initial development, but in its ongoing maintenance.</li>
+<li>Three design principles for maintainable software systems:<ul>
+<li><strong>Operability</strong> — Make it easy for operations teams to keep the system running smoothly. Good operability means having good visibility into the system’s health and having effective ways of managing it.</li>
+<li><strong>Simplicity</strong> — Make it easy for new engineers to understand the system, by removing as much complexity as possible from the system. Good abstractions can help reduce complexity and make the system easier to modify and adapt for new use cases.</li>
+<li><strong>Evolvability</strong> — Make it easy for engineers to make changes to the system in the future, adapting it for unanticipated use cases as requirements change.</li>
+</ul>
+</li>
+</ol>
+<h2>Chapter 2 — Data Models &amp; Query Language</h2>
+<blockquote>
+<p>This chapter looks at 3 general-purpose data models for data storage and querying:</p>
+<ul>
+<li>Relational model</li>
+<li>Document model</li>
+<li>Graph models</li>
+</ul>
+</blockquote>
+<ol>
+<li>Data models affect:<ul>
+<li>How software is written<blockquote>
+<p>The limits of my language mean the limits of my world. — Ludwig Wittgenstein, Tractatus Logico-Philosophicus (1922)</p>
+</blockquote>
+</li>
+<li>How the problem being solved is thought about</li>
+</ul>
+</li>
+<li>Most apps are built using layered data models. For each layer, the key question is:<blockquote>
+<p>How is it represented in terms of the next-lower layer</p>
+</blockquote>
+</li>
+<li>Data-model layering example:<ul>
+<li>App developers model the real world in terms of data-structures (usually) specific to their app.</li>
+<li>To store those data-structures, they are expressed in terms of a general-purpose data model like: JSON/XML documents, SQL tables, graph models, etc.</li>
+<li>The database represents the general-purpose data model in terms of bytes in memory, on disk, or on a network.</li>
+<li>At the hardware level, bytes are represented in terms of electrical currents, pulses of light, magnetic fields, etc.</li>
+</ul>
+</li>
+<li>Each layer hides the complexity of the layers below it by providing a &quot;clean data model&quot;. Abstractions like these allow different group of people to work together effectively.</li>
+</ol>
+<h3>Relational Model Versus Document Model</h3>
+<ol>
+<li>SQL is based on the relational model which was proposed by Edgar Codd in 1970:<ul>
+<li>Data is organized into relations (called tables in SQL)</li>
+<li>Each relation is an unordered collection of tuples (rows in SQL)</li>
+</ul>
+</li>
+<li>The roots of relational databases lie in business data processing, which was performed on mainframes in the 1960s-1970s:<ul>
+<li>Transaction processing (like entering sales/banking transactions)</li>
+<li>Batch processing (like payroll)</li>
+</ul>
+</li>
+<li><blockquote>
+<p>Other databases at that time forced application developers to think a lot about the internal representation of the data in the database. The goal of the relational model was to hide that implementation detail behind a cleaner interface.</p>
+</blockquote>
+</li>
+<li>Each competitor to the relational model generated a lot of hype in its time, but it never lasted:<ul>
+<li>Network model (<em>1970s &amp; 1980s</em>)</li>
+<li>Hierachical model (<em>1970s &amp; 1980s</em>)</li>
+<li>Object databases (<em>1980s &amp; 1990s</em>)</li>
+<li>XML databases (<em>2000s</em>)</li>
+</ul>
+</li>
+<li>Relational databases turned out to generalize well, beyond their original scope of <strong>business data processing</strong>, to a broad variety of use cases.</li>
+</ol>
+<h4>The Birth of NoSQL</h4>
+<ol>
+<li>NoSQL doesn&#39;t refer to any particular technology — it was coined as a catchy Twitter hastag for a meetup.</li>
+<li>Retroactively, it&#39;s interpreted as Not Only SQL.</li>
+<li>Some driving forces behind the adoption of NoSQL databases:<ul>
+<li>Scalability: for very large datasets or very high write throughput.</li>
+<li>Preference for open-source.</li>
+<li>Specialized query operations.</li>
+<li>More expressive data model.</li>
+<li>Flexible/Schemaless.</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p><a href="https://en.wikipedia.org/wiki/Polyglot_persistence"><strong>Polyglot persistence</strong></a> is a term that refers to using multiple data storage technologies for varying data storage needs within an app.</p>
+</blockquote>
+<h4>The Object-Relational Impedance Mismatch</h4>
+<blockquote>
+<p>If data is stored in relational tables, an awkward translation layer is required between the objects in the application code (written in an <strong>OOP language</strong>) and the database model of tables, rows, and columns.</p>
+</blockquote>
+<ol>
+<li>Object-relational mapping (ORM) frameworks like ActiveRecord and Hibernate reduce the amount of boilerplate code required for this translation layer <strong>only to an extent</strong>.</li>
+</ol>
+<h5>Representing a LinkedIn profile using a relational schema</h5>
+<p><img src="assets/fig2.1.png" alt="Fig2.1">
+<small id="fig2.1">Figure 2-1</small></p>
+<ol>
+<li>The profile as a whole can be identified by a unique identifier, <code>user_id</code>.</li>
+<li><strong>One-to-one relationships</strong> — Fields like <code>first_name</code> and <code>last_name</code> are modeled as columns on the users table because they appear exactly once per user.</li>
+<li><strong>One-to-many relationships</strong> — Users can have more than one career position, varying periods of education, and contact information. Ways to represent:<ul>
+<li>The common normalized representation is to put positions, education, and contact information in separate tables, with a <code>foreign key</code> reference to the users table.</li>
+<li>Later versions of the SQL standard added support for structured datatypes and XML data; this allowed multi-valued data to be stored within a single row, with support for querying and indexing inside those documents.</li>
+<li>Encode jobs, education, and contact info as a JSON or XML document, store it on a text column in the user table, and let the application interpret its structure and content.</li>
+</ul>
+</li>
+</ol>
+<h5>Representing a LinkedIn profile using JSON (Document Data Model)</h5>
+<pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;user_id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">251</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;first_name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Bill&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;last_name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Gates&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;summary&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Co-chair of the Bill &amp; Melinda Gates... Active blogger.&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;region_id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;us:91&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;industry_id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">131</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;photo_url&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/p/7/000/253/05b/308dd6e.jpg&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;positions&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;job_title&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Co-chair&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;organization&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Bill &amp; Melinda Gates Foundation&quot;</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;job_title&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Co-founder, Chairman&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;organization&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Microsoft&quot;</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;education&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;school_name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Harvard University&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;start&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1973</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;end&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1975</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;school_name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Lakeside School, Seattle&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;start&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;end&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;contact_info&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;blog&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;http://thegatesnotes.com&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;twitter&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;http://twitter.com/BillGates&quot;</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre><ol>
+<li>Pros:<ul>
+<li>Can reduce the impeadance mismatch between the app code and storage layer.</li>
+<li>Schema flexibility.</li>
+<li>Better locality — All the data is in one place, available with one query — compared to the relational example which requires:<ul>
+<li>Multiple queries or</li>
+<li>Joins between the users table and its subordinate tables.</li>
+</ul>
+</li>
+<li>Appropriate for a self-contained document like this.</li>
+<li>Simpler than XML.</li>
+<li>The one-to-many relationships imply a tree structure in the data, and the JSON representation makes this explicit:
+<img src="assets/fig2.2.png" alt="Fig2.2"></li>
+</ul>
+<p><small id="fig2.2">Figure 2.2</small></p>
+</li>
+</ol>
+<h4>Many-to-One and Many-to-Many Relationships</h4>
+<ol>
+<li>In the preceding section, <code>region_id</code> and <code>industry_id</code> are given as IDs, not as plain-text strings.<blockquote>
+<p>Whether to store an ID or a text string is a question of <strong>duplication</strong>:</p>
+<ul>
+<li>With an ID, the information that is meaningful to humans (such as the word &quot;Philanthropy&quot;) is stored in only one place, and everything that refers to it uses an ID (which only has meaning within the database).</li>
+<li>With the text directly, you are duplicating the human-meaningful information in every record that uses it. Maintaining consistency or updating all the redundant copies is difficult.</li>
+</ul>
+</blockquote>
+</li>
+<li>The advantage of using an ID is that because it has no meaning to humans, it never needs to change: the ID can remain the same, even if the information it identifies changes.</li>
+<li>Removing such duplication is the key idea behind <code>normalization</code> in databases.</li>
+<li>Normalizing this data requires many-to-one relationships, which don’t fit nicely into the document model:<ul>
+<li>many people work in one particular industry</li>
+</ul>
+</li>
+<li>In relational databases, it’s normal to refer to rows in other tables by ID, because joins are easy.</li>
+<li>In document databases, joins are not needed for one-to-many tree structures, and support for joins is often weak.</li>
+<li>If the database itself does not support joins, the app developer have to emulate a join in app code by making multiple queries to the database.</li>
+<li>The profile in the preceeding section can have new product requirements that introduce many-to-many relationships. E.g:<ul>
+<li>Making organizations and schools as entities (i.e: tables with features) instead of plain string.</li>
+<li>User recommendations
+ <img src="assets/fig2.4.png" alt="Fig2.4"></li>
+</ul>
+</li>
+</ol>
+<p>   <small id="fig2.4">Figure 2.4: The data within each dotted rectangle can be grouped into one document, but the references to organizations, schools, and other users need to be represented as references, and require joins when queried.</small></p>
+<h4>Are Document Databases Repeating History?</h4>
+<h5>Hierarchical model</h5>
+<ol>
+<li>Popular in the 1970s. It represented all data as a tree of records nested within records, much like the JSON structure of <a href="#fig2.2">Fig2.2</a></li>
+<li>Cons:<ul>
+<li>Worked well for one-to-many relationships, but it made many-to-many relationships difficult.</li>
+<li>No support for joins.</li>
+</ul>
+</li>
+<li>Two models were proposed to solve the limitations of the hierarchical model:</li>
+</ol>
+<h6>a. The network/CODASYL model</h6>
+<ol>
+<li>Standardized by a committee called the Conference on Data Systems Languages (CODASYL).</li>
+<li>The CODASYL model was a generalization of the hierarchical model:<ul>
+<li>In the hierarchical model, every record has exactly one parent.</li>
+<li>In the network model, a record could have multiple parents.</li>
+</ul>
+</li>
+<li>For example, there could be one record for the &quot;Greater Seattle Area&quot; region, and every user who lived in that region could be linked to it. This allowed many-to-one and many-to-many relationships to be modeled.<blockquote>
+<p>The links between records in the network model were not foreign keys, but more like pointers in a programming language (while still being stored on disk). The only way of accessing a record was to follow a path from a root record along these chains of links. This was called an <strong>access path</strong>.</p>
+</blockquote>
+</li>
+<li>Cons:<ul>
+<li>Difficult to make changes to the app&#39;s data model — because this usually requires changing all the handwritten database query code to handle the new access paths</li>
+<li>Complexity in app code — A query in CODASYL was performed by moving a cursor through the database by iterating over lists of records and following access paths.</li>
+</ul>
+</li>
+</ol>
+<h6>b. The relational model</h6>
+<ol>
+<li>What the relational model did, by contrast, was to lay out all the data in the open: a relation (table) is simply a collection of tuples (rows). There are no complicated access paths to follow if you want to look at the data.</li>
+<li>The query optimizer automatically decides which parts of the query to execute in which order, and which indexes to use. Those choices are effectively the “access path”.</li>
+</ol>
+<h5>Comparison to document databases</h5>
+<ol>
+<li>Document databases reverted back to the hierarchical model in one aspect: storing nested records within their parent record rather than in a separate table.<blockquote>
+<p>However, when it comes to representing many-to-one and many-to-many relationships, relational and document databases are not fundamentally different: in both cases, the related item is referenced by a unique identifier, which is called a <code>foreign key</code> in the relational model and a <code>document reference</code> in the document model. That identifier is resolved at read time by using a join or follow-up queries. To date, document databases have not followed the path of CODASYL.</p>
+</blockquote>
+</li>
+</ol>
+<h4>Relational Versus Document Databases Today</h4>
+<h5>Which data model leads to simpler application code?</h5>
+<ol>
+<li>This question hinges on the relationships that exist between data items.</li>
+<li>For tree like structures, the document model shines.</li>
+<li>For many-to-many or many-to-one relationships, the relational model shines.</li>
+</ol>
+<blockquote>
+<p>With the document model you cannot refer directly to a nested item within a document, but instead you need to say something like “the second item in the list of positions for user 251” (much like an access path in the hierarchical model).</p>
+</blockquote>
+<h5>Schema flexibility in the document model</h5>
+<ol>
+<li>Schema-on-read: the structure of the data is implicit, and only interpreted when the data is read. Also known as schemaless, but this term is misleading, as the code that reads the data usually assumes some kind of structure—i.e., there is an implicit schema, but it is not enforced by the database.</li>
+<li><strong>Schema-on-write</strong>: the traditional approach of relational databases, where the schema is explicit and the database ensures all written data conforms to it.</li>
+<li>Most document databases are schema-on-read.</li>
+<li>Schema-on-read is similar to dynamic (runtime) type checking in programming languages, whereas schema-on-write is similar to static (compile-time) type checking.</li>
+</ol>
+<h5>Data locality for queries</h5>
+<ol>
+<li>A document is usually stored as a single continuous string, encoded as JSON, XML, BSON (MongoDB), etc.</li>
+<li>This locality leads to less disk seek and can lead to better performance ONLY if a large part of the document is needed at the same time.</li>
+</ol>
+<blockquote>
+<p>The idea of grouping related data together for locality is not limited to the document model. For example, Google’s Spanner database offers the same locality properties in a relational data model, by allowing the schema to declare that a table’s rows should be interleaved (nested) within a parent table.</p>
+</blockquote>
+<h5>Convergence of document and relational databases</h5>
+<ol>
+<li>Most modern relational databases have support for JSON and XML documents.</li>
+<li>Some document databases either have support for relational like joins (like RethinkDB) or handle them in their client-side driver (MongoDB).</li>
+</ol>
+<h3>Query Languages for Data</h3>
+<ol>
+<li>In a declarative query language, like SQL or relational algebra, the pattern of the data required is specified — what conditions the results must meet, and how the data should be transformed (e.g., sorted, grouped, and aggregated) — but not how to achieve that goal. It is up to the database system’s query optimizer to decide which indexes and which join methods to use, and in which order to execute various parts of the query.<pre><code class="hljs language-sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> animals <span class="hljs-keyword">WHERE</span> family <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;Sharks&#x27;</span>;
+</code></pre></li>
+<li>An imperative language tells the computer to perform certain operations in a certain order. Imagine stepping through the code line by line, evaluating conditions, updating variables, and deciding whether to go around the loop one more time.<pre><code class="hljs language-javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">getSharks</span>(<span class="hljs-params"></span>) {
+   <span class="hljs-keyword">var</span> sharks = [];
+   <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; animals.<span class="hljs-property">length</span>; i++) {
+      <span class="hljs-keyword">if</span> (animals[i].<span class="hljs-property">family</span> === <span class="hljs-string">&quot;Sharks&quot;</span>) {
+         sharks.<span class="hljs-title function_">push</span>(animals[i]);
+      }
+   }
+   <span class="hljs-keyword">return</span> sharks;
+}
+</code></pre></li>
+<li>Pros of declarative query language:<ul>
+<li>Concise.</li>
+<li>Easier to work with.</li>
+<li>Hides implementation details of the database.</li>
+<li>It&#39;s less powerful, giving the database room for auto optimizations.</li>
+<li>Lends itself to parallel execution</li>
+</ul>
+</li>
+</ol>
+<h3>Graph-Like Data Models</h3>
+<ol>
+<li>A graph consists of two kinds of objects:<ul>
+<li>Vertices (also known as nodes or entities)</li>
+<li>Edges (also known as relationships or arcs).
+<img src="assets/fig2.5.png" alt="Fig2.5"></li>
+</ul>
+<p><small id="fig2.5">Figure 2.5: Example of graph-structured data (boxes represent vertices, arrows represent edges).</small></p>
+</li>
+<li>There are several different, but related, ways of structuring and querying data in graphs.</li>
+</ol>
+<h4>Property Graphs</h4>
+<ol>
+<li>In the property graph model, each vertex consists of:<ul>
+<li>A unique identifier</li>
+<li>A set of outgoing edges</li>
+<li>A set of incoming edges</li>
+<li>A collection of properties (key-value pairs)</li>
+</ul>
+</li>
+<li>Each edge consists of:<ul>
+<li>A unique identifier</li>
+<li>The vertex at which the edge starts (the tail vertex)</li>
+<li>The vertex at which the edge ends (the head vertex)</li>
+<li>A label to describe the kind of relationship between the two vertices</li>
+<li>A collection of properties (key-value pairs)</li>
+</ul>
+</li>
+<li>Relational equivalent:<ul>
+<li>one table for vertices.</li>
+<li>one table for edges.</li>
+<li>The head and tail vertex are stored for each edge; to get the set of incoming or outgoing edges for a vertex, query the edges table by <code>head_vertex</code> or <code>tail_vertex</code>, respectively.</li>
+</ul>
+<pre><code class="hljs language-sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> vertices (
+   vertex_id <span class="hljs-type">integer</span> <span class="hljs-keyword">PRIMARY</span> KEY,
+   properties json
+);
+
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> edges (
+   edge_id <span class="hljs-type">integer</span> <span class="hljs-keyword">PRIMARY</span> KEY,
+   tail_vertex <span class="hljs-type">integer</span> <span class="hljs-keyword">REFERENCES</span> vertices (vertex_id),
+   head_vertex <span class="hljs-type">integer</span> <span class="hljs-keyword">REFERENCES</span> vertices (vertex_id),
+   label text,
+   properties json
+);
+
+<span class="hljs-keyword">CREATE</span> INDEX edges_tails <span class="hljs-keyword">ON</span> edges (tail_vertex);
+<span class="hljs-keyword">CREATE</span> INDEX edges_heads <span class="hljs-keyword">ON</span> edges (head_vertex);
+</code></pre></li>
+<li>Some important aspects of this model are:<ul>
+<li>Any vertex can have an edge connecting it with any other vertex. There is no schema that restricts which kinds of things can or cannot be associated. This is useful for evolvability: E.g: <a href="#fig2.5">Fig 2.5</a> can be extended to include allergen vertices, which can have edges to people and food items that contain such substances.</li>
+<li>Given any vertex, you can efficiently find both its incoming and its outgoing edges, and thus traverse the graph—i.e., follow a path through a chain of vertices — both forward and backward.</li>
+<li>By using different labels for different kinds of relationships, you can store several different kinds of information in a single graph, while still maintaining a clean data model.</li>
+</ul>
+</li>
+</ol>
+<h4>The Cypher Query Language</h4>
+<ol>
+<li><p>Cypher is a declarative query language for property graphs, created for the Neo4j graph database.</p>
+</li>
+<li><pre><code class="hljs language-cypher">CREATE
+   (NAmerica:Location {name:&#x27;North America&#x27;, type:&#x27;continent&#x27;}), // Vertex symbolic name: NAmerica
+   (USA:Location {name:&#x27;United States&#x27;, type:&#x27;country&#x27; }),
+   (Idaho:Location {name:&#x27;Idaho&#x27;, type:&#x27;state&#x27; }),
+   (Lucy:Person {name:&#x27;Lucy&#x27; }),
+   (Idaho) -[:WITHIN]-&gt; (USA) -[:WITHIN]-&gt; (NAmerica), // creates an edge labeled WITHIN, with Idaho as the tail node and USA as the head node.
+   (Lucy) -[:BORN_IN]-&gt; (Idaho)
+</code></pre><p><small>A subset of the data in <a href="#fig2.5">Fig 2.5</a>, represented as a Cypher query</small></p>
+</li>
+<li><p><strong>Query</strong>: Find the names of all the people who emigrated from the United States to Europe.<span id="#cypher-query-example"></span></p>
+<pre><code class="hljs language-cypher">MATCH
+   (person) -[:BORN_IN]-&gt; () -[:WITHIN*0..]-&gt; (us:Location {name:&#x27;United States&#x27;}),
+   (person) -[:LIVES_IN]-&gt; () -[:WITHIN*0..]-&gt; (eu:Location {name:&#x27;Europe&#x27;})
+RETURN person.name
+
+// `(person) -[:BORN_IN]-&gt; ()` matches any two vertices that are related by an edge labeled `BORN_IN`. The tail vertex of that edge is bound to the variable `person`, and the head vertex is left unnamed.
+</code></pre><p>Interpretation:
+Find any vertex (call it <code>person</code>) that meets both of the following conditions:</p>
+<ul>
+<li><code>person</code> has an outgoing <code>BORN_IN</code> edge to some vertex. From that vertex, you can follow a chain of outgoing <code>WITHIN</code> edges until eventually you reach a vertex of type <code>Location</code>, whose name property is equal to <strong>&quot;United States&quot;</strong>.</li>
+<li>That same <code>person</code> vertex also has an outgoing <code>LIVES_IN</code> edge. Following that edge, and then a chain of outgoing <code>WITHIN</code> edges, you eventually reach a vertex of type <code>Location</code>, whose name property is equal to <strong>&quot;Europe&quot;</strong>.</li>
+</ul>
+<p>For each such person vertex, return the name property.</p>
+</li>
+</ol>
+<h4>Graph Queries in SQL</h4>
+<ol>
+<li>While graph data can be queried with SQL, it is more difficult:<blockquote>
+<p> In a relational database, you usually know in advance which joins you need in your query.
+In a graph query, you may need to traverse a variable number of edges before you find the vertex you’re looking for — that is, the number of joins is not fixed in advance.
+In the <a href="#cypher-query-example">previous example</a>, this happens in the <code>() -[:WITHIN*0..]-&gt; ()</code> rule in the Cypher query.</p>
+</blockquote>
+</li>
+<li>Since SQL:1999, this idea of variable-length traversal paths in a query can be expressed using something called recursive common table expressions (the <code>WITH RECURSIVE</code> syntax).</li>
+</ol>
+<h4>Triple-Stores and SPARQL</h4>
+<ol>
+<li>The triple-store model is mostly equivalent to the property graph model, using different words to describe the same ideas.</li>
+<li>In a triple-store, all information is stored in the form of very simple three-part statements: <code>(subject, predicate, object)</code>, e.g: (Jim, likes, bananas)</li>
+<li>The subject of a triple is equivalent to a vertex in a graph. The object is one of two things:<ul>
+<li>Primitive data: e.g: <code>(lucy, age, 33)</code>. The predicate and object of the triple are equivalent to the key and value of a property on the subject vertex.</li>
+<li>Vertex: e.g: <code>(lucy, marriedTo, alain)</code>. The predicate is the label of an edge in the graph, the subject is the tail vertex, and the object is the head vertex.</li>
+</ul>
+</li>
+<li><pre><code class="hljs language-turtle">@prefix : &lt;urn:example:&gt;.
+_:lucy a :Person.
+_:lucy :name &quot;Lucy&quot;.
+_:lucy :bornIn _:idaho.
+_:idaho a :Location.
+_:idaho :name &quot;Idaho&quot;.
+_:idaho :type &quot;state&quot;.
+_:idaho :within _:usa.
+_:usa a :Location.
+_:usa :name &quot;United States&quot;.
+_:usa :type &quot;country&quot;.
+_:usa :within _:namerica.
+_:namerica a :Location.
+_:namerica :name &quot;North America&quot;.
+_:namerica :type &quot;continent&quot;.
+</code></pre><small>A subset of the data in <a href="#fig2.5">Figure 2.5</a>, represented as Turtle triples</small></li>
+</ol>
+<h5>The SPARQL query language</h5>
+<ol>
+<li><p>Query: The same query as before — finding people who have moved from the US to Europe:</p>
+<pre><code class="hljs language-sparql">PREFIX : &lt;urn:example:&gt;
+
+SELECT ?personName WHERE {
+   ?person :name ?personName.
+   ?person :bornIn / :within* / :name &quot;United States&quot;.
+   ?person :livesIn / :within* / :name &quot;Europe&quot;.
+}
+</code></pre></li>
+<li><p>The structure is very similar. The following two expressions are equivalent (variables start with a question mark in SPARQL):</p>
+<pre><code class="hljs language-cypher">// Cypher
+(person) -[:BORN_IN]-&gt; () -[:WITHIN*0..]-&gt; (location)
+</code></pre><pre><code class="hljs language-sparql"># SPARQL
+?person :bornIn / :within* ?location.
+</code></pre></li>
+</ol>
+<h4>Graph Databases Compared to the Network Model</h4>
+<ol>
+<li>In a graph database, any vertex can have an edge to any other vertex. In CODASYL, a database had a schema that restricted/controlled nesting.</li>
+<li>In a graph database, you can refer directly to any vertex by its unique ID, or you can use an index to find vertices with a particular value. In CODASYL, you have to use the record&#39;s access path.</li>
+<li>In a graph database, vertices and edges are not ordered (you can only sort the results when making a query). In CODASYL, the children of a record were an ordered set.</li>
+<li>Graph databases support high-level declarative query languages. CODASYL relied on imperative queries.</li>
+</ol>
+<h4>The Foundation: Datalog</h4>
+<ol>
+<li>Datalog is a much older language than SPARQL or Cypher.</li>
+<li>It&#39;s the query language of Datomic.</li>
+<li>Cascalog is a Datalog implementation for querying large datasets in Hadoop.</li>
+<li>Datalog’s data model is similar to the triple-store model. Instead of writing a triple as <code>(subject, predicate, object)</code>, it&#39;s written as <code>predicate(subject, object)</code>.</li>
+<li><pre><code class="hljs language-prolog">name(namerica, <span class="hljs-string">&#x27;North America&#x27;</span>).
+type(namerica, continent).
+name(usa, <span class="hljs-string">&#x27;United States&#x27;</span>).
+type(usa, country).
+within(usa, namerica).
+name(idaho, <span class="hljs-string">&#x27;Idaho&#x27;</span>).
+type(idaho, state).
+within(idaho, usa).
+name(lucy, <span class="hljs-string">&#x27;Lucy&#x27;</span>).
+born_in(lucy, idaho).
+</code></pre><small>A subset of the data in <a href="#fig2.5">Figure 2.5</a>, represented as Datalog facts</small></li>
+<li>Query: The same query as before — finding people who have moved from the US to Europe:<pre><code class="hljs language-prolog">within_recursive(<span class="hljs-symbol">Location</span>, <span class="hljs-symbol">Name</span>) :- name(<span class="hljs-symbol">Location</span>, <span class="hljs-symbol">Name</span>). <span class="hljs-comment">/* Rule 1 */</span>
+
+within_recursive(<span class="hljs-symbol">Location</span>, <span class="hljs-symbol">Name</span>) :- within(<span class="hljs-symbol">Location</span>, <span class="hljs-symbol">Via</span>), <span class="hljs-comment">/* Rule 2 */</span>
+
+within_recursive(<span class="hljs-symbol">Via</span>, <span class="hljs-symbol">Name</span>).
+
+migrated(<span class="hljs-symbol">Name</span>, <span class="hljs-symbol">BornIn</span>, <span class="hljs-symbol">LivingIn</span>) :- name(<span class="hljs-symbol">Person</span>, <span class="hljs-symbol">Name</span>), <span class="hljs-comment">/* Rule 3 */</span>
+                                    born_in(<span class="hljs-symbol">Person</span>, <span class="hljs-symbol">BornLoc</span>),
+                                    within_recursive(<span class="hljs-symbol">BornLoc</span>, <span class="hljs-symbol">BornIn</span>),
+                                    lives_in(<span class="hljs-symbol">Person</span>, <span class="hljs-symbol">LivingLoc</span>),
+                                    within_recursive(<span class="hljs-symbol">LivingLoc</span>, <span class="hljs-symbol">LivingIn</span>).
+
+?- migrated(<span class="hljs-symbol">Who</span>, <span class="hljs-string">&#x27;United States&#x27;</span>, <span class="hljs-string">&#x27;Europe&#x27;</span>).
+<span class="hljs-comment">/* Who = &#x27;Lucy&#x27;. */</span>
+</code></pre></li>
+<li>We define rules that tell the database about new predicates. Here, we define: <code>within_recursive</code> and <code>migrated</code>. These predicates aren’t triples stored in the database, but instead they are derived from data or from other rules.</li>
+<li>In rules, words that start with an uppercase letter are variables. For example, name <code>(Location, Name)</code> matches the triple <code>name(namerica, &#39;North America&#39;)</code> with variable bindings <code>Location = namerica</code> and <code>Name = &#39;North America&#39;</code>.</li>
+</ol>
+<h2>Chapter 3 — Storage &amp; Retrieval</h2>
+<h2>Chapter 4 - Encoding &amp; Evolution</h2>
+<ol>
+<li>Compatibility is a relationship between one process that encodes the data, and another process that decodes it.</li>
+<li>Backward compatibility: Newer code can read data that was written by older code.</li>
+<li>Forward compatibility: Older code can read data that was written by newer code.</li>
+<li>Schemaless databases can contain a mixture of data in older and newer formats.</li>
+<li>Database with schemas enforce data conformity as schema changes.</li>
+</ol>
+<h2>Formats for Encoding Data</h2>
+<ol>
+<li>Programs usually work with data in two different representation:<ul>
+<li>In-memory: Data is kept in objects, arrays, lists, hash tables, etc.</li>
+<li>Self-contained byte sequence: Used when writing data to a file or network.</li>
+</ul>
+</li>
+<li>Translation is needed between the two representations:<ul>
+<li>In-memory to byte sequence — Known as serialization, or encoding, or marshalling</li>
+<li>Byte sequence to in-memory — Known as deserailization, or decoding, or unmarshalling, or parsing.</li>
+</ul>
+</li>
+</ol>
+<h3>Language-Specific Formats</h3>
+<ol>
+<li>Many programming languages come with built-in support for encoding in-memory objects into byte sequences:<ul>
+<li>Java has java.io.Serializable.</li>
+<li>Ruby has Marshal.</li>
+<li>Python has pickle, ...</li>
+</ul>
+</li>
+<li>Pro:<ul>
+<li>Convenient: It&#39;s already included in the programming language.</li>
+</ul>
+</li>
+<li>Cons:<ul>
+<li>Coupled to the programming language.</li>
+<li>Security concern as arbitrary classes can be instantiated.</li>
+<li>Versoning is absent or abysmal.</li>
+<li>Inefficiencies in CPU usage and size of encoded structure.</li>
+</ul>
+</li>
+</ol>
+<h3>JSON, XML, &amp; CSV Formats</h3>
+<ol>
+<li>These are standardized textual (human readable) encoding formats that are used in many programming languages.</li>
+<li>XML is verbose and unnecessarily complicated; JSON is popular and simpler than XML; CSV is less powerful than both.</li>
+<li>Cons:<ul>
+<li>Number encoding ambiguity: JSON doesn&#39;t distinguish integers and floating-point numbers; XML and CSV doesn&#39;t distinguish numbers and strings (without an external schema).</li>
+<li>JSON &amp; XML don&#39;t support binary strings (sequences of bytes without a character encoding). Albeit inefficient, Base64 encoding binary data is used to circumvent this limitation.</li>
+<li>Optional &amp; complicated schema support for XML &amp; JSON. Consumers that don&#39;t use the schema have to hardcode the appropriate encoding/decoding logic (for correct interpretation: Is it base64 encoded? is it a number?).</li>
+<li>No schema support for CSV. Applications define the meaning of each column &amp; row.</li>
+</ul>
+</li>
+</ol>
+<h4>Binary Encoding</h4>
+<pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;userName&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Martin&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;favoriteNumber&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1337</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;interests&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;daydreaming&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;hacking&quot;</span><span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span>
+</code></pre><p><small id="example4.1">Example record used in several binary formats below.</small></p>
+<ol>
+<li>Binary encoding format for JSON: MessagePack, BSON, BJSON, UBJSON, BISON, Smile, ...</li>
+<li>Binary encoding format for XML: WBXML, Fast Infoset, ...</li>
+<li>These binary formats can extend the set of datatypes:<ul>
+<li>Distinguishing integers &amp; floating-point numbers</li>
+<li>Binary string support</li>
+</ul>
+</li>
+<li>Because these binary formats don&#39;t pescribe a schema, they need to include all the object field names within the encoded data.</li>
+<li>The <a href="#example4.1">example record</a> encoded with MessagePack is <code>66 bytes</code> long, compared to the <code>81 bytes</code> taken by the textual JSON encoding (with whitespace removed).
+<img src="assets/fig4.1.png" alt="Example record encoded with MessagePack"></li>
+<li>The downside of binary encoding is that data needs to be decoded before it is human-readable.</li>
+</ol>
+<h3>Thrift &amp; Protocol Buffers</h3>
+<ol>
+<li><p>Apache Thrift &amp; Protocol Buffers (protobuf) are binary encoding formats.</p>
+</li>
+<li><p>Both have code generation tools that use a required schema definition to produce classes that implement the schema in various programming languages.</p>
+<pre><code class="hljs language-thrift"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Person</span> </span>{
+   <span class="hljs-number">1</span>: <span class="hljs-keyword">required</span> <span class="hljs-type">string</span> userName,
+   <span class="hljs-number">2</span>: <span class="hljs-keyword">optional</span> <span class="hljs-type">i64</span> favoriteNumber,
+   <span class="hljs-number">3</span>: <span class="hljs-keyword">optional</span> <span class="hljs-type">list</span>&lt;<span class="hljs-type">string</span>&gt; interests
+}
+</code></pre><p><small>Schema for the <a href="#example4.1">example record</a> in Thrift IDL.</small></p>
+<pre><code class="hljs language-protobuf"><span class="hljs-keyword">message </span><span class="hljs-title class_">Person</span> {
+   <span class="hljs-keyword">required</span> <span class="hljs-type">string</span> user_name = <span class="hljs-number">1</span>;
+   <span class="hljs-keyword">optional</span> <span class="hljs-type">int64</span> favorite_number = <span class="hljs-number">2</span>;
+   <span class="hljs-keyword">repeated</span> <span class="hljs-type">string</span> interests = <span class="hljs-number">3</span>;
+}
+</code></pre><p><small>Schema for the <a href="#example4.1">example record</a> with Protobuf.</small></p>
+</li>
+<li><p>Required/optional markers are only used for runtime verification.</p>
+</li>
+<li><p>Thrift has two encoding formats: BinaryProtocol &amp; CompactProtocol.</p>
+</li>
+<li><p><a href="#example4.1">Example record</a> encoded with Thrift&#39;s BinaryProtocol takes <code>59 bytes</code>.
+<img src="assets/fig4.2.png" alt="Example record encoded with Thrift BinaryProtocol"></p>
+<p><strong>Note</strong>: No field names — Instead field tags from the schema definition is used.</p>
+</li>
+<li><p>Thrift&#39;s CompactProtocol is semantically equivalent to BinaryProtocol, but packs the same information into <code>34 bytes</code>.
+<img src="assets/fig4.3.png" alt="Example record encoded with Thrift CompactProtocol"></p>
+<ul>
+<li>It packs the field tag &amp; type into one byte</li>
+<li>Uses variable length integers: Rather than using a full eight bytes for the number <strong>1337</strong>, it&#39;s encoded in two bytes, with the top bit of each byte used to indicate whether there are still more bytes to come. This means numbers between –64 and 63 are encoded in one byte, numbers between –8192 and 8191 are encoded in two bytes, etc.</li>
+</ul>
+</li>
+<li><p><a href="#example4.1">Example record</a> encoded with Protobuf takes <code>33 bytes</code>.
+<img src="assets/fig4.4.png" alt="Example record encoded with Protobuf"></p>
+</li>
+</ol>
+<h4>Field tags &amp; Schema evolution</h4>
+<ol>
+<li>An encoded record is just a concantenation of its encoded fields. Each field is identified by its tag number and annotated with a datatype.</li>
+<li>Unset field are omitted from the encoded record.</li>
+</ol>
+<h5>Maintaining forward-compatibility</h5>
+<ol>
+<li>Field names can be changed, but field tag numbers can&#39;t be changed without invalidating existing encoded data.</li>
+<li>Fields can be added to a schema, using distinct tag numbers — Old code simply ignores it.</li>
+<li>Required fields can&#39;t be removed afterwards.</li>
+</ol>
+<h5>Maintaining backward-compatibility</h5>
+<ol>
+<li>New code can read old data as long as field tag numbers are unique.</li>
+<li>New fields can&#39;t be required as old code can&#39;t write it. They must be optional or have a default value.</li>
+<li>Removed fields tag numbers must be reserved.</li>
+</ol>
+<h5>Datatype &amp; Schema evolution</h5>
+<ol>
+<li>Changing the datatype for numbers is possible, but could lose precision or get truncated.</li>
+<li>Protobuf has a <code>repeated</code> marker instead of a list or array datatype — this allows evolution from single-valued fields into repeated (multi-valued) fields of the same type.</li>
+<li>Thrift has a dedicated list datatype, which has the advantage of supporting nested lists.</li>
+</ol>
+<h3>Avro</h3>
+<ol>
+<li>Apache Avro is a binary encoding format.</li>
+<li>Apache Avro have two schema languages:<ul>
+<li>Avro IDL (intended for human editing)</li>
+</ul>
+<pre><code class="hljs language-avro">record Person {
+   string userName;
+   union { null, long } favoriteNumber = null;
+   array&lt;string&gt; interests;
+}
+</code></pre><ul>
+<li>JSON (more machine readable)</li>
+</ul>
+<pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+   <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;record&quot;</span><span class="hljs-punctuation">,</span>
+   <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Person&quot;</span><span class="hljs-punctuation">,</span>
+   <span class="hljs-attr">&quot;fields&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+      <span class="hljs-punctuation">{</span>
+         <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;userName&quot;</span><span class="hljs-punctuation">,</span>
+         <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;string&quot;</span>
+      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-punctuation">{</span>
+         <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;favoriteNumber&quot;</span><span class="hljs-punctuation">,</span>
+         <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;null&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;long&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+         <span class="hljs-attr">&quot;default&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span>
+      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-punctuation">{</span>
+         <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;interests&quot;</span><span class="hljs-punctuation">,</span>
+         <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+             <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;array&quot;</span><span class="hljs-punctuation">,</span>
+             <span class="hljs-attr">&quot;items&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;string&quot;</span>
+         <span class="hljs-punctuation">}</span>
+      <span class="hljs-punctuation">}</span>
+   <span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span>
+</code></pre></li>
+<li><a href="#example4.1">Example record</a> encoded with Avro takes <code>32 bytes</code>.
+<img src="assets/fig4.5.png" alt="Example record encoded with Protobuf"></li>
+<li>Compared to Thrift or Protobuf, there is no field tag number with an annotated data-type in the encoded data, instead, the schema is used to determine the order and data-type of fields in the encoded data. Thus the writer and reader schemas&#39; must be compatible.</li>
+</ol>
+<h4>Writer &amp; Reader Schema</h4>
+<ol>
+<li>The writer’s schema and the reader’s schema don’t have to be the same — they only need to be compatible.</li>
+<li>During decoding, the Avro library resolves the differences by looking at the writer’s schema and the reader’s schema side by side and translating the data from the writer’s schema into the reader’s schema.</li>
+</ol>
+<p><img src="assets/fig4.6.png" alt="An Avro reader resolves differences between the writer’s schema and the reader’s schema."></p>
+<h3>The Merits of Schemas</h3>
+<ol>
+<li>Compact since field names can be omitted.</li>
+<li>Schema is a form of documentation.</li>
+<li>Database of schema enables validation of backward &amp; forward compatibility.</li>
+<li>Code-gen from the schema enables compile-time type checking in statically typed languages.</li>
+</ol>
+<h3>Modes of Dataflow</h3>
+<h4>Dataflow Through Databases</h4>
+<ol>
+<li>In a database, the process that writes to the database encodes the data, and the process that reads from the database decodes it.</li>
+<li>Data outlives code.</li>
+<li>When an older version of the application updates data previously written by a newer version of the application, data may be lost if you’re not careful.
+<img src="assets/fig4.7.png" alt=""></li>
+</ol>
+<h4>Dataflow Through Services: REST and RPC</h4>
+<ol>
+<li>Client-server is a common arrangement for processes that want to communicate over a network.</li>
+<li>The servers expose an API over the network, and the clients can connect to the servers to make requests to that API. The API exposed by the server is known as a service.</li>
+<li>The client encodes a request, the server decodes the request and encodes a response, and the client finally decodes the response.</li>
+<li>An application can be decomposed into smaller services by area of functionality, such that one service is a client of another. This is known as <code>Service oriented architecture (SOA)</code> or <code>Microservices architecture</code>.</li>
+</ol>
+<h5>Web services</h5>
+<ol>
+<li>When HTTP is used as the underlying protocol for talking to the service, it&#39;s called a web service. This is a misnomer tho as web services are not only used on the web.</li>
+<li>REST is not a protocol, but rather a design philosophy that builds upon the principles of HTTP. It emphasizes simple data formats, using URLs for identifying resources and using HTTP features for cache control, authentication, and content type negotiation.</li>
+<li>An API designed according to the principles of REST is called RESTful.</li>
+<li>A definition format such as OpenAPI (aka Swagger), can be used to describe RESTful APIs and produce documentation.</li>
+<li>By contrast, SOAP is an XML-based protocol for making network API requests. Although it is most commonly used over HTTP, it aims to be independent from HTTP and avoids using most HTTP features.</li>
+<li>The API of a SOAP web service is described using an XML-based language called the Web Services Description Language, or WSDL.</li>
+</ol>
+<h5>The problems with remote procedure calls (RPCs)</h5>
+<ol>
+<li>The RPC model tries to make a request to a remote network service look the same as calling a local function (this abstraction is called location transparency).</li>
+<li>RPC is flawed because a network request is different from a local function call:<ul>
+<li>A local function call is predictable and either succeeds or fails, depending only on parameters that are under your control.</li>
+<li>A network request can timeout. A local function call always: returns a result or throws an exception or never returns.</li>
+<li>Network request responses&#39; can get lost.</li>
+<li>A network request latency is wildly variable.</li>
+<li>References (pointers) to objects in local memory can be efficiently passed to local functions.</li>
+<li>Translation of data-types is necessary if the client &amp; server are written in different programming languages.</li>
+</ul>
+</li>
+</ol>
+<h5>Current directions for RPC</h5>
+<ol>
+<li>Thrift and Avro come with RPC support included.</li>
+<li>gRPC is an RPC implementation using Protocol Buffers.</li>
+<li>Finagle uses Thrift.</li>
+<li>Rest.li uses JSON over HTTP.</li>
+<li>The new generation of RPC frameworks are more explicit about the fact that a remote request is different from a local function call.</li>
+</ol>
+<h4>Message-Passing Dataflow</h4>
+<ol>
+<li>Asynchronous message-passing systems are somewhere between RPC and databases:<ul>
+<li>They are similar to RPC in that a client’s request (usually called a message) is delivered to another process with low latency.</li>
+<li>They are similar to databases in that the message is not sent via a direct network connection, but goes via an intermediary called a <code>message broker</code> (also called a message queue or message-oriented middleware), which stores the message temporarily.</li>
+</ul>
+</li>
+<li>Using a message broker has several advantages compared to direct RPC:<ul>
+<li>It can act as a buffer if the recipient is unavailable or overloaded, and thus improve system reliability.</li>
+<li>It can automatically redeliver messages to a process that has crashed, and thus prevent messages from being lost.</li>
+<li>It avoids the sender needing to know the IP address and port number of the recipient.</li>
+<li>It allows one message to be sent to several recipients.</li>
+<li>It logically decouples the sender from the recipient (the sender just publishes messages and doesn’t care who consumes them).</li>
+</ul>
+</li>
+<li>Message-passing communication is usually one-way: a sender normally doesn’t expect to receive a reply to its messages.</li>
+<li>This communication pattern is asynchronous: the sender fires &amp; forget.</li>
+</ol>
+<h5>Message brokers</h5>
+<ol>
+<li>Open source implementations: RabbitMQ, ActiveMQ, HornetQ, NATS, Apache Kafka, etc.</li>
+<li>The detailed delivery semantics vary by implementation and configuration, but in general, message brokers are used as follows:<blockquote>
+<p>One process sends a message to a <code>named queue/topic</code>, and the <code>broker</code> ensures that the message is delivered to one or more <code>consumers of</code> or <code>subscribers to</code> that <code>queue/topic</code>. There can be many producers and many consumers on the same topic.</p>
+</blockquote>
+</li>
+<li>Message brokers typically don’t enforce any particular data model — a message is just a sequence of bytes with some metadata.</li>
+<li>Messages are encoded by the sender and decoded by the recipient.</li>
+</ol>
+<h5>Distributed actor frameworks</h5>
+<ol>
+<li>The actor model is a programming model for concurrency in a single process:<ul>
+<li>Rather than dealing directly with threads, logic is encapsulated in actors.</li>
+<li>Each actor typically represents one client or entity, it may have some local state (which is not shared with any other actor)</li>
+<li>It communicates with other actors by sending and receiving asynchronous messages.</li>
+<li>Message delivery is not guaranteed: in certain error scenarios, messages will be lost.</li>
+<li>Since each actor processes only one message at a time, it doesn’t need to worry about threads, and each actor can be scheduled independently by the framework.</li>
+</ul>
+</li>
+<li>In distributed actor frameworks, this programming model is used to scale an application across multiple nodes. Messages are transparently encoded into a byte sequence, sent over the network, and decoded on the other side.</li>
+<li>Location transparency works better in the actor model than in RPC, because the actor model already assumes that messages may be lost, even within a single process.</li>
+<li>A distributed actor framework essentially integrates a message broker and the actor programming model into a single framework.</li>
+<li>Three popular distributed actor frameworks:<ul>
+<li>Akka</li>
+<li>Orleans</li>
+<li>Erlang OTP</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>Aside: &quot;<code>Rolling upgrades</code> is where a new version of a service is gradually deployed to a few nodes at a time, rather than deploying to all nodes simultaneously.
+Rolling upgrades allow new versions of a service to be released without downtime (thus encouraging frequent small releases over rare big releases) and make deployments less risky (allowing faulty releases to be detected and rolled back before they affect a large number of users).&quot;</p>
+</blockquote>
+<h2>Chapter 5 — Replication</h2>
+<blockquote>
+<p>The major difference between a thing that might go wrong and a thing that cannot possibly go wrong is that when a thing that cannot possibly go wrong goes wrong it usually turns out to be impossible to get at or repair.
+— Douglas Adams, Mostly Harmless (1992)</p>
+</blockquote>
+<ol>
+<li>Replication means keeping a copy of the same data on multiple machines that are connected via a network.</li>
+<li>Benefits:<ul>
+<li>Low latency: Data can be kept geographically close to users.</li>
+<li>High availability: The system can continue working even if some machines fail.</li>
+<li>Scalability: Increased throughput with many machines.</li>
+</ul>
+</li>
+<li>Each node that stores a copy of the database is called a replica.</li>
+</ol>
+<h3>Single leader replication</h3>
+<ol>
+<li>aka: leader-based, active/passive or master–slave replication.</li>
+<li>How it works:<ul>
+<li>One of the replicas is designated the <code>leader</code> (aka: master or primary). All writes goes to the leader.</li>
+<li>The other replicas are known as <code>followers</code> (aka: read replicas, slaves, secondaries, or hot standbys).</li>
+<li>Whenever data is written to the leader, it also sends the data change to all of its followers as part of a replication log or change stream. The followers use this log to update their local copy of the database.</li>
+<li>A client can read from either the leader or any of the followers. Followers are read-only from the client&#39;s POV.
+<img src="assets/fig5.1.png" alt="Leader-based (master–slave) replication"></li>
+</ul>
+</li>
+<li>Used by:<ul>
+<li>Relational databases: PostgreSQL, MySQL.</li>
+<li>Nonrelational databases: MongoDB, RethinkDB, and Espresso.</li>
+<li>Distributed message brokers: Kafka, RabbitMQ.</li>
+</ul>
+</li>
+</ol>
+<h4>Synchronous Versus Asynchronous Replication</h4>
+<ol>
+<li>Semi-synchronous example: The replication to follower 1 is synchronous, and the replication to follower 2 is asynchronous.
+<img src="assets/fig5.2.png" alt="Leader-based replication with one synchronous and one asynchronous fol‐
+lower"></li>
+<li>Advantage of synchronous replication: the follower is guaranteed to have an up-to-date copy of the data that is consistent with the leader.</li>
+<li>Disadvantage of synchronous replication: Writes can&#39;t be processed if the synchronous replica is unavailable.</li>
+<li>Advantage of full asynchronous replication: the leader can continue processing writes, even if all of its followers have fallen behind.</li>
+<li>Disadvantage of full asynchronous replication: writes are not guaranteed to be durable, even if it has been confirmed to the client.</li>
+</ol>
+<h4>Setting Up New Followers</h4>
+<ol>
+<li>Setting up a new follower without downtime:<ul>
+<li>Take a <strong>consistent</strong> snapshot of the leader’s database at some point in time. A standard file copy is insufficient as the database can be modified in between the copy operation.</li>
+<li>Copy the snapshot to the new follower node.</li>
+<li>The follower connects to the leader and requests all the data changes that have happened since the snapshot was taken.</li>
+<li>When the follower has processed the backlog of data changes since the snapshot we say it has caught up.</li>
+</ul>
+</li>
+</ol>
+<h4>Handling Node Outages</h4>
+<p>How to achieve high availability with leader-based replication.</p>
+<h5>Follower failure: Catch-up recovery</h5>
+<ol>
+<li>After a failure, a follower can recover by requesting from the leader all the changes between its last processed transaction and now. Similar to the last two steps mentioned in <a href="#setting-up-new-followers">setting up new followers</a>.</li>
+</ol>
+<h5>Leader failure: Failover</h5>
+<ol>
+<li>Failover is the process of handling a leader failure:<ul>
+<li>one of the followers needs to be promoted to be the new leader,</li>
+<li>clients need to be reconfigured to send their writes to the new leader, and</li>
+<li>the other followers need to start consuming data changes from the new leader.</li>
+</ul>
+</li>
+<li>An automatic failover process usually consists of the following steps:<ul>
+<li>Determining that the leader has failed: Timeouts are usually used as there is no better alternative.</li>
+<li>Choosing a new leader: Through an election process or a single elected controller node. The replica with the most recent changes is the best candidate given this minimizes data loss.</li>
+<li>Reconfiguring the system to use the new leader and ensuring that the old leader becomes a follower whenever it comes back on the network.</li>
+</ul>
+</li>
+<li>Failover is fraught with things that can go wrong:<ul>
+<li>If asynchronous replication is used, the new leader may not have received all the writes from the old leader before it failed, leading to potential data loss.</li>
+<li>Discarding writes is especially dangerous if other storage systems outside of the database need to be coordinated with the database contents.</li>
+<li>In certain fault scenarios, it could happen that two nodes both believe that they are the leader. This situation is called split brain and it can lead to data loss or corruption.</li>
+<li>What is the right timeout before the leader is declared dead?<ul>
+<li>Short timeout: can lead to unncessary failovers.</li>
+<li>Long timeout: leads to longer recovery times.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h4>Implementation of Replication Logs</h4>
+<p>Several different leader-based replication methods are used in practice.</p>
+<h5>Statement-based replication</h5>
+<ol>
+<li>The leader logs every write request (statement) that it executes and sends that statement log to its followers.</li>
+<li>For a relational database, this means that every <code>INSERT</code>, <code>UPDATE</code>, or <code>DELETE</code>m statement is forwarded to followers.</li>
+<li>Issues:<ul>
+<li>Nondeterministic functions (like <code>NOW()</code>, <code>RAND()</code>) in statements can produce different values on replicas.</li>
+<li>If a statement depends on existing data in the database, they must be executed in exactly the same order on each replica in order to have the same effect.</li>
+<li>Statements that have side effects (e.g: triggers, stored procedures, user-defined functions) may result in different side effects occurring on each replica.</li>
+</ul>
+</li>
+<li>Some of the issues can be addressed, like replacing <code>NOW()</code> with an exact date-time on the leader. However, there are so many edge cases.</li>
+<li>VoltDB uses statement-based replication, and makes it safe by requiring transactions to be deterministic.</li>
+</ol>
+<h5>Write-ahead log (WAL) shipping</h5>
+<ol>
+<li>As discussed in <a href="#chapter-3--storage--retrieval">Chapter 3</a>, storage engines maintain a log that is an append-only sequence of bytes containing all writes to the database.</li>
+<li>This log can be used to build a replica on another node: besides writing the log to disk, the leader also sends it across the network to its followers.</li>
+<li>Disadvantages:<ul>
+<li>Couples replication to the storage engine: the log describes the data on a very low level — a WAL contains details of which bytes were changed in which disk blocks. If the database changes its storage format, upgrading to this version will require downtime if replicas can&#39;t use the same log.</li>
+</ul>
+</li>
+<li>Used by: PostgreSQL, Oracle, etc.</li>
+</ol>
+<h5>Logical (row-based) log replication</h5>
+<ol>
+<li>An alternative is to use different log formats for replication and for the storage engine, which allows the replication log to be decoupled from the storage engine internals.</li>
+<li>This kind of replication log is called a <code>logical log</code>, to distinguish it from the storage engine’s (<code>physical</code>) data representation.</li>
+<li>A logical log for a relational database is usually a sequence of records describing writes to database tables at the granularity of a row:<ul>
+<li>For an inserted row, the log contains the new values of all columns.</li>
+<li>For a deleted row, the log contains enough information to uniquely identify the row that was deleted.</li>
+<li>For an updated row, the log contains enough information to uniquely identify the updated row, and the new values.</li>
+</ul>
+</li>
+</ol>
+<h5>Trigger-based replication</h5>
+<ol>
+<li>Unlike the methods above that are done at the database level, this is done at the application level.</li>
+<li>Triggers and stored procedures can be used to implement this.</li>
+<li>Pros compared to database level replication:<ul>
+<li>Flexible</li>
+</ul>
+</li>
+<li>Cons compared to database level replication:<ul>
+<li>Greater overhead</li>
+<li>Prone to bugs and limitations</li>
+</ul>
+</li>
+</ol>
+<h3>Problems with Replication Lag</h3>
+<ol>
+<li>Replication lag is the delay between a write happening on the leader and being reflected on a follower.</li>
+<li>With asynchronous replication, replication lag can lead to inconsistencies between a follower and the leader. </li>
+<li>This inconstencies is temporary as eventually the follower catches up with the latest data. This effect is known as eventual consistency.</li>
+</ol>
+<h4>Reading Your Own Writes</h4>
+<ol>
+<li>Issue: A user makes a write, followed by a read from a stale replica. To prevent this anomaly, we need read-after-write/read-your-writes consistency.
+<img src="assets/fig5.3.png" alt=""></li>
+<li>This is a consistency gurantee that a writer will see all their latest writes whenever they read.</li>
+<li>Ways to implement:<ul>
+<li>When reading something that the user may have modified, read it from the leader; otherwise, read it from a follower. E.g: Always read a user&#39;s own profile from the leader, other profiles can be read from followers. This doesn&#39;t work well if most things are editable by the user.</li>
+<li>Prevent reads to lagging replicas for a duration of time.</li>
+<li>The client can remember the timestamp of its most recent write — then the system can ensure that the replica serving any reads for that user reflects updates at least until that timestamp. This doesn&#39;t work if a user uses multiple devices.</li>
+</ul>
+</li>
+</ol>
+<h4>Monotonic Reads</h4>
+<ol>
+<li>A user first reads from a fresh replica, then from a stale replica. Time appears to go backward. To prevent this anomaly, we need monotonic reads.
+<img src="assets/fig5.4.png" alt=""></li>
+<li>Monotonic reads is weaker gurantee than strong consistency (as older data can still be returned), but it&#39;s a stronger gurantee than eventual consistency.</li>
+<li>Monotonic reads only means a user will not read older data after having previously read newer data.</li>
+<li>One way of achieving monotonic reads is to make sure that each user always makes their reads from the same replica (different users can read from different replicas).</li>
+</ol>
+<h4>Consistent Prefix Reads</h4>
+<ol>
+<li>If some partitions are replicated slower than others, an observer may see the answer before they see the question (violation of causality).
+<img src="assets/fig5.5.png" alt=""></li>
+<li>Consistent prefix reads is a consistency guarantee that if a sequence of writes happens in a certain order, then anyone reading those writes will see them appear in the same order.</li>
+<li>This anomaly only affects partitioned databases. As a non-partitioned database is dependent on the leader and thus have only one write order.</li>
+<li>One way of achieving consistent prefix reads is to make sure that any writes that are causally related to each other are written to the same partition.</li>
+</ol>
+<h3>Multi-Leader Replication</h3>
+<ol>
+<li>Multi-Leader replication (aka: master–master or active/active replication) allows more than one node to accept writes. In this setup, each leader simultaneously acts as a follower to the other leaders.</li>
+</ol>
+<h4>Use Cases for Multi-Leader Replication</h4>
+<h5>1. Multi-datacenter operation</h5>
+<ol>
+<li>In a multi-leader configuration, you can have a leader in each datacenter. Within each datacenter, regular leader–follower replication is used; between datacenters, each datacenter’s leader replicates its changes to the leaders in other datacenters.
+<img src="assets/fig5.6.png" alt="Multi-leader replication across multiple datacenters"></li>
+<li>Multi-leader replication is an often retrofitted feature of databases, making them dangerous as they have suprising interactions with other database features.</li>
+<li>External tools enabling multi-leader replication on relational databases:<ul>
+<li>Tungsten Replicator for MySQL</li>
+<li>BDR for PostgreSQL</li>
+<li>GoldenGate for Oracle</li>
+</ul>
+</li>
+<li>Major downside of multi-leader replication: the same data may be concurrently modified in two different datacenters, and those write conflicts must be resolved.</li>
+<li>Comparison of single-leader vs multi-leader in a multi-datacenter environment:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Single-leader</th>
+<th>Multi-leader</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Performance</td>
+<td>Added latency because every write goes over the internet to the datacenter with the leader.</td>
+<td>Inter-datacenter network delay can be hidden by writing to a local datacenter and asynchronously syncing with other datacenters.</td>
+</tr>
+<tr>
+<td>Tolerance of datacenter outages</td>
+<td>Failover to a follower in anothe datacenter</td>
+<td>Datacenters can continue operating independently</td>
+</tr>
+<tr>
+<td>Tolerance of network problems</td>
+<td>Sensitive to problems in the inter-datacenter link because writes are made usually made over this link</td>
+<td>With asynchronous replication, network problems are tolerable as writes can be processed locally</td>
+</tr>
+</tbody></table>
+<h5>Clients with offline operation</h5>
+<ol>
+<li>In this case, every device has a local database that acts as a leader (it accepts write requests), and there is an asynchronous multi-leader replication process (sync) between the replicas on all devices.</li>
+<li>CouchDB is designed for this mode of operation.</li>
+</ol>
+<h5>Collaborative editing</h5>
+<ol>
+<li>Real-time collaborative editing applications allow several people to edit a document simultaneously.</li>
+<li>Document locks can gurantee no edit conflicts, but this disables simultaneous editing.</li>
+</ol>
+<h4>Handling Write Conflicts</h4>
+<ol>
+<li>A write conflict caused by two leaders concurrently updating the same record.
+<img src="assets/fig5.7.png" alt=""></li>
+</ol>
+<h5>Synchronous versus asynchronous conflict detection</h5>
+<ol>
+<li>Conflict detection can be made synchronous — i.e: wait for the write to be replicated to all replicas before telling the user that the write was successful.</li>
+<li>However, this loses the main advantage of multi-leader replication: allowing each replica to accept writes independently.</li>
+</ol>
+<h5>Conflict avoidance</h5>
+<ol>
+<li>The application can ensure that all writes for a particular record go through the same leader, to avoid conflicts. Each record can have a &quot;home&quot; leader.</li>
+<li>Conflict avoidance can breaksdown whenever you want to change a record&#39;s &quot;home&quot; leader. You have to deal with the possibility of concurrent writes on different leaders.</li>
+</ol>
+<h5>Converging toward a consistent state</h5>
+<ol>
+<li>In a multi-leader configuration, there is no defined ordering of writes, so it’s not clear what the final value should be.</li>
+<li>Every replication scheme must ensure that the data is eventually the same in all replicas. Thus, the database must resolve the conflict in a convergent way, which means that all replicas must arrive at the same final value when all changes have been replicated.</li>
+<li>Some ways of achieving convergent conflict resolution:<ul>
+<li>Give each write a unique ID (e.g: a timestamp, a UUID) and pick the write with the highest ID as the winner. Prone to data-loss.</li>
+<li>Give each replica a unique ID, and let writes that originated at a higher numbered replica always take precedence. Prone to data-loss.</li>
+<li>Somehow merge the values together—e.g., order them alphabetically and then concatenate them.</li>
+<li>Record the conflict in an explicit data structure that preserves all information, and write application code that resolves the conflict at some later time (perhaps by prompting the user).</li>
+</ul>
+</li>
+</ol>
+<h5>Custom conflict resolution logic</h5>
+<p>Resolution can be app specific, thus most tools allow application code to handle conflicts. This code is run:</p>
+<ul>
+<li><strong>On write</strong>: As soon as the database system detects a conflict in the log of replicated changes, it calls the conflict handler. Burcado does this.</li>
+<li><strong>On read</strong>: Conflicting writes are stored and returned to the application whenever it tries to read te affected record. It can auto resolve the conflict, or prompt the user to do so. CouchDB does this.</li>
+</ul>
+<h5>Automatic Conflict Resolution</h5>
+<p>A few lines of research are worth mentioning:</p>
+<ul>
+<li><strong>Conflict-free replicated datatypes (CRDTs)</strong> are a family of data structures for sets, maps, ordered lists, counters, etc. that can be concurrently edited by multiple users, and which automatically resolve conflicts in sensible ways. Some CRDTs have been implemented in Riak 2.0.</li>
+<li><strong>Mergeable persistent data structures</strong> track history explicitly, similarly to the Git version control system, and use a three-way merge function (whereas CRDTs use two-way merges).</li>
+<li><strong>Operational transformation</strong> is the conflict resolution algorithm behind collaborative editing applications such as Etherpad and Google Docs. It was designed particularly for concurrent editing of an ordered list of items, such as the list of characters that constitute a text document.</li>
+</ul>
+<h5>What is a conflict?</h5>
+<p>Editing the same field on the same record is an obvious conflict. But some conflicts are subtle: like the ones that violate some application constraints when two distinct records are edited by two independent leaders.</p>
+<h4>Multi-Leader Replication Topologies</h4>
+<ol>
+<li>A replication topology describes the communication paths along which writes are propagated from one node to another.</li>
+<li>Three example topologies in which multi-leader replication can be set up.
+<img src="assets/fig5.8.png" alt=""></li>
+<li><strong>All-to-all topology</strong>: every leader sends its writes to every other leader.</li>
+<li><strong>Circular topology</strong>: each node receives writes from one node and forwards those writes (plus any writes of its own) to one other node.</li>
+<li><strong>Star topology</strong>: one designated root node forwards writes to all of the other nodes. The star topology can be generalized to a tree.</li>
+<li>To prevent infinite replication loops, each node is given a unique identifier, and in the replication log, each write is tagged with the identifiers of all the nodes it has passed through. Thus, a node can ignore a data change with its identifier.</li>
+</ol>
+<h3>Leaderless Replication</h3>
+<ol>
+<li>Leaderless replication abandons the concept of a leader and allows any replica to directly accept writes from clients.</li>
+<li>Clients send each write to several nodes, and read from several nodes in parallel in order to detect and correct nodes with stale data.</li>
+<li>Amazon built Dynamo, its in-house datastore with leaderless replication. Riak, Cassandra, and Voldemort are open source datasources insipred by Dynamo.</li>
+<li>In some leaderless implementations, the client directly sends its writes to several replicas, while in others, a coordinator node does this on behalf of the client.</li>
+</ol>
+<h4>Writing to the Database When a Node Is Down</h4>
+<ol>
+<li>A quorum write, quorum read, and read repair after a node outage.
+<img src="assets/fig5.10.png" alt=""></li>
+<li>When a client reads from the database, it doesn’t just send its request to one replica: read requests are also sent to several nodes in parallel. The client may get different responses from different nodes; i.e: the up-to-date value from one node and a stale value from another.</li>
+</ol>
+<h5>Read repair and anti-entropy</h5>
+<p>Two mechanisms are often used in Dynamo-style datastores to ensure that eventually all the data is copied to every replica:</p>
+<ul>
+<li><strong>Read Repair</strong>: When a client makes a read from several nodes in parallel, it can detect any stale responses, and update the stale node with fresher values. With only this mechanism, values that are rarely read may be missing from some replicas.</li>
+<li><strong>Anti-entropy process</strong>: A background process that constantly looks for differences in the data between replicas and copies any missing data from one replica to another, in no particular order and probably with some delay.</li>
+</ul>
+<h4>Quorums for reading and writing</h4>
+<blockquote>
+<p>If there are <code>n</code> replicas, every write must be confirmed by <code>w</code> nodes to be considered successful, and we must query at least <code>r</code> nodes for each read.
+As long as <code>w + r &gt; n</code>, we expect to get an up-to-date value when reading, because at least one of the <code>r</code> nodes we’re reading from must be up to date.
+Reads and writes that obey these <code>r</code> and <code>w</code> values are called quorum reads and writes.
+You can think of <code>r</code> and <code>w</code> as the minimum number of votes required for the read or write to be valid.</p>
+</blockquote>
+<ol>
+<li>A common choice is to make <code>n</code> an odd number (typically 3 or 5) and to set <code>w = r = (n + 1) / 2</code> (rounded up).</li>
+<li>A workload with few writes and many reads may benefit from setting <code>w = n</code> and <code>r = 1</code>. This makes reads faster, but has the disadvantage that just one failed node causes all database writes to fail.</li>
+<li>The quorum condition, <code>w + r &gt; n</code>, allows the system to tolerate unavailable nodes as follows:<ul>
+<li>If <code>w &lt; n</code>, we can still process writes if a node is unavailable.</li>
+<li>If <code>r &lt; n</code>, we can still process reads if a node is unavailable.</li>
+<li>With <code>n = 3</code>, <code>w = 2</code>, <code>r = 2</code> we can tolerate one unavailable node.</li>
+<li>With <code>n = 5</code>, <code>w = 3</code>, <code>r = 3</code> we can tolerate two unavailable nodes.</li>
+<li>Normally, reads and writes are always sent to all <code>n</code> replicas in parallel. Them parameters <code>w</code> and <code>r</code> determine how many nodes we wait for — i.e: how many of the <code>n</code> nodes need to report success before we consider the read or write to be successful.
+<img src="assets/fig5.11.png" alt=""></li>
+</ul>
+</li>
+</ol>
+<h5>Limitations of Quorum Consistency</h5>
+<ol>
+<li>If you have <code>n</code> replicas, and you choose <code>w</code> and <code>r</code> such that <code>w + r &gt; n</code>, you can generally expect every read to return the most recent value written for a key. This is the case because the set of nodes to which you’ve written and the set of nodes from which you’ve read must overlap.</li>
+<li>Even with <code>w + r &gt; n</code>, depending on the implementation, there are edge cases where stale values can be returned. It&#39;s best to think of the <code>r</code> and <code>w</code> values as adjusting the probability that a stale value will be read.</li>
+</ol>
+<h5>Monitoring staleness</h5>
+<ol>
+<li>In systems with leaderless replication, there is no fixed order in which writes are applied, which makes monitoring more difficult; compared to leader-based replication where the replication lag can be measured based on the difference between a follower&#39;s local data and the leader&#39;s.</li>
+<li>Eventual consistency is a deliberately vague guarantee, but for <strong>operability</strong> it’s important to be able to quantify “eventual.”</li>
+</ol>
+<h4>Sloppy Quorums and Hinted Handoff</h4>
+<ol>
+<li>Database designers face a trade-off:<ul>
+<li>Is it better to return errors to all requests for which we cannot reach a quorum of <code>w</code> or <code>r</code> nodes?</li>
+<li>Or should we accept writes anyway, and write them to some nodes that are reachable but aren’t among the <code>n</code> nodes on which the value usually lives?</li>
+</ul>
+</li>
+<li>The latter is known as a <code>sloppy quorum</code>: writes and reads still require <code>w</code> and <code>r</code> successful responses, but those may include nodes that are not among the designated <code>n</code> “home” nodes for a value.</li>
+<li>Once the network interruption is fixed, any writes that one node temporarily accepted on behalf of another node are sent to the appropriate “home” nodes. This is called <code>hinted handoff</code>.</li>
+</ol>
+<blockquote>
+<p>Sloppy quorums are particularly useful for increasing write availability: as long as any <code>w</code> nodes are available, the database can accept writes. However, this means that even when <code>w + r &gt; n</code>, you cannot be sure to read the latest value for a key, because the latest value may have been temporarily written to some nodes outside of <code>n</code>.</p>
+</blockquote>
+<h4>Multi-datacenter operation</h4>
+<p>Leaderless replication uses a similar to multi-leader replication in a multi-datacenter environment: writes across datacenters are usually asynchronous, and writes within a datacenter can be synchronous — this dampens the effect of faults in the cross-datacenter link.</p>
+<h4>The “happens-before” relationship and concurrency</h4>
+<blockquote>
+<p>An operation <code>A</code> happens before another operation <code>B</code> if <code>B</code> knows about <code>A</code>, or depends on <code>A</code>, or builds upon <code>A</code> in some way. [...]
+Two operations are concurrent if neither happens before the other (i.e: neither knows about the other)</p>
+</blockquote>
+<h2>Chapter 10 — Batch Processing</h2>
+<p>Three types of systems:</p>
+<ol>
+<li><p>Services (Online systems): Handle client requests as they arrive. Primary performance metric is response time.</p>
+</li>
+<li><p>Batch processing systems (offline systems): (Periodically) takes a large amount of input data, runs a job to process it, and produces some output data. Primary performance metric is throughput.</p>
+</li>
+<li><p>Stream processing systems (near-real-time systems): Somewhere between (1) &amp; (2). Like (2), a stream processor consumes inputs and produces outputs (rather than responding to requests). However, a stream job operates on events shortly after they happen.</p>
+</li>
+</ol>
+<h3>Bash Processing with Unix Tools</h3>
+<pre><code class="hljs">216.58.210.78 - - [27/Feb/2015:17:55:11 +0000] &quot;GET /css/typography.css HTTP/1.1&quot;
+200 3377 &quot;http://martin.kleppmann.com/&quot; &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X
+10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115
+Safari/537.36&quot;
+</code></pre><p>For a file containing log lines (like above), a simple unix tool can be used to do log analysis.</p>
+<p>For example, to find the five most popular pages:</p>
+<pre><code class="hljs language-bash"><span class="hljs-built_in">cat</span> /var/log/nginx/access.log |
+awk <span class="hljs-string">&#x27;{print $7}&#x27;</span> |
+<span class="hljs-built_in">sort</span> |
+<span class="hljs-built_in">uniq</span> -c |
+<span class="hljs-built_in">sort</span> -r -n |
+<span class="hljs-built_in">head</span> -n 5
+</code></pre><p>Writing an equivalent simple program with a hash table is possible. The unix approach has some advantages -- sort for example uses multiple threads, and if a data doesn&#39;t fit in memory, it is written to disk.</p>
+<h3>The Unix Philoshophy</h3>
+<ol>
+<li>Make each program do one thing well. To do a new job, build afresh rather than complicate old programs by adding new “features”.</li>
+<li>Expect the output of every program to become the input to another, as yet unknown, program. Don’t clutter output with extraneous information. Avoid stringently columnar or binary input formats. Don’t insist on interactive input.</li>
+<li>Design and build software, even operating systems, to be tried early, ideally within weeks. Don’t hesitate to throw away the clumsy parts and rebuild them.</li>
+<li>Use tools in preference to unskilled help to lighten a programming task, even if you have to detour to build the tools and expect to throw some of them out after you’ve finished using them.</li>
+</ol>
+<h4>Uniform Interface</h4>
+<p>All programs must use the same I/O interface to be able to connect any program’s output to any program’s input. In Unix, that interface is a file (or, more precisely, a file descriptor). A file is just an ordered sequence of bytes.</p>
+<p>Unix programs read from <code>stdin</code> (default: keyboard) and write to <code>stdout</code> (default: screen). Because of the loose coupling, it is possible to pipe a program <code>stdout</code> to another program <code>stdin</code>, or have <code>stdin/stdout</code> be an arbirtrary file.</p>
+<p>Running on a single machine is the biggest limitation of Unix tools.</p>
+<h3>MapReduce &amp; Distributed Filesystems</h3>
+<p>Like Unix tools, MapReduce normally doesn&#39;t have side-effects -- It takes in input, and produces an output.</p>
+<p>MapReduce jobs read and write files on a distributed filesystem -- HDFS (Hadoop Distributed Filesystem) in Hadoop&#39;s implementation of MapReduce.</p>
+<p>HDFS is based on the shared-nothing principle.</p>
+<p>HDFS consists of a daemon process running on each machine, exposing a network service that allows other nodes to access files stored on that machine.</p>
+<p>A central server called the <code>NameNode</code> keeps track of which file blocks are stored on which machine.</p>
+<p>Conceptually, it is one big filesystem that can use the space on the disks of all machines running the daemon.</p>
+<p><img src="hdfs_architecture.gif" alt=""></p>
+<p>Replication is used to tolerate machine and disk failures. Replication may mean simply several copies of the same data on multiple machines, or an erasure coding scheme such as Reed–Solomon codes, which allows lost data to be recovered with lower storage overhead than full replication.</p>
+<h4>MapReduce Job Execution</h4>
+<p>MapReduce is a programming framework with which you can write code to process large datasets in a distributed filesystem like HDFS.</p>
+<p>The pattern of MapReduce is similar to the example above in Simple Log Analysis:</p>
+<ol>
+<li><p>Read a set of input files, and break it up into records. In the web server log example, each record is one line in the log (that is, \n is the record separator).</p>
+</li>
+<li><p>Call the mapper function to extract a key and value from each input record. In the preceding example, the mapper function is <code>awk &#39;{print $7}&#39;</code>: it extracts the URL ($7) as the key, and leaves the value empty.</p>
+</li>
+<li><p>Sort all of the key-value pairs by key. In the log example, this is done by the first sort command.</p>
+</li>
+<li><p>Call the reducer function to iterate over the sorted key-value pairs. If there are multiple occurrences of the same key, the sorting has made them adjacent in the list, so it is easy to combine those values without having to keep a lot of state in memory. In the preceding example, the reducer is implemented by the command <code>uniq -c</code>, which counts the number of adjacent records with the same key.</p>
+</li>
+</ol>
+<p>Those four steps can be performed by one MapReduce job. Steps 2 (map) and 4 (reduce) are where you write your custom data processing code. Step 1 (breaking files into records) is handled by the input format parser. Step 3, the sort step, is implicit in MapReduce—you don’t have to write it, because the output from the mapper is always sorted before it is given to the reducer.</p>
+<p>To create a MapReduce job, two callback functions implementation are needed: mapper &amp; reducer.</p>
+<p>Mapper: The mapper is called once for every input record, and its job is to extract the key and value from the input record. For each input, it may generate any number of key-value pairs (including none). It does not keep any state from one input record to the next, so each record is handled independently.</p>
+<p>Reducer: The MapReduce framework takes the key-value pairs produced by the mappers, collects all the values belonging to the same key, and calls the reducer with an iterator over that collection of values. The reducer can produce output records.</p>
+<p>In the web server log example, we had a second sort command in step 5, which ranked URLs by number of requests. In MapReduce, if you need a second sorting stage, you can implement it by writing a second MapReduce job and using the output of the first job as input to the second job.</p>
+<h5>Distributed execution of MapReduce</h5>
+<p>Without explicitly writing code to handle parallelism, MapReduce can help parallize a computation across many machines. The mapper and reducer only operate on one record at a time; they don’t need to know where their input is coming from or their output is going to, so the framework can handle the complexities of moving data between machines.</p>
+<p>In Hadoop MapReduce, the mapper and reducer are each a Java class that implements a particular interface. In MongoDB and CouchDB, mappers and reducers are JavaScript functions.</p>
+<p>Figure 10-1 shows the dataflow in a Hadoop MapReduce job. Its parallelization is based on partitioning (see Chapter 6): the input to a job is typically a directory in HDFS, and each file or file block within the input directory is considered to be a separate partition that can be processed by a separate map task (marked by m 1, m 2, and m 3 in Figure 10-1).</p>
+<p>Each input file is typically hundreds of megabytes in size. The MapReduce scheduler (not shown in the diagram) tries to run each mapper on one of the machines that stores a replica of the input file, provided that machine has enough spare RAM and CPU resources to run the map task [26]. This principle is known as putting the computation near the data [27]: it saves copying the input file over the network, reducing network load and increasing locality.</p>
+<p><img src="map_reduce_flow.png" alt="">
+Figure 10-1. A MapReduce job with three mappers and three reducers.</p>
+<p>In most cases, the application code that should run in the map task is not yet present on the machine that is assigned the task of running it, so the MapReduce framework first copies the code (e.g., JAR files in the case of a Java program) to the appropriate machines. It then starts the map task and begins reading the input file, passing one record at a time to the mapper callback. The output of the mapper consists of keyvalue pairs.</p>
+<p>The reduce side of the computation is also partitioned. While the number of map tasks is determined by the number of input file blocks, the number of reduce tasks is configured by the job author (it can be different from the number of map tasks). To ensure that all key-value pairs with the same key end up at the same reducer, the framework uses a hash of the key to determine which reduce task should receive a particular key-value pair (see “Partitioning by Hash of Key” on page 203).</p>
+<p>The key-value pairs must be sorted, but the dataset is likely too large to be sorted with a conventional sorting algorithm on a single machine. Instead, the sorting is performed in stages. First, each map task partitions its output by reducer, based on the hash of the key. Each of these partitions is written to a sorted file on the mapper’s local disk, using a technique similar to what we discussed in “SSTables and LSMTrees”.</p>
+<p>Whenever a mapper finishes reading its input file and writing its sorted output files, the MapReduce scheduler notifies the reducers that they can start fetching the output files from that mapper. The reducers connect to each of the mappers and download the files of sorted key-value pairs for their partition. The process of partitioning by reducer, sorting, and copying data partitions from mappers to reducers is known as the shuffle [26] (a confusing term—unlike shuffling a deck of cards, there is no randomness in MapReduce).</p>
+<p>The reduce task takes the files from the mappers and merges them together, preserving the sort order. Thus, if different mappers produced records with the same key, they will be adjacent in the merged reducer input.</p>
+<p>The reducer is called with a key and an iterator that incrementally scans over all records with the same key (which may in some cases not all fit in memory). The reducer can use arbitrary logic to process these records, and can generate any number of output records. These output records are written to a file on the distributed filesystem (usually, one copy on the local disk of the machine running the reducer, with replicas on other machines).</p>
+<h5>MapReduce workflows</h5>
+<p>The range of problems you can solve with a single MapReduce job is limited. Referring
+back to the log analysis example, a single MapReduce job could determine the
+number of page views per URL, but not the most popular URLs, since that requires a
+second round of sorting.</p>
+<p>Thus, it is very common for MapReduce jobs to be chained together into workflows,
+such that the output of one job becomes the input to the next job. The Hadoop Map‐
+Reduce framework does not have any particular support for workflows, so this chaining
+is done implicitly by directory name: the first job must be configured to write its
+output to a designated directory in HDFS, and the second job must be configured to
+read that same directory name as its input. From the MapReduce framework’s point
+of view, they are two independent jobs.</p>
+<p>A batch job’s output is only considered valid when the job has completed successfully
+(MapReduce discards the partial output of a failed job). Therefore, one job in a workflow
+can only start when the prior jobs—that is, the jobs that produce its input directories—
+have completed successfully.</p>
+<p>To handle these dependencies between job executions, various workflow schedulers for Hadoop have been developed, including
+Oozie, Azkaban, Luigi, Airflow, and Pinball [28].
+These schedulers also have management features that are useful when maintaining a
+large collection of batch jobs. Workflows consisting of 50 to 100 MapReduce jobs are
+common when building recommendation systems</p>
+<h4>Reduce-Side Joins and Grouping</h4>
+<h3>The Output of Batch Workflows</h3>
+<h4>Building search indexes</h4>
+<p>Google’s original use of MapReduce was to build indexes for its search engine, which
+was implemented as a workflow of 5 to 10 MapReduce jobs</p>
+<h4>Key-value store</h4>
+<p>Another common use for batch processing is to build machine learning
+systems such as classifiers (e.g., spam filters, anomaly detection, image recognition)
+and recommendation systems (e.g., people you may know, products you may be
+interested in, or related searches [29]).</p>
+<p>So how does the
+output from the batch process get back into a database where the web application can
+query it?</p>
+<p>The most obvious choice might be to use the client library for your favorite database
+directly within a mapper or reducer, and to write from the batch job directly to the
+database server, one record at a time. This will work (assuming your firewall rules
+allow direct access from your Hadoop environment to your production databases), but it is a bad idea for several reasons:</p>
+<p>• As discussed previously in the context of joins, making a network request for
+every single record is orders of magnitude slower than the normal throughput of
+a batch task. Even if the client library supports batching, performance is likely to
+be poor.</p>
+<p>• MapReduce jobs often run many tasks in parallel. If all the mappers or reducers
+concurrently write to the same output database, with a rate expected of a batch
+process, that database can easily be overwhelmed, and its performance for queries is likely to suffer. This can in turn cause operational problems in other parts
+of the system [35].</p>
+<p>• Normally, MapReduce provides a clean all-or-nothing guarantee for job output:
+if a job succeeds, the result is the output of running every task exactly once, even
+if some tasks failed and had to be retried along the way; if the entire job fails, no
+output is produced. However, writing to an external system from inside a job
+produces externally visible side effects that cannot be hidden in this way. Thus,
+you have to worry about the results from partially completed jobs being visible to
+other systems, and the complexities of Hadoop task attempts and speculative
+execution.</p>
+<p>A much better solution is to build a brand-new database inside the batch job and
+write it as files to the job’s output directory in the distributed filesystem, just like the
+search indexes in the last section. Those data files are then immutable once written,
+and can be loaded in bulk into servers that handle read-only queries. Various keyvalue
+stores support building database files in MapReduce jobs, including Voldemort
+[46], Terrapin [47], ElephantDB [48], and HBase bulk loading [49].</p>
+<p>By treating inputs as immutable and avoiding side effects (such as writing to external databases), batch jobs not only achieve good performance but also become much easier to maintain.</p>
+<h4>Philosophy of batch process outputs</h4>
+<p>By treating
+inputs as immutable and avoiding side effects (such as writing to external databases),
+batch jobs not only achieve good performance but also become much easier to
+maintain.</p>
+<h3>Comparing Hadoop to Distributed Databases</h3>
+<p>When MapReduce paper was published, it wasn&#39;t entirely new -- similar ideas had already been implemented in massively parallel processing (MPP) databases about a decade ago.</p>
+<p>The biggest difference is that MPP databases focus on parallel execution of analytic
+SQL queries on a cluster of machines, while the combination of MapReduce and a
+distributed filesystem [19] provides something much more like a general-purpose
+operating system that can run arbitrary programs.</p>
+<h4>Diversity of Storage</h4>
+<p>Databases require you to structure data according to a particular model (e.g., relational
+or documents), whereas files in a distributed filesystem are just byte sequences,
+which can be written using any data model and encoding.</p>
+<p>To put it bluntly, Hadoop opened up the possibility of indiscriminately dumping data
+into HDFS, and only later figuring out how to process it further [53]. By contrast,
+MPP databases typically require careful up-front modeling of the data and query patterns
+before importing the data into the database’s proprietary storage format.</p>
+<p>Data lake or enterprise data hub.</p>
+<p>Sushi principle: “raw data is better”. Indiscriminate data dumping shifts the burden of interpreting the data: instead of
+forcing the producer of a dataset to bring it into a standardized format, the interpretation
+of the data becomes the consumer’s problem</p>
+<p>Thus, Hadoop has often been used for implementing ETL processes (see “Data Warehousing”
+on page 91): data from transaction processing systems is dumped into the
+distributed filesystem in some raw form, and then MapReduce jobs are written to
+clean up that data, transform it into a relational form, and import it into an MPP data
+warehouse for analytic purposes. Data modeling still happens, but it is in a separate
+step, decoupled from the data collection. This decoupling is possible because a distributed
+filesystem supports data encoded in any format.</p>
+<h4>Diversity of Processing Models</h4>
+<p>MPP uses SQL but not all kinds of processing can be sensibly expressed as SQL queries. MapReduce gave engineers the ability to easily run their own code over large datasets.
+If you have HDFS and MapReduce, you can build a SQL query execution engine
+on top of it, and indeed this is what the Hive project did</p>
+<p>The Hadoop ecosystem includes both random-access OLTP databases such as HBase
+(see “SSTables and LSM-Trees” on page 76) and MPP-style analytic databases such as
+Impala [41]. Neither HBase nor Impala uses MapReduce, but both use HDFS for
+storage. They are very different approaches to accessing and processing data, but they
+can nevertheless coexist and be integrated in the same system.</p>
+<h4>Designing for frequent faults</h4>
+<p>Handling faults and the use of memory and disk.</p>
+<p>If a node crashes while a query is executing, most MPP databases abort the entire
+query, and either let the user resubmit the query or automatically run it again [3]. As
+queries normally run for a few seconds or a few minutes at most, this way of handling
+errors is acceptable, since the cost of retrying is not too great. MPP databases also
+prefer to keep as much data as possible in memory (e.g., using hash joins) to avoid
+the cost of reading from disk.</p>
+<p>On the other hand, MapReduce can tolerate the failure of a map or reduce task
+without it affecting the job as a whole by retrying work at the granularity of an individual
+task. It is also very eager to write data to disk, partly for fault tolerance, and
+partly on the assumption that the dataset will be too big to fit in memory anyway.</p>
+<p>Even if recovery at the granularity of an individual task
+introduces overheads that make fault-free processing slower, it can still be a reasonable
+trade-off if the rate of task failures is high enough.</p>
+<p>While machine faults are infrequent, the MapReduce design choices can be traced back to Google (the creators). Google has mixed-use datacenters, in which online production services and
+offline batch jobs run on the same machines. Every task has a resource allocation
+(CPU cores, RAM, disk space, etc.) that is enforced using containers. Every task also
+has a priority, and if a higher-priority task needs more resources, lower-priority tasks
+on the same machine can be terminated (preempted) in order to free up resources.
+Priority also determines pricing of the computing resources: teams must pay for the
+resources they use, and higher-priority processes cost more.</p>
+<p>This architecture allows non-production (low-priority) computing resources to be
+overcommitted, because the system knows that it can reclaim the resources if necessary.
+Overcommitting resources in turn allows better utilization of machines and
+greater efficiency compared to systems that segregate production and nonproduction
+tasks. However, as MapReduce jobs run at low priority, they run the risk
+of being preempted at any time because a higher-priority process requires their
+resources. Batch jobs effectively “pick up the scraps under the table,” using any computing
+resources that remain after the high-priority processes have taken what they
+need.</p>
+<p>At Google, a MapReduce task that runs for an hour has an approximately 5% risk of
+being terminated to make space for a higher-priority process. This rate is more than
+an order of magnitude higher than the rate of failures due to hardware issues,
+machine reboot, or other reasons [59]. At this rate of preemptions, if a job has 100
+tasks that each run for 10 minutes, there is a risk greater than 50% that at least one
+task will be terminated before it is finished.</p>
+<p>And this is why MapReduce is designed to tolerate frequent unexpected task termination:
+it’s not because the hardware is particularly unreliable, it’s because the freedom
+to arbitrarily terminate processes enables better resource utilization in a computing
+cluster.</p>
+<h3>Beyond MapReduce</h3>
+<h4>Materialization of Intermediate State</h4>
+<p>every MapReduce job is independent from every other job.
+The main contact points of a job with the rest of the world are its input and output
+directories on the distributed filesystem. If you want the output of one job to become
+the input to a second job, you need to configure the second job’s input directory to be
+the same as the first job’s output directory, and an external workflow scheduler must
+start the second job only once the first job has completed.</p>
+<p>The process of writing out this intermediate state to files is called materialization.
+(It means to eagerly compute
+the result of some operation and write it out, rather than computing it on
+demand when requested.)</p>
+<p>MapReduce’s approach of fully materializing intermediate state has downsides compared
+to Unix pipes:</p>
+<p>• A MapReduce job can only start when all tasks in the preceding jobs (that generate
+its inputs) have completed, whereas processes connected by a Unix pipe are
+started at the same time, with output being consumed as soon as it is produced.
+Skew or varying load on different machines means that a job often has a few
+straggler tasks that take much longer to complete than the others. Having to wait
+until all of the preceding job’s tasks have completed slows down the execution of
+the workflow as a whole.</p>
+<p>• Mappers are often redundant: they just read back the same file that was just written
+by a reducer, and prepare it for the next stage of partitioning and sorting. In
+many cases, the mapper code could be part of the previous reducer: if the reducer
+output was partitioned and sorted in the same way as mapper output, then
+reducers could be chained together directly, without interleaving with mapper
+stages.</p>
+<p>• Storing intermediate state in a distributed filesystem means those files are replicated
+across several nodes, which is often overkill for such temporary data.</p>
+<h5>Dataflow engines</h5>
+<p>In order to fix these problems with MapReduce, several new execution engines for
+distributed batch computations were developed, the most well known of which are
+Spark [61, 62], Tez [63, 64], and Flink [65, 66]. There are various differences in the
+way they are designed, but they have one thing in common: they handle an entire
+workflow as one job, rather than breaking it up into independent subjobs.</p>
+<p>Since they explicitly model the flow of data through several processing stages, these
+systems are known as dataflow engines. Like MapReduce, they work by repeatedly
+calling a user-defined function to process one record at a time on a single thread.
+They parallelize work by partitioning inputs, and they copy the output of one function
+over the network to become the input to another function.</p>
+
+    </body>
+</html>

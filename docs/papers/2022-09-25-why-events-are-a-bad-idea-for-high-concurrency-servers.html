@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>Why Events Are A Bad Idea (for high-concurrency servers) — Paper Summary</title>
+        <meta property="og:image" content="/assets/banners/2022-09-25-why-events-are-a-bad-idea-for-high-concurrency-servers.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>Why Events Are A Bad Idea (for high-concurrency servers) — Paper Summary</h1>
+<p>Today&#39;s summary is about a  <a href="https://www.usenix.org/legacy/events/hotos03/tech/full_papers/vonbehren/vonbehren.pdf">paper</a> written in 2003 by Rob von Behren, Jeremy Condit and Eric Brewer.</p>
+<hr>
+<ol>
+<li>The four primary arguments for the supremacy of events:<ul>
+<li>Inexpensive synchronization due to cooperative multitasking.</li>
+<li>Lower overhead for managing state (no stacks).</li>
+<li>Better scheduling and locality, based on application-level information.</li>
+<li>More flexible control flow (not just call/return).</li>
+</ul>
+</li>
+<li>Lauer and Needham <a href="https://dl.acm.org/doi/10.1145/850657.850658">showed</a> in 1978 that message-passing (i.e: event) systems and process-based systems are duals, both in terms of program structure and performance characteristics.</li>
+<li>“Problems” with threads:<ul>
+<li><strong>Performance criticism</strong> — Many attempts to use threads for high concurrency have not performed well.<ul>
+<li>The authors argue that this is an artifact of poor thread implementations.</li>
+<li><blockquote>
+<p>A major source of overhead is the presence of operations that are O(n) in the number of threads. Another common problem with thread packages is their relatively high context switch overhead when compared with events. This overhead is due to both preemption, which requires saving registers and other states during context switches, and additional kernel crossings (in the case of kernel threads).</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><strong>Control-flow criticism</strong> — Threads have restrictive control flow.<ul>
+<li>The authors argue that complicated control-flow patterns are rare in practice. Common control-flow patterns are simple: call/return, parallel calls, and pipelines.</li>
+<li><blockquote>
+<p>The only patterns we considered that are less graceful with threads are dynamic fan-in and fan-out; such patterns might occur with multicast or publish/subscribe applications. In these cases, events are probably more natural.</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><strong>Synchronization criticism</strong> — Thread synchronization mechanisms are too heavyweight.<ul>
+<li>The authors argue that cooperative thread systems can also get synchronization for “free” — i.e: cooperative multitasking instead of preemptive scheduling.</li>
+</ul>
+</li>
+<li><strong>State Management criticism</strong> — Thread stacks are an ineffective way to manage live-state.<ul>
+<li>Threaded systems typically face a tradeoff between potential stack overflow and wasted space because of fixed-size stacks.</li>
+<li>Event systems avoid this problem because they typically use a few threads and unwind the thread stack after each event handler.</li>
+<li>The authors argue this problem can be solved with dynamic stack growth.</li>
+</ul>
+</li>
+<li><strong>Scheduling criticism</strong> — The virtual processor model provided by threads forces the runtime system to be too generic and prevents it from making optimal scheduling decisions.<ul>
+<li>Event systems are capable of scheduling event deliveries at the application level. This allows for various optimizations: allowing better code locality by running several of the same kind of event in a row; performing shortest remaining completion time scheduling; etc</li>
+<li>The authors argue that Lauer-Needham duality indicates that the same scheduling tricks can be applied to cooperatively scheduled threads.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>The case for threads:<ul>
+<li><strong>Control Flow</strong> —For high-concurrency systems, event-based programming tends to obfuscate the control flow of the application.</li>
+<li><strong>Exception Handling and State Lifetime</strong> — Cleaning up task state after exceptions and after normal termination is simpler in a threaded system since the thread stack naturally tracks the live state for that task.</li>
+<li><strong>Runtime dispatch</strong>: Event systems require various forms of runtime dispatch, since the next event handler to execute is not known statically. This problem is related to the problem of ambiguous control flow, which affects performance by reducing opportunities for compiler optimizations and by increasing CPU pipeline stalls.</li>
+<li>Trying to fix these event issues effectively duplicates the syntax and run-time behavior of threads.</li>
+</ul>
+</li>
+<li>How compilers can support threads:<ul>
+<li><strong>Dynamic Stack Growth</strong> — Determining upper bounds for dynamic stack growth.</li>
+<li><strong>Live State Management</strong> — Compilers can purge unnecessary states from the stack before making function calls.</li>
+<li><strong>Synchronization</strong> — Compile-time analysis can reduce the occurrence of bugs by warning the programmer about data races.</li>
+</ul>
+</li>
+<li>The authors ran a test to show that a well-designed thread package can achieve the same scaling behavior as a well-designed event system.</li>
+</ol>
+
+    </body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>Blockchains from a Distributed Computing Perspective — Paper Summary</title>
+        <meta property="og:image" content="/assets/banners/2022-09-17-blockchains-from-a-distributed-computing-perspective.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>Blockchains from a Distributed Computing Perspective — Paper Summary</h1>
+<p>Today&#39;s summary is about a draft  <a href="https://cs.brown.edu/courses/csci2952-a/papers/perspective.pdf">paper</a> written by Maurice Herlihy in 2019.</p>
+<blockquote>
+<p>This article is a tutorial on the basic notions and mechanisms underlying blockchains, colored by the perspective that much of the blockchain world is a disguised, sometimes distorted, mirror-image of the distributed computing world.  </p>
+</blockquote>
+<hr>
+<ol>
+<li><p>The abstraction at the heart of blockchain systems is the notion of a ledger: an indelible append-only log of transactions that take place between various parties.</p>
+</li>
+<li><p>A ledger establishes which transactions happened (in order).</p>
+</li>
+<li><p>A consensus protocol involves a collection of parties, some of whom are honest, and follow the protocol, and some of whom are dishonest, and may depart from the protocol for any reason (crash or Byzantine failures).</p>
+</li>
+<li><p>In consensus, each party proposes a transaction to append to the ledger, and one of these proposed transactions is chosen. Consensus ensures:</p>
+<ul>
+<li>Agreement: all honest parties agree on which transaction was selected</li>
+<li>Termination: all honest parties eventually learn the selected transaction, and</li>
+<li>Validity: the selected transaction was proposed by some party.</li>
+</ul>
+</li>
+<li><p>A byzan­tine fault-tolerant consensus protocol ensures that transactions cannot be distorted by a small number of faulty or corrupted parties.</p>
+</li>
+<li><p>Tamper-proofing a new ledger entry involves including a hash of the previous entry in the new entry.</p>
+</li>
+<li><p>Signing transactions establish authenticity and “eliminates” impersonation fraud.</p>
+</li>
+<li><p>Modern cryptography is based on the notions of matching public and private keys. Encrypting a message with Alice’s public key yields a message only Alice can read, and encrypting a message with Alice’s private key yields a digital signature, a message everyone can read but only Alice could have produced.</p>
+</li>
+<li><p>Knowledge of a private key confers ownership.</p>
+</li>
+<li><p>Public key enables proof of ownership.</p>
+</li>
+<li><p>The ledger conveys value: it establishes the link between the public key and X with an entry saying: “Anyone who knows the secret key matching the following public key owns n number of X”. Where X is a variable for an item/coins, etc.</p>
+</li>
+<li><p>An unspent transaction output (UTXO) represents some amount of digital currency which has been authorized by one account to be spent by another. UTXOs use public key cryptography to identify and transfer ownership between holders of public/private key pairs. UTXOs are formatted with the recipient&#39;s public key, thus restricting the ability to spend that UTXO to the account that can prove ownership of the associated private key.</p>
+</li>
+<li><p>A Sybil attack is a type of security assault where one person tries to take over the network by creating multiple nodes.</p>
+</li>
+<li><p>Solutions to a Sybil attack:</p>
+<ul>
+<li>Identity verification — things like IP addresses are easily forged.</li>
+<li>Costly signal­ing — the most common is proof of work (PoW).</li>
+</ul>
+</li>
+<li><blockquote>
+<p>Essentially the same problem arises when organizing a street gang: how to ensure that someone who wants to join the gang is not a plain-clothes police officer, newspaper reporter, or just a freeloader? One approach is what sociologists call <strong>costly signal­ing</strong>: the candidate is required to do something expensive and hard to fake, like robbing a store or getting a gang symbol tattoo.</p>
+</blockquote>
+</li>
+<li><p>In the PoW lottery, miners compete to solve a useless puzzle, where solving the puzzle is hard, but proving one has solved the puzzle is easy.</p>
+<blockquote>
+<p>Simplifying things for a moment, the first miner to solve the puzzle wins the consensus and gets to choose the next block to append to the ledger. That miner also receives a fee, but the other miners receive nothing and must start over on a new puzzle.</p>
+</blockquote>
+<blockquote>
+<p>As hinted, the previous paragraph was an oversimplification. In fact, PoW consensus is not really consensus. If two miners both solve the puzzle at about the same time, they could append blocks to the blockchain in parallel, so that neither block precedes the other in the chain. When this happens, the blockchain is said to fork. Which block should subsequent miners build on? The usual answer is to build on the block whose chain is the longest.</p>
+</blockquote>
+<blockquote>
+<p>As a result, there is always some uncertainty whether a transac­tion on the blockchain is permanent, although the probability that a block, once on the blockchain, will be replaced decreases exponen­tially with the number of blocks that follow it.</p>
+</blockquote>
+</li>
+<li><p>A private (or permissioned) blockchain sys­tem is where parties have reliable identities, and only vetted parties can participate.</p>
+</li>
+<li><p>A public (or permissionless) blockchain system is where parties cannot be reliably identified, and anyone can partici­pate.</p>
+</li>
+<li><p>Although PoW was invented by Dwork and Naor as a way to con­trol spam, Nakamoto’s application of PoW to large-scale consensus was a genuine innovation.</p>
+</li>
+<li><p>Most blockchain systems also provide some form of scripting lan­guage to make it easier to add functionality to ledgers (often called smart contracts).</p>
+</li>
+<li><p>Bitcoin provides a rudimentary scripting language, while Ethereum provides a Turing-complete scripting language.</p>
+</li>
+<li><p>Some examples of simple contract functionality:</p>
+<ul>
+<li>A hashlock <code>h</code> prevents an asset from being transferred until the contract receives a matching secret <code>s</code>, where <code>h = H(s)</code>, for <code>H</code> a cryptographic hash function.</li>
+<li>A timelock <code>t</code> prevents an asset from being transferred until a specified future time <code>t</code>.</li>
+</ul>
+</li>
+<li><p>Smart contracts are used for:</p>
+<ul>
+<li>Off-chain trans­actions, where assets are transferred back and forth off the blockchain for efficiency, using the blockchain only to settle bal­ances at infrequent intervals.</li>
+<li>Atomic cross-chain swap — allows two parties to trade tokens from two different blockchains.</li>
+</ul>
+</li>
+<li><p>A cryptographic hash function <code>H(·)</code> has the property that for any value <code>v</code>, it is easy to compute <code>H(v)</code>, but it is infeasible to discover a <code>v ≠ ′ v</code> such that <code>H(v ′ ) = H(v)</code>.</p>
+</li>
+</ol>
+<h2>Proof of work puzzles</h2>
+<blockquote>
+<p>Here is a puzzle typical of those used in PoW implementations. Let <code>b</code> be the block the miner wants to append to the ledger, <code>H(·)</code> a cryptographic hash function, and <code>“·”</code> concatenation of binary strings. The puzzle is to find a value <code>c</code> such that <code>H(b · c) &lt; D</code>, where <code>D</code> is a difficulty setting (the smaller <code>D</code>, the more difficult). Because <code>H</code> is difficult to invert, there is no way to find <code>c</code> substantially more efficiently than an exhaustive search.  </p>
+</blockquote>
+
+    </body>
+</html>

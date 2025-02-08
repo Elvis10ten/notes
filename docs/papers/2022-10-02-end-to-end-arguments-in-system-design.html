@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>End-to-end arguments in system design — Paper Summary</title>
+        <meta property="og:image" content="/assets/banners/2022-10-02-end-to-end-arguments-in-system-design.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>End-to-end arguments in system design — Paper Summary</h1>
+<p>Authors: J.H. Saltzer, D.P. Reed and D.D. Clark</p>
+<p>Date: 1984</p>
+<p>Link:   <a href="https://web.mit.edu/Saltzer/www/publications/endtoend/endtoend.pdf">PDF</a></p>
+<hr>
+<ol>
+<li>This paper presents a design principle that helps guide the placement of functions among the modules of a distributed computer system.</li>
+<li>The principle, called the end-to-end argument, suggests that functions placed at low levels of a system may be redundant or of little value when compared with the cost of providing them at that low level.</li>
+<li>In communicating systems, functions can be implemented:<ul>
+<li>By the communication subsystem</li>
+<li>By a client</li>
+<li>As a joint venture</li>
+<li>Redundantly in all clients.</li>
+</ul>
+</li>
+<li>End-to-end argument:<blockquote>
+<p>The function in question can completely and correctly be implemented only with the knowledge and help of the application standing at the end points of the communication system. Therefore, providing that questioned function as a feature of the communication system itself is not possible. (Sometimes an incomplete version of the function provided by the communication system may be useful as a performance enhancement.)</p>
+</blockquote>
+</li>
+<li>Case study: Reliable file transfer<ul>
+<li>End-to-end reliability: After the sender sends the file, the recipient recalculates the checksum of the received file, and sends this value back to the sender, where it is compared with the checksum of the original file. Only if the two checksums agree does the file transfer application declare the transaction committed.</li>
+<li>Communication system reliability: Internally, a guarantee of reliable data transmission.</li>
+<li>Reliability at the communication system level guards against only lost or mangled packets; End-to-end reliability provides more protections:<ul>
+<li>Incorrect data read on the sender due to a hardware fault.</li>
+<li>Software or hardware faults while buffering or copying the file on the sender or recipient.</li>
+</ul>
+</li>
+<li>The amount of effort to put into reliability measures within the data communication system is seen to be an engineering tradeoff based on performance, rather than a requirement for correctness.</li>
+</ul>
+</li>
+<li>Pros of end-to-end functions:<ul>
+<li>Simplifies the communication system</li>
+</ul>
+</li>
+<li>Cons of end-to-end functions:<ul>
+<li>May increase overall cost, since the communication system is shared by other applications and each application must now provide its implementation of a function.</li>
+</ul>
+</li>
+<li>Pros of placing functions in the communication system:<ul>
+<li>Placing a function like a retry protocol in the communication system may be more efficient, since it may be performed inside the network on a hop-by-hop basis, reducing the delay involved in correcting a failure.</li>
+</ul>
+</li>
+<li>Cons of placing functions in the communication system:
+* Since the lower-level subsystem is common to many applications, those that do not need the function will pay for it anyway.
+* The low-level subsystem may not have as much information as the higher levels, so it cannot do the job as efficiently.</li>
+<li>Performing a function at a low level may be more efficient if the operation can be performed with a minimum perturbation of the machinery already included in the low-level subsystem.</li>
+<li>Case study: Delivery Guarantees<ul>
+<li>What an application wants to know is that a message was acted upon. This acknowledgment can only be done at the application level, not the lower communication system level (which can only tell that a packet was received by the target host).</li>
+</ul>
+</li>
+<li>Case study: Secure transmission of data<ul>
+<li>If the data transmission system performs encryption and decryption:<ul>
+<li>It must be trusted to manage securely the required encryption keys.</li>
+<li>The data will be in the clear and thus vulnerable as it passes into the target node and is fanned out to the target application.</li>
+<li>The authenticity of the message must still be checked by the application.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Case study: Duplicate message suppression<blockquote>
+<p>Even if the network suppresses duplicates, the application itself may accidentally originate duplicate requests, in its own failure/retry procedures. These application-level duplications look like different messages to the communication system, so it cannot suppress them; suppression must be accomplished by the application itself with knowledge of how to detect its duplicates.</p>
+</blockquote>
+</li>
+<li>The end-to-end argument is not an absolute rule, but rather a guideline that helps in application and protocol design analysis; one must use some care to identify the endpoints to which the argument should be applied.</li>
+</ol>
+
+    </body>
+</html>

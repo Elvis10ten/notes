@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>Out Of The Tar Pit — Paper Summary</title>
+        <meta property="og:image" content="/assets/banners/2022-01-02-summary-out-of-the-tar-pit.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>Out Of The Tar Pit — Paper Summary</h1>
+<p>Authors: Ben Moseley &amp; Peter Mark</p>
+<blockquote>
+<p>Summary structure:</p>
+<ol>
+<li>Comment blocks are used to add personal comments. These are usually clarifications, extra info, or guidance.</li>
+<li>This summary includes all quotes and key points only. You can read the full paper <a href="https://github.com/papers-we-love/papers-we-love/blob/master/design/out-of-the-tar-pit.pdf">here</a>.</li>
+<li>Unless otherwise stated, all claims are made by the authors.</li>
+</ol>
+</blockquote>
+<h2>Abstract</h2>
+<blockquote>
+<p>Complexity is the single major difficulty in the successful development of <strong>large-scale</strong> software systems.
+Following Brooks we distinguish <strong>accidental</strong> from <strong>essential</strong> complexity, but disagree with his premise that most complexity remaining in contemporary systems is essential.
+We identify common causes of complexity and discuss general approaches which can be taken to eliminate them where they are accidental.
+To make things more concrete we then give an outline for a potential complexity-minimizing approach based on <strong>functional programming</strong> and Codd’s <strong>relational model</strong> of data.</p>
+</blockquote>
+<h2>2. Complexity</h2>
+<ol>
+<li><blockquote>
+<p>Comment: The authors didn&#39;t rigorously define complexity but implied that it&#39;s the degree of difficulty in understanding/maintaining software systems. Alas, &quot;difficulty&quot; is subjective.</p>
+</blockquote>
+</li>
+<li>According to the <a href="https://en.wikipedia.org/wiki/No_Silver_Bullet">No Silver Bullet paper</a>, four properties that make software construction hard are:<ul>
+<li>Complexity</li>
+<li>Conformity</li>
+<li>Changeability</li>
+<li>Invisibility</li>
+</ul>
+</li>
+<li>Complexity is the most significant problem — the others are forms of complexity, or only problematic as a result of complexity.<blockquote>
+<p><strong>Complexity hinders understanding</strong> — Being able to understand a system (like the effects of changes) is a prerequisite for avoiding problems.</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>“...we have to keep it crisp, disentangled, and simple if we refuse to be crushed by the complexities of our own making...” - Dijkstra</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>“The general problem with ambitious systems is complexity.”, “...it&#39;s important to emphasize the value of simplicity and elegance, for complexity has a way of compounding difficulties” — Corbato, 1990</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>“there is a desperate need for a powerful methodology to help us
+think about programs. ... conventional languages create unnecessary confusion in the way we think about programs” - Backus, 1977</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>“...there is one quality that cannot be purchased... — and that is reliability. The price of reliability is the pursuit of the utmost simplicity” — Hoare, 1980</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>“I conclude that there are two ways of constructing a software design: One way is to make it so simple that there are <strong>obviously</strong> no deficiencies and the other way is to make it so complicated that there are no <strong>obvious</strong> deficiencies. The first method is far more difficult.” - Hoare, 1980</p>
+</blockquote>
+</li>
+<li><strong>Simplicity is Hard</strong>.</li>
+</ol>
+<h2>3. Approaches to Understanding Systems</h2>
+<ol>
+<li>There are two widely-used approaches to understanding systems (or system components):<ul>
+<li><strong>(Automated/Manual) Testing</strong>: attempting to understand a system from the outside — as a “black box”. Conclusions about the system are drawn based on observations about how it behaves in certain specific situations.</li>
+<li><strong>Informal reasoning</strong>: Attempting to understand the system by examining it from the inside and building some mental model.</li>
+</ul>
+</li>
+<li><strong>Informal reasoning</strong> is more important because:<ul>
+<li>It&#39;s always used, as it&#39;s an inherent part of the development process.</li>
+<li>In an existing system, improvements in informal reasoning will lead to fewer errors being created while improvements in testing only lead to more errors being detected.</li>
+</ul>
+</li>
+<li><blockquote>
+<p>“Those who want really reliable software will discover that they must find means of avoiding the majority of bugs to start with.” — Dijkstra</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>“Our response to mistakes should be to look for ways that we can avoid making them, not to blame the nature of things.” — O&#39;Keefe</p>
+</blockquote>
+</li>
+<li>The key problem with <strong>testing</strong> is that a test (of any kind) that uses one particular set of inputs tells you <strong>nothing at all</strong> about the behavior of the system when it is given a different set of inputs.</li>
+<li>The huge number of different possible inputs usually rules out the possibility of testing them all, hence the unavoidable concern with testing will always be — <code>have you performed the right tests?</code>. The only certain answer you will ever get to this question is an answer in the <strong>negative — when the system breaks</strong>.</li>
+<li><blockquote>
+<p>“testing is hopelessly inadequate....(it) can be used very effectively to show the presence of bugs but never to show their absence.” - Dijkstra</p>
+</blockquote>
+</li>
+<li><strong>Informal reasoning</strong> is limited in scope, imprecise, and hence prone to error.</li>
+<li><strong>Formal reasoning</strong> is dependent upon the accuracy of a specification.</li>
+<li>The bottom line is that all ways of attempting to understand a system have their limitations.</li>
+<li>When considered next to testing and reasoning, simplicity is more important than either. Given a stark choice between investment in testing and investment in simplicity, the latter may often be the better choice because it will facilitate all future attempts of any kind to understand the system.</li>
+</ol>
+<h2>4. Causes of Complexity</h2>
+<h3>4.1. State</h3>
+<ol>
+<li>State: mutable state — i.e. excluding (immutable) single-assignment variables which are provided by logic programming languages.</li>
+<li>The presence of state makes programs hard to understand.</li>
+<li><blockquote>
+<p>“From the complexity comes the difficulty of enumerating, much less understanding, all the possible states of the program, and from that comes the unreliability” — Brook</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>“computers. . . have very large numbers of states. This makes conceiving, describing, and testing them hard. Software systems have orders-of-magnitude more states than computers do.” — Brook</p>
+</blockquote>
+</li>
+<li>Arguably, the single biggest cause of complexity in most contemporary large systems is state, and the more we can do to limit and manage state, the better.</li>
+<li>The number of possible states grows at an exponential rate — for every single bit of state that is added, the number of possible states doubles.</li>
+<li>Stateful procedures can contaminate stateless procedures directly or indirectly.<blockquote>
+<p>“when you let the nose of the camel into the tent, the rest of him tends to follow”</p>
+</blockquote>
+</li>
+</ol>
+<h4>4.1.1. Impact of State on Testing</h4>
+<ol>
+<li>State affects all types of testing — from system-level to component-level testing.</li>
+<li>The key problem is that a test (of any kind) on a program that is in one particular state tells you <strong>nothing at all</strong> about the behavior of that program when it&#39;s in another state.</li>
+<li>The common approach to testing a stateful system:<ul>
+<li>Start it up such that it is in some kind of “clean”/“initial” (albeit mostly hidden) state</li>
+<li>Perform the desired tests using the test inputs and then rely upon the (ill-founded) assumption that the system would perform the same way — <code>regardless of its hidden internal state</code> — every time the test is run with those inputs.</li>
+</ul>
+</li>
+<li>This approach is pragmatic but ignores the problem of state.</li>
+<li>The reason for this approach is that there isn’t any alternative when testing a stateful system with a complicated internal hidden state.</li>
+</ol>
+<h4>4.1.2 Impact of State on Informal Reasoning</h4>
+<ol>
+<li>State hinders the developer who must attempt to reason (most commonly on an informal basis) about the expected behavior of the system.</li>
+<li>The mental processes which are used to do this informal reasoning often revolve around a case-by-case mental simulation of behavior.</li>
+</ol>
+<h3>4.2. Control</h3>
+<ol>
+<li><p>Control: the order in which things happen.</p>
+</li>
+<li><p>Most traditional programming languages force a concern with control — control is based on statements&#39; order.</p>
+</li>
+<li><p>The difficulty is that when control is an implicit part of the language, then every single piece of the program must be understood in that context — even when the programmer may wish to say nothing about this.</p>
+</li>
+<li><p>When a programmer is forced (through the use of a language with implicit control flow) to specify the control, they are being forced to specify an aspect of <code>how</code> the system should work rather than simply <code>what</code> is desired. Effectively they are being forced to <code>over-specify</code> the problem.</p>
+</li>
+<li><p>Consider the pseudo-code example:</p>
+<pre><code class="hljs">a := b + 3
+c := d + 2
+e := f * 4
+</code></pre><p>The programmer is only interested in specifying a <code>relationship</code> between certain values but has been forced to say more than this by choosing an arbitrary control flow.</p>
+</li>
+<li><p>This forced order complicates informal reasoning — the person reading the code above must effectively duplicate the work of a compiler — they must (under the definition of the language semantics) start with the assumption that the ordering specified is significant, and then by further inspection determine that it&#39;s not.</p>
+</li>
+<li><p>The problem is not in the text of the program above — after all that does have to be written down in some order — it&#39;s solely in the semantics of the imperative language.</p>
+</li>
+<li><p>The second control-related problem is concurrency which affects:</p>
+<ul>
+<li>Informal reasoning: <code>Shared-state concurrency</code> is the common concurrency model — where specification for explicit synchronization is provided. This further adds to the number of scenarios that must mentally be considered as the program is read.</li>
+<li>Testing: result consistency cannot be assured when repeating tests on a system — even if a consistent starting state is ensured.</li>
+</ul>
+</li>
+</ol>
+<h3>4.3. Code Volume</h3>
+<ol>
+<li>This cause is in many ways a secondary effect — much code is simply concerned with managing state or specifying control.</li>
+<li>It&#39;s the easiest form of complexity to measure.</li>
+<li>It interacts badly with the other causes of complexity.</li>
+<li><blockquote>
+<p>“Many of the classic problems of developing software products derive from this essential complexity and its nonlinear increase with size” — Brooks</p>
+</blockquote>
+</li>
+<li>This quote by Dijkstra highlights that if managed properly, code volume doesn&#39;t have to grow non-linearly with complexity:<blockquote>
+<p>“It has been suggested that there is some kind of law of nature telling us that the amount of intellectual effort needed grows with the square of program length. But, thank goodness, no one has been able to prove this law. And this is because it need not be true. . . . I tend to the assumption — up till now not disproved by experience — that by suitable application of our <code>powers of abstraction</code>, the intellectual effort needed to conceive or to understand a program need not grow more than proportional to program length.” — Dijkstra</p>
+</blockquote>
+</li>
+</ol>
+<h3>4.4. Others</h3>
+<ol>
+<li>Other causes of complexity includes:<ul>
+<li>Duplicated code</li>
+<li>Unnecessary abstraction</li>
+<li>Missed abstraction</li>
+<li>Poor modularity</li>
+<li>Poor documentation</li>
+</ul>
+</li>
+<li>All these other causes come down to the following three (inter-related) principles:<ul>
+<li><strong>Complexity breeds complexity</strong>: More complexity is introduced as a result of not being able to clearly understand a system. Duplication is a prime example of this — if it&#39;s not clear that a given functionality already exists, or it&#39;s too complex to understand whether what exists does exactly what is required, there will be a strong tendency to duplicate.</li>
+<li><strong>Simplicity is Hard</strong>: Simplicity needs to be sought and prized — because a significant amount of effort is required to achieve simplicity.</li>
+<li><strong>Power corrupts</strong>: the more powerful a language (i.e. the more that is possible within the language), the harder it is to understand systems constructed in it. E.g: Manual memory management (instead of garbage collection), stateful variables (instead of stateless variables), etc.</li>
+</ul>
+</li>
+</ol>
+<h2>5. Classical approaches to managing complexity</h2>
+<h3>5.1. Object-Orientation</h3>
+<ol>
+<li>It&#39;s an imperative style to programming.</li>
+<li>It&#39;s the dominant method of general software development for traditional (von-Neumann) computers. Many of its characteristics spring from a desire to facilitate von-Neumann style (i.e. state-based) computation.</li>
+</ol>
+<h4>5.1.1. State</h4>
+<ol>
+<li>An object is usually seen as consisting of some state together with a set of procedures for accessing and manipulating that state.</li>
+<li>The above is referred to as encapsulation, and it allows the programmer to enforce integrity constraints over an object’s state by regulating access to that state through the access procedures (“methods”).</li>
+<li>Problems:<ul>
+<li>Enforcing constraints when several procedures access or manipulate the same bit of state.</li>
+<li>Encapsulation-based integrity constraint enforcement is strongly biased toward single-object constraints and it is awkward to enforce more complicated constraints involving multiple objects with this approach (where do such constraints reside?).</li>
+</ul>
+</li>
+</ol>
+<h5>Identity and State</h5>
+<ol>
+<li>Each object is seen as being a uniquely identifiable entity regardless of its attributes. This is known as <code>intensional identity</code> (in contrast with <code>extensional identity</code> in which things are considered the same if their attributes are the same).</li>
+<li><blockquote>
+<p>&quot;In a sense, <code>object identity</code> can be considered to be a rejection of the “relational algebra” view of the world in which two objects can only be distinguished through differing attributes.&quot; — Baker</p>
+</blockquote>
+</li>
+<li>Object identity makes sense when objects are used to provide a (mutable) stateful abstraction.</li>
+<li><code>Value Objects</code> are used in cases where mutability is not required. They attempt to de-emphasize the original concept of object identity and re-introduce extensional identity. This is usually done using access procedures to check equivalence in a domain-specific sense.</li>
+<li>Risks with value objects:<ul>
+<li>(Usually) Extra code volume.</li>
+<li>Such domain-specific equivalence might not conform to the standard idea of an equivalence relation — e.g: transitivity property.</li>
+<li>Mentally switching between the two equivalence concepts.</li>
+</ul>
+</li>
+<li>OOP does not provide an adequate foundation for avoiding complexity (caused by state) — it relies on state (contained within objects) and in general all behavior is affected by this state.</li>
+</ol>
+<h4>5.1.2. Control</h4>
+<ol>
+<li>Most OOP languages offer standard sequential control flow and explicit classical &quot;shared-state concurrency&quot; mechanisms.</li>
+<li>Actor-style languages are an exception — they use &quot;message-passing&quot; model of concurrency — which can improve informal reasoning.</li>
+</ol>
+<h3>5.2. Functional Programming</h3>
+<ol>
+<li>It has its roots in the completely stateless lambda calculus of Church.</li>
+<li>The untyped lambda calculus is equivalent in power to the standard stateful abstraction of computation — the Turing machine.</li>
+</ol>
+<h4>5.2.1. State</h4>
+<ol>
+<li>Pure functional PL like Haskell shun state and side-effects completely.</li>
+<li>Impure functional PL like ML advocates the avoidance of state and side-effects in general but permits their use.</li>
+<li>The primary strength of systems written in a pure functional PL is the property of <code>referential transparency</code> — which implies that when supplied with a given set of arguments a function will always return the same result.</li>
+<li>Testing &amp; informal reasoning become more effective due to the lack of statefulness.</li>
+</ol>
+<h4>5.2.2. Control</h4>
+<ol>
+<li>Most functional languages specify implicit (left-to-right) sequencing (of calculation of function arguments).</li>
+<li>They have a slight edge in control because they encourage a more abstract use of control using functionals (such as <code>fold</code>/<code>map</code>) rather than explicit looping.</li>
+<li>In a pure functional language, it will always be safe to evaluate all arguments to a function in parallel.</li>
+</ol>
+<h4>5.2.3. Kinds of State</h4>
+<ol>
+<li>It&#39;s possible to achieve similar effects to mutable state by passing extra parameters to a function. E.g:
+Using mutable state:<pre><code class="hljs">procedure int getNextCounter()
+   // ’counter’ is declared and initialized elsewhere in the code
+   counter := counter + 1
+   return counter
+</code></pre>Using extra parameters:<pre><code class="hljs">function (int, int) getNextCounter(int oldCounter)
+   let int result = oldCounter + 1
+   let int newCounter = oldCounter + 1
+   return (newCounter, result)
+</code></pre></li>
+<li>There is in principle nothing to stop functional programs from passing a single extra parameter into and out of every single function in the entire system. If this extra parameter were a collection (compound value) of some kind then it could be used to simulate an arbitrarily large set of mutable variables. In effect this approach recreates a single pool of global variables — hence, even though referential transparency is maintained, ease of reasoning is lost.</li>
+<li>Whatever the language being used — there are large benefits to be had from avoiding hidden, implicit, mutable states.</li>
+</ol>
+<h4>5.2.4. State and Modularity</h4>
+<ol>
+<li>State permits a particular kind of modularity — within a stateful framework, it&#39;s possible to add state to any component without adjusting the components which invoke it. The same can&#39;t be said when working in a functional framework.</li>
+<li>There is a fundamental trade-off between the two approaches.</li>
+<li>The trade-off is between complexity (with the ability to take a shortcut when making some specific types of change) and simplicity (with huge improvements in both testing and reasoning).</li>
+<li>As with the discipline of static typing, it is trading a one-off up-front cost for continuing future gains and safety (“one-off” because each piece of code is written once but is read, reasoned about, and tested continuingly).</li>
+<li>In a functional framework, you can always tell exactly what will control the outcome of a procedure simply by looking at the arguments supplied where it is invoked.</li>
+</ol>
+<h3>5.3. Logic Programming</h3>
+<ol>
+<li>Declarative style of programming emphasizes specifying what needs to be done rather than exactly how to do it.</li>
+<li>Logic and functional programming are considered declarative.</li>
+<li>Pure logic programming is done by stating a set of axioms that describe the problem and the attributes required of something for it to be considered a solution. The infrastructure uses these raw axioms to find/check solutions.</li>
+</ol>
+<h4>5.3.1. State</h4>
+<ol>
+<li>Pure logic programming uses no mutable state — thus, it has the same benefits as pure functional programming.</li>
+</ol>
+<h4>4.3.2. Control</h4>
+<ol>
+<li>In the ideal world of logic programming, there is no specified control.</li>
+</ol>
+<h2>6. Accidents and Essence</h2>
+<ol>
+<li>Brooks defined difficulties of “essence” as those inherent in the nature of software and classified the rest as “accidents”.</li>
+<li>A similar definition is used here, but more strict and without considering software:<ul>
+<li><strong>Essential Complexity</strong> is inherent in, and the essence of, the problem (as seen by the users).</li>
+<li><strong>Accidental Complexity</strong> is something non-essential that is present. It&#39;s complexity with which the development team would not have to deal with in the ideal world (e.g. complexity arising from performance issues and from suboptimal language and infrastructure).</li>
+</ul>
+</li>
+<li><blockquote>
+<p>... if there is any possible way that the team could produce a system that the users will consider correct without having to be concerned with a given type of complexity then that complexity is not essential.</p>
+</blockquote>
+</li>
+</ol>
+<h2>7. Recommended General Approach</h2>
+<ol>
+<li>The main recommendations revolve around trying to avoid as much accidental complexity as possible.</li>
+</ol>
+<h3>7.1. Ideal World</h3>
+<ol>
+<li>In the ideal world we are not concerned with performance, and our language and infrastructure provide all the general support we desire.</li>
+<li>Accidental state can be omitted in this ideal world, and the same applies to control.</li>
+<li><code>Informal requirements</code> gets converted directly to <code>Formal requirements</code>.</li>
+<li>The sole concern when producing the formal requirements must be to ensure that there is no relevant ambiguity in the informal requirements (i.e. that it has no omissions).</li>
+<li>The next step in the ideal world is to execute these formal requirements directly.</li>
+<li>What is described in this section is the essence of declarative programming.</li>
+</ol>
+<h4>7.1.1. State in the ideal world</h4>
+<ol>
+<li>We aim to eliminate state in the ideal world.</li>
+<li>Accidental state means that it can be excluded from the ideal world (by re-deriving the data as required).</li>
+<li>All data mentioned in the users’ informal requirements are of concern to the users, and is as such essential (data).</li>
+<li>Essential data does not mean that it will correspond to essential state.</li>
+</ol>
+<h5>Types of data</h5>
+<h6>Input Data</h6>
+<ol>
+<li>Data that is provided directly (input) will have to have been included in the informal requirements and as such is deemed essential. There are two cases:<ul>
+<li>There is (according to the requirements) a possibility that the system may be required to refer to the data in the future. The system must retain the data and it corresponds to <code>essential state</code>.</li>
+<li>There is no such possibility. The data is not maintained as it&#39;s often used to cause a side-effect (eg: most click events).</li>
+</ul>
+</li>
+</ol>
+<h6>Immutable Essential Derived Data</h6>
+<ol>
+<li>Data of this kind can always be re-derived (from the input data — i.e. from the essential state) whenever required.</li>
+<li>We do not need to store it in the ideal world and it&#39;s an accidental state.</li>
+<li>It&#39;s intended only for display.</li>
+</ol>
+<h6>Mutable Essential Derived Data</h6>
+<ol>
+<li>It&#39;s an accidental state and can be excluded like the immutable essential derived state.</li>
+<li>Explicit reference is made within the requirements to the ability of users to update that data.</li>
+<li>Mutability of derived data makes sense only where the function (logic) used to derive the data has an inverse (otherwise — given its mutability — the data cannot be considered derived on an ongoing basis, and it is effectively input). Modifications to the data can simply be treated identically to the corresponding modifications to the existing essential state.</li>
+</ol>
+<h6>Accidental Derived Data</h6>
+<ol>
+<li>State which is derived but not in the users’ requirements is also an accidental state. E.g: Caching an expensive computation (it&#39;s derived from the input and can be eliminated — because it&#39;s usually not part of the user&#39;s requirement).</li>
+<li>It&#39;s an accidental state.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Data essentiality</th>
+<th>Data type</th>
+<th>Data mutability</th>
+<th>Classification</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Essenital</td>
+<td>Input</td>
+<td>-</td>
+<td>Essential state</td>
+</tr>
+<tr>
+<td>Essenital</td>
+<td>Derived</td>
+<td>Immutable</td>
+<td>Accidental state</td>
+</tr>
+<tr>
+<td>Essenital</td>
+<td>Derived</td>
+<td>Mutable</td>
+<td>Accidental state</td>
+</tr>
+<tr>
+<td>Accidental</td>
+<td>Derived</td>
+<td>-</td>
+<td>Accidental state</td>
+</tr>
+</tbody></table>
+<h4>7.1.2. Control in the ideal world</h4>
+<ol>
+<li>Control generally can be completely omitted from the ideal world and as such is considered entirely accidental.</li>
+<li>It typically won’t be mentioned in the informal requirements and hence should not appear in the formal requirements (because these are derived with no view to execution).</li>
+<li>Clearly if the program is ever to run, some control will be needed somewhere — but this isn&#39;t our concern.</li>
+<li>Typically the informal requirements will not mention concurrency, that too is normally of an accidental nature.</li>
+</ol>
+<h3>7.2. Theoretical and Practical Limitations</h3>
+<ol>
+<li>We examine assumptions made in <code>7.1</code> and see where they break down in the real world.</li>
+<li>State is required simply because most systems do have some state as part of their true essence. Practical (e.g. efficiency) concerns will often dictate the use of some accidental state.</li>
+<li>Control generally is accidental (the users normally are not concerned about it at all) but the ability to restrict and influence it is often required from a practical point of view.</li>
+</ol>
+<h4>7.2.1. Formal Specification Languages</h4>
+<ol>
+<li>In the ideal world described above, we described executable &quot;formal requirements&quot; which can also be called executable &quot;formal specification&quot;.</li>
+<li>Formal specification categories:<ul>
+<li><strong>Property-based</strong> approaches focus (in a declarative manner) on what is required rather than how the requirements should be achieved. These approaches include the algebraic (equational axiomatic semantics) approaches such as Larch and OBJ.</li>
+<li><strong>Model-based (or State-based)</strong> approaches construct a potential model for the system (often a stateful model) and specify how that model must behave. These approaches (which include Z and VDM) can hence be used to specify how a stateful, imperative language solution must behave to satisfy the requirements.</li>
+</ul>
+</li>
+<li>Primary problems of executable formal specification:<ul>
+<li><strong>Theoretical</strong>:  consideration of specification languages highlights the (theoretically) fuzzy boundary between what is essential and what is accidental — specifically it challenges the validity of our definition of essential (which we identified closely with requirements from the users) by observing that it is possible to specify things which are not directly executable.</li>
+<li><strong>Practical</strong>: impractical for effciency reasons.</li>
+</ul>
+</li>
+</ol>
+<h4>7.2.3. Ease of Expression</h4>
+<ol>
+<li>There are occasionally situations where the ideal world approach (of having no accidental state, and using on-demand derivation) does not give rise to the most natural modeling of the problem.</li>
+<li>An example of this would be the derived data representing the position state of a character in an interactive game — it&#39;s at all times derivable by a function of both all prior user movements, the initial starting positions, &amp; time, but this is not the way it&#39;s most naturally expressed.</li>
+</ol>
+<h4>7.2.3 Required Accidental Complexity</h4>
+<ol>
+<li>Specifically we can see that if we add in the accidental state which has to be managed explicitly by the logic of the system, then we become at risk of the possibility of the system entering an inconsistent state (or “bad state”) due to errors in that explicit logic.</li>
+</ol>
+<h3>7.3 Recommendations</h3>
+<ol>
+<li>Recommendations for dealing with complexity:<ul>
+<li>Avoid: avoid state and control where they are not absolutely and truly essential.</li>
+<li>Separate: there will sometimes be complexity that either is truly essential (section 7.1.1) or, whilst not truly essential, is useful from a practical point of view (section 7.2.3). Such complexity must be separated out from the rest of the system.</li>
+</ul>
+</li>
+<li><blockquote>
+<p>“Algorithm = Logic + Control” — Kowalski</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>Comment: Because the authors claim that state is the prime cause of complexity, they use it interchangeably with complexity.</p>
+</blockquote>
+</li>
+</ol>
+<h4>7.3.1. Required Accidental Complexity</h4>
+<ol>
+<li>Most appropriate way of handling each identified reason for requiring accidental complexity:</li>
+</ol>
+<h5>Performance</h5>
+<ol>
+<li>Accidental complexity has risks when introduced in an undisciplined manner.</li>
+<li>The recommendation here is that we completely avoid explicit management of the accidental state — instead, we should restrict ourselves to simply declaring what accidental state should be used, and leave it to a completely separate infrastructure (on which our system will eventually run) to maintain. This is reasonable because the infrastructure can make use of the (separate) system logic which specifies how accidental data must be derived. By doing this we eliminate any risk of state inconsistency.</li>
+</ol>
+<h5>Ease of Expression</h5>
+<ol>
+<li>In cases where it really is the only natural thing to do, we should pretend that the accidental state is really an essential state for the purposes of the separation discussed below. One straightforward way to do this is to make use of an external component that observes the derived data in question and creates the illusion of the user typing that same (derived, accidental) data back in as input data.</li>
+</ol>
+<h5>7.3.2. Separation and the relationship between the components</h5>
+<ol>
+<li>Separation encompasses two things:<ul>
+<li>Separating out all complexity of any kind from the pure logic of the system (which — having nothing to do with either state or control — we’re not really considering part of the complexity). This could be referred to as the logic/state split (although of course state is just one aspect of complexity — albeit the main one).</li>
+<li>Further dividing the complexity which we do retain into accidental and essential. This could be referred to as the accidental/essential split.</li>
+</ul>
+</li>
+</ol>
+<p>| Complexity | Type | Recommendation |
+|---|---|---|---|
+| Essential Logic | | Separate |
+| Essential complexity | State | Separate |
+| Accidental useful complexity | State / Control | Separate |
+| Accidental useless complexity | State / Control | Avoid |</p>
+<ol start="2">
+<li>Control is not considered essential.</li>
+<li>We advocate a split between the state and control components of the “useful” Accidental Complexity — but this distinction is less important than the others.</li>
+<li><blockquote>
+<p>“The logic component determines the meaning . . . whereas the control component only affects its efficiency” — Kowalski</p>
+</blockquote>
+</li>
+<li>Given that each separated component is of a different nature, different specific/restricted languages might be ideal for each.</li>
+<li>The weaker the language, the more simple it is to reason about.</li>
+<li>Each component can be reasoned about individually, which facilitates reasoning about the system as a whole.</li>
+</ol>
+<p><img src="figure1.png" alt="Figure 1">
+Changes to a component depended upon might require changes to the dependent component, but not vice versa.
+8. <strong>Essential State</strong>: This can be seen as the foundation of the system. The specification of the required state is completely self-contained.
+9. <strong>Essential Logic</strong>: aka “business” logic. It does not say anything about how, when, or why the state might change dynamically.</p>
+<h2>8. The Relational Model</h2>
+<ol>
+<li>Four aspects of the relational model:<ul>
+<li><strong>Structure</strong>: the use of relations as the means for representing all data.</li>
+<li><strong>Manipulation</strong>: a means to specify derived data.</li>
+<li><strong>Integrity</strong>: a means to specify certain inviolable restrictions on the data.</li>
+<li><strong>Data Independence</strong>: a clear separation is enforced between the logical data and its physical representation.</li>
+</ul>
+</li>
+<li>SQL (of any version) is not an accurate reflection of the relational model.</li>
+</ol>
+<h3>8.1. Structure</h3>
+<h4>8.1.1. Relations</h4>
+<ol>
+<li>A relation is best seen as a homogeneous set of records, each record itself consisting of a heterogeneous set of uniquely named attributes.</li>
+<li>Relations can be of the following kinds:<ul>
+<li><strong>Base Relations</strong> are those which are stored directly.</li>
+<li><strong>Derived Relations</strong> (also known as Views) are those which are defined in terms of other relations (base or derived).</li>
+</ul>
+</li>
+<li>It&#39;s useful to think of a relation as being a single (albeit compound) value, and to consider any mutable state not as a “mutable relation” but rather as a variable which at any time can contain a particular relation value. <a href="https://www.amazon.com/Introduction-Database-Systems-8th/dp/0321197844">Date</a> calls these variables <code>relation variables</code> or <code>relvars</code>, leading to the terms base <code>relvar</code> and <code>derived relvar</code>, and we shall use this terminology later.</li>
+</ol>
+<h4>8.1.2. Structuring benefits of Relations — Access path independence</h4>
+<ol>
+<li>The idea of structuring data using relations is appealing because no subjective, up-front decisions need to be made about the access paths that will later be used to query and process the data.</li>
+<li>The two main data structuring approaches which preceded the relational model were both access path-dependent:<ul>
+<li><strong>Hierarchical model</strong>:  a subjective choice would be forced early on as to whether departments would form the top-level (with each department “containing” its employees) or the other way round (with employees “containing” their departments). The choice made would impact all future use of the data. If the first alternative was selected, then users of the data would find it easy to retrieve all employees within a given department (following the access path), but they would find it harder to retrieve the department of a given employee.</li>
+<li><strong>Network model</strong>: alleviated the problem to some degree by allowing multiple access paths between data instances (so the choice could be made to provide both an access path from department to employee and an access path from employee to department). Because it&#39;s impossible to predict all future required access paths, this can still lead to difficulty with new requirements.</li>
+</ul>
+</li>
+<li>Being access path independent was a primary reason the relational model dominated both.</li>
+</ol>
+<h3>8.2. Manipulation</h3>
+<ol>
+<li>Relational algebra was introduced by Codd as one of the mechanisms for expressing the manipulation aspects of the relational model.</li>
+<li>Relational algebra consists of the following eight operations:<ul>
+<li><strong>Restrict</strong> is a unary operation that allows the selection of a subset of the records in a relation according to some desired criteria.</li>
+<li><strong>Project</strong> is a unary operation that creates a new relation corresponding to the old relation with various attributes removed from the records.</li>
+<li><strong>Product</strong> is a binary operation corresponding to the cartesian product of mathematics.</li>
+<li><strong>Union</strong> is a binary operation that creates a relation consisting of all records in either argument relation.</li>
+<li><strong>Intersection</strong> is a binary operation that creates a relation consisting of all records in both argument relations.</li>
+<li><strong>Difference</strong> is a binary operation that creates a relation consisting of all records in the first but not the second argument relation.</li>
+<li><strong>Join</strong> is a binary operation that constructs all possible records that result from matching identical attributes of the records of the argument relations.</li>
+<li><strong>Divide</strong> is a ternary operation that returns all records of the first argument which occur in the second argument associated with each record of the third argument.</li>
+</ul>
+</li>
+</ol>
+<h3>8.3. Integrity</h3>
+<ol>
+<li>Integrity in the relational model is maintained simply by specifying — in a purely declarative way — a set of constraints that must hold at all times.</li>
+</ol>
+<h3>8.4. Data Independence</h3>
+<ol>
+<li>Data independence is the principle of separating the logical model from the physical storage representation.</li>
+</ol>
+<h2>9. Functional Relational Programming</h2>
+<ol>
+<li>In FRP all essential state takes the form of relations, and the essential logic is expressed using relational algebra extended with (pure) user-defined functions.</li>
+</ol>
+<p><img src="figure2.png" alt="Figure 2"></p>
+<h3>9.1. Architecture</h3>
+<ol>
+<li><strong>Essential State</strong>: A Relational definition of the stateful components of the system</li>
+<li><strong>Essential Logic</strong>: Derived-relation definitions, integrity constraints and (pure) functions</li>
+<li><strong>Accidental State &amp; Control</strong>: A declarative specification of a set of performance optimizations for the system</li>
+<li><strong>Other</strong> A specification of the required interfaces to the outside world (user and system interfaces)</li>
+</ol>
+<h4>9.1.1. Essential State (“State”)</h4>
+<ol>
+<li>FRP strongly encourages that data be treated as an essential state only when it has been input directly by a user or external system.</li>
+<li>It consists solely of a specification of the essential state for the system in terms of base relvars (in FRP all state is stored solely in terms of relations).</li>
+<li>Specifically it&#39;s the names and types of the base relvars that are specified here, not their actual contents.</li>
+</ol>
+<h4>9.1.2. Essential Logic (“Behaviour”)</h4>
+<ol>
+<li>The essential logic comprises both functional and algebraic (relational) parts.</li>
+<li>The main (in the sense that it provides the overall structure for the component) part is the relational one and consists of derived-relvar names and definitions. These definitions consist of applications of the relational algebra operators to other relvars (both derived relvars and the base relvars which make up the essential state).</li>
+<li>In addition to relational algebra, the definitions can make use of an arbitrary set of pure user-defined functions which make up the functional part of the essential logic.</li>
+<li>Finally (in accordance with the standard relational model) the logic specifies a set of integrity constraints — boolean expressions which must hold at all times. (These can include everything from simple foreign key constraints to complicated multiple-relvar requirements making use of user-defined functions).</li>
+</ol>
+<h4>9.1.3 Accidental State and Control (“Performance”)</h4>
+<ol>
+<li>This component fundamentally consists of a series of isolated (in the sense that they cannot refer to each other in any way) performance “hints”. These hints — which should be declarative in nature — are intended to provide guidance to the infrastructure responsible for running the FRP system.</li>
+<li>On the state side, this component is concerned with both the accidental state itself and accidental aspects of the state.</li>
+<li>Firstly, it provides a means to specify what state (of the accidental variety) should exist (eg: a hint that a derived-relvar should be stored instead of continually recalculated).</li>
+<li>Secondly it provides (if desired) a means to specify what physical storage mechanisms should be used for storing state (of both kinds) — i.e. the accidental aspects of storage (eg: a hint to store an infrequently used state separately).</li>
+<li>On the control side, recommendations for parallel evaluation of derived relvars might be given. Also, declarative hints could be given about whether the derived relvars should be computed eagerly (as soon as the essential state changes), lazily (when the infrastructure is forced to provide them).</li>
+</ol>
+<h4>9.1.4. Other (Interfacing with the outside world)</h4>
+<h5>Feeders</h5>
+<ol>
+<li>Feeders are components that convert input into relational assignments — i.e. cause changes to the essential state.</li>
+</ol>
+<h5>Observers</h5>
+<ol>
+<li>Observers are components that generate output in response to changes which they observe in the values of the (derived) relvars.</li>
+<li>At a minimum, observers will only need to specify the name of the relvar which they wish to observe.</li>
+</ol>
+<h4>9.1.5. Infrastructure</h4>
+<ol>
+<li>The FRP system is the specification — comprising of the four components above, the infrastructure is what is needed to execute this specification.</li>
+<li>The different components of an FRP system lead to different requirements on the infrastructure which is going to support them.</li>
+</ol>
+<h5>Infrastructure for Essential State</h5>
+<ol>
+<li>Some means of storing and retrieving data in the form of relations assigned to named relvars.</li>
+<li>A state manipulation language that allows the stored relvars to be updated (within the bounds of the integrity constraints).</li>
+<li>Optionally secondary (e.g. disk-based) storage in addition to the primary (in-memory) storage.</li>
+<li>A base set of generally useful types (typically an integer, boolean, string, date, etc).</li>
+</ol>
+<h5>Infrastructure for Essential Logic</h5>
+<ol>
+<li>A means to evaluate relational expressions.</li>
+<li>A base set of generally useful functions (for things such as basic arithmetic etc).</li>
+<li>A language to allow specification (and evaluation) of the user-defined functions in the FRP system. (It does not have to be a functional language, but the infrastructure must only allow it to be used in a functional way).</li>
+<li>optionally a means of type inference (this will also require a mechanism for declaring the types of the user-defined functions in the FRP system)</li>
+<li>A means to express and enforce integrity constraints.</li>
+</ol>
+<h5>Infrastructure for Accidental State and Control</h5>
+<ol>
+<li>A means to specify which derived relvars should actually be stored, along with the ability to store such relvars and ensure that the stored values are accurately up-to-date at all times.</li>
+<li>A flexible means to specify physical storage mechanisms to be used by a relvar. This is a vital part of the infrastructure — without it, the infrastructure must store relvars in a way that closely mirrors their logical (essential) definitions, and that inevitably leads to accidental (performance) concerns corrupting the essential parts of the system. Specifically, procedures such as normalization or “de-normalization” at the logical (essential) level should have no intrinsic performance implications because of the presence of this mechanism.</li>
+</ol>
+<h5>Infrastructure for Feeders</h5>
+<ol>
+<li>The minimum requirement on the infrastructure is for it to be able to process relational assignment commands (containing complete new relation values) and reject them if necessary.</li>
+<li>Practical extensions that could be useful include the ability to accept commands which specify new relvar values in terms of their previous values — typically in the form of INSERT / UPDATE / DELETE commands.</li>
+</ol>
+<h5>Infrastructure for Observers</h5>
+<ol>
+<li>The minimum requirement on the infrastructure is for it to be able to supply the new value of a relvar whenever it changes.</li>
+<li>Practical extensions that could be useful are the ability to provide deltas, throttling, and coalescing capabilities (if the observers are viewed as live query handlers, then these extensions represent potential query meta-data).</li>
+<li>Finally, the ability to access arbitrary historical relvar values would obviously be a useful extension in some scenarios.</li>
+</ol>
+<h3>9.2. Benefits of this approach</h3>
+<ol>
+<li>FRP follows the guidelines of <code>avoid</code> and <code>separate</code> as recommended in section 7 and hence gains all the benefits we derive from that.</li>
+</ol>
+<h4>9.2.1. Benefits for  Data Abstraction</h4>
+<ol>
+<li>By data abstraction we basically mean the creation of compound data types and the use of the corresponding compound values (whose internal contents are hidden).</li>
+<li>Un-needed data abstraction actually represents another common (and serious) cause of complexity. This is for two reasons:<ul>
+<li><strong>Subjectivity</strong>: The grouping of data items together into larger compound data abstractions is inherently subjective. Groupings that make sense for one purpose will inevitably differ from those most natural for other uses, yet the presence of pre-existing data abstractions all too easily leads to inappropriate reuse.</li>
+<li><strong>Data Hiding</strong>: Secondly, large and heavily structured data abstractions can seriously erode the benefits of referential transparency. This problem occurs both because data abstractions will often cause un-needed, irrelevant data to be supplied to a function, and because the data which does get used (and hence influences the result of a function) is hidden at the function call site.</li>
+</ul>
+</li>
+<li>One of the primary strengths of the relational model (inherited by FRP) is that it involves only minimal commitment to any subjective groupings (basically just the structure chosen for the base relations), and this commitment has only minimal impact on the rest of the system. Derived relvars offer a straightforward way for different (application-specific) groupings to be used alongside the base groupings. The benefits in terms of subjectivity are closely related to the benefits of access path independence.</li>
+<li>FRP also offers benefits in the area of data hiding, simply by discouraging it.</li>
+</ol>
+<h3>9.3. Types</h3>
+<ol>
+<li>FRP provides a limited ability to define new user types for use in the essential state and essential logic components.</li>
+<li>Specifically it permits the creation of disjoint union types (sometimes known as “enumeration” types) but does not permit the creation of new product types (types with multiple subsidiary components). This is because (as mentioned above) we have a strong desire to avoid any unnecessary data abstraction.</li>
+</ol>
+<h2>10. Example of an FRP system</h2>
+<ol>
+<li>A simple real-estate project is used to demonstrate the FRP approach.</li>
+</ol>
+<blockquote>
+<p>The example can be found in the <a href="https://github.com/papers-we-love/papers-we-love/blob/master/design/out-of-the-tar-pit.pdf">paper</a>.</p>
+</blockquote>
+
+    </body>
+</html>

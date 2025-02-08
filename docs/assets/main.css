@@ -483,3 +483,77 @@ a {
     transform: scale(1.03);
     transition: transform 0.3s ease;
 }
+
+.card a {
+    text-decoration: none;
+}
+
+.card h2, h3 {
+    color: #fff;
+    margin: 0;
+}
+
+.card p {
+    margin: 0;
+}
+
+/* Grid Container */
+.grid-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(2, 200px);
+    gap: 12px;
+    margin-bottom: 40px;
+}
+
+/* Card Base Styles */
+.card {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: #fff;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: flex-end;
+    padding: 15px;
+}
+
+/* Scrim / Blur Overlay for better text readability */
+.card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.1); /* increased opacity for better contrast */
+    backdrop-filter: blur(1px); /* adds a subtle blur to the background */
+    z-index: 0;
+}
+
+/* Make sure text appears above the overlay */
+.card .card-content {
+    position: relative;
+    z-index: 1;
+}
+
+/* Special styling for dark cards (no background image) */
+.card.dark {
+    background: #333;
+}
+.card.dark::after {
+    background: none;
+    backdrop-filter: none;
+}
+
+/* Group 1: Left card spans two rows */
+.grid-group.group1 .card:first-child {
+    grid-row: span 2;
+}
+/* Group 2: Right card spans two rows */
+.grid-group.group2 .card:last-child {
+    grid-row: span 2;
+}

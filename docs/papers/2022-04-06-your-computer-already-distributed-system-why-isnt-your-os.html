@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>Your computer is already a distributed system. Why isn’t your OS? — Paper Summary</title>
+        <meta property="og:image" content="/assets/banners/2022-04-06-your-computer-already-distributed-system-why-isnt-your-os.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>Your computer is already a distributed system. Why isn’t your OS? — Paper Summary</h1>
+<p>This post summarizes the key topics in this very accessible <a href="https://barrelfish.org/publications/barrelfish_hotos09.pdf">paper</a> published in 2009.</p>
+<blockquote>
+<p>We argue that a new OS for a multicore machine should be designed ground-up as a distributed system, using concepts from that field.<br/>
+Modern hardware resembles a networked system even more than past large multi-processors: in addition to familiar latency effects, it exhibits node heterogeneity and dynamic membership changes.  </p>
+</blockquote>
+<h2>Observation</h2>
+<ol>
+<li><p>A modern computer is a networked system of point-to-point links exchanging messages.</p>
+<blockquote>
+<p>A single machine today consists of a <strong>dynamically</strong> changing collection of <strong>heterogeneous</strong> processing elements, communicating via channels (whether messages or shared-memory) with diverse <strong>latencies</strong>.</p>
+</blockquote>
+<p><img src="assets/fig1.png" alt="Figure 1">
+<small>Figure 1: Node layout of a commodity 32-core machine</small></p>
+</li>
+<li><p>Distributed systems are historically distinguished from centralized ones by three additional challenges:</p>
+<ul>
+<li><p><strong>Node heterogeneity</strong>:</p>
+<ul>
+<li>Centralized computer systems traditionally assume that all the processors which share memory have the same architecture and performance trade- offs.</li>
+<li>This assumption is barely true with modern commodity computers.</li>
+<li>Non-coherent compromises are used to address the fact that mainstream operating systems cannot easily represent different processing architectures within the same kernel.</li>
+</ul>
+</li>
+<li><p><strong>Node Dynamicity</strong>: Nodes (CPU, memory, etc) come and go due to partial failures and other reconfigurations — however, the hardware of a computer from the OS perspective is not viewed in this manner.</p>
+</li>
+<li><p><strong>Communication Latency</strong>: The problem of latency in <a href="https://en.wikipedia.org/wiki/Cache_coherence">cache-coherent</a> <a href="https://en.wikipedia.org/wiki/Non-uniform_memory_access">NUMA</a> machines is well-known.</p>
+<table>
+<thead>
+<tr>
+<th>Access</th>
+<th>Cycles</th>
+<th>Normalized to L1</th>
+<th>Per-hop cost</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>L1 cache</td>
+<td>2</td>
+<td>1</td>
+<td>-</td>
+</tr>
+<tr>
+<td>L2 cache</td>
+<td>15</td>
+<td>7.5</td>
+<td>-</td>
+</tr>
+<tr>
+<td>L3 cache</td>
+<td>7</td>
+<td>5 37.5</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Other L1/L2</td>
+<td>130</td>
+<td>65</td>
+<td>-</td>
+</tr>
+<tr>
+<td>1-hop cache</td>
+<td>190</td>
+<td>95</td>
+<td>60</td>
+</tr>
+<tr>
+<td>2-hop cache</td>
+<td>260</td>
+<td>130</td>
+<td>70</td>
+</tr>
+</tbody></table>
+<p> <small>Table 1: Latency of cache access for the PC in Figure 1.</small></p>
+</li>
+</ul>
+</li>
+</ol>
+<h2>Implications</h2>
+<h3>Message passing vs. shared memory</h3>
+<ol>
+<li>Traversing a shared data structure in a modern cache-coherent system is equivalent to a series of synchronous RPCs to fetch remote cache lines.</li>
+<li>Pros of message passing:<ul>
+<li>Facilitates interoperation between heterogeneous processors.</li>
+<li>Amenable to both informal and formal analysis.</li>
+<li>In an OS, a message-passing primitive can make more efficient use of the interconnect and reduce latency over sharing data structures between cores.</li>
+</ul>
+</li>
+</ol>
+<h3>Replication</h3>
+<ol>
+<li>Replication of data is used in distributed systems to <strong>increase throughput</strong> for read-mostly workloads and to <strong>increase availability</strong>.</li>
+<li>Processor caches and <a href="https://en.wikipedia.org/wiki/Translation_lookaside_buffer">TLBs</a> replicate data in hardware for performance.</li>
+<li>Replication in current OSes is treated as an optimization of the shared data model. The authors suggest that it is useful to instead see replication as the default model:<blockquote>
+<p>The principal impact on clients is that they now invoke an agreement protocol (propose a change to system state, and later receive agreement or failure notification) rather than modifying data under a lock or transaction.</p>
+</blockquote>
+</li>
+</ol>
+<h3>Consistency</h3>
+<ol>
+<li>Maintaining the consistency of replicas in current operating systems is simple: Typically an initiator synchronously contacts all cores, often via a global <a href="https://en.wikipedia.org/wiki/Inter-processor_interrupt">IPI</a>, and waits for a confirmation.</li>
+<li>The authors argue that OS designers are missing out from the vast design space of agreement and consensus protocols.</li>
+</ol>
+<h3>Network effects</h3>
+<ol>
+<li>Routing, congestion, and queueing effects within a computer are already an issue.<blockquote>
+<p>Closer to the level of system software, routing problems emerge when considering where to place buffers in memory as data flows through processors, <a href="https://en.wikipedia.org/wiki/Direct_memory_access">DMA</a> controllers, memory, and peripherals.<br/>
+For example, data that arrives at a machine and is immediately forwarded back over the network should be placed in buffers close to the <a href="https://en.wikipedia.org/wiki/Network_interface_controller">NIC</a>, whereas data that will be read in its entirety should be DMAed to memory local to the computing core.</p>
+</blockquote>
+</li>
+</ol>
+<h3>Heterogeneity</h3>
+<ol>
+<li>Heterogeneity (and interoperability) have been tackled in distributed systems:<ul>
+<li>At the data level using standardized messaging protocols.</li>
+<li>At the interface level using logical descriptions of distributed services that software can reason about.</li>
+</ul>
+</li>
+</ol>
+<h2>The multikernel architecture</h2>
+<ol>
+<li>In this section, the authors sketch out an example multi-kernel architecture for an operating system built from the ground up as a distributed system, targeting modern multicore processors, intelligent peripherals, and heterogeneous multiprocessors, and incorporating the <strong>ideas above</strong>.</li>
+</ol>
+<p><img src="assets/fig2.png" alt="Figure 2">
+<small>Figure 2: The multikernel architecture</small></p>
+<h2>Open questions</h2>
+<ol>
+<li>The authors do not advocate blindly importing distributed systems ideas into OS design.</li>
+</ol>
+<h3>What are the appropriate algorithms, and how do they scale?</h3>
+<ol>
+<li>Intuitively, distributed algorithms based on messages should scale just as well as cache-coherent shared memory, since at some level the latter is based on the former.</li>
+</ol>
+<h3>Where does the analogy break?</h3>
+<ol>
+<li>There are important differences limiting the degree to which distributed algorithms can be applied to OS design.</li>
+<li>Many arise from the hardware-based message transport, such as fixed transfer sizes, no ability to do in-network aggregation, static routing, and the need to poll for incoming messages.</li>
+<li>Others (reliable messaging, broadcast, simpler failure models) may allow novel optimizations.</li>
+</ol>
+<h3>Why stop at the edge of the box?</h3>
+<ol>
+<li>Viewing a machine as a distributed system makes the boundary between physical machines (traditionally the network interface) less clear-cut, and more a question of degree (overhead, latency, bandwidth, reliability).</li>
+</ol>
+<h2>My thoughts</h2>
+<ol>
+<li>It provides a unique way to look at single machines.</li>
+<li>I was hoping to see a section on complexity: While I found the ideas interesting, I couldn’t help but wonder how this could make current software more complicated. The surface simplicity might be worth the internal cost/compromises?</li>
+</ol>
+
+    </body>
+</html>

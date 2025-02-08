@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>Fast key-value stores An idea whose time has come and gone — Paper Summary</title>
+        <meta property="og:image" content="/assets/banners/2022-10-10-fast-key-value-stores-an-idea-whose-time-has-come-and-gone.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>Fast key-value stores An idea whose time has come and gone — Paper Summary</h1>
+<p>Authors: Atul Adya, Robert Grandl, Daniel Myers, Henry Qin</p>
+<p>Date: 2019</p>
+<p>Link: <a href="https://pages.cs.wisc.edu/~rgrandl/papers/link.pdf#page7">PDF</a></p>
+<hr>
+<ol>
+<li>Modern internet-scale services often use <strong>remote, in-memory, key-value (RInK)</strong> stores such as Redis and Memcached as:<ul>
+<li>A cache for storage</li>
+<li>A short-lived data store</li>
+</ul>
+</li>
+<li>Stateless application servers bring operational simplicity.</li>
+<li>A key property of RInK stores is that they provide a simple and domain-agnostic interface (e.g., PUT/GET of string keys and string values, or manipulation of simple data structures such as lists).</li>
+<li>The domain-agnostic interfaces of RInK stores push cost and complexity back to the application servers:<ul>
+<li><strong>CPU cost and code complexity</strong>: they force applications to repeatedly convert their internal data structures between native language representations and strings.</li>
+<li><strong>Overreads</strong>: Apps might not use the entire value retrieved from a RInK store.</li>
+<li><strong>Latency cost</strong>: because of the network distance.</li>
+</ul>
+</li>
+<li>The authors argue that these costs are under-appreciated and no longer necessary, given recent improvements in auto-sharding systems.</li>
+<li>Rather than externalizing in-memory state in a RInK, the authors suggest developers should instead build stateful application servers.</li>
+<li>If a stateful application server is not feasible, e.g., because state is shared by multiple applications or languages, developers should instead build a custom in-memory store, which is at a network distance and has a domain-specific interface for optimized operations.</li>
+<li>Although they pose challenges, stateful services offer significant performance improvements. For example, ProtoCache (a component of a widely-used Google application) saw a 40% reduction of 99.9% latency when it made this architectural switch.</li>
+<li>The authors conducted a test that shows the stateful approach is superior to the stateless service + RInK in terms of per request/response latency and resource utilization:<ul>
+<li>Latency is 29% to 57% better (at the median), with relative improvement increasing with object size.</li>
+<li>Decreased overreads lead to lower latency and resource utilization.</li>
+</ul>
+</li>
+<li>The authors conclude with:<blockquote>
+<p>Stateful architectures offer higher performance by avoiding unnecessary network and (un)marshalling costs, at the expense of higher demands on infrastructure software. To address these demands, we have proposed the LInK (linked in-memory key-value) store and described areas for future research.</p>
+</blockquote>
+</li>
+</ol>
+
+    </body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>Hardware is the new Software — Paper Summary</title>
+        <meta property="og:image" content="/assets/banners/2022-09-08-hardware-new-software.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>Hardware is the new Software — Paper Summary</h1>
+<p>Today&#39;s summary is about a <a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2017/05/baumann-hotos17.pdf">paper</a> written by Andrew Baumann (Microsoft Research) in 2017.</p>
+<hr>
+<ol>
+<li>Moore’s Law may be slowing, but, perhaps as a result, other measures of processor complexity are (rapidly) acceler­ating.</li>
+<li>The paper examines the causes of this rapid growth, and speculate about the underlying trends driving it.</li>
+<li>While the paper focuses on Intel x86 architecture and its recent extensions, the author doubt these trends are unique to Intel.</li>
+<li>The paper espouses that these extensions are now approaching software-like levels of complexity, yet carry all the attendant drawbacks of a hardware implementation and the slow deployment cycle that implies.</li>
+<li>An <a href="https://en.wikipedia.org/wiki/Instruction_set_architecture">instruction set architecture (ISA)</a> is the key interface between the lowest-levels of software and the CPU.</li>
+<li>The <a href="https://en.wikipedia.org/wiki/X86_instruction_listings">x86 ISA</a> is a complex but enduring set of semantics for in­structions, registers, memory, and core devices that must be respected by CPUs, emulators and virtual machines, and all the software that runs on top.</li>
+<li>Like any successful product, successful ISAs grow over time.</li>
+<li>While new instructions add CPU implementation com­plexity, past system designers could, for the most part, ignore such changes because they didn’t substan­tially change systems interfaces or add too many instructions at a time.</li>
+<li>Whereas past extensions largely focused on performance improvements through new data-processing instructions; Recent extensions introduce new system-level functionality, often change the semantics of existing instructions, and exhibit complex interactions with other extensions and prior ar­chitectural features.</li>
+<li>Such past extensions include:<ul>
+<li>Vector extensions (MMX, SSE, and AVX) </li>
+<li>64-bit mode and virtualisation extensions</li>
+</ul>
+</li>
+<li><img src="assets/fig1.png" alt="Figure 1"></li>
+<li>The figure above plots the transistor count of Intel x86 CPU implementations (on a log scale), as well as the number of words in the Intel architecture software developer’s manual (on a linear scale).</li>
+<li>The two data sets are not comparable, but some trends are evident:<ul>
+<li>Moore’s Law</li>
+<li>The steady growth, and recent 2015–2016 jump in the general complexity of x86. The jump is due to extensions introduced with the “Sky­lake” microarchitecture, and dwarfs even 64-bit mode and virtual-machine extensions (both added in 2007).</li>
+</ul>
+</li>
+<li>It’s likely that the explosion in extensions is a deliberate strategy:<blockquote>
+<p>The slowing pace of Moore’s Law will make it harder to sell CPUs: absent improvements in microarchitecture, they won’t be substantially faster, nor substantially more power eﬃcient, and they will have about the same num­ber of cores at the same price point as prior CPUs. Why would anyone buy a new CPU? One reason to which In­tel appears to be turning is features: if the new CPU im­plements an important ISA extension—say, one required by software because it is essential to security—consumers will have a strong reason to upgrade.</p>
+</blockquote>
+</li>
+</ol>
+<h3>Case study: SGX</h3>
+<ol>
+<li>The new instructions introduced by <a href="https://en.wikipedia.org/wiki/Software_Guard_Extensions">software guard exten­sions</a> enable strong isolation and remote attestation of software enclaves.</li>
+<li>An enclave is an isolated region of virtual address space, whose contents are protected from access by code outside the enclave.</li>
+<li>However, SGX introduces substantial complexity: 26 instructions described by nearly 200 pages of En­glish/pseudocode speciﬁcation.</li>
+<li>The paper goes on to describe the complexity introduced by SGX because of how some features are implemented and the decision to be compatible with existing OSes.</li>
+</ol>
+<h3>Case study: CET</h3>
+<ol>
+<li><p><a href="https://en.wikipedia.org/wiki/Control-flow_integrity">Control-ﬂow enforcement technology</a> defends against code-reuse attacks such as <a href="https://en.wikipedia.org/wiki/Return-oriented_programming">return-oriented programming (ROP)</a>.</p>
+</li>
+<li><p>These attacks exploit vulnerabilities in unsafe code like buﬀer overﬂows, but rather than directly inject­ing executable code, manipulate the program’s control-­ﬂow to execute legitimate instructions in an unintended context.</p>
+</li>
+<li><p>CET consists of two mechanisms: a shadow stack, and indirect branch tracking:</p>
+<blockquote>
+<p>At its core, a shadow stack is a straightforward mecha­nism: on a function call, the processor saves the return ad­dress on both the regular and shadow stacks. The shadow stack stores only return addresses, and is inaccessible to normal code.</p>
+<p>On a return, the addresses from both stacks are popped and compared, and an exception raised if they diﬀer, defeating ROP.</p>
+<p>The advantage of CET compared to software implementations of shadow stacks is perfor­mance, compatibility and security: by modifying the se­mantics of CALL and RET instructions, no program mod-iﬁcations are needed, and the shadow stack can be made easily and cheaply inaccessible to software through the use of a new page table attribute which protects shadow stacks from access by regular loads and stores.</p>
+</blockquote>
+<blockquote>
+<p>CET also includes indirect branch tracking to prevent misdirection of function pointers: after an indirect JMP or CALL, an exception is raised unless the next instruction is a valid programmer-intended branch target, as signiﬁed by a new form of NOP instruction. While this is not full control-ﬂow integrity [1], it restricts the available gadgets.</p>
+</blockquote>
+</li>
+<li><p>Similarly, the paper describes how CET adds complexity because of the way it interacts/modifies existing instructions/features.</p>
+</li>
+</ol>
+<h3>Implications</h3>
+<ol>
+<li><p><strong>Sustainability</strong>: Given the rate of change + complexity, criticality of the x86 ISA, and particularly given the complex interactions between recent features, the paper questions whether the core x86 promise of indeﬁnite backwards compatibility across many implementations is sustainable.</p>
+</li>
+<li><p><strong>Timescales</strong>: Since they depend on deploying new CPUs, ISA features are slow to be adopted. Example: The original SGX speciﬁcation was published in 2013, but the ﬁrst CPUs to implement it didn’t ship until late 2015, and at the time of writing [the paper] (early 2017) server-class CPUs with SGX support are yet to appear.</p>
+</li>
+<li><p><strong>Hardware is the new software</strong>: From a careful reading of Intel patents, some researchers conclude that SGX instructions are implemented entirely in microcode. This is logical from an engineering per­spective:</p>
+<ul>
+<li>EPCM updates are oﬀ the critical path</li>
+<li>Too complex to implement in silicon</li>
+<li>Allows errata to be cor­rected by updates.</li>
+</ul>
+<p> The paper posit an al­ternative future with the ultimate goal of decoupling new ISA features from the underlying hardware. Two strategies were proposed.</p>
+</li>
+<li><p><strong>Security</strong>: A key selling point for many recent security features, SGX in particular, is that no software is trusted. Does the implementation of these features in microcode change this? We argue that microcode is more reliable than current software, but not as inherently secure as we might assume.</p>
+</li>
+</ol>
+<h3>Conclusion</h3>
+<p>The paper calls for a rethink of how we approach the instruc­tion set.</p>
+<blockquote>
+<p>It’s time to rethink the notion of an instruction set. It’s no longer the boundary between hardware and software, but rather just another translation layer in the stack.</p>
+</blockquote>
+
+    </body>
+</html>

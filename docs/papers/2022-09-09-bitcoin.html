@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>Bitcoin: A Peer-to-Peer Electronic Cash System — Paper Summary</title>
+        <meta property="og:image" content="/assets/banners/2022-09-09-bitcoin.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>Bitcoin: A Peer-to-Peer Electronic Cash System — Paper Summary</h1>
+<p>Today&#39;s summary is about a <a href="https://bitcoin.org/bitcoin.pdf">paper</a>  written by Satoshi Nakamoto in 2008.</p>
+<p>This paper proposes Bitcoin — a system for electronic transactions without relying on trust.</p>
+<hr>
+<ol>
+<li>No mechanism exists to make payments over a communications channel (the internet) without a trusted third party (a financial institution).</li>
+<li>Inherent weaknesses of the trust-based model:<ul>
+<li>It precludes completely <strong>non-reversible transactions</strong> because financial institutions have to mediate disputes.</li>
+<li>Consequently, it permits <strong>buyers fraud</strong> because of a loss of ability to make non-reversible payments for non­reversible services.</li>
+<li>It impedes <strong>micropayments</strong> because mediation cost increases transaction costs.</li>
+</ul>
+</li>
+<li>A solution: An electronic payment system based on cryptographic proof instead of trust, which allows any two willing parties to transact directly with each other (i.e peer-to-peer) without the need for a trusted third party.</li>
+</ol>
+<h2>Solutions to electronic payment system concerns</h2>
+<h3>a. Forgery</h3>
+<ol>
+<li>An electronic coin can be defined as a chain of digital signatures.</li>
+<li>Each owner transfers the coin to the next by digitally signing a hash of the previous transaction and the public key of the next owner (recipient) and adding these to the end of the coin. A payee can verify the signatures to verify the chain of ownership.</li>
+<li>An ID can be attached to each transaction to avoid (intentionally/unintentionally) repeating a transaction.</li>
+<li><img src="assets/fig1.png" alt="Figure 1"></li>
+</ol>
+<h3>b. Double spending</h3>
+<ol>
+<li>The only way to confirm the absence of a transaction is to be aware of all transactions.</li>
+<li>A common solution is to introduce a trusted central authority, or mint, that checks every transaction against past transactions.</li>
+<li>To accomplish this without a trusted party, transactions must be publicly announced, and nodes must come to a consensus on a single history.</li>
+<li>The payee needs proof that at the time of each transaction, the majority of nodes agreed it was the first received.</li>
+<li>Specific nodes (miners) accumulate these new transactions into a collection (block).</li>
+<li>Each block includes the previous block’s hash, forming a chain, with each additional block reinforcing the ones before it.</li>
+<li>A proof-of-work (PoW) system is employed to compute a block’s nonce such that when hashed (SHA-256) with the rest of the block’s content, the hash begins with a number of zero bits.</li>
+<li>The average work required is exponential in the number of zero bits required and can be verified by executing a single hash (asymmetry: work is hard, verification is easy).</li>
+<li>The nonce in the block is simply incremented until a value is found that gives the block&#39;s hash the required zero bits.</li>
+<li>Once the CPU effort has been expended to make it satisfy the proof-of-work, the block cannot be changed without redoing the work.</li>
+<li>The difficulty of PoW is determined by a moving average targeting an average number of blocks per hour to compensate for increasing hardware speed and varying interest in running nodes over time.</li>
+<li>The system is secure as long as honest nodes collectively control more CPU power than any cooperating group of attacker nodes.</li>
+<li>Proof-of-work is essentially one-CPU-one-vote; compared to one-IP-address-one-vote which can be subverted by anyone able to allocate many IPs.<blockquote>
+<p>If a majority of CPU power is controlled by honest nodes, the honest chain will grow the fastest and outpace any competing chains. To modify a past block, an attacker would have to redo the proof-of-work of the block and all blocks after it and then catch up with and surpass the work of the honest nodes.</p>
+</blockquote>
+</li>
+</ol>
+<p><img src="assets/fig2.png" alt="Figure 2"></p>
+<h2>Network</h2>
+<ol>
+<li>The steps to run the network are as follows: <ul>
+<li>New transactions are broadcast to all nodes.</li>
+<li>Each node collects new transactions into a block.</li>
+<li>Each node works on finding a difficult proof-of-work for its block.</li>
+<li>When a node finds a proof-of-work, it broadcasts the block to all nodes.</li>
+<li>Nodes accept the block only if all transactions in it are valid and not already spent.</li>
+<li>Nodes express their acceptance of the block by working on creating the next block in the chain, using the hash of the accepted block as the previous hash.</li>
+</ul>
+</li>
+<li>Tolerance: Nodes are tolerant to any missed block broadcast: they request blocks whenever any new block is received.</li>
+<li>Conflict resolution: Nodes always consider the longest chain to be the correct one and will keep working on extending it.</li>
+<li>The network is robust in its unstructured simplicity. Nodes work all at once with little coordination. They do not need to be identified, since messages are not routed to any particular place and only need to be delivered on a best-effort basis.</li>
+<li>Nodes can leave and rejoin the network at will, accepting the proof-of-work chain as proof of what happened while they were gone.</li>
+</ol>
+<h2>Incentive</h2>
+<ol>
+<li>By convention, the first transaction in a block is a special transaction that starts a new coin owned by the creator of the block. This adds an incentive for nodes to support the network and provides a way to initially distribute coins into circulation since there is no central authority to issue them.</li>
+<li>The incentive can also be funded with transaction fees. If the output value of a transaction is less than its input value, the difference is a transaction fee that is added to the incentive value of the block containing the transaction.</li>
+<li>Once a predetermined number of coins have entered circulation, the incentive can transition entirely to transaction fees and be completely inflation free.</li>
+</ol>
+<h2>Reclaiming Disk Space</h2>
+<ol>
+<li>Transactions are hashed in a Merkle Tree, with only the root included in the block&#39;s hash. Old blocks can then be compacted by stubbing off branches of the tree. The interior hashes do not need to be stored.</li>
+</ol>
+<p><img src="assets/fig3.png" alt="Figure 3"></p>
+<h2>Combining and Splitting Value</h2>
+<ol>
+<li>To allow value to be split and combined, transactions contain multiple inputs and outputs.</li>
+<li>Normally there will be either a single input from a larger previous transaction or multiple inputs combining smaller amounts, and at most two outputs: one for the payment, and one returning the change, if any, back to the sender.</li>
+</ol>
+<p><img src="assets/fig4.png" alt="Figure 4"></p>
+<h2>Privacy</h2>
+<ol>
+<li>The traditional banking model achieves a level of privacy by limiting access to information to the parties involved and the trusted third party.</li>
+<li>The necessity to announce all transactions publicly precludes this method, but privacy can still be maintained by breaking the flow of information in another place: by keeping public keys anonymous.</li>
+</ol>
+<p><img src="assets/fig5.png" alt="Figure 5"></p>
+<h2>Calculations</h2>
+<ol>
+<li>The paper evaluates two scenarios:<ul>
+<li>An attacker trying to generate an alternate chain faster than the honest chain.</li>
+<li>How long the recipient of a new transaction needs to wait before being sufficiently certain the sender can&#39;t change the transaction.</li>
+</ul>
+</li>
+<li>The probability of a slower attacker catching up diminishes exponentially as subsequent blocks are added.</li>
+</ol>
+
+    </body>
+</html>

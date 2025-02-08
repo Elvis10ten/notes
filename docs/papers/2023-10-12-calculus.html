@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1, viewport-fit=cover">
+
+        <title>[WIP] Calculus — Notes</title>
+        <meta property="og:image" content="assets/banners/2023-10-12-calculus.jpg">
+        <meta property="og:type" content="article">
+
+        <link rel="icon" type="image/png" href="/assets/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+        <link href="/assets/main.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+    </head>
+    <body>
+    <h1>[WIP] Calculus — Notes</h1>
+<p>Intro</p>
+<hr>
+<h2>Chapter 1: Functions and Graphs</h2>
+<ol>
+<li>A <strong>function</strong> <code>f</code> consists of a set of inputs, a set of outputs, and a rule for assigning each input to <em>exactly one</em> output.</li>
+<li>The set of inputs is called the <strong>domain</strong> of the function.</li>
+<li>The set of outputs is called the <strong>range</strong> of the function.</li>
+<li>For any function, when we know the input, the output is determined, so we say that the <em>output is a function of the input</em>.</li>
+<li>Given two sets <code>A</code> and <code>B</code>, a set with elements that are ordered pairs <code>(x, y)</code>, where <code>x</code> is an element of <code>A</code> and <code>y</code> is an element of <code>B</code>, is a <strong>relation</strong> from <code>A</code> to <code>B</code>.</li>
+<li>A function is a special type of relation.</li>
+<li>For a general function <code>f</code> with domain <code>D</code>, we often use <code>x</code> to denote the input and <code>y</code> to denote the output associated with <code>x</code>.</li>
+<li>When doing so, we refer to <code>x</code> as the <strong>independent variable</strong> and <code>y</code> as the <strong>dependent variable</strong>, because it depends on <code>x</code>.</li>
+<li>Using function notation, we write <code>y = f(x)</code>, and we read this equation as “y equals f of x.”</li>
+<li>A function can be visualized by plotting points <code>(x, y)</code> in the coordinate plane where <code>y = f(x)</code>. The <strong>graph of a function</strong> is the set of all these points.</li>
+<li>Every function has a domain. However, sometimes a function is described with no specific domain given. In this case, the domain is taken to be the set of all real numbers <code>x</code> for which <code>f(x)</code> is a real number.</li>
+<li>When describing a set with an infinite number of elements, it is often helpful to use:<ul>
+<li>Set-builder notation: <code>{ x | 1 &gt; x &lt; 5 }</code> or</li>
+<li>Interval notation: <code>(1, 5)</code></li>
+</ul>
+</li>
+<li><strong>Piecewise functions</strong> are defined using different equations for different parts of their domain. Eg:<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mrow><mo fence="true">{</mo><mtable rowspacing="0.36em" columnalign="left left" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mn>3</mn><mi>x</mi><mo>+</mo><mn>1</mn></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mtext>if </mtext><mi>x</mi><mo>≥</mo><mn>2</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msup><mi>x</mi><mn>2</mn></msup></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mtext>if </mtext><mi>x</mi><mo>&lt;</mo><mn>2</mn></mrow></mstyle></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">f(x) = \begin{cases}
+  3x + 1 &amp;\text{if } x \geq 2 \\
+  x^2 &amp;\text{if } x &lt; 2
+   \end{cases}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:3em;vertical-align:-1.25em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size4">{</span></span><span class="mord"><span class="mtable"><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.69em;"><span style="top:-3.69em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord">3</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1</span></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.19em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:1em;"></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.69em;"><span style="top:-3.69em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord text"><span class="mord">if </span></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord">2</span></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord text"><span class="mord">if </span></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.19em;"><span></span></span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span>
+</li>
+<li>Functions can be represented through:<ul>
+<li>Tables</li>
+<li>Formulas</li>
+<li>Graphs</li>
+</ul>
+</li>
+<li>Given an algebraic formula for a function <code>f</code>, the graph of <code>f</code> is the set of points <code>(x, f(x))</code>, where <code>x</code> is in the domain of <code>f</code> and <code>f(x)</code> is in the range.</li>
+<li>Those values of <code>x</code> where <code>f(x) = 0</code> are called the <strong>zeros of a function</strong>.</li>
+<li>The zeros determine where the graph of <code>f</code> intersects the x-axis.</li>
+<li>The <strong>y-intercept</strong> is given by <code>(0, f(0))</code>.</li>
+<li>Since a function has exactly one output for each input, the graph of a function can have, at most, one y-intercept.</li>
+<li><strong>Vertical line test</strong>: Given a function <code>f</code>, every vertical line that may be drawn intersects the graph of <code>f</code> no more than once. If any vertical line intersects a set of points more than once, the set of points does not represent a function.</li>
+<li>We say that a function <code>f</code> is <strong>increasing on the interval</strong> <code>I</code> if for all <code>x₁, x₂ ∈ I</code>,
+<code>f(x₁) ≤ f(x₂)</code> when <code>x₁ &lt; x₂</code>.</li>
+<li>We say that a function <code>f</code> is <strong>strictly increasing on the interval</strong> <code>I</code> if for all <code>x₁, x₂ ∈ I</code>,
+<code>f(x₁) &lt; f(x₂)</code> when <code>x₁ &lt; x₂</code>.</li>
+<li>We say that a function <code>f</code> is <strong>decreasing on the interval</strong> <code>I</code> if for all <code>x₁, x₂ ∈ I</code>,
+<code>f(x₁) ≥ f(x₂)</code> when <code>x₁ &lt; x₂</code>.</li>
+<li>We say that a function <code>f</code> is <strong>strictly decreasing on the interval</strong> <code>I</code> if for all <code>x₁, x₂ ∈ I</code>,
+<code>f(x₁) &gt; f(x₂)</code> when <code>x₁ &lt; x₂</code>.</li>
+<li><strong>To combine functions using mathematical operators</strong>, write the functions with the operator and simplify. E.g:<ul>
+<li>Sum: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>f</mi><mo>+</mo><mi>g</mi><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>+</mo><mi>g</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(f + g)(x) = f(x) + g(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mclose">)</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span></li>
+<li>Difference: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>f</mi><mo>−</mo><mi>g</mi><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>−</mo><mi>g</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(f − g)(x) = f(x) − g(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mclose">)</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span></li>
+<li>Product: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>f</mi><mo separator="true">⋅</mo><mi>g</mi><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mi>g</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(f · g)(x) = f(x)g(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mpunct">⋅</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mclose">)</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span></li>
+<li>Quotient: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>f</mi><mi mathvariant="normal">/</mi><mi>g</mi><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mi>g</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(f / g)(x) = f(x) / g(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mclose">)</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span> for <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo mathvariant="normal">≠</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">g(x) ≠ 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel"><span class="mrel"><span class="mord vbox"><span class="thinbox"><span class="rlap"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="inner"><span class="mord"><span class="mrel"></span></span></span><span class="fix"></span></span></span></span></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></li>
+</ul>
+</li>
+<li><strong>Linear functions</strong> have the form <code>f(x) = ax + b</code>, where <code>a</code> and <code>b</code> are constants.</li>
+<li>The graph of any linear function is a <strong>line</strong>.</li>
+<li>The <strong>slope</strong> is the change in <code>y</code> for each <strong>unit</strong> change in <code>x</code>.</li>
+<li>The slope measures both the <strong>steepness</strong> and the <strong>direction</strong> of a line:<ul>
+<li>If the slope is zero, the line is horizontal.</li>
+<li>The magnitude of the slope determines the slope&#39;s steepness.</li>
+<li>The sign of the slope determines the slope&#39;s direction:<ul>
+<li>If the slope is positive, the line points upward when moving from left to right.</li>
+<li>If the slope is negative, the line points downward when moving from left to right.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To calculate the slope of a line, we need to determine the ratio of the change in <code>y</code> versus the change in <code>x</code>. To do so, we choose any two points <code>(x₁, y₁)</code> and <code>(x₂, y₂)</code> on the line and calculate <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>S</mi><mi>l</mi><mi>o</mi><mi>p</mi><mi>e</mi><mo stretchy="false">(</mo><mi>m</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><mi mathvariant="normal">Δ</mi><mi>y</mi></mrow><mrow><mi mathvariant="normal">Δ</mi><mi>x</mi></mrow></mfrac><mo>=</mo><mfrac><mrow><msub><mi>y</mi><mn>2</mn></msub><mo>−</mo><msub><mi>y</mi><mn>1</mn></msub></mrow><mrow><msub><mi>x</mi><mn>2</mn></msub><mo>−</mo><msub><mi>x</mi><mn>1</mn></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">Slope (m) = \frac{Δy}{Δx} = \frac{y_2 - y_1}{x_2 - x_1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.01968em;">Sl</span><span class="mord mathnormal">o</span><span class="mord mathnormal">p</span><span class="mord mathnormal">e</span><span class="mopen">(</span><span class="mord mathnormal">m</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0463em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">Δ</span><span class="mord mathnormal">x</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0963em;vertical-align:-0.836em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.2603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span>.</li>
+<li>The slope of a line is independent of the choice of points <code>(x₁, y₁)</code> and <code>(x₂, y₂)</code> on the line.</li>
+<li>The relationship between slope and the formula for a linear function <code>f(x) = ax + b</code>:<ul>
+<li>Evaluating the function <code>f</code> at <code>x = 0</code>, we see that <code>(0, b)</code> is a point on this line.</li>
+<li>Evaluating this function at <code>x = 1</code>, we see that <code>(1, a + b)</code> is also a point on this line.</li>
+<li>Using the slope formula, this gives us:$Slope = \frac{(a + b) − b}{1 − 0} = a$</li>
+<li>We conclude that the formula <code>f(x) = mx + b</code> tells us the slope, <code>m</code>, and the y-intercept, <code>(0, b)</code>. This form of expressing a linear function is called the <strong>slope-intercept form</strong>.</li>
+</ul>
+</li>
+<li>Consider a line passing through the point <code>(x₁, y₁)</code> with slope <code>m</code>. The equation <code>y − y₁ = m (x - x₁)</code> is the <strong>point-slope form</strong> for that linear function.</li>
+<li>The <strong>standard form of a line</strong> is given by the equation <code>ax + by = c</code>, where <code>a</code> and <code>b</code> are both not zero. This form is more general because it allows for a <code>vertical line</code>, <code>x = k</code>.</li>
+<li>A linear function is a special type of a more general class of functions: polynomials.</li>
+<li>A <strong>polynomial function</strong> is any function consisting of variables and coefficients, that involves only the operations of addition, subtraction, multiplication, and positive-integer powers of variables.</li>
+<li>A univariate polynomial function can always be written (or rewritten) in the form:
+$f(x) = a_{n}x^{n} + a_{n-1}x^{n-1} + … + a_{1}x^{1} + a_{0}x^{0}$
+Where:<ul>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">a_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, ..., <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">a_n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> are constants that are called the coefficients of the polynomial and</li>
+<li>x is the variable.</li>
+</ul>
+</li>
+<li>The exponent on a variable in a term is called the degree of that variable in that term.</li>
+<li>The <strong>degree of a polynomial</strong> is the largest degree of any term with nonzero coefficient.</li>
+<li>The <strong>leading coefficient</strong> is the coefficient of the term with the largest degree.</li>
+<li>A linear function of the form <code>f(x) = mx + b</code> is a polynomial of <strong>degree 1</strong> if <code>m ≠ 0</code> and <strong>degree 0</strong> if <code>m = 0</code>.</li>
+<li>A polynomial of <strong>degree 0</strong> is also called a <strong>constant function</strong>.</li>
+<li>The function <code>f(x) = 0</code> is called the <strong>zero function</strong> and its degree is undefined.</li>
+<li>A polynomial function of <strong>degree 2</strong> is called a <strong>quadratic function</strong> and has the form <code>f(x) = ax2 + bx + c</code>, where <code>a ≠ 0</code>.</li>
+<li>A polynomial function of <strong>degree 3</strong> is called a <strong>cubic function</strong>.</li>
+<li>A power function is any function of the form <code>f(x) = axᵇ</code>, where <code>a</code> and <code>b</code> are any real numbers.</li>
+<li>A power function is also a polynomial function if <code>b</code> is a positive integer.</li>
+<li>If <code>b</code> is even, then <code>f(x) = axᵇ</code> is an even function because <code>f(−x) = a(−x)ᵇ = axᵇ</code> if <code>b</code> is even.</li>
+<li>If <code>b</code> is odd, then <code>f(x) = axᵇ</code> is an odd function because <code>f(−x) = a(−x)ᵇ = −axᵇ</code> if <code>b</code> is odd.</li>
+<li>The <strong>end behavior of a function</strong> <code>f(x)</code>  is what happens to the values of <code>f(x)</code> as <code>x → ∞</code> and as <code>x → −∞</code>.</li>
+<li>The value of <code>f(x)</code> either:<ul>
+<li>Approaches a finite number <code>c</code> and we say “<code>f(x)</code> approaches <code>c</code> as <code>x</code> goes to infinity,” and we write <code>f(x) → c</code> as <code>x → ∞</code>. Also, the line <code>y = c</code> is a <strong>horizontal asymptote</strong> for the function. E.g, <code>f(x) = 2 + 1/x</code>.</li>
+<li>Approaches ±infinity and we say “f(x) approaches infinity as x approaches infinity,” and we write <code>f(x) → ∞</code> as <code>x → ∞</code>. E.g, <code>f(x) = 3x²</code>.</li>
+</ul>
+</li>
+<li>End behavior of polynomials:<ul>
+<li>For a <strong>quadratic function</strong> <code>f(x) = ax² + bx + c</code>.<ul>
+<li>If <code>a &gt; 0</code>, the values <code>f(x) → ∞</code> as <code>x → ±∞</code>.</li>
+<li>If <code>a &lt; 0</code>, the values <code>f(x) → −∞</code> as <code>x → ±∞</code>.</li>
+<li>Since the graph of a quadratic function is a parabola, the parabola opens upward if <code>a &gt; 0</code>; the parabola opens downward if <code>a &lt; 0</code>.</li>
+</ul>
+</li>
+<li>For a cubic function <code>f(x) = ax³ + bx2 + cx + d</code>.<ul>
+<li>If <code>a &gt; 0</code>, then <code>f(x) → ∞</code> as <code>x → ∞</code> and <code>f(x) → −∞</code> as <code>x → −∞</code>.</li>
+<li>If <code>a &lt; 0</code>, then <code>f(x) → −∞</code> as <code>x → ∞</code> and <code>f(x) → ∞</code> as <code>x → −∞</code>.</li>
+</ul>
+</li>
+<li>The behavior for higher-degree polynomials can be analyzed similarly.</li>
+</ul>
+</li>
+<li>The <strong>zeros of a polynomial</strong> function are where the function intersects the x-axis. To determine where a function <code>f</code> intersects the x-axis, we need to solve the equation <code>f(x) = 0</code> for <code>x</code>:<ul>
+<li>For a linear function <code>f(x) = mx + b</code>, the x-intercept is given by <code>(−b/m, 0)</code>.</li>
+<li>For a quadratic function, we can find the zeroes of the quadratic equation <code>ax² + bx + c = 0</code>:<ul>
+<li>Sometimes it&#39;s possible to factor the equation</li>
+<li>Make use of the quadratic formula <code>x = (−b ± √(b2 − 4ac)) ÷ 2a</code>. The discriminant part of the formula is <code>b² − 4ac</code>.<ul>
+<li>If the discriminant <code>b² − 4ac &gt; 0</code>, there are two real numbers that satisfy the quadratic equation.</li>
+<li>If <code>b² − 4ac = 0</code>, there is only real number one solution.</li>
+<li>If <code>b² − 4ac &lt; 0</code>, no real numbers satisfy the quadratic equation.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>In the case of higher-degree polynomials, it may be more complicated to determine where the graph intersects the x-axis.</li>
+</ul>
+</li>
+<li>A <strong>mathematical model</strong> is a method of simulating real-life situations with mathematical equations.</li>
+<li>Physicists, engineers, economists, and other researchers develop models by combining observation with quantitative data to develop equations, functions, graphs, and other mathematical tools to describe the behavior of various systems accurately.</li>
+<li>Models are useful because they help predict future outcomes.</li>
+<li>An <strong>algebraic function</strong> is one that involves addition, subtraction, multiplication, division, rational powers, and roots.</li>
+<li>The two types of algebraic functions are<ul>
+<li><strong>Rational functions</strong> are any function of the form <code>f(x) = p(x) / q(x)</code>, where <code>p(x)</code> and <code>q(x)</code> are polynomials.</li>
+<li><strong>Root functions</strong> are a power function of the form <code>f(x) = x^1/n</code>, where <code>n</code> is a positive integer greater than one.</li>
+</ul>
+</li>
+<li>For root functions, If <code>n</code> is even, the domain of <code>f(x) = x^1/n</code> is <code>[0, ∞)</code>.</li>
+<li>For root functions, If <code>n</code> is odd, the domain of <code>f(x) = x^1/n</code> is <code>[-∞, ∞)</code> and the function is an odd function.</li>
+<li><strong>Transcendental functions</strong> cannot be described by basic algebraic operations. They are said to “transcend,” or go beyond, algebra.</li>
+<li>The most common transcendental functions are trigonometric, exponential, and logarithmic functions.</li>
+<li>A <strong>piecewise-defined function</strong> is defined by different formulas on different parts of its domain. An example is the absolute-value function:<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mrow><mo fence="true">{</mo><mtable rowspacing="0.36em" columnalign="left left" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>a</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mtext>if </mtext><mi>b</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>c</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mtext>if </mtext><mi>d</mi></mrow></mstyle></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">f(x) = \begin{cases}
+  a &amp;\text{if } b \\
+  c &amp;\text{if } d
+   \end{cases}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:3em;vertical-align:-1.25em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size4">{</span></span><span class="mord"><span class="mtable"><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.69em;"><span style="top:-3.69em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord mathnormal">a</span></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord mathnormal">c</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.19em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:1em;"></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.69em;"><span style="top:-3.69em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord text"><span class="mord">if </span></span><span class="mord mathnormal">b</span></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord text"><span class="mord">if </span></span><span class="mord mathnormal">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.19em;"><span></span></span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span>
+</li>
+<li>To graph a piecewise-defined function, we graph each part of the function in its respective domain, on the same coordinate system. If the formula for a function is different for <code>x &lt; a</code> and <code>x &gt; a</code>, we need to pay special attention to what happens at <code>x = a</code> when we graph the function. Sometimes the graph needs to include an open or closed circle to indicate the value of the function at <code>x = a</code>. An open circle is used to denote that a graph doesn’t define the function output at <code>x = a</code>. A closed circle is used for the opposite effect.</li>
+<li>Given the base function <code>y = f(x)</code>, we can apply multiple function transformations to it: <code>y = cf(a(x + b)) + d</code>. When function transformations are combined, you can follow the order below to get the transformed function’s graph from the  base function’s graph:<ul>
+<li><strong>Horizontal shift</strong> of the graph of <code>y = f(x)</code>.</li>
+<li><strong>Horizontal scaling</strong> of the graph of <code>y = f(x + b)</code> by a factor of <code>|a|</code>. If <code>a &lt; 0</code>, reflect the graph about the y-axis.</li>
+<li><strong>Vertical scaling</strong> of the graph of <code>y = f(a(x + b))</code> by a factor of <code>|c|</code>. If <code>c &lt; 0</code>, reflect the graph about the x-axis.</li>
+<li><strong>Vertical shift</strong> of the graph of <code>y = cf(a(x + b))</code>.</li>
+</ul>
+</li>
+</ol>
+<p>An enumeration of the different function transformations and their related effects on the graph of a function:</p>
+<table>
+<thead>
+<tr>
+<th>Transformation of <code>f</code>; Where <code>c &gt; 0</code></th>
+<th>Effect on the graph of <code>f</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>f(x) + c</code></td>
+<td>Vertical shift up <code>c</code> units</td>
+</tr>
+<tr>
+<td><code>f(x) − c</code></td>
+<td>Vertical shift down <code>c</code> units</td>
+</tr>
+<tr>
+<td><code>f(x + c)</code></td>
+<td>Shift left by <code>c</code> units</td>
+</tr>
+<tr>
+<td><code>f(x − c)</code></td>
+<td>Shift right by <code>c</code> units</td>
+</tr>
+<tr>
+<td>cf(x)</td>
+<td>Vertical stretch if <code>c &gt; 1</code>;<br/>Vertical compression if <code>0 &lt; c &lt; 1</code></td>
+</tr>
+<tr>
+<td>f(cx)</td>
+<td>Horizontal stretch if <code>0 &lt; c &lt; 1</code>;<br/>Horizontal compression if <code>c &gt; 1</code></td>
+</tr>
+<tr>
+<td>−f(x)</td>
+<td>Reflection about the x-axis</td>
+</tr>
+<tr>
+<td>f(−x)</td>
+<td>Reflection about the y-axis</td>
+</tr>
+</tbody></table>
+<h3>Trigonometric Functions</h3>
+<ol>
+<li>Almost any repetitive or cyclical motion can be modeled by some combination of trigonometric functions.</li>
+<li>Radians are a more natural measurement of angles compared to degrees because they are related directly to the <strong>unit circle</strong>, a circle with radius 1.</li>
+<li>The radian measure of an angle <code>θ</code> is the arc length <code>s</code> of the associated arc on the unit circle. I.e. the angle corresponding to the arc of length 1 has radian measure 1.</li>
+<li>Since an angle of <code>360°</code> corresponds to the circumference of a circle, or an arc of length <code>2π</code> (on the unit circle), we conclude that an angle with a degree measure of <code>360°</code> has a radian measure of <code>2π</code>.</li>
+<li>Use the fact that 180° is equivalent to π radians as a conversion factor:
+<code>1 = π rad / 180° = 180° / π rad</code></li>
+<li>Let <code>P = (x, y)</code> be a point on the unit circle centered at the origin <code>O</code>. Let <code>θ</code> be an angle with an initial side along the positive x-axis and a terminal side given by the line segment <code>OP</code>. The trigonometric functions are then defined as:<ul>
+<li><p><code>sinθ = y</code></p>
+</li>
+<li><p><code>cscθ = 1/y</code></p>
+</li>
+<li><p><code>cosθ = x</code></p>
+</li>
+<li><p><code>secθ = 1/x</code></p>
+</li>
+<li><p><code>tanθ = y/x</code></p>
+</li>
+<li><p><code>cotθ = x/y</code></p>
+<p>If <code>x = 0</code>, <code>secθ</code> and <code>tanθ</code> are undefined. If <code>y = 0</code>, then <code>cotθ</code> and <code>cscθ</code> are undefined.</p>
+</li>
+</ul>
+</li>
+<li>For a point <code>P = (x, y)</code> on a circle of radius <code>r</code> with a corresponding angle <code>θ</code>, the coordinates <code>x</code> and <code>y</code> satisfy:<ul>
+<li><code>cosθ = x / r</code></li>
+<li><code>x = r / cosθ</code></li>
+<li><code>sinθ = y / r</code></li>
+<li><code>y =r / sinθ</code>L</li>
+</ul>
+</li>
+</ol>
+<p><img src="Calculus/30e647ffdbb4ccb4aaaa2056d1a63be9c6754d8f.png" alt=""></p>
+<ol start="8">
+<li><p>The <strong>ratios of the side lengths of a right triangle</strong> can be expressed in terms of the trigonometric functions <em>evaluated at either of the acute angles of the triangle</em>. Let <code>θ</code> be one of the acute angles. Let <code>A</code> be the length of the adjacent leg, <code>O</code> be the length of the opposite leg, and <code>H</code> be the length of the hypotenuse. By inscribing the triangle into a circle of radius <code>H</code>, we see that <code>A</code>, <code>H</code>, and <code>O</code> satisfy the following relationships with θ:</p>
+<ul>
+<li><code>sinθ = O / H</code></li>
+<li><code>cosθ = A / H</code></li>
+<li><code>tanθ = O / A</code></li>
+<li><code>cscθ = H / O</code></li>
+<li><code>secθ = H / A</code></li>
+<li><code>cotθ = A / O</code></li>
+</ul>
+</li>
+<li><p>A trigonometric identity is an equation involving trigonometric functions that is true for all angles <code>θ</code> for which the functions are defined. We can use the identities to help us solve or simplify equations.</p>
+</li>
+<li><p>The main trigonometric identities are:</p>
+<ul>
+<li><strong>Reciprocal identities</strong>:<ul>
+<li><code>tanθ = sinθ / cosθ</code></li>
+<li><code>cotθ = cosθ / sinθ</code></li>
+<li><code>cscθ = 1 / sinθ</code></li>
+<li><code>secθ = 1 / cosθ</code></li>
+</ul>
+</li>
+<li><strong>Pythagorean identities</strong>:<ul>
+<li>sin²θ + cos²θ = 1</li>
+<li>1 + tan²θ = sec²θ</li>
+<li>1 + cot²θ = csc²θ</li>
+</ul>
+</li>
+<li><strong>Addition and subtraction formulas</strong>:<ul>
+<li>sin(α ± β) = sinα cosβ ∓ cosα sinβ</li>
+<li>cos(α ± β) = cosα cosβ ∓ sinα sinβ</li>
+</ul>
+</li>
+<li><strong>Double-angle formulas</strong>:<ul>
+<li>sin(2θ) = 2sinθ cosθ</li>
+<li>cos(2θ) = 2cos²θ − 1 = 1 − 2sin²θ = cos²θ −sin²θ</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>The trigonometric functions are <strong>periodic functions</strong>.</p>
+</li>
+<li><p>The period of a function <code>f</code> is defined to be the smallest positive value <code>p</code> such that <code>f(x + p) = f(x)</code> for all values <code>x</code> in the domain of <code>f</code>.</p>
+</li>
+<li><p>The sine, cosine, secant, and cosecant functions have a period of <code>2π</code>. Since, the angle <code>θ</code> and <code>θ +2π</code> correspond to the same point on the unit circle.</p>
+</li>
+<li><p>Since the tangent and cotangent functions repeat on an interval of length <code>π</code>, their period is <code>π</code>.
+[Figure1.34]</p>
+</li>
+<li><p>Transformations can be applied to trigonometric functions. E.g. <code>f(x) = A sin(B(x − α)) + C</code>where:</p>
+<ul>
+<li>The constant <code>α</code> causes a horizontal or <strong>phase shift</strong>.</li>
+<li>The factor <code>B</code> changes the <strong>period</strong>. This transformed sine function will have a period <code>2π / |B|</code>.</li>
+<li>The factor <code>A</code> results in a vertical stretch by a factor of <code>|A|</code>. We say <code>|A|</code> is the <strong>amplitude of f</strong>.</li>
+<li>The constant <code>C</code> causes a <strong>vertical shift</strong>.
+Figure1.35</li>
+</ul>
+</li>
+<li><p>The graph of <code>y = cosx</code> is the graph of <code>y = sinx</code> shifted to the left <code>π / 2</code> units: <code>cosx = sin(x + π/2)</code>.</p>
+</li>
+<li><p>Similarly, we can view the graph of <code>y = sinx</code> as the graph of <code>y = cosx</code> shifted right <code>π/2</code> units: <code>sinx = cos(x − π/2)</code>.</p>
+</li>
+</ol>
+<h3>Inverse functions</h3>
+<ol>
+<li>A function maps elements in the domain of <code>f</code> to elements in the range of <code>f</code>. The inverse function maps each element from the range of <code>f</code> back to its corresponding element from the domain of <code>f</code>.</li>
+<li>Given a function <code>f</code> with domain <code>D</code> and range <code>R</code>, its <strong>inverse function</strong> (if it exists) is the function <code>f⁻¹</code> with domain <code>R</code> and range <code>D</code> such that <code>f⁻¹(y) = x</code> if <code>f(x) = y</code>. In other words, for a function <code>f</code> and its inverse <code>f⁻¹</code>:<ul>
+<li><code>f⁻¹(f(x)) = x</code> for all <code>x</code> in <code>D</code>, and</li>
+<li><code>f(f⁻¹(y)) = y</code> for all <code>y</code> in <code>R</code>.</li>
+</ul>
+</li>
+<li><code>f⁻¹</code> is read as <strong>f inverse</strong>. The <code>-1</code> is not used as not used as an exponent.</li>
+<li>The range of <code>f</code> becomes the domain of <code>f⁻¹</code> and the domain of <code>f</code> becomes the range of <code>f⁻¹</code>.</li>
+<li>A function <code>f</code> is a <strong>one-to-one function</strong> if <code>f(x1) ≠ f(x2)</code> when <code>x1 ≠ x2</code>.</li>
+<li>The <strong>horizontal line test</strong>: A function <code>f</code> is one-to-one if and only if every horizontal line intersects the graph of <code>f</code> no more than once.</li>
+<li>A strategy to find the inverse function of function <code>f</code>:<ul>
+<li>Solve the equation <code>y = f(x)</code> for <code>x</code>.</li>
+<li>Interchange the variables <code>x</code> and <code>y</code> and write <code>y = f⁻¹(x)</code>. This is because by convention, <code>x</code> represent the independent variable and <code>y</code> represent the dependent variable. Representing the inverse function in this way is also helpful when graphing a function <code>f</code> and its inverse <code>f⁻¹</code> on the same axes.</li>
+</ul>
+</li>
+<li>The relationship between the graph of a function <code>f</code> and the graph of its inverse:<ul>
+<li>Consider the graph of <code>f</code> and a point <code>(a, b)</code> on the graph.</li>
+<li>Since <code>b = f(a)</code>, then <code>f⁻¹(b) = a</code>.</li>
+<li>Therefore, when we graph <code>f⁻¹</code>, the point <code>(b, a)</code> is on the graph.</li>
+<li>As a result, the graph of <code>f⁻¹</code>  is a reflection of the graph of <code>f</code> about the line <code>y = x</code>.</li>
+</ul>
+</li>
+<li>For a non one-to-one function <code>f</code> we can choose a subset of the domain of <code>f</code> such that the function is one-to-one. This subset is called a <strong>restricted domain</strong>. By restricting the domain of <code>f</code>, we can define a new function <code>g</code> such that the domain of <code>g</code> is the restricted domain of <code>f</code> and <code>g(x) = f(x)</code> for all <code>x</code> in the domain of <code>g</code>. Then we can define an inverse function for <code>g</code> on that domain.</li>
+<li>The inverse sine function, denoted <code>sin⁻¹</code> or <code>arcsin</code>, and the inverse cosine function, denoted <code>cos⁻¹</code> or <code>arccos</code>, are defined on the domain <code>D = {x| − 1 ≤ x ≤ 1}</code> as follows:<ul>
+<li><code>sin⁻¹(x) = y</code> if and only if <code>sin(y) = x</code> and <code>−π/2 ≤ y ≤ π/2</code>;</li>
+<li><code>cos⁻¹(x) = y</code> if and only if <code>cos(y) = x</code> and <code>0 ≤ y ≤ π</code>.</li>
+</ul>
+</li>
+<li>The inverse tangent function, denoted <code>tan⁻¹</code> or <code>arctan</code>, and inverse cotangent function, denoted <code>cot⁻¹</code> or <code>arccot</code>, are defined on the domain <code>D = {x| − ∞ &lt; x &lt; ∞}</code> as follows:<ul>
+<li><code>tan⁻¹(x) = y</code> if and only if <code>tan(y) = x</code> and <code>− π 2 &lt; y&lt; π 2</code>;</li>
+<li><code>cot⁻¹(x) = y</code> if and only if <code>cot(y) = x</code> and <code>0 &lt; y &lt; π</code>.</li>
+</ul>
+</li>
+<li>The <strong>inverse cosecant function</strong>, denoted <code>csc⁻¹</code> or <code>arccsc</code>, and <strong>inverse secant function</strong>, denoted <code>sec⁻¹</code> or <code>arcsec</code>, are defined on the domain <code>D = {x |x| ≥ 1}</code> as follows:<ul>
+<li><code>csc⁻¹(x) = y</code> if and only if <code>csc(y) = x</code> and <code>− π 2 ≤ y≤ π 2</code>, <code>y ≠ 0</code>;</li>
+<li><code>sec⁻¹(x) = y</code> if and only if <code>sec(y) = x</code> and <code>0 ≤ y ≤ π, y ≠ π/2</code>.</li>
+</ul>
+</li>
+<li>The sine function is one-to-one on an infinite number of intervals, but the standard convention is to restrict the domain to the interval <code>[−π/2, π/2]</code>. By doing so, we define the inverse sine function on the domain <code>[−1, 1]</code> such that for any x in the interval <code>[−1, 1]</code>, the inverse sine function tells us which angle θ in the interval <code>[−π/2, π/2]</code> satisfies <code>sinθ = x</code>.</li>
+<li>When evaluating an inverse trigonometric function, the output is an angle.</li>
+</ol>
+<h3>Exponential and logarithmic functions</h3>
+<ol>
+<li>Any function of the form <code>f(x) = bˣ</code>, where <code>b &gt; 0</code>, <code>b ≠ 1</code>, is an <strong>exponential function</strong> with <strong>base</strong> <code>b</code> and <strong>exponent</strong> <code>x</code>.</li>
+<li>The domain of the exponential function is <code>(−∞, ∞)</code> and the range is <code>(0, ∞)</code>. </li>
+<li>For <code>b &gt; 1</code>, <code>f(x) = bˣ</code>  is increasing on <code>(−∞, ∞)</code> and <code>bˣ → ∞</code> as <code>x → ∞</code>, whereas <code>bˣ → 0</code> as <code>x → −∞</code>.</li>
+<li>For <code>0 &lt; b &lt; 1</code>, <code>f(x) = bˣ</code>  is decreasing on <code>(−∞, ∞)</code> and <code>bˣ → 0</code> as <code>x → ∞</code>, whereas <code>bˣ → 0</code> as <code>x → −∞</code>.</li>
+<li>Exponential functions have constant bases and variable exponents.</li>
+<li>Note that a function of the form <code>f(x) = xᵇ</code> for some constant <code>b</code> is not an <strong>exponential function</strong> but a <strong>power function</strong>.</li>
+<li>An exponential function grows faster than a power function.</li>
+<li>Properties of exponents:<ul>
+<li>If <code>x</code> is a positive integer, then <code>bˣ = b · b ⋯ b</code> (with <code>x</code> factors of <code>b</code>).</li>
+<li>If <code>x</code> is a negative integer, then <code>bˣ = 1/bˣ</code>.</li>
+<li>If  <code>x</code> is zero,  then <code>bˣ = 1</code>.</li>
+<li>If <code>x</code> is a rational number (<code>x = c/d</code>; where <code>c</code> and <code>d</code> are integers), then <code>bˣ = ᵈ√bᶜ</code>.</li>
+</ul>
+</li>
+<li><strong>Laws of Exponents</strong> (For any constants a &gt; 0, b &gt; 0, and for all x and y,)<ul>
+<li><code>bˣ · bʸ = bˣ⁺ʸ</code></li>
+<li><code>bˣ / bʸ = bˣ⁻ʸ</code></li>
+<li><code>(bˣ)ʸ = bˣʸ</code></li>
+<li><code>(ab)ˣ = aˣbˣ</code></li>
+<li><code>aˣ / bˣ = (a/b)ˣ</code></li>
+</ul>
+</li>
+<li>The function <code>f(x) = eˣ</code> is called the <strong>natural exponential function</strong>.</li>
+<li><code>e ≈ 2.718282</code>.</li>
+<li>￼ The function <code>f(x) = eˣ</code> is the only exponential function with tangent line at <code>x=0</code> that has aslope of <code>1</code>.</li>
+<li>As we see later in the text, having this property makes the natural exponential function the most simple exponential function to use in many instances.</li>
+<li>The inverse of exponential functions are logarithm functions.</li>
+<li>These come in handy when we need to consider any phenomenon that varies over a wide range of values, such as pH in chemistry or decibels in sound levels.</li>
+<li>For any <code>b &gt; 0</code>, <code>b ≠ 1</code>, the logarithmic function with base <code>b</code>, denoted logb, has domain <code>(0, ∞)</code> and range <code>(−∞, ∞)</code>, and satisfies <code>logb(x) = y</code> if and only if <code>bʸ = x</code>.</li>
+<li>since y = logb(x) and y = bx are inverse functions, logb(bx) = xandb logb(x) = x.</li>
+<li>The most commonly used logarithmic function is the function loge. Since this function uses natural e as its base, it is called the natural logarithm. Here we use the notation ln(x) or lnx to mean loge(x). </li>
+<li>Properties of Logarithms If a,b,c&gt;0,b≠1, and r is any real number, then 1. logb(ac)=logb(a)+logb(c) (Product property) 2. logb⎛ ⎝ a c⎞ ⎠=logb(a)−logb(c) (Quotient property) 3. logb(ar)=rlogb(a) (Power property)</li>
+<li>The common logarithm is log10 or log.</li>
+<li>Change-of-Base Formulas Let a &gt; 0, b &gt; 0, and a ≠ 1, b ≠1. 1. ax =bxlogba for any real number x. If b = e, this equation reduces to ax = e xlogea = exlna. 2. logax = logbx logba for any real number x &gt; 0. If b = e, this equation reduces to logax = lnx Proof lna .</li>
+<li>The hyperbolic functions are defined in terms of certain combinations of ex and e−x. These functions arise naturally in various engineering and physics applications, including the study of water waves and vibrations of elastic membranes. Another common use for a hyperbolic function is the representation of a hanging chain or cable, also known as a catenary.</li>
+<li></li>
+</ol>
+
+    </body>
+</html>
