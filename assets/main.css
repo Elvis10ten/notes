@@ -484,10 +484,6 @@ a {
     transition: transform 0.3s ease;
 }
 
-.link-no-underline {
-    text-decoration: none; !important;
-}
-
 .card h4, h3 {
     color: #fff;
     margin: 0;
@@ -519,6 +515,7 @@ a {
     display: flex;
     align-items: flex-end;
     padding: 15px;
+    text-decoration: none;
 }
 
 /* Dark overlay on image cards for added contrast */
@@ -545,13 +542,23 @@ a {
     background: #37474F;
 }
 
-/* Group 1: Left card spans two rows */
-.grid-group.group1 .card:first-child {
+.grid-group .card:first-child {
     grid-row: span 2;
 }
-/* Group 2: Right card spans two rows */
-.grid-group.group2 .card:last-child {
-    grid-row: span 2;
+
+.card .card-content {
+    position: relative;
+    z-index: 1;
+}
+.card .card-content h4 {
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+    color: #fff;
+}
+.card .card-content p {
+    font-size: 1rem;
+    line-height: 1.4;
+    color: #fefefe;
 }
 
 /* Responsive Support: Single-column layout on small screens */
@@ -563,6 +570,6 @@ a {
     /* Reset any row spanning for mobile */
     .grid-group .card {
         grid-row: auto !important;
-        min-height: 250px; /* Increase minimum height for mobile */
+        min-height: 200px;
     }
 }
