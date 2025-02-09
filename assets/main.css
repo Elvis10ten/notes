@@ -410,6 +410,76 @@ a {
     transition: transform 0.3s ease;
 }
 
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+}
+
+.card {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.card-image {
+    padding: 16px;
+    text-align: center;
+}
+
+.card-image img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+.card-content h5 {
+    margin: 0;
+}
+
+.card-content p {
+    margin: 0;
+}
+
+/* Alternating card image backgrounds using nth-child selectors */
+.card-grid > .card:nth-child(7n+1) .card-image {
+    background: linear-gradient(135deg, #f0f8ff, #e0ffff); /* light blue gradient */
+}
+.card-grid > .card:nth-child(7n+2) .card-image {
+    background: linear-gradient(135deg, #ffe4b5, #ffdab9); /* pastel peach gradient */
+}
+.card-grid > .card:nth-child(7n+3) .card-image {
+    background: linear-gradient(135deg, #e0ffe0, #c1ffc1); /* pastel green gradient */
+}
+.card-grid > .card:nth-child(7n+4) .card-image {
+    background: linear-gradient(135deg, #e6e6fa, #d8bfd8); /* pastel lavender gradient */
+}
+.card-grid > .card:nth-child(7n+5) .card-image {
+    background: linear-gradient(135deg, #fffacd, #fafad2); /* pastel yellow gradient */
+}
+.card-grid > .card:nth-child(7n+6) .card-image {
+    background: linear-gradient(135deg, #ffe4e1, #ffc0cb); /* pastel pink gradient */
+}
+.card-grid > .card:nth-child(7n) .card-image {
+    background: linear-gradient(135deg, #ffcc99, #ff9966); /* pastel orange gradient */
+}
+
+/* Responsive adjustments for mobile devices */
+@media (max-width: 600px) {
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Dark Mode Overrides – auto-applied when system prefers dark mode */
 @media (prefers-color-scheme: dark) {
     /* Base background and text */
