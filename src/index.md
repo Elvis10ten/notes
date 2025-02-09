@@ -38,6 +38,82 @@
 <li><a href="https://tech.deliveryhero.com/primer-on-delivery-heros-server-driven-ui-platform/"><strong>Fluid</strong></a>: A <pmark>server-driven UI (SDUI)</pmark> platform I helped conceptualized and build at Delivery Hero.</li>
 </ol>
 
+<div class="card-grid">
+    <!-- Card 1 -->
+    <div class="card">
+      <div class="card-image">
+        <img src="/docs/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/test.svg" alt="Image 1">
+      </div>
+      <div class="card-content">
+        <h5>Card Title 1</h5>
+        <p class="card-description">This is a short description for card 1. It provides a brief overview of the content.</p>
+      </div>
+    </div>
+<div class="card">
+      <div class="card-image">
+        <img src="/docs/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/test.svg" alt="Image 1">
+      </div>
+      <div class="card-content">
+        <h5>Card Title 1</h5>
+        <p class="card-description">This is a short description for card 1. It provides a brief overview of the content.</p>
+      </div>
+    </div>
+<div class="card">
+      <div class="card-image">
+        <img src="/docs/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/test.svg" alt="Image 1">
+      </div>
+      <div class="card-content">
+        <h5>Card Title 1</h5>
+        <p class="card-description">This is a short description for card 1. It provides a brief overview of the content.</p>
+      </div>
+    </div>
+<div class="card">
+      <div class="card-image">
+        <img src="/docs/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/test.svg" alt="Image 1">
+      </div>
+      <div class="card-content">
+        <h5>Card Title 1</h5>
+        <p class="card-description">This is a short description for card 1. It provides a brief overview of the content.</p>
+      </div>
+    </div>
+<div class="card">
+      <div class="card-image">
+        <img src="/docs/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/test.svg" alt="Image 1">
+      </div>
+      <div class="card-content">
+        <h5>Card Title 1</h5>
+        <p class="card-description">This is a short description for card 1. It provides a brief overview of the content.</p>
+      </div>
+    </div>
+<div class="card">
+      <div class="card-image">
+        <img src="/docs/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/test.svg" alt="Image 1">
+      </div>
+      <div class="card-content">
+        <h5>Card Title 1</h5>
+        <p class="card-description">This is a short description for card 1. It provides a brief overview of the content.</p>
+      </div>
+    </div>
+<div class="card">
+      <div class="card-image">
+        <img src="/docs/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/test.svg" alt="Image 1">
+      </div>
+      <div class="card-content">
+        <h5>Card Title 1</h5>
+        <p class="card-description">This is a short description for card 1. It provides a brief overview of the content.</p>
+      </div>
+    </div>
+<div class="card">
+      <div class="card-image">
+        <img src="/docs/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/test.svg" alt="Image 1">
+      </div>
+      <div class="card-content">
+        <h5>Card Title 1</h5>
+        <p class="card-description">This is a short description for card 1. It provides a brief overview of the content.</p>
+      </div>
+    </div>
+  </div>
+
 ## <span id="books">Books digest</span>
 <div class="book-gallery">
 <a href="/src/books/2022-a-philosophy-software-design.md"><img src="/assets/banners/2022-a-philosophy-software-design.jpg" alt="A Philosophy of Software Design" loading="lazy" /></a>
