@@ -511,11 +511,6 @@ a {
         color: #ffffff;
     }
 
-    /* Links: using an accent color for dark backgrounds */
-    a {
-        color: #bb86fc;
-    }
-
     /* Tables – adjust borders, header and row backgrounds */
     table th,
     table td {
@@ -584,6 +579,17 @@ a {
         color: #f8d7da;
     }
 
+    .card {
+        background-color: #1e1e1e;
+        border: 1px solid #333;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    }
+    .card:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
+    }
+    .card-content {
+        background-color: #1e1e1e;
+    }
     /* If you have any other components that use light backgrounds or dark text,
        add similar overrides here so they match the dark mode palette. */
 }
