@@ -26,10 +26,12 @@
 > "I believe in human agency. Extreme optimism and extreme pessimism are both excuses for laziness." - Peter Thiel
 
 ## <span id="essays">My essays</span>
+
 - [Pitfalls of best practices](/src/essays/2024-05-24-pitfalls-of-best-practices.md)
 - [Against Bit Rot (Why & how I rebuilt my blog)](/src/essays/2025-how.md)
 
 ## <span id="essays">My projects</span>
+
 <ol>
 <li><a href="/src/projects/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform.md"><strong>Peripheral connection augmentation system (PCAS)</strong></a>: I recreated the Apple seamless headphone switch feature on Android using Kotlin multi-platform.</li>
 <li><a href="/src/projects/2020-11-23-building-distributed-android-remote-testing-platform.md"><strong>Distributed android remote testing (DART)</strong></a>: I took a stab at making real device testing cheaper, more realistic and comprehensive.</li>
@@ -39,7 +41,24 @@
 </ol>
 
 <div class="card-grid">
-    <!-- Card 1 -->
+    <div class="card">
+      <div class="card-image">
+        <img src="/docs/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/PCASBlocksEmitter.svg" alt="Image 1">
+      </div>
+      <div class="card-content">
+        <h5>PCAS</h5>
+        <p>I recreated the Apple seamless headphone switch feature on Android using Kotlin multi-platform.</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-image">
+        <img src="/docs/assets/banners/2020-11-23-building-distributed-android-remote-testing-platform.png" alt="Image 1">
+      </div>
+      <div class="card-content">
+        <h5>DART</h5>
+        <p>I took a stab at making real device testing cheaper, more realistic and comprehensive.</p>
+      </div>
+    </div>
     <div class="card">
       <div class="card-image">
         <img src="/docs/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/test.svg" alt="Image 1">
@@ -49,7 +68,7 @@
         <p class="card-description">This is a short description for card 1. It provides a brief overview of the content.</p>
       </div>
     </div>
-<div class="card">
+    <div class="card">
       <div class="card-image">
         <img src="/docs/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/test.svg" alt="Image 1">
       </div>
@@ -58,7 +77,7 @@
         <p class="card-description">This is a short description for card 1. It provides a brief overview of the content.</p>
       </div>
     </div>
-<div class="card">
+    <div class="card">
       <div class="card-image">
         <img src="/docs/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/test.svg" alt="Image 1">
       </div>
@@ -67,25 +86,7 @@
         <p class="card-description">This is a short description for card 1. It provides a brief overview of the content.</p>
       </div>
     </div>
-<div class="card">
-      <div class="card-image">
-        <img src="/docs/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/test.svg" alt="Image 1">
-      </div>
-      <div class="card-content">
-        <h5>Card Title 1</h5>
-        <p class="card-description">This is a short description for card 1. It provides a brief overview of the content.</p>
-      </div>
-    </div>
-<div class="card">
-      <div class="card-image">
-        <img src="/docs/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/test.svg" alt="Image 1">
-      </div>
-      <div class="card-content">
-        <h5>Card Title 1</h5>
-        <p class="card-description">This is a short description for card 1. It provides a brief overview of the content.</p>
-      </div>
-    </div>
-<div class="card">
+    <div class="card">
       <div class="card-image">
         <img src="/docs/assets/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform/test.svg" alt="Image 1">
       </div>
@@ -115,6 +116,7 @@
   </div>
 
 ## <span id="books">Books digest</span>
+
 <div class="book-gallery">
 <a href="/src/books/2022-a-philosophy-software-design.md"><img src="/assets/banners/2022-a-philosophy-software-design.jpg" alt="A Philosophy of Software Design" loading="lazy" /></a>
 <a href="/src/books/2022-design-of-everyday-things.md"><img src="/assets/banners/2022-design-of-everyday-things.jpg" alt="The Design of Everyday Things" loading="lazy" /></a>
@@ -139,6 +141,7 @@
 </div>
 
 ## <span id="papers">Papers digest</span>
+
 - [Out Of The Tar Pit](/src/papers/2022-01-02-summary-out-of-the-tar-pit.md)
 - [No Silver Bullet — Essence and Accident in Software Engineering](/src/papers/2022-01-11-no-silver-bullet—essence-and-accident-in-software-engineering.md)
 - [Your computer is already a distributed system. Why isn’t your OS?](/src/papers/2022-04-06-your-computer-already-distributed-system-why-isnt-your-os.md)

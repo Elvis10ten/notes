@@ -3,7 +3,7 @@
 
 The inspiration for this project came from this tweet.
 
-<blockquote class="twitter-tweet" data-theme="dark"><p lang="en" dir="ltr">AirPods will now automatically switch between devices by recognizing if you put down your phone and pick up your iPad. Or if you’re on your iPad and you get a phone call, it’ll switch back to the phone. That’s the type of experience only a complete ecosystem can create.</p>&mdash; Marques Brownlee (@MKBHD) <a href="https://twitter.com/MKBHD/status/1275122690618261511?ref_src=twsrc%5Etfw">June 22, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+![Inspiration tweet](/docs/assets/banners/2020-11-10-rebuilding-apple-seamless-headphone-switch-feature-with-kotlin-multiplatform.png)
 
 A core tenet of the Apple camp is that their complete ecosystem makes every product "just work". This is a truism: Apple isn't plagued with fragmentation issues like other platforms. But replicating these functionalities on other platforms isn't rocket science.
 
