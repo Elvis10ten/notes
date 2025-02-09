@@ -448,6 +448,7 @@ a {
 
 .card-content p {
     margin: 0;
+    font-size: 1rem;
 }
 
 /* Alternating card image backgrounds using nth-child selectors */
