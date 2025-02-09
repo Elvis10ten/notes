@@ -46,16 +46,16 @@
       </div>
       <div class="card-content">
         <h5>DART</h5>
-        <p>I took a stab at making real device testing cheaper, more realistic and comprehensive.</p>
+        <p>I took a stab at making real device testing cheaper, comprehensive and more realistic.</p>
       </div>
     </a>
     <a href="https://www.youtube.com/embed/WUGaB5e83wg?start=58" class="card">
       <div class="card-image">
-        <img src="/docs/assets/banners/prepup.webp" alt="Prepup">
+        <img src="/docs/assets/banners/prepup.png" alt="Prepup">
       </div>
       <div class="card-content">
         <h5>Prepup</h5>
-        <p>Prepup is an app I co-created that helpede ~120K students across West Africa in preparing for local exams.</p>
+        <p>Prepup is an app I co-created that helped ~120K students across West Africa in preparing for local exams.</p>
       </div>
     </a>
     <a href="https://tech.deliveryhero.com/primer-on-delivery-heros-server-driven-ui-platform/" class="card">
