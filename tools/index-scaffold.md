@@ -55,7 +55,7 @@
       </div>
       <div class="card-content">
         <h5>Prepup</h5>
-        <p>Prepup is an app I co-created that helped ~120K students across West Africa in preparing for local exams.</p>
+        <p>Prepup is an app I co-created which helped ~120K Nigerian students in preparing for local exams.</p>
       </div>
     </a>
     <a href="https://tech.deliveryhero.com/primer-on-delivery-heros-server-driven-ui-platform/" class="card">
