@@ -424,18 +424,35 @@ a {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover animation for the entire card */
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .card-image {
-    padding: 16px;
+    height: 200px;
+    padding: 16px 16px 0px 16px;
     text-align: center;
+    transition: transform 0.3s ease; /* for optional animation on hover */
 }
 
 .card-image img {
-    max-width: 100%;
-    height: auto;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
     display: block;
     margin: 0 auto;
+    transition: transform 0.3s ease;
+}
+
+/* Slight image scale on card hover */
+.card:hover .card-image img {
+    transform: scale(1.05);
 }
 
 .card-content {
