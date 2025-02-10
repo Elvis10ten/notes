@@ -21,7 +21,6 @@ body {
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
     position: relative;
-    max-width: 100%;
 }
 
 html {
