@@ -21,10 +21,7 @@ body {
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
     position: relative;
-}
-
-html {
-    position: relative;
+    max-width: 100%;
 }
 
 button, p, ul {
