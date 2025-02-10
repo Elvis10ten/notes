@@ -23,6 +23,10 @@ body {
     position: relative;
 }
 
+html {
+    position: relative;
+}
+
 button, p, ul {
     margin: 0;
     padding: 0;
