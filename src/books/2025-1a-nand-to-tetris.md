@@ -858,7 +858,7 @@ $100101_2$ = $37_{10}$
 
 A <pmark>numeral system</pmark> is a mathematical notation for representing numbers of a given set using digits or other symbols in a consistent manner.
 
-In a <bmark>positional numeral system</bmark>, the <pmark>radix</pmark> or <ymark>base<ymark> is the number of unique digits, including the digit zero, used to represent numbers.
+In a <bmark>positional numeral system</bmark>, the <pmark>radix</pmark> or <ymark>base</ymark> is the number of unique digits, including the digit zero, used to represent numbers.
 
 Computers represent numbers in binary. Any number can be represented by a sequence of bits (binary digits), which in turn may be represented by any mechanism capable of being in two mutually exclusive states.
 
