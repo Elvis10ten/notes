@@ -316,7 +316,8 @@ rmark {
 }
 
 .katex-display {
-    overflow: auto hidden
+    overflow: auto hidden;
+    margin: 20px auto !important;
 }
 
 .book-gallery {

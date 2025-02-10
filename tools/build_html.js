@@ -71,7 +71,7 @@ async function buildHTMLFile(dir, markdownFileName) {
     outputHTML = outputHTML.replace(/\/src\/(.*?)\.md/g, "$1.html");
 
     console.log(`Setting the title...`);
-    let firstH1Text = outputHTML.match(/>(.*?)<\/h1>/)?.[1] ?? 'Elvis Chidera Blog';
+    let firstH1Text = outputHTML.match(/><h1>(.*?)<\/h1>/)?.[1] ?? 'Elvis Chidera Blog';
     outputHTML = outputHTML.replace('<!-- output_title -->', firstH1Text);
 
     console.log(`Setting the banner path...`);

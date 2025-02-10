@@ -841,14 +841,12 @@ DMux4Way(in= second, sel= sel[0..1], a= e, b= f, c= g, d= h);
 
 🎯 Objective: Use the gates from chapter 1 to build an ALU (Arithmetic logic unit).
 
-The ALU is the centerpiece chip that executes all the arithmetic and logical operations performed by the computer.
+The <bmark>ALU</bmark> is the centerpiece chip that executes all the arithmetic and logical operations performed by the computer.
 
 ---
 
-A <bmark>binary number</bmark> is a number expressed in the **base-2 positional numeral system**. Let $x = x_{n}x_{n − 1}x_{n − 2} ... x_{0}$ be a string of binary digits, the value of $x$ in the base-2 positional numeral system is defined as:  
-$$  
-x = \sum_{i=0}^{n} x_i \cdot b^i  
-$$
+A <bmark>binary number</bmark> is a number expressed in the **base-2 positional numeral system**.
+Let $x = x_{n}x_{n − 1}x_{n − 2} ... x_{0}$ be a string of binary digits, the value of $x$ in the base-2 positional numeral system is defined as: $x = \sum_{i=0}^{n} x_i \cdot b^i$
 
 e.g.    
 
@@ -858,16 +856,16 @@ $100101_2$ = $[ 1 × 32 ] + [ 0 × 16 ] + [ 0 × 8 ] + [ 1 × 4 ] + [ 0 × 2 ] +
 
 $100101_2$ = $37_{10}$
 
-A **numeral system** is a mathematical notation for representing numbers of a given set using digits or other symbols in a consistent manner.
+A <pmark>numeral system</pmark> is a mathematical notation for representing numbers of a given set using digits or other symbols in a consistent manner.
 
-In a **positional numeral system**, the **radix** or **base** is the number of unique digits, including the digit zero, used to represent numbers.
+In a <bmark>positional numeral system</bmark>, the <pmark>radix</pmark> or <ymark>base<ymark> is the number of unique digits, including the digit zero, used to represent numbers.
 
 Computers represent numbers in binary. Any number can be represented by a sequence of bits (binary digits), which in turn may be represented by any mechanism capable of being in two mutually exclusive states.
 
 Integer numbers are unbounded: for any given number $x$, there are integers that are less than $x$ and integers greater than $x$. However, computers are finite machines that use a fixed word size for representing numbers. An 8-bit register can represent $2^8 = 256$ different things. Using $n$ bits, we can represent all the nonnegative integers ranging from $0$ to $2^n - 1$.
 
 ---
-The three common methods of extending the binary numeral system to represent <bmark>signed numbers</bmark> (i.e. positive, negative, and zero numbers) numbers are:
+The three common methods of extending the binary numeral system to represent <bmark>signed numbers</bmark> (i.e. positive, negative, and zero) numbers are:
 * Sign–magnitude,
 * Ones' complement, and
 * Two's complement.
@@ -875,7 +873,7 @@ The three common methods of extending the binary numeral system to represent <bm
 Of the three, two’s complement is the most commonly used today.
 
 ---
-A <bmark>two's complement number system</bmark> encodes positive and negative numbers in a binary number representation. The weight of each bit is a power of two, except for the **most significant bit** (aka **sign bit**), whose weight is the negative of the corresponding power of two. The value $w$ of an N-bit integer $a_{N-1} a_{N-2} ... a_0$ is given by the following formula:
+A <bmark>two's complement number system</bmark> encodes positive and negative numbers in a binary number representation. The weight of each bit is a power of two, except for the <pmark>most significant bit</pmark> (aka <ymark>sign bit</ymark>), whose weight is the negative of the corresponding power of two. The value $w$ of an N-bit integer $a_{N-1} a_{N-2} ... a_0$ is given by the following formula:
 
 $$
 w = -(a_{N-1} 2^{N-1}) + \sum_{i=0}^{N-2} a_i 2^i
@@ -885,19 +883,15 @@ $$
 
 The two's complement of an N-bit number is the complement of that number with respect to $2^N$ (this is the property that gives this system its name). i.e. Given that $x$ is an N-bit number and $y$ is its two's complement, then $x + y = 2^N$. e.g.
 
-$$
-N = 3
-$$
-$$
-2^N = 2^3 = 8_{10} = 1000_2
-$$
-$$
-If \space x = 011_2 \space (3_{10})
-$$
-Then $y$ ($x$'s two's complement) $= 101_2$ $(5_{10})$ because:
-$$
-011_2 + 101_2 = 1000_2 = 2^N
-$$
+$N = 3$
+
+$2^N = 2^3 = 8_{10} = 1000_2$
+
+If, $\space x = 011_2 \space (3_{10})$
+
+Then, $y$ (x's two's complement) $= 101_2$ $(5_{10})$ because:
+
+$011_2 + 101_2 = 1000_2 = 2^N$
 
 ---
 <bmark>Calculation of the two's complement of a number</bmark> essentially means subtracting the number from $2^N$. But as can be seen from the 3-bit example above with the 4-bit $1000_2$, the number $2^N$ will not itself be representable in a system limited to $N$ bits, as it is just outside the $N$ bit space. Because of this, systems with maximally N-bit must break the subtraction into two operations:
@@ -1008,6 +1002,7 @@ A <bmark>full adder</bmark> is designed to add three bits. Like the half-adder, 
 | Input     | `a`, `b`, `c`                                              |
 | Output    | `sum`, `carry`                                             |
 | Function  | `sum = LSB of a + b + c`<br><br>`carry = MSB of a + b + c` |
+
 
 | a | b | c | carry | sum |
 |---|---|---|-------|-----|
