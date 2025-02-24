@@ -5,7 +5,8 @@
   "main": "build_html.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node update_index.js && node build_html.js"
+    "build": "node update_index.js && node build_html.js",
+    "run": "node server.js"
   },
   "author": "Elvis Chidera",
   "license": "MIT",
