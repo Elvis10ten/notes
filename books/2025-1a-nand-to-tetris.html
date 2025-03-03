@@ -3367,7 +3367,7 @@ CHIP CPU {
 <li>Instance-level field of an object</li>
 <li>Method-level local or argument variable.</li>
 </ul>
-<p>In virtual machines, variables are represented as entries in virtual memory segments:</p>
+<p>Variable scopes are represented in the virtual machine as virtual memory segments and variables are stored as entries in them:</p>
 <table>
 <thead>
 <tr>
@@ -3393,27 +3393,26 @@ CHIP CPU {
 </tr>
 <tr>
 <td>this</td>
-<td></td>
+<td>Described in later chapters.</td>
 </tr>
 <tr>
 <td>that</td>
-<td></td>
+<td>Described in later chapters.</td>
 </tr>
 <tr>
 <td>pointer</td>
-<td></td>
+<td>Described in later chapters.</td>
 </tr>
 <tr>
 <td>temp</td>
-<td></td>
+<td>Described in later chapters.</td>
 </tr>
 </tbody></table>
 <p>VM commands access all the memory segments in exactly the same way: by using the segment name followed by a non-negative index.</p>
-<p>The compiler maps the first, second, third, … static variable found in the high-level program onto <code>static 0</code>, <code>static 1</code>, <code>static 2</code>, and so on. The other variable kinds are mapped similarly into their respective segments.</p>
+<p>The compiler maps the first, second, third, … <code>static</code> variable found in the high-level program onto <code>static 0</code>, <code>static 1</code>, <code>static 2</code>, and so on. The other variable kinds are mapped similarly into their respective segments.</p>
 <p>For example, if the local variable <code>x</code> and the field <code>y</code> have been mapped on <code>local 1</code> and <code>this 3</code>, respectively, then a high-level statement like <code>let x = y</code> will be translated by the compiler into <code>push this 3</code> and <code>pop local 1</code>.</p>
 <hr>
 <p>Our VM model is stack-based: all the VM operations take their operands from, and store their results on, the stack.</p>
-<p>There is only one data type: a signed 16-bit integer.</p>
 <p>A VM program is a sequence of VM commands that fall into four categories:</p>
 <ul>
 <li><strong>Push / pop commands</strong> transfer data between the stack and memory segments.</li>
@@ -3438,18 +3437,18 @@ CHIP CPU {
 </ul>
 </li>
 </ul>
-<p>The commands <code>add</code>, <code>sub</code>, <code>eq</code>, <code>gt</code>, <code>lt</code>, <code>and</code>, and <code>or</code> have two implicit operands. To execute each one of them, the VM implementation pops two values off the stack, computes the stated function on them, and pushes the resulting value back onto the stack. The remaining <code>neg</code> and <code>not</code> commands have one implicit operand and work the same way.</p>
+<p>The commands <code>add</code>, <code>sub</code>, <code>eq</code>, <code>gt</code>, <code>lt</code>, <code>and</code>, and <code>or</code> have <ymark>two implicit operands</ymark>. To execute each one of them, the VM implementation pops two values off the stack, computes the stated function on them, and pushes the resulting value back onto the stack. The remaining <code>neg</code> and <code>not</code> commands have <ymark>one implicit operand</ymark> and work the same way.</p>
 <p>Implicit here means that the operand is not part of the command syntax: since the command is designed to always operate on the two top stack values, there is no need to specify them.</p>
 <hr>
-<p>The abstract VM described so far must be implemented on a host machine to actually run. One implementation option is a VM translator.</p>
+<p>The abstract VM described so far must be implemented on a host machine to actually run. The implementation option chosen by the project is a <pmark>VM translator</pmark>.</p>
 <p>Writing a VM translator entails two main tasks:</p>
 <ul>
 <li>First, we have to decide how to represent the stack and the virtual memory segments on the target platform.</li>
 <li>Second, we have to translate each VM command into a sequence of low-level instructions that can execute on the target platform.</li>
 </ul>
 <p>We can represent the VM’s stack using a designated memory block in the host RAM. The lower end of this RAM block will be a fixed base address, and its higher end will change as the stack grows and shrinks.</p>
-<p>Thus, given a fixed <code>stackBase</code> address, we can manage the stack by keeping track of a single variable: a <code>stack pointer</code>, or <code>SP</code>, which holds the address of the RAM entry just following the stack’s top-most value. To initialize the stack, we set <code>SP</code> to <code>stackBase</code>.</p>
-<p>Lets assume that the <code>stack base</code> address is <code>256</code> in the Hack computer RAM. In that case, the VM translator can start by generating assembly code that realizes <code>SP=256</code>, that is:</p>
+<p>Thus, given a fixed <code>stackBase</code> address, we can manage the stack by keeping track of a single variable: a <pmark>stack pointer (SP)</pmark>, which holds the address of the RAM entry just following the stack’s top-most value. To initialize the stack, we set <code>SP</code> to <code>stackBase</code>.</p>
+<p>Let&#39;s assume that the <code>stackBase</code> address is <code>256</code> in the Hack computer RAM. In that case, the VM translator can start by generating assembly code that realizes <code>SP=256</code>, that is:</p>
 <pre><code class="hljs">@256
 D = A
 @SP
@@ -3484,7 +3483,50 @@ M = D
 <td>Stack</td>
 </tr>
 </tbody></table>
-<p>VirtualRegistersTable</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Location</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SP</td>
+<td>RAM[0]</td>
+<td>Points to the memory address just following the memory address containing the topmost stack value.</td>
+</tr>
+<tr>
+<td>LCL</td>
+<td>RAM[1]</td>
+<td>Points to the base memory address of the current VM function’s local segment.</td>
+</tr>
+<tr>
+<td>ARG</td>
+<td>RAM[2]</td>
+<td>Points to the base memory address of the current VM function’s argument segment.</td>
+</tr>
+<tr>
+<td>THIS</td>
+<td>RAM[3]</td>
+<td>Points to the base memory address of the current VM function’s this segment.</td>
+</tr>
+<tr>
+<td>THAT</td>
+<td>RAM[4]</td>
+<td>Points to the base memory address of the current VM function’s that segment.</td>
+</tr>
+<tr>
+<td>TEMP</td>
+<td>RAM[5-12]</td>
+<td>A general-purpose segment.</td>
+</tr>
+<tr>
+<td>R13, R14, R15</td>
+<td>RAM[13-15]</td>
+<td>If the assembleY code generated by the VM translator needs variables, it can use these registers.</td>
+</tr>
+</tbody></table>
 <blockquote>
 <p>Assume that <code>SP</code>, <code>ARG</code>, <code>LCL</code>, <code>THIS</code>, and <code>THAT</code> have been already initialized to some sensible addresses in the host RAM.</p>
 </blockquote>
@@ -3613,6 +3655,241 @@ The callee&#39;s view:
 <p>Figure8.6</p>
 <hr>
 <p>The output of the VM translator is a single assembly file, named source.asm. If source is a folder name, the single .asm file contains the translation of all the functions in all the .vm files in the folder, one after the other.</p>
+<h2>Chapter 9: High-level language</h2>
+<p>Jack is a simple high-level object-based language. It’s it inspired from Java, with simpler syntax and no support for inheritance.</p>
+<p>Jack comes with a standard class library (AKA the Jack OS), which extends the basic language with various abstractions and services. The OS consists of eight classes:</p>
+<table>
+<thead>
+<tr>
+<th>OS class</th>
+<th>Services</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Array</td>
+<td>Array representation and manipulation: <code>new(int)</code>, <code>dispose</code>, ...</td>
+</tr>
+<tr>
+<td>Math</td>
+<td>Common mathematical functions: <code>max(int, int)</code>, <code>sqrt(int)</code>, ...</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>Facilitates access to the host RAM: <code>alloc(int)</code>, <code>deAlloc(Array)</code>, <code>peek(int)</code>, <code>poke(int, int)</code>, ....</td>
+</tr>
+<tr>
+<td>Output</td>
+<td>Facilitates text output to the screen: <code>printString(string)</code>, <code>printInt(int)</code>, <code>println</code>, ...</td>
+</tr>
+<tr>
+<td>Screen</td>
+<td>Facilitates graphics output to the screen: <code>setColor(boolean)</code>, <code>drawPixel(int, int)</code>, <code>drawLine(int, int, int, int)</code>, ...</td>
+</tr>
+<tr>
+<td>Keyboard</td>
+<td>Facilitates input from the keyboard: <code>readLine(String)</code>, <code>readInt(String)</code>, ...</td>
+</tr>
+<tr>
+<td>String</td>
+<td>String representation and manipulation: <code>length()</code>, <code>charAt(int)</code>, ...</td>
+</tr>
+<tr>
+<td>Sys</td>
+<td>Facilitates execution-related services: <code>halt()</code>, <code>wait(int)</code>, ...</td>
+</tr>
+</tbody></table>
+<h2>Chapter 10: Compiler I -- Syntax analysis</h2>
+<p>A <bmark>compiler</bmark> is a program that translates programs from a <strong>source language</strong> into a <strong>target language</strong>.</p>
+<p>Compilation consists of two main stages:</p>
+<ol>
+<li><bmark>Syntax analysis<bmark>: Understanding the syntax and semantics of the source program.</li>
+<li><pmark>Code generation</pmark>: Re-expressing the semantics of the source program using the syntax of the target language.</li>
+</ol>
+<p>The syntax analysis stage is divided two sub-stages:</p>
+<ol>
+<li><pmark>Tokenizing</pmark>: The grouping of input characters into language atoms called tokens.</li>
+<li><pmark>Parsing</pmark>: The grouping of tokens into structured statements that have a meaning.</li>
+</ol>
+<p><img src="/assets/nand-images/fig10.1.png" alt="Figure 10.1"></p>
+<p><bmark>Grammar</bmark> are the set of rules that define the syntax of a programming language.
+To understand — parse — a given program means to determine the exact correspondence between the program’s text and the grammar’s rules.
+To do so, the program’s text must be converted into a list of tokens.</p>
+<hr>
+<p>Each programming language specification includes the types of tokens, or words, that the language recognizes.
+Jack has the following token types:</p>
+<ol>
+<li><strong>Keywords</strong>: <code>class</code>, <code>constructor</code>, <code>function</code>, <code>method</code>, <code>field</code>, <code>static</code>, <code>var</code>, <code>int</code>, <code>char</code>, <code>boolean</code>, <code>void</code>, <code>true</code>, <code>false</code>, <code>null</code>, <code>this</code>, <code>let</code>, <code>do</code>, <code>if</code>, <code>else</code>, <code>while</code>, <code>return</code>.</li>
+<li><strong>Symbols</strong>: <code>{</code>, <code>}</code>, <code>(</code>, <code>)</code>, <code>[</code>, <code>]</code>, <code>.</code>, <code>,</code>, <code>;</code>, <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>&amp;</code>, <code>|</code>, <code>&lt;</code>, <code>&gt;</code>, <code>=</code>, <code>~</code>.</li>
+<li><strong>Integer constants</strong>: A decimal integer in the range 0 to 32767.</li>
+<li><strong>String constants</strong>: A sequence of characters enclosed in double quotes. Not including double quotes or newline characters.</li>
+<li><strong>Identifiers</strong>: A sequence of letters, digits, and underscores that does not begin with a digit. Used to name classes, variables, and subroutines.</li>
+</ol>
+<p>The tokens defined by these lexical categories are referred to as the <bmark>language lexicon</bmark>.
+The first step in analyzing a program&#39;s syntax is grouping the characters into tokens, as defined by the language lexicon, while ignoring white spaces and comments.
+This process is called <bmark>lexical analysis</bmark> or <bmark>tokenizing</bmark> and is implemented by a program called a <pmark>tokenizer</pmark> or <pmark>lexical analyzer</pmark>.
+The tokenizer reads the input text character by character and groups the characters into tokens.</p>
+<p>Once a program has been tokenized, the tokens, rather than the characters, are viewed as its basic atoms.</p>
+<hr>
+<p>The second stage of syntax analysis is <bmark>parsing</bmark>, which involves grouping the tokens into structured statements that have meaning (i.e. that are valid).</p>
+<p>The structured statements are called <bmark>parse trees</bmark> or <bmark>abstract syntax trees (ASTs)</bmark>.
+The ASTs are built according to the rules of the language&#39;s grammar.
+A language&#39;s grammar is written in a meta-language: a language describing a language.
+The book avoids grammar formalism and instead views grammar as a set of rules that define the syntax of a language:</p>
+<ol>
+<li>Each rule consists of a left sie and a right side.</li>
+<li>The left side specifies the rule&#39;s name, which is not part of the language (i.e. the name can be any arbitrary ID).</li>
+<li>The right side describes the lingual pattern that the rule specifies. This pattern is a left-to-right sequence consisting of three building blocks:<ul>
+<li><gmark>Terminals</gmark>: These are the language&#39;s tokens. It is written within single quotes.</li>
+<li><pmark>Non-terminal symbols</pmark>: These are names of other rules. It is written without quotes.</li>
+<li><rmark>Qualifiers</rmark>: Of which there are five:<ul>
+<li><code>*</code>: Zero or more occurrences. e.g. <code>x*</code> means <code>x</code> appears zero or more times.</li>
+<li><code>?</code>: Zero or one occurrence. e.g. <code>x?</code> means <code>x</code> appears zero or one time.</li>
+<li><code>|</code>: Alternation. e.g. <code>x | y</code> means either <code>x</code> or <code>y</code>.</li>
+<li><code>(</code> and <code>)</code>: Grouping grammar elements to be treated as a single grammatical element. e.g. <code>(x | y) z</code> means either <code>x z</code> or <code>y z</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>For example, the rule &quot;<code>ifStatement</code>: &#39;<gmark>if</gmark>&#39; &#39;<gmark>(</gmark>&#39; <pmark>expression</pmark> &#39;<gmark>)</gmark>&#39; &#39;<gmark>{</gmark>&#39; <pmark>statements</pmark> &#39;<gmark>}</gmark>&#39;&quot;
+stipulates that every valid instance of an <code>ifStatement</code> must begin with the token <gmark>if</gmark>, followed by the token
+<gmark>(</gmark>, followed by a valid instance of an <pmark>expression</pmark> (defined elsewhere in the grammar),
+followed by the token <gmark>)</gmark>, followed by the token <gmark>{</gmark>, followed by a valid instance of statements (defined elsewhere in the grammar),
+followed by the token <gmark>}</gmark>.</p>
+</blockquote>
+<hr>
+<h3>The Jack grammar</h3>
+<h4>Lexical elements</h4>
+<p>The Jack language includes five types of terminal elements (tokens):</p>
+<ul>
+<li><strong>keyword</strong>: <code>class</code>, <code>constructor</code>, <code>function</code>, <code>method</code>, <code>field</code>, <code>static</code>, <code>var</code>, <code>int</code>, <code>char</code>, <code>boolean</code>, <code>void</code>, <code>true</code>, <code>false</code>, <code>null</code>, <code>this</code>, <code>let</code>, <code>do</code>, <code>if</code>, <code>else</code>, <code>while</code>, <code>return</code>.</li>
+<li><strong>symbol</strong>: <code>{</code>, <code>}</code>, <code>(</code>, <code>)</code>, <code>[</code>, <code>]</code>, <code>.</code>, <code>,</code>, <code>;</code>, <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>&amp;</code>, <code>|</code>, <code>&lt;</code>, <code>&gt;</code>, <code>=</code>, <code>~</code>.</li>
+<li><strong>integerConstant</strong>: A decimal integer in the range 0 to 32767.</li>
+<li><strong>stringConstant</strong>: A sequence of characters enclosed in double quotes. Not including double quotes or newline characters.</li>
+<li><strong>identifiers</strong>: A sequence of letters, digits, and underscores that does not begin with a digit. Used to name classes, variables, and subroutines.</li>
+</ul>
+<h4>Program structure</h4>
+<p>A Jack program is a collection of classes, each appearing in a separate file. The compilation unin is a class. A class is a sequence of tokens, as follows:</p>
+<ul>
+<li><code>class</code>: &#39;class&#39; className &#39;{&#39; classVarDec* subroutineDec* &#39;}&#39;</li>
+<li><code>classVarDec</code>: (&#39;static&#39; | &#39;field&#39;) type varName (&#39;,&#39; varName)* &#39;;&#39;</li>
+<li><code>type</code>: &#39;int&#39; | &#39;char&#39; | &#39;boolean&#39; | className</li>
+<li><code>subroutineDec</code>: (&#39;constructor&#39; | &#39;function&#39; | &#39;method&#39;) (&#39;void&#39; | type) subroutineName &#39;(&#39; parameterList &#39;)&#39; subroutineBody</li>
+<li><code>parameterList</code>: ((type varName) (&#39;,&#39; type varName)*)?</li>
+<li><code>subroutineBody</code>: &#39;{&#39; varDec* statements &#39;}&#39;</li>
+<li><code>varDec</code>: &#39;var&#39; type varName (&#39;,&#39; varName)* &#39;;&#39;</li>
+<li><code>className</code>: identifier</li>
+<li><code>subroutineName</code>: identifier</li>
+<li><code>varName</code>: identifier</li>
+</ul>
+<h4>Statements</h4>
+<ul>
+<li><code>statements</code>: statement*</li>
+<li><code>statement</code>: letStatement | ifStatement | whileStatement | doStatement | returnStatement</li>
+<li><code>letStatement</code>: &#39;let&#39; varName (&#39;[&#39; expression &#39;]&#39;)? &#39;=&#39; expression &#39;;&#39;;</li>
+<li><code>ifStatement</code>: &#39;if&#39; &#39;(&#39; expression &#39;)&#39; &#39;{&#39; statements &#39;}&#39; (&#39;else&#39; &#39;{&#39; statements &#39;}&#39;)?</li>
+<li><code>whileStatement</code>: &#39;while&#39; &#39;(&#39; expression &#39;)&#39; &#39;{&#39; statements &#39;}&#39;</li>
+<li><code>doStatement</code>: &#39;do&#39; subroutineCall &#39;;&#39;</li>
+<li><code>returnStatement</code>: &#39;return&#39; expression? &#39;;&#39;</li>
+</ul>
+<h4>Expressions</h4>
+<ul>
+<li><code>expression</code>: term (op term)*</li>
+<li><code>term</code>: integerConstant | stringConstant | keywordConstant | varName | varName &#39;[&#39; expression &#39;]&#39; | subroutineCall | &#39;(&#39; expression &#39;)&#39; | unaryOp term</li>
+<li><code>subroutineCall</code>: subroutineName &#39;(&#39; expressionList &#39;)&#39; | (className | varName) &#39;.&#39; subroutineName &#39;(&#39; expressionList &#39;)&#39;</li>
+<li><code>expressionList</code>: (expression (&#39;,&#39; expression)*)?</li>
+<li><code>op</code>: &#39;+&#39; | &#39;-&#39; | &#39;*&#39; | &#39;/&#39; | &#39;&amp;&#39; | &#39;|&#39; | &#39;&lt;&#39; | &#39;&gt;&#39; | &#39;=&#39;</li>
+<li><code>unaryOp</code>: &#39;-&#39; | &#39;~&#39;</li>
+<li><code>keywordConstant</code>: &#39;true&#39; | &#39;false&#39; | &#39;null&#39; | &#39;this&#39;</li>
+</ul>
+<hr>
+<p>Grammars are inherently recursive.</p>
+<pre><code class="hljs language-jack">if (x&lt;0){if(y &gt; 0){...}}
+</code></pre><p>The grammar can be used to parse the above code as follows:</p>
+<ul>
+<li>After getting the first token and realizing that we have an <strong>if</strong> pattern, we focus on the rule &quot;<code>ifStatement</code>: &#39;<gmark>if</gmark>&#39; &#39;<gmark>(</gmark>&#39; <pmark>expression</pmark> &#39;<gmark>)</gmark>&#39; &#39;<gmark>{</gmark>&#39; <pmark>statements</pmark> &#39;<gmark>}</gmark>&#39;&quot;. </li>
+<li>The rule informs that following the token <strong>if</strong> there ought to be the token <strong>(</strong>, followed by an <em>expression</em>, followed by the token <strong>)</strong>.
+And indeed, these requirements are satisfied by the input element <code>(x&lt;0)</code>.</li>
+<li>Next, we see that we now have to anticipate the token <strong>{</strong>, followed by <em>statements</em>, followed by the token <strong>}</strong>.
+Now, <em>statements</em> is defined as 0 or more instances of statement, and statement, in turn, is either a letStatement, an ifStatement, or a whileStatement.</li>
+<li>This expectation is met by the inner input element <code>if(y&gt;0){...}</code> which is an <code>ifStatement</code>.</li>
+</ul>
+<p>The parser produces an exact correspondence between the given input, on the one hand, and the syntactic patterns admitted by the grammar rules, on the other.
+The correspondence can be represented by a data structure called a parse tree, also called a derivation tree, like the one shown in figure 10.4a.
+If such a tree can be constructed, the parser renders the input valid; otherwise, it can report that the input contains syntax errors.</p>
+<p><img src="/assets/nand-images/fig10.4a.png" alt="Figure 10.4"></p>
+<hr>
+<p>A parser is an agent that operates according to a given grammar. The parser
+accepts as input a stream of tokens and attempts to produce as output the
+parse tree associated with the given input. In our case, the input is expected
+to be structured according to the Jack grammar, and the output is written in
+XML.</p>
+<p>There are several algorithms for constructing parse trees. The top-down
+approach, also known as recursive descent parsing, attempts to parse the
+tokenized input recursively, using the nested structures admitted by the
+language grammar. Such an algorithm can be implemented as follows. For
+every nontrivial rule in the grammar, we equip the parser program with a
+routine designed to parse the input according to that rule. For example, the
+grammar listed in figure 10.3 can be implemented using a set of routines
+named compileStatement, compileStatements, compileLet, compileIf, …,
+compileExpression, and so on.</p>
+<p>The parsing logic of each compilexxx routine should follow the syntactic
+pattern specified by the right side of the xxx rule. For example, let us focus
+on the rule whileStatement: &#39;while&#39; &#39;(&#39; expression &#39;)&#39; &#39;{&#39; statements &#39;}&#39;. According
+to our scheme, this rule will be implemented by a parsing routine named
+compileWhile. This routine should realize the left-to-right derivation logic
+specified by the pattern &#39;while&#39; &#39;(&#39; expression &#39;)&#39; &#39;{&#39; statements &#39;}&#39;. Here is one
+way to implement this logic, using pseudocode:</p>
+<pre><code class="hljs">// This routine implements the rule whileStatement: &#x27;while&#x27; &#x27;(&#x27; expression &#x27;)&#x27; &#x27;{&#x27; statements &#x27;}&#x27;.
+// Should be called if the current token is &#x27;while&#x27;.
+compileWhile():
+    print(&quot;&lt;whileStatement&gt;&quot;)
+    process(&quot;while&quot;)
+    process(&quot;(&quot;)
+    compileExpression()
+    process(&quot;)&quot;)
+    process(&quot;{&quot;)
+    compileStatements()
+    process(&quot;}&quot;)
+    print(&quot;&lt;/whileStatement&gt;&quot;)
+
+// A helper routine that handles the current token, and advances to get the next token.
+process(token):
+    if (currentToken == token):
+        printXMLToken(currentToken)
+        currentToken = tokenizer.advance()
+    else:
+        error(&quot;Syntax error: Expected token &quot; + token + &quot; but got &quot; + currentToken)
+</code></pre><p>This parsing process will continue until the expression and statements parts
+of the while statement have been fully parsed.</p>
+<p>they all follow the same contract: each compilexxx routine should get from
+the input, and handle, all the tokens that make up xxx, advance the tokenizer
+exactly beyond these tokens, and output the parse tree of xxx.
+Recursive parsing algorithms are simple and elegant. If the language is
+simple, a single token lookahead is all that it takes to know which parsing
+rule to invoke next. For example, if the current token is let, we know that we
+have a letStatement; if the current token is while, we know that we have a
+whileStatement, and so on. Indeed, in the simple grammar shown in figure
+10.3, looking ahead one token suffices to resolve, without ambiguity, which
+rule to use next. Grammars that have this lingual property are called LL (1).
+These grammars can be handled simply and elegantly by recursive descent
+algorithms, without backtracking.
+The term LL comes from the observation that the grammar parses the
+input from left to right, performing leftmost derivation of the input. The (1) they all follow the same contract: each compilexxx routine should get from
+the input, and handle, all the tokens that make up xxx, advance the tokenizer
+exactly beyond these tokens, and output the parse tree of xxx.
+Recursive parsing algorithms are simple and elegant. If the language is
+simple, a single token lookahead is all that it takes to know which parsing
+rule to invoke next. For example, if the current token is let, we know that we
+have a letStatement; if the current token is while, we know that we have a
+whileStatement, and so on. Indeed, in the simple grammar shown in figure
+10.3, looking ahead one token suffices to resolve, without ambiguity, which
+rule to use next. Grammars that have this lingual property are called LL (1).
+These grammars can be handled simply and elegantly by recursive descent
+algorithms, without backtracking.
+The term LL comes from the observation that the grammar parses the
+input from left to right, performing leftmost derivation of the input. The (1)</p>
 
 
     </body>
