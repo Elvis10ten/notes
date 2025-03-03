@@ -3367,7 +3367,7 @@ CHIP CPU {
 <li>Instance-level field of an object</li>
 <li>Method-level local or argument variable.</li>
 </ul>
-<p>In virtual machines, variables are represented as entries in virtual memory segments:</p>
+<p>Variable scopes are represented in the virtual machine as virtual memory segments and variables are stored as entries in them:</p>
 <table>
 <thead>
 <tr>
@@ -3393,27 +3393,26 @@ CHIP CPU {
 </tr>
 <tr>
 <td>this</td>
-<td></td>
+<td>Described in later chapters.</td>
 </tr>
 <tr>
 <td>that</td>
-<td></td>
+<td>Described in later chapters.</td>
 </tr>
 <tr>
 <td>pointer</td>
-<td></td>
+<td>Described in later chapters.</td>
 </tr>
 <tr>
 <td>temp</td>
-<td></td>
+<td>Described in later chapters.</td>
 </tr>
 </tbody></table>
 <p>VM commands access all the memory segments in exactly the same way: by using the segment name followed by a non-negative index.</p>
-<p>The compiler maps the first, second, third, … static variable found in the high-level program onto <code>static 0</code>, <code>static 1</code>, <code>static 2</code>, and so on. The other variable kinds are mapped similarly into their respective segments.</p>
+<p>The compiler maps the first, second, third, … <code>static</code> variable found in the high-level program onto <code>static 0</code>, <code>static 1</code>, <code>static 2</code>, and so on. The other variable kinds are mapped similarly into their respective segments.</p>
 <p>For example, if the local variable <code>x</code> and the field <code>y</code> have been mapped on <code>local 1</code> and <code>this 3</code>, respectively, then a high-level statement like <code>let x = y</code> will be translated by the compiler into <code>push this 3</code> and <code>pop local 1</code>.</p>
 <hr>
 <p>Our VM model is stack-based: all the VM operations take their operands from, and store their results on, the stack.</p>
-<p>There is only one data type: a signed 16-bit integer.</p>
 <p>A VM program is a sequence of VM commands that fall into four categories:</p>
 <ul>
 <li><strong>Push / pop commands</strong> transfer data between the stack and memory segments.</li>
@@ -3438,18 +3437,18 @@ CHIP CPU {
 </ul>
 </li>
 </ul>
-<p>The commands <code>add</code>, <code>sub</code>, <code>eq</code>, <code>gt</code>, <code>lt</code>, <code>and</code>, and <code>or</code> have two implicit operands. To execute each one of them, the VM implementation pops two values off the stack, computes the stated function on them, and pushes the resulting value back onto the stack. The remaining <code>neg</code> and <code>not</code> commands have one implicit operand and work the same way.</p>
+<p>The commands <code>add</code>, <code>sub</code>, <code>eq</code>, <code>gt</code>, <code>lt</code>, <code>and</code>, and <code>or</code> have <ymark>two implicit operands</ymark>. To execute each one of them, the VM implementation pops two values off the stack, computes the stated function on them, and pushes the resulting value back onto the stack. The remaining <code>neg</code> and <code>not</code> commands have <ymark>one implicit operand</ymark> and work the same way.</p>
 <p>Implicit here means that the operand is not part of the command syntax: since the command is designed to always operate on the two top stack values, there is no need to specify them.</p>
 <hr>
-<p>The abstract VM described so far must be implemented on a host machine to actually run. One implementation option is a VM translator.</p>
+<p>The abstract VM described so far must be implemented on a host machine to actually run. The implementation option chosen by the project is a <pmark>VM translator</pmark>.</p>
 <p>Writing a VM translator entails two main tasks:</p>
 <ul>
 <li>First, we have to decide how to represent the stack and the virtual memory segments on the target platform.</li>
 <li>Second, we have to translate each VM command into a sequence of low-level instructions that can execute on the target platform.</li>
 </ul>
 <p>We can represent the VM’s stack using a designated memory block in the host RAM. The lower end of this RAM block will be a fixed base address, and its higher end will change as the stack grows and shrinks.</p>
-<p>Thus, given a fixed <code>stackBase</code> address, we can manage the stack by keeping track of a single variable: a <code>stack pointer</code>, or <code>SP</code>, which holds the address of the RAM entry just following the stack’s top-most value. To initialize the stack, we set <code>SP</code> to <code>stackBase</code>.</p>
-<p>Lets assume that the <code>stack base</code> address is <code>256</code> in the Hack computer RAM. In that case, the VM translator can start by generating assembly code that realizes <code>SP=256</code>, that is:</p>
+<p>Thus, given a fixed <code>stackBase</code> address, we can manage the stack by keeping track of a single variable: a <pmark>stack pointer (SP)</pmark>, which holds the address of the RAM entry just following the stack’s top-most value. To initialize the stack, we set <code>SP</code> to <code>stackBase</code>.</p>
+<p>Let&#39;s assume that the <code>stackBase</code> address is <code>256</code> in the Hack computer RAM. In that case, the VM translator can start by generating assembly code that realizes <code>SP=256</code>, that is:</p>
 <pre><code class="hljs">@256
 D = A
 @SP
@@ -3484,7 +3483,50 @@ M = D
 <td>Stack</td>
 </tr>
 </tbody></table>
-<p>VirtualRegistersTable</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Location</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SP</td>
+<td>RAM[0]</td>
+<td>Points to the memory address just following the memory address containing the topmost stack value.</td>
+</tr>
+<tr>
+<td>LCL</td>
+<td>RAM[1]</td>
+<td>Points to the base memory address of the current VM function’s local segment.</td>
+</tr>
+<tr>
+<td>ARG</td>
+<td>RAM[2]</td>
+<td>Points to the base memory address of the current VM function’s argument segment.</td>
+</tr>
+<tr>
+<td>THIS</td>
+<td>RAM[3]</td>
+<td>Points to the base memory address of the current VM function’s this segment.</td>
+</tr>
+<tr>
+<td>THAT</td>
+<td>RAM[4]</td>
+<td>Points to the base memory address of the current VM function’s that segment.</td>
+</tr>
+<tr>
+<td>TEMP</td>
+<td>RAM[5-12]</td>
+<td>A general-purpose segment.</td>
+</tr>
+<tr>
+<td>R13, R14, R15</td>
+<td>RAM[13-15]</td>
+<td>If the assembleY code generated by the VM translator needs variables, it can use these registers.</td>
+</tr>
+</tbody></table>
 <blockquote>
 <p>Assume that <code>SP</code>, <code>ARG</code>, <code>LCL</code>, <code>THIS</code>, and <code>THAT</code> have been already initialized to some sensible addresses in the host RAM.</p>
 </blockquote>
