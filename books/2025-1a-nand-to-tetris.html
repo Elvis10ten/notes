@@ -3529,23 +3529,44 @@ CHIP Computer {
     );
 }
 </code></pre><h2>Chapter 6: Assembler</h2>
-<p>A binary instruction as shown is preceding chapters is an agreed-upon package of <ymark>micro-codes</ymark> designed to be decoded and executed
+<p>A <bmark>binary instruction</bmark> as shown is preceding chapters is an agreed-upon package of <ymark>micro-codes</ymark> designed to be decoded and executed
 by some target hardware platform.</p>
 <p>To improve readability and ease of programming, we use a symbolic language called <bmark>assembly language</bmark> to represent these binary instructions.
 An assembly language is made up of a set of <ymark>mnemonic symbols</ymark> and <gmark>symbolic addresses</gmark> that are translated by an <pmark>assembler</pmark> into binary code.
 The assembler parses each assembly instruction into its underlying fields, e.g. <code>load</code>, <code>R3</code>, and <code>7</code>, translates each field into its equivalent binary code,
 and finally assembles the generated bits into a binary instruction that can be executed by the hardware.</p>
-<p>Assembly programs can use symbolic references to memory addresses.</p>
-<p>An assembler handles this by using a
-<pmark>symbol table</pmark> (data structure) to keep track of the correspondence between symbolic labels and physical memory addresses.</p>
-<p>each mnemonic component (field) of a symbolic Cinstruction is translated into its corresponding bit code, according to figure
-6.2, and each decimal constant xxx in a symbolic A-instruction is translated
-into its equivalent binary code.</p>
-<p>We propose basing the assembler on a software architecture consisting of
-a Parser module for parsing the input into instructions and instructions into
-fields, a Code module for translating the fields (symbolic mnemonics) into
-binary codes, and a Hack assembler program that drives the entire
-translation process.</p>
+<p>An <bmark>assembly Hack program</bmark> is a sequence of text lines, each being:</p>
+<ul>
+<li>An <pmark>assembly instruction</pmark>: A symbolic A-instruction or a symbolic C-instruction.</li>
+<li>A <ymark>label declaration</ymark>: A line of the form <code>(xxx)</code>, where <code>xxx</code> is a symbolic label.</li>
+<li>A <gmark>comment</gmark>: A line that starts with <code>//</code> is considered a comment and is ignored.</li>
+</ul>
+<p>Symbols in Hack assembly programs fall into three categories:</p>
+<ol>
+<li><pmark>Predefined symbols</pmark>: Any Hack assembly program is allowed to use predefined symbols,
+whose values are interpreted to be addresses in the Hack RAM. Supported predefined symbols are:<ul>
+<li><code>R0</code>, <code>R1</code>, …, <code>R15</code> stand for <code>0</code>, <code>1</code>, … <code>15</code>, respectively.</li>
+<li><code>SP</code>, <code>LCL</code>, <code>ARG</code>, <code>THIS</code>, <code>THAT</code> stand for <code>0</code>, <code>1</code>, <code>2</code>, <code>3</code>, <code>4</code>, respectively.</li>
+<li><code>SCREEN</code> and <code>KBD</code> stand for <code>16384</code> and <code>24576</code>, respectively.</li>
+</ul>
+</li>
+<li><ymark>Label symbols</ymark>: The pseudo-instruction <code>(xxx)</code> defines the symbol <code>xxx</code> to refer to the location in the
+Hack ROM holding the next instruction in the program. A label symbol can be defined once and can be used anywhere in
+the assembly program, even before the line in which it is defined.</li>
+<li><gmark>Variable symbols</gmark>: Any symbol <code>xxx</code> appearing in an assembly program that is not predefined and is not
+defined elsewhere by a label declaration <code>(xxx)</code> is treated as a variable.
+Variables are mapped to consecutive RAM locations as they are first encountered, starting at RAM address <code>16</code></li>
+</ol>
+<p>Assembly programs can use symbolic references to memory addresses. An assembler handles this by using a
+<pmark>symbol table</pmark> (data structure) to keep track of the correspondence between symbolic labels and physical memory addresses.
+A typical solution is to develop a <pmark>two-pass assembler</pmark>:</p>
+<ul>
+<li>In the first pass, the assembler reads the entire assembly program, builds the symbol table, and resolves all the symbolic labels. No code is generated.</li>
+<li>In the second pass, the assembler translates the assembly instructions into binary code, using the symbol table to resolve symbolic references.</li>
+</ul>
+<p>See the project for implementation details.</p>
+<h3>Project</h3>
+<p>Solution code is on <a href="https://github.com/Elvis10ten/nand-to-tetris/tree/main/src/assembler">GitHub</a>.</p>
 <h2>Chapter 7: Virtual machine 1 (Processing)</h2>
 <p>Before a high-level program can run on a target computer, it must be translated into the computer’s machine language.</p>
 <p>Modern compilers typically translate high-level programs into an intermediate code designed to run on an abstract computer called a <bmark>virtual machine (VM)</bmark>. The compiler is split into two:</p>
