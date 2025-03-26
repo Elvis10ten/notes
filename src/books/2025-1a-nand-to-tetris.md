@@ -2385,7 +2385,7 @@ CHIP Computer {
 ```
 
 ## Chapter 6: Assembler
-A binary instruction as shown is preceding chapters is an agreed-upon package of <ymark>micro-codes</ymark> designed to be decoded and executed
+A <bmark>binary instruction</bmark> as shown is preceding chapters is an agreed-upon package of <ymark>micro-codes</ymark> designed to be decoded and executed
 by some target hardware platform.
 
 To improve readability and ease of programming, we use a symbolic language called <bmark>assembly language</bmark> to represent these binary instructions.
@@ -2393,21 +2393,35 @@ An assembly language is made up of a set of <ymark>mnemonic symbols</ymark> and 
 The assembler parses each assembly instruction into its underlying fields, e.g. `load`, `R3`, and `7`, translates each field into its equivalent binary code,
 and finally assembles the generated bits into a binary instruction that can be executed by the hardware.
 
-Assembly programs can use symbolic references to memory addresses.
+An <bmark>assembly Hack program</bmark> is a sequence of text lines, each being:
+* An <pmark>assembly instruction</pmark>: A symbolic A-instruction or a symbolic C-instruction.
+* A <ymark>label declaration</ymark>: A line of the form `(xxx)`, where `xxx` is a symbolic label.
+* A <gmark>comment</gmark>: A line that starts with `//` is considered a comment and is ignored.
 
-An assembler handles this by using a
+Symbols in Hack assembly programs fall into three categories:
+1. <pmark>Predefined symbols</pmark>: Any Hack assembly program is allowed to use predefined symbols,
+whose values are interpreted to be addresses in the Hack RAM. Supported predefined symbols are:
+    * `R0`, `R1`, …, `R15` stand for `0`, `1`, … `15`, respectively.
+    * `SP`, `LCL`, `ARG`, `THIS`, `THAT` stand for `0`, `1`, `2`, `3`, `4`, respectively.
+    * `SCREEN` and `KBD` stand for `16384` and `24576`, respectively.
+2. <ymark>Label symbols</ymark>: The pseudo-instruction `(xxx)` defines the symbol `xxx` to refer to the location in the
+Hack ROM holding the next instruction in the program. A label symbol can be defined once and can be used anywhere in
+the assembly program, even before the line in which it is defined.
+3. <gmark>Variable symbols</gmark>: Any symbol `xxx` appearing in an assembly program that is not predefined and is not
+defined elsewhere by a label declaration `(xxx)` is treated as a variable.
+Variables are mapped to consecutive RAM locations as they are first encountered, starting at RAM address `16`
+
+Assembly programs can use symbolic references to memory addresses. An assembler handles this by using a
 <pmark>symbol table</pmark> (data structure) to keep track of the correspondence between symbolic labels and physical memory addresses.
+A typical solution is to develop a <pmark>two-pass assembler</pmark>:
+* In the first pass, the assembler reads the entire assembly program, builds the symbol table, and resolves all the symbolic labels. No code is generated.
+* In the second pass, the assembler translates the assembly instructions into binary code, using the symbol table to resolve symbolic references.
 
-each mnemonic component (field) of a symbolic Cinstruction is translated into its corresponding bit code, according to figure
-6.2, and each decimal constant xxx in a symbolic A-instruction is translated
-into its equivalent binary code.
+See the project for implementation details.
 
-We propose basing the assembler on a software architecture consisting of
-a Parser module for parsing the input into instructions and instructions into
-fields, a Code module for translating the fields (symbolic mnemonics) into
-binary codes, and a Hack assembler program that drives the entire
-translation process.
+### Project
 
+Solution code is on [GitHub](https://github.com/Elvis10ten/nand-to-tetris/tree/main/src/assembler).
 
 ## Chapter 7: Virtual machine 1 (Processing)
 Before a high-level program can run on a target computer, it must be translated into the computer’s machine language.
