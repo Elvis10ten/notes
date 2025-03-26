@@ -1,9 +1,14 @@
 # [WIP] The Elements of Computing Systems – Building a Modern Computer from First Principles
 
-> Verdict: I highly recommend this [book](https://amzn.to/3CnFJRp). It literally starts from nothing and builds a computer from first principles.
-> It's a great way to understand how computers work and has changed the way I think about computers.
+I highly recommend reading the [Nand to Tetris book](https://amzn.to/3CnFJRp) for anyone interested in learning how computers work from the ground up.
+This page is a result of my notes while reading the book.
+While most of the ideas come from the book, I have added some of my own thoughts and some external sources.
+I hope you find this page helpful. 
 
 ## Chapter 1: Boolean logic
+
+🎯 **Objective**: Understand the basics of boolean logic and build all required logic gates from the NAND gate.
+
 Modern computers store and process information stored as two-valued signals — called <bmark>bits</bmark> (i.e. binary digits).
 Two-value signals were chosen because they can readily be represented, stored, and transmitted.
 For example, they can be represented as:
@@ -313,7 +318,7 @@ Or(a= aandnotb, b= bandnota, out= out);
 
 ---
 
-Next, we look at a set of <pmark>control flow gates</pmark>. These gates provide means for controlling flows of information. The first of such gate is the <bmark>multiplexer</bmark> which is a three-input gate. Two input bits, named `a` and `b`, are interpreted as **data bits**, and a third bit, named `sel`, is interpreted as a **selection bit**. The multiplexer uses `sel` to select and output the value of either `a` or `b`.
+Next, we look at a set of <pmark>control flow gates</pmark>. These gates provide means for controlling flows of information. The first of such gate is the <bmark>multiplexer</bmark> which is a three-input gate. Two input bits, named `a` and `b`, are interpreted as **data bits**, and a third bit, named `sel`, is interpreted as a <ymark>selection bit</ymark>. The multiplexer uses `sel` to select and output the value of either `a` or `b`.
 
 ![](/docs/assets/nand-images/multiplexer_gate.png)
 
@@ -366,7 +371,7 @@ Or(a= aandnotsel, b= bandsel, out= out);
 ```
 ---
 
-Next is the <bmark>demultiplexer gate</bmark> which performs the opposite function of a multiplexer: it takes a single input value and routes it to one of two possible outputs, according to a selector bit that selects the destination output.
+Next is the <bmark>demultiplexer gate</bmark> which performs the opposite function of a multiplexer: it takes a single input value and routes it to one of two possible outputs, according to a <ymark>selector bit</ymark> that selects the destination output.
 
 ![](/docs/assets/nand-images/demultiplexer_gate.png)
 
@@ -410,7 +415,7 @@ And(a= in, b= sel, out= b);
 
 ```
 ---
-Now, we explore <bmark>multi-bit versions of some of the basic gates</bmark> above. This section describes several 16-bit logic gates that will be needed for constructing our target computer platform. HDL programs treat multi-bit values like single-bit values, except that the values can be indexed in order to access individual bits. For example, if `in` and `out` represent 16-bit values, then `out [3] = in[5]` sets the 3rd bit of `out` to the value of the 5th bit of `in`. The bits are indexed from right to left, the rightmost bit being the 0’th bit and the leftmost bit being the 15’th bit (in a 16-bit setting).
+Now, we explore <bmark>multi-bit versions</bmark> of some of the basic gates above. This section describes several <ymark>16-bit logic gates</ymark> that will be needed for constructing our target computer platform. HDL programs treat multi-bit values like single-bit values, except that the values can be indexed in order to access individual bits. For example, if `in` and `out` represent 16-bit values, then `out [3] = in[5]` sets the 3rd bit of `out` to the value of the 5th bit of `in`. The bits are indexed from right to left, the rightmost bit being the 0’th bit and the leftmost bit being the 15’th bit (in a 16-bit setting).
 
 ---
 The first multi-bit gate we will build is the <bmark>16-bit Not gate</bmark>, which applies the Boolean operation `Not` to every one of the input bits.
@@ -659,7 +664,7 @@ Mux(a= a[15], b= b[15], sel= sel, out= out[15]);
 
 ```  
 ---
-The last set of gates we will build are the <bmark>multi-way versions of basic gates</bmark>. Logic gates that operate on one or two inputs have natural generalization to multi-way variants that operate on more than two inputs.
+The last set of gates we will build are the <bmark>multi-way versions</bmark> of basic gates. Logic gates that operate on one or two inputs have natural generalization to multi-way variants that operate on more than two inputs.
 
 ---
 The first gate in this set is the <bmark>multi-way Or gate</bmark>. An m-way `Or` gate outputs `1` when at least one of its `m` input bits is `1`, and `0` otherwise. Our target computer will need an 8-way variant of this gate:
@@ -729,6 +734,8 @@ IN a[16], b[16], c[16], d[16], sel[2];
 
 OUT out[16];
 
+// If you look at the truth table, you can see that the sel[0] bit selects between a/b (first group) and c/d (second group),
+and the sel[1] bit selects between the outputs of the first group and the second group.
 PARTS:
 
 // First level: Select between a/b and c/d using sel[0]
@@ -794,8 +801,7 @@ IN in, sel[2];
 
 OUT a, b, c, d;
 
-  
-
+// Performs the inverse of the multi-way multiplexer operation.
 PARTS:
 
 DMux(in= in, sel= sel[1], a= first, b= second);
@@ -839,7 +845,7 @@ DMux4Way(in= second, sel= sel[0..1], a= e, b= f, c= g, d= h);
 
 ## Chapter 2: Boolean arithmetic
 
-🎯 Objective: Use the gates from chapter 1 to build an ALU (Arithmetic logic unit).
+🎯 **Objective**: Use the gates from chapter 1 to build an ALU (Arithmetic logic unit).
 
 The <bmark>ALU</bmark> is the centerpiece chip that executes all the arithmetic and logical operations performed by the computer.
 
@@ -862,7 +868,7 @@ In a <bmark>positional numeral system</bmark>, the <pmark>radix</pmark> or <ymar
 
 Computers represent numbers in binary. Any number can be represented by a sequence of bits (binary digits), which in turn may be represented by any mechanism capable of being in two mutually exclusive states.
 
-Integer numbers are unbounded: for any given number $x$, there are integers that are less than $x$ and integers greater than $x$. However, computers are finite machines that use a fixed word size for representing numbers. An 8-bit register can represent $2^8 = 256$ different things. Using $n$ bits, we can represent all the nonnegative integers ranging from $0$ to $2^n - 1$.
+Integer numbers are <ymark>unbounded</ymark>: for any given number $x$, there are integers that are less than $x$ and integers greater than $x$. However, computers are finite machines that use a fixed word size for representing numbers. An 8-bit register can represent $2^8 = 256$ different things. Using $n$ bits, we can represent all the nonnegative integers ranging from $0$ to $2^n - 1$.
 
 ---
 The three common methods of extending the binary numeral system to represent <bmark>signed numbers</bmark> (i.e. positive, negative, and zero) numbers are:
@@ -885,7 +891,7 @@ The two's complement of an N-bit number is the complement of that number with re
 
 $N = 3$
 
-$2^N = 2^3 = 8_{10} = 1000_2$
+$2^N = 2^3 = 1000_2 (8_{10})$
 
 If, $\space x = 011_2 \space (3_{10})$
 
@@ -899,27 +905,27 @@ $011_2 + 101_2 = 1000_2 = 2^N$
 1. First, subtract from the maximum number in the N-bit system, that is $2^N - 1$. This term in binary is actually a simple number consisting of 'all 1s', and a subtraction from it can be done by simply inverting all bits in the number. The number obtained in this step is called the **ones' complement** because summing it with the original number yields 'all 1s'.
 2. Secondly, add one to the result.
 
-| Bits | Unsigned value | Signed value (Two's complement) |
-|------|----------------|---------------------------------|
-| 000  | 0              | 0                               |
-| 001  | 1              | 1                               |
-| 010  | 2              | 2                               |
-| 011  | 3              | 3                               |
-| 100  | 4              | -4                              |
-| 101  | 5              | -3                              |
-| 110  | 6              | -2                              |
-| 111  | 7              | -1                              |
+| Bits | Signed value (Two's complement) | Unsigned value |
+|------|---------------------------------|----------------|
+| 000  | 0                               | 0              |
+| 001  | 1                               | 1              |
+| 010  | 2                               | 2              |
+| 011  | 3                               | 3              |
+| 100  | -4                              | 4              |
+| 101  | -3                              | 5              |
+| 110  | -2                              | 6              |
+| 111  | -1                              | 7              |
 
 ---
-Here is <bmark>why the two's complement system works</bmark>. Given a set of all possible N-bit values, we can assign the lower (by the binary value) half to be the integers from $0$ to $(2^{N-1} - 1)$ inclusive and the upper half to be $-2^{N-1}$ to $-1$ inclusive. The upper half (again, by the binary value) can be used to represent negative integers from $-2^{N-1}$ to $-1$ because, under addition modulo $2^N$ they behave the same way as those negative integers. That is to say that, because $i + j \bmod 2^N = i + (j + 2^N) \bmod 2^N$, any value in the set $\{j + k2^N \space | \space k \space is \space an \space integer\}$ can be used in place of $j$. Fundamentally, the system counts negative numbers by counting backwards and wrapping around.
+Here is <bmark>why the two's complement system works</bmark>. Given a set of all possible N-bit values, we can assign the lower (by the binary value) half to be the integers from $0$ to $(2^{N-1} - 1)$ inclusive and the upper half to be $-2^{N-1}$ to $-1$ inclusive. The upper half (again, by the binary value) can be used to represent negative integers from $-2^{N-1}$ to $-1$ because, under addition modulo $2^N$ they behave the same way as those negative integers.
 
 Given $2^N = 2^3$, these are some examples:
 
-| Addition in the two's complement system      | Addition modulo $2^3$                                             |
-|----------------------------------------------|-------------------------------------------------------------------|
-| $-4 + 3 = -1$ (represented as $7$ in binary) | $4 + 3 \bmod 8 = 7$ (the two's complement representation of $-1$) |
-| $-3 + 3 = 0$ (represented as $0$ in binary)  | $5 + 3 \bmod 8 = 8$ (the two's complement representation of $0$)  |
-| $-2 + 3 = 1$ (represented as $1$ in binary)  | $6 + 3 \bmod 8 = 1$ (the two's complement representation of $1$)  |
+| Addition in the two's complement system      | Addition modulo $2^3$                                              |
+|----------------------------------------------|--------------------------------------------------------------------|
+| $-4 + 3 = -1$ (represented as $7$ in binary) | $4 + 3 \bmod 8 = 7$ (the two's complement representation of $-1$ ) |
+| $-3 + 3 = 0$ (represented as $0$ in binary)  | $5 + 3 \bmod 8 = 8$ (the two's complement representation of $0$ )  |
+| $-2 + 3 = 1$ (represented as $1$ in binary)  | $6 + 3 \bmod 8 = 1$ (the two's complement representation of $1$ )  |
 
 ---
 The <bmark>two's complement system has the following advantages</bmark> over other systems for representing signed numbers:
@@ -949,11 +955,11 @@ A <bmark>pair of binary numbers can be added</bmark> bitwise from right to left,
 
 ```
 
-When adding in the two's complement system, any extra carry bit is discarded, such that the result and the addends always have the same number of bits. This is effectively the same as applying the modulo operator. For any number $x$, computing $x \bmod 2^N$ essentially results in keeping the lowest $N$ bits of the number $x$. As explained in the two's complement section, this modulo operation is what makes the two's complement system work.
+When adding in the two's complement system, any extra carry bit is discarded, such that the result and the addends always have the same number of bits. This is effectively the same as applying the <pmark>modulo operator</pmark>. For <ymark>any number $x$, computing $x \bmod 2^N$ essentially results in keeping the lowest $N$ bits of the number $x$ </ymark>. As explained in the two's complement section, this modulo operation is what makes the two's complement system work.
 
 ---
 
-An <bmark>adder</bmark> or summer is a digital circuit used in the ALU to perform addition on binary numbers. We saw (from the elementary school style addition) that computer hardware for binary addition of two n-bit numbers can be built from logic gates designed to calculate the sum of three bits (pair of bits plus carry bit). These are the following hierarchy of adders that will be built:
+An <bmark>adder</bmark> or <pmark>summer</pmark> is a digital circuit used in the ALU to perform addition on binary numbers. We saw (from the elementary school style addition) that computer hardware for binary addition of two n-bit numbers can be built from logic gates designed to calculate the sum of three bits (pair of bits plus <ymark>carry bit</ymark>). These are the following hierarchy of adders that will be built:
 
 ---
 A <bmark>half adder</bmark> is designed to add two bits.
@@ -1155,7 +1161,7 @@ The <bmark>Arithmetic logic unit (ALU)</bmark> is a chip designed to compute a s
 | x  | y | 0  | 0  | 0  | 0  | 0 | 0  | x&y  | x AND y                 |
 | x  | y | 0  | 1  | 0  | 1  | 0 | 1  | x\|y | x OR y                  |
 
-The Hack ALU operates on two 16-bit two's complement integers denoted `x` and `y`, an on six 1-bit inputs, called **control bits**. The control bits "tell" the ALU which function to compute. Each control bit effects a standalone conditional micro-action:
+The Hack ALU operates on two 16-bit two's complement integers denoted `x` and `y`, and on six 1-bit inputs, called <pmark>control bits</pmark>. The control bits "tell" the ALU which function to compute. <ymark>Each control bit effects a standalone conditional micro-action</ymark>:
 
 ```
 1. if (zx) then x = 0 else x = x
@@ -1171,7 +1177,7 @@ The Hack ALU operates on two 16-bit two's complement integers denoted `x` and `y
 6. if (no) then out = !out else out = out
 ```
 
-> It may be instructive to describe the thought process that led to the design of this particular ALU. First, we made a list of all the primitive operations that we wanted our computer to be able to perform. Next, we used backward reasoning to figure out how x, y, and out can be manipulated in binary fashion in order to carry out the desired operations. These processing requirements, along with our objective to keep the ALU logic as simple as possible, have led to the design decision to use six control bits, each associated with a straightforward binary operation.
+> It may be instructive to describe the thought process that led to the design of this particular ALU. First, we made a list of all the primitive operations that we wanted our computer to be able to perform. Next, we used backward reasoning to figure out how `x`, `y`, and `out` can be manipulated in binary fashion in order to carry out the desired operations. These processing requirements, along with our objective to keep the ALU logic as simple as possible, have led to the design decision to use six control bits, each associated with a straightforward binary operation.
 
 ```hdl
 /**
@@ -1229,15 +1235,15 @@ x[16], y[16], // 16-bit inputs
 
 zx, // zero the x input?
 
-nx, // negate the x input?
+nx, // NOT the x input?
 
 zy, // zero the y input?
 
-ny, // negate the y input?
+ny, // NOT the y input?
 
 f, // compute (out = x + y) or (out = x & y)?
 
-no; // negate the out output?
+no; // NOT the out output?
 
 OUT
 
@@ -1255,9 +1261,9 @@ PARTS:
 
 Mux16(a= x, sel= zx, out= x1);
 
-Not16(in= x1, out= x1Negated);
+Not16(in= x1, out= x1Notted);
 
-Mux16(a= x1, b= x1Negated, sel= nx, out= x2);
+Mux16(a= x1, b= x1Notted, sel= nx, out= x2);
 
   
 
@@ -1265,11 +1271,10 @@ Mux16(a= x1, b= x1Negated, sel= nx, out= x2);
 
 Mux16(a= y, sel= zy, out= y1);
 
-Not16(in= y1, out= y1Negated);
+Not16(in= y1, out= y1Notted);
 
-Mux16(a= y1, b= y1Negated, sel= ny, out= y2);
+Mux16(a= y1, b= y1Notted, sel= ny, out= y2);
 
-  
 
 // function
 
@@ -1283,9 +1288,9 @@ Mux16(a= andded, b= summed, sel= f, out= out1);
 
 // output post-processing
 
-Not16(in= out1, out= out1Negated);
+Not16(in= out1, out= out1Notted);
 
-Mux16(a= out1, b= out1Negated, sel= no, out= out, out[15]= outFirst, out[0..7]= outLeft, out[8..15]= outRight);
+Mux16(a= out1, b= out1Notted, sel= no, out= out, out[15]= outFirst, out[0..7]= outLeft, out[8..15]= outRight);
 
   
 
@@ -1297,20 +1302,20 @@ And(a= true, b= outFirst, out=ng);
 
 // zr status bit
 
-Or8Way(in= outLeft, out= zrLeft);
+Or8Way(in= outLeft, out= isOutLeftAllZeroes);
 
-Or8Way(in= outRight, out= zrRight);
+Or8Way(in= outRight, out= isOutRightAllZeroes);
 
-Or(a= zrLeft, b= zrRight, out= zrLeftOrZrRight);
+Or(a= isOutLeftAllZeroes, b= isOutRightAllZeroes, out= isOutLeftOrRightAllZeroes);
 
-Not(in= zrLeftOrZrRight, out= zr);
+Not(in= isOutLeftOrRightAllZeroes, out= zr);
 
 }
 ```
 
 ## Chapter 3: Memory
 There are two types of chips:
-1. <bmark>Combinational chips</bmark> compute functions that depend solely on combinations of their input values. They cannot maintain state. All the chips built thus far are combinational chips.
+1. <pmark>Combinational chips</pmark> compute functions that depend solely on combinations of their input values. They cannot maintain state. All the chips built thus far are combinational chips.
 2. <bmark>Sequential chips</bmark> compute functions that depend on both their input values and their previous state. They have "memory" and can preserve data over time.
 
 ---
@@ -1335,7 +1340,7 @@ The clock hardware implementation is usually an oscillator that generates a squa
 ![Clock signal](/docs/assets/nand-images/hertz.webp)
 <em><a href="https://www.xtronical.com/6502computerep3/">Image source</a></em>
 
-The elapsed time between the beginning of a "tick" and the end of a subsequent "tock" is called a **clock cycle**.
+The elapsed time between the beginning of a "tick" and the end of a subsequent "tock" is called a <pmark>clock cycle</pmark>.
 
 The clock is used to synchronize the sequential chips. Using the hardware’s circuitry, this signal is simultaneously broadcast to every sequential chip throughout the computer platform.
 
@@ -1371,8 +1376,10 @@ All DFFs in a computer are connected to the same clock signal.
 This reliable and predictable behavior of DFFs is crucial for data synchronization across the computer platform. There are physical delays in the propagation of signals through the computer’s hardware, e.g. It takes some time for the input into the ALU to stabilize and for the ALU to compute its output.
 
 We solve this problem by using <bmark>discrete time</bmark>:
-* First, the `cycle length` must be set to a value slightly greater than the `maximum propagation delay` in the computer
+* First, the <bmark>cycle length</bmark> must be set to a value slightly greater than the <pmark>maximum propagation delay</pmark> in the computer
 * Secondly, we can ONLY use the chip's output at end of cycles, and ignore all the fluctuations that can occur within cycles. This is achieved by simply using a DFF (because it's edge-triggered) to store the output of the chip. In our ALU example, the output of the ALU is stored in a register, which ignores the unstable output of the ALU due to propagation delays.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/5Qnbcx4HHBs?si=BBUY2pUwy38YRriv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ![Discrete time](/docs/assets/nand-images/dff_sync.png)
 
@@ -1409,7 +1416,7 @@ CHIP Bit {
 }
 ```
 
-A multi-bit register of **width** `w` can be constructed from an array of `w` 1-bit registers. The basic design parameter of such a register is its width — the number of bits that it holds — e.g., `16`, `32`, or `64`.
+A multi-bit register of <pmark>width</pmark> `w` can be constructed from an array of `w` 1-bit registers. The basic design parameter of such a register is its width — the number of bits that it holds — e.g., `16`, `32`, or `64`.
 The multi-bit contents of such registers are typically referred to as **words**.
 
 |           |                                                               |
@@ -1453,7 +1460,7 @@ A <bmark>RAM chip</bmark> (aka direct access memory unit) is a sequential chip t
 The term random access memory derives from the requirement that any randomly chosen word in the memory — irrespective of its physical location — be accessed directly, in equal speed.
 
 This requirement can be satisfied as follows:
-* First, we assign each word in the `n`-register RAM a unique address (an integer between `0` to `n-1`), according to which it will be accessed.
+* First, we assign each word in the n-register RAM a unique address (an integer between `0` to `n-1`), according to which it will be accessed.
 * Second, in addition to building an array of `n` registers, we build a gate logic design that, given an address `j`, is capable of selecting the individual register whose address is `j`.
 
 > In sum, a classical RAM device accepts three inputs: a data input, an address input, and a load bit.
@@ -1477,11 +1484,6 @@ The basic design parameters of a RAM device are:
 
 ```hdl
 CHIP RAM8 {
-    IN in[16], load, address[3];
-    OUT out[16];
-
-    PARTS:
-    CHIP RAM8 {
     IN in[16], load, address[3];
     OUT out[16];
 
@@ -1619,31 +1621,34 @@ A <bmark>machine language</bmark> is an agreed-upon formalism, designed to code 
 1. Direct execution in, and
 2. Total control of, a given hardware platform.
 
-A machine language is the fine line where hardware and software meet: it can be considered as both a programming tool and an integral part of the hardware platform.
+A <pmark>machine language</pmark> is the <ymark>fine line where hardware and software meet</ymark>: it can be considered as both a programming tool and an integral part of the hardware platform.
 
 
 ---
 
 This chapter only focuses on the machine language and leaves the hardware details to the next chapter. To give a general description of machine languages, it's sufficient to only use three main hardware abstractions:
-1. **Processor**: The processor, normally called the CPU (Central Processing Unit), is a device capable of performing a fixed set of elementary operations. These typically include:
+1. <pmark>Processor</pmark>: The processor, normally called the CPU (Central Processing Unit), is a device capable of performing a fixed set of elementary operations. These typically include:
     * Arithmetic operations (`addition`, `subtraction`, `multiplication`, `division`)
     * Logical operations (`AND`, `OR`, `NOT`)
     * Memory access operations (`load`, `store`)
-    * Control/Branching operations (`jump`, `branch`). Branching is used to conditional or unconditional jump to selected locations in a program. Branching serves several purposes like: looping, conditional execution, and subroutine calls.
+    * Control/Branching operations (`jump`, `branch`). <bmark>Branching</bmark> is used to **conditionally** or **unconditionally** jump to selected locations in a program. Branching serves several purposes like:
+      * looping,
+      * conditional execution,
+      * and subroutine calls.
    
     The operands of these operations and their results/output are binary values that are read and stored in registers or selected memory locations.
-2. **Memory**: The term memory refers loosely to the collection of hardware devices that store data and instructions in a computer.
-3. **Set of registers**: Memory access is a relatively slow operation, requiring long instruction formats. For this reason, most processors are equipped with
+2. <gmark>Memory</gmark>: The term memory refers loosely to the collection of hardware devices that store data and instructions in a computer.
+3. <ymark>Set of registers</ymark>: Memory access is a relatively slow operation, requiring long instruction formats. For this reason, most processors are equipped with
     several registers, each capable of holding a single value, allowing the processor to manipulate data and instructions quickly.
 
 ---
 
 A machine language is a series of coded instructions. For example, an instruction in a 16-bit computer may be `1010001100011001`.
-In order to figure out what this instruction means, we must know the instruction set of the underlying hardware platform.
+In order to figure out what this instruction means, we must know the <pmark>instruction set</pmark> of the underlying hardware platform.
 For example, the language, may be such that each instruction consists of four 4-bit fields: The left-most field codes a CPU operation, and the remaining
 three fields code the operation's operands.
 
-Since binary codes are rather cryptic, machine languages are normally specified using both binary codes and symbolic mnemonics.
+Since binary codes are rather cryptic, machine languages are normally specified using both <pmark>binary codes</pmark> and <bmark>symbolic mnemonics</bmark>.
 A mnemonic is a short, easy-to-remember name for a binary code.
 For example, the binary code `1010001100011001` may be associated with the mnemonic `ADD R1, R2, R3`.
 
@@ -1657,7 +1662,7 @@ represent machine instructions.
 
 ---
 
-The Hack computer is a von Neumann platform. It's a simple computer with a 16-bit architecture which has:
+The Hack computer is a <pmark>von Neumann platform</pmark>. It's a simple computer with a 16-bit architecture which has:
 1. A CPU
 2. A **read-only memory (ROM)** that stores the computer instructions. It is 16-bit wide and have a 15-bit address space (i.e. it can hold $32K (2^{15})$ 16-bit instructions).
 3. A **random access memory (RAM)** that stores the computer data. It is also 16-bit wide and have a 15-bit address space.
@@ -1671,10 +1676,10 @@ So, depending on the context, the contents of `A` can be interpreted as:
    * A memory address in the instruction memory
 
 > Why do we overload the `A` register with so many roles?
-> Since Hack instructions are 16-bit wide, and since addresses are specified using 15-bits, it's impossible to pack both an operation code and an address in one instruction.
+> Since Hack instructions are 16-bit wide, and since addresses are specified using 15-bits, it's impossible to pack both an <pmark>operation code</pmark> and an address in one instruction.
 > Thus, the syntax of the Hack language mandates that memory access instructions operate on an implicit memory location labeled `M`, for example `D=M+1`.
 > In order to resolve this address, the convention is that `M` always refers to the memory word whose address is the current value of the `A` register.
-> **That is `M` is a synonym for `RAM[A]`**. This implies, we must first load the address into the `A` register before we can access the memory word at that address.
+> <gmark>That is `M` is a synonym for `RAM[A]`</gmark>. This implies, we must first load the address into the `A` register before we can access the memory word at that address.
 >
 > This also applies to instruction memory access. To jump to a specific instruction, we must first load the address of that instruction into the `A` register.
 > 
@@ -1685,17 +1690,17 @@ So, depending on the context, the contents of `A` can be interpreted as:
 ---
 
 The Hack language consists of two generic instructions:
-1. An address instruction (A-instruction) and
-2. A compute instruction (C-instruction).
+1. An <pmark>address instruction (A-instruction)</pmark> and
+2. A <ymark>compute instruction (C-instruction)</ymark>.
 
 ---
 
 The <bmark>A-instruction</bmark> is used to set the `A` register to a 15-bit value:
 
 A-instruction's symbolic representation: `@value` (where `value` is a non-negative decimal number or a symbol referring to such a number).
-A-instruction's binary representation: `0value` (where `value` is a 15-bit binary number).
+A-instruction's binary representation is: `0value` (where `value` is a 15-bit binary number).
 
-The leftmost bit is the A-instruction marker bit (aka opcode), which is always set to `0`.
+The leftmost bit is the <pmark>A-instruction marker bit (aka opcode)</pmark>, which is always set to `0`.
 
 The A-instruction is used for three different purposes:
 1. It provides the only way to enter a constant into the computer under program control.
@@ -1705,18 +1710,25 @@ The A-instruction is used for three different purposes:
 ---
 
 The <bmark>C-instruction</bmark> is used to perform a computation. The instruction code is a specification that answers three questions:
-1. What to compute?
-2. Where to store the computed value?
-3. What to do next?
+1. <pmark>What to compute?</pmark>
+2. <gmark>Where to store the computed value?</green>
+3. <ymark>What to do next?</ymark>
 
-C-instruction's symbolic representation: `dest=comp;jump` (where `dest` is the destination register, `comp` is the computation, and `jump` is the jump condition). Both `dest=` and `;jump` are optional.
-C-instruction's binary representation: `1 1 1 a c_1 c_2 c_3 c_4 c_5 c_6 d_1 d_2 d_3 j_1 j_2 j_3` (where `a_n` & `c_n` specify the comp component; `d_n` specifies the dest component, and `j_n` specifies the jump component).
+C-instruction's symbolic representation is: `dest=comp;jump`, where:
+* `dest=` is the destination register (optional),
+* `comp` is the computation, and
+* `;jump` is the jump condition (optional).
 
-The leftmost bit is the C-instruction marker bit (aka opcode), which is always set to `1`. The next wo bits are not used and are set to `1`.
+C-instruction's binary representation is: `1 1 1 a c_1 c_2 c_3 c_4 c_5 c_6 d_1 d_2 d_3 j_1 j_2 j_3`, where:
+* `a_n` & `c_n` specify the comp component;
+* `d_n` specifies the dest component, and
+* `j_n` specifies the jump component.
+
+The leftmost bit is the <pmark>C-instruction marker bit (aka opcode)</pmark>, which is always set to `1`. The next two bits are not used and are set to `1`.
 
 ---
 
-The `dest` component of the C-instruction specifies where to store the computed value (the ALU output).
+The <bmark>`dest` component of the C-instruction</bmark> specifies where to store the computed value (the ALU output).
 
 The first and second bits specify whether to store the computed value in the `A` register and in the `D` register, respectively.
 The third bit specifies whether to store the computed value in the data memory location specified by the `A` register.
@@ -1734,9 +1746,9 @@ The third bit specifies whether to store the computed value in the data memory l
 
 ---
 
-The `comp` component of the C-instruction specifies what the ALU should compute.
+The <bmark>`comp` component of the C-instruction</bmark> specifies what the ALU should compute.
 We can compute a fixed set of functions on the `D`, `A`, and `M` registers.
-The a-bit specifies whether the `A` register or the `M` register should be used as the ALU's input.
+The `a-bit` specifies whether the `A` register or the `M` register should be used as the ALU's input.
 And the six c-bits specifies the function to be computed.
 All 7-bit comprise the `comp` field. While this 7-bit field can specify $128$ different possible operations, only $28$ are used in the Hack language.
 
@@ -1763,8 +1775,8 @@ All 7-bit comprise the `comp` field. While this 7-bit field can specify $128$ di
 
 ---
 
-The `jump` component of the C-instruction specifies a jump condition, namely, which command to fetch and execute next.
-Whether a not a jump should actually materialize depends on the three j-bits of the jump component and the ALU's output value.
+The <bmark>`jump` component of the C-instruction</bmark> specifies a jump condition, namely, which command to fetch and execute next.
+Whether a jump should actually materialize depends on the three `j-bits` of the jump component and the ALU's output value.
 It is a 3-bit field that can specify one of $8$ different jump conditions.
 
 | j1 (`out < 0`)  | j2 (`out = 0`)  | j3 (`out > 0`)  | **jump** mnemonic | Effect                                                                    |
@@ -1793,21 +1805,21 @@ Example: We want the computer to increment the value of `DataMemory[7]` by $1$ a
 
 Assembly commands can refer to memory addresses using either constants or symbols. Symbols are introduced into assembly programs in the following three ways:
 
-1. Predefined symbols: A subset of RAM addresses have predefined symbols:
-    * Virtual registers: The symbols `R0` to `R15` refer to RAM addresses `0` to `15`, respectively.
-    * Predefined pointers: The symbols `SP`, `LCL`, `ARG`, `THIS`, and `THAT` refer to RAM addresses `0`, `1`, `2`, `3`, and `4`, respectively.
-    * I/O pointers: The symbols `SCREEN` and `KBD` refer to RAM addresses `16384` (0x4000) and `24576` (0x6000), respectively, which are the base addresses of the screen and
+1. <pmark>Predefined symbols</pmark>: A subset of RAM addresses have predefined symbols:
+    * **Virtual registers**: The symbols `R0` to `R15` refer to RAM addresses `0` to `15`, respectively.
+    * **Predefined pointers**: The symbols `SP`, `LCL`, `ARG`, `THIS`, and `THAT` refer to RAM addresses `0`, `1`, `2`, `3`, and `4`, respectively.
+    * **I/O pointers**: The symbols `SCREEN` and `KBD` refer to RAM addresses `16384` (0x4000) and `24576` (0x6000), respectively, which are the base addresses of the screen and
     keyboard memory maps.
-2. Label symbols: These are user-defined symbols serve to label destinations of goto commands. They are declared by the pseudo-command `(Xxx)`. This directive defines the symbol
+2. <gmark>Label symbols</gmark>: These are user-defined symbols that serve to label destinations of goto commands. They are declared by the pseudo-command `(Xxx)`. This directive defines the symbol
 `Xxx` to refer to the ROM address holding the next command in the program.
-3. Variable symbols: Any user-defined symbol `Xxx` that appears in an assembly program without being predefined or declared as a label is treated as a variable.
+3. <ymark>Variable symbols</ymark>: Any user-defined symbol `Xxx` that appears in an assembly program without being predefined or declared as a label is treated as a variable.
 The assembler allocates a unique RAM address for each appearance of such a symbol and replaces the symbol with its RAM address in the assembly program.
-The instruction is of the form `@value`, where `value` is a 15-bit constant.
+The instruction is of the form `@value`, where `value` is a 15-bit (non-numerical) constant.
 
 ---
 
-The Hack platform can be connected to two peripheral devices: a screen and a keyboard.
-Both devices interact with the computer platform through memory maps.
+The Hack platform can be connected to two peripheral devices: <pmark>a screen</pmark> and a <ymark>keyboard</ymark>.
+Both devices interact with the computer platform through <bmark>memory maps</bmark>.
 This means that drawing pixels on the screen is achieved by writing binary values into a memory segment associated with the screen.
 Likewise, listening to the keyboard is done by reading a memory location associated with the keyboard.
 The physical I/O devices and their memory maps are synchronized via continuous refresh loops.
@@ -1815,9 +1827,9 @@ The physical I/O devices and their memory maps are synchronized via continuous r
 ---
 
 The Hack computer includes a black-and-white screen organized as $256$ rows of $512$ pixels per row.
-The screen’s contents are represented by an 8K memory map that starts at RAM address $16384$ ($0x4000$).
+The screen’s contents are represented by an 8K memory map that starts at RAM address $16384$ ( $0x4000$ ).
 Each row in the physical screen, starting at the screen’s top left corner, is represented in the RAM by $32$ consecutive 16-bit words.
-Thus, the pixel at row `r` from the top and column `c` from the left is mapped on the `c%16` bit (counting from LSB to MSB) of the word located at `RAM[16384 + r * 32 + c/16]`.
+Thus, the pixel at row `r` from the top and column `c` from the left is mapped on the `c%16` bit (counting from LSB to MSB) of the **word** located at `RAM[16384 + r * 32 + c/16]`.
 To write or read a pixel of the physical screen, one reads or writes the corresponding bit in the RAM-resident memory map (1 = black, 0 = white).
 
 Example:
@@ -1831,7 +1843,7 @@ M=1 // Blacken the left-most pixel.
 
 ---
 
-The Hack computer interfaces with the physical keyboard via a single-word memory map located in RAM address $24576$ ($0x6000$).
+The Hack computer interfaces with the physical keyboard via a single-word memory map located in RAM address $24576$ ( $0x6000$ ).
 Whenever a key is pressed on the physical keyboard, its 16-bit ASCII code appears in `RAM[24576]`.
 When no key is pressed, the code `0` appears in this location.
 In addition to the usual ASCII codes, the Hack keyboard recognizes the keys shown below.
@@ -1853,31 +1865,129 @@ In addition to the usual ASCII codes, the Hack keyboard recognizes the keys show
 | esc         | 140     |
 | f1-f2       | 141-152 |
 
+### Projects
+
+#### Multiplication
+
+```hack
+@R2
+M=0
+@count
+M=0
+(loop_start)
+@R1
+D=M
+@count
+D=D-M
+@loop_end
+D;JEQ
+@R0
+D=M
+@R2
+M=D+M
+@count
+M=M+1
+@loop_start
+0;JMP
+(loop_end)
+@loop_end
+0;JMP
+```
+
+#### I/O handling
+```hack
+(keyboard_loop_start)
+@KBD
+D=M
+@on_keyboard_input
+// The D register will be positive if a key is pressed
+D;JGT
+
+// Set fill color to white (i.e. "0").
+@fill_color
+M=0
+@SCREEN
+D=M
+// Jump to start if screen is already filled with white (i.e. "0").
+@keyboard_loop_start
+D;JEQ
+// Jump to paint loop
+@paint_loop_init
+0;JMP
+
+(on_keyboard_input)
+// Set fill color to black (i.e. "-1").
+@fill_color
+M=-1
+@SCREEN
+D=M
+// Jump to start if screen is already filled with black (i.e. "-1").
+@keyboard_loop_start
+D;JLT
+// Else, continue as normal
+
+(paint_loop_init)
+@R1
+M=0
+(paint_loop_start)
+@SCREEN
+D=A
+@R1
+A=D+M
+
+// Temporarily store the screen address in the D register, then store it in a "temp" variable.
+// Next, set the D register to the value of the "fill_color" variable.
+// Finally, read the screen address from the "temp" variable.
+// All this gymnastics allows us to store the fill color in the D register.
+D=A
+@temp
+M=D
+@fill_color
+D=M
+@temp
+A=M
+M=D
+
+@R1
+MD=M+1
+// The screen has 8kb size, so we repeat this loop for the entire size to fill the screen.
+@8192
+D=A-D
+@paint_loop_start
+D;JGT
+@keyboard_loop_start
+0;JMP
+```
+
 ---
 
 ## Chapter 5: Computer Architecture
-The computer is based on a fixed hardware platform, capable of executing a fixed repertoire of simple instructions.
+The computer is based on a <pmark>fixed hardware platform</pmark>, capable of executing a <ymark>fixed repertoire</ymark> of <gmark>simple instructions</gmark>.
 However, these instructions can be combined like building blocks, yielding arbitrarily sophisticated programs.
 
-The <bmark>von Neumann architecture</bmark>, shown below, is based on a central processing unit (CPU), interacting with a memory device,
-receiving data from some input device, and sending data to some output device.
+The <bmark>von Neumann architecture</bmark>, shown below, is based on:
+
+* a central processing unit (CPU),
+* which interacts with a memory device,
+* and receives data from some input device,
+* while sending data to some output device.
 
 At the heart of this architecture lies the <bmark>stored program concept</bmark>: The computer's memory stores both the
 data that the computer manipulates and the instructions that tell the computer what to do.
 
 ![Von Neumann architecture](/docs/assets/nand-images/von_neumann_architecture.svg)
 
-A related stored program computer architecture is the <bmark>Harvard architecture</bmark>, which physically separates the memory devices used for storing data and instructions.
+A related stored program computer architecture is the <bmark>Harvard architecture</bmark>, which <ymark>physically</ymark> separates the memory devices used for storing data and instructions.
 
 ![Harvard architecture](/docs/assets/nand-images/harvard_architecture.svg)
 
 ---
 
-The CPU operation can be described as a repeated loop (aka fetch-decode-execute cycle):
-1. Fetches (i.e, reads) a binary machine instruction from a selected register in the instruction memory
-2. Decodes it
-3. Executes the specified instruction
-4. And figures out which instruction to fetch and execute next.
+The CPU operation can be described as a repeated loop (aka <pmark>fetch</pmark>-<ymark>decode</ymark>-<gmark>execute</gmark> cycle):
+1. <pmark>Fetches</pmark> (i.e, reads) a binary machine instruction from a selected register in the instruction memory
+2. <ymark>Decodes</ymark> it
+3. <gmark>Executes</gmark> the specified instruction
+4. And figures out which instruction to fetch and execute <rmark>next</rmark>.
 
 (3) and (4) are based on the fetched instruction which tells the CPU:
 * What calculation to perform
@@ -1885,17 +1995,17 @@ The CPU operation can be described as a repeated loop (aka fetch-decode-execute 
 * And which instruction to fetch and execute next
 
 The CPU executes these tasks using three main hardware elements:
-* An ALU
-* A set of registers and
-* A control unit
+* An <gmark>ALU</gmark>
+* A <pmark>set of registers</pmark> and
+* A <ymark>control unit</ymark>
 
 The first two elements were already introduced in the previous chapters.
 
 ---
 
 A computer instruction is represented as a binary code, typically 16, 32, or 64 bits wide.
-Before such an instruction can be executed, it must be decoded, and the information embedded in it must be used to signal
-various hardware devices (ALU, registers, memory) how to execute the instruction.
+Before such an instruction can be <gmark>executed</gmark>, it must be <pmark>decoded</pmark>, and the <ymark>information embedded in it must be used to signal
+various hardware devices</ymark> (ALU, registers, memory) how to execute the instruction.
 
 The instruction decoding is done by some <bmark>control unit</bmark>, which is also responsible for figuring out which
 instruction to fetch and execute next.
@@ -1903,13 +2013,13 @@ instruction to fetch and execute next.
 ---
 
 The set of registers used by the Hack computer are:
-* Data register (`D`): A 16-bit register used to store a data value. In principle, data values can just be stored in the RAM,
+* <pmark>Data register (`D`)</pmark>: A 16-bit register used to store a data value. In principle, data values can just be stored in the RAM,
  but the `D` register is used to speed up operations.
-* Address register (`A`): A 16-bit register used to store a memory address. The output of this register is connected
- to the address input ot our memory devices (RAM and ROM). Therefore, placing a value in the address register has the
+* <ymark>Address register (`A`)</ymark>: A 16-bit register used to store a memory address. The output of this register is connected
+ to the address input of our memory devices (RAM and ROM). Therefore, placing a value in the address register has the
  side effect of selecting a particular memory register, and this register makes itself available to subsequent instructions
  designed to manipulate it. The `A` register's value can be read directly as a data value.
-* Program counter (`PC`): A 16-bit register used to store the address of the next instruction. The contents of the
+* <gmark>Program counter (`PC`)</gmark>: A 16-bit register used to store the address of the next instruction. The contents of the
  PC is computed and updated as a side effect of executing the current instruction.
 
 ---
@@ -1921,19 +2031,18 @@ The Hack computer is a 16-bit machine based on the Harvard architecture, designe
 The Hack CPU interface:
 
 ```hack
-/**
-	CHIP	CPU
-	
-	IN
-	    instruction[16],	//	Instruction	to	execute.
-	    inM[16],			//	Value	of	Mem[A],	the	instruction’s	M	input
-	    reset;				//	Signals	whether	to	continue	executing	the	current	program	(reset==0)	or	restart	the	current	program	(reset==1).
+CHIP CPU
+
+IN
+    instruction[16], //	Instruction	to	execute.
+    inM[16], //	Value of Mem[A], the instruction’s M input
+    reset; // Signals whether to continue executing	the	current	program	(reset==0) or restart the current program (reset==1).
 	    
-	OUT
-	    outM[16],			//	Value	to	write	to	Mem[addressM],	the	instruction’s	M	output
-	    addressM[15],		//	In	which	address	to	write?
-	    writeM,				//	Write	to	the	Memory?
-	    pc[15];				//	address	of	next	instruction	
+OUT
+    outM[16], // Value to write to Mem[addressM], the instruction’s M output
+    addressM[15], // In	which address to write?
+    writeM,	// Write to the Memory?
+    pc[15];	// Address of next instruction	
 ```
 
 ![Hack CPU](/docs/assets/nand-images/hack_cpu.png)
@@ -1958,13 +2067,13 @@ Key points:
 The Hack instruction memory interface:
 
 ```hdl
-CHIP	ROM32K
+CHIP ROM32K
 
-    IN
-        address[15];
-    
-    OUT
-        out[16];	
+IN
+    address[15];
+
+OUT
+    out[16];	
 ```
 
 ![Hack instruction memory](/docs/assets/nand-images/hack_rom.png)
@@ -1984,11 +2093,11 @@ The Hack data memory interface:
 ```hdl
 CHIP Memory
 
-    IN
-        in[16],	load,	address[15];
-    
-    OUT
-        out[16];
+IN
+    in[16],	load,	address[15];
+
+OUT
+    out[16];
 ```
 
 ![Hack data memory](/docs/assets/nand-images/hack_data_memory.png)
@@ -2005,7 +2114,7 @@ Key points:
   * `0x0000 - 0x5FFF`: accessing an address in this range results in accessing the **RAM**.
   * `0x4000 - 0x5FFF`: accessing an address in this range results in accessing the **Screen**.
   * `0x6000`: accessing this address results in accessing the **Keyboard**.
-  * `0x6000`: accessing an address in this range is **invalid**.
+  * `>= 0x6000`: accessing an address in this range is **invalid**.
 
 ---
 
@@ -2014,8 +2123,8 @@ The interface of the topmost chip in the Hack hardware platform, named Computer:
 ```hdl
 CHIP Computer
 
-    IN
-        reset;	
+IN
+    reset;	
 ```
 
 ![Hack computer](/docs/assets/nand-images/hack_computer.png)
@@ -2035,13 +2144,13 @@ The Hack keyboard chip interface:
 ```hdl
 CHIP Keyboard
 
-    OUT
-        out[16]; //	The	scan-code	of	the	pressed	key, or	0	if	no	key	is	currently	pressed.
+OUT
+    out[16]; //	The	scan-code of the pressed key, or 0 if no key is currently pressed.
 ```
 
 Keypoint:
 * The Keyboard (memory map) is connected to a standard, physical keyboard. 
-* It is made to output the **16-bit scan-code** associated with the key which is presently pressed on the physical keyboard, or `0` if no key is pressed.
+* It is made to output the <ymark>16-bit scan-code</ymark> associated with the key which is presently pressed on the physical keyboard, or `0` if no key is pressed.
 
 ---
 
@@ -2050,13 +2159,13 @@ The Hack screen chip interface:
 ```hdl
 CHIP Screen
 
-    IN
-        in[16], //	what	to	write
-        address[13]; //	where	to	write	(or	read)
-        load, // write-enable	bit
-    
-    OUT
-        out[16]; //	Screen	value	at	the	given	address	
+IN
+    in[16], // what to write
+    address[13]; //	where to write (or read)
+    load, // write-enable bit
+
+OUT
+    out[16]; //	Screen value at the given address	
 ```
 
 Keypoint:
@@ -2083,6 +2192,10 @@ The architecture shown below is used to perform three classical CPU tasks:
 In the case of the ALU, the `c's` input stands for the 6 control bits that instruct the ALU what to compute, and the `c's`
 output stands for its `zr` and `ng` outputs.
 Taken together, the distributed behaviors that these control bits effect throughout the CPU architecture end up executing the instruction.</em>
+
+### Projects
+
+#### CPU
 
 ```hack
 // This file is part of www.nand2tetris.org
@@ -2161,6 +2274,141 @@ CHIP CPU {
 }
 ```
 
+#### Memory
+```hack
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/5/Memory.hdl
+/**
+ * The complete address space of the Hack computer's memory,
+ * including RAM and memory-mapped I/O. 
+ * The chip facilitates read and write operations, as follows:
+ *     Read:  out(t) = Memory[address(t)](t)
+ *     Write: if load(t-1) then Memory[address(t-1)](t) = in(t-1)
+ * In words: the chip always outputs the value stored at the memory 
+ * location specified by address. If load=1, the in value is loaded 
+ * into the memory location specified by address. This value becomes 
+ * available through the out output from the next time step onward.
+ * Address space rules:
+ * Only the upper 16K+8K+1 words of the Memory chip are used. 
+ * Access to address>0x6000 is invalid and reads 0. Access to any address
+ * in the range 0x4000-0x5FFF results in accessing the screen memory 
+ * map. Access to address 0x6000 results in accessing the keyboard 
+ * memory map. The behavior in these addresses is described in the Screen
+ * and Keyboard chip specifications given in the lectures and the book.
+ */
+CHIP Memory {
+    IN in[16], load, address[15];
+    OUT out[16];
+
+    PARTS:
+
+
+    // 0000 000 RAM start
+    // 0011 FFF RAM end
+    // 0100 000 Screen start
+    // 0101 FFF Screen end
+    // 0110 000 Keyboard
+
+    DMux4Way(
+        in=load,
+        sel=address[13..14],
+        a=loadRam1,
+        b=loadRam2,
+        c=loadScreen,
+        d=ignoredLoadKeyboard
+    );
+	Or(a=loadRam1, b=loadRam2, out=loadRam);
+
+    RAM16K(in=in, load=loadRam, address=address[0..13], out=ramOut);
+    Screen(in=in, load=loadScreen, address=address[0..12], out=screenOut);
+    Keyboard(out=keyboardOut);
+
+    Mux4Way16(
+        a=ramOut,
+        b=ramOut,
+        c=screenOut,
+        d=keyboardOut,
+        sel=address[13..14],
+        out=out
+    );
+}
+```
+
+#### Computer
+
+```hack
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/5/Computer.hdl
+/**
+ * The Hack computer, consisting of CPU, ROM and RAM.
+ * When reset = 0, the program stored in the ROM executes.
+ * When reset = 1, the program's execution restarts. 
+ * Thus, to start running the currently loaded program,
+ * set reset to 1, and then set it to 0. 
+ * From this point onwards, the user is at the mercy of the software.
+ * Depending on the program's code, and whether the code is correct,
+ * the screen may show some output, the user may be expected to enter
+ * some input using the keyboard, or the program may do some procerssing. 
+ */
+CHIP Computer {
+
+    IN reset;
+
+    PARTS:
+
+    Memory(
+        in= cpuMemoryOut,
+        load= writeCpuMemoryOut,
+        address= cpuMemoryOutAddress,
+        out= memoryOut
+    );
+
+    ROM32K(
+        address= programCounter,
+        out= instruction
+    );
+
+    CPU(
+        inM= memoryOut,
+        instruction= instruction,
+        reset= reset,
+        outM= cpuMemoryOut,
+        writeM= writeCpuMemoryOut,
+        addressM= cpuMemoryOutAddress,
+        pc= programCounter
+    );
+}
+```
+
+## Chapter 6: Assembler
+A binary instruction as shown is preceding chapters is an agreed-upon package of <ymark>micro-codes</ymark> designed to be decoded and executed
+by some target hardware platform.
+
+To improve readability and ease of programming, we use a symbolic language called <bmark>assembly language</bmark> to represent these binary instructions.
+An assembly language is made up of a set of <ymark>mnemonic symbols</ymark> and <gmark>symbolic addresses</gmark> that are translated by an <pmark>assembler</pmark> into binary code.
+The assembler parses each assembly instruction into its underlying fields, e.g. `load`, `R3`, and `7`, translates each field into its equivalent binary code,
+and finally assembles the generated bits into a binary instruction that can be executed by the hardware.
+
+Assembly programs can use symbolic references to memory addresses.
+
+An assembler handles this by using a
+<pmark>symbol table</pmark> (data structure) to keep track of the correspondence between symbolic labels and physical memory addresses.
+
+each mnemonic component (field) of a symbolic Cinstruction is translated into its corresponding bit code, according to figure
+6.2, and each decimal constant xxx in a symbolic A-instruction is translated
+into its equivalent binary code.
+
+We propose basing the assembler on a software architecture consisting of
+a Parser module for parsing the input into instructions and instructions into
+fields, a Code module for translating the fields (symbolic mnemonics) into
+binary codes, and a Hack assembler program that drives the entire
+translation process.
+
+
 ## Chapter 7: Virtual machine 1 (Processing)
 Before a high-level program can run on a target computer, it must be translated into the computer’s machine language.
 
@@ -2168,9 +2416,9 @@ Modern compilers typically translate high-level programs into an intermediate co
 * The <pmark>frontend tier</pmark> involves a compiler program that translates the high-level code into intermediate VM commands.
 * The <pmark>backend tier</pmark> involves a <bmark> VM translator </bmark> program that translates the VM commands into the machine instructions of the target hardware platform.
 
-Cross-platform compatibility is a key benefit that this two-tiered compilation model has over a traditional direct-to-machine code compilation model. The price paid for the elegance and power of the VM framework is reduced efficiency.
+<ymark>Cross-platform compatibility</ymark> is a key benefit that this two-tiered compilation model has over a traditional direct-to-machine code compilation model. The price paid for the elegance and power of the VM framework is reduced efficiency.
 
-This chapter presents a typical VM architecture and VM language, conceptually similar to the Java Virtual Machine (JVM) and bytecode, respectively.
+This chapter presents a typical <pmark>VM architecture</pmark> and <ymark>VM language</ymark>, conceptually similar to the <pmark>Java Virtual Machine (JVM)</pmark> and <ymark>bytecode</ymark>, respectively.
 
 - - -
 
@@ -2185,8 +2433,8 @@ One way to satisfy these somewhat conflicting requirements is to base the interi
 - - -
 
 The centerpiece of the stack model is an <pmark>abstract data structure (ADT)</pmark> called a <bmark>Stack </bmark>. A stack is a sequential ADT with two key operations:
-1. **Push**: Adds a value to the top of the stack.
-2. **Pop**: Removes the stack’s top value.
+1. <pmark>Push</pmark>: Adds a value to the top of the stack.
+2. <ymark>Pop</ymark>: Removes the stack’s top value.
 
 The push/pop combination leads to a <bmark>last-in-first-out (LIFO)</bmark> access logic. This access logic lends itself perfectly to program translation and execution purposes.
 
@@ -2240,28 +2488,28 @@ For example, if the local variable `x` and the field `y` have been mapped on `lo
 Our VM model is stack-based: all the VM operations take their operands from, and store their results on, the stack.
 
 A VM program is a sequence of VM commands that fall into four categories:
-* **Push / pop commands** transfer data between the stack and memory segments.
-* **Arithmetic-logical commands** perform arithmetic and logical operations.
-* **Branching commands** facilitate conditional and unconditional branching operations.
-* **Function commands** facilitate function call-and-return operations.
+* <pmark>Push / pop commands</pmark> transfer data between the stack and memory segments.
+* <ymark>Arithmetic-logical commands</ymark> perform arithmetic and logical operations.
+* <gmark>Branching commands</gmark> facilitate conditional and unconditional branching operations.
+* <rmark>Function commands</rmark> facilitate function call-and-return operations.
 
 In this chapter we focus on the arithmetic-logical and push/pop commands.
 
 - - -
 
 ### VM Specification (Part 1)
-* **Comments and white space**: Lines beginning with `//` are considered comments and are ignored. Blank lines are permitted and are ignored.
-* **Push / Pop Commands**:
+* <pmark>Comments and white space</pmark>: Lines beginning with `//` are considered comments and are ignored. Blank lines are permitted and are ignored.
+* <ymark>Push / Pop Commands</ymark>:
     * `push segment index`: Pushes the value of `segment[index]` onto the stack.
     * `pop segment index`: Pops the top stack value and stores it in `segment[index]`.
-* **Arithmetic-Logical Commands**:
+* <gmark>Arithmetic-Logical Commands</gmark>:
     * **Arithmetic commands**: `add`, `sub`, `neg` (unary).
     * **Comparison commands**: `eq`, `gt`, `lt`.
     * **Logical commands**: `and`, `or`, `not` (unary).
 
 The commands `add`, `sub`, `eq`, `gt`, `lt`, `and`, and `or` have <ymark>two implicit operands</ymark>. To execute each one of them, the VM implementation pops two values off the stack, computes the stated function on them, and pushes the resulting value back onto the stack. The remaining `neg` and `not` commands have <ymark>one implicit operand</ymark> and work the same way.
 
-Implicit here means that the operand is not part of the command syntax: since the command is designed to always operate on the two top stack values, there is no need to specify them.
+<bmark>Implicit</bmark> here means that the operand is not part of the command syntax: since the command is designed to always operate on the two top stack values, there is no need to specify them.
 
 - - -
 
@@ -2284,13 +2532,13 @@ D = A
 M = D
 ```
 
-From this point onward, the VM translator can handle each `push x` and `pop x` command by generating assembly code that realizes the operations `RAM[++sp] = x` and `x = RAM[--sp]`, respectively.
+From this point onward, the VM translator can handle each `push x` and `pop x` command by generating assembly code that realizes the operations `RAM[sp++] = x` and `x = RAM[--sp]`, respectively.
 
 For the VM arithmetic-logical commands, conveniently, all the commands share exactly the same access logic: popping the command’s operands off the stack, carrying out a simple calculation, and pushing the result onto the stack.
 
 - - -
 
-In principle, the most important thing is correctly and effienciently implementing the VM abstraction on a hardware platform (I.e. The actual implementation details are irrelevant). Nevertheless, VM architects normally publish basic implementation guidelines, known as <bmark>standard mappings</bmark>, for different hardware platforms.
+In principle, the most important thing is correctly and efficiently implementing the VM abstraction on a hardware platform (i.e. The actual implementation details are irrelevant). Nevertheless, VM architects normally publish basic implementation guidelines, known as <bmark>standard mappings</bmark>, for different hardware platforms.
 
 ### VM program
 A <bmark>VM program</bmark> is a sequence of **VM commands** stored in a text file named `FileName.vm`. The VM translator should read each line in the file, treat it as a **VM command**, and translate it into one or more instructions written in the **Hack assembly language** stored in a text file named `FileName.asm`.
@@ -2301,31 +2549,31 @@ The VM abstraction has only one data type: **a signed integer**. This type is im
 ### RAM usage
 The host Hack RAM consists of 32K 16-bit words. VM implementations should use the top of this address space as follows:
 
-| RAM address | Usage                                                      |
-|-------------|------------------------------------------------------------|
-| 0-15        | Sixteen virtual registers (described in other table below) |
-| 16-255      | Static variables                                           |
-| 256-2047    | Stack                                                      |
+| RAM address | Usage                                                          |
+|-------------|----------------------------------------------------------------|
+| 0-15        | Sixteen virtual registers (described in the other table below) |
+| 16-255      | Static variables                                               |
+| 256-2047    | Stack                                                          |
 
 | Name          | Location   | Usage                                                                                              |
 |---------------|------------|----------------------------------------------------------------------------------------------------|
 | SP            | RAM[0]     | Points to the memory address just following the memory address containing the topmost stack value. |
-| LCL           | RAM[1]     | Points to the base memory address of the current VM function’s local segment.                      |
-| ARG           | RAM[2]     | Points to the base memory address of the current VM function’s argument segment.                   |
-| THIS          | RAM[3]     | Points to the base memory address of the current VM function’s this segment.                       |
-| THAT          | RAM[4]     | Points to the base memory address of the current VM function’s that segment.                       |
+| LCL           | RAM[1]     | Points to the base memory address of the current VM function’s `local` segment.                    |
+| ARG           | RAM[2]     | Points to the base memory address of the current VM function’s `argument` segment.                 |
+| THIS          | RAM[3]     | Points to the base memory address of the current VM function’s `this` segment.                     |
+| THAT          | RAM[4]     | Points to the base memory address of the current VM function’s `that` segment.                     |
 | TEMP          | RAM[5-12]  | A general-purpose segment.                                                                         |
-| R13, R14, R15 | RAM[13-15] | If the assembleY code generated by the VM translator needs variables, it can use these registers.  |
+| R13, R14, R15 | RAM[13-15] | If the assembly code generated by the VM translator needs variables, it can use these registers.   |
 
 > Assume that `SP`, `ARG`, `LCL`, `THIS`, and `THAT` have been already initialized to some sensible addresses in the host RAM.
 
 Note that VM implementations never see these addresses anyway. Rather, they manipulate them **symbolically**, using the **pointer names**. For example, suppose we want to push the value of the **D register** onto the **stack**. This operation can be implemented using the logic which can be expressed in Hack assembly as:
 ```
-@SP
-A = M
-M = D
-@SP
-M = M + 1
+@SP // Sets the A register to address pointed to by SP (the stack pointer).
+A = M // Basically, SP is amemory address on the RAM, and the value at RAM[SP] is also an address on the RAM. This instruction sets the A register to the value at RAM[SP].
+M = D // Sets RAM[RAM[SP]] to the value of the D register.
+@SP // Sets the A register to address pointed to by SP (the stack pointer).
+M = M + 1 // Increments the value at RAM[SP] by 1 (i.e. increments the stack pointer).
 ```
 
 - - -
