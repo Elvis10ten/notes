@@ -3597,6 +3597,7 @@ A typical solution is to develop a <pmark>two-pass assembler</pmark>:</p>
 </ul>
 <hr>
 <h3>Translating arithmetic-logical expressions into stack commands</h3>
+<p>Arithmetic and boolean expressions can be represented and evaluated by elementary operations on a stack.</p>
 <p>In a stack machine, the generic binary operation <code>x op y</code> is carried out as follows:</p>
 <ol>
 <li>The operands <code>x</code> and <code>y</code> are popped off the stack.</li>
@@ -3687,7 +3688,8 @@ A typical solution is to develop a <pmark>two-pass assembler</pmark>:</p>
 <p>The commands <code>add</code>, <code>sub</code>, <code>eq</code>, <code>gt</code>, <code>lt</code>, <code>and</code>, and <code>or</code> have <ymark>two implicit operands</ymark>. To execute each one of them, the VM implementation pops two values off the stack, computes the stated function on them, and pushes the resulting value back onto the stack. The remaining <code>neg</code> and <code>not</code> commands have <ymark>one implicit operand</ymark> and work the same way.</p>
 <p><bmark>Implicit</bmark> here means that the operand is not part of the command syntax: since the command is designed to always operate on the two top stack values, there is no need to specify them.</p>
 <hr>
-<p>The abstract VM described so far must be implemented on a host machine to actually run. The implementation option chosen by the project is a <pmark>VM translator</pmark>.</p>
+<p>The abstract VM described so far must be implemented on a host machine to actually run. The implementation option chosen by the project is a <pmark>VM translator</pmark>.
+This translator will serve as the back-end module of the compiler that we will build in chapters 10 and 11.</p>
 <p>Writing a VM translator entails two main tasks:</p>
 <ul>
 <li>First, we have to decide how to represent the stack and the virtual memory segments on the target platform.</li>
@@ -3804,40 +3806,37 @@ M = M + 1 // Increments the value at RAM[SP] by 1 (i.e. increments the stack poi
 <blockquote>
 <p>One relatively simple way to implement a virtual machine is to write a high-level program (called a <bmark>VM emulator</bmark>) that represents the stack and the memory segments and implements all the VM commands using high-level programming.</p>
 </blockquote>
-<h2>Virtual Machine II: Control</h2>
-<p>In this chapter we’ll learn how to use and implement the VM’s branching commands and function commands.</p>
+<h2>Chapter 8: Virtual Machine II: Control</h2>
+<p>🎯 <strong>Objective</strong>: In this chapter we’ll learn how to use and implement the VM’s branching commands and function commands.</p>
+<p>This chapter shows how the simple <bmark>stack</bmark> data structure can also support remarkably complex tasks like nested function calling, parameter passing, recursion, and the various memory allocation and recycling tasks required to support program execution during run-time.</p>
 <hr>
-<p>In general, whenever one function (the caller) calls a function (the callee), someone must take care of the following overhead:</p>
-<ul>
-<li>Save the return address, which is the address within the caller’s code to which execution must return after the callee completes its execution;</li>
-<li>Save the memory resources of the caller;</li>
-<li>Allocate the memory resources required by the callee;</li>
-<li>Make the arguments passed by the caller available to the callee’s code;</li>
-<li>Start executing the callee’s code.</li>
-</ul>
-<p>When the callee terminates and returns a value, someone must take care of the following overhead:</p>
-<ul>
-<li>Make the callee’s return value available to the caller’s code;</li>
-<li>Recycle the memory resources used by the callee;</li>
-<li>Reinstate the previously saved memory resources of the caller;</li>
-</ul>
-<hr>
-<p>The default flow of computer programs is sequential, executing one command after the other. This sequential flow can be redirected by branching commands.</p>
+<h3>Branching</h3>
+<p>The default flow of computer programs is sequential, executing one command after the other. This sequential flow can be redirected by <bmark>branching commands</bmark>.</p>
 <p>In low-level programming, branching is accomplished by <code>goto</code> destination commands. The destination specification can take several forms:</p>
 <ul>
 <li>The most primitive being the physical memory address of the instruction that should be executed next.</li>
-<li>A slightly more abstract specification is established by specifying a <ymark>symbolic label</ymark> (bound to a physical memory address). This variation requires that the language be equipped with a labeling directive, designed to assign symbolic labels to selected locations in the code. In our VM language, this is done using a labeling command whose syntax is <code>label symbol</code>.</li>
+<li>A slightly more abstract specification is established by specifying a <ymark>symbolic label</ymark> (bound to a physical memory address). This variation requires that the language be equipped with a labeling directive, designed to assign symbolic labels to selected locations in the code.</li>
 </ul>
 <p>The VM language supports two forms of branching:</p>
 <ul>
-<li><pmark>Unconditional branching</pmark> is effected using a <code>goto symbol</code> command, which means: jump to execute the command just after the label symbol command in the code.</li>
-<li><pmark>Conditional branching</pmark> is effected using the <code>if-goto symbol</code> command, whose semantics is: Pop the topmost value off the stack; if it’s not false, jump to execute the command just after the label symbol command; otherwise, execute the next command in the code.</li>
+<li><gmark>Unconditional branching</gmark> is effected using a <code>goto label</code> command, which means: jump to execute the command just after the label symbol command in the code.</li>
+<li><pmark>Conditional branching</pmark> is effected using the <code>if-goto label</code> command, whose semantics is:<ul>
+<li>Pop the topmost value off the stack;</li>
+<li>If it’s true, jump to execute the command just after the label symbol command;</li>
+<li>Otherwise, execute the next command in the code.</li>
+</ul>
+</li>
 </ul>
 <blockquote>
 <p> Any flow of control structure found in high-level programming languages can be realized using our (rather minimal set of) VM logical and branching commands.</p>
 </blockquote>
 <hr>
-<p>Function calls and primitive commands share a consistent calling protocol, thus, enabling both to be seamless composed. e.g. expressions like <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>+</mo><mi>y</mi><msup><mo stretchy="false">)</mo><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">(x + y)^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span> can be evaluated using:</p>
+<h3>Functions</h3>
+<p><bmark>Functions</bmark>—the bread and butter of <gmark>modular programming</gmark>—are standalone programming units that are allowed to call each other for their effect.
+Typically, the calling function (the <pmark>caller</pmark>) passes arguments to the called function (the <ymark>callee</ymark>) and suspends its execution until the latter completes its execution.
+The callee uses the passed arguments to execute or compute something and then returns a value (which may be void) to the caller.
+The caller then resumes its execution.</p>
+<p>Function calls and primitive commands share a <ymark>consistent calling protocol</ymark>, thus, enabling both to be seamless composed. e.g. expressions like <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>+</mo><mi>y</mi><msup><mo stretchy="false">)</mo><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">(x + y)^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span> can be evaluated using:</p>
 <pre><code class="hljs">push x
 push y
 add
@@ -3850,26 +3849,77 @@ call power
 <li>Both operations are expected to push return values onto the stack.</li>
 </ul>
 <hr>
-<p>use the term calling chain to refer, conceptually, to all the functions that are currently involved in the program’s execution. only function that is truly active in the calling chain is the last one, which we call the current function,</p>
-<p>In order to carry out their work, functions normally use local and argument variables. These variables are temporary: the memory segments that represent them must be allocated when the function starts executing and can be recycled when the function returns. During run-time, each function call must be executed independently of all the other calls and maintain its own stack, local variables, and argument variables.</p>
-<blockquote>
-<p> The property that makes this housekeeping task tractable is the linear nature of the call-and-return logic. Although the function calling chain may be arbitrarily deep as well as recursive, at any given point in time only one function executes at the chain’s end, while all the other functions up the calling chain are waiting for it to return. This Last-In-First-Out processing model lends itself perfectly to the stack data structure, which is also LIFO.</p>
-</blockquote>
-<p>Now, putting foo’s working stack on hold is not a problem: because the stack grows only in one direction, the working stack of bar will never override previously pushed values. Therefore, saving the working stack of the caller is easy—we get it “for free” thanks to the linear and unidirectional stack structure. But how can we save foo’s memory segments? Recall that in chapter 7 we used the pointers LCL, ARG, THIS, and THAT to refer to the base RAM addresses of the local, argument, this, and that segments of the current function. If we wish to put these segments on hold, we can push their pointers onto the stack and pop them later, when we’ll want to bring foo back to life. In what follows, we use the term frame to refer, collectively, to the set of pointer values needed for saving and reinstating the function’s state.</p>
-<p>Specifically, we now use the same data structure to hold both the working stacks as well as the frames of all the functions up the calling chain. To give it the respect that it deserves, from now on we’ll refer to this hard-working data structure as the global stack.</p>
-<p>Figure8.3</p>
-<p>The global stack, shown when the callee is running. Before the callee terminates, it pushes a return value onto the stack (not shown). When the VM implementation handles the return command, it copies the return value onto argument 0, and sets SP to point to the address just following it. This effectively frees the global stack area below the new value of SP. Thus, when the caller resumes its execution, it sees the return value at the top of its working stack.</p>
-<p>when handling the call functionName command, the VM implementation pushes the caller’s frame onto the stack. At the end of this housekeeping, we are ready to jump to executing the callee’s code. This mega jump is not hard to implement. As we’ll see later, when handling a function functionName command, we use the function’s name to create, and inject into the generated assembly code stream, a unique symbolic label that marks where the function starts. Thus, when handling a “function functionName” command, we can generate assembly code that effects a “goto functionName” operation. When executed, this command will effectively transfer control to the callee.</p>
-<p>Returning from the callee to the caller when the former terminates is trickier, since the VM return command specifies no return address. Indeed, the caller’s anonymity is inherent in the notion of a function call: functions like mult or sqrt are designed to serve any caller, implying that a return address cannot be specified a priori. Instead, a return command is interpreted as follows: redirect the program’s execution to the memory location holding the command just following the call command that invoked the current function.</p>
-<p>The VM implementation can realize this contract by (i) saving the return address just before control is transferred to executing the caller and (ii) retrieving the return address and jumping to it just after the callee returns. But where shall we save the return address? Once again, the resourceful stack comes to the rescue. To remind you, the VM translator advances from one VM command to the next, generating assembly code as it goes along. When we encounter a call foo command in the VM code, we know exactly which command should be executed when foo terminates: it’s the assembly command just after the assembly commands that realize the call foo command. Thus, we can have the VM translator plant a label right there, in the generated assembly code stream, and push this label onto the stack. When we later encounter a return command in the VM code, we can pop the previously saved return address off the stack—let’s call it returnAddress— and effect the operation goto returnAddress in assembly.</p>
-<p>Each call operation is implemented by saving the frame of the caller on the stack and jumping to execute the callee. Each return operation is implemented by (i) using the most recently stored frame for getting the return address within the caller’s code and reinstating its memory segments, (ii) copying the topmost stack value (the return value) onto the stack location associated with argument 0, and (iii) jumping to execute the caller’s code from the return address onward.</p>
+<p>The term <pmark>calling chain</pmark> refers conceptually, to all the functions that are currently involved in the program’s execution.
+Only function that is <ymark>truly active in the calling chain is the last one</ymark> (called the current function).</p>
+<p>During run-time, each function call must be executed independently of all the other calls and maintain its own stack, local variables, and argument variables.
+The local and argument variables of a function are temporary with a lifetime that spans the function’s execution.</p>
+<p>Although the function calling chain may be arbitrarily deep as well as recursive, at any given point in time only one function executes at the chain’s end,
+while all the other functions up the calling chain are waiting for it to return.
+This call-and-return logic has a linear nature that makes the problem of implementing functions tractable.
+This Last-In-First-Out processing model lends itself perfectly to the stack data structure, which is also LIFO.</p>
+<hr>
+<p>There are two problems that must be solved to implement function calling and returning:</p>
+<ol>
+<li><gmark>Putting the caller&#39;s working stack on hold</gmark>: Thanks to the linear and unidirectional stack structure, saving the caller&#39;s working stack is easy.
+Because the stack grows only in one direction, the working stack of the callee will never override previously pushed values.
+So we can simply save <code>SP</code> before the callee starts executing and restore it when the callee returns.</li>
+<li><ymark>Saving the caller&#39;s memory segments</ymark>: Recall that the pointers <code>LCL</code>, <code>ARG</code>, <code>THIS</code>, and <code>THAT</code> refer to
+the base RAM addresses of the <strong>local</strong>, <strong>argument</strong>, <strong>this</strong>, and <strong>that</strong> segments of the current function.
+To put these segments on hold, we can push their pointers onto the stack and restore them when the callee returns.</li>
+</ol>
+<p>The term <bmark>frame</bmark> is used to refer, collectively, to the set of pointer values needed for saving and reinstating the caller&#39;s function state.</p>
+<p>We see that the same data structure is used to hold both the working stacks and the frames of all the functions up the calling chain.</p>
+<hr>
+<h3>Function call and return contract</h3>
+<p><strong>The <pmark>caller</pmark>&#39;s contract</strong>:</p>
+<ul>
+<li><code>nArgs</code> is the number of arguments required by the function to be called (<gmark>callee</gmark>).</li>
+<li>First, the <pmark>caller</pmark> must <em>push</em> <code>nArgs</code> onto the stack.</li>
+<li>Next, the <pmark>caller</pmark>&#39;s frame is saved onto the stack as follows:<ul>
+<li>The return address is <em>pushed</em> onto the stack. This is the address within the <pmark>caller</pmark>&#39;s code to which execution must return after the <gmark>callee</gmark> completes its execution.
+It’s set to the ROM address of the assembly command just after the assembly commands that realize the <code>call callee</code> command.</li>
+<li>The memory segments of the <pmark>caller</pmark> are saved by <em>pushing</em> the contents of the <code>local</code>, <code>argument</code>, <code>this</code>, and <code>that</code> virtual registers onto the stack.</li>
+</ul>
+</li>
+<li>Next, the memory segments of the <gmark>callee</gmark> are initialized:<ul>
+<li>The <code>argument</code> segment is initialized with the argument values passed by the <pmark>caller</pmark>.
+This is done by setting the <code>argument</code> virtual register to <code>SP - nArgs - callerFrameSize</code>,
+where <code>callerFrameSize</code> is <code>5</code> in our case (composed of return address, <code>LCL</code>, <code>ARG</code>, <code>THIS</code>, <code>THAT</code>).</li>
+<li>The <code>local</code> virtual register is set to <code>SP</code>. This will be used in the <gmark>callee</gmark>&#39;s contract to initialize the local segment variables to zeroes.</li>
+</ul>
+</li>
+<li>Start executing the <gmark>callee</gmark>&#39;s code by performing an unconditional jump to its symbolic label.</li>
+<li>After the <gmark>callee</gmark> returns, the following properties hold for the <pmark>caller</pmark>:<ul>
+<li>The return value of the <gmark>callee</gmark> is at the top of the <pmark>caller</pmark>&#39;s working stack. Besides this change, the <pmark>caller</pmark>&#39;s working stack is exactly the same as it was before the call.</li>
+<li>The memory segments of the <pmark>caller</pmark> are exactly the same as they were before the call, except that the contents of the <code>static</code> segment may have changed and the <code>temp</code> segment is undefined.</li>
+</ul>
+</li>
+</ul>
+<p><strong>The <gmark>callee</gmark>&#39;s contract</strong>:</p>
+<ul>
+<li>The <gmark>callee</gmark> has a label that specifies where its code starts. This is set by the VM translator when handling the <code>function functionName nVars</code> command.</li>
+<li>The variables in the local segment are all initialized to zeroes. <code>LCL</code> was set by the <pmark>caller</pmark> to be equal to <code>SP</code>,
+so we simply achieve this by repeating <code>pop constant 0</code> for <code>nVars</code> (the number of local variables of the <gmark>callee</gmark>).</li>
+<li>The <gmark>callee</gmark>&#39;s working stack is empty and points to a position that is one above the last local variable.</li>
+<li>The static segment has been set to the static segment of the VM file to which the <gmark>callee</gmark> belongs.</li>
+<li>The memory segments <code>this</code>, <code>that</code>, <code>pointer</code>, and <code>temp</code> are undefined upon entry.</li>
+<li>Before returning, the <gmark>callee</gmark> must <em>push</em> a return value onto the stack.</li>
+<li>Returning to the <pmark>caller</pmark> involves the following actions:<ul>
+<li>The return value is <em>pushed</em> to the position on the stack where the <gmark>callee</gmark>&#39;s <code>argument 0</code> was.</li>
+<li><code>SP</code> is set to one above that position. This effectively frees the global stack area below the new value of <code>SP</code>.</li>
+<li>The <pmark>caller</pmark>&#39;s memory segments are restored.</li>
+<li>Control is transferred to the return address that was pushed to the stack by the <pmark>caller</pmark>.
+This means the <pmark>caller</pmark> is completely anonymous to the <gmark>callee</gmark> (an important property of function calls).</li>
+</ul>
+</li>
+</ul>
 <hr>
 <h3>VM Specification: Part II</h3>
 <ol>
 <li><strong>Branching Commands</strong>:<ul>
-<li><code>label label</code>: Labels the current location in the function’s code. Only labeled locations can be jumped to. The scope of the label is the function in which it is defined. The label is a string composed of any sequence of letters, digits, underscore (_), dot (.), and colon (:) that does not begin with a digit. The label command can be located anywhere in the function, before or after the goto commands that refer to it.</li>
-<li><code>goto label</code>: Effects an unconditional goto operation, causing execution to continue from the location marked by the label. The goto command and the labeled jump destination must be located in the same function.</li>
-<li><code>if-goto label</code>: Effects a conditional goto operation. The stack’s topmost value is popped; if the value is not zero, execution continues from the location marked by the label; otherwise, execution continues from the next command in the program. The if-goto command and the labeled jump destination must be located in the same function.</li>
+<li><code>label labelName</code>: Labels the current location in the function’s code. Only labeled locations can be jumped to. The scope of the label is the function in which it is defined. The label is a string composed of any sequence of letters, digits, underscore (_), dot (.), and colon (:) that does not begin with a digit. The label command can be located anywhere in the function, before or after the goto commands that refer to it.</li>
+<li><code>goto labelName</code>: Effects an unconditional goto operation, causing execution to continue from the location marked by the label. The goto command and the labeled jump destination must be located in the same function.</li>
+<li><code>if-goto labelName</code>: Effects a conditional goto operation. The stack’s topmost value is popped; if the value is not zero, execution continues from the location marked by the label; otherwise, execution continues from the next command in the program. The if-goto command and the labeled jump destination must be located in the same function.</li>
 </ul>
 </li>
 <li><strong>Function commands</strong>:<ul>
@@ -3879,29 +3929,20 @@ call power
 </ul>
 </li>
 </ol>
-<p>The scope of VM function names is global: all the VM functions in all the vm files in the program folder see each other and may call each other using the unique and full function name FileName functionName.</p>
-<p>One file in any Jack program must be named Main jack, and one function in this file must be named main. which is the application&#39;s entry point. This run-time convention is implemented as follows. When we start running a VM program, the first function that always executes is an argument-less VM function named <code>Sys.init</code>, which is part of the operating system. This OS function is programmed to call the entry point function in the user&#39;s program. In the case of Jack programs, <code>Sys.init</code> is programmed to call <code>Main.main</code>.</p>
+<p>The scope of VM function names is global: all the VM functions in all the vm files in the program folder see each other
+and may call each other using the unique and fully qualified function name <code>FileName.functionName</code>.</p>
+<p>One file in any Jack program must be named <code>Main.jack</code>, and one function in this file must be named <code>main</code>,
+which is the <pmark>application&#39;s entry point</pmark>.
+This run-time convention is implemented as follows:</p>
+<ul>
+<li>When we start running a VM program, the first function that always executes is an argument-less VM function named <code>Sys.init</code>,
+which is part of the operating system.</li>
+<li>This OS function is programmed to call the entry point function in the user&#39;s program.
+In the case of Jack programs, <code>Sys.init</code> is programmed to call <code>Main.main</code>.</li>
+</ul>
 <hr>
-<h3>Function call and return</h3>
-<p>The caller’s view:</p>
-<ol>
-<li>Before calling a function, I must push onto the stack as many arguments (<code>nArgs</code>) as the callee expects to get.</li>
-<li>Next, I invoke the callee using the command call <code>fileName.functionName nArgs</code>.</li>
-<li>After the callee returns, the argument values that I pushed before the call have disappeared from the stack, and a return value (that always exists) appears at the top of the stack. Except for this change, my working stack is exactly the same as it was before the call [i], except that the contents of my <strong>static segment</strong> may have changed and the <strong>temp segment</strong> is undefined.
-﻿﻿
-The callee&#39;s view:
-﻿</li>
-<li>Before I start executing, my <strong>argument segment</strong> been initialized with the argument values passed by the caller, and my <strong>local variables</strong> segment has been allocated and initialized to zeros. My <strong>static segment</strong> has been set to the static segment of the VM file to which I belong, and my working stack is empty. The memory segments <code>this</code>, <code>that</code>, <code>pointer</code>, and <code>temp</code> are undefined upon entry.</li>
-<li>Before returning, I must push a return value onto the stack.</li>
-</ol>
-<p>In particular, every function, call, and return command in the VM code is handled by generating assembly code that manipulates the global stack as follows: A call command generates code that saves the frame of the caller on the stack and jumps to execute the callee. A function command generates code that initializes the local variables of the callee. Finally, a return command generates code that copies the return value to the top of the caller’s working stack, reinstates the segment pointers of the caller, and jumps to execute the latter from the return address onward.</p>
-<p>Figure8.5</p>
-<hr>
-<p>First, it manages predefined assembly-level symbols like SP, LCL, and ARG. Second, it generates and uses symbolic labels for marking return addresses and function entry points</p>
-<p>When the VM translator is applied to this same folder, it produces a single assembly code file, named PointDemo.asm. At the assembly code level, the function abstractions no longer exist. Instead, for each function command, the VM translator generates an entry label in assembly; for each call command, the VM translator (i) generates an assembly goto instruction, (ii) creates a return address label and pushes it onto the stack, and (iii) injects the label into the generated code. For each return command, the VM translator pops the return address off the stack and generates a goto instruction.</p>
-<p>Figure8.6</p>
-<hr>
-<p>The output of the VM translator is a single assembly file, named source.asm. If source is a folder name, the single .asm file contains the translation of all the functions in all the .vm files in the folder, one after the other.</p>
+<p>The output of the <pmark>VM translator</pmark> is a single assembly file, named <code>source.asm</code>.
+If source is a folder name, the single <code>.asm</code> file contains the translation of all the functions in all the <code>.vm</code> files in the folder, one after the other.</p>
 <h2>Chapter 9: High-level language</h2>
 <p>Jack is a simple high-level object-based language. It’s it inspired from Java, with simpler syntax and no support for inheritance.</p>
 <p>Jack comes with a standard class library (AKA the Jack OS), which extends the basic language with various abstractions and services. The OS consists of eight classes:</p>
