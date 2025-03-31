@@ -2612,6 +2612,10 @@ M = M + 1 // Increments the value at RAM[SP] by 1 (i.e. increments the stack poi
 
 > One relatively simple way to implement a virtual machine is to write a high-level program (called a <bmark>VM emulator</bmark>) that represents the stack and the memory segments and implements all the VM commands using high-level programming.
 
+### Project
+
+Solution code is on [GitHub](https://github.com/Elvis10ten/nand-to-tetris/tree/main/src/vm).
+
 ## Chapter 8: Virtual Machine II: Control
 
 🎯 **Objective**: In this chapter we’ll learn how to use and implement the VM’s branching commands and function commands.
@@ -2751,6 +2755,10 @@ In the case of Jack programs, `Sys.init` is programmed to call `Main.main`.
 The output of the <pmark>VM translator</pmark> is a single assembly file, named `source.asm`.
 If source is a folder name, the single `.asm` file contains the translation of all the functions in all the `.vm` files in the folder, one after the other.
 
+### Project
+
+Solution code is on [GitHub](https://github.com/Elvis10ten/nand-to-tetris/tree/main/src/vm).
+
 ## Chapter 9: High-level language
 Jack is a simple high-level object-based language. It’s it inspired from Java, with simpler syntax and no support for inheritance.
 
@@ -2767,21 +2775,25 @@ Jack comes with a standard class library (AKA the Jack OS), which extends the ba
 | String   | String representation and manipulation: `length()`, `charAt(int)`, ...                                                     |
 | Sys      | Facilitates execution-related services: `halt()`, `wait(int)`, ...                                                         |
 
+> Note: I quickly went through this chapter without doing its exercises because the Jack language is very similar to Java, which I'm already familiar with.
+> I focused only on familiarizing with the places where the Jack language differs from Java.
+> I am not interested in gaining an intimate knowledge of Jack, but rather learning the bare minimum to be able to write the compiler in the coming chapters.
+
 ## Chapter 10: Compiler I -- Syntax analysis
 A <bmark>compiler</bmark> is a program that translates programs from a **source language** into a **target language**.
 
 Compilation consists of two main stages:
-1. <bmark>Syntax analysis<bmark>: Understanding the syntax and semantics of the source program.
+1. <bmark>Syntax analysis</bmark>: Understanding the syntax and semantics of the source program.
 2. <pmark>Code generation</pmark>: Re-expressing the semantics of the source program using the syntax of the target language.
 
 The syntax analysis stage is divided two sub-stages:
-1. <pmark>Tokenizing</pmark>: The grouping of input characters into language atoms called tokens.
+1. <gmark>Tokenizing</gmark>: The grouping of input characters into language atoms called tokens.
 2. <pmark>Parsing</pmark>: The grouping of tokens into structured statements that have a meaning.
 
 ![Figure 10.1](/docs/assets/nand-images/fig10.1.png)
 
 <bmark>Grammar</bmark> are the set of rules that define the syntax of a programming language.
-To understand — parse — a given program means to determine the exact correspondence between the program’s text and the grammar’s rules.
+To understand — <pmark>parse</pmark> — a given program means to determine the exact correspondence between the program’s text and the grammar’s rules.
 To do so, the program’s text must be converted into a list of tokens.
 
 ---
@@ -2796,7 +2808,7 @@ Jack has the following token types:
 
 The tokens defined by these lexical categories are referred to as the <bmark>language lexicon</bmark>.
 The first step in analyzing a program's syntax is grouping the characters into tokens, as defined by the language lexicon, while ignoring white spaces and comments.
-This process is called <bmark>lexical analysis</bmark> or <bmark>tokenizing</bmark> and is implemented by a program called a <pmark>tokenizer</pmark> or <pmark>lexical analyzer</pmark>.
+This process is called <bmark>lexical analysis</bmark> or <pmark>tokenizing</pmark> and is implemented by a program called a <gmark>tokenizer</gmark> or <ymark>lexical analyzer</ymark>.
 The tokenizer reads the input text character by character and groups the characters into tokens.
 
 Once a program has been tokenized, the tokens, rather than the characters, are viewed as its basic atoms.
@@ -2805,7 +2817,7 @@ Once a program has been tokenized, the tokens, rather than the characters, are v
 
 The second stage of syntax analysis is <bmark>parsing</bmark>, which involves grouping the tokens into structured statements that have meaning (i.e. that are valid).
 
-The structured statements are called <bmark>parse trees</bmark> or <bmark>abstract syntax trees (ASTs)</bmark>.
+The structured statements are called <bmark>parse trees</bmark> or <ymark>abstract syntax trees (ASTs)</ymark>.
 The ASTs are built according to the rules of the language's grammar.
 A language's grammar is written in a meta-language: a language describing a language.
 The book avoids grammar formalism and instead views grammar as a set of rules that define the syntax of a language:
@@ -2839,7 +2851,7 @@ The Jack language includes five types of terminal elements (tokens):
 * **identifiers**: A sequence of letters, digits, and underscores that does not begin with a digit. Used to name classes, variables, and subroutines.
 
 #### Program structure
-A Jack program is a collection of classes, each appearing in a separate file. The compilation unin is a class. A class is a sequence of tokens, as follows:
+A Jack program is a collection of classes, each appearing in a separate file. The compilation unit is a class. A class is a sequence of tokens, as follows:
 * `class`: 'class' className '{' classVarDec* subroutineDec* '}'
 * `classVarDec`: ('static' | 'field') type varName (',' varName)* ';'
 * `type`: 'int' | 'char' | 'boolean' | className
@@ -2879,43 +2891,45 @@ if (x<0){if(y > 0){...}}
 
 The grammar can be used to parse the above code as follows:
 * After getting the first token and realizing that we have an **if** pattern, we focus on the rule "`ifStatement`: '<gmark>if</gmark>' '<gmark>(</gmark>' <pmark>expression</pmark> '<gmark>)</gmark>' '<gmark>{</gmark>' <pmark>statements</pmark> '<gmark>}</gmark>'". 
-* The rule informs that following the token **if** there ought to be the token **(**, followed by an _expression_, followed by the token **)**.
+* The rule informs that following the token <gmark>if</gmark> there ought to be the token <gmark>(</gmark>, followed by an <pmark>expression</pmark>, followed by the token <gmark>)</gmark>.
 And indeed, these requirements are satisfied by the input element `(x<0)`.
-* Next, we see that we now have to anticipate the token **{**, followed by _statements_, followed by the token **}**.
-Now, _statements_ is defined as 0 or more instances of statement, and statement, in turn, is either a letStatement, an ifStatement, or a whileStatement.
+* Next, we see that we now have to anticipate the token <gmark>{</gmark>, followed by <pmark>statements</pmark>, followed by the token <gmark>}</gmark>.
+Now, <pmark>statements</pmark> is defined as **0** or more instances of statement, and statement, in turn, is either:
+  * a **letStatement**,
+  * an **ifStatement**,
+  * or a **whileStatement**.
 * This expectation is met by the inner input element `if(y>0){...}` which is an `ifStatement`.
 
 The parser produces an exact correspondence between the given input, on the one hand, and the syntactic patterns admitted by the grammar rules, on the other.
-The correspondence can be represented by a data structure called a parse tree, also called a derivation tree, like the one shown in figure 10.4a.
+The correspondence can be represented by a data structure called a <bmark>parse tree</bmark>, also called a derivation tree, like the one shown in figure 10.4a.
 If such a tree can be constructed, the parser renders the input valid; otherwise, it can report that the input contains syntax errors.
 
 ![Figure 10.4](/docs/assets/nand-images/fig10.4a.png)
 
 ---
 
-A parser is an agent that operates according to a given grammar. The parser
-accepts as input a stream of tokens and attempts to produce as output the
-parse tree associated with the given input. In our case, the input is expected
-to be structured according to the Jack grammar, and the output is written in
-XML.
+A parser is an agent that operates according to a given grammar. The parser accepts as input a stream of tokens and attempts to produce as output the
+parse tree associated with the given input. In our case, the input is expected to be structured according to the Jack grammar, and the output is written in XML.
 
-There are several algorithms for constructing parse trees. The top-down
-approach, also known as recursive descent parsing, attempts to parse the
-tokenized input recursively, using the nested structures admitted by the
-language grammar. Such an algorithm can be implemented as follows. For
-every nontrivial rule in the grammar, we equip the parser program with a
-routine designed to parse the input according to that rule. For example, the
-grammar listed in figure 10.3 can be implemented using a set of routines
-named compileStatement, compileStatements, compileLet, compileIf, …,
-compileExpression, and so on.
+There are several algorithms for constructing parse trees. The top-down approach, also known as <bmark>recursive descent parsing</bmark>,
+attempts to parse the tokenized input recursively, using the nested structures admitted by the language grammar.
+Such an algorithm can be implemented as follows:
 
-The parsing logic of each compilexxx routine should follow the syntactic
-pattern specified by the right side of the xxx rule. For example, let us focus
-on the rule whileStatement: 'while' '(' expression ')' '{' statements '}'. According
-to our scheme, this rule will be implemented by a parsing routine named
-compileWhile. This routine should realize the left-to-right derivation logic
-specified by the pattern 'while' '(' expression ')' '{' statements '}'. Here is one
-way to implement this logic, using pseudocode:
+> For every nontrivial rule in the grammar, we equip the parser program with a routine designed to parse the input according to that rule.
+
+For example, the grammar listed previously can be implemented using a set of routines named:
+* `compileStatement`, 
+* `compileStatements`,
+* `compileLet`,
+* `compileIf`,
+* …,
+* `compileExpression`, and so on.
+
+The parsing logic of each `compileXXX` routine should follow the syntactic pattern specified by the right side of the `XXX` rule.
+For example, according to our scheme, the **whileStatement** rule will be implemented by a parsing routine named `compileWhile`.
+This routine should realize the left-to-right derivation logic specified by the pattern
+"'<gmark>while</gmark>' '<gmark>(</gmark>' <pmark>expression</pmark> '<gmark>)</gmark>' '<gmark>{</gmark>' <pmark>statements</pmark> '<gmark>}</gmark>'".
+Below is the pseudocode for the `compileWhile` routine:
 
 ```
 // This routine implements the rule whileStatement: 'while' '(' expression ')' '{' statements '}'.
@@ -2943,31 +2957,158 @@ process(token):
 This parsing process will continue until the expression and statements parts
 of the while statement have been fully parsed.
 
-they all follow the same contract: each compilexxx routine should get from
-the input, and handle, all the tokens that make up xxx, advance the tokenizer
-exactly beyond these tokens, and output the parse tree of xxx.
-Recursive parsing algorithms are simple and elegant. If the language is
-simple, a single token lookahead is all that it takes to know which parsing
-rule to invoke next. For example, if the current token is let, we know that we
-have a letStatement; if the current token is while, we know that we have a
-whileStatement, and so on. Indeed, in the simple grammar shown in figure
-10.3, looking ahead one token suffices to resolve, without ambiguity, which
-rule to use next. Grammars that have this lingual property are called LL (1).
-These grammars can be handled simply and elegantly by recursive descent
-algorithms, without backtracking.
-The term LL comes from the observation that the grammar parses the
-input from left to right, performing leftmost derivation of the input. The (1) they all follow the same contract: each compilexxx routine should get from
-the input, and handle, all the tokens that make up xxx, advance the tokenizer
-exactly beyond these tokens, and output the parse tree of xxx.
-Recursive parsing algorithms are simple and elegant. If the language is
-simple, a single token lookahead is all that it takes to know which parsing
-rule to invoke next. For example, if the current token is let, we know that we
-have a letStatement; if the current token is while, we know that we have a
-whileStatement, and so on. Indeed, in the simple grammar shown in figure
-10.3, looking ahead one token suffices to resolve, without ambiguity, which
-rule to use next. Grammars that have this lingual property are called LL (1).
-These grammars can be handled simply and elegantly by recursive descent
-algorithms, without backtracking.
-The term LL comes from the observation that the grammar parses the
-input from left to right, performing leftmost derivation of the input. The (1)
+Each `compileXXX` routine follow the same contract:
+* Each routine should get from the input, and handle, all the tokens that make up `XXX`,
+* Advance the tokenizer exactly beyond these tokens,
+* And output the parse tree of xxx.
 
+Recursive parsing algorithms are simple and elegant. Jack's grammar is simple, only requiring a <ymark>single token lookahead</ymark>
+to know which parsing rule to invoke next, without ambiguity.
+
+Grammars that have this lingual property are called <pmark>LL (1)<pmark>.
+These grammars can be handled simply and elegantly by recursive descent algorithms, without backtracking.
+
+For example:
+* If the current token is `let`, we know that we have a **letStatement**;
+* If the current token is `while`, we know that we have a **whileStatement**,
+* and so on.
+
+### Project
+
+Solution code is on [GitHub](https://github.com/Elvis10ten/nand-to-tetris/tree/main/src/compiler).
+
+## Chapter 11: Compiler II -- Code generation
+> The syntax analyzer was built in order to develop, and demonstrate, a capability for parsing high-level programs into their underlying syntactical elements.
+> In this chapter we’ll morph the analyzer into a full-scale compiler: a program that converts the parsed elements into VM commands designed to execute on the abstract virtual machine described in chapters 7-8.
+> This approach follows the modular analysis-synthesis paradigm that informs the construction of well-designed compilers.
+> It also captures the very essence of translating text from one language to another:
+> first, one uses the source language’s syntax for analyzing the source text and figuring out its underlying semantics, that is, what the text seeks to say;
+> next, one re-expresses the parsed semantics using the syntax of the target language.
+
+One of the basic tasks of compilers is mapping the variables declared in the source high-level program onto the host RAM of the target platform.
+Thus, every Jack variable, including pointer variables holding 16-bit address values, can be mapped on exactly one word in memory.
+
+The second challenge faced by compilers is that variables of different kinds have different life cycles.
+* Class-level static variables are shared globally by all the subroutines in the class.
+Therefore, a single copy of each static variable should be kept alive during the complete duration of the program’s execution.
+* Instance-level field variables are treated differently: each object (instance of the class) must have a private set of its field variables, and,
+when the object is no longer needed, this memory must be freed.
+* Subroutine-level local and argument variables are created each time a subroutine starts running and must be freed when the subroutine terminates.
+
+In our two-tier compiler architecture, memory allocation and de-allocation are delegated to the VM level.
+All we have to do now is map:
+* Jack static variables on static 0, static 1, static 2, …;
+* Field variables on this 0, this 1, …;
+* Local variables on local 0, local 1, …; and
+* Argument variables on argument 0, argument 1, ….
+
+The subsequent mapping of the virtual memory segments on the host RAM, as well as the intricate management of their run-time life cycles,
+are completely taken care of by the VM implementation.
+
+> Recall that this implementation was not achieved easily:
+> we had to work hard to generate assembly code that dynamically maps the virtual memory segments on the host RAM as a side effect of
+> realizing the function call-and-return protocol. Now we can reap the benefits of this effort:
+> the only thing required from the compiler is mapping the high-level variables onto the virtual memory segments.
+> All the subsequent gory details associated with managing these segments on the RAM will be handled by the VM implementation.
+
+In a two-tier compilation model, the handling of variables can be reduced to mapping high-level variables on virtual memory segments
+and using this mapping, as needed, throughout code generation.
+These tasks can be readily managed using a classical abstraction known as a symbol table.
+
+### Project
+
+Solution code is on [GitHub](https://github.com/Elvis10ten/nand-to-tetris/tree/main/src/compiler).
+
+## Chapter 12: Operating System
+
+### Multiplication
+
+```pseudocode
+// Return x * y, where x, y >= 0
+multiply(x, y):
+    sum = 0
+    shiftedX = x
+    
+    for i = 0 ... n - 1 do
+        if ((i-th bit of y) == 1)
+            // For each i-th bit of `y`, if it is 1, we add the shifted x to the `sum` accumulator.
+            sum = sum + shiftedX
+        
+        // For each i-th bit of `y`, we shift `x` `i` times to the left (same as multiplying `x` by `2^i`).
+        // `2 * shiftedX` can be computed by left-shifting the bitwise representation of `shiftedX` or by adding `shiftedX` to itself.
+        shiftedX = 2 * shiftedX
+    
+    return sum
+```
+
+**Algorithm analysis**:
+* The multiplication algorithm performs `n` iterations, where `n` is the bit width of the y input.
+* In each iteration, the algorithm performs a few addition and comparison operations.
+* The total running time of the algorithm is $a + b \cdot n$, where $a$ is the time it takes to initialize a few variables,
+and $b$ is the time it takes to perform a few addition and comparison operations.
+* Formally, the algorithm’s running time is $O(n)$, where $n$ is the bit width of the inputs.
+
+**Algorithm in action**:
+```
+x = 27 =      ...  0 0 0 0 1 1 0 1 1
+y  = 9 =      ...  0 0 0 0 0 1 0 0 1 (i-th bit of y)
+              -----------------------
+              ...  0 0 0 0 1 1 0 1 1  (1)
+              ...  0 0 0 1 1 0 1 1 0  (0)
+              ...  0 0 1 1 0 1 1 0 0  (0)
+              ...  0 1 1 0 1 1 0 0 0  (1)
+              -----------------------
+x * y = 243 = ... 0 1 1 1 1 0 0 1 1   sum
+```
+
+-----
+
+### Division
+```pseudocode
+// Returns the integer division `x / y`, where x >= 0 and y > 0.
+divide(x, y):
+    if (y > x) return 0
+    q = divide(x, 2 * y)
+    if ((x - 2 * q * y) < y)
+        return 2 * q
+    else
+        return 2 * q + 1
+```
+
+Suppose we have to divide $480 by 17$. The algorithm shown above is based on the insight
+$ 480 / 17 = 2 \cdot (240 / 17) = 2 \cdot (2 \cdot (120 / 17)) = 2 \cdot (2 \cdot (2 \cdot (60 / 17))) = ...$, and so on.
+
+The depth of this recursion is bounded by the number of times $y$ can be multiplied by $2$ before reaching $x$.
+This also happens to be, at most, the number of bits required to represent $x$.
+Thus, the running time of this algorithm is $O(n)$, where $n$ is the bit width of the inputs.
+
+-----
+
+### Square root
+The square root function $y = sqrt(x)$ has two attractive properties:
+* First, it is monotonically increasing.
+* Second, its inverse function, $y = x^2$, is a function that we already know how to compute efficiently—multiplication. 
+Taken together, these properties imply that we have all we need to compute square roots efficiently, using a form of binary search.
+
+```pseudocode
+// Computes the integer part of `y = sqrt(x)`.
+// Strategy: finds an integer `y` such that `y^2 <= x < (y + 1)^2` (for 0 <= x < 2^n).
+// by performing binary search in the range `0 ... 2^(n/2) - 1`.
+sqrt(x):
+    y = 0
+    for j = (n/2 - 1) ... 0 do
+        if (y + 2^j)^2 <= x then
+            y = y + 2^j
+    return y
+```
+
+Since the number of iterations in the binary search that the algorithm performs is bound by $n / 2$
+where $n$ is the number of bits in $x$, the algorithm’s running time is $O(n)$.
+
+### Project
+
+Solution code is on [GitHub](https://github.com/Elvis10ten/nand-to-tetris/tree/main/src/os).
+
+I only completed like 60% of the project. The OS described in the book is more of a typical standard library.
+The implementation of which I am largely familiar with.
+Also, I plan on continuing another book specifically for "real" operating systems.

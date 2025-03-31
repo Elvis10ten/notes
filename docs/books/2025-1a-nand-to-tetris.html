@@ -3806,6 +3806,8 @@ M = M + 1 // Increments the value at RAM[SP] by 1 (i.e. increments the stack poi
 <blockquote>
 <p>One relatively simple way to implement a virtual machine is to write a high-level program (called a <bmark>VM emulator</bmark>) that represents the stack and the memory segments and implements all the VM commands using high-level programming.</p>
 </blockquote>
+<h3>Project</h3>
+<p>Solution code is on <a href="https://github.com/Elvis10ten/nand-to-tetris/tree/main/src/vm">GitHub</a>.</p>
 <h2>Chapter 8: Virtual Machine II: Control</h2>
 <p>🎯 <strong>Objective</strong>: In this chapter we’ll learn how to use and implement the VM’s branching commands and function commands.</p>
 <p>This chapter shows how the simple <bmark>stack</bmark> data structure can also support remarkably complex tasks like nested function calling, parameter passing, recursion, and the various memory allocation and recycling tasks required to support program execution during run-time.</p>
@@ -3943,6 +3945,8 @@ In the case of Jack programs, <code>Sys.init</code> is programmed to call <code>
 <hr>
 <p>The output of the <pmark>VM translator</pmark> is a single assembly file, named <code>source.asm</code>.
 If source is a folder name, the single <code>.asm</code> file contains the translation of all the functions in all the <code>.vm</code> files in the folder, one after the other.</p>
+<h3>Project</h3>
+<p>Solution code is on <a href="https://github.com/Elvis10ten/nand-to-tetris/tree/main/src/vm">GitHub</a>.</p>
 <h2>Chapter 9: High-level language</h2>
 <p>Jack is a simple high-level object-based language. It’s it inspired from Java, with simpler syntax and no support for inheritance.</p>
 <p>Jack comes with a standard class library (AKA the Jack OS), which extends the basic language with various abstractions and services. The OS consists of eight classes:</p>
@@ -3986,21 +3990,26 @@ If source is a folder name, the single <code>.asm</code> file contains the trans
 <td>Facilitates execution-related services: <code>halt()</code>, <code>wait(int)</code>, ...</td>
 </tr>
 </tbody></table>
+<blockquote>
+<p>Note: I quickly went through this chapter without doing its exercises because the Jack language is very similar to Java, which I&#39;m already familiar with.
+I focused only on familiarizing with the places where the Jack language differs from Java.
+I am not interested in gaining an intimate knowledge of Jack, but rather learning the bare minimum to be able to write the compiler in the coming chapters.</p>
+</blockquote>
 <h2>Chapter 10: Compiler I -- Syntax analysis</h2>
 <p>A <bmark>compiler</bmark> is a program that translates programs from a <strong>source language</strong> into a <strong>target language</strong>.</p>
 <p>Compilation consists of two main stages:</p>
 <ol>
-<li><bmark>Syntax analysis<bmark>: Understanding the syntax and semantics of the source program.</li>
+<li><bmark>Syntax analysis</bmark>: Understanding the syntax and semantics of the source program.</li>
 <li><pmark>Code generation</pmark>: Re-expressing the semantics of the source program using the syntax of the target language.</li>
 </ol>
 <p>The syntax analysis stage is divided two sub-stages:</p>
 <ol>
-<li><pmark>Tokenizing</pmark>: The grouping of input characters into language atoms called tokens.</li>
+<li><gmark>Tokenizing</gmark>: The grouping of input characters into language atoms called tokens.</li>
 <li><pmark>Parsing</pmark>: The grouping of tokens into structured statements that have a meaning.</li>
 </ol>
 <p><img src="/assets/nand-images/fig10.1.png" alt="Figure 10.1"></p>
 <p><bmark>Grammar</bmark> are the set of rules that define the syntax of a programming language.
-To understand — parse — a given program means to determine the exact correspondence between the program’s text and the grammar’s rules.
+To understand — <pmark>parse</pmark> — a given program means to determine the exact correspondence between the program’s text and the grammar’s rules.
 To do so, the program’s text must be converted into a list of tokens.</p>
 <hr>
 <p>Each programming language specification includes the types of tokens, or words, that the language recognizes.
@@ -4014,12 +4023,12 @@ Jack has the following token types:</p>
 </ol>
 <p>The tokens defined by these lexical categories are referred to as the <bmark>language lexicon</bmark>.
 The first step in analyzing a program&#39;s syntax is grouping the characters into tokens, as defined by the language lexicon, while ignoring white spaces and comments.
-This process is called <bmark>lexical analysis</bmark> or <bmark>tokenizing</bmark> and is implemented by a program called a <pmark>tokenizer</pmark> or <pmark>lexical analyzer</pmark>.
+This process is called <bmark>lexical analysis</bmark> or <pmark>tokenizing</pmark> and is implemented by a program called a <gmark>tokenizer</gmark> or <ymark>lexical analyzer</ymark>.
 The tokenizer reads the input text character by character and groups the characters into tokens.</p>
 <p>Once a program has been tokenized, the tokens, rather than the characters, are viewed as its basic atoms.</p>
 <hr>
 <p>The second stage of syntax analysis is <bmark>parsing</bmark>, which involves grouping the tokens into structured statements that have meaning (i.e. that are valid).</p>
-<p>The structured statements are called <bmark>parse trees</bmark> or <bmark>abstract syntax trees (ASTs)</bmark>.
+<p>The structured statements are called <bmark>parse trees</bmark> or <ymark>abstract syntax trees (ASTs)</ymark>.
 The ASTs are built according to the rules of the language&#39;s grammar.
 A language&#39;s grammar is written in a meta-language: a language describing a language.
 The book avoids grammar formalism and instead views grammar as a set of rules that define the syntax of a language:</p>
@@ -4058,7 +4067,7 @@ followed by the token <gmark>}</gmark>.</p>
 <li><strong>identifiers</strong>: A sequence of letters, digits, and underscores that does not begin with a digit. Used to name classes, variables, and subroutines.</li>
 </ul>
 <h4>Program structure</h4>
-<p>A Jack program is a collection of classes, each appearing in a separate file. The compilation unin is a class. A class is a sequence of tokens, as follows:</p>
+<p>A Jack program is a collection of classes, each appearing in a separate file. The compilation unit is a class. A class is a sequence of tokens, as follows:</p>
 <ul>
 <li><code>class</code>: &#39;class&#39; className &#39;{&#39; classVarDec* subroutineDec* &#39;}&#39;</li>
 <li><code>classVarDec</code>: (&#39;static&#39; | &#39;field&#39;) type varName (&#39;,&#39; varName)* &#39;;&#39;</li>
@@ -4097,38 +4106,44 @@ followed by the token <gmark>}</gmark>.</p>
 </code></pre><p>The grammar can be used to parse the above code as follows:</p>
 <ul>
 <li>After getting the first token and realizing that we have an <strong>if</strong> pattern, we focus on the rule &quot;<code>ifStatement</code>: &#39;<gmark>if</gmark>&#39; &#39;<gmark>(</gmark>&#39; <pmark>expression</pmark> &#39;<gmark>)</gmark>&#39; &#39;<gmark>{</gmark>&#39; <pmark>statements</pmark> &#39;<gmark>}</gmark>&#39;&quot;. </li>
-<li>The rule informs that following the token <strong>if</strong> there ought to be the token <strong>(</strong>, followed by an <em>expression</em>, followed by the token <strong>)</strong>.
+<li>The rule informs that following the token <gmark>if</gmark> there ought to be the token <gmark>(</gmark>, followed by an <pmark>expression</pmark>, followed by the token <gmark>)</gmark>.
 And indeed, these requirements are satisfied by the input element <code>(x&lt;0)</code>.</li>
-<li>Next, we see that we now have to anticipate the token <strong>{</strong>, followed by <em>statements</em>, followed by the token <strong>}</strong>.
-Now, <em>statements</em> is defined as 0 or more instances of statement, and statement, in turn, is either a letStatement, an ifStatement, or a whileStatement.</li>
+<li>Next, we see that we now have to anticipate the token <gmark>{</gmark>, followed by <pmark>statements</pmark>, followed by the token <gmark>}</gmark>.
+Now, <pmark>statements</pmark> is defined as <strong>0</strong> or more instances of statement, and statement, in turn, is either:<ul>
+<li>a <strong>letStatement</strong>,</li>
+<li>an <strong>ifStatement</strong>,</li>
+<li>or a <strong>whileStatement</strong>.</li>
+</ul>
+</li>
 <li>This expectation is met by the inner input element <code>if(y&gt;0){...}</code> which is an <code>ifStatement</code>.</li>
 </ul>
 <p>The parser produces an exact correspondence between the given input, on the one hand, and the syntactic patterns admitted by the grammar rules, on the other.
-The correspondence can be represented by a data structure called a parse tree, also called a derivation tree, like the one shown in figure 10.4a.
+The correspondence can be represented by a data structure called a <bmark>parse tree</bmark>, also called a derivation tree, like the one shown in figure 10.4a.
 If such a tree can be constructed, the parser renders the input valid; otherwise, it can report that the input contains syntax errors.</p>
 <p><img src="/assets/nand-images/fig10.4a.png" alt="Figure 10.4"></p>
 <hr>
-<p>A parser is an agent that operates according to a given grammar. The parser
-accepts as input a stream of tokens and attempts to produce as output the
-parse tree associated with the given input. In our case, the input is expected
-to be structured according to the Jack grammar, and the output is written in
-XML.</p>
-<p>There are several algorithms for constructing parse trees. The top-down
-approach, also known as recursive descent parsing, attempts to parse the
-tokenized input recursively, using the nested structures admitted by the
-language grammar. Such an algorithm can be implemented as follows. For
-every nontrivial rule in the grammar, we equip the parser program with a
-routine designed to parse the input according to that rule. For example, the
-grammar listed in figure 10.3 can be implemented using a set of routines
-named compileStatement, compileStatements, compileLet, compileIf, …,
-compileExpression, and so on.</p>
-<p>The parsing logic of each compilexxx routine should follow the syntactic
-pattern specified by the right side of the xxx rule. For example, let us focus
-on the rule whileStatement: &#39;while&#39; &#39;(&#39; expression &#39;)&#39; &#39;{&#39; statements &#39;}&#39;. According
-to our scheme, this rule will be implemented by a parsing routine named
-compileWhile. This routine should realize the left-to-right derivation logic
-specified by the pattern &#39;while&#39; &#39;(&#39; expression &#39;)&#39; &#39;{&#39; statements &#39;}&#39;. Here is one
-way to implement this logic, using pseudocode:</p>
+<p>A parser is an agent that operates according to a given grammar. The parser accepts as input a stream of tokens and attempts to produce as output the
+parse tree associated with the given input. In our case, the input is expected to be structured according to the Jack grammar, and the output is written in XML.</p>
+<p>There are several algorithms for constructing parse trees. The top-down approach, also known as <bmark>recursive descent parsing</bmark>,
+attempts to parse the tokenized input recursively, using the nested structures admitted by the language grammar.
+Such an algorithm can be implemented as follows:</p>
+<blockquote>
+<p>For every nontrivial rule in the grammar, we equip the parser program with a routine designed to parse the input according to that rule.</p>
+</blockquote>
+<p>For example, the grammar listed previously can be implemented using a set of routines named:</p>
+<ul>
+<li><code>compileStatement</code>, </li>
+<li><code>compileStatements</code>,</li>
+<li><code>compileLet</code>,</li>
+<li><code>compileIf</code>,</li>
+<li>…,</li>
+<li><code>compileExpression</code>, and so on.</li>
+</ul>
+<p>The parsing logic of each <code>compileXXX</code> routine should follow the syntactic pattern specified by the right side of the <code>XXX</code> rule.
+For example, according to our scheme, the <strong>whileStatement</strong> rule will be implemented by a parsing routine named <code>compileWhile</code>.
+This routine should realize the left-to-right derivation logic specified by the pattern
+&quot;&#39;<gmark>while</gmark>&#39; &#39;<gmark>(</gmark>&#39; <pmark>expression</pmark> &#39;<gmark>)</gmark>&#39; &#39;<gmark>{</gmark>&#39; <pmark>statements</pmark> &#39;<gmark>}</gmark>&#39;&quot;.
+Below is the pseudocode for the <code>compileWhile</code> routine:</p>
 <pre><code class="hljs">// This routine implements the rule whileStatement: &#x27;while&#x27; &#x27;(&#x27; expression &#x27;)&#x27; &#x27;{&#x27; statements &#x27;}&#x27;.
 // Should be called if the current token is &#x27;while&#x27;.
 compileWhile():
@@ -4151,33 +4166,139 @@ process(token):
         error(&quot;Syntax error: Expected token &quot; + token + &quot; but got &quot; + currentToken)
 </code></pre><p>This parsing process will continue until the expression and statements parts
 of the while statement have been fully parsed.</p>
-<p>they all follow the same contract: each compilexxx routine should get from
-the input, and handle, all the tokens that make up xxx, advance the tokenizer
-exactly beyond these tokens, and output the parse tree of xxx.
-Recursive parsing algorithms are simple and elegant. If the language is
-simple, a single token lookahead is all that it takes to know which parsing
-rule to invoke next. For example, if the current token is let, we know that we
-have a letStatement; if the current token is while, we know that we have a
-whileStatement, and so on. Indeed, in the simple grammar shown in figure
-10.3, looking ahead one token suffices to resolve, without ambiguity, which
-rule to use next. Grammars that have this lingual property are called LL (1).
-These grammars can be handled simply and elegantly by recursive descent
-algorithms, without backtracking.
-The term LL comes from the observation that the grammar parses the
-input from left to right, performing leftmost derivation of the input. The (1) they all follow the same contract: each compilexxx routine should get from
-the input, and handle, all the tokens that make up xxx, advance the tokenizer
-exactly beyond these tokens, and output the parse tree of xxx.
-Recursive parsing algorithms are simple and elegant. If the language is
-simple, a single token lookahead is all that it takes to know which parsing
-rule to invoke next. For example, if the current token is let, we know that we
-have a letStatement; if the current token is while, we know that we have a
-whileStatement, and so on. Indeed, in the simple grammar shown in figure
-10.3, looking ahead one token suffices to resolve, without ambiguity, which
-rule to use next. Grammars that have this lingual property are called LL (1).
-These grammars can be handled simply and elegantly by recursive descent
-algorithms, without backtracking.
-The term LL comes from the observation that the grammar parses the
-input from left to right, performing leftmost derivation of the input. The (1)</p>
+<p>Each <code>compileXXX</code> routine follow the same contract:</p>
+<ul>
+<li>Each routine should get from the input, and handle, all the tokens that make up <code>XXX</code>,</li>
+<li>Advance the tokenizer exactly beyond these tokens,</li>
+<li>And output the parse tree of xxx.</li>
+</ul>
+<p>Recursive parsing algorithms are simple and elegant. Jack&#39;s grammar is simple, only requiring a <ymark>single token lookahead</ymark>
+to know which parsing rule to invoke next, without ambiguity.</p>
+<p>Grammars that have this lingual property are called <pmark>LL (1)<pmark>.
+These grammars can be handled simply and elegantly by recursive descent algorithms, without backtracking.</p>
+<p>For example:</p>
+<ul>
+<li>If the current token is <code>let</code>, we know that we have a <strong>letStatement</strong>;</li>
+<li>If the current token is <code>while</code>, we know that we have a <strong>whileStatement</strong>,</li>
+<li>and so on.</li>
+</ul>
+<h3>Project</h3>
+<p>Solution code is on <a href="https://github.com/Elvis10ten/nand-to-tetris/tree/main/src/compiler">GitHub</a>.</p>
+<h2>Chapter 11: Compiler II -- Code generation</h2>
+<blockquote>
+<p>The syntax analyzer was built in order to develop, and demonstrate, a capability for parsing high-level programs into their underlying syntactical elements.
+In this chapter we’ll morph the analyzer into a full-scale compiler: a program that converts the parsed elements into VM commands designed to execute on the abstract virtual machine described in chapters 7-8.
+This approach follows the modular analysis-synthesis paradigm that informs the construction of well-designed compilers.
+It also captures the very essence of translating text from one language to another:
+first, one uses the source language’s syntax for analyzing the source text and figuring out its underlying semantics, that is, what the text seeks to say;
+next, one re-expresses the parsed semantics using the syntax of the target language.</p>
+</blockquote>
+<p>One of the basic tasks of compilers is mapping the variables declared in the source high-level program onto the host RAM of the target platform.
+Thus, every Jack variable, including pointer variables holding 16-bit address values, can be mapped on exactly one word in memory.</p>
+<p>The second challenge faced by compilers is that variables of different kinds have different life cycles.</p>
+<ul>
+<li>Class-level static variables are shared globally by all the subroutines in the class.
+Therefore, a single copy of each static variable should be kept alive during the complete duration of the program’s execution.</li>
+<li>Instance-level field variables are treated differently: each object (instance of the class) must have a private set of its field variables, and,
+when the object is no longer needed, this memory must be freed.</li>
+<li>Subroutine-level local and argument variables are created each time a subroutine starts running and must be freed when the subroutine terminates.</li>
+</ul>
+<p>In our two-tier compiler architecture, memory allocation and de-allocation are delegated to the VM level.
+All we have to do now is map:</p>
+<ul>
+<li>Jack static variables on static 0, static 1, static 2, …;</li>
+<li>Field variables on this 0, this 1, …;</li>
+<li>Local variables on local 0, local 1, …; and</li>
+<li>Argument variables on argument 0, argument 1, ….</li>
+</ul>
+<p>The subsequent mapping of the virtual memory segments on the host RAM, as well as the intricate management of their run-time life cycles,
+are completely taken care of by the VM implementation.</p>
+<blockquote>
+<p>Recall that this implementation was not achieved easily:
+we had to work hard to generate assembly code that dynamically maps the virtual memory segments on the host RAM as a side effect of
+realizing the function call-and-return protocol. Now we can reap the benefits of this effort:
+the only thing required from the compiler is mapping the high-level variables onto the virtual memory segments.
+All the subsequent gory details associated with managing these segments on the RAM will be handled by the VM implementation.</p>
+</blockquote>
+<p>In a two-tier compilation model, the handling of variables can be reduced to mapping high-level variables on virtual memory segments
+and using this mapping, as needed, throughout code generation.
+These tasks can be readily managed using a classical abstraction known as a symbol table.</p>
+<h3>Project</h3>
+<p>Solution code is on <a href="https://github.com/Elvis10ten/nand-to-tetris/tree/main/src/compiler">GitHub</a>.</p>
+<h2>Chapter 12: Operating System</h2>
+<h3>Multiplication</h3>
+<pre><code class="hljs language-pseudocode">// Return x * y, where x, y &gt;= 0
+multiply(x, y):
+    sum = 0
+    shiftedX = x
+    
+    for i = 0 ... n - 1 do
+        if ((i-th bit of y) == 1)
+            // For each i-th bit of `y`, if it is 1, we add the shifted x to the `sum` accumulator.
+            sum = sum + shiftedX
+        
+        // For each i-th bit of `y`, we shift `x` `i` times to the left (same as multiplying `x` by `2^i`).
+        // `2 * shiftedX` can be computed by left-shifting the bitwise representation of `shiftedX` or by adding `shiftedX` to itself.
+        shiftedX = 2 * shiftedX
+    
+    return sum
+</code></pre><p><strong>Algorithm analysis</strong>:</p>
+<ul>
+<li>The multiplication algorithm performs <code>n</code> iterations, where <code>n</code> is the bit width of the y input.</li>
+<li>In each iteration, the algorithm performs a few addition and comparison operations.</li>
+<li>The total running time of the algorithm is <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>+</mo><mi>b</mi><mo>⋅</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">a + b \cdot n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span>, where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span> is the time it takes to initialize a few variables,
+and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span> is the time it takes to perform a few addition and comparison operations.</li>
+<li>Formally, the algorithm’s running time is <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span>, where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> is the bit width of the inputs.</li>
+</ul>
+<p><strong>Algorithm in action</strong>:</p>
+<pre><code class="hljs">x = 27 =      ...  0 0 0 0 1 1 0 1 1
+y  = 9 =      ...  0 0 0 0 0 1 0 0 1 (i-th bit of y)
+              -----------------------
+              ...  0 0 0 0 1 1 0 1 1  (1)
+              ...  0 0 0 1 1 0 1 1 0  (0)
+              ...  0 0 1 1 0 1 1 0 0  (0)
+              ...  0 1 1 0 1 1 0 0 0  (1)
+              -----------------------
+x * y = 243 = ... 0 1 1 1 1 0 0 1 1   sum
+</code></pre><hr>
+<h3>Division</h3>
+<pre><code class="hljs language-pseudocode">// Returns the integer division `x / y`, where x &gt;= 0 and y &gt; 0.
+divide(x, y):
+    if (y &gt; x) return 0
+    q = divide(x, 2 * y)
+    if ((x - 2 * q * y) &lt; y)
+        return 2 * q
+    else
+        return 2 * q + 1
+</code></pre><p>Suppose we have to divide <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>480</mn><mi>b</mi><mi>y</mi><mn>17</mn></mrow><annotation encoding="application/x-tex">480 by 17</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord">480</span><span class="mord mathnormal">b</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mord">17</span></span></span></span>. The algorithm shown above is based on the insight
+$ 480 / 17 = 2 \cdot (240 / 17) = 2 \cdot (2 \cdot (120 / 17)) = 2 \cdot (2 \cdot (2 \cdot (60 / 17))) = ...$, and so on.</p>
+<p>The depth of this recursion is bounded by the number of times <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> can be multiplied by <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn></mrow><annotation encoding="application/x-tex">2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span> before reaching <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span>.
+This also happens to be, at most, the number of bits required to represent <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span>.
+Thus, the running time of this algorithm is <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span>, where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> is the bit width of the inputs.</p>
+<hr>
+<h3>Square root</h3>
+<p>The square root function <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mi>s</mi><mi>q</mi><mi>r</mi><mi>t</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">y = sqrt(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">s</span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">t</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span> has two attractive properties:</p>
+<ul>
+<li>First, it is monotonically increasing.</li>
+<li>Second, its inverse function, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><msup><mi>x</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">y = x^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>, is a function that we already know how to compute efficiently—multiplication. 
+Taken together, these properties imply that we have all we need to compute square roots efficiently, using a form of binary search.</li>
+</ul>
+<pre><code class="hljs language-pseudocode">// Computes the integer part of `y = sqrt(x)`.
+// Strategy: finds an integer `y` such that `y^2 &lt;= x &lt; (y + 1)^2` (for 0 &lt;= x &lt; 2^n).
+// by performing binary search in the range `0 ... 2^(n/2) - 1`.
+sqrt(x):
+    y = 0
+    for j = (n/2 - 1) ... 0 do
+        if (y + 2^j)^2 &lt;= x then
+            y = y + 2^j
+    return y
+</code></pre><p>Since the number of iterations in the binary search that the algorithm performs is bound by <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi mathvariant="normal">/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">n / 2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">n</span><span class="mord">/2</span></span></span></span>
+where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> is the number of bits in <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span>, the algorithm’s running time is <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span>.</p>
+<h3>Project</h3>
+<p>Solution code is on <a href="https://github.com/Elvis10ten/nand-to-tetris/tree/main/src/os">GitHub</a>.</p>
+<p>I only completed like 60% of the project. The OS described in the book is more of a typical standard library.
+The implementation of which I am largely familiar with.
+Also, I plan on continuing another book specifically for &quot;real&quot; operating systems.</p>
 
 
     </body>
