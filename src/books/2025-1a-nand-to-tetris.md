@@ -1,4 +1,4 @@
-# [WIP] The Elements of Computing Systems – Building a Modern Computer from First Principles
+# The Elements of Computing Systems – Building a Modern Computer from First Principles
 
 I highly recommend reading the [Nand to Tetris book](https://amzn.to/3CnFJRp) for anyone interested in learning how computers work from the ground up.
 This page is a result of my notes while reading the book.
