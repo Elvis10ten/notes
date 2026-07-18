@@ -18,15 +18,14 @@ h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; }
 .tabbtn { border: none; padding: 9px 0; flex: 1; font: 700 15px Archivo; letter-spacing: .04em; cursor: pointer; border-radius: 7px; background: transparent; color: #EDE7D6; }
 .tabbtn.on { background: #C9A24B; color: #1D2B26; }
 .meta { display: flex; justify-content: space-between; font-size: 12.5px; color: #CFC8B4; margin-bottom: 8px; }
-.flip-scene { perspective: 1200px; width: 100%; max-width: 420px; }
-.flip-inner { position: relative; width: 100%; height: 280px; transition: transform .45s cubic-bezier(.2,.7,.3,1); transform-style: preserve-3d; cursor: pointer; }
-.flip-inner.flipped { transform: rotateX(180deg); }
-.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 10px;
+.flip-scene { width: 100%; max-width: 420px; }
+.flipcard { width: 100%; height: 280px; cursor: pointer; transition: transform .18s ease; transform-origin: 50% 50%; }
+.flipcard.mid { transform: perspective(700px) rotateX(88deg); }
+.face { position: relative; height: 100%; border-radius: 10px;
   background: #FBF6E9; color: #2B2820; box-shadow: 0 10px 24px rgba(0,0,0,.35), 0 2px 0 rgba(0,0,0,.15);
   display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; overflow: hidden; }
 .face::before { content: ""; position: absolute; left: 0; right: 0; top: 44px; height: 2px; background: #D2584C; opacity: .85; }
 .face::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(to bottom, transparent 0 35px, rgba(90,130,170,.18) 35px 36px); pointer-events: none; }
-.face.back { transform: rotateX(180deg); }
 .face .z { position: relative; z-index: 1; text-align: center; }
 .lab { font-size: 11px; letter-spacing: .2em; color: #A09A88; font-weight: 700; margin-bottom: 14px; }
 .de-word { font-size: 32px; font-weight: 800; color: #2B2820; line-height: 1.2; }
@@ -52,7 +51,7 @@ h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; }
 textarea { width: 100%; min-height: 140px; border-radius: 8px; border: none; padding: 10px; font: 14px/1.5 Archivo; background: #FBF6E9; color: #2B2820; }
 .mt { margin-top: 26px; } .hide { display: none !important; }
 p.help { font-size: 13px; line-height: 1.55; color: #CFC8B4; margin: 0 0 10px; }
-@media (prefers-reduced-motion: reduce) { .flip-inner { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .flipcard { transition: none; } }
 </style>
 </head>
 <body>
@@ -326,7 +325,16 @@ const store = {
 };
 
 let level="A1", progress={}, custom=[], queue=[], idx=0, flipped=false,
-    right=0, wrong=0, withMastered=false, importLevel="A1", confirmReset=false, saveTimer=null;
+    right=0, wrong=0, withMastered=false, importLevel="A1", confirmReset=false, saveTimer=null,
+    animating=false, openAnim=false;
+
+function doFlip(){
+  const el=$("flipCard");
+  if(!el || animating) return;
+  animating=true;
+  el.classList.add("mid");
+  setTimeout(()=>{ flipped=!flipped; openAnim=true; animating=false; render(); }, 180);
+}
 
 const $ = id => document.getElementById(id);
 const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
@@ -390,19 +398,25 @@ function render(){
     $("btnArea").innerHTML="";
     $("btnNext").onclick=buildQueue;
   } else if(card){
-    $("cardArea").innerHTML='<div class="flip-scene"><div class="flip-inner'+(flipped?" flipped":"")+'" id="flipCard">'
-      +'<div class="face"><div class="z"><div class="lab">'+level+' · DEUTSCH</div>'
+    const front='<div class="lab">'+level+' · DEUTSCH</div>'
       +'<div class="de-word'+(card.de.length>18?" long":"")+'">'+esc(card.de)+'</div>'
-      +'<div class="hint">Tippen zum Umdrehen</div></div></div>'
-      +'<div class="face back"><div class="z"><div class="lab">ENGLISCH</div>'
-      +'<div class="en-word">'+esc(card.en)+'</div><div class="de-small">'+esc(card.de)+'</div></div></div>'
-      +'</div></div>';
-    $("flipCard").onclick=()=>{ flipped=!flipped; render(); };
+      +'<div class="hint">Tippen zum Umdrehen</div>';
+    const back='<div class="lab">ENGLISCH</div>'
+      +'<div class="en-word">'+esc(card.en)+'</div><div class="de-small">'+esc(card.de)+'</div>';
+    $("cardArea").innerHTML='<div class="flip-scene"><div class="flipcard" id="flipCard">'
+      +'<div class="face"><div class="z">'+(flipped?back:front)+'</div></div></div></div>';
+    const el=$("flipCard");
+    el.onclick=doFlip;
+    if(openAnim){
+      el.style.transition="none"; el.classList.add("mid"); void el.offsetHeight; el.style.transition="";
+      requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.remove("mid")));
+      openAnim=false;
+    }
     $("btnArea").innerHTML = flipped
       ? '<button class="actbtn red" id="bNo">Nochmal üben</button><button class="actbtn green" id="bYes">Gewusst ✓</button>'
       : '<button class="actbtn neutral" id="bFlip">Antwort zeigen</button>';
     if(flipped){ $("bNo").onclick=()=>answer(false); $("bYes").onclick=()=>answer(true); }
-    else $("bFlip").onclick=()=>{ flipped=true; render(); };
+    else $("bFlip").onclick=doFlip;
   } else {
     $("cardArea").innerHTML='<div style="margin-top:30px;text-align:center;color:#CFC8B4">Alles gelernt!<div style="margin-top:12px"><button class="ghost" id="bAgain">Gelernte Wörter wiederholen</button></div></div>';
     $("btnArea").innerHTML="";
@@ -455,7 +469,7 @@ $("btnDoImport").onclick=async()=>{
 
 document.addEventListener("keydown",e=>{
   if(currentView()!=="study"||idx>=queue.length) return;
-  if(e.key===" "){ e.preventDefault(); flipped=!flipped; render(); }
+  if(e.key===" "){ e.preventDefault(); doFlip(); }
   if(flipped&&e.key==="1") answer(false);
   if(flipped&&e.key==="2") answer(true);
 });
