@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Telc Wortschatz – Karteikasten</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap');
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; }
+body { min-height: 100vh; background: radial-gradient(circle at 50% 0%, #2A4F46 0%, #1D3831 60%, #162B26 100%);
+  font-family: 'Archivo', sans-serif; color: #EDE7D6; display: flex; flex-direction: column; align-items: center; padding: 16px 14px 28px; }
+.wrap { width: 100%; max-width: 420px; }
+.eyebrow { font-size: 11px; letter-spacing: .22em; font-weight: 700; color: #C9A24B; text-transform: uppercase; }
+h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; }
+.hdr { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+.ghost { background: transparent; border: 1px solid rgba(237,231,214,.35); color: #EDE7D6; border-radius: 8px; padding: 8px 12px; font: 600 13px Archivo; cursor: pointer; }
+.tabs { display: flex; gap: 6px; background: rgba(0,0,0,.25); padding: 5px; border-radius: 10px; margin-bottom: 14px; }
+.tabbtn { border: none; padding: 9px 0; flex: 1; font: 700 15px Archivo; letter-spacing: .04em; cursor: pointer; border-radius: 7px; background: transparent; color: #EDE7D6; }
+.tabbtn.on { background: #C9A24B; color: #1D2B26; }
+.meta { display: flex; justify-content: space-between; font-size: 12.5px; color: #CFC8B4; margin-bottom: 8px; }
+.flip-scene { perspective: 1200px; width: 100%; max-width: 420px; }
+.flip-inner { position: relative; width: 100%; height: 280px; transition: transform .45s cubic-bezier(.2,.7,.3,1); transform-style: preserve-3d; cursor: pointer; }
+.flip-inner.flipped { transform: rotateX(180deg); }
+.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 10px;
+  background: #FBF6E9; color: #2B2820; box-shadow: 0 10px 24px rgba(0,0,0,.35), 0 2px 0 rgba(0,0,0,.15);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; overflow: hidden; }
+.face::before { content: ""; position: absolute; left: 0; right: 0; top: 44px; height: 2px; background: #D2584C; opacity: .85; }
+.face::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(to bottom, transparent 0 35px, rgba(90,130,170,.18) 35px 36px); pointer-events: none; }
+.face.back { transform: rotateX(180deg); }
+.face .z { position: relative; z-index: 1; text-align: center; }
+.lab { font-size: 11px; letter-spacing: .2em; color: #A09A88; font-weight: 700; margin-bottom: 14px; }
+.de-word { font-size: 32px; font-weight: 800; color: #2B2820; line-height: 1.2; }
+.de-word.long { font-size: 26px; }
+.hint { margin-top: 22px; font-size: 12.5px; color: #A09A88; }
+.en-word { font-family: 'Caveat', cursive; font-size: 34px; font-weight: 700; color: #44567A; line-height: 1.15; }
+.de-small { margin-top: 14px; font-size: 16px; font-weight: 600; color: #8A8474; }
+.btnrow { display: flex; gap: 10px; width: 100%; max-width: 420px; margin-top: 16px; min-height: 54px; }
+.actbtn { border: none; border-radius: 9px; padding: 15px 10px; flex: 1; font: 700 16px Archivo; cursor: pointer; color: #FBF6E9; box-shadow: 0 3px 0 rgba(0,0,0,.3); }
+.actbtn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,.3); }
+.green { background: #3E8E5A; } .red { background: #B5483D; }
+.neutral { background: rgba(255,255,255,.12); color: #EDE7D6; box-shadow: none; }
+.boxes { display: flex; gap: 5px; align-items: flex-end; height: 70px; }
+.boxcol { flex: 1; }
+.boxbar { width: 100%; border-radius: 4px 4px 2px 2px; display: flex; align-items: flex-start; justify-content: center; padding-top: 2px; font-size: 11px; font-weight: 700; color: #1D2B26; box-shadow: inset 0 -3px 0 rgba(0,0,0,.18); }
+.boxlabels { display: flex; gap: 5px; margin-top: 4px; }
+.boxlabels div { flex: 1; text-align: center; font-size: 10px; color: #9DA796; }
+.statcard { background: rgba(0,0,0,.22); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
+.statrow { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 6px; }
+.bar { height: 8px; background: rgba(255,255,255,.12); border-radius: 4px; overflow: hidden; margin-bottom: 8px; }
+.bar div { height: 100%; background: #3E8E5A; }
+.small { font-size: 12.5px; color: #CFC8B4; }
+textarea { width: 100%; min-height: 140px; border-radius: 8px; border: none; padding: 10px; font: 14px/1.5 Archivo; background: #FBF6E9; color: #2B2820; }
+.mt { margin-top: 26px; } .hide { display: none !important; }
+p.help { font-size: 13px; line-height: 1.55; color: #CFC8B4; margin: 0 0 10px; }
+@media (prefers-reduced-motion: reduce) { .flip-inner { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hdr">
+    <div>
+      <div class="eyebrow">Telc Wortschatz</div>
+      <h1>Karteikasten</h1>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="ghost" id="btnStats">Statistik</button>
+      <button class="ghost" id="btnImport">+ Wörter</button>
+    </div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+</div>
+
+<!-- Study -->
+<div id="viewStudy" class="wrap">
+  <div class="meta"><span id="metaRound"></span><span id="metaMastered"></span></div>
+  <div id="cardArea"></div>
+  <div class="btnrow" id="btnArea"></div>
+  <div class="mt">
+    <div class="eyebrow" style="margin-bottom:8px">Dein Karteikasten</div>
+    <div class="boxes" id="boxes"></div>
+    <div class="boxlabels"><div>Fach 1</div><div>Fach 2</div><div>Fach 3</div><div>Fach 4</div><div style="color:#7FBF98">Gelernt</div></div>
+  </div>
+</div>
+
+<!-- Stats -->
+<div id="viewStats" class="wrap hide">
+  <div id="statsArea"></div>
+  <button class="ghost" id="btnReset" style="width:100%;padding:11px;border-color:#D2584C;color:#E08A80">Fortschritt zurücksetzen</button>
+</div>
+
+<!-- Import -->
+<div id="viewImport" class="wrap hide">
+  <div style="font-size:15px;font-weight:700;margin-bottom:6px">Wörter importieren</div>
+  <p class="help">Eine Zeile pro Wort: <b>deutsches Wort ; Übersetzung</b> (auch Komma, Tab oder „–" möglich).
+    So kannst du die vollständige offizielle Telc-Wortliste aus dem PDF einfügen.</p>
+  <div style="display:flex;gap:6px;margin-bottom:8px" id="importTabs"></div>
+  <textarea id="importText" placeholder="die Ausnahme ; exception&#10;der Begriff ; term, concept"></textarea>
+  <div class="btnrow"><button class="actbtn green" id="btnDoImport">Hinzufügen</button></div>
+  <div id="importMsg" style="margin-top:10px;font-size:13px;color:#C9A24B"></div>
+</div>
+
+<script>
+const RAW = {
+  A1: [
+    ["der Mann","man"],["die Frau","woman"],["das Kind","child"],["der Junge","boy"],["das Mädchen","girl"],["die Familie","family"],
+    ["die Eltern","parents"],["der Vater","father"],["die Mutter","mother"],["der Sohn","son"],["die Tochter","daughter"],["der Bruder","brother"],
+    ["die Schwester","sister"],["die Großeltern","grandparents"],["der Großvater","grandfather"],["die Großmutter","grandmother"],["der Onkel","uncle"],["die Tante","aunt"],
+    ["der Freund","friend (m.)"],["die Freundin","friend (f.)"],["die Leute","people"],["der Name","name"],["der Vorname","first name"],["der Familienname","last name"],
+    ["der Herr","Mr. / gentleman"],["die Dame","lady"],["das Baby","baby"],["der Nachbar","neighbor"],["verheiratet","married"],["ledig","single"],
+    ["hallo","hello"],["tschüs","bye"],["auf Wiedersehen","goodbye"],["danke","thank you"],["bitte","please / you're welcome"],["die Entschuldigung","apology / excuse me"],
+    ["ja","yes"],["nein","no"],["vielleicht","maybe"],["die Zahl","number"],["die Uhr","clock / watch"],["die Zeit","time"],
+    ["die Stunde","hour"],["die Minute","minute"],["der Tag","day"],["die Woche","week"],["der Monat","month"],["das Jahr","year"],
+    ["heute","today"],["morgen","tomorrow"],["gestern","yesterday"],["jetzt","now"],["später","later"],["früh","early"],
+    ["spät","late"],["der Morgen","morning"],["der Vormittag","late morning"],["der Mittag","noon"],["der Nachmittag","afternoon"],["der Abend","evening"],
+    ["die Nacht","night"],["das Wochenende","weekend"],["der Montag","Monday"],["der Dienstag","Tuesday"],["der Mittwoch","Wednesday"],["der Donnerstag","Thursday"],
+    ["der Freitag","Friday"],["der Samstag","Saturday"],["der Sonntag","Sunday"],["der Januar","January"],["der Februar","February"],["der März","March"],
+    ["der April","April"],["der Mai","May"],["der Juni","June"],["der Juli","July"],["der August","August"],["der September","September"],
+    ["der Oktober","October"],["der November","November"],["der Dezember","December"],["der Frühling","spring"],["der Sommer","summer"],["der Herbst","autumn"],
+    ["der Winter","winter"],["der Geburtstag","birthday"],["der Termin","appointment"],["der Kalender","calendar"],["die Pause","break"],["der Feiertag","public holiday"],
+    ["der Urlaub","vacation"],["die Ferien","school holidays"],["das Essen","food / meal"],["das Getränk","drink"],["das Brot","bread"],["das Brötchen","bread roll"],
+    ["die Butter","butter"],["der Käse","cheese"],["die Wurst","sausage"],["das Fleisch","meat"],["der Fisch","fish"],["das Ei","egg"],
+    ["die Milch","milk"],["der Zucker","sugar"],["das Salz","salt"],["der Pfeffer","pepper"],["das Obst","fruit"],["der Apfel","apple"],
+    ["die Banane","banana"],["die Orange","orange"],["die Zitrone","lemon"],["die Erdbeere","strawberry"],["das Gemüse","vegetables"],["die Kartoffel","potato"],
+    ["die Tomate","tomato"],["der Salat","salad / lettuce"],["die Suppe","soup"],["der Reis","rice"],["die Nudeln","pasta / noodles"],["der Kuchen","cake"],
+    ["die Schokolade","chocolate"],["das Eis","ice cream / ice"],["das Wasser","water"],["der Saft","juice"],["der Kaffee","coffee"],["der Tee","tea"],
+    ["das Bier","beer"],["der Wein","wine"],["die Flasche","bottle"],["das Glas","glass"],["die Tasse","cup"],["der Teller","plate"],
+    ["der Löffel","spoon"],["die Gabel","fork"],["das Messer","knife"],["das Frühstück","breakfast"],["das Mittagessen","lunch"],["das Abendessen","dinner"],
+    ["der Hunger","hunger"],["der Durst","thirst"],["lecker","tasty"],["das Restaurant","restaurant"],["das Café","café"],["die Speisekarte","menu"],
+    ["die Rechnung","bill"],["bestellen","to order"],["bezahlen","to pay"],["schmecken","to taste (good)"],["der Kellner","waiter"],["das Haus","house"],
+    ["die Wohnung","apartment"],["das Zimmer","room"],["die Küche","kitchen"],["das Bad","bathroom"],["das Schlafzimmer","bedroom"],["das Wohnzimmer","living room"],
+    ["die Toilette","toilet"],["der Balkon","balcony"],["der Garten","garden"],["die Tür","door"],["das Fenster","window"],["die Wand","wall"],
+    ["der Boden","floor"],["die Treppe","stairs"],["der Aufzug","elevator"],["der Schlüssel","key"],["die Möbel","furniture"],["der Tisch","table"],
+    ["der Stuhl","chair"],["das Bett","bed"],["der Schrank","wardrobe / cupboard"],["das Sofa","sofa"],["die Lampe","lamp"],["das Bild","picture"],
+    ["der Spiegel","mirror"],["der Kühlschrank","fridge"],["der Herd","stove"],["die Waschmaschine","washing machine"],["der Fernseher","TV set"],["das Radio","radio"],
+    ["die Miete","rent"],["der Vermieter","landlord"],["wohnen","to live (reside)"],["die Adresse","address"],["die Straße","street"],["die Hausnummer","house number"],
+    ["die Stadt","city"],["das Dorf","village"],["das Land","country / countryside"],["der Bahnhof","train station"],["der Zug","train"],["die Bahn","railway"],
+    ["der Bus","bus"],["die Haltestelle","bus/tram stop"],["die U-Bahn","subway"],["das Auto","car"],["das Fahrrad","bicycle"],["das Taxi","taxi"],
+    ["das Flugzeug","airplane"],["der Flughafen","airport"],["das Schiff","ship"],["die Fahrkarte","ticket (transport)"],["der Fahrplan","timetable"],["die Abfahrt","departure"],
+    ["die Ankunft","arrival"],["fahren","to drive / go (by vehicle)"],["fliegen","to fly"],["gehen","to go / walk"],["kommen","to come"],["abfahren","to depart"],
+    ["ankommen","to arrive"],["einsteigen","to get on"],["aussteigen","to get off"],["umsteigen","to change (trains)"],["die Reise","trip / journey"],["das Hotel","hotel"],
+    ["das Gepäck","luggage"],["der Koffer","suitcase"],["die Tasche","bag"],["der Pass","passport"],["der Weg","way / path"],["links","left"],
+    ["rechts","right"],["geradeaus","straight ahead"],["weit","far"],["nah","near"],["hier","here"],["dort","there"],
+    ["die Ecke","corner"],["die Ampel","traffic light"],["die Brücke","bridge"],["der Platz","square / place"],["der Park","park"],["die Kirche","church"],
+    ["das Museum","museum"],["das Kino","cinema"],["das Theater","theater"],["die Bibliothek","library"],["das Schwimmbad","swimming pool"],["der Supermarkt","supermarket"],
+    ["das Geschäft","shop"],["der Markt","market"],["die Apotheke","pharmacy"],["die Bank","bank"],["die Post","post office"],["die Polizei","police"],
+    ["das Krankenhaus","hospital"],["das Rathaus","town hall"],["die Schule","school"],["der Kindergarten","kindergarten"],["kaufen","to buy"],["verkaufen","to sell"],
+    ["einkaufen","to go shopping"],["kosten","to cost"],["das Geld","money"],["der Preis","price"],["billig","cheap"],["teuer","expensive"],
+    ["die Kasse","checkout / till"],["der Kunde","customer"],["geöffnet","open"],["geschlossen","closed"],["die Größe","size"],["die Kleidung","clothing"],
+    ["das Hemd","shirt"],["die Hose","trousers"],["der Rock","skirt"],["das Kleid","dress"],["die Jacke","jacket"],["der Mantel","coat"],
+    ["der Pullover","sweater"],["das T-Shirt","T-shirt"],["der Schuh","shoe"],["die Socke","sock"],["die Mütze","cap / beanie"],["der Hut","hat"],
+    ["die Brille","glasses"],["tragen","to wear / carry"],["anziehen","to put on"],["ausziehen","to take off"],["der Körper","body"],["der Kopf","head"],
+    ["das Haar","hair"],["das Gesicht","face"],["das Auge","eye"],["das Ohr","ear"],["die Nase","nose"],["der Mund","mouth"],
+    ["der Zahn","tooth"],["der Hals","neck / throat"],["der Arm","arm"],["die Hand","hand"],["der Finger","finger"],["der Bauch","belly"],
+    ["der Rücken","back"],["das Bein","leg"],["der Fuß","foot"],["krank","sick"],["gesund","healthy"],["der Arzt","doctor (m.)"],
+    ["die Ärztin","doctor (f.)"],["der Zahnarzt","dentist"],["das Medikament","medicine"],["die Tablette","pill"],["das Fieber","fever"],["die Schmerzen","pain"],
+    ["der Schnupfen","runny nose"],["wehtun","to hurt"],["die Gesundheit","health"],["die Arbeit","work"],["arbeiten","to work"],["der Beruf","profession"],
+    ["der Lehrer","teacher"],["der Schüler","pupil"],["der Student","student"],["studieren","to study (university)"],["lernen","to learn"],["die Universität","university"],
+    ["der Kurs","course"],["die Klasse","class"],["die Prüfung","exam"],["der Test","test"],["die Aufgabe","task / exercise"],["die Hausaufgabe","homework"],
+    ["das Buch","book"],["das Heft","notebook"],["der Stift","pen"],["das Papier","paper"],["der Computer","computer"],["das Handy","mobile phone"],
+    ["das Telefon","telephone"],["die E-Mail","e-mail"],["der Brief","letter"],["die Nachricht","message"],["schreiben","to write"],["lesen","to read"],
+    ["sprechen","to speak"],["hören","to hear / listen"],["verstehen","to understand"],["fragen","to ask"],["antworten","to answer"],["wiederholen","to repeat"],
+    ["buchstabieren","to spell"],["die Sprache","language"],["das Wort","word"],["der Satz","sentence"],["die Frage","question"],["die Antwort","answer"],
+    ["das Büro","office"],["der Chef","boss"],["der Kollege","colleague"],["die Firma","company"],["die Freizeit","free time"],["das Hobby","hobby"],
+    ["der Sport","sport"],["der Fußball","soccer"],["spielen","to play"],["schwimmen","to swim"],["tanzen","to dance"],["singen","to sing"],
+    ["die Musik","music"],["der Film","film"],["fernsehen","to watch TV"],["das Foto","photo"],["fotografieren","to take photos"],["malen","to paint"],
+    ["kochen","to cook"],["backen","to bake"],["reisen","to travel"],["wandern","to hike"],["das Spiel","game"],["der Ball","ball"],
+    ["die Party","party"],["feiern","to celebrate"],["einladen","to invite"],["die Einladung","invitation"],["das Geschenk","present"],["besuchen","to visit"],
+    ["treffen","to meet"],["das Wetter","weather"],["die Sonne","sun"],["der Regen","rain"],["regnen","to rain"],["der Schnee","snow"],
+    ["schneien","to snow"],["der Wind","wind"],["die Wolke","cloud"],["warm","warm"],["kalt","cold"],["heiß","hot"],
+    ["kühl","cool"],["das Grad","degree"],["der Himmel","sky"],["das Meer","sea"],["der See","lake"],["der Fluss","river"],
+    ["der Berg","mountain"],["der Wald","forest"],["der Baum","tree"],["die Blume","flower"],["das Tier","animal"],["der Hund","dog"],
+    ["die Katze","cat"],["der Vogel","bird"],["das Pferd","horse"],["sein","to be"],["haben","to have"],["werden","to become"],
+    ["können","can / to be able to"],["müssen","must / to have to"],["wollen","to want"],["dürfen","may / to be allowed"],["sollen","should"],["mögen","to like"],
+    ["möchten","would like"],["machen","to do / make"],["geben","to give"],["nehmen","to take"],["sehen","to see"],["essen","to eat"],
+    ["trinken","to drink"],["schlafen","to sleep"],["aufstehen","to get up"],["leben","to live"],["heißen","to be called"],["kennen","to know (person)"],
+    ["wissen","to know (fact)"],["finden","to find"],["suchen","to look for"],["brauchen","to need"],["helfen","to help"],["holen","to fetch"],
+    ["bringen","to bring"],["zeigen","to show"],["öffnen","to open"],["schließen","to close"],["beginnen","to begin"],["anfangen","to start"],
+    ["aufhören","to stop"],["warten","to wait"],["bleiben","to stay"],["liegen","to lie (position)"],["stehen","to stand"],["sitzen","to sit"],
+    ["legen","to lay / put"],["stellen","to put (upright)"],["glauben","to believe"],["denken","to think"],["lachen","to laugh"],["lieben","to love"],
+    ["schicken","to send"],["bekommen","to receive"],["vergessen","to forget"],["probieren","to try / taste"],["gefallen","to please / like"],["passen","to fit"],
+    ["putzen","to clean"],["waschen","to wash"],["schenken","to give (as a gift)"],["wünschen","to wish"],["gratulieren","to congratulate"],["danken","to thank"],
+    ["rauchen","to smoke"],["parken","to park"],["anrufen","to call (phone)"],["telefonieren","to phone"],["mitkommen","to come along"],["mitbringen","to bring along"],
+    ["abholen","to pick up"],["ausfüllen","to fill out"],["unterschreiben","to sign"],["das Formular","form"],["die Anmeldung","registration"],["gut","good"],
+    ["schlecht","bad"],["schön","beautiful / nice"],["neu","new"],["alt","old"],["jung","young"],["groß","big / tall"],
+    ["klein","small"],["lang","long"],["kurz","short"],["schnell","fast"],["langsam","slow"],["leicht","easy / light"],
+    ["schwer","difficult / heavy"],["richtig","correct"],["falsch","wrong"],["frei","free"],["kaputt","broken"],["sauber","clean"],
+    ["schmutzig","dirty"],["laut","loud"],["leise","quiet"],["müde","tired"],["fertig","finished / ready"],["wichtig","important"],
+    ["interessant","interesting"],["langweilig","boring"],["glücklich","happy"],["traurig","sad"],["nett","nice / kind"],["freundlich","friendly"],
+    ["allein","alone"],["zusammen","together"],["viel","much / a lot"],["wenig","little / few"],["mehr","more"],["alle","all / everyone"],
+    ["etwas","something"],["nichts","nothing"],["immer","always"],["oft","often"],["manchmal","sometimes"],["nie","never"],
+    ["schon","already"],["noch","still / yet"],["sehr","very"],["auch","also"],["nur","only"],["wieder","again"],
+    ["natürlich","of course"],["leider","unfortunately"],["gern","gladly / with pleasure"],["zuerst","first"],["dann","then"],["danach","afterwards"]
+  ],
+  A2: [
+    ["der Alltag","everyday life"],["die Ausbildung","vocational training"],["der Arbeitsplatz","workplace"],["arbeitslos","unemployed"],["die Stelle","position / job"],["die Bewerbung","job application"],
+    ["sich bewerben","to apply (for a job)"],["der Lebenslauf","CV / résumé"],["das Praktikum","internship"],["der Vertrag","contract"],["das Gehalt","salary"],["der Lohn","wage"],
+    ["verdienen","to earn"],["die Erkältung","a cold"],["der Husten","cough"],["die Grippe","flu"],["verletzt","injured"],["die Versicherung","insurance"],
+    ["das Rezept","prescription / recipe"],["die Praxis","doctor's office"],["die Sprechstunde","consultation hours"],["der Notfall","emergency"],["der Unfall","accident"],["gefährlich","dangerous"],
+    ["sich fühlen","to feel"],["sich ausruhen","to rest"],["der Stress","stress"],["fit","fit"],["die Auskunft","information (desk)"],["die Verspätung","delay"],
+    ["der Anschluss","connection (transport)"],["buchen","to book"],["reservieren","to reserve"],["die Reservierung","reservation"],["die Jugendherberge","youth hostel"],["der Campingplatz","campsite"],
+    ["das Reisebüro","travel agency"],["die Sehenswürdigkeit","sight / attraction"],["der Ausflug","excursion"],["der Reiseführer","travel guide"],["das Ausland","foreign countries / abroad"],["der Ausweis","ID card"],
+    ["das Visum","visa"],["die Grenze","border"],["der Stau","traffic jam"],["die Autobahn","motorway"],["der Führerschein","driver's license"],["tanken","to refuel"],
+    ["die Tankstelle","gas station"],["die Panne","breakdown"],["die Werkstatt","repair shop"],["das Internet","internet"],["die Webseite","website"],["herunterladen","to download"],
+    ["drucken","to print"],["der Drucker","printer"],["speichern","to save (file)"],["löschen","to delete"],["der Bildschirm","screen"],["die Tastatur","keyboard"],
+    ["das Passwort","password"],["anklicken","to click on"],["die Zeitung","newspaper"],["die Zeitschrift","magazine"],["die Nachrichten","the news"],["die Werbung","advertising"],
+    ["die Sendung","TV program / shipment"],["der Sender","TV/radio channel"],["die Angst","fear"],["sich freuen","to be glad / look forward"],["die Freude","joy"],["sich ärgern","to be annoyed"],
+    ["der Ärger","trouble / anger"],["sich interessieren für","to be interested in"],["das Interesse","interest"],["die Liebe","love"],["der Streit","argument"],["sich streiten","to argue"],
+    ["die Sorge","worry"],["hoffen","to hope"],["der Wunsch","wish"],["der Traum","dream"],["träumen","to dream"],["lustig","funny"],
+    ["nervös","nervous"],["sauer","annoyed / sour"],["überrascht","surprised"],["die Überraschung","surprise"],["der Haushalt","household"],["aufräumen","to tidy up"],
+    ["der Müll","garbage"],["die Mülltonne","garbage bin"],["der Staubsauger","vacuum cleaner"],["bügeln","to iron"],["die Wäsche","laundry"],["das Geschirr","dishes"],
+    ["abwaschen","to wash dishes"],["die Spülmaschine","dishwasher"],["die Heizung","heating"],["der Strom","electricity"],["das Licht","light"],["anmachen","to turn on"],
+    ["ausmachen","to turn off"],["der Mietvertrag","rental contract"],["vermieten","to rent out"],["umziehen","to move (house)"],["der Umzug","move / relocation"],["erzählen","to tell (a story)"],
+    ["beschreiben","to describe"],["bedeuten","to mean"],["vergleichen","to compare"],["sich erinnern","to remember"],["vorschlagen","to suggest"],["empfehlen","to recommend"],
+    ["versprechen","to promise"],["erlauben","to allow"],["verbieten","to forbid"],["erreichen","to reach"],["schaffen","to manage / accomplish"],["klappen","to work out"],
+    ["passieren","to happen"],["ändern","to change"],["wechseln","to switch / exchange"],["verlieren","to lose"],["gewinnen","to win"],["teilnehmen","to participate"],
+    ["stattfinden","to take place"],["ausfallen","to be canceled"],["absagen","to cancel (an event)"],["abgeben","to hand in"],["ausleihen","to borrow / lend"],["zurückgeben","to give back"],
+    ["anbieten","to offer"],["sich anmelden","to register"],["sich abmelden","to deregister"],["sich kümmern um","to take care of"],["aufpassen","to pay attention"],["benutzen","to use"],
+    ["vorbereiten","to prepare"],["übersetzen","to translate"],["korrigieren","to correct"],["üben","to practice"],["der Fehler","mistake"],["das Beispiel","example"],
+    ["die Bedeutung","meaning"],["die Regel","rule"],["die Grammatik","grammar"],["die Übung","exercise"],["die Note","grade / mark"],["bestehen","to pass (an exam)"],
+    ["durchfallen","to fail (an exam)"],["erklären","to explain"],["ähnlich","similar"],["anders","different(ly)"],["bekannt","well-known"],["berühmt","famous"],
+    ["eigentlich","actually"],["ganz","quite / whole"],["gemeinsam","together / shared"],["genau","exact(ly)"],["gleich","same / right away"],["einfach","simple / simply"],
+    ["kompliziert","complicated"],["modern","modern"],["praktisch","practical"],["bequem","comfortable"],["eng","tight / narrow"],["breit","wide"],
+    ["hoch","high"],["tief","deep"],["dunkel","dark"],["hell","bright"],["hübsch","pretty"],["hässlich","ugly"],
+    ["dick","thick / fat"],["dünn","thin"],["stark","strong"],["schwach","weak"],["hart","hard"],["weich","soft"],
+    ["trocken","dry"],["nass","wet"],["voll","full"],["leer","empty"],["fast","almost"],["sofort","immediately"],
+    ["plötzlich","suddenly"],["ungefähr","approximately"],["mindestens","at least"],["höchstens","at most"],["früher","earlier / in the past"],["bald","soon"],
+    ["gerade","just now / straight"],["trotzdem","nevertheless"],["deshalb","therefore"],["also","so / thus"],["außerdem","besides / moreover"],["zufrieden","satisfied"],
+    ["die Veranstaltung","event"],["das Konzert","concert"],["die Ausstellung","exhibition"],["die Eintrittskarte","admission ticket"],["der Eintritt","admission"],["das Mitglied","member"],
+    ["der Verein","club / association"],["die Mannschaft","team"],["das Training","training"],["der Trainer","coach"],["das Ergebnis","result"],["der Gewinner","winner"],
+    ["das Glück","luck / happiness"],["das Pech","bad luck"],["die Möglichkeit","possibility"],["der Plan","plan"],["das Ziel","goal / destination"],["die Idee","idea"],
+    ["die Meinung","opinion"],["der Grund","reason"],["das Problem","problem"],["die Hilfe","help"],["der Tipp","tip / hint"],["der Rat","advice"],
+    ["die Information","information"],["der Zettel","slip of paper / note"],["die Liste","list"],["der Anfang","beginning"],["das Ende","end"],["die Mitte","middle"],
+    ["der Teil","part"],["das Stück","piece"],["die Hälfte","half"],["das Doppelzimmer","double room"],["das Einzelzimmer","single room"],["die Übernachtung","overnight stay"],
+    ["der Empfang","reception"],["das Gespräch","conversation"],["die Verabredung","appointment (private)"],["sich verabreden","to arrange to meet"],["der Besuch","visit"],["zu Besuch","on a visit"],
+    ["die Hochzeit","wedding"],["heiraten","to marry"],["der Geburtsort","place of birth"],["das Geburtsdatum","date of birth"],["der Wohnort","place of residence"],["die Staatsangehörigkeit","nationality"],
+    ["das Alter","age"],["geboren","born"],["der Erwachsene","adult"],["der Jugendliche","teenager"],["das Gewicht","weight"],["wiegen","to weigh"],
+    ["messen","to measure"],["der Meter","meter"],["das Kilo","kilo"],["der Liter","liter"],["die Packung","pack"],["die Dose","can / tin"],
+    ["die Tüte","bag (plastic/paper)"],["das Sonderangebot","special offer"],["die Quittung","receipt"],["das Bargeld","cash"],["die Kreditkarte","credit card"],["der Automat","vending machine / ATM"],
+    ["der Geldautomat","ATM"],["das Konto","bank account"],["die Wohnung dup-frei","--"],["bezahlt","paid"],["kostenlos","free of charge"],["gebraucht","used / second-hand"],
+    ["der Flohmarkt","flea market"],["das Schaufenster","shop window"],["die Abteilung","department (store)"],["der Verkäufer","salesperson"],["bedienen","to serve"],["die Bedienung","service / waiter"],
+    ["das Trinkgeld","tip (money)"],["der Imbiss","snack bar"],["die Bäckerei","bakery"],["die Metzgerei","butcher's shop"],["frisch","fresh"],["süß","sweet"],
+    ["scharf","spicy / sharp"],["bitter","bitter"],["roh","raw"],["gebraten","fried"],["gekocht","cooked / boiled"],["vegetarisch","vegetarian"],
+    ["die Speise","dish / food"],["die Vorspeise","starter"],["das Hauptgericht","main course"],["der Nachtisch","dessert"],["satt","full (after eating)"],["einpacken","to wrap / pack"],
+    ["auspacken","to unpack"],["wegwerfen","to throw away"],["aufmachen","to open (coll.)"],["zumachen","to close (coll.)"],["festhalten","to hold on"],["losfahren","to set off"],
+    ["zurückkommen","to come back"],["vorbeikommen","to drop by"],["spazieren gehen","to go for a walk"],["der Spaziergang","walk / stroll"],["das Picknick","picnic"],["grillen","to barbecue"],
+    ["angeln","to fish"],["reiten","to ride (a horse)"],["klettern","to climb"],["joggen","to jog"],["das Fitnessstudio","gym"],["die Bewegung","movement / exercise"],
+    ["der Lärm","noise"],["stören","to disturb"],["der Krach","racket / quarrel"],["ruhig","calm / quiet"],["die Ruhe","quiet / peace"],["die Ordnung","order / tidiness"],
+    ["in Ordnung","all right / OK"],["der Notruf","emergency call"],["die Feuerwehr","fire department"],["der Brand","fire (blaze)"],["brennen","to burn"],["die Gefahr","danger"],
+    ["retten","to rescue"],["verlassen","to leave (a place)"],["erkennen","to recognize"],["bemerken","to notice"],["beobachten","to observe"],["folgen","to follow"]
+  ],
+  B1: [
+    ["die Gesellschaft","society"],["der Staat","state / nation"],["die Regierung","government"],["die Politik","politics"],["der Politiker","politician"],["die Wahl","election / choice"],
+    ["wählen","to vote / choose"],["das Gesetz","law"],["das Recht","right / law"],["die Pflicht","duty"],["die Freiheit","freedom"],["die Sicherheit","security / safety"],
+    ["der Krieg","war"],["der Frieden","peace"],["die Armut","poverty"],["arm","poor"],["reich","rich"],["die Bevölkerung","population"],
+    ["der Bürger","citizen"],["der Ausländer","foreigner"],["der Flüchtling","refugee"],["die Heimat","homeland"],["die Kultur","culture"],["die Tradition","tradition"],
+    ["die Religion","religion"],["die Geschichte","history / story"],["das Jahrhundert","century"],["die Entwicklung","development"],["der Fortschritt","progress"],["die Zukunft","future"],
+    ["die Vergangenheit","past"],["die Gegenwart","present (time)"],["die Umwelt","environment"],["der Umweltschutz","environmental protection"],["das Klima","climate"],["der Klimawandel","climate change"],
+    ["die Energie","energy"],["die Luft","air"],["verschmutzen","to pollute"],["die Verschmutzung","pollution"],["recyceln","to recycle"],["sparen","to save (money/energy)"],
+    ["verbrauchen","to consume"],["der Verbraucher","consumer"],["die Wirtschaft","economy"],["die Industrie","industry"],["herstellen","to produce / manufacture"],["das Produkt","product"],
+    ["die Qualität","quality"],["die Ware","goods"],["liefern","to deliver"],["die Lieferung","delivery"],["der Handel","trade"],["die Krise","crisis"],
+    ["die Arbeitslosigkeit","unemployment"],["die Steuer","tax"],["das Einkommen","income"],["die Ausgaben","expenses"],["überweisen","to transfer (money)"],["die Überweisung","bank transfer"],
+    ["abheben","to withdraw (money)"],["einzahlen","to deposit"],["der Kredit","loan / credit"],["die Schulden","debts"],["die Karriere","career"],["die Erfahrung","experience"],
+    ["die Kenntnisse","knowledge / skills"],["die Fähigkeit","ability"],["die Verantwortung","responsibility"],["verantwortlich","responsible"],["der Mitarbeiter","employee / staff member"],["der Arbeitgeber","employer"],
+    ["der Arbeitnehmer","employee"],["die Gewerkschaft","trade union"],["der Betrieb","company / business"],["die Schicht","shift"],["die Überstunden","overtime"],["der Feierabend","end of the workday"],
+    ["die Teilzeit","part-time"],["die Vollzeit","full-time"],["befristet","temporary (contract)"],["unbefristet","permanent (contract)"],["kündigen","to quit / terminate"],["die Kündigung","termination / notice"],
+    ["einstellen","to hire / adjust"],["entlassen","to dismiss"],["die Besprechung","meeting"],["verhandeln","to negotiate"],["die Verhandlung","negotiation"],["die Präsentation","presentation"],
+    ["präsentieren","to present"],["die Konferenz","conference"],["die Dienstreise","business trip"],["der Auftrag","order / assignment"],["erledigen","to take care of / complete"],["die Frist","deadline"],
+    ["verlängern","to extend"],["die Voraussetzung","prerequisite"],["die Weiterbildung","further training"],["das Vorstellungsgespräch","job interview"],["die Stärke","strength"],["die Schwäche","weakness"],
+    ["sich verhalten","to behave"],["das Verhalten","behavior"],["sich entscheiden","to decide"],["die Entscheidung","decision"],["sich entwickeln","to develop"],["entstehen","to arise / come into being"],
+    ["beweisen","to prove"],["behaupten","to claim"],["zweifeln","to doubt"],["der Zweifel","doubt"],["überzeugen","to convince"],["beeinflussen","to influence"],
+    ["der Einfluss","influence"],["betreffen","to concern / affect"],["abhängen von","to depend on"],["abhängig","dependent"],["unabhängig","independent"],["ermöglichen","to enable"],
+    ["verhindern","to prevent"],["vermeiden","to avoid"],["sich beschweren","to complain"],["die Beschwerde","complaint"],["beantragen","to apply for (officially)"],["der Antrag","application (official)"],
+    ["genehmigen","to approve"],["ablehnen","to reject"],["zustimmen","to agree"],["die Zustimmung","approval / consent"],["widersprechen","to contradict"],["diskutieren","to discuss"],
+    ["die Diskussion","discussion"],["das Argument","argument (point)"],["begründen","to justify / give reasons"],["die Begründung","justification"],["zusammenfassen","to summarize"],["die Zusammenfassung","summary"],
+    ["ergänzen","to add / complete"],["erwähnen","to mention"],["betonen","to emphasize"],["feststellen","to determine / notice"],["untersuchen","to examine"],["die Untersuchung","examination / investigation"],
+    ["die Forschung","research"],["der Wissenschaftler","scientist"],["die Wissenschaft","science"],["die Studie","study (research)"],["die Statistik","statistics"],["der Durchschnitt","average"],
+    ["durchschnittlich","average / on average"],["steigen","to rise"],["sinken","to fall / decrease"],["zunehmen","to increase / gain weight"],["abnehmen","to decrease / lose weight"],["sich verändern","to change"],
+    ["der Unterschied","difference"],["unterschiedlich","different / varying"],["notwendig","necessary"],["erforderlich","required"],["geeignet","suitable"],["sinnvoll","sensible / meaningful"],
+    ["nützlich","useful"],["wertvoll","valuable"],["erfolgreich","successful"],["der Erfolg","success"],["scheitern","to fail"],["zuverlässig","reliable"],
+    ["ehrlich","honest"],["höflich","polite"],["unhöflich","impolite"],["geduldig","patient"],["die Geduld","patience"],["selbstständig","independent / self-employed"],
+    ["fleißig","hard-working"],["faul","lazy"],["mutig","brave"],["vorsichtig","careful"],["sorgfältig","thorough / careful"],["gerecht","just / fair"],
+    ["ungerecht","unjust"],["üblich","usual / customary"],["gewöhnlich","ordinary / usually"],["selten","rare(ly)"],["häufig","frequent(ly)"],["regelmäßig","regular(ly)"],
+    ["ständig","constantly"],["dringend","urgent(ly)"],["deutlich","clear(ly)"],["offensichtlich","obvious(ly)"],["wahrscheinlich","probably"],["möglicherweise","possibly"],
+    ["vermutlich","presumably"],["tatsächlich","actually / indeed"],["allerdings","however / though"],["jedoch","however"],["dennoch","nevertheless"],["obwohl","although"],
+    ["falls","in case / if"],["sobald","as soon as"],["während","while / during"],["seitdem","since then"],["schließlich","finally / after all"],["anschließend","afterwards"],
+    ["zunächst","at first"],["übrigens","by the way"],["insgesamt","altogether"],["hauptsächlich","mainly"],["besonders","especially"],["die Beziehung","relationship"],
+    ["sich verlieben","to fall in love"],["verliebt","in love"],["die Ehe","marriage"],["der Ehemann","husband"],["die Ehefrau","wife"],["sich trennen","to separate"],
+    ["die Trennung","separation"],["die Scheidung","divorce"],["schwanger","pregnant"],["die Geburt","birth"],["erziehen","to raise (children)"],["die Erziehung","upbringing / education"],
+    ["die Jugend","youth"],["der Rentner","pensioner"],["die Rente","pension"],["der Tod","death"],["sterben","to die"],["die Ernährung","nutrition / diet"],
+    ["sich ernähren","to feed / nourish oneself"],["die Diät","diet"],["der Muskel","muscle"],["das Herz","heart"],["das Blut","blood"],["die Haut","skin"],
+    ["das Gehirn","brain"],["atmen","to breathe"],["die Operation","operation / surgery"],["operieren","to operate"],["die Behandlung","treatment"],["behandeln","to treat"],
+    ["die Therapie","therapy"],["der Patient","patient"],["die Krankenkasse","health insurance fund"],["impfen","to vaccinate"],["die Impfung","vaccination"],["die Sucht","addiction"],
+    ["süchtig","addicted"],["verzichten auf","to do without"],["die Gewohnheit","habit"],["sich gewöhnen an","to get used to"],["das Erlebnis","experience (event)"],["erleben","to experience"],
+    ["das Ereignis","event / occurrence"],["der Eindruck","impression"],["die Erwartung","expectation"],["erwarten","to expect"],["enttäuschen","to disappoint"],["die Enttäuschung","disappointment"],
+    ["das Vertrauen","trust"],["vertrauen","to trust"],["das Verständnis","understanding / sympathy"],["der Vorteil","advantage"],["der Nachteil","disadvantage"],["die Bedingung","condition"],
+    ["der Vergleich","comparison"],["das Verhältnis","relationship / ratio"],["der Zusammenhang","connection / context"],["die Ursache","cause"],["die Folge","consequence"],["die Wirkung","effect"],
+    ["wirken","to have an effect / seem"],["das Mittel","means / remedy"],["die Maßnahme","measure (action)"],["der Vorschlag","suggestion"],["die Verbesserung","improvement"],["verbessern","to improve"],
+    ["verschlechtern","to worsen"],["der Schaden","damage"],["beschädigen","to damage"],["zerstören","to destroy"],["schützen","to protect"],["der Schutz","protection"],
+    ["drohen","to threaten"],["der Verlust","loss"],["ersetzen","to replace"],["der Ersatz","replacement"],["die Garantie","warranty"],["die Reklamation","complaint (about goods)"],
+    ["umtauschen","to exchange (goods)"],["die Verpackung","packaging"],["das Angebot","offer"],["der Rabatt","discount"],["gültig","valid"],["ungültig","invalid"],
+    ["die Bescheinigung","certificate / attestation"],["die Unterlagen","documents / papers"],["das Dokument","document"],["die Behörde","public authority"],["das Amt","(government) office"],["die Genehmigung","permit / approval"],
+    ["die Erlaubnis","permission"],["das Verbot","ban / prohibition"],["die Strafe","punishment / fine"],["bestrafen","to punish"],["der Zeuge","witness"],["der Verdacht","suspicion"],
+    ["der Diebstahl","theft"],["stehlen","to steal"],["der Dieb","thief"],["betrügen","to deceive / cheat"],["der Betrug","fraud"],["das Gericht","court / dish"],
+    ["der Richter","judge"],["der Anwalt","lawyer"],["das Opfer","victim"],["der Täter","perpetrator"],["die Lösung","solution"],["lösen","to solve"],
+    ["der Inhalt","content"],["das Thema","topic"],["die Quelle","source"],["der Hinweis","hint / notice"],["die Anleitung","instructions"],["der Schritt","step"],
+    ["das Niveau","level"],["die Stufe","step / stage"],["das Fach","subject / compartment"],["der Abschluss","degree / completion"],["das Zeugnis","certificate / report card"],["die Bildung","education"],
+    ["der Unterricht","lessons / instruction"],["unterrichten","to teach"],["die Fortsetzung","continuation"],["fortsetzen","to continue"],["unterbrechen","to interrupt"],["die Unterbrechung","interruption"],
+    ["verschieben","to postpone"],["vereinbaren","to arrange / agree on"],["die Vereinbarung","agreement"],["mitteilen","to inform / notify"],["die Mitteilung","notification"],["sich melden","to get in touch"],
+    ["die Rückmeldung","feedback / reply"],["weiterleiten","to forward"],["der Anhang","attachment"],["der Empfänger","recipient"],["der Absender","sender"],["betreffen dup-frei","--"]
+  ]
+};
+for (const k of Object.keys(RAW)) RAW[k] = RAW[k].filter(p => p[1] !== "--");
+
+const LEVELS = ["A1","A2","B1"], BOX_MAX = 4;
+
+// ── Storage: Claude artifact storage if present, else localStorage ──────────
+const store = {
+  async get(k){ 
+    if (window.storage) { try { const r = await window.storage.get(k); return r && r.value != null ? r.value : null; } catch(e){ return null; } }
+    try { return localStorage.getItem(k); } catch(e){ return null; }
+  },
+  async set(k,v){
+    if (window.storage) { try { await window.storage.set(k,v); } catch(e){} return; }
+    try { localStorage.setItem(k,v); } catch(e){}
+  }
+};
+
+let level="A1", progress={}, custom=[], queue=[], idx=0, flipped=false,
+    right=0, wrong=0, withMastered=false, importLevel="A1", confirmReset=false, saveTimer=null;
+
+const $ = id => document.getElementById(id);
+const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+function wordsFor(lv){
+  const seen = new Set(), out = [];
+  for (const [de,en] of RAW[lv]) { const id=lv+"|"+de; if(!seen.has(id)){seen.add(id); out.push({id,de,en});} }
+  for (const w of custom) if (w.level===lv) { const id=lv+"|"+w.de; if(!seen.has(id)){seen.add(id); out.push({id,de:w.de,en:w.en});} }
+  return out;
+}
+function stats(lv){
+  const words=wordsFor(lv); let mastered=0,learning=0,fresh=0; const boxes=[0,0,0,0,0];
+  for(const w of words){ const e=progress[w.id]; if(!e){fresh++;boxes[0]++;continue;} boxes[e.b]++; e.b>=BOX_MAX?mastered++:learning++; }
+  return {total:words.length,mastered,learning,fresh,boxes};
+}
+function persist(){ clearTimeout(saveTimer); saveTimer=setTimeout(()=>store.set("telc-progress",JSON.stringify(progress)),350); }
+
+function buildQueue(){
+  const pool = wordsFor(level).filter(w => withMastered || (progress[w.id]?.b ?? 0) < BOX_MAX || !(w.id in progress));
+  queue = shuffle(pool).sort((a,b)=>(progress[a.id]?.b??0)-(progress[b.id]?.b??0)).slice(0,30);
+  idx=0; flipped=false; right=0; wrong=0;
+  render();
+}
+
+function answer(knew){
+  const w=queue[idx]; if(!w) return;
+  const box=progress[w.id]?.b ?? 0;
+  progress[w.id]={b: knew?Math.min(BOX_MAX,box+1):0, t:Date.now()};
+  persist(); knew?right++:wrong++; flipped=false; idx++;
+  render();
+}
+
+function show(view){
+  $("viewStudy").classList.toggle("hide", view!=="study");
+  $("viewStats").classList.toggle("hide", view!=="stats");
+  $("viewImport").classList.toggle("hide", view!=="import");
+  $("btnStats").textContent = view==="stats" ? "Lernen" : "Statistik";
+  $("btnImport").textContent = view==="import" ? "Lernen" : "+ Wörter";
+  if(view==="stats") renderStats();
+}
+function currentView(){ return !$("viewStats").classList.contains("hide") ? "stats" : !$("viewImport").classList.contains("hide") ? "import" : "study"; }
+
+function renderTabs(){
+  $("tabs").innerHTML = LEVELS.map(lv=>'<button class="tabbtn'+(lv===level?" on":"")+'" data-lv="'+lv+'">'+lv+"</button>").join("");
+  $("tabs").querySelectorAll("button").forEach(b=>b.onclick=()=>{ level=b.dataset.lv; store.set("telc-level",JSON.stringify(level)); show("study"); withMastered=false; renderTabs(); buildQueue(); });
+  $("importTabs").innerHTML = LEVELS.map(lv=>'<button class="ghost'+'" data-lv="'+lv+'" style="'+(lv===importLevel?"background:#C9A24B;color:#1D2B26;border-color:#C9A24B":"")+'">'+lv+"</button>").join("");
+  $("importTabs").querySelectorAll("button").forEach(b=>b.onclick=()=>{ importLevel=b.dataset.lv; renderTabs(); });
+}
+
+function render(){
+  const s=stats(level), card=queue[idx], done=idx>=queue.length && queue.length>0;
+  $("metaRound").textContent=(done?queue.length:Math.min(idx+1,queue.length))+" / "+queue.length+" in dieser Runde";
+  $("metaMastered").textContent=s.mastered+"/"+s.total+" gelernt";
+
+  if(done){
+    $("cardArea").innerHTML='<div class="flip-scene"><div class="face" style="position:relative;height:280px"><div class="z">'
+      +'<div style="font-size:22px;font-weight:800;margin-bottom:8px">Runde geschafft!</div>'
+      +'<div style="font-size:15px;color:#56524A;margin-bottom:18px">'+right+' gewusst · '+wrong+' zum Wiederholen</div>'
+      +'<button class="actbtn green" id="btnNext" style="max-width:220px">Nächste Runde</button></div></div></div>';
+    $("btnArea").innerHTML="";
+    $("btnNext").onclick=buildQueue;
+  } else if(card){
+    $("cardArea").innerHTML='<div class="flip-scene"><div class="flip-inner'+(flipped?" flipped":"")+'" id="flipCard">'
+      +'<div class="face"><div class="z"><div class="lab">'+level+' · DEUTSCH</div>'
+      +'<div class="de-word'+(card.de.length>18?" long":"")+'">'+esc(card.de)+'</div>'
+      +'<div class="hint">Tippen zum Umdrehen</div></div></div>'
+      +'<div class="face back"><div class="z"><div class="lab">ENGLISCH</div>'
+      +'<div class="en-word">'+esc(card.en)+'</div><div class="de-small">'+esc(card.de)+'</div></div></div>'
+      +'</div></div>';
+    $("flipCard").onclick=()=>{ flipped=!flipped; render(); };
+    $("btnArea").innerHTML = flipped
+      ? '<button class="actbtn red" id="bNo">Nochmal üben</button><button class="actbtn green" id="bYes">Gewusst ✓</button>'
+      : '<button class="actbtn neutral" id="bFlip">Antwort zeigen</button>';
+    if(flipped){ $("bNo").onclick=()=>answer(false); $("bYes").onclick=()=>answer(true); }
+    else $("bFlip").onclick=()=>{ flipped=true; render(); };
+  } else {
+    $("cardArea").innerHTML='<div style="margin-top:30px;text-align:center;color:#CFC8B4">Alles gelernt!<div style="margin-top:12px"><button class="ghost" id="bAgain">Gelernte Wörter wiederholen</button></div></div>';
+    $("btnArea").innerHTML="";
+    $("bAgain").onclick=()=>{ withMastered=true; buildQueue(); };
+  }
+
+  const max=Math.max(...s.boxes,1);
+  $("boxes").innerHTML=s.boxes.map((n,i)=>{
+    const h=16+(n/max)*48;
+    const bg=i===BOX_MAX?"#3E8E5A":"rgba(251,246,233,"+(0.25+i*0.16)+")";
+    const col=i===BOX_MAX?"#FBF6E9":"#1D2B26";
+    return '<div class="boxcol"><div class="boxbar" style="height:'+h+'px;background:'+bg+';color:'+col+'">'+n+'</div></div>';
+  }).join("");
+}
+
+function renderStats(){
+  $("statsArea").innerHTML=LEVELS.map(lv=>{
+    const st=stats(lv), pct=st.total?Math.round(st.mastered/st.total*100):0;
+    return '<div class="statcard"><div class="statrow"><span>'+lv+'</span><span style="color:#C9A24B">'+pct+'% gelernt</span></div>'
+      +'<div class="bar"><div style="width:'+pct+'%"></div></div>'
+      +'<div class="small">'+st.total+' Wörter · '+st.mastered+' gelernt · '+st.learning+' in Arbeit · '+st.fresh+' neu</div></div>';
+  }).join("");
+}
+
+$("btnStats").onclick=()=>show(currentView()==="stats"?"study":"stats");
+$("btnImport").onclick=()=>show(currentView()==="import"?"study":"import");
+$("btnReset").onclick=async()=>{
+  if(!confirmReset){ confirmReset=true; $("btnReset").textContent="Wirklich? Tippe erneut zum Zurücksetzen"; $("btnReset").style.background="#D2584C"; $("btnReset").style.color="#FBF6E9";
+    setTimeout(()=>{ confirmReset=false; $("btnReset").textContent="Fortschritt zurücksetzen"; $("btnReset").style.background="transparent"; $("btnReset").style.color="#E08A80"; },3000); return; }
+  progress={}; confirmReset=false; await store.set("telc-progress","{}");
+  $("btnReset").textContent="Fortschritt zurücksetzen"; $("btnReset").style.background="transparent"; $("btnReset").style.color="#E08A80";
+  renderStats(); buildQueue();
+};
+$("btnDoImport").onclick=async()=>{
+  const lines=$("importText").value.split(/\n+/).map(l=>l.trim()).filter(Boolean);
+  const added=[];
+  for(const line of lines){
+    const parts=line.split(/\t|;| – | - |,/).map(x=>x.trim()).filter(Boolean);
+    if(parts.length>=2) added.push({de:parts[0],en:parts.slice(1).join(", "),level:importLevel});
+  }
+  if(!added.length){ $("importMsg").textContent="Keine gültigen Zeilen gefunden. Format: deutsches Wort ; Übersetzung"; return; }
+  const existing=new Set([...RAW[importLevel].map(([de])=>importLevel+"|"+de), ...custom.map(w=>w.level+"|"+w.de)]);
+  const fresh=added.filter(w=>!existing.has(w.level+"|"+w.de));
+  custom=[...custom,...fresh];
+  await store.set("telc-custom",JSON.stringify(custom));
+  const dup=added.length-fresh.length;
+  $("importMsg").textContent=fresh.length+" neue Wörter zu "+importLevel+" hinzugefügt"+(dup?" ("+dup+" Duplikate übersprungen)":"")+".";
+  $("importText").value="";
+};
+
+document.addEventListener("keydown",e=>{
+  if(currentView()!=="study"||idx>=queue.length) return;
+  if(e.key===" "){ e.preventDefault(); flipped=!flipped; render(); }
+  if(flipped&&e.key==="1") answer(false);
+  if(flipped&&e.key==="2") answer(true);
+});
+
+(async()=>{
+  try{ const v=await store.get("telc-progress"); if(v) progress=JSON.parse(v); }catch(e){}
+  try{ const v=await store.get("telc-custom"); if(v){const c=JSON.parse(v); if(Array.isArray(c)) custom=c;} }catch(e){}
+  try{ const v=await store.get("telc-level"); if(v){const l=JSON.parse(v); if(LEVELS.includes(l)) level=l;} }catch(e){}
+  renderTabs(); buildQueue();
+})();
+</script>
+</body>
+</html>

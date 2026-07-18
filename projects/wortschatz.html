@@ -38,7 +38,7 @@
 
   nav.tabs{
     max-width:680px; margin:4px auto 0; padding:0 18px;
-    display:flex; gap:22px; border-bottom:1.5px solid var(--line);
+    display:flex; gap:18px; border-bottom:1.5px solid var(--line);
   }
   nav.tabs button{
     appearance:none; background:none; border:none; cursor:pointer;
@@ -155,6 +155,28 @@
   .more{width:100%; appearance:none; border:none; background:none; cursor:pointer; font:inherit; font-weight:700; color:var(--accent); padding:13px;}
   .count-line{font-size:13px; color:var(--ink-soft); margin-top:10px;}
 
+  /* ---------- stats tab ---------- */
+  .lvlrow{margin-top:13px;}
+  .lvlrow:first-of-type{margin-top:2px;}
+  .lvlrow .top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;}
+  .lvlrow .name{font-weight:700; font-size:14px;}
+  .lvlrow .cts{font-size:12px; color:var(--ink-soft);}
+  .lvlrow .cts b{color:var(--ok); font-weight:700;} .lvlrow .cts i{font-style:normal; color:var(--amber); font-weight:700;}
+  .chart{display:flex; align-items:stretch; gap:4px; height:110px; margin-top:10px;}
+  .chart .col{flex:1; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; gap:3px; min-width:0;}
+  .chart .cv{font-size:9.5px; color:var(--ink-soft); font-variant-numeric:tabular-nums; line-height:1;}
+  .chart .fill{width:100%; border-radius:4px 4px 0 0; background:var(--accent); min-height:2px;}
+  .chart .fill.g{background:var(--ok);} .chart .fill.a{background:var(--amber);}
+  .chart .fill.n{background:var(--gray);}
+  .chart .cl{font-size:9.5px; color:var(--ink-soft); line-height:1; white-space:nowrap;}
+  .hardrow{display:flex; justify-content:space-between; gap:10px; align-items:baseline; padding:9px 0; border-bottom:1px solid var(--line-soft); font-size:14.5px;}
+  .hardrow:last-child{border-bottom:none;}
+  .hardrow .hw{font-family:Charter,Georgia,serif; font-weight:700; white-space:nowrap;}
+  .hardrow .hw .art{font-weight:400;}
+  .hardrow .he{color:var(--ink-soft); font-size:13px; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .hardrow .hm{color:var(--bad); font-weight:700; font-size:13px; white-space:nowrap;}
+  .emptyhint{font-size:13.5px; color:var(--ink-soft);}
+
   /* ---------- data tab ---------- */
   .panel{background:var(--card); border:1px solid var(--line-soft); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px; margin-top:14px;}
   .panel h3{margin:0 0 8px; font-size:15.5px;}
@@ -183,6 +205,7 @@
 <nav class="tabs">
   <button id="tab-study" class="on">Study</button>
   <button id="tab-browse">Words</button>
+  <button id="tab-stats">Stats</button>
   <button id="tab-data">Data</button>
 </nav>
 <main id="main"></main>
@@ -251,12 +274,13 @@ const Store = (() => {
 /* ============ app state ============ */
 let S = {
   prog: {},                                   // key -> {b,d,n,w}
+  days: {},                                   // 'YYYY-MM-DD' -> {r: reviews, ok: correct}
   set: { lvl: "all", dir: "de", newN: 20 }    // settings
 };
 let saveTimer = null;
 function persist(immediate){
   if (saveTimer){ clearTimeout(saveTimer); saveTimer = null; }
-  const doSave = () => Store.save({ v: 1, prog: S.prog, set: S.set });
+  const doSave = () => Store.save({ v: 1, prog: S.prog, set: S.set, days: S.days || {} });
   if (immediate) doSave();
   else saveTimer = setTimeout(doSave, 1500);
 }
@@ -305,7 +329,7 @@ function artSpan(r, cls){
 /* ============ tabs ============ */
 let tab = "study";
 let session = null;
-const tabs = { study: "#tab-study", browse: "#tab-browse", data: "#tab-data" };
+const tabs = { study: "#tab-study", browse: "#tab-browse", stats: "#tab-stats", data: "#tab-data" };
 function setTab(t){
   tab = t;
   for (const k in tabs) $(tabs[k]).classList.toggle("on", k === t);
@@ -396,6 +420,11 @@ function grade(correct){
   let p = S.prog[k];
   if (!p) p = S.prog[k] = { b: 0, d: 0, n: 0, w: 0 };
   p.n++;
+  if (!S.days) S.days = {};
+  const dk = dayKey(Date.now());
+  const dd = S.days[dk] || (S.days[dk] = { r: 0, ok: 0 });
+  dd.r++;
+  if (correct) dd.ok++;
   if (correct){
     p.b = Math.min(p.b + 1, 5);
     p.d = Date.now() + INTERVALS[p.b];
@@ -558,7 +587,7 @@ function renderData(root){
 
   const exp = el("textarea", {readonly:"", placeholder:"Your progress JSON appears here"});
   const expBtn = el("button", {class:"btn", onclick: () => {
-    exp.value = JSON.stringify({ v:1, prog:S.prog, set:S.set });
+    exp.value = JSON.stringify({ v:1, prog:S.prog, set:S.set, days:S.days||{} });
     exp.select();
   }}, "Export progress");
   root.appendChild(el("div", {class:"panel"},
@@ -575,6 +604,7 @@ function renderData(root){
       if (!d || typeof d.prog !== "object") throw new Error("bad");
       S.prog = d.prog || {};
       if (d.set) S.set = Object.assign(S.set, d.set);
+      S.days = d.days || {};
       persist(true);
       msg.className = "msg ok"; msg.textContent = "Imported. " + Object.keys(S.prog).length + " card records restored.";
     }catch(e){
@@ -598,7 +628,7 @@ function renderData(root){
         return;
       }
       clearTimeout(t);
-      if (lvl === "all") S.prog = {};
+      if (lvl === "all"){ S.prog = {}; S.days = {}; }
       else for (const r of WORDS){ if (r[5] === lvl) delete S.prog[keyOf(r)]; }
       persist(true);
       rmsg.className = "msg ok"; rmsg.textContent = label + " progress cleared.";
@@ -623,12 +653,150 @@ function renderData(root){
   ));
 }
 
+
+/* ============ stats ============ */
+function dayKey(t){
+  const d = new Date(t);
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+function streak(){
+  const days = S.days || {};
+  let n = 0;
+  const t = new Date();
+  if (!days[dayKey(t.getTime())]) t.setDate(t.getDate() - 1);
+  while (days[dayKey(t.getTime())]){ n++; t.setDate(t.getDate() - 1); }
+  return n;
+}
+function statBlock(val, label, cls){
+  return el("div", {class: "n" + (cls ? " " + cls : "")},
+    el("b", null, String(val)), el("span", null, label));
+}
+function chart(cols, fillCls){
+  const max = Math.max(1, ...cols.map(c => c.v));
+  const c = el("div", {class:"chart"});
+  for (const col of cols){
+    c.appendChild(el("div", {class:"col"},
+      el("span", {class:"cv"}, col.v ? String(col.v) : ""),
+      el("div", {class:"fill " + (col.cls || fillCls || ""), style:"height:" + Math.round(col.v / max * 78) + "%"}),
+      el("span", {class:"cl"}, col.l)
+    ));
+  }
+  return c;
+}
+function renderStats(root){
+  let totN = 0, totW = 0, studied = 0;
+  const boxes = { neu: 0, 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+  const hard = [];
+  for (const r of WORDS){
+    const p = S.prog[keyOf(r)];
+    if (!p){ boxes.neu++; continue; }
+    studied++;
+    totN += p.n || 0;
+    totW += p.w || 0;
+    boxes[p.b] = (boxes[p.b] || 0) + 1;
+    if (p.w > 0) hard.push([r, p.w]);
+  }
+  const acc = totN ? Math.round((totN - totW) / totN * 100) : 0;
+
+  root.appendChild(el("div", {class:"stats", style:"margin-top:2px"},
+    el("div", {class:"nums", style:"margin-bottom:0"},
+      statBlock(studied + " / " + WORDS.length, "words studied"),
+      statBlock(totN, "reviews"),
+      statBlock(acc + "%", "accuracy", "mast"),
+      statBlock(streak(), "day streak", "due")
+    )
+  ));
+
+  if (!totN){
+    root.appendChild(el("div", {class:"panel"},
+      el("h3", null, "No stats yet"),
+      el("p", {class:"emptyhint", style:"margin:0"}, "Finish your first study session and your progress, activity and review forecast will show up here.")
+    ));
+  }
+
+  const lv = el("div", {class:"panel"}, el("h3", null, "Progress by level"));
+  for (const l of [1, 2, 3]){
+    const st = levelStats(l);
+    const pm = st.total ? st.mast / st.total * 100 : 0;
+    const pl = st.total ? st.learn / st.total * 100 : 0;
+    lv.appendChild(el("div", {class:"lvlrow"},
+      el("div", {class:"top"},
+        el("span", {class:"name"}, LV[l]),
+        el("span", {class:"cts"},
+          el("b", null, String(st.mast)), " mastered \u00b7 ",
+          el("i", null, String(st.learn)), " learning \u00b7 " + st.neu + " new")
+      ),
+      el("div", {class:"bar"},
+        el("i", {class:"m", style:"width:" + pm + "%"}),
+        el("i", {class:"l", style:"width:" + pl + "%"})
+      )
+    ));
+  }
+  root.appendChild(lv);
+
+  const act = el("div", {class:"panel"}, el("h3", null, "Reviews \u00b7 last 14 days"));
+  const acols = [];
+  for (let i = 13; i >= 0; i--){
+    const dt = new Date(); dt.setDate(dt.getDate() - i);
+    const rec = (S.days || {})[dayKey(dt.getTime())];
+    acols.push({ v: rec ? rec.r : 0, l: i === 0 ? "T" : "SMTWTFS"[dt.getDay()] });
+  }
+  act.appendChild(chart(acols, "g"));
+  root.appendChild(act);
+
+  const fc = el("div", {class:"panel"}, el("h3", null, "Upcoming reviews \u00b7 next 7 days"));
+  const now = Date.now();
+  const fkeys = [], fcols = [];
+  for (let i = 0; i < 7; i++){
+    const dt = new Date(); dt.setDate(dt.getDate() + i);
+    fkeys.push(dayKey(dt.getTime()));
+    fcols.push({ v: 0, l: i === 0 ? "Today" : ["Su","Mo","Tu","We","Th","Fr","Sa"][dt.getDay()] });
+  }
+  for (const r of WORDS){
+    const p = S.prog[keyOf(r)];
+    if (!p) continue;
+    if (p.d <= now){ fcols[0].v++; continue; }
+    const idx = fkeys.indexOf(dayKey(p.d));
+    if (idx >= 0) fcols[idx].v++;
+  }
+  fc.appendChild(chart(fcols, ""));
+  root.appendChild(fc);
+
+  const bx = el("div", {class:"panel"}, el("h3", null, "Cards by Leitner box"));
+  bx.appendChild(chart([
+    { v: boxes.neu, l: "New", cls: "n" },
+    { v: boxes[0], l: "Again", cls: "a" },
+    { v: boxes[1], l: "1d", cls: "a" },
+    { v: boxes[2], l: "3d", cls: "a" },
+    { v: boxes[3], l: "7d", cls: "a" },
+    { v: boxes[4], l: "16d", cls: "a" },
+    { v: boxes[5], l: "Done", cls: "g" }
+  ]));
+  root.appendChild(bx);
+
+  const hd = el("div", {class:"panel"}, el("h3", null, "Trickiest words"));
+  if (!hard.length){
+    hd.appendChild(el("div", {class:"emptyhint"}, "No missed words yet."));
+  } else {
+    hard.sort((a, b) => b[1] - a[1]);
+    for (const [r, w] of hard.slice(0, 8)){
+      hd.appendChild(el("div", {class:"hardrow"},
+        el("span", {class:"hw"}, artSpan(r), r[0]),
+        el("span", {class:"he"}, r[4]),
+        el("span", {class:"hm"}, w + "\u00d7 missed")
+      ));
+    }
+  }
+  root.appendChild(hd);
+}
+
 /* ============ render root ============ */
 function render(){
   const root = $("#main");
   root.innerHTML = "";
   if (tab === "study") renderStudy(root);
   else if (tab === "browse") renderBrowse(root);
+  else if (tab === "stats") renderStats(root);
   else renderData(root);
 }
 
@@ -645,9 +813,10 @@ document.addEventListener("keydown", e => {
 (async function(){
   await Store.detect();
   const saved = await Store.load();
-  if (saved && saved.prog){ S.prog = saved.prog; if (saved.set) S.set = Object.assign(S.set, saved.set); }
+  if (saved && saved.prog){ S.prog = saved.prog; if (saved.set) S.set = Object.assign(S.set, saved.set); if (saved.days) S.days = saved.days; }
   $("#tab-study").addEventListener("click", () => { setTab("study"); });
   $("#tab-browse").addEventListener("click", () => { setTab("browse"); });
+  $("#tab-stats").addEventListener("click", () => { setTab("stats"); });
   $("#tab-data").addEventListener("click", () => { setTab("data"); });
   $("#foot").textContent = "Vocabulary compiled from the official Goethe/ÖSD/telc certificate word lists (A1 · A2 · B1).";
   render();
