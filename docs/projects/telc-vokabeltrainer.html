@@ -51,6 +51,11 @@ h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; }
 textarea { width: 100%; min-height: 140px; border-radius: 8px; border: none; padding: 10px; font: 14px/1.5 Archivo; background: #FBF6E9; color: #2B2820; }
 .mt { margin-top: 26px; } .hide { display: none !important; }
 p.help { font-size: 13px; line-height: 1.55; color: #CFC8B4; margin: 0 0 10px; }
+#toast { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%) translateY(60px); background: #3E8E5A; color: #FBF6E9;
+  font: 700 13px Archivo; padding: 8px 16px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,.4); opacity: 0;
+  transition: transform .25s ease, opacity .25s ease; pointer-events: none; z-index: 50; }
+#toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+#storageWarn { background: #B5483D; color: #FBF6E9; border-radius: 10px; padding: 11px 14px; font-size: 13px; line-height: 1.5; margin-bottom: 14px; }
 @media (prefers-reduced-motion: reduce) { .flipcard { transition: none; } }
 </style>
 </head>
@@ -97,6 +102,8 @@ p.help { font-size: 13px; line-height: 1.55; color: #CFC8B4; margin: 0 0 10px; }
   <div class="btnrow"><button class="actbtn green" id="btnDoImport">Hinzufügen</button></div>
   <div id="importMsg" style="margin-top:10px;font-size:13px;color:#C9A24B"></div>
 </div>
+
+<div id="toast"></div>
 
 <script>
 const RAW = {
@@ -312,20 +319,37 @@ for (const k of Object.keys(RAW)) RAW[k] = RAW[k].filter(p => p[1] !== "--");
 
 const LEVELS = ["A1","A2","B1"], BOX_MAX = 4;
 
-// ── Storage: Claude artifact storage if present, else localStorage ──────────
+// ── Storage: probe what actually works here (artifact storage → localStorage) ──
 const store = {
-  async get(k){ 
-    if (window.storage) { try { const r = await window.storage.get(k); return r && r.value != null ? r.value : null; } catch(e){ return null; } }
-    try { return localStorage.getItem(k); } catch(e){ return null; }
+  backend: null, // "artifact" | "local" | null (nothing works)
+  async init(){
+    if (window.storage) {
+      try {
+        await window.storage.set("telc-probe","1");
+        const r = await window.storage.get("telc-probe");
+        if (r && r.value === "1") { this.backend = "artifact"; return; }
+      } catch(e){}
+    }
+    try {
+      localStorage.setItem("telc-probe","1");
+      if (localStorage.getItem("telc-probe") === "1") { this.backend = "local"; return; }
+    } catch(e){}
+    this.backend = null;
+  },
+  async get(k){
+    if (this.backend === "artifact") { try { const r = await window.storage.get(k); return r && r.value != null ? r.value : null; } catch(e){ return null; } }
+    if (this.backend === "local")    { try { return localStorage.getItem(k); } catch(e){ return null; } }
+    return null;
   },
   async set(k,v){
-    if (window.storage) { try { await window.storage.set(k,v); } catch(e){} return; }
-    try { localStorage.setItem(k,v); } catch(e){}
+    if (this.backend === "artifact") { try { await window.storage.set(k,v); return true; } catch(e){ return false; } }
+    if (this.backend === "local")    { try { localStorage.setItem(k,v); return true; } catch(e){ return false; } }
+    return false;
   }
 };
 
 let level="A1", progress={}, custom=[], queue=[], idx=0, flipped=false,
-    right=0, wrong=0, withMastered=false, importLevel="A1", confirmReset=false, saveTimer=null,
+    right=0, wrong=0, withMastered=false, importLevel="A1", confirmReset=false,
     animating=false, openAnim=false;
 
 function doFlip(){
@@ -351,7 +375,20 @@ function stats(lv){
   for(const w of words){ const e=progress[w.id]; if(!e){fresh++;boxes[0]++;continue;} boxes[e.b]++; e.b>=BOX_MAX?mastered++:learning++; }
   return {total:words.length,mastered,learning,fresh,boxes};
 }
-function persist(){ clearTimeout(saveTimer); saveTimer=setTimeout(()=>store.set("telc-progress",JSON.stringify(progress)),350); }
+let toastTimer=null;
+function toast(msg, ok){
+  const t=$("toast");
+  t.textContent=msg;
+  t.style.background = ok ? "#3E8E5A" : "#B5483D";
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove("show"), 1100);
+}
+async function persist(){
+  const ok = await store.set("telc-progress", JSON.stringify(progress));
+  if (!ok) toast("⚠ Nicht gespeichert", false);
+  else toast("Gespeichert ✓", true);
+}
 
 function buildQueue(){
   const pool = wordsFor(level).filter(w => withMastered || (progress[w.id]?.b ?? 0) < BOX_MAX || !(w.id in progress));
@@ -475,6 +512,13 @@ document.addEventListener("keydown",e=>{
 });
 
 (async()=>{
+  await store.init();
+  if (store.backend === null) {
+    const warn = document.createElement("div");
+    warn.id = "storageWarn";
+    warn.innerHTML = "<b>⚠ Fortschritt kann hier nicht gespeichert werden.</b> Diese Ansicht erlaubt kein Speichern. Öffne die Datei direkt in einem Browser (z.&nbsp;B. in Safari oder Chrome, etwa über die Dateien-App), dann bleibt dein Fortschritt erhalten.";
+    document.querySelector(".wrap").prepend(warn);
+  }
   try{ const v=await store.get("telc-progress"); if(v) progress=JSON.parse(v); }catch(e){}
   try{ const v=await store.get("telc-custom"); if(v){const c=JSON.parse(v); if(Array.isArray(c)) custom=c;} }catch(e){}
   try{ const v=await store.get("telc-level"); if(v){const l=JSON.parse(v); if(LEVELS.includes(l)) level=l;} }catch(e){}
