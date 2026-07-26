@@ -44,6 +44,13 @@ h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; }
 .boxlabels { display: flex; gap: 5px; margin-top: 4px; }
 .boxlabels div { flex: 1; text-align: center; font-size: 10px; color: #9DA796; }
 .statcard { background: rgba(0,0,0,.22); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
+.wrow { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(0,0,0,.18); border-radius: 8px; margin-bottom: 6px; }
+.wde { font-weight: 700; font-size: 14px; }
+.wen { font-size: 12px; color: #CFC8B4; }
+.pip { display: inline-block; width: 9px; height: 9px; border-radius: 2px; background: rgba(255,255,255,.14); margin-left: 3px; }
+.pip.on { background: #C9A24B; }
+.pip.done { background: #3E8E5A; }
+.neuchip { font-size: 11px; color: #9DA796; border: 1px solid rgba(255,255,255,.2); border-radius: 10px; padding: 2px 8px; }
 .statrow { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 6px; }
 .bar { height: 8px; background: rgba(255,255,255,.12); border-radius: 4px; overflow: hidden; margin-bottom: 8px; }
 .bar div { height: 100%; background: #3E8E5A; }
@@ -401,7 +408,15 @@ function answer(knew){
   const w=queue[idx]; if(!w) return;
   const box=progress[w.id]?.b ?? 0;
   progress[w.id]={b: knew?Math.min(BOX_MAX,box+1):0, t:Date.now()};
-  persist(); knew?right++:wrong++; flipped=false; idx++;
+  persist();
+  if(knew){ right++; }
+  else {
+    wrong++;
+    // put the card back into the round, 3 cards later, until it's answered correctly
+    const pos=Math.min(idx+4, queue.length);
+    queue.splice(pos,0,w);
+  }
+  flipped=false; idx++;
   render();
 }
 
@@ -424,13 +439,13 @@ function renderTabs(){
 
 function render(){
   const s=stats(level), card=queue[idx], done=idx>=queue.length && queue.length>0;
-  $("metaRound").textContent=(done?queue.length:Math.min(idx+1,queue.length))+" / "+queue.length+" in dieser Runde";
+  $("metaRound").textContent = done ? queue.length+" Karten geschafft" : "Noch "+(queue.length-idx)+" Karten in dieser Runde";
   $("metaMastered").textContent=s.mastered+"/"+s.total+" gelernt";
 
   if(done){
     $("cardArea").innerHTML='<div class="flip-scene"><div class="face" style="position:relative;height:280px"><div class="z">'
       +'<div style="font-size:22px;font-weight:800;margin-bottom:8px">Runde geschafft!</div>'
-      +'<div style="font-size:15px;color:#56524A;margin-bottom:18px">'+right+' gewusst · '+wrong+' zum Wiederholen</div>'
+      +'<div style="font-size:15px;color:#56524A;margin-bottom:18px">'+right+' richtig · '+wrong+' Fehlversuche</div>'
       +'<button class="actbtn green" id="btnNext" style="max-width:220px">Nächste Runde</button></div></div></div>';
     $("btnArea").innerHTML="";
     $("btnNext").onclick=buildQueue;
@@ -469,13 +484,37 @@ function render(){
   }).join("");
 }
 
+let statSort="strong";
+function pips(b, touched){
+  if(!touched) return '<span class="neuchip">neu</span>';
+  const learned = b>=BOX_MAX;
+  let s="";
+  for(let i=0;i<5;i++) s+='<span class="pip'+((learned||i<b)?(learned?" done":" on"):"")+'"></span>';
+  return s;
+}
 function renderStats(){
+  const words=wordsFor(level);
+  const score=w=>{ const e=progress[w.id]; return e ? e.b : -1; };
+  const sorted=[...words].sort((a,b)=>{
+    const d=score(b)-score(a);
+    return (statSort==="strong"?d:-d) || a.de.localeCompare(b.de,"de");
+  });
+  const rows=sorted.map(w=>{
+    const e=progress[w.id];
+    return '<div class="wrow"><div><div class="wde">'+esc(w.de)+'</div><div class="wen">'+esc(w.en)+'</div></div>'
+      +'<div>'+pips(e?e.b:0, !!e)+'</div></div>';
+  }).join("");
   $("statsArea").innerHTML=LEVELS.map(lv=>{
     const st=stats(lv), pct=st.total?Math.round(st.mastered/st.total*100):0;
     return '<div class="statcard"><div class="statrow"><span>'+lv+'</span><span style="color:#C9A24B">'+pct+'% gelernt</span></div>'
       +'<div class="bar"><div style="width:'+pct+'%"></div></div>'
       +'<div class="small">'+st.total+' Wörter · '+st.mastered+' gelernt · '+st.learning+' in Arbeit · '+st.fresh+' neu</div></div>';
-  }).join("");
+  }).join("")
+  +'<div style="display:flex;justify-content:space-between;align-items:center;margin:18px 0 8px">'
+  +'<div class="eyebrow">Alle Wörter · '+level+'</div>'
+  +'<button class="ghost" id="btnSort">'+(statSort==="strong"?"Stärkste zuerst ↓":"Schwächste zuerst ↑")+'</button></div>'
+  +rows;
+  $("btnSort").onclick=()=>{ statSort=statSort==="strong"?"weak":"strong"; renderStats(); };
 }
 
 $("btnStats").onclick=()=>show(currentView()==="stats"?"study":"stats");
