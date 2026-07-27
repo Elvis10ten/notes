@@ -63,9 +63,9 @@
 
   /* ---------- stats ---------- */
   .stats{background:var(--card); border:1px solid var(--line-soft); border-radius:var(--radius); box-shadow:var(--shadow); padding:14px 16px; margin-top:16px;}
-  .stats .nums{display:flex; gap:18px; flex-wrap:wrap; margin-bottom:10px;}
-  .stats .n b{display:block; font-size:21px; line-height:1.1; font-family:Charter,Georgia,serif;}
-  .stats .n span{font-size:12px; color:var(--ink-soft);}
+  .nums{display:flex; gap:18px; flex-wrap:wrap; margin-bottom:10px;}
+  .n b{display:block; font-size:21px; line-height:1.1; font-family:Charter,Georgia,serif;}
+  .n span{font-size:12px; color:var(--ink-soft);}
   .n.mast b{color:var(--ok);} .n.learn b{color:var(--amber);} .n.due b{color:var(--accent);}
   .bar{height:8px; border-radius:99px; background:var(--gray); overflow:hidden; display:flex;}
   .bar i{display:block; height:100%;}
@@ -176,6 +176,12 @@
   .hardrow .he{color:var(--ink-soft); font-size:13px; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
   .hardrow .hm{color:var(--bad); font-weight:700; font-size:13px; white-space:nowrap;}
   .emptyhint{font-size:13.5px; color:var(--ink-soft);}
+  .heat{display:flex; gap:3px; margin-top:8px;}
+  .hcol{display:flex; flex-direction:column; gap:3px; flex:1;}
+  .hc{display:block; width:100%; aspect-ratio:1/1; border-radius:3px; background:#e8dfcb;}
+  .hc.h1{background:#b9d3b0;} .hc.h2{background:#7fb277;} .hc.h3{background:#2e6b3f;}
+  .hc.hf{background:transparent; border:1px dashed var(--line-soft);}
+  .actsum{font-size:12px; color:var(--ink-soft); margin-top:10px; text-align:center;}
 
   /* ---------- data tab ---------- */
   .panel{background:var(--card); border:1px solid var(--line-soft); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px; margin-top:14px;}
@@ -418,6 +424,7 @@ function grade(correct){
   const r = session.queue[session.i];
   const k = keyOf(r);
   let p = S.prog[k];
+  const firstSeen = !p;
   if (!p) p = S.prog[k] = { b: 0, d: 0, n: 0, w: 0 };
   p.n++;
   if (!S.days) S.days = {};
@@ -425,8 +432,11 @@ function grade(correct){
   const dd = S.days[dk] || (S.days[dk] = { r: 0, ok: 0 });
   dd.r++;
   if (correct) dd.ok++;
+  if (firstSeen) dd.nw = (dd.nw || 0) + 1;
   if (correct){
+    const wasBelow = p.b < 5;
     p.b = Math.min(p.b + 1, 5);
+    if (wasBelow && p.b === 5) dd.m = (dd.m || 0) + 1;
     p.d = Date.now() + INTERVALS[p.b];
     session.ok++;
   } else {
@@ -667,6 +677,47 @@ function streak(){
   while (days[dayKey(t.getTime())]){ n++; t.setDate(t.getDate() - 1); }
   return n;
 }
+function accStat(n, w){ return n ? Math.round((n - w) / n * 100) + "%" : "\u2014"; }
+function nextDay(k){
+  const parts = k.split("-").map(Number);
+  const dt = new Date(parts[0], parts[1] - 1, parts[2]);
+  dt.setDate(dt.getDate() + 1);
+  return dayKey(dt.getTime());
+}
+function longestStreak(){
+  const days = S.days || {};
+  const ks = Object.keys(days).sort();
+  let best = 0, cur = 0, prev = null;
+  for (const k of ks){
+    cur = (prev && nextDay(prev) === k) ? cur + 1 : 1;
+    prev = k;
+    if (cur > best) best = cur;
+  }
+  return best;
+}
+function heatmap(){
+  const wrap = el("div", {class:"heat"});
+  const days = S.days || {};
+  const today = new Date(); today.setHours(23,59,59,0);
+  const start = new Date();
+  start.setDate(start.getDate() - ((start.getDay() + 6) % 7) - 77);
+  for (let w = 0; w < 12; w++){
+    const col = el("div", {class:"hcol"});
+    for (let d = 0; d < 7; d++){
+      const dt = new Date(start); dt.setDate(start.getDate() + w * 7 + d);
+      const k = dayKey(dt.getTime());
+      const v = days[k] ? days[k].r : 0;
+      let cls = "h0";
+      if (v >= 25) cls = "h3"; else if (v >= 10) cls = "h2"; else if (v >= 1) cls = "h1";
+      col.appendChild(el("span", {
+        class: "hc " + (dt > today ? "hf" : cls),
+        title: k + " \u00b7 " + v + " review" + (v === 1 ? "" : "s")
+      }));
+    }
+    wrap.appendChild(col);
+  }
+  return wrap;
+}
 function statBlock(val, label, cls){
   return el("div", {class: "n" + (cls ? " " + cls : "")},
     el("b", null, String(val)), el("span", null, label));
@@ -734,7 +785,66 @@ function renderStats(root){
   }
   root.appendChild(lv);
 
-  const act = el("div", {class:"panel"}, el("h3", null, "Reviews \u00b7 last 14 days"));
+  const accP = el("div", {class:"panel"}, el("h3", null, "Accuracy"));
+  function accCell(t, v, style){
+    return el("div", {class:"n"}, el("b", style ? {style: style} : null, v), el("span", null, t));
+  }
+  const byLvl = el("div", {class:"nums", style:"margin-bottom:0"});
+  for (const l of [1, 2, 3]){
+    let an = 0, aw = 0;
+    for (const r of WORDS){
+      if (r[5] !== l) continue;
+      const p = S.prog[keyOf(r)];
+      if (p){ an += p.n || 0; aw += p.w || 0; }
+    }
+    byLvl.appendChild(accCell(LV[l], accStat(an, aw)));
+  }
+  accP.appendChild(el("div", {class:"lbl", style:"margin-top:0"}, "By level"));
+  accP.appendChild(byLvl);
+  const byArt = el("div", {class:"nums", style:"margin-bottom:0"});
+  const artColor = { der: "var(--der)", die: "var(--die)", das: "var(--das)" };
+  for (const a of ["der", "die", "das"]){
+    let an = 0, aw = 0;
+    for (const r of WORDS){
+      if (r[1] !== a) continue;
+      const p = S.prog[keyOf(r)];
+      if (p){ an += p.n || 0; aw += p.w || 0; }
+    }
+    byArt.appendChild(accCell(a, accStat(an, aw), "color:" + artColor[a]));
+  }
+  accP.appendChild(el("div", {class:"lbl"}, "By gender (nouns)"));
+  accP.appendChild(byArt);
+  root.appendChild(accP);
+
+  const tyP = el("div", {class:"panel"}, el("h3", null, "Word types"));
+  const isNoun = r => r[1] !== "";
+  const isVerb = r => r[1] === "" && (r[3] !== "" || r[4].slice(0, 3) === "to ");
+  const types = [["Nouns", isNoun], ["Verbs", isVerb], ["Other", r => !isNoun(r) && !isVerb(r)]];
+  for (const t of types){
+    let neu = 0, learn = 0, mast = 0;
+    for (const r of WORDS){
+      if (!t[1](r)) continue;
+      const p = S.prog[keyOf(r)];
+      if (!p) neu++; else if (p.b >= 5) mast++; else learn++;
+    }
+    const tot = neu + learn + mast;
+    const pm = tot ? mast / tot * 100 : 0, pl = tot ? learn / tot * 100 : 0;
+    tyP.appendChild(el("div", {class:"lvlrow"},
+      el("div", {class:"top"},
+        el("span", {class:"name"}, t[0]),
+        el("span", {class:"cts"},
+          el("b", null, String(mast)), " mastered \u00b7 ",
+          el("i", null, String(learn)), " learning \u00b7 " + neu + " new")
+      ),
+      el("div", {class:"bar"},
+        el("i", {class:"m", style:"width:" + pm + "%"}),
+        el("i", {class:"l", style:"width:" + pl + "%"})
+      )
+    ));
+  }
+  root.appendChild(tyP);
+
+  const act = el("div", {class:"panel"}, el("h3", null, "Activity"));
   const acols = [];
   for (let i = 13; i >= 0; i--){
     const dt = new Date(); dt.setDate(dt.getDate() - i);
@@ -742,7 +852,38 @@ function renderStats(root){
     acols.push({ v: rec ? rec.r : 0, l: i === 0 ? "T" : "SMTWTFS"[dt.getDay()] });
   }
   act.appendChild(chart(acols, "g"));
+  act.appendChild(el("div", {class:"lbl"}, "Last 12 weeks"));
+  act.appendChild(heatmap());
+  const dkeys = Object.keys(S.days || {});
+  if (dkeys.length){
+    let totR = 0, bestR = 0;
+    for (const k of dkeys){
+      const v = S.days[k].r || 0;
+      totR += v;
+      if (v > bestR) bestR = v;
+    }
+    act.appendChild(el("div", {class:"actsum"},
+      dkeys.length + " active day" + (dkeys.length === 1 ? "" : "s") +
+      " \u00b7 longest streak " + longestStreak() +
+      " \u00b7 best day " + bestR + " reviews" +
+      " \u00b7 avg " + Math.round(totR / dkeys.length) + "/day"));
+  }
   root.appendChild(act);
+
+  let nw7 = 0;
+  for (let i = 0; i < 7; i++){
+    const dt = new Date(); dt.setDate(dt.getDate() - i);
+    const rec = (S.days || {})[dayKey(dt.getTime())];
+    if (rec) nw7 += rec.nw || 0;
+  }
+  const pace = Math.round(nw7 / 7 * 10) / 10;
+  const remaining = WORDS.length - studied;
+  root.appendChild(el("div", {class:"panel"}, el("h3", null, "Pace"),
+    el("div", {class:"nums", style:"margin-bottom:0"},
+      statBlock(pace, "new words / day (7-day avg)"),
+      statBlock(remaining, "not yet seen"),
+      statBlock(pace > 0 ? "\u2248" + Math.ceil(remaining / pace) + " d" : "\u2014", "to see them all", "due")
+    )));
 
   const fc = el("div", {class:"panel"}, el("h3", null, "Upcoming reviews \u00b7 next 7 days"));
   const now = Date.now();
