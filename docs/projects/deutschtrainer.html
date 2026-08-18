@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DeutschTrainer A1–A2</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>body{margin:0;}</style>
+<script>
+/* Persistence shim: the component expects an async window.storage API.
+   Back it with localStorage so progress survives reloads in a plain browser. */
+window.storage = window.storage || {
+  async get(key) {
+    const value = localStorage.getItem(key);
+    return value === null ? null : { value };
+  },
+  async set(key, value) {
+    localStorage.setItem(key, value);
+  },
+  async delete(key) {
+    localStorage.removeItem(key);
+  },
+};
+</script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useMemo, useRef, useCallback } = React;
+
+/* ============================================================
+   DEUTSCHTRAINER A1–A2
+   Case-coded grammar drilling. Every answer shows you where it
+   lives in the paradigm table.
+   ============================================================ */
+
+const CSS = `
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=DM+Mono:wght@400;500&display=swap');
+
+.dt {
+  --paper:#E9E8E2;
+  --card:#F6F5F1;
+  --grid:#D8D8CE;
+  --ink:#15171A;
+  --ink2:#4E545A;
+  --ink3:#878D93;
+  --line:#C9C9BE;
+  --nom:#1B5E9C;
+  --akk:#0F7A6B;
+  --dat:#9A6A00;
+  --gen:#6E3B96;
+  --err:#C0392B;
+  --disp:'Archivo',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --serif:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --mono:'DM Mono',ui-monospace,'SF Mono',Menlo,monospace;
+
+  font-family:var(--disp);
+  color:var(--ink);
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:22px 22px;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.dt *{box-sizing:border-box;}
+.dt button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+.dt button:focus-visible,.dt input:focus-visible{outline:2px solid var(--ink);outline-offset:2px;}
+
+.dt-shell{max-width:660px;margin:0 auto;padding:0 16px 96px;}
+
+/* ---------- masthead ---------- */
+.dt-top{
+  display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  padding:20px 0 14px;border-bottom:2px solid var(--ink);margin-bottom:0;flex-wrap:wrap;
+}
+.dt-wordmark{font-size:19px;font-weight:700;letter-spacing:-0.02em;}
+.dt-wordmark span{font-family:var(--mono);font-weight:400;font-size:12px;color:var(--ink2);letter-spacing:0.06em;margin-left:8px;}
+.dt-tabs{display:flex;gap:2px;}
+.dt-tab{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
+  padding:6px 11px;color:var(--ink3);border-bottom:2px solid transparent;margin-bottom:-2px;
+}
+.dt-tab[data-on="1"]{color:var(--ink);border-bottom-color:var(--ink);}
+
+/* ---------- eyebrow ---------- */
+.dt-eyebrow{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:11px;letter-spacing:0.09em;text-transform:uppercase;
+  color:var(--ink2);padding:16px 0 12px;
+}
+.dt-caseTag{
+  color:#fff;padding:2px 7px 3px;font-weight:500;letter-spacing:0.07em;border-radius:2px;
+}
+.dt-lvl{border:1px solid var(--line);padding:2px 6px 3px;border-radius:2px;color:var(--ink3);}
+
+/* ---------- question card ---------- */
+.dt-card{
+  background:var(--card);border:1px solid var(--line);
+  box-shadow:3px 3px 0 rgba(21,23,26,0.07);
+  padding:24px 20px;
+}
+.dt-sentence{
+  font-family:var(--serif);font-size:23px;line-height:1.5;letter-spacing:-0.005em;
+}
+@media(min-width:520px){.dt-sentence{font-size:26px;}}
+.dt-slot{
+  display:inline-block;min-width:52px;text-align:center;
+  border-bottom:2.5px solid var(--ink);padding:0 6px 1px;margin:0 1px;
+}
+.dt-slot[data-filled="1"]{border-bottom-color:currentColor;}
+.dt-gloss{font-family:var(--disp);font-size:13px;color:var(--ink2);margin-top:12px;line-height:1.5;}
+.dt-cue{font-family:var(--mono);font-size:13px;color:var(--ink);background:#E4E2D9;padding:1px 6px;border-radius:2px;}
+
+/* ---------- answer controls ---------- */
+.dt-choices{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;}
+.dt-chip{
+  font-family:var(--mono);font-size:15px;padding:11px 16px;
+  border:1.5px solid var(--ink);background:var(--card);border-radius:3px;
+  transition:transform .09s ease, background .12s ease;
+}
+.dt-chip:hover:not(:disabled){background:#E4E2D9;}
+.dt-chip:active:not(:disabled){transform:translateY(1px);}
+.dt-chip:disabled{cursor:default;}
+.dt-chip[data-state="right"]{background:var(--ink);color:var(--card);border-color:var(--ink);}
+.dt-chip[data-state="wrong"]{background:var(--err);color:#fff;border-color:var(--err);}
+.dt-chip[data-state="muted"]{opacity:.34;}
+
+.dt-input{
+  width:100%;font-family:var(--mono);font-size:19px;padding:13px 14px;
+  border:1.5px solid var(--ink);background:var(--card);border-radius:3px;color:var(--ink);
+  margin-top:22px;
+}
+.dt-input::placeholder{color:var(--ink3);}
+.dt-input:disabled{opacity:.75;}
+
+/* ---------- token / order builder ---------- */
+.dt-line{
+  min-height:52px;border-bottom:2.5px solid var(--ink);padding:8px 2px;
+  display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:18px;
+}
+.dt-line:empty::after{content:"Tippe die Wörter in der richtigen Reihenfolge an";font-family:var(--disp);font-size:13px;color:var(--ink3);}
+.dt-tok{
+  font-family:var(--serif);font-size:18px;padding:6px 11px;border:1px solid var(--line);
+  background:var(--card);border-radius:3px;
+}
+.dt-tok[data-used="1"]{opacity:.22;pointer-events:none;}
+.dt-bank{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+
+/* ---------- feedback ---------- */
+.dt-fb{margin-top:22px;padding-top:16px;border-top:2px solid var(--ink);}
+.dt-verdict{
+  display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:0.1em;
+  text-transform:uppercase;padding:3px 9px 4px;border-radius:2px;margin-bottom:10px;
+}
+.dt-verdict[data-v="1"]{background:var(--ink);color:var(--card);}
+.dt-verdict[data-v="0"]{background:var(--err);color:#fff;}
+.dt-note{font-size:14.5px;line-height:1.62;color:var(--ink2);}
+.dt-note b{color:var(--ink);font-weight:600;}
+.dt-note code{font-family:var(--serif);font-size:16px;color:var(--ink);font-style:italic;}
+
+/* ---------- paradigm mini-table ---------- */
+.dt-para{margin-top:18px;}
+.dt-paraLbl{font-family:var(--mono);font-size:10.5px;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink3);margin-bottom:7px;}
+.dt-grid{border-collapse:collapse;font-family:var(--mono);font-size:12.5px;width:100%;max-width:340px;}
+.dt-grid th,.dt-grid td{border:1px solid var(--line);padding:5px 4px;text-align:center;color:var(--ink2);}
+.dt-grid th{font-weight:500;color:var(--ink3);font-size:10.5px;letter-spacing:0.06em;text-transform:uppercase;background:#E4E2D9;}
+.dt-grid td[data-hit="1"]{background:var(--ink);color:var(--card);font-weight:500;}
+.dt-grid th[data-hit="1"]{color:var(--ink);}
+
+/* ---------- footer bar ---------- */
+.dt-bar{
+  position:fixed;left:0;right:0;bottom:0;background:var(--card);
+  border-top:2px solid var(--ink);padding:11px 16px;
+}
+.dt-barIn{max-width:660px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;}
+.dt-boxes{display:flex;gap:9px;font-family:var(--mono);font-size:10.5px;color:var(--ink3);}
+.dt-box{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.dt-boxBar{width:20px;background:var(--line);border-radius:1px;position:relative;height:20px;overflow:hidden;}
+.dt-boxFill{position:absolute;bottom:0;left:0;right:0;background:var(--ink);}
+.dt-go{
+  font-family:var(--disp);font-weight:600;font-size:15px;padding:11px 22px;
+  background:var(--ink);color:var(--card);border-radius:3px;white-space:nowrap;
+}
+.dt-go:disabled{opacity:.3;cursor:default;}
+.dt-go[data-alt="1"]{background:transparent;color:var(--ink);border:1.5px solid var(--ink);}
+
+/* ---------- topic picker ---------- */
+.dt-secTitle{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--ink3);margin:26px 0 10px;
+}
+.dt-topics{display:grid;grid-template-columns:1fr;gap:6px;}
+@media(min-width:520px){.dt-topics{grid-template-columns:1fr 1fr;}}
+.dt-topic{
+  display:flex;align-items:center;gap:10px;text-align:left;padding:10px 12px;
+  border:1px solid var(--line);background:var(--card);border-radius:3px;font-size:14px;
+}
+.dt-topic[data-on="1"]{border-color:var(--ink);border-width:1.5px;background:#E4E2D9;}
+.dt-mark{
+  width:15px;height:15px;flex:none;border:1.5px solid var(--ink);border-radius:2px;
+  display:flex;align-items:center;justify-content:center;font-size:11px;line-height:1;
+}
+.dt-topic[data-on="1"] .dt-mark{background:var(--ink);color:var(--card);}
+.dt-topicMeta{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--ink3);}
+
+/* ---------- reference ---------- */
+.dt-ref h3{font-size:16px;font-weight:600;margin:30px 0 4px;letter-spacing:-0.01em;}
+.dt-ref p{font-size:14px;line-height:1.6;color:var(--ink2);margin:0 0 12px;}
+.dt-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;}
+.dt-table{border-collapse:collapse;font-size:13.5px;width:100%;min-width:340px;background:var(--card);}
+.dt-table th,.dt-table td{border:1px solid var(--line);padding:7px 9px;text-align:left;}
+.dt-table th{font-family:var(--mono);font-size:10.5px;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink3);background:#E4E2D9;font-weight:500;}
+.dt-table td.k{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#fff;text-align:center;width:64px;}
+.dt-table td.m{font-family:var(--mono);font-size:13px;}
+.dt-search{
+  width:100%;font-family:var(--mono);font-size:14px;padding:10px 12px;margin-bottom:10px;
+  border:1.5px solid var(--line);background:var(--card);border-radius:3px;color:var(--ink);
+}
+
+/* ---------- stats ---------- */
+.dt-figs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:6px;}
+.dt-fig{background:var(--card);padding:14px 12px;}
+.dt-figN{font-family:var(--mono);font-size:26px;font-weight:500;letter-spacing:-0.02em;}
+.dt-figL{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);margin-top:3px;}
+.dt-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--line);font-size:13.5px;}
+.dt-rowBar{flex:1;height:7px;background:#DEDCD3;border-radius:1px;overflow:hidden;}
+.dt-rowFill{height:100%;background:var(--ink);}
+.dt-rowN{font-family:var(--mono);font-size:11.5px;color:var(--ink3);width:58px;text-align:right;flex:none;}
+
+.dt-empty{font-size:14px;line-height:1.6;color:var(--ink2);padding:26px 0;}
+.dt-mini{font-family:var(--mono);font-size:11px;color:var(--ink3);letter-spacing:0.04em;}
+.dt-link{text-decoration:underline;text-underline-offset:3px;font-size:13px;color:var(--ink2);}
+
+@media(prefers-reduced-motion:reduce){.dt *{transition:none !important;animation:none !important;}}
+`;
+
+const CASES = {
+  nom: { label: "Nominativ", color: "var(--nom)", q: "wer? was?" },
+  akk: { label: "Akkusativ", color: "var(--akk)", q: "wen? was?" },
+  dat: { label: "Dativ", color: "var(--dat)", q: "wem?" },
+  gen: { label: "Genitiv", color: "var(--gen)", q: "wessen?" },
+};
+
+/* ============================================================
+   DATA
+   ============================================================ */
+
+// inf, en, er-form, präteritum(3sg), aux, partizip II, class
+const VERBS = [
+  ["sein", "to be", "ist", "war", "ist", "gewesen", "einzeln"],
+  ["haben", "to have", "hat", "hatte", "hat", "gehabt", "einzeln"],
+  ["werden", "to become", "wird", "wurde", "ist", "geworden", "einzeln"],
+  ["gehen", "to go", "geht", "ging", "ist", "gegangen", "einzeln"],
+  ["kommen", "to come", "kommt", "kam", "ist", "gekommen", "einzeln"],
+  ["fahren", "to drive/travel", "fährt", "fuhr", "ist", "gefahren", "a–u–a"],
+  ["laufen", "to run/walk", "läuft", "lief", "ist", "gelaufen", "a–ie–a"],
+  ["fliegen", "to fly", "fliegt", "flog", "ist", "geflogen", "ie–o–o"],
+  ["bleiben", "to stay", "bleibt", "blieb", "ist", "geblieben", "ei–ie–ie"],
+  ["essen", "to eat", "isst", "aß", "hat", "gegessen", "e–a–e"],
+  ["trinken", "to drink", "trinkt", "trank", "hat", "getrunken", "i–a–u"],
+  ["sprechen", "to speak", "spricht", "sprach", "hat", "gesprochen", "e–a–o"],
+  ["sehen", "to see", "sieht", "sah", "hat", "gesehen", "e–a–e"],
+  ["lesen", "to read", "liest", "las", "hat", "gelesen", "e–a–e"],
+  ["schreiben", "to write", "schreibt", "schrieb", "hat", "geschrieben", "ei–ie–ie"],
+  ["nehmen", "to take", "nimmt", "nahm", "hat", "genommen", "e–a–o"],
+  ["geben", "to give", "gibt", "gab", "hat", "gegeben", "e–a–e"],
+  ["finden", "to find", "findet", "fand", "hat", "gefunden", "i–a–u"],
+  ["helfen", "to help", "hilft", "half", "hat", "geholfen", "e–a–o"],
+  ["treffen", "to meet", "trifft", "traf", "hat", "getroffen", "e–a–o"],
+  ["schlafen", "to sleep", "schläft", "schlief", "hat", "geschlafen", "a–ie–a"],
+  ["tragen", "to carry/wear", "trägt", "trug", "hat", "getragen", "a–u–a"],
+  ["waschen", "to wash", "wäscht", "wusch", "hat", "gewaschen", "a–u–a"],
+  ["halten", "to hold/stop", "hält", "hielt", "hat", "gehalten", "a–ie–a"],
+  ["fallen", "to fall", "fällt", "fiel", "ist", "gefallen", "a–ie–a"],
+  ["gefallen", "to please", "gefällt", "gefiel", "hat", "gefallen", "a–ie–a"],
+  ["vergessen", "to forget", "vergisst", "vergaß", "hat", "vergessen", "e–a–e"],
+  ["verlieren", "to lose", "verliert", "verlor", "hat", "verloren", "ie–o–o"],
+  ["schließen", "to close", "schließt", "schloss", "hat", "geschlossen", "ie–o–o"],
+  ["beginnen", "to begin", "beginnt", "begann", "hat", "begonnen", "i–a–o"],
+  ["gewinnen", "to win", "gewinnt", "gewann", "hat", "gewonnen", "i–a–o"],
+  ["singen", "to sing", "singt", "sang", "hat", "gesungen", "i–a–u"],
+  ["sitzen", "to sit", "sitzt", "saß", "hat", "gesessen", "einzeln"],
+  ["liegen", "to lie", "liegt", "lag", "hat", "gelegen", "einzeln"],
+  ["stehen", "to stand", "steht", "stand", "hat", "gestanden", "einzeln"],
+  ["verstehen", "to understand", "versteht", "verstand", "hat", "verstanden", "einzeln"],
+  ["bringen", "to bring", "bringt", "brachte", "hat", "gebracht", "gemischt"],
+  ["denken", "to think", "denkt", "dachte", "hat", "gedacht", "gemischt"],
+  ["kennen", "to know (be familiar)", "kennt", "kannte", "hat", "gekannt", "gemischt"],
+  ["nennen", "to name", "nennt", "nannte", "hat", "genannt", "gemischt"],
+  ["rennen", "to race", "rennt", "rannte", "ist", "gerannt", "gemischt"],
+  ["wissen", "to know (a fact)", "weiß", "wusste", "hat", "gewusst", "gemischt"],
+  ["tun", "to do", "tut", "tat", "hat", "getan", "einzeln"],
+  ["rufen", "to call", "ruft", "rief", "hat", "gerufen", "einzeln"],
+  ["heißen", "to be called", "heißt", "hieß", "hat", "geheißen", "einzeln"],
+  ["lassen", "to let/leave", "lässt", "ließ", "hat", "gelassen", "a–ie–a"],
+  ["bekommen", "to receive", "bekommt", "bekam", "hat", "bekommen", "einzeln"],
+  ["einladen", "to invite", "lädt ein", "lud ein", "hat", "eingeladen", "a–u–a"],
+  ["anfangen", "to begin", "fängt an", "fing an", "hat", "angefangen", "a–ie–a"],
+  ["aufstehen", "to get up", "steht auf", "stand auf", "ist", "aufgestanden", "einzeln"],
+  ["sterben", "to die", "stirbt", "starb", "ist", "gestorben", "e–a–o"],
+  ["wachsen", "to grow", "wächst", "wuchs", "ist", "gewachsen", "a–u–a"],
+  ["steigen", "to climb/rise", "steigt", "stieg", "ist", "gestiegen", "ei–ie–ie"],
+  ["schneiden", "to cut", "schneidet", "schnitt", "hat", "geschnitten", "ei–i–i"],
+  ["bitten", "to ask/request", "bittet", "bat", "hat", "gebeten", "einzeln"],
+  ["empfehlen", "to recommend", "empfiehlt", "empfahl", "hat", "empfohlen", "e–a–o"],
+  ["werfen", "to throw", "wirft", "warf", "hat", "geworfen", "e–a–o"],
+  ["lügen", "to lie (untruth)", "lügt", "log", "hat", "gelogen", "ie–o–o"],
+];
+
+// noun, gender, plural, en
+const NOUNS = [
+  ["Tisch", "m", "Tische", "table", "ding"],
+  ["Stuhl", "m", "Stühle", "chair", "ding"],
+  ["Mann", "m", "Männer", "man", "person"],
+  ["Wagen", "m", "Wagen", "car", "ding"],
+  ["Freund", "m", "Freunde", "friend", "person"],
+  ["Bruder", "m", "Brüder", "brother", "person"],
+  ["Lehrer", "m", "Lehrer", "teacher", "person"],
+  ["Schlüssel", "m", "Schlüssel", "key", "ding"],
+  ["Zug", "m", "Züge", "train", "ding"],
+  ["Garten", "m", "Gärten", "garden", "ort"],
+  ["Vertrag", "m", "Verträge", "contract", "abstrakt"],
+  ["Termin", "m", "Termine", "appointment", "abstrakt"],
+  ["Frau", "f", "Frauen", "woman", "person"],
+  ["Wohnung", "f", "Wohnungen", "flat", "ort"],
+  ["Stadt", "f", "Städte", "city", "ort"],
+  ["Lampe", "f", "Lampen", "lamp", "ding"],
+  ["Tür", "f", "Türen", "door", "ding"],
+  ["Schwester", "f", "Schwestern", "sister", "person"],
+  ["Arbeit", "f", "Arbeiten", "work", "abstrakt"],
+  ["Sprache", "f", "Sprachen", "language", "abstrakt"],
+  ["Rechnung", "f", "Rechnungen", "invoice", "abstrakt"],
+  ["Hand", "f", "Hände", "hand", "ding"],
+  ["Antwort", "f", "Antworten", "answer", "abstrakt"],
+  ["Küche", "f", "Küchen", "kitchen", "ort"],
+  ["Auto", "n", "Autos", "car", "ding"],
+  ["Haus", "n", "Häuser", "house", "ort"],
+  ["Kind", "n", "Kinder", "child", "person"],
+  ["Buch", "n", "Bücher", "book", "ding"],
+  ["Fenster", "n", "Fenster", "window", "ding"],
+  ["Zimmer", "n", "Zimmer", "room", "ort"],
+  ["Handy", "n", "Handys", "mobile phone", "ding"],
+  ["Fahrrad", "n", "Fahrräder", "bicycle", "ding"],
+  ["Problem", "n", "Probleme", "problem", "abstrakt"],
+  ["Bild", "n", "Bilder", "picture", "ding"],
+  ["Gespräch", "n", "Gespräche", "conversation", "abstrakt"],
+  ["Land", "n", "Länder", "country", "ort"],
+];
+
+// weak masculine nouns (N-Deklination)
+const NDEKL = [
+  ["Student", "Studenten", "student"],
+  ["Kollege", "Kollegen", "colleague"],
+  ["Nachbar", "Nachbarn", "neighbour"],
+  ["Junge", "Jungen", "boy"],
+  ["Kunde", "Kunden", "customer"],
+  ["Mensch", "Menschen", "human being"],
+  ["Herr", "Herrn", "gentleman/Mr"],
+  ["Praktikant", "Praktikanten", "intern"],
+  ["Tourist", "Touristen", "tourist"],
+  ["Polizist", "Polizisten", "police officer"],
+];
+
+// adj, en, umlaut?, irregular [comp, sup] or null
+const ADJS = [
+  ["neu", "new", false, null, ["ding","ort","abstrakt"]],
+  ["alt", "old", true, null, ["person","ding","ort","abstrakt"]],
+  ["klein", "small", false, null, ["person","ding","ort"]],
+  ["groß", "big", true, ["größer", "am größten"], ["person","ding","ort"]],
+  ["schön", "beautiful", false, null, ["person","ding","ort","abstrakt"]],
+  ["teuer", "expensive", false, ["teurer", "am teuersten"], ["ding","ort","mass"]],
+  ["billig", "cheap", false, null, ["ding","mass"]],
+  ["schnell", "fast", false, null, ["person","ding"]],
+  ["langsam", "slow", false, null, ["person","ding"]],
+  ["gut", "good", false, ["besser", "am besten"], ["person","ding","ort","abstrakt","mass"]],
+  ["schlecht", "bad", false, null, ["ding","abstrakt"]],
+  ["jung", "young", true, null, ["person"]],
+  ["lang", "long", true, null, ["ding","ort","abstrakt"]],
+  ["kurz", "short", true, null, ["ding","abstrakt"]],
+  ["warm", "warm", true, null, ["ort","mass"]],
+  ["kalt", "cold", true, null, ["ort","mass"]],
+  ["stark", "strong", true, null, ["person","mass","abstrakt"]],
+  ["hoch", "high", true, ["höher", "am höchsten"], []],
+  ["nah", "near", true, ["näher", "am nächsten"], []],
+  ["viel", "much", false, ["mehr", "am meisten"], []],
+  ["gern", "gladly", false, ["lieber", "am liebsten"], []],
+  ["interessant", "interesting", false, null, ["person","ding","abstrakt"]],
+  ["wichtig", "important", false, null, ["ding","abstrakt"]],
+  ["freundlich", "friendly", false, null, ["person"]],
+  ["dunkel", "dark", false, ["dunkler", "am dunkelsten"], ["ding","ort"]],
+  ["klug", "clever", true, null, ["person"]],
+];
+
+const TOPICS = [
+  ["artikel", "Artikel & Kasus", "Nom / Akk / Dat forms", "A1"],
+  ["plural", "Plural", "The five plural patterns", "A1"],
+  ["praesens", "Präsens", "Stem-changing verbs", "A1"],
+  ["modal", "Modalverben", "können, müssen, dürfen …", "A1"],
+  ["perfekt", "Perfekt", "haben or sein + Partizip II", "A1"],
+  ["praeteritum", "Präteritum", "Simple past, all verbs", "A2"],
+  ["wortstellung", "Wortstellung", "V2, Satzklammer, Nebensatz", "A1"],
+  ["negation", "Negation", "nicht vs. kein, placement", "A1"],
+  ["praep", "Präpositionen", "Akk, Dat, Wechsel", "A1"],
+  ["konj", "Konjunktionen", "weil, denn, deshalb, obwohl", "A2"],
+  ["adjektiv", "Adjektivendungen", "All three ending tables", "A2"],
+  ["komparativ", "Komparativ", "Comparative & superlative", "A2"],
+  ["reflexiv", "Reflexive Verben", "Akkusativ & Dativ pronouns", "A2"],
+  ["verbpraep", "Verben mit Präposition", "Fixed prepositions, da-/wo-", "A2"],
+  ["relativ", "Relativsätze", "der / den / dem / denen", "A2"],
+  ["konjunktiv", "Konjunktiv II", "wäre, hätte, könnte, würde", "A2"],
+  ["passiv", "Passiv", "werden + Partizip II", "A2"],
+  ["zu", "Infinitiv mit zu", "um … zu, ohne … zu", "A2"],
+  ["ndekl", "N-Deklination & Genitiv", "Weak masculine nouns", "A2"],
+  ["verben", "Unregelmäßige Verben", "Forms by ablaut class", "A1"],
+];
+
+/* ============================================================
+   GRAMMAR ENGINE
+   ============================================================ */
+
+// deterministic PRNG so the item pool — and therefore Leitner
+// progress — is identical on every load
+function rng(seed) {
+  let a = seed >>> 0;
+  return () => {
+    a += 0x6d2b79f5;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const pick = (r, arr) => arr[Math.floor(r() * arr.length)];
+
+const ART = {
+  def: {
+    m: { nom: "der", akk: "den", dat: "dem", gen: "des" },
+    f: { nom: "die", akk: "die", dat: "der", gen: "der" },
+    n: { nom: "das", akk: "das", dat: "dem", gen: "des" },
+    pl: { nom: "die", akk: "die", dat: "den", gen: "der" },
+  },
+  indef: {
+    m: { nom: "ein", akk: "einen", dat: "einem", gen: "eines" },
+    f: { nom: "eine", akk: "eine", dat: "einer", gen: "einer" },
+    n: { nom: "ein", akk: "ein", dat: "einem", gen: "eines" },
+    pl: { nom: "meine", akk: "meine", dat: "meinen", gen: "meiner" },
+  },
+};
+
+// adjective endings — the three tables from the reference
+const ADJ_END = {
+  def: {
+    nom: { m: "e", f: "e", n: "e", pl: "en" },
+    akk: { m: "en", f: "e", n: "e", pl: "en" },
+    dat: { m: "en", f: "en", n: "en", pl: "en" },
+    gen: { m: "en", f: "en", n: "en", pl: "en" },
+  },
+  indef: {
+    nom: { m: "er", f: "e", n: "es", pl: "en" },
+    akk: { m: "en", f: "e", n: "es", pl: "en" },
+    dat: { m: "en", f: "en", n: "en", pl: "en" },
+    gen: { m: "en", f: "en", n: "en", pl: "en" },
+  },
+  none: {
+    nom: { m: "er", f: "e", n: "es", pl: "e" },
+    akk: { m: "en", f: "e", n: "es", pl: "e" },
+    dat: { m: "em", f: "er", n: "em", pl: "en" },
+    gen: { m: "en", f: "er", n: "en", pl: "er" },
+  },
+};
+
+const ADJ_TABLE_NAME = {
+  def: "Nach bestimmtem Artikel",
+  indef: "Nach ein-/kein-/Possessiv",
+  none: "Ohne Artikel",
+};
+
+const datPlural = (pl) => (/[ns]$/.test(pl) ? pl : pl + "n");
+const adjStem = (a) => (a === "teuer" ? "teur" : a === "dunkel" ? "dunkl" : a === "hoch" ? "hoh" : a);
+
+/* ---------- generators ---------- */
+
+const MASS = [
+  ["Kaffee", "m", "coffee"], ["Wein", "m", "wine"], ["Zucker", "m", "sugar"],
+  ["Tee", "m", "tea"], ["Milch", "f", "milk"], ["Suppe", "f", "soup"],
+  ["Wasser", "n", "water"], ["Bier", "n", "beer"], ["Brot", "n", "bread"],
+  ["Fleisch", "n", "meat"],
+];
+
+// keeps generated sentences from saying things like "das kluge Fenster"
+const fitsNoun = (adj, cat) => adj[4].includes(cat);
+
+function genAdjektiv(r, n) {
+  const out = [];
+  const cases = ["nom", "akk", "dat"];
+  for (let i = 0; i < n; i++) {
+    const at = pick(r, ["def", "indef", "none"]);
+    const kase = pick(r, cases);
+
+    // an adjective with no article needs a mass noun or a plural
+    const usePl = at === "none" ? r() < 0.5 : r() < 0.25;
+    const useMass = at === "none" && !usePl;
+    const noun = useMass ? pick(r, MASS) : pick(r, NOUNS);
+    const cat = useMass ? "mass" : noun[4];
+    const g = usePl ? "pl" : noun[1];
+
+    const usable = ADJS.filter((a) => fitsNoun(a, cat));
+    if (!usable.length) continue;
+    const adj = pick(r, usable);
+    const stem = adjStem(adj[0]);
+    const end = ADJ_END[at][kase][g];
+    const nounForm = usePl ? (kase === "dat" ? datPlural(noun[2]) : noun[2]) : noun[0];
+    const head = at === "none" ? "" : ART[at][g][kase] + " ";
+    const phrase = `${head}${stem}___ ${nounForm}`;
+
+    let frame;
+    if (kase === "nom") {
+      frame = useMass ? `${phrase} schmeckt gut.` : `${phrase} ${usePl ? "sind" : "ist"} hier.`;
+    } else if (kase === "akk") {
+      frame = useMass ? `Ich mag ${phrase}.` : cat === "person" ? `Ich kenne ${phrase}.` : `Ich sehe ${phrase}.`;
+    } else {
+      frame = useMass
+        ? `Ich koche mit ${phrase}.`
+        : cat === "person"
+        ? `Ich spreche mit ${phrase}.`
+        : `Ich frage nach ${phrase}.`;
+    }
+
+    out.push({
+      id: `g:adj:${at}:${kase}:${g}:${noun[0]}:${adj[0]}`,
+      topic: "adjektiv",
+      level: "A2",
+      type: "choice",
+      sentence: frame,
+      gloss: `${adj[0]} — ${adj[1]}`,
+      answer: end,
+      options: ["e", "en", "er", "es", "em"],
+      caseTag: kase,
+      note: `${at === "none" ? "<b>Kein Artikel</b>" : `<b>${head.trim()}</b>`} · ${
+        { m: "maskulin", f: "feminin", n: "neutrum", pl: "Plural" }[g]
+      } · ${CASES[kase].label} → <b>-${end}</b>`,
+      table: { kind: "adj", article: at, gender: g, kase },
+    });
+  }
+  return out;
+}
+
+function genArtikel(r, n) {
+  const out = [];
+  const cases = ["nom", "akk", "dat"];
+  for (let i = 0; i < n; i++) {
+    const noun = pick(r, NOUNS);
+    const g = noun[1];
+    const cat = noun[4];
+    const kase = pick(r, cases);
+    const at = r() < 0.5 ? "def" : "indef";
+    const correct = ART[at][g][kase];
+    let opts = [...new Set(Object.values(ART[at][g]).concat(Object.values(ART[at].m)))].slice(0, 5);
+    if (!opts.includes(correct)) opts = [correct, ...opts.slice(0, 4)];
+
+    let frame, why;
+    if (kase === "nom") {
+      frame = `___ ${noun[0]} ist ${cat === "person" ? "nett" : cat === "abstrakt" ? "wichtig" : "neu"}.`;
+      why = "Subject → Nominativ.";
+    } else if (kase === "akk") {
+      frame = cat === "person" ? `Ich kenne ___ ${noun[0]}.` : `Ich brauche ___ ${noun[0]}.`;
+      why = "Direct object → Akkusativ.";
+    } else {
+      frame = cat === "person" ? `Ich helfe ___ ${noun[0]}.` : `Ich frage nach ___ ${noun[0]}.`;
+      why = cat === "person" ? "<code>helfen</code> governs the Dativ." : "<code>nach</code> is always Dativ.";
+    }
+
+    out.push({
+      id: `g:art:${at}:${kase}:${noun[0]}`,
+      topic: "artikel",
+      level: "A1",
+      type: "choice",
+      sentence: frame,
+      gloss: `${noun[0]} — ${noun[3]}`,
+      answer: correct,
+      options: opts.sort(),
+      caseTag: kase,
+      note: `<b>${noun[0]}</b> is ${{ m: "masculine", f: "feminine", n: "neuter" }[g]}. ${why} → <b>${correct} ${noun[0]}</b>`,
+      table: { kind: "art", article: at, gender: g, kase },
+    });
+  }
+  return out;
+}
+
+function genPlural(r, n) {
+  const out = [];
+  const used = new Set();
+  for (let i = 0; i < n; i++) {
+    const noun = pick(r, NOUNS);
+    if (used.has(noun[0])) continue;
+    used.add(noun[0]);
+    const art = { m: "der", f: "die", n: "das" }[noun[1]];
+    out.push({
+      id: `g:pl:${noun[0]}`,
+      topic: "plural",
+      level: "A1",
+      type: "input",
+      sentence: `${art} ${noun[0]} → die ___`,
+      gloss: `${noun[3]} · Plural`,
+      answer: [noun[2]],
+      placeholder: "Pluralform",
+      caseTag: null,
+      note: `<b>die ${noun[2]}</b>. Dativ Plural: <code>mit den ${datPlural(noun[2])}</code>.`,
+      table: null,
+    });
+  }
+  return out;
+}
+
+function genPraesens(r, n) {
+  const out = [];
+  const changers = VERBS.filter((v) => v[2] !== v[0].replace(/en$/, "t") && !["sein", "haben", "werden"].includes(v[0]));
+  for (let i = 0; i < n; i++) {
+    const v = pick(r, changers);
+    out.push({
+      id: `g:pres:${v[0]}`,
+      topic: "praesens",
+      level: "A1",
+      type: "input",
+      sentence: `er / sie / es ___`,
+      gloss: `${v[0]} — ${v[1]}`,
+      answer: [v[2]],
+      placeholder: "3. Person Singular",
+      caseTag: null,
+      note: `<b>er ${v[2]}</b> · Präteritum <b>${v[3]}</b> · Perfekt <b>${v[4]} ${v[5]}</b>`,
+      table: null,
+    });
+  }
+  return out;
+}
+
+function genPerfekt(r, n) {
+  const out = [];
+  const used = new Set();
+  for (let i = 0; i < n; i++) {
+    const v = pick(r, VERBS);
+    if (used.has(v[0])) continue;
+    used.add(v[0]);
+    const aux = v[4] === "ist" ? "bin" : "habe";
+    out.push({
+      id: `g:perf:${v[0]}`,
+      topic: "perfekt",
+      level: "A1",
+      type: "input",
+      sentence: `Ich ___ . (${v[0]})`,
+      gloss: `${v[1]} · Perfekt, 1. Person`,
+      answer: [`${aux} ${v[5]}`],
+      placeholder: "z. B. habe gemacht",
+      caseTag: null,
+      note: `<b>ich ${aux} ${v[5]}</b> — ${
+        v[4] === "ist"
+          ? "takes <b>sein</b> (movement, change of state, or a fixed exception)."
+          : "takes <b>haben</b>, like the large majority of verbs."
+      }`,
+      table: null,
+    });
+  }
+  return out;
+}
+
+function genPraeteritum(r, n) {
+  const out = [];
+  const used = new Set();
+  for (let i = 0; i < n; i++) {
+    const v = pick(r, VERBS);
+    if (used.has(v[0])) continue;
+    used.add(v[0]);
+    out.push({
+      id: `g:prat:${v[0]}`,
+      topic: "praeteritum",
+      level: "A2",
+      type: "input",
+      sentence: `Gestern ___ er … (${v[0]})`,
+      gloss: `${v[1]} · Präteritum`,
+      answer: [v[3]],
+      placeholder: "Präteritum, er-Form",
+      caseTag: null,
+      note: `<b>${v[3]}</b> · Ablautklasse <b>${v[6]}</b> · Perfekt <b>${v[4]} ${v[5]}</b>`,
+      table: null,
+    });
+  }
+  return out;
+}
+
+function genVerben(r, n) {
+  const out = [];
+  const used = new Set();
+  for (let i = 0; i < n; i++) {
+    const v = pick(r, VERBS);
+    if (used.has(v[0])) continue;
+    used.add(v[0]);
+    out.push({
+      id: `g:vb:${v[0]}`,
+      topic: "verben",
+      level: "A1",
+      type: "input",
+      sentence: `${v[0]} — ${v[3]} — ___`,
+      gloss: `${v[1]} · Partizip II mit haben/sein`,
+      answer: [`${v[4]} ${v[5]}`, v[5]],
+      placeholder: "z. B. hat gemacht",
+      caseTag: null,
+      note: `<b>${v[0]} · ${v[3]} · ${v[4]} ${v[5]}</b> — Klasse ${v[6]}`,
+      table: null,
+    });
+  }
+  return out;
+}
+
+function genKomparativ(r, n) {
+  const out = [];
+  const used = new Set();
+  for (let i = 0; i < n; i++) {
+    const a = pick(r, ADJS);
+    if (used.has(a[0])) continue;
+    used.add(a[0]);
+    const comp = a[3] ? a[3][0] : a[2] ? umlaut(a[0]) + "er" : a[0] + "er";
+    const sup = a[3] ? a[3][1] : "am " + (a[2] ? umlaut(a[0]) : a[0]) + (/[tdszß]$|sch$|[aeiouäöü]$/.test(a[0]) ? "esten" : "sten");
+    out.push({
+      id: `g:komp:${a[0]}`,
+      topic: "komparativ",
+      level: "A2",
+      type: "input",
+      sentence: `${a[0]} — ___ — ${sup}`,
+      gloss: `${a[1]} · Komparativ`,
+      answer: [comp],
+      placeholder: "Komparativ",
+      caseTag: null,
+      note: `<b>${a[0]} · ${comp} · ${sup}</b>${
+        a[2] ? " — takes an <b>Umlaut</b> (one of the ~20 that do)." : a[3] ? " — irregular, learn as a unit." : " — regular, no Umlaut."
+      }`,
+      table: null,
+    });
+  }
+  return out;
+}
+
+function umlaut(w) {
+  if (/a(?!u)/.test(w)) return w.replace(/a(?!u)/, "ä");
+  if (/au/.test(w)) return w.replace(/au/, "äu");
+  if (/o/.test(w)) return w.replace(/o/, "ö");
+  if (/u(?!e)/.test(w)) return w.replace(/u(?!e)/, "ü");
+  return w;
+}
+
+/* ---------- hand-written bank ---------- */
+// idiosyncratic material that can't be generated from a rule
+
+const BANK = [
+  // ---- Wortstellung ----
+  { id: "w1", topic: "wortstellung", level: "A1", type: "order", tokens: ["Morgen", "fahre", "ich", "nach", "Hamburg"], answer: ["Morgen fahre ich nach Hamburg"], gloss: "Start with Morgen. Verb second.", note: "Fronting <code>Morgen</code> pushes the subject to position 3. The conjugated verb never moves off position 2." },
+  { id: "w2", topic: "wortstellung", level: "A1", type: "order", tokens: ["Ich", "stehe", "um", "sieben", "Uhr", "auf"], answer: ["Ich stehe um sieben Uhr auf"], gloss: "aufstehen — separable", note: "The prefix <b>auf</b> closes the Satzklammer at the end of the clause." },
+  { id: "w3", topic: "wortstellung", level: "A2", type: "order", tokens: ["weil", "ich", "morgen", "arbeiten", "muss"], answer: ["weil ich morgen arbeiten muss"], gloss: "Subordinate clause", note: "In a Nebensatz the <b>conjugated</b> verb goes last — after the infinitive: <code>… arbeiten muss</code>." },
+  { id: "w4", topic: "wortstellung", level: "A2", type: "order", tokens: ["Ich", "habe", "den", "Film", "nicht", "gesehen"], answer: ["Ich habe den Film nicht gesehen"], gloss: "Perfekt + negation", note: "<b>nicht</b> sits immediately before the Partizip II." },
+  { id: "w5", topic: "wortstellung", level: "A2", type: "order", tokens: ["Ich", "gebe", "ihm", "das", "Buch"], answer: ["Ich gebe ihm das Buch"], gloss: "Two objects", note: "Pronoun before noun. If both were nouns: <code>Ich gebe dem Kind das Buch</code> (Dativ before Akkusativ)." },
+  { id: "w6", topic: "wortstellung", level: "A2", type: "order", tokens: ["Ich", "gebe", "es", "ihm"], answer: ["Ich gebe es ihm"], gloss: "Two pronouns", note: "When both objects are pronouns the order flips: <b>Akkusativ before Dativ</b>." },
+  { id: "w7", topic: "wortstellung", level: "A2", type: "order", tokens: ["Ich", "fahre", "morgen", "mit", "dem", "Zug", "nach", "Köln"], answer: ["Ich fahre morgen mit dem Zug nach Köln"], gloss: "TeKaMoLo", note: "Temporal → Kausal → Modal → Lokal. <code>morgen</code> (Te) · <code>mit dem Zug</code> (Mo) · <code>nach Köln</code> (Lo)." },
+  { id: "w8", topic: "wortstellung", level: "A2", type: "order", tokens: ["Weil", "es", "regnet", "bleibe", "ich", "zu", "Hause"], answer: ["Weil es regnet bleibe ich zu Hause"], gloss: "Nebensatz first (comma omitted)", note: "The whole Nebensatz occupies position 1, so the main verb follows immediately: <b>verb, comma, verb</b>." },
+
+  // ---- Negation ----
+  { id: "n1", topic: "negation", level: "A1", type: "choice", sentence: "Ich habe ___ Zeit.", gloss: "no article in the positive form", answer: "keine", options: ["nicht", "kein", "keine", "keinen"], note: "<b>Zeit</b> is feminine and has no article → <b>keine</b>. <code>nicht</code> can't negate a bare noun." },
+  { id: "n2", topic: "negation", level: "A1", type: "choice", sentence: "Das ist ___ mein Auto.", gloss: "possessive present", answer: "nicht", options: ["nicht", "kein", "keins", "keine"], note: "A noun with a <b>possessive</b> or definite article is negated with <b>nicht</b>, never <code>kein</code>." },
+  { id: "n3", topic: "negation", level: "A1", type: "choice", sentence: "Ich kenne den Mann ___.", gloss: "Where does nicht go?", answer: "nicht", options: ["nicht", "kein", "keinen", "nichts"], note: "Definite article → <b>nicht</b>, and it lands at the end because it negates the whole statement." },
+  { id: "n4", topic: "negation", level: "A2", type: "order", tokens: ["Er", "ruft", "mich", "nicht", "an"], answer: ["Er ruft mich nicht an"], gloss: "anrufen + nicht", note: "<b>nicht</b> goes immediately before the separable prefix." },
+  { id: "n5", topic: "negation", level: "A1", type: "choice", sentence: "Du ___ hier nicht rauchen. (verboten)", gloss: "prohibition", answer: "darfst", options: ["musst", "darfst", "kannst", "sollst"], note: "<b>nicht dürfen</b> = must not. <code>nicht müssen</code> would mean you simply don't have to." },
+  { id: "n6", topic: "negation", level: "A2", type: "choice", sentence: "Ich fahre ___ nach Berlin, sondern nach Bonn.", gloss: "contrast", answer: "nicht", options: ["nicht", "kein", "keine", "nichts"], note: "Directional info pulls <b>nicht</b> in front of it; <code>sondern</code> then supplies the correction." },
+
+  // ---- Präpositionen ----
+  { id: "p1", topic: "praep", level: "A1", type: "choice", sentence: "Ich gehe in ___ Schule.", gloss: "wohin?", answer: "die", options: ["die", "der", "den", "dem"], caseTag: "akk", note: "Movement toward a destination → <b>Akkusativ</b>. Compare <code>Ich bin in der Schule</code> (wo? → Dativ)." },
+  { id: "p2", topic: "praep", level: "A1", type: "choice", sentence: "Das Buch liegt auf ___ Tisch.", gloss: "wo?", answer: "dem", options: ["den", "dem", "der", "das"], caseTag: "dat", note: "Static location → <b>Dativ</b>. <code>Ich lege das Buch auf den Tisch</code> would be Akkusativ." },
+  { id: "p3", topic: "praep", level: "A1", type: "choice", sentence: "Ich fahre mit ___ Bus.", gloss: "mit + ?", answer: "dem", options: ["den", "dem", "der", "das"], caseTag: "dat", note: "<b>mit</b> is always Dativ — one of aus, bei, mit, nach, seit, von, zu." },
+  { id: "p4", topic: "praep", level: "A1", type: "choice", sentence: "Das Geschenk ist für ___ Bruder.", gloss: "für + ?", answer: "meinen", options: ["mein", "meinen", "meinem", "meines"], caseTag: "akk", note: "<b>für</b> is always Akkusativ (durch, ohne, gegen, für, um)." },
+  { id: "p5", topic: "praep", level: "A1", type: "choice", sentence: "Ich wohne ___ zwei Jahren in Berlin.", gloss: "still ongoing", answer: "seit", options: ["seit", "vor", "für", "ab"], note: "<b>seit</b> + Dativ — started in the past, still true. <code>vor zwei Jahren</code> would mean two years ago, finished." },
+  { id: "p6", topic: "praep", level: "A1", type: "choice", sentence: "Ich gehe ___ Arzt.", gloss: "to a person", answer: "zum", options: ["zum", "nach", "in", "an"], note: "<b>zu</b> for people and businesses; <code>nach</code> only for cities and countries without an article." },
+  { id: "p7", topic: "praep", level: "A1", type: "choice", sentence: "Ich bin ___ Hause.", gloss: "static", answer: "zu", options: ["zu", "nach", "in", "an"], note: "<b>zu Hause</b> = at home. <code>nach Hause</code> = homewards." },
+  { id: "p8", topic: "praep", level: "A2", type: "choice", sentence: "Wir treffen uns ___ Freitag.", gloss: "day", answer: "am", options: ["am", "im", "um", "in"], note: "<b>am</b> for days and dates, <code>im</code> for months and seasons, <code>um</code> for clock times." },
+
+  // ---- Konjunktionen ----
+  { id: "k1", topic: "konj", level: "A2", type: "choice", sentence: "Ich bleibe zu Hause, ___ ich müde bin.", gloss: "verb went to the end", answer: "weil", options: ["weil", "denn", "deshalb", "trotzdem"], note: "Verb-final → subordinating. With <code>denn</code> it would be <b>… denn ich bin müde</b>." },
+  { id: "k2", topic: "konj", level: "A2", type: "choice", sentence: "Ich bin müde, ___ bleibe ich zu Hause.", gloss: "verb came second", answer: "deshalb", options: ["weil", "denn", "deshalb", "dass"], note: "<b>deshalb</b> is an adverb: it takes position 1 and the verb follows in position 2." },
+  { id: "k3", topic: "konj", level: "A2", type: "choice", sentence: "___ ich 18 war, bin ich nach Berlin gezogen.", gloss: "one event, past", answer: "Als", options: ["Als", "Wenn", "Wann", "Ob"], note: "<b>als</b> for a single completed past event. <code>wenn</code> = whenever / if. <code>wann</code> is a question word." },
+  { id: "k4", topic: "konj", level: "A2", type: "choice", sentence: "___ ich Zeit habe, gehe ich schwimmen.", gloss: "repeated / conditional", answer: "Wenn", options: ["Als", "Wenn", "Wann", "Dass"], note: "Repeated or conditional → <b>wenn</b>." },
+  { id: "k5", topic: "konj", level: "A2", type: "choice", sentence: "Ich weiß nicht, ___ er heute kommt.", gloss: "indirect yes/no question", answer: "ob", options: ["ob", "dass", "wenn", "wann"], note: "A yes/no question turned indirect becomes <b>ob</b>." },
+  { id: "k6", topic: "konj", level: "A2", type: "choice", sentence: "Er ging weg, ___ etwas zu sagen.", gloss: "without doing", answer: "ohne", options: ["ohne", "um", "statt", "damit"], note: "<b>ohne … zu</b> + Infinitiv, same subject in both halves." },
+  { id: "k7", topic: "konj", level: "A2", type: "choice", sentence: "Ich erkläre es dir, ___ du es verstehst.", gloss: "different subjects", answer: "damit", options: ["damit", "um", "ohne", "weil"], note: "Subjects differ (<code>ich</code> / <code>du</code>) → <b>damit</b>. <code>um … zu</code> requires one shared subject." },
+  { id: "k8", topic: "konj", level: "A2", type: "choice", sentence: "Er kam nicht, ___ er krank war.", gloss: "main-clause word order after it", answer: "denn", options: ["denn", "weil", "obwohl", "deshalb"], note: "Word order stays normal (<code>er war</code>) → <b>denn</b>, which sits in position 0." },
+
+  // ---- Reflexive ----
+  { id: "r1", topic: "reflexiv", level: "A2", type: "choice", sentence: "Ich wasche ___ die Hände.", gloss: "there's already an Akkusativ object", answer: "mir", options: ["mich", "mir", "sich", "mein"], caseTag: "dat", note: "<b>die Hände</b> is the Akkusativ object, so the reflexive drops to <b>Dativ</b>: <code>mir</code>." },
+  { id: "r2", topic: "reflexiv", level: "A2", type: "choice", sentence: "Ich wasche ___.", gloss: "no other object", answer: "mich", options: ["mich", "mir", "sich", "meiner"], caseTag: "akk", note: "No second object → plain <b>Akkusativ</b> reflexive." },
+  { id: "r3", topic: "reflexiv", level: "A2", type: "choice", sentence: "Er freut ___ auf das Wochenende.", gloss: "3rd person", answer: "sich", options: ["sich", "ihn", "ihm", "er"], caseTag: "akk", note: "Every 3rd person and the <code>Sie</code> form use <b>sich</b>, in both Akkusativ and Dativ." },
+  { id: "r4", topic: "reflexiv", level: "A2", type: "choice", sentence: "Kannst du ___ das vorstellen?", gloss: "sich etwas vorstellen", answer: "dir", options: ["dich", "dir", "du", "sich"], caseTag: "dat", note: "<code>das</code> occupies the Akkusativ slot → <b>dir</b>." },
+  { id: "r5", topic: "reflexiv", level: "A2", type: "order", tokens: ["Heute", "freut", "sich", "Anna"], answer: ["Heute freut sich Anna"], gloss: "inverted subject", note: "With a noun subject the reflexive pronoun may come first: <code>Heute freut sich Anna</code>." },
+
+  // ---- Verben mit Präposition ----
+  { id: "v1", topic: "verbpraep", level: "A2", type: "choice", sentence: "Ich warte ___ den Bus.", gloss: "warten + ?", answer: "auf", options: ["auf", "für", "an", "über"], caseTag: "akk", note: "<b>warten auf</b> + Akkusativ. Never <code>für</code>, despite the English." },
+  { id: "v2", topic: "verbpraep", level: "A2", type: "choice", sentence: "Ich freue mich ___ das Wochenende.", gloss: "still ahead", answer: "auf", options: ["auf", "über", "für", "an"], caseTag: "akk", note: "<b>sich freuen auf</b> = look forward to. <code>sich freuen über</code> = be pleased about something that already happened." },
+  { id: "v3", topic: "verbpraep", level: "A2", type: "choice", sentence: "Ich interessiere mich ___ Musik.", gloss: "sich interessieren + ?", answer: "für", options: ["für", "an", "auf", "über"], caseTag: "akk", note: "<b>sich interessieren für</b> + Akkusativ." },
+  { id: "v4", topic: "verbpraep", level: "A2", type: "choice", sentence: "Ich habe Angst ___ Hunden.", gloss: "Angst haben + ?", answer: "vor", options: ["vor", "über", "für", "an"], caseTag: "dat", note: "<b>Angst haben vor</b> + Dativ." },
+  { id: "v5", topic: "verbpraep", level: "A2", type: "choice", sentence: "___ wartest du? — Auf den Bus.", gloss: "asking about a thing", answer: "Worauf", options: ["Worauf", "Auf wen", "Woauf", "Wofür"], note: "Thing → <b>wo(r)-</b> compound. A person would take <code>Auf wen wartest du?</code>" },
+  { id: "v6", topic: "verbpraep", level: "A2", type: "choice", sentence: "Wartest du auf den Bus? — Ja, ich warte ___.", gloss: "replacing a thing", answer: "darauf", options: ["darauf", "auf ihn", "dafür", "daran"], note: "Thing → <b>da(r)-</b> compound. The <code>-r-</code> appears because <code>auf</code> starts with a vowel." },
+  { id: "v7", topic: "verbpraep", level: "A2", type: "choice", sentence: "Ich denke oft ___ meine Familie.", gloss: "denken + ?", answer: "an", options: ["an", "über", "auf", "für"], caseTag: "akk", note: "<b>denken an</b> + Akkusativ. <code>nachdenken über</code> means to ponder." },
+
+  // ---- Relativsätze ----
+  { id: "rel1", topic: "relativ", level: "A2", type: "choice", sentence: "Das ist der Mann, ___ hier wohnt.", gloss: "subject of the relative clause", answer: "der", options: ["der", "den", "dem", "dessen"], caseTag: "nom", note: "It's the subject inside the relative clause → <b>Nominativ</b>." },
+  { id: "rel2", topic: "relativ", level: "A2", type: "choice", sentence: "Das ist der Mann, ___ ich gestern getroffen habe.", gloss: "object of treffen", answer: "den", options: ["der", "den", "dem", "dessen"], caseTag: "akk", note: "Direct object of <code>treffen</code> → <b>Akkusativ</b>." },
+  { id: "rel3", topic: "relativ", level: "A2", type: "choice", sentence: "Das ist der Mann, ___ ich geholfen habe.", gloss: "helfen + ?", answer: "dem", options: ["der", "den", "dem", "deren"], caseTag: "dat", note: "<code>helfen</code> governs the Dativ → <b>dem</b>." },
+  { id: "rel4", topic: "relativ", level: "A2", type: "choice", sentence: "Die Kollegen, mit ___ ich arbeite, sind nett.", gloss: "mit + Plural", answer: "denen", options: ["den", "denen", "der", "dem"], caseTag: "dat", note: "<b>denen</b> — the one dative form that differs from the article. The preposition always precedes the pronoun." },
+  { id: "rel5", topic: "relativ", level: "A2", type: "choice", sentence: "Das ist die Frau, ___ Auto kaputt ist.", gloss: "possession", answer: "deren", options: ["deren", "dessen", "der", "die"], caseTag: "gen", note: "Feminine antecedent, genitive → <b>deren</b>. Masculine/neuter would be <code>dessen</code>." },
+
+  // ---- Konjunktiv II ----
+  { id: "kj1", topic: "konjunktiv", level: "A2", type: "choice", sentence: "___ Sie mir bitte helfen?", gloss: "polite request", answer: "Könnten", options: ["Könnten", "Konnten", "Können", "Würden Sie können"], note: "<b>könnten</b> — Konjunktiv II of <code>können</code>. <code>Konnten</code> is the plain past." },
+  { id: "kj2", topic: "konjunktiv", level: "A2", type: "input", sentence: "Ich ___ gern einen Kaffee. (haben)", gloss: "ordering politely", answer: ["hätte"], placeholder: "Konjunktiv II", note: "<b>hätte</b> — the standard way to order anything in German." },
+  { id: "kj3", topic: "konjunktiv", level: "A2", type: "input", sentence: "Wenn ich Zeit ___, würde ich mitkommen. (haben)", gloss: "unreal condition", answer: ["hätte"], placeholder: "Konjunktiv II", note: "Unreal conditions take Konjunktiv II in the wenn-clause and <code>würde</code> + Infinitiv in the main clause." },
+  { id: "kj4", topic: "konjunktiv", level: "A2", type: "choice", sentence: "Du ___ mehr schlafen.", gloss: "giving advice", answer: "solltest", options: ["solltest", "sollst", "willst", "musst"], note: "<b>sollte</b> is the standard advice form — softer than <code>musst</code>." },
+  { id: "kj5", topic: "konjunktiv", level: "A2", type: "input", sentence: "Ich ___ gern reicher. (sein)", gloss: "wish", answer: ["wäre"], placeholder: "Konjunktiv II", note: "<b>wäre</b>. Alongside <code>hätte</code>, <code>würde</code> and <code>könnte</code>, this is one of the four you must produce without thinking." },
+  { id: "kj6", topic: "konjunktiv", level: "A2", type: "choice", sentence: "Ich ___ gern nach Italien fahren.", gloss: "no special form exists for fahren", answer: "würde", options: ["würde", "wäre", "hätte", "wurde"], note: "Most verbs have no usable Konjunktiv II, so you use <b>würde</b> + Infinitiv." },
+
+  // ---- Passiv ----
+  { id: "pa1", topic: "passiv", level: "A2", type: "choice", sentence: "Das Auto ___ repariert.", gloss: "Präsens Passiv", answer: "wird", options: ["wird", "ist", "hat", "wurde"], note: "Passive = <b>werden</b> + Partizip II. <code>ist repariert</code> describes a finished state, not the process." },
+  { id: "pa2", topic: "passiv", level: "A2", type: "input", sentence: "Das Haus ___ 1920 gebaut. (Präteritum Passiv)", gloss: "werden im Präteritum", answer: ["wurde"], placeholder: "werden-Form", note: "<b>wurde</b> + Partizip II. Perfekt would be <code>ist gebaut worden</code>." },
+  { id: "pa3", topic: "passiv", level: "A2", type: "order", tokens: ["Das", "Auto", "muss", "repariert", "werden"], answer: ["Das Auto muss repariert werden"], gloss: "Passiv + Modalverb", note: "Modal in position 2, then <b>Partizip II + werden</b> at the end." },
+  { id: "pa4", topic: "passiv", level: "A2", type: "choice", sentence: "Das Auto wird ___ Mechaniker repariert.", gloss: "the actor", answer: "vom", options: ["vom", "durch den", "von den", "mit dem"], note: "A person doing the action → <b>von</b> + Dativ. <code>durch</code> + Akkusativ marks a means or cause." },
+  { id: "pa5", topic: "passiv", level: "A2", type: "choice", sentence: "Der Brief ist gestern geschrieben ___.", gloss: "Perfekt Passiv", answer: "worden", options: ["worden", "geworden", "werden", "wurde"], note: "In the passive the participle of <code>werden</code> loses its <code>ge-</code>: <b>worden</b>, not <code>geworden</code>." },
+
+  // ---- Infinitiv mit zu ----
+  { id: "z1", topic: "zu", level: "A2", type: "input", sentence: "Ich habe vergessen, dich ___. (anrufen)", gloss: "separable verb + zu", answer: ["anzurufen"], placeholder: "Infinitiv mit zu", note: "With separable verbs <b>zu</b> goes inside: <code>an-zu-rufen</code>." },
+  { id: "z2", topic: "zu", level: "A2", type: "choice", sentence: "Ich lerne Deutsch, ___ in Deutschland zu arbeiten.", gloss: "purpose, same subject", answer: "um", options: ["um", "damit", "ohne", "statt"], note: "<b>um … zu</b> when both halves share a subject." },
+  { id: "z3", topic: "zu", level: "A2", type: "choice", sentence: "Ich gehe ___.", gloss: "gehen + Infinitiv", answer: "schwimmen", options: ["schwimmen", "zu schwimmen", "zum schwimmen", "schwimmend"], note: "No <code>zu</code> after <code>gehen, fahren, kommen, bleiben, lassen, sehen, hören, lernen</code> — or after modals." },
+  { id: "z4", topic: "zu", level: "A2", type: "choice", sentence: "Du ___ heute nicht zu kommen.", gloss: "no obligation", answer: "brauchst", options: ["brauchst", "musst", "darfst", "sollst"], note: "<b>brauchen … nicht zu</b> is the idiomatic negative of <code>müssen</code>." },
+
+  // ---- N-Deklination & Genitiv ----
+  { id: "nd1", topic: "ndekl", level: "A2", type: "choice", sentence: "Ich kenne den ___.", gloss: "der Student", answer: "Studenten", options: ["Studenten", "Student", "Studente", "Studentes"], caseTag: "akk", note: "Weak masculine noun: <b>-en</b> in every case except the Nominativ Singular." },
+  { id: "nd2", topic: "ndekl", level: "A2", type: "choice", sentence: "Ich habe mit meinem ___ gesprochen.", gloss: "der Kollege", answer: "Kollegen", options: ["Kollegen", "Kollege", "Kollegem", "Kolleges"], caseTag: "dat", note: "N-Deklination applies in the Dativ too → <b>Kollegen</b>." },
+  { id: "nd3", topic: "ndekl", level: "A2", type: "choice", sentence: "Guten Tag, ___ Müller!", gloss: "der Herr, direct address", answer: "Herr", options: ["Herr", "Herrn", "Herren", "Herrs"], caseTag: "nom", note: "Direct address is Nominativ → <b>Herr</b>. In the Akkusativ it would be <code>Ich sehe Herrn Müller</code>." },
+  { id: "nd4", topic: "ndekl", level: "A2", type: "choice", sentence: "Das ist das Auto ___ Mannes.", gloss: "Genitiv", answer: "des", options: ["des", "dem", "der", "den"], caseTag: "gen", note: "Masculine Genitiv: <b>des Mannes</b>. In speech you'd more likely say <code>von dem Mann</code>." },
+  { id: "nd5", topic: "ndekl", level: "A2", type: "choice", sentence: "___ des schlechten Wetters bleiben wir zu Hause.", gloss: "genitive preposition", answer: "Wegen", options: ["Wegen", "Weil", "Trotzdem", "Während"], caseTag: "gen", note: "<b>wegen</b> takes the Genitiv in careful usage. <code>weil</code> would need a full clause with a verb." },
+
+  // ---- Modalverben ----
+  { id: "m1", topic: "modal", level: "A1", type: "input", sentence: "Ich ___ gut Deutsch sprechen. (können)", gloss: "1. Person Singular", answer: ["kann"], placeholder: "Modalverb", note: "<b>kann</b> — no umlaut and no <code>-e</code> in the singular. <code>ich kann = er kann</code>." },
+  { id: "m2", topic: "modal", level: "A1", type: "input", sentence: "Du ___ die Rechnung bezahlen. (müssen)", gloss: "2. Person Singular", answer: ["musst"], placeholder: "Modalverb", note: "<b>musst</b>. The umlaut returns in the plural: <code>wir müssen</code>." },
+  { id: "m3", topic: "modal", level: "A1", type: "order", tokens: ["Ich", "muss", "morgen", "früh", "aufstehen"], answer: ["Ich muss morgen früh aufstehen"], gloss: "Satzklammer", note: "Modal in position 2, infinitive at the very end." },
+  { id: "m4", topic: "modal", level: "A1", type: "choice", sentence: "___ ich das Fenster öffnen? (Erlaubnis)", gloss: "asking permission", answer: "Darf", options: ["Darf", "Muss", "Soll", "Will"], note: "<b>dürfen</b> for permission. <code>soll</code> would ask what someone else wants you to do." },
+  { id: "m5", topic: "modal", level: "A2", type: "input", sentence: "Gestern ___ ich lange arbeiten. (müssen)", gloss: "Präteritum", answer: ["musste"], placeholder: "Präteritum", note: "<b>musste</b> — modals lose the umlaut in the Präteritum and behave like weak verbs." },
+];
+
+/* ============================================================
+   ITEM POOL — built once, deterministically, so that Leitner
+   progress keyed on item id survives a reload
+   ============================================================ */
+
+function shuffleWith(r, arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(r() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+const ALL_ITEMS = (() => {
+  const r = rng(20260815);
+  const gen = [
+    ...genAdjektiv(r, 46),
+    ...genArtikel(r, 30),
+    ...genPlural(r, 26),
+    ...genPraesens(r, 24),
+    ...genPerfekt(r, 30),
+    ...genPraeteritum(r, 28),
+    ...genKomparativ(r, 20),
+    ...genVerben(r, 26),
+  ];
+  const bank = BANK.map((q) => ({
+    ...q,
+    options: q.options ? shuffleWith(r, q.options) : undefined,
+    tokens: q.tokens ? shuffleWith(r, q.tokens) : undefined,
+    answer: Array.isArray(q.answer) ? q.answer : [q.answer],
+    caseTag: q.caseTag || null,
+    table: q.table || null,
+  }));
+  const seen = new Set();
+  return [...gen, ...bank]
+    .map((q) => ({ ...q, answer: Array.isArray(q.answer) ? q.answer : [q.answer] }))
+    .filter((q) => (seen.has(q.id) ? false : (seen.add(q.id), true)));
+})();
+
+const BOX_MS = [0, 60e3, 10 * 60e3, 24 * 3600e3, 3 * 24 * 3600e3, 10 * 24 * 3600e3];
+const STORE_KEY = "deutschtrainer:v1";
+
+const norm = (s) =>
+  (s == null ? "" : String(s))
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, " ")
+    .replace(/ä/g, "ae")
+    .replace(/ö/g, "oe")
+    .replace(/ü/g, "ue")
+    .replace(/ß/g, "ss")
+    .replace(/[.,!?;:]/g, "");
+
+const isRight = (given, answers) => answers.some((a) => norm(a) === norm(given));
+
+function chooseNext(pool, progress, lastId) {
+  if (!pool.length) return null;
+  const now = Date.now();
+  const seen = pool.filter((i) => progress[i.id]);
+  const fresh = pool.filter((i) => !progress[i.id]);
+  const due = seen.filter((i) => progress[i.id].due <= now);
+
+  let bucket;
+  if (due.length) {
+    bucket = [...due].sort(
+      (a, b) => progress[a.id].box - progress[b.id].box || progress[a.id].due - progress[b.id].due
+    );
+  } else if (fresh.length) {
+    bucket = fresh;
+  } else {
+    bucket = [...seen].sort((a, b) => progress[a.id].due - progress[b.id].due);
+  }
+  let top = bucket.slice(0, 8);
+  if (top.length > 1 && lastId) {
+    const without = top.filter((i) => i.id !== lastId);
+    if (without.length) top = without;
+  }
+  return top[Math.floor(Math.random() * top.length)];
+}
+
+/* ============================================================
+   COMPONENT
+   ============================================================ */
+
+function DeutschTrainer() {
+  const [tab, setTab] = useState("drill");
+  const [topics, setTopics] = useState(() => new Set(TOPICS.map((t) => t[0])));
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [progress, setProgress] = useState({});
+  const [ready, setReady] = useState(false);
+  const [item, setItem] = useState(null);
+  const [result, setResult] = useState(null);
+  const [typed, setTyped] = useState("");
+  const [built, setBuilt] = useState([]);
+  const [session, setSession] = useState({ right: 0, wrong: 0, streak: 0, best: 0 });
+  const [saveNote, setSaveNote] = useState("");
+  const [vquery, setVquery] = useState("");
+  const saveTimer = useRef(null);
+  const inputRef = useRef(null);
+
+  const pool = useMemo(() => ALL_ITEMS.filter((i) => topics.has(i.topic)), [topics]);
+
+  /* ---- load ---- */
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const res = await window.storage.get(STORE_KEY);
+        const saved = res && res.value ? JSON.parse(res.value) : null;
+        if (alive && saved) {
+          setProgress(saved.progress || {});
+          if (saved.topics && saved.topics.length) setTopics(new Set(saved.topics));
+          if (saved.best) setSession((s) => ({ ...s, best: saved.best }));
+        }
+      } catch (e) {
+        /* nothing saved yet — first run */
+      }
+      if (alive) setReady(true);
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  /* ---- save (debounced) ---- */
+  const persist = useCallback(
+    (prog, tset, best) => {
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+      saveTimer.current = setTimeout(async () => {
+        try {
+          await window.storage.set(
+            STORE_KEY,
+            JSON.stringify({ progress: prog, topics: [...tset], best })
+          );
+          setSaveNote("gespeichert");
+          setTimeout(() => setSaveNote(""), 1600);
+        } catch (e) {
+          setSaveNote("nicht gespeichert");
+        }
+      }, 600);
+    },
+    []
+  );
+
+  /* ---- first question ---- */
+  useEffect(() => {
+    if (ready && !item && pool.length) setItem(chooseNext(pool, progress, null));
+  }, [ready, item, pool, progress]);
+
+  useEffect(() => {
+    if (item && item.type === "input" && inputRef.current) inputRef.current.focus();
+  }, [item]);
+
+  const advance = useCallback(() => {
+    const nxt = chooseNext(pool, progress, item ? item.id : null);
+    setItem(nxt);
+    setResult(null);
+    setTyped("");
+    setBuilt([]);
+  }, [pool, progress, item]);
+
+  const grade = useCallback(
+    (given) => {
+      if (!item || result) return;
+      const ok = isRight(given, item.answer);
+      const prev = progress[item.id] || { box: 1, right: 0, wrong: 0 };
+      const box = ok ? Math.min(5, prev.box + 1) : 1;
+      const next = {
+        ...progress,
+        [item.id]: {
+          box,
+          due: Date.now() + BOX_MS[box],
+          right: prev.right + (ok ? 1 : 0),
+          wrong: prev.wrong + (ok ? 0 : 1),
+        },
+      };
+      const streak = ok ? session.streak + 1 : 0;
+      const best = Math.max(session.best, streak);
+      setProgress(next);
+      setSession({ right: session.right + (ok ? 1 : 0), wrong: session.wrong + (ok ? 0 : 1), streak, best });
+      setResult({ ok, given });
+      persist(next, topics, best);
+    },
+    [item, result, progress, session, topics, persist]
+  );
+
+  const submit = () => {
+    if (!item) return;
+    if (item.type === "input") grade(typed);
+    else if (item.type === "order") grade(built.map((i) => item.tokens[i]).join(" "));
+  };
+
+  const toggleTopic = (key) => {
+    const nt = new Set(topics);
+    if (nt.has(key)) nt.delete(key);
+    else nt.add(key);
+    if (!nt.size) return;
+    setTopics(nt);
+    setItem(null);
+    setResult(null);
+    setTyped("");
+    setBuilt([]);
+    persist(progress, nt, session.best);
+  };
+
+  const resetAll = async () => {
+    setProgress({});
+    setSession({ right: 0, wrong: 0, streak: 0, best: 0 });
+    setItem(null);
+    setResult(null);
+    try {
+      await window.storage.delete(STORE_KEY);
+      setSaveNote("zurückgesetzt");
+      setTimeout(() => setSaveNote(""), 1600);
+    } catch (e) {
+      /* nothing stored */
+    }
+  };
+
+  /* ---- derived ---- */
+  const boxCounts = useMemo(() => {
+    const c = [0, 0, 0, 0, 0];
+    Object.values(progress).forEach((p) => {
+      if (p.box >= 1 && p.box <= 5) c[p.box - 1]++;
+    });
+    return c;
+  }, [progress]);
+
+  const topicStats = useMemo(() => {
+    const m = {};
+    TOPICS.forEach(([k]) => (m[k] = { right: 0, wrong: 0, seen: 0, total: 0 }));
+    ALL_ITEMS.forEach((i) => m[i.topic] && m[i.topic].total++);
+    Object.entries(progress).forEach(([id, p]) => {
+      const it = ALL_ITEMS.find((x) => x.id === id);
+      if (!it || !m[it.topic]) return;
+      m[it.topic].right += p.right;
+      m[it.topic].wrong += p.wrong;
+      m[it.topic].seen++;
+    });
+    return m;
+  }, [progress]);
+
+  const totalRight = Object.values(progress).reduce((a, p) => a + p.right, 0);
+  const totalWrong = Object.values(progress).reduce((a, p) => a + p.wrong, 0);
+  const accuracy = totalRight + totalWrong ? Math.round((totalRight / (totalRight + totalWrong)) * 100) : 0;
+
+  /* ---- render helpers ---- */
+  const renderSentence = (it, res) => {
+    if (!it.sentence) return null;
+    const parts = it.sentence.split("___");
+    const fill = res ? it.answer[0] : null;
+    const col = it.caseTag ? CASES[it.caseTag].color : "var(--ink)";
+    return (
+      <div className="dt-sentence">
+        {parts.map((p, i) => (
+          <React.Fragment key={i}>
+            <span>{p}</span>
+            {i < parts.length - 1 && (
+              <span className="dt-slot" data-filled={fill ? "1" : "0"} style={fill ? { color: col } : undefined}>
+                {fill || " "}
+              </span>
+            )}
+          </React.Fragment>
+        ))}
+      </div>
+    );
+  };
+
+  const renderParadigm = (t) => {
+    if (!t) return null;
+    const cases = ["nom", "akk", "dat"];
+    const gens = ["m", "f", "n", "pl"];
+    const label =
+      t.kind === "adj"
+        ? `Adjektivendungen · ${ADJ_TABLE_NAME[t.article]}`
+        : `Artikel · ${t.article === "def" ? "bestimmt" : "unbestimmt"}`;
+    return (
+      <div className="dt-para">
+        <div className="dt-paraLbl">{label}</div>
+        <table className="dt-grid">
+          <thead>
+            <tr>
+              <th />
+              {gens.map((g) => (
+                <th key={g} data-hit={t.gender === g ? "1" : "0"}>
+                  {g === "pl" ? "Pl" : g}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {cases.map((c) => (
+              <tr key={c}>
+                <th data-hit={t.kase === c ? "1" : "0"}>{c}</th>
+                {gens.map((g) => {
+                  const hit = t.kase === c && t.gender === g;
+                  const val = t.kind === "adj" ? "-" + ADJ_END[t.article][c][g] : ART[t.article][g][c];
+                  return (
+                    <td key={g} data-hit={hit ? "1" : "0"}>
+                      {val}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
+  /* ============================ DRILL ============================ */
+  const topicMeta = TOPICS.find((t) => item && t[0] === item.topic);
+
+  const drill = (
+    <>
+      <div className="dt-eyebrow">
+        <button className="dt-link" onClick={() => setPickerOpen((v) => !v)}>
+          {topics.size} von {TOPICS.length} Themen
+        </button>
+        <span style={{ color: "var(--line)" }}>·</span>
+        <span>{pool.length} Aufgaben</span>
+        {saveNote && <span style={{ marginLeft: "auto" }}>{saveNote}</span>}
+      </div>
+
+      {pickerOpen && (
+        <div style={{ marginBottom: 22 }}>
+          <div className="dt-topics">
+            {TOPICS.map(([key, name, sub, lvl]) => (
+              <button key={key} className="dt-topic" data-on={topics.has(key) ? "1" : "0"} onClick={() => toggleTopic(key)}>
+                <span className="dt-mark">{topics.has(key) ? "✓" : ""}</span>
+                <span>
+                  <span style={{ display: "block", fontWeight: 500 }}>{name}</span>
+                  <span style={{ display: "block", fontSize: 12, color: "var(--ink3)" }}>{sub}</span>
+                </span>
+                <span className="dt-topicMeta">{lvl}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {!item ? (
+        <div className="dt-empty">Wähle mindestens ein Thema aus, um zu üben.</div>
+      ) : (
+        <>
+          <div className="dt-eyebrow" style={{ paddingTop: 0 }}>
+            <span>{topicMeta ? topicMeta[1] : item.topic}</span>
+            {item.caseTag && (
+              <span className="dt-caseTag" style={{ background: CASES[item.caseTag].color }}>
+                {CASES[item.caseTag].label}
+              </span>
+            )}
+            <span className="dt-lvl">{item.level}</span>
+          </div>
+
+          <div className="dt-card">
+            {item.type === "order" ? (
+              <>
+                <div className="dt-gloss" style={{ marginTop: 0, fontSize: 14 }}>
+                  {item.gloss}
+                </div>
+                <div className="dt-line">
+                  {built.map((idx, pos) => (
+                    <button
+                      key={pos}
+                      className="dt-tok"
+                      disabled={!!result}
+                      onClick={() => setBuilt(built.filter((_, j) => j !== pos))}
+                    >
+                      {item.tokens[idx]}
+                    </button>
+                  ))}
+                </div>
+                <div className="dt-bank">
+                  {item.tokens.map((w, i) => (
+                    <button
+                      key={i}
+                      className="dt-tok"
+                      data-used={built.includes(i) ? "1" : "0"}
+                      disabled={!!result}
+                      onClick={() => setBuilt([...built, i])}
+                    >
+                      {w}
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                {renderSentence(item, result)}
+                {item.gloss && <div className="dt-gloss">{item.gloss}</div>}
+                {item.type === "choice" ? (
+                  <div className="dt-choices">
+                    {item.options.map((o) => {
+                      let state = "";
+                      if (result) {
+                        if (isRight(o, item.answer)) state = "right";
+                        else if (norm(o) === norm(result.given)) state = "wrong";
+                        else state = "muted";
+                      }
+                      return (
+                        <button key={o} className="dt-chip" data-state={state} disabled={!!result} onClick={() => grade(o)}>
+                          {item.topic === "adjektiv" ? "-" + o : o}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <input
+                    ref={inputRef}
+                    className="dt-input"
+                    value={typed}
+                    disabled={!!result}
+                    placeholder={item.placeholder || "Antwort"}
+                    onChange={(e) => setTyped(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        result ? advance() : submit();
+                      }
+                    }}
+                    aria-label="Antwort eingeben"
+                  />
+                )}
+              </>
+            )}
+
+            {result && (
+              <div className="dt-fb">
+                <div className="dt-verdict" data-v={result.ok ? "1" : "0"}>
+                  {result.ok ? "Richtig" : "Nicht ganz"}
+                </div>
+                {!result.ok && (
+                  <div className="dt-note" style={{ marginBottom: 8 }}>
+                    Richtig wäre: <b>{item.answer[0]}</b>
+                  </div>
+                )}
+                <div className="dt-note" dangerouslySetInnerHTML={{ __html: item.note }} />
+                {renderParadigm(item.table)}
+              </div>
+            )}
+          </div>
+        </>
+      )}
+    </>
+  );
+
+  /* ============================ REFERENCE ============================ */
+  const caseRow = (k) => (
+    <td className="k" style={{ background: CASES[k].color }}>
+      {k}
+    </td>
+  );
+
+  const verbsFiltered = VERBS.filter((v) => {
+    const q = vquery.toLowerCase().trim();
+    if (!q) return true;
+    return v[0].includes(q) || v[1].toLowerCase().includes(q) || v[3].includes(q) || v[5].includes(q) || v[6].includes(q);
+  });
+
+  const reference = (
+    <div className="dt-ref">
+      <h3>Artikel</h3>
+      <p>Only the masculine changes in the Akkusativ. That one fact carries most of A1.</p>
+      <div className="dt-scroll">
+        <table className="dt-table">
+          <thead>
+            <tr>
+              <th>Kasus</th>
+              <th>mask.</th>
+              <th>fem.</th>
+              <th>neut.</th>
+              <th>Plural</th>
+            </tr>
+          </thead>
+          <tbody>
+            {["nom", "akk", "dat", "gen"].map((k) => (
+              <tr key={k}>
+                {caseRow(k)}
+                {["m", "f", "n", "pl"].map((g) => (
+                  <td className="m" key={g}>
+                    {ART.def[g][k]} / {ART.indef[g][k]}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Personalpronomen</h3>
+      <div className="dt-scroll">
+        <table className="dt-table">
+          <thead>
+            <tr>
+              <th>Kasus</th>
+              <th>ich</th>
+              <th>du</th>
+              <th>er</th>
+              <th>sie</th>
+              <th>wir</th>
+              <th>ihr</th>
+              <th>sie/Sie</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {caseRow("nom")}
+              {["ich", "du", "er", "sie", "wir", "ihr", "sie/Sie"].map((x) => (
+                <td className="m" key={x}>{x}</td>
+              ))}
+            </tr>
+            <tr>
+              {caseRow("akk")}
+              {["mich", "dich", "ihn", "sie", "uns", "euch", "sie/Sie"].map((x) => (
+                <td className="m" key={x}>{x}</td>
+              ))}
+            </tr>
+            <tr>
+              {caseRow("dat")}
+              {["mir", "dir", "ihm", "ihr", "uns", "euch", "ihnen/Ihnen"].map((x) => (
+                <td className="m" key={x}>{x}</td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Adjektivendungen</h3>
+      <p>The case signal appears exactly once — on the article or on the adjective, never twice.</p>
+      {["def", "indef", "none"].map((at) => (
+        <div key={at} style={{ marginBottom: 14 }}>
+          <div className="dt-paraLbl">{ADJ_TABLE_NAME[at]}</div>
+          <div className="dt-scroll">
+            <table className="dt-table">
+              <thead>
+                <tr>
+                  <th>Kasus</th>
+                  <th>mask.</th>
+                  <th>fem.</th>
+                  <th>neut.</th>
+                  <th>Plural</th>
+                </tr>
+              </thead>
+              <tbody>
+                {["nom", "akk", "dat", "gen"].map((k) => (
+                  <tr key={k}>
+                    {caseRow(k)}
+                    {["m", "f", "n", "pl"].map((g) => (
+                      <td className="m" key={g}>
+                        -{ADJ_END[at][k][g]}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ))}
+
+      <h3>Relativpronomen</h3>
+      <p>Identical to the definite article except <b>denen</b> in the Dativ Plural and the whole Genitiv row.</p>
+      <div className="dt-scroll">
+        <table className="dt-table">
+          <thead>
+            <tr>
+              <th>Kasus</th>
+              <th>mask.</th>
+              <th>fem.</th>
+              <th>neut.</th>
+              <th>Plural</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              ["nom", "der", "die", "das", "die"],
+              ["akk", "den", "die", "das", "die"],
+              ["dat", "dem", "der", "dem", "denen"],
+              ["gen", "dessen", "deren", "dessen", "deren"],
+            ].map((row) => (
+              <tr key={row[0]}>
+                {caseRow(row[0])}
+                {row.slice(1).map((x, i) => (
+                  <td className="m" key={i}>{x}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Präpositionen</h3>
+      <div className="dt-scroll">
+        <table className="dt-table">
+          <thead>
+            <tr>
+              <th>Kasus</th>
+              <th>Präpositionen</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {caseRow("akk")}
+              <td className="m">durch, ohne, gegen, für, um, bis, entlang</td>
+            </tr>
+            <tr>
+              {caseRow("dat")}
+              <td className="m">aus, bei, mit, nach, seit, von, zu, gegenüber, ab, außer</td>
+            </tr>
+            <tr>
+              <td className="k" style={{ background: "var(--ink)" }}>wechsel</td>
+              <td className="m">an, auf, hinter, in, neben, über, unter, vor, zwischen — Akk. bei <i>wohin?</i>, Dat. bei <i>wo?</i></td>
+            </tr>
+            <tr>
+              {caseRow("gen")}
+              <td className="m">wegen, während, trotz, statt, innerhalb, außerhalb</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Konjunktionen</h3>
+      <div className="dt-scroll">
+        <table className="dt-table">
+          <thead>
+            <tr>
+              <th>Verbposition</th>
+              <th>Wörter</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Position 2 (unverändert)</td>
+              <td className="m">und, oder, aber, denn, sondern</td>
+            </tr>
+            <tr>
+              <td>Position 2, Inversion</td>
+              <td className="m">deshalb, deswegen, darum, daher, trotzdem, dann, danach, sonst, außerdem, also</td>
+            </tr>
+            <tr>
+              <td>Verb am Ende</td>
+              <td className="m">weil, dass, wenn, als, ob, obwohl, damit, bevor, nachdem, während, bis, seitdem, sobald, falls, solange</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Unregelmäßige Verben</h3>
+      <input
+        className="dt-search"
+        value={vquery}
+        onChange={(e) => setVquery(e.target.value)}
+        placeholder="Verb, Bedeutung oder Ablautklasse suchen"
+        aria-label="Verben durchsuchen"
+      />
+      <div className="dt-scroll">
+        <table className="dt-table">
+          <thead>
+            <tr>
+              <th>Infinitiv</th>
+              <th>er</th>
+              <th>Präteritum</th>
+              <th>Perfekt</th>
+              <th>Klasse</th>
+            </tr>
+          </thead>
+          <tbody>
+            {verbsFiltered.map((v) => (
+              <tr key={v[0]}>
+                <td className="m">
+                  {v[0]}
+                  <span style={{ color: "var(--ink3)", fontSize: 11, display: "block" }}>{v[1]}</span>
+                </td>
+                <td className="m">{v[2]}</td>
+                <td className="m">{v[3]}</td>
+                <td className="m">
+                  {v[4]} {v[5]}
+                </td>
+                <td className="m" style={{ fontSize: 11, color: "var(--ink3)" }}>{v[6]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {!verbsFiltered.length && <div className="dt-empty">Kein Verb gefunden. Versuch es mit einem Teil des Infinitivs.</div>}
+    </div>
+  );
+
+  /* ============================ PROGRESS ============================ */
+  const progressView = (
+    <div>
+      <div className="dt-secTitle">Diese Sitzung</div>
+      <div className="dt-figs">
+        <div className="dt-fig">
+          <div className="dt-figN">{session.right + session.wrong}</div>
+          <div className="dt-figL">Aufgaben</div>
+        </div>
+        <div className="dt-fig">
+          <div className="dt-figN">{session.streak}</div>
+          <div className="dt-figL">Serie</div>
+        </div>
+        <div className="dt-fig">
+          <div className="dt-figN">{session.best}</div>
+          <div className="dt-figL">Bestserie</div>
+        </div>
+      </div>
+
+      <div className="dt-secTitle">Insgesamt</div>
+      <div className="dt-figs">
+        <div className="dt-fig">
+          <div className="dt-figN">{Object.keys(progress).length}</div>
+          <div className="dt-figL">gesehen</div>
+        </div>
+        <div className="dt-fig">
+          <div className="dt-figN">{accuracy}%</div>
+          <div className="dt-figL">richtig</div>
+        </div>
+        <div className="dt-fig">
+          <div className="dt-figN">{boxCounts[4]}</div>
+          <div className="dt-figL">in Kasten 5</div>
+        </div>
+      </div>
+
+      <div className="dt-secTitle">Nach Thema</div>
+      {TOPICS.map(([key, name]) => {
+        const s = topicStats[key];
+        const tot = s.right + s.wrong;
+        const pct = tot ? Math.round((s.right / tot) * 100) : 0;
+        return (
+          <div className="dt-row" key={key}>
+            <span style={{ width: 150, flex: "none" }}>{name}</span>
+            <span className="dt-rowBar">
+              <span className="dt-rowFill" style={{ width: tot ? pct + "%" : "0%" }} />
+            </span>
+            <span className="dt-rowN">{tot ? pct + "% · " + s.seen : "–"}</span>
+          </div>
+        );
+      })}
+
+      <div style={{ marginTop: 26 }}>
+        <button className="dt-go" data-alt="1" onClick={resetAll}>
+          Fortschritt zurücksetzen
+        </button>
+        <p style={{ fontSize: 12.5, color: "var(--ink3)", marginTop: 10, lineHeight: 1.5 }}>
+          Die Leitner-Kästen steuern die Wiederholung: richtig beantwortet → ein Kasten weiter und später wieder
+          dran, falsch → zurück in Kasten 1.
+        </p>
+      </div>
+    </div>
+  );
+
+  /* ============================ SHELL ============================ */
+  const canSubmit = item && !result && (item.type === "input" ? typed.trim().length > 0 : built.length > 0);
+
+  return (
+    <div className="dt">
+      <style>{CSS}</style>
+      <div className="dt-shell">
+        <div className="dt-top">
+          <div className="dt-wordmark">
+            Deutschtrainer<span>A1–A2</span>
+          </div>
+          <div className="dt-tabs">
+            {[
+              ["drill", "Üben"],
+              ["ref", "Tabellen"],
+              ["stats", "Fortschritt"],
+            ].map(([k, l]) => (
+              <button key={k} className="dt-tab" data-on={tab === k ? "1" : "0"} onClick={() => setTab(k)}>
+                {l}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {tab === "drill" && drill}
+        {tab === "ref" && reference}
+        {tab === "stats" && progressView}
+      </div>
+
+      {tab === "drill" && item && (
+        <div className="dt-bar">
+          <div className="dt-barIn">
+            <div className="dt-boxes">
+              {boxCounts.map((c, i) => {
+                const max = Math.max(1, ...boxCounts);
+                return (
+                  <div className="dt-box" key={i}>
+                    <span className="dt-boxBar">
+                      <span className="dt-boxFill" style={{ height: Math.round((c / max) * 20) + "px" }} />
+                    </span>
+                    <span>{i + 1}</span>
+                  </div>
+                );
+              })}
+            </div>
+            {result || item.type === "choice" ? (
+              <button className="dt-go" onClick={advance} disabled={!result}>
+                Weiter
+              </button>
+            ) : (
+              <button className="dt-go" onClick={submit} disabled={!canSubmit}>
+                Prüfen
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<DeutschTrainer />);
+</script>
+</body>
+</html>
