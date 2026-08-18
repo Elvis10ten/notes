@@ -233,6 +233,15 @@ ul.tight li .deword{font-family:var(--serif);font-weight:600}
    STORAGE — localStorage first, no backend needed
    ══════════════════════════════════════════════════════════ */
 const KEY = 'line-a2-b1-v1';
+
+/* Day 1 of the plan. Applied once to existing saved progress via MIGRATION below. */
+const START = '2026-08-19';
+const MIGRATION = 1;
+
+/* Local calendar date as YYYY-MM-DD. Not toISOString(), which returns UTC and
+   shifts the day for anyone east of Greenwich. */
+const isoLocal = (d = new Date()) =>
+  `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 const Store = (function(){
   try{
     const t='__probe__';
@@ -636,14 +645,15 @@ const SPEAKING = {
 /* ══════════════════════════════════════════════════════════
    STATE
    ══════════════════════════════════════════════════════════ */
-let S = { start:null, day:1, done:{}, drills:{}, srs:{}, travel:false };
+let S = { start:null, mig:null, day:1, done:{}, drills:{}, srs:{}, travel:false };
 
 function load(){
   try{
     const raw = Store.get(KEY);
     if(raw) S = Object.assign(S, JSON.parse(raw));
   }catch(e){ console.warn('Could not read saved progress', e); }
-  if(!S.start) S.start = new Date().toISOString().slice(0,10);
+  if(!S.start) S.start = START;
+  if(S.mig !== MIGRATION){ S.start = START; S.mig = MIGRATION; save(); }
   S.day = todayIndex();
 }
 let saveTimer = null;
@@ -798,7 +808,7 @@ function renderRoute(){
   });
   el.querySelector('#reset').onclick = ()=>{
     if(!confirm('Clear all progress and restart from day 1?')) return;
-    S = {start:new Date().toISOString().slice(0,10), day:1, done:{}, drills:{}, srs:{}, travel:false};
+    S = {start:isoLocal(), mig:MIGRATION, day:1, done:{}, drills:{}, srs:{}, travel:false};
     Store.set(KEY, JSON.stringify(S));
     buildDeck(); render(); show('today'); centre();
   };
@@ -927,7 +937,7 @@ function renderDrill(){
    TAB: VOCAB (Leitner boxes)
    ══════════════════════════════════════════════════════════ */
 let cIdx = 0, cOpen = false, deck = [], cSession = 0;
-const isoToday = ()=>new Date().toISOString().slice(0,10);
+const isoToday = ()=>isoLocal();
 function buildDeck(){
   const t = isoToday(), due = [], fresh = [];
   CARDS.forEach((_,i)=>{
@@ -945,7 +955,7 @@ function grade(i, how){
   else st.box = Math.min(5, st.box+2);
   const days = [0,1,2,4,8,16][st.box];
   const d = new Date(); d.setDate(d.getDate()+days);
-  st.due = d.toISOString().slice(0,10);
+  st.due = isoLocal(d);
   S.srs[i] = st; save();
 }
 function renderCards(){
