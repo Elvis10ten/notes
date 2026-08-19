@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deutsch — Übersicht</title>
+<style>
+  :root { --bg:#f7f7f5; --card:#fff; --text:#1a1a1a; --muted:#6b6b6b; --accent:#2f6fed; --border:#e3e3e0; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#161615; --card:#1f1f1e; --text:#f0f0ee; --muted:#a0a09c; --accent:#7aa2f7; --border:#333331; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:3rem 1.25rem; background:var(--bg); color:var(--text);
+         font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  main { max-width:640px; margin:0 auto; }
+  h1 { font-size:1.75rem; margin:0 0 .25rem; }
+  p.sub { color:var(--muted); margin:0 0 2rem; font-size:.95rem; }
+  ul { list-style:none; padding:0; margin:0; display:grid; gap:.75rem; }
+  a.card { display:block; background:var(--card); border:1px solid var(--border); border-radius:10px;
+           padding:1rem 1.1rem; text-decoration:none; color:inherit; transition:border-color .15s, transform .15s; }
+  a.card:hover { border-color:var(--accent); transform:translateY(-1px); }
+  .name { font-weight:600; font-size:1.02rem; }
+  .desc { color:var(--muted); font-size:.87rem; margin-top:.2rem; }
+  code { font-size:.8rem; color:var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Deutsch — Übersicht</h1>
+  <p class="sub">Lernmaterialien und Trainer</p>
+  <ul>
+    <li><a class="card" href="deutschtrainer.html">
+      <div class="name">Deutschtrainer</div>
+      <div class="desc">Allgemeiner Übungstrainer</div>
+    </a></li>
+    <li><a class="card" href="line-a2-b1.html">
+      <div class="name">Linie A2–B1</div>
+      <div class="desc">Kursbuch-Material, Niveau A2 bis B1</div>
+    </a></li>
+    <li><a class="card" href="mission-b1.html">
+      <div class="name">Mission B1</div>
+      <div class="desc">Prüfungsvorbereitung Niveau B1</div>
+    </a></li>
+    <li><a class="card" href="telc-vokabeltrainer.html">
+      <div class="name">telc Vokabeltrainer</div>
+      <div class="desc">Wortschatz für die telc-Prüfung</div>
+    </a></li>
+    <li><a class="card" href="wortschatz.html">
+      <div class="name">Wortschatz</div>
+      <div class="desc">Vokabelsammlung</div>
+    </a></li>
+  </ul>
+</main>
+</body>
+</html>
