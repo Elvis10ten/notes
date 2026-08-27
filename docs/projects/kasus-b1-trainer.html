@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KASUS — B1 Case Trainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E9EEF1;
+  --sheet:#FBFCFD;
+  --grid:rgba(31,95,168,.10);
+  --ink:#152430;
+  --ink2:#5A6D7A;
+  --ink3:#8C9BA6;
+  --rule:#C9D5DD;
+  --m:#1F5FA8;   /* der  · maskulin */
+  --f:#C2334D;   /* die  · feminin  */
+  --n:#1D7A52;   /* das  · neutrum  */
+  --p:#6B4E9E;   /* die  · Plural   */
+  --ok:#1D7A52;
+  --no:#C2334D;
+  --amber:#B57A0B;
+  --shadow:0 1px 0 rgba(21,36,48,.06), 0 12px 28px -18px rgba(21,36,48,.5);
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --disp:'Archivo',system-ui,sans-serif;
+  --serif:'Source Serif 4',Georgia,serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--disp);
+  color:var(--ink);
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;
+  -webkit-text-size-adjust:100%;
+  padding-bottom:64px;
+}
+button{font-family:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2.5px solid var(--m);outline-offset:2px}
+
+/* ---------- shell ---------- */
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+header.top{
+  border-bottom:1.5px solid var(--ink);
+  background:rgba(233,238,241,.92);
+  backdrop-filter:blur(6px);
+  position:sticky;top:0;z-index:40;
+}
+.topin{display:flex;align-items:center;gap:14px;height:56px}
+.mark{font-weight:800;letter-spacing:.26em;font-size:15px}
+.mark em{font-style:normal;color:var(--f)}
+.tag{
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+  color:var(--ink2);text-transform:uppercase;padding-top:2px;
+}
+.spacer{flex:1}
+.hud{display:flex;gap:10px;align-items:center}
+.pill{
+  font-family:var(--mono);font-size:11px;font-weight:500;
+  border:1.5px solid var(--ink);background:var(--sheet);
+  padding:4px 9px;border-radius:2px;white-space:nowrap;
+}
+.pill b{font-weight:700}
+.pill.hot{border-color:var(--f);color:var(--f)}
+
+nav.tabs{display:flex;gap:0;border-bottom:1.5px solid var(--ink);overflow-x:auto;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{
+  background:transparent;border:0;border-bottom:3px solid transparent;
+  padding:11px 15px;font-size:13px;font-weight:600;letter-spacing:.02em;
+  color:var(--ink2);white-space:nowrap;
+}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--f)}
+nav.tabs button:hover{color:var(--ink)}
+
+main{padding-top:22px}
+.cols{display:grid;grid-template-columns:262px 1fr;gap:26px;align-items:start}
+@media(max-width:860px){.cols{grid-template-columns:1fr;gap:18px}.cols aside{order:2}.cols section{order:1}}
+
+/* ---------- Kasusraster (signature) ---------- */
+.raster{position:sticky;top:112px}
+@media(max-width:860px){.raster{position:static}}
+.raster h3,.side h3{
+  font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink2);margin:0 0 8px;font-weight:500;
+}
+.rtable{
+  width:100%;border-collapse:collapse;background:var(--sheet);
+  border:1.5px solid var(--ink);font-family:var(--mono);font-size:11px;
+  box-shadow:var(--shadow);table-layout:fixed;
+}
+.rtable th,.rtable td{border:1px solid var(--rule);padding:5px 2px;text-align:center;transition:background .18s,color .18s}
+.rtable thead th:first-child{width:32px}
+.rtable thead th{font-size:9.5px;letter-spacing:.08em;font-weight:700;color:#fff;padding:5px 2px}
+.rtable thead th:nth-child(1){background:var(--ink)}
+.rtable thead th:nth-child(2){background:var(--m)}
+.rtable thead th:nth-child(3){background:var(--f)}
+.rtable thead th:nth-child(4){background:var(--n)}
+.rtable thead th:nth-child(5){background:var(--p)}
+.rtable tbody th{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;font-weight:700;
+  background:#EFF3F6;color:var(--ink2);
+}
+.rtable td{color:var(--ink2)}
+.rtable tr.rowon th{background:var(--ink);color:#fff}
+.rtable tr.rowon td{background:rgba(31,95,168,.07);color:var(--ink)}
+.rtable td.cellon{background:var(--ink)!important;color:#fff!important;font-weight:700}
+.rtable td.reveal{animation:pop .45s ease}
+@keyframes pop{0%{transform:scale(.82)}55%{transform:scale(1.1)}100%{transform:scale(1)}}
+.rcap{font-family:var(--mono);font-size:9.5px;color:var(--ink3);margin-top:7px;letter-spacing:.04em;line-height:1.5}
+
+.side{margin-top:22px}
+.mastery{display:flex;flex-direction:column;gap:5px}
+.mrow{display:grid;grid-template-columns:1fr 34px;gap:7px;align-items:center;font-size:11.5px;cursor:pointer;background:none;border:0;padding:2px 0;text-align:left;width:100%}
+.mrow .lbl{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink2);font-weight:600}
+.mrow:hover .lbl{color:var(--ink)}
+.bar{display:block;height:6px;background:#DCE4E9;border:1px solid var(--rule);position:relative;overflow:hidden}
+.bar i{position:absolute;inset:0 auto 0 0;background:var(--m);display:block}
+.bar i.full{background:var(--ok)}
+.mnum{font-family:var(--mono);font-size:10px;color:var(--ink3);text-align:right}
+
+/* ---------- question card ---------- */
+.card{
+  background:var(--sheet);border:1.5px solid var(--ink);border-radius:3px;
+  box-shadow:var(--shadow);position:relative;overflow:hidden;
+}
+.card.ruled{padding:26px 24px 24px 40px}
+.card.ruled::before{
+  content:"";position:absolute;left:22px;top:0;bottom:0;width:1.5px;background:var(--f);opacity:.55;
+}
+@media(max-width:600px){.card.ruled{padding:20px 16px 20px 30px}.card.ruled::before{left:15px}}
+
+.qmeta{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-bottom:16px}
+.chip{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  border:1.5px solid var(--ink);padding:3px 7px;border-radius:2px;font-weight:500;
+}
+.chip.solid{background:var(--ink);color:var(--sheet)}
+.chip.m{border-color:var(--m);color:var(--m)}
+.chip.f{border-color:var(--f);color:var(--f)}
+.chip.n{border-color:var(--n);color:var(--n)}
+.chip.p{border-color:var(--p);color:var(--p)}
+.chip.bonus{border-color:var(--amber);color:var(--amber)}
+.chip.box{border-color:var(--rule);color:var(--ink3)}
+
+.qtext{font-family:var(--serif);font-size:25px;line-height:1.45;margin:0 0 6px;font-weight:400}
+@media(max-width:600px){.qtext{font-size:21px}}
+.qtext .gap{
+  display:inline-block;min-width:74px;border-bottom:2.5px solid var(--ink);
+  text-align:center;font-family:var(--mono);font-size:.82em;vertical-align:baseline;
+}
+.qtext .gap.filled{border-bottom-color:var(--ok);color:var(--ok);font-weight:700}
+.qtext .gap.bad{border-bottom-color:var(--no);color:var(--no)}
+.qtext b{font-weight:600;box-shadow:inset 0 -.5em 0 rgba(181,122,11,.22)}
+.qtext .qsm{font-family:var(--mono);font-size:.6em;letter-spacing:.03em;color:var(--ink2);text-transform:uppercase;font-weight:500}
+.qhint{font-family:var(--serif);font-style:italic;color:var(--ink2);font-size:15px;margin:2px 0 0}
+.qcue{font-family:var(--mono);font-size:12px;color:var(--m);margin-top:8px;letter-spacing:.02em}
+
+.choices{display:grid;gap:8px;margin-top:20px}
+.choices.wide{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.ch{
+  display:flex;align-items:center;gap:10px;text-align:left;
+  background:var(--sheet);border:1.5px solid var(--rule);border-radius:3px;
+  padding:11px 13px;font-size:16px;font-weight:600;transition:border-color .12s,background .12s,transform .06s;
+}
+.ch:hover:not(:disabled){border-color:var(--ink);background:#fff}
+.ch:active:not(:disabled){transform:translateY(1px)}
+.ch kbd{
+  font-family:var(--mono);font-size:10px;font-weight:500;color:var(--ink3);
+  border:1px solid var(--rule);border-radius:2px;padding:1px 5px;flex:none;
+}
+.ch .txt{font-family:var(--mono);font-weight:500}
+.ch.long .txt{font-family:var(--serif);font-size:16px;font-weight:400}
+.ch:disabled{cursor:default;opacity:.55}
+.ch.right{border-color:var(--ok);background:rgba(29,122,82,.09);opacity:1}
+.ch.right kbd{border-color:var(--ok);color:var(--ok)}
+.ch.wrong{border-color:var(--no);background:rgba(194,51,77,.08);opacity:1}
+.ch.wrong .txt{text-decoration:line-through;text-decoration-color:var(--no);text-decoration-thickness:2px}
+
+.typerow{display:flex;gap:9px;margin-top:20px;flex-wrap:wrap}
+input.answer{
+  flex:1;min-width:200px;font-family:var(--mono);font-size:18px;padding:11px 13px;
+  border:1.5px solid var(--ink);border-radius:3px;background:#fff;color:var(--ink);
+}
+input.answer::placeholder{color:var(--ink3);font-size:14px}
+input.answer.right{border-color:var(--ok);background:rgba(29,122,82,.07)}
+input.answer.wrong{border-color:var(--no);background:rgba(194,51,77,.07);text-decoration:line-through}
+.btn{
+  border:1.5px solid var(--ink);background:var(--ink);color:var(--sheet);
+  border-radius:3px;padding:11px 20px;font-size:14px;font-weight:700;letter-spacing:.02em;
+}
+.btn:hover{background:#000}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.ghost:hover{background:rgba(21,36,48,.06)}
+.btn.sm{padding:7px 13px;font-size:12px}
+.umlauts{display:flex;gap:5px;margin-top:9px;flex-wrap:wrap}
+.umlauts button{font-family:var(--mono);font-size:14px;border:1.5px solid var(--rule);background:var(--sheet);border-radius:2px;padding:4px 11px}
+.umlauts button:hover{border-color:var(--ink)}
+
+.verdict{margin-top:20px;border-top:1.5px solid var(--ink);padding-top:15px}
+.vhead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.vlabel{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:700}
+.vlabel.ok{color:var(--ok)}
+.vlabel.no{color:var(--no)}
+.vsol{font-family:var(--mono);font-size:19px;font-weight:700}
+.why{font-family:var(--serif);font-size:16px;line-height:1.6;color:var(--ink);margin:0}
+.why s{text-decoration-color:var(--no);text-decoration-thickness:1.5px;opacity:.75}
+.why code{font-family:var(--mono);font-size:.86em;background:#E4EAEE;padding:1px 5px;border-radius:2px}
+.why .warn{color:var(--amber);font-weight:600;font-style:italic}
+.vnext{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap}
+.vnext .hintkey{font-family:var(--mono);font-size:10.5px;color:var(--ink3)}
+
+/* ---------- mode bar ---------- */
+.modebar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.mode{
+  font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;
+  border:1.5px solid var(--rule);background:var(--sheet);border-radius:2px;padding:6px 11px;color:var(--ink2);
+}
+.mode[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--sheet)}
+.mode:hover{border-color:var(--ink);color:var(--ink)}
+.mode[aria-pressed="true"]:hover{color:var(--sheet)}
+
+/* ---------- panels ---------- */
+.panel{background:var(--sheet);border:1.5px solid var(--ink);border-radius:3px;box-shadow:var(--shadow);padding:24px;margin-bottom:20px}
+.panel h2{font-size:19px;margin:0 0 4px;letter-spacing:-.01em}
+.panel .sub{font-family:var(--serif);color:var(--ink2);font-size:15px;margin:0 0 18px;line-height:1.55}
+.panel h4{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink2);margin:24px 0 9px;font-weight:500}
+.panel h4:first-of-type{margin-top:0}
+table.ref{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12.5px;margin-bottom:6px}
+table.ref th,table.ref td{border:1px solid var(--rule);padding:6px 8px;text-align:center}
+table.ref thead th{color:#fff;font-size:10px;letter-spacing:.08em}
+table.ref thead th:nth-child(1){background:var(--ink);text-align:left}
+table.ref thead th:nth-child(2){background:var(--m)}
+table.ref thead th:nth-child(3){background:var(--f)}
+table.ref thead th:nth-child(4){background:var(--n)}
+table.ref thead th:nth-child(5){background:var(--p)}
+table.ref.plain thead th{background:var(--ink);text-align:left}
+table.ref tbody th{background:#EFF3F6;text-align:left;font-size:10.5px;letter-spacing:.06em;color:var(--ink2)}
+.reflist{font-family:var(--serif);font-size:15.5px;line-height:1.65;margin:0 0 4px;padding-left:20px}
+.reflist li{margin-bottom:5px}
+.reflist code,.inline-code{font-family:var(--mono);font-size:.84em;background:#E4EAEE;padding:1px 5px;border-radius:2px}
+.note{
+  border-left:3px solid var(--amber);background:rgba(181,122,11,.07);
+  padding:12px 15px;font-family:var(--serif);font-size:15px;line-height:1.6;margin:14px 0;
+}
+.note b{font-family:var(--disp);font-size:12px;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:5px;color:var(--amber)}
+.scroller{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+.statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(126px,1fr));gap:12px;margin-bottom:6px}
+.stat{border:1.5px solid var(--ink);border-radius:3px;padding:13px 14px;background:var(--sheet)}
+.stat .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+.stat .v{font-family:var(--mono);font-size:27px;font-weight:700;line-height:1.2;margin-top:3px}
+.stat .v small{font-size:13px;color:var(--ink3);font-weight:400}
+
+.tprog{display:grid;grid-template-columns:1fr;gap:10px}
+.tp{display:grid;grid-template-columns:1fr;gap:5px;border-bottom:1px solid var(--rule);padding-bottom:10px}
+.tp .r1{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.tp .nm{font-size:14px;font-weight:600}
+.tp .de{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:.08em;text-transform:uppercase}
+.tp .num{font-family:var(--mono);font-size:11.5px;color:var(--ink2);white-space:nowrap}
+.bigbar{height:9px;background:#DCE4E9;border:1px solid var(--rule);display:flex;overflow:hidden}
+.bigbar span{display:block;height:100%}
+.bigbar .s5{background:var(--ok)}
+.bigbar .s3{background:var(--m)}
+.bigbar .s1{background:#9FB4C4}
+.legend{display:flex;gap:14px;font-family:var(--mono);font-size:10px;color:var(--ink2);margin-top:10px;flex-wrap:wrap}
+.legend i{display:inline-block;width:9px;height:9px;margin-right:5px;vertical-align:-1px}
+
+.empty{font-family:var(--serif);font-size:17px;line-height:1.6;color:var(--ink2)}
+.result{text-align:center;padding:14px 0}
+.result .big{font-family:var(--mono);font-size:56px;font-weight:700;line-height:1}
+.result .cap{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink2);margin-top:6px}
+.result .msg{font-family:var(--serif);font-size:17px;line-height:1.6;margin:16px auto 0;max-width:46ch}
+.misslist{margin-top:20px;border-top:1.5px solid var(--ink);padding-top:14px;text-align:left}
+.miss{font-family:var(--serif);font-size:15px;line-height:1.55;padding:7px 0;border-bottom:1px solid var(--rule)}
+.miss .sol{font-family:var(--mono);font-weight:700;color:var(--ok)}
+.miss .yours{font-family:var(--mono);color:var(--no);text-decoration:line-through}
+
+footer{max-width:1120px;margin:34px auto 0;padding:16px;font-family:var(--mono);font-size:10.5px;color:var(--ink3);line-height:1.7;border-top:1px solid var(--rule)}
+@media(max-width:560px){.topin{gap:9px}.tag{display:none}.hud .pill.hide-s{display:none}.mark{font-size:13px;letter-spacing:.2em}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="topin">
+      <div class="mark">KASUS<em>.</em></div>
+      <div class="tag">telc&nbsp;B1</div>
+      <div class="spacer"></div>
+      <div class="hud" id="hud"></div>
+    </div>
+  </div>
+  <div class="wrap">
+    <nav class="tabs" id="tabs" role="tablist"></nav>
+  </div>
+</header>
+<main class="wrap" id="main"></main>
+<footer>
+  Built from your own B1 notes · 4 cases × 4 genders × every trigger you wrote down.<br>
+  Keyboard: <b>1–6</b> pick · <b>Enter</b> check / next · <b>Esc</b> skip.
+</footer>
+<script>
+"use strict";
+/* ============================================================
+   KASUS — B1 German case trainer
+   Content derived from the user's own B1 notes.
+   ============================================================ */
+
+const CASES = ["nom","akk","dat","gen"];
+const CASE_DE = {nom:"Nominativ",akk:"Akkusativ",dat:"Dativ",gen:"Genitiv"};
+const CASE_SHORT = {nom:"NOM",akk:"AKK",dat:"DAT",gen:"GEN"};
+const GEN_DE = {m:"maskulin",f:"feminin",n:"neutrum",p:"Plural"};
+const GEN_SHORT = {m:"MASK",f:"FEM",n:"NEUT",p:"PL"};
+
+/* ---- declension tables (from the notes) ---- */
+const TBL = {
+  def:   {nom:{m:"der",f:"die",n:"das",p:"die"},akk:{m:"den",f:"die",n:"das",p:"die"},dat:{m:"dem",f:"der",n:"dem",p:"den"},gen:{m:"des",f:"der",n:"des",p:"der"}},
+  dies:  {nom:{m:"dieser",f:"diese",n:"dieses",p:"diese"},akk:{m:"diesen",f:"diese",n:"dieses",p:"diese"},dat:{m:"diesem",f:"dieser",n:"diesem",p:"diesen"},gen:{m:"dieses",f:"dieser",n:"dieses",p:"dieser"}},
+  ein:   {nom:{m:"ein",f:"eine",n:"ein",p:"—"},akk:{m:"einen",f:"eine",n:"ein",p:"—"},dat:{m:"einem",f:"einer",n:"einem",p:"—"},gen:{m:"eines",f:"einer",n:"eines",p:"—"}},
+  kein:  {nom:{m:"kein",f:"keine",n:"kein",p:"keine"},akk:{m:"keinen",f:"keine",n:"kein",p:"keine"},dat:{m:"keinem",f:"keiner",n:"keinem",p:"keinen"},gen:{m:"keines",f:"keiner",n:"keines",p:"keiner"}},
+  mein:  {nom:{m:"mein",f:"meine",n:"mein",p:"meine"},akk:{m:"meinen",f:"meine",n:"mein",p:"meine"},dat:{m:"meinem",f:"meiner",n:"meinem",p:"meinen"},gen:{m:"meines",f:"meiner",n:"meines",p:"meiner"}},
+  euer:  {nom:{m:"euer",f:"eure",n:"euer",p:"eure"},akk:{m:"euren",f:"eure",n:"euer",p:"eure"},dat:{m:"eurem",f:"eurer",n:"eurem",p:"euren"},gen:{m:"eures",f:"eurer",n:"eures",p:"eurer"}},
+  weak:  {nom:{m:"-e",f:"-e",n:"-e",p:"-en"},akk:{m:"-en",f:"-e",n:"-e",p:"-en"},dat:{m:"-en",f:"-en",n:"-en",p:"-en"},gen:{m:"-en",f:"-en",n:"-en",p:"-en"}},
+  mixed: {nom:{m:"-er",f:"-e",n:"-es",p:"-en"},akk:{m:"-en",f:"-e",n:"-es",p:"-en"},dat:{m:"-en",f:"-en",n:"-en",p:"-en"},gen:{m:"-en",f:"-en",n:"-en",p:"-en"}},
+  strong:{nom:{m:"-er",f:"-e",n:"-es",p:"-e"},akk:{m:"-en",f:"-e",n:"-es",p:"-e"},dat:{m:"-em",f:"-er",n:"-em",p:"-en"},gen:{m:"-en",f:"-er",n:"-en",p:"-er"}},
+  rel:   {nom:{m:"der",f:"die",n:"das",p:"die"},akk:{m:"den",f:"die",n:"das",p:"die"},dat:{m:"dem",f:"der",n:"dem",p:"denen"},gen:{m:"dessen",f:"deren",n:"dessen",p:"deren"}}
+};
+const GRID_CAP = {
+  def:"bestimmter Artikel", dies:"der-Wörter (dieser)", ein:"unbestimmter Artikel",
+  kein:"ein-Wörter (kein / mein)", mein:"Possessiv (mein)", euer:"euer — das zweite e fällt weg",
+  weak:"Adjektiv nach der-Wort · schwach", mixed:"Adjektiv nach ein-Wort · gemischt",
+  strong:"Adjektiv ohne Artikel · stark", rel:"Relativpronomen"
+};
+
+/* ---- topics ---- */
+const TOPICS = [
+  {id:"prep",   nm:"Prepositions",        de:"Präpositionen"},
+  {id:"wechsel",nm:"Two-way in context",  de:"Wechselpräpositionen"},
+  {id:"verb",   nm:"Verbs that fix case", de:"Verben"},
+  {id:"zeit",   nm:"Time expressions",    de:"Zeitangaben"},
+  {id:"funktion",nm:"Role in the sentence",de:"Satzglieder"},
+  {id:"artikel",nm:"Articles & der/ein-words",de:"Artikelwörter"},
+  {id:"adjektiv",nm:"Adjective endings",  de:"Adjektivendungen"},
+  {id:"relativ",nm:"Relative pronouns",   de:"Relativpronomen"},
+  {id:"pronomen",nm:"Personal & reflexive",de:"Pronomen"},
+  {id:"wer",    nm:"wer / wen / wem",     de:"Fragewörter"},
+  {id:"nomen",  nm:"When the noun changes",de:"Nomen-Endungen"},
+  {id:"stellung",nm:"Object word order",  de:"Wortstellung"},
+  {id:"bauen",  nm:"Build the phrase",    de:"Produktion"},
+  {id:"feste",  nm:"Fixed verb + prep.",  de:"feste Verbindungen", bonus:true}
+];
+const TOPIC_BY_ID = {}; TOPICS.forEach(t=>TOPIC_BY_ID[t.id]=t);
+
+/* ---- bank ---- */
+const BANK = [];
+let _n = 0;
+function add(o){
+  o.id = o.id || (o.topic + "-" + (++_n));
+  if(!o.alts) o.alts = [];
+  BANK.push(o);
+  return o;
+}
+const CASE4 = ["Nominativ","Akkusativ","Dativ","Genitiv"];
+const CASE_OR = ["Akkusativ","Dativ","Genitiv","Akkusativ oder Dativ"];
+
+/* ============================================================
+   1 · PRÄPOSITIONEN
+   ============================================================ */
+const PREPS = [
+  ["durch","Akkusativ","through"],["für","Akkusativ","for"],["gegen","Akkusativ","against"],
+  ["ohne","Akkusativ","without"],["um","Akkusativ","around / at"],
+  ["bis","Akkusativ","until","In practice bis usually stands bare (bis Montag) or in front of a second preposition — and then that one governs the case: bis zum Bahnhof is Dativ because of zu."],
+  ["entlang","Akkusativ","along","entlang normally follows its noun: die Straße entlang. Put in front of the noun it switches to Dativ (entlang dem Fluss), but the postposed accusative is the B1 form."],
+  ["aus","Dativ","out of / from"],["außer","Dativ","except"],["bei","Dativ","at / near"],
+  ["mit","Dativ","with"],["nach","Dativ","after / to"],["seit","Dativ","since"],
+  ["von","Dativ","from / of"],["zu","Dativ","to"],["ab","Dativ","from (time)"],["gegenüber","Dativ","opposite","gegenüber often follows its noun — dem Bahnhof gegenüber — and with a pronoun it always does: mir gegenüber."],
+  ["wegen","Genitiv","because of"],["während","Genitiv","during"],["trotz","Genitiv","despite"],
+  ["(an)statt","Genitiv","instead of"],
+  ["an","Akkusativ oder Dativ","on / at"],["auf","Akkusativ oder Dativ","on top of"],
+  ["hinter","Akkusativ oder Dativ","behind"],["in","Akkusativ oder Dativ","in / into"],
+  ["neben","Akkusativ oder Dativ","next to"],["über","Akkusativ oder Dativ","above"],
+  ["unter","Akkusativ oder Dativ","under"],["vor","Akkusativ oder Dativ","in front of"],
+  ["zwischen","Akkusativ oder Dativ","between"]
+];
+const PREP_WHY = {
+  "Akkusativ":"Fixed accusative preposition. The set is <code>durch, für, gegen, ohne, um, bis, entlang</code> — a closed list, so the case never varies no matter what the sentence means. The <em>noun</em> can still change, though: <em>ohne den Studenten</em> (n-Deklination).",
+  "Dativ":"Fixed dative preposition: <code>aus, außer, bei, mit, nach, seit, von, zu</code> (+ <code>ab, gegenüber</code>). Sing it as one chant — it is the single most useful list in B1.",
+  "Genitiv":"Genitive preposition: <code>wegen, während, trotz, (an)statt</code>. In speech you will hear dative (<em>wegen dem Wetter</em>), but write the genitive in the exam.",
+  "Akkusativ oder Dativ":"Wechselpräposition. Ask <em>wohin?</em> → Akkusativ (crossing into a new place). Ask <em>wo?</em> → Dativ (already there, stable position)."
+};
+PREPS.forEach(([p,c,en,note])=>{
+  add({topic:"prep",kind:"mc",q:"Which case does <b>"+p+"</b> take?",hint:en,
+    a:c,choices:CASE_OR.slice(),why:PREP_WHY[c]+(note?" <span class=\"warn\">"+note+"</span>":""),
+    grid:{mode:"def",case:c==="Akkusativ"?"akk":c==="Dativ"?"dat":c==="Genitiv"?"gen":null}});
+});
+
+/* ============================================================
+   2 · WECHSELPRÄPOSITIONEN IM SATZ
+   ============================================================ */
+function wech(sent,ans,gender,cs,gloss,extra){
+  const seen=[], ch=[];
+  ["akk","dat","gen","nom"].forEach(c=>{const v=TBL.def[c][gender]; if(seen.indexOf(v)<0){seen.push(v);ch.push(v);}});
+  ["den","dem","die","der","das","des"].forEach(v=>{ if(ch.length<4 && ch.indexOf(v)<0) ch.push(v); });
+  add({topic:"wechsel",kind:"mc",q:sent,hint:gloss,a:ans,
+    choices:ch,gender:gender,
+    why:(cs==="akk"
+      ? "<em>Wohin?</em> — the thing crosses into a new place, so <b>Akkusativ</b>. "
+      : "<em>Wo?</em> — stable position, nothing changes place, so <b>Dativ</b>. ")+(extra||""),
+    grid:{mode:"def",case:cs,gender:gender}});
+}
+wech("Ich hänge das Bild an ___ Wand.","die","f","akk","I hang the picture on the wall.","Pair it with <code>hängen</code> (weak, transitive) = to put up.");
+wech("Das Bild hängt an ___ Wand.","der","f","dat","The picture is hanging on the wall.","<code>hängen</code> (strong, intransitive: hing, gehangen) = to be hanging.");
+wech("Er legt das Buch auf ___ Tisch.","den","m","akk","He puts the book on the table.","<code>legen</code> puts → Akkusativ. Its partner <code>liegen</code> lies → Dativ.");
+wech("Das Buch liegt auf ___ Tisch.","dem","m","dat","The book is lying on the table.","<code>liegen</code> = it is already there.");
+wech("Ich stelle die Flasche in ___ Kühlschrank.","den","m","akk","I put the bottle in the fridge.","<code>stellen</code> puts upright → Akkusativ.");
+wech("Die Flasche steht in ___ Kühlschrank.","dem","m","dat","The bottle is (standing) in the fridge.","<code>stehen</code> → Dativ. Spoken German contracts <em>in dem</em> → <em>im</em>.");
+wech("Die Katze springt auf ___ Sofa.","das","n","akk","The cat jumps onto the sofa.","It was not on the sofa before — new place.");
+wech("Die Katze schläft auf ___ Sofa.","dem","n","dat","The cat is sleeping on the sofa.","Sleeping is not going anywhere.");
+wech("Der Hund läuft unter ___ Tisch.","den","m","akk","The dog runs under the table (and stays there).","Crossing the boundary of the table's underside.");
+wech("Der Hund liegt unter ___ Tisch.","dem","m","dat","The dog is lying under the table.","");
+wech("Sie setzt sich neben ___ Fenster.","das","n","akk","She sits down next to the window.","<code>sich setzen</code> = change of position → Akkusativ.");
+wech("Sie sitzt neben ___ Fenster.","dem","n","dat","She is sitting next to the window.","<code>sitzen</code> = already seated → Dativ.");
+wech("Er stellt das Auto vor ___ Haus.","das","n","akk","He puts the car in front of the house.","<code>stellen</code> puts → Akkusativ.");
+wech("Er parkt das Auto vor ___ Haus.","dem","n","dat","He parks the car in front of the house.","<b>Exception worth memorising:</b> <code>parken</code> behaves like <em>stehen</em>, not like <em>stellen</em>. The car obviously moves, but German treats parking as a location, so it is always Dativ: <em>Ich parke in der Garage</em>, never <s>in die Garage</s>.");
+wech("Das Auto steht vor ___ Haus.","dem","n","dat","The car is standing in front of the house.","");
+wech("Ich gehe hinter ___ Haus.","das","n","akk","I walk round to behind the house.","");
+wech("Ich warte hinter ___ Haus.","dem","n","dat","I am waiting behind the house.","");
+wech("Ich stelle den Stuhl zwischen ___ Tisch und das Fenster.","den","m","akk","I put the chair between the table and the window.","Both nouns after <em>zwischen</em> take the same case.");
+wech("Der Stuhl steht zwischen ___ Tisch und dem Fenster.","dem","m","dat","The chair stands between the table and the window.","");
+wech("Ich jogge in ___ Park.","dem","m","dat","I jog around inside the park.","Straight from your notes: movement <em>inside</em> a place is still Dativ. Motion alone does not trigger Akkusativ — a <em>change of place</em> does.");
+wech("Ich jogge in ___ Park.","den","m","akk","I jog into the park (from outside).","Same sentence, other meaning: I cross the park boundary → Akkusativ.");
+wech("Wir gehen heute Abend in ___ Kino.","das","n","akk","We are going to the cinema tonight.","<em>ins Kino</em> = <em>in das Kino</em>.");
+wech("Wir sitzen schon in ___ Kino.","dem","n","dat","We are already sitting in the cinema.","<em>im Kino</em> = <em>in dem Kino</em>.");
+wech("Häng die Jacke bitte in ___ Schrank!","den","m","akk","Hang the jacket in the wardrobe, please.","Imperative, but the rule is unchanged: it goes in → Akkusativ.");
+wech("Die Jacke hängt schon in ___ Schrank.","dem","m","dat","The jacket is already in the wardrobe.","In real use you would contract this to <em>im Schrank</em>; the gap is left open here so the case stays visible.");
+
+/* ============================================================
+   3 · VERBEN
+   ============================================================ */
+const DAT_VERBS = ["helfen","danken","gefallen","gehören","passen","schmecken","antworten","folgen","gratulieren","zuhören","vertrauen","begegnen","fehlen","wehtun","passieren","glauben"];
+const DA_VERBS  = ["geben","schenken","zeigen","erklären","empfehlen","bringen","schicken","leihen","erzählen","anbieten"];
+DAT_VERBS.forEach(v=>{
+  add({topic:"verb",kind:"mc",q:"<b>"+v+"</b> — which case does its object take?",
+    a:"Dativ",choices:["Nominativ","Akkusativ","Dativ","Genitiv"],
+    why:"A one-object dative verb: the person on the receiving end goes in the <b>Dativ</b>, and there is no accusative object at all. Full list from your notes: <code>"+DAT_VERBS.join(", ")+"</code>.",
+    grid:{mode:"def",case:"dat"}});
+});
+["sein","werden","bleiben"].forEach(v=>{
+  add({topic:"verb",kind:"mc",q:"<b>"+v+"</b> + a noun that renames the subject — which case?",
+    a:"Nominativ",choices:["Nominativ","Akkusativ","Dativ","Genitiv"],
+    why:"<code>sein, werden, bleiben</code> are linking verbs. The noun after them is not an object, it re-labels the subject, so it stays <b>Nominativ</b>: <em>Er ist ein guter Arzt.</em> (not <s>einen</s>)",
+    grid:{mode:"def",case:"nom"}});
+});
+add({topic:"verb",kind:"mc",q:"<b>schenken, zeigen, erklären</b> — what is the pattern?",
+  a:"Person im Dativ, Sache im Akkusativ",
+  choices:["Person im Dativ, Sache im Akkusativ","Person im Akkusativ, Sache im Dativ","beide im Akkusativ","beide im Dativ"],long:true,
+  why:"Dative + accusative verbs: the <em>receiver</em> is Dativ, the <em>thing handed over</em> is Akkusativ. <em>Ich schenke meiner Mutter einen Ring.</em> Same shape as English 'I give my mother a ring'.",
+  grid:{mode:"def",case:"dat"}});
+
+function vb(sent,cue,ans,cs,gender,why,alts){
+  add({topic:"verb",kind:"type",q:sent,cue:cue,a:ans,alts:alts||[],why:why,
+    grid:{mode:"def",case:cs,gender:gender}});
+}
+vb("Ich helfe ___.","mein Bruder","meinem Bruder","dat","m","<code>helfen</code> is a dative verb → <em>meinem</em> (ein-word, Dativ maskulin).");
+vb("Das Buch gehört ___.","meine Schwester","meiner Schwester","dat","f","<code>gehören</code> takes Dativ → feminine Dativ is <em>-er</em>: <em>meiner</em>.");
+vb("Wir danken ___.","der Lehrer","dem Lehrer","dat","m","<code>danken</code> = Dativ. <em>der</em> → <em>dem</em>.");
+vb("Der Film gefällt ___.","die Kinder (Pl.)","den Kindern","dat","p","<code>gefallen</code> = Dativ, and Dativ Plural adds <b>-n</b> to the noun too: <em>Kinder → Kindern</em>.");
+vb("Die Suppe schmeckt ___ nicht.","ich","mir","dat",null,"<code>schmecken</code> = Dativ, so the pronoun is <em>mir</em>, never <s>mich</s>.");
+vb("Er antwortet ___ nicht.","der Chef","dem Chef","dat","m","<code>antworten</code> = Dativ. Careful: English 'answer somebody' looks like a direct object.");
+vb("Wir gratulieren ___ zum Geburtstag.","unsere Freundin","unserer Freundin","dat","f","<code>gratulieren</code> = Dativ; <em>unser</em> follows the ein-pattern → <em>unserer</em>.");
+vb("Ich vertraue ___.","mein Kollege","meinem Kollegen","dat","m","Two rules at once: <code>vertrauen</code> = Dativ, and <em>Kollege</em> is n-Deklination → <em>Kollegen</em> in every case but Nominativ singular.");
+vb("Gestern bin ich ___ begegnet.","ein alter Freund","einem alten Freund","dat","m","<code>begegnen</code> = Dativ. After an ein-word in Dativ the adjective ending is always <b>-en</b>.");
+vb("Der Kopf tut ___ weh.","ich","mir","dat",null,"<code>wehtun</code> = Dativ: <em>Das tut mir weh.</em>");
+vb("Was ist ___ passiert?","du","dir","dat",null,"<code>passieren</code> = Dativ.");
+vb("Ich glaube ___ nicht.","du","dir","dat",null,"<code>glauben</code> + person = Dativ.");
+vb("Der Mantel passt ___ gut.","Sie (formal)","Ihnen","dat",null,"<code>passen</code> = Dativ; the formal <em>Sie</em> becomes <em>Ihnen</em>, capitalised.");
+vb("Ich schenke ___ ___.","meine Mutter / ein Ring","meiner Mutter einen Ring","dat","f","Receiver in Dativ (<em>meiner Mutter</em>), thing in Akkusativ (<em>einen Ring</em>). Two nouns → Dativ first.");
+vb("Er zeigt ___ ___.","die Touristen / der Weg","den Touristen den Weg","dat","p","Dativ Plural <em>den Touristen</em> (noun already ends in -en), then Akkusativ <em>den Weg</em>.");
+vb("Sie erklärt ___ ___.","der Student / die Regel","dem Studenten die Regel","dat","m","<em>Student</em> is n-Deklination → <em>dem Studenten</em>. Then Akkusativ <em>die Regel</em>.");
+vb("Ich empfehle ___ ___.","du / dieses Buch","dir dieses Buch","dat",null,"Pronoun receiver <em>dir</em>, then the thing. <em>dieses</em> = der-word, Akkusativ neutrum.");
+vb("Kannst du ___ ___ leihen?","ich / dein Auto","mir dein Auto","dat",null,"<em>mir</em> (Dativ), <em>dein Auto</em> (Akkusativ neutrum = same as Nominativ).");
+vb("Er erzählt ___ ___.","die Kinder / eine Geschichte","den Kindern eine Geschichte","dat","p","Dativ Plural takes the extra <b>-n</b>: <em>den Kindern</em>.");
+vb("Er ist ___.","ein guter Arzt","ein guter Arzt","nom","m","<code>sein</code> links back to the subject, so this stays <b>Nominativ</b>. Nominativ maskulin after an ein-word: <em>-er</em> on the adjective.");
+vb("Sie wird ___.","eine bekannte Ärztin","eine bekannte Ärztin","nom","f","<code>werden</code> = Nominativ.");
+vb("Das bleibt ___.","mein größtes Problem","mein größtes Problem","nom","n","<code>bleiben</code> = Nominativ. Neutrum after an ein-word: <em>-es</em>.");
+vb("Er ist ___ geworden.","ein guter Vater","ein guter Vater","nom","m","Still <code>werden</code> → Nominativ, even in the Perfekt.");
+
+/* ============================================================
+   4 · ZEITANGABEN
+   ============================================================ */
+function zeit(sent,cue,ans,cs,gender,why,alts){
+  add({topic:"zeit",kind:"type",q:sent,cue:cue,a:ans,alts:alts||[],why:why,grid:{mode:"def",case:cs,gender:gender}});
+}
+zeit("___ gehe ich joggen.","jeder Tag","Jeden Tag","akk","m","A definite time with <b>no preposition</b> → Akkusativ. <em>jeden Tag, jedes Wochenende, jede Woche</em>.");
+zeit("___ fahre ich nach Hamburg.","nächste Woche","Nächste Woche","akk","f","No preposition → Akkusativ. Feminine Akkusativ looks like Nominativ, so it hides.");
+zeit("___ war ich in Italien.","letzter Sommer","Letzten Sommer","akk","m","No preposition → Akkusativ: <em>letzten Sommer, letzten Monat, letztes Jahr</em>.");
+zeit("Ich war ___ krank.","ein Monat + lang","einen Monat lang","akk","m","A duration without a preposition is Akkusativ: <em>einen Monat lang, eine Woche lang</em>.");
+zeit("Der Kurs dauert ___.","ein ganzes Jahr","ein ganzes Jahr","akk","n","Duration → Akkusativ, but neutrum Akkusativ = neutrum Nominativ, so nothing visibly changes. Recognising that is the point.");
+zeit("___ lese ich eine Stunde.","jeder Abend","Jeden Abend","akk","m","No preposition → Akkusativ.");
+zeit("Wir treffen uns ___.","an + der Montag","am Montag","dat","m","Time + <code>an</code> → Dativ. <em>an dem</em> contracts to <em>am</em>.");
+zeit("___ habe ich Urlaub.","in + der Juli","Im Juli","dat","m","Time + <code>in</code> → Dativ; <em>in dem</em> → <em>im</em>.");
+zeit("Ich habe ihn ___ gesehen.","vor + ein Jahr","vor einem Jahr","dat","n","Time + <code>vor</code> → Dativ. <em>vor einem Jahr</em> = a year ago.");
+zeit("Ich wohne ___ hier.","seit + zwei Jahre","seit zwei Jahren","dat","p","<code>seit</code> → Dativ, and Dativ Plural adds <b>-n</b>: <em>Jahre → Jahren</em>.");
+zeit("___ trinken wir Kaffee.","nach + das Essen","Nach dem Essen","dat","n","<code>nach</code> → Dativ.");
+zeit("___ arbeite ich in Berlin.","ab + der erste Mai","Ab dem ersten Mai","dat","m","<code>ab</code> → Dativ; the ordinal takes the weak <em>-en</em> after <em>dem</em>.");
+zeit("___ darf ich nicht telefonieren.","bei + die Arbeit","Bei der Arbeit","dat","f","<code>bei</code> → Dativ.");
+zeit("___ fahren wir zu meinen Eltern.","zu + Weihnachten","Zu Weihnachten","dat","n","<code>zu</code> → Dativ (no article needed with festivals).");
+add({topic:"zeit",kind:"mc",q:"<b>jeden Tag, nächste Woche, letzten Sommer</b> — which case?",a:"Akkusativ",
+  choices:CASE4.slice(),why:"Definite time or duration <b>without a preposition</b> → Akkusativ. This is the rule people forget, because nothing in the sentence looks like an object.",grid:{mode:"def",case:"akk"}});
+add({topic:"zeit",kind:"mc",q:"<b>am Montag, im Juli, vor einem Jahr, seit zwei Jahren</b> — which case?",a:"Dativ",
+  choices:CASE4.slice(),why:"Once a time phrase carries one of <code>an, in, vor, seit, nach, ab, zu, bei</code>, the preposition takes over and it is <b>Dativ</b>.",grid:{mode:"def",case:"dat"}});
+
+/* ============================================================
+   5 · SATZGLIEDER (function)
+   ============================================================ */
+function fn(sent,ans,why,cs,gender){
+  add({topic:"funktion",kind:"mc",q:sent,a:ans,choices:CASE4.slice(),why:why,grid:{mode:"def",case:cs,gender:gender}});
+}
+fn("<b>Der Mann</b> ist mein Bruder.","Nominativ","Subject — ask <em>Wer? Was?</em>","nom","m");
+fn("Der Mann ist <b>mein Bruder</b>.","Nominativ","Predicate noun after <code>sein</code>: it renames the subject, so it is Nominativ too. Both halves of the sentence are Nominativ.","nom","m");
+fn("Ich sehe <b>den Mann</b>.","Akkusativ","Direct object — ask <em>Wen? Was?</em>","akk","m");
+fn("Ich gebe <b>dem Mann</b> das Buch.","Dativ","Indirect object, the receiver — ask <em>Wem?</em>","dat","m");
+fn("Das ist das Auto <b>des Mannes</b>.","Genitiv","Possession, 'of the man' — ask <em>Wessen?</em> Note the noun also takes <b>-es</b>.","gen","m");
+fn("<b>Meinem Vater</b> schmeckt der Kuchen.","Dativ","Fronted, but still the dative object of <code>schmecken</code>. Word order does not change case — the subject here is <em>der Kuchen</em>.","dat","m");
+fn("Kennst du <b>die Frau</b>?","Akkusativ","Direct object of <code>kennen</code>. Feminine Akkusativ = <em>die</em>, identical to Nominativ.","akk","f");
+fn("<b>Die Kinder</b> spielen im Garten.","Nominativ","Subject, plural.","nom","p");
+fn("Ich zeige <b>den Kindern</b> das Haus.","Dativ","Receiver → Dativ Plural, with the extra <b>-n</b> on the noun.","dat","p");
+fn("Trotz <b>des Regens</b> gehen wir raus.","Genitiv","<code>trotz</code> is a genitive preposition, so the preposition decides before anything else.","gen","m");
+fn("Wir warten auf <b>den Bus</b>.","Akkusativ","<code>warten auf</code> is a fixed verb + preposition combination, always Akkusativ — the wohin/wo test does not apply here.","akk","m");
+fn("Sie wird <b>Ärztin</b>.","Nominativ","<code>werden</code> links back to the subject.","nom","f");
+
+/* ============================================================
+   6 · ARTIKELWÖRTER  (generated from the tables)
+   ============================================================ */
+const ART_SETS = [
+  {key:"def", word:"der / die / das", note:"bestimmter Artikel", full:true},
+  {key:"dies",word:"dieser", note:"der-Wort — also jeder, jener, mancher, welcher, alle", full:true},
+  {key:"ein", word:"ein", note:"unbestimmter Artikel — kein Plural", full:true},
+  {key:"kein",word:"kein", note:"ein-Wort — mein, dein, sein, ihr, unser, euer, Ihr laufen genauso", full:true},
+  {key:"mein",word:"mein", note:"Possessivartikel", full:false},
+  {key:"euer",word:"euer", note:"euer verliert das zweite e", full:true}
+];
+function uniqForms(key){
+  const s=new Set();
+  CASES.forEach(c=>["m","f","n","p"].forEach(g=>{const v=TBL[key][c][g]; if(v!=="—") s.add(v);}));
+  return Array.from(s);
+}
+ART_SETS.forEach(set=>{
+  const forms = uniqForms(set.key);
+  const gens = set.key==="ein" ? ["m","f","n"] : ["m","f","n","p"];
+  const subset = set.full ? CASES : ["akk","dat","gen"];
+  subset.forEach(c=>{
+    gens.forEach(g=>{
+      const a = TBL[set.key][c][g];
+      let why = "";
+      if(set.key==="def") why = "The definite article is the master pattern — every der-word copies it.";
+      else if(set.key==="dies") why = "der-Wörter (<code>dieser, jeder, jener, mancher, welcher, alle</code>) take exactly the definite-article endings.";
+      else if(set.key==="ein") why = "<code>ein</code> has <b>no ending at all</b> in Nominativ maskulin and Nominativ/Akkusativ neutrum — that bare form is what makes the ein-pattern different.";
+      else if(set.key==="euer") why = "<code>euer</code> drops its second <b>e</b> as soon as an ending is added: <em>euer → eurem</em>, never <s>euerem</s>.";
+      else why = "ein-Wörter: <code>kein</code> and all possessives run on this table. Bare form only in Nom. mask. and Nom./Akk. neutrum.";
+      if(c==="gen" && (g==="m"||g==="n")) why += " In the Genitiv the noun itself also takes <b>-s / -es</b>.";
+      if(c==="dat" && g==="p") why += " In the Dativ Plural the noun also takes an extra <b>-n</b>.";
+      add({topic:"artikel",id:"art-"+set.key+"-"+c+"-"+g,kind:"mc",
+        q:"<span class='qsm'>"+set.word+"</span> &nbsp;·&nbsp; "+CASE_DE[c]+" &nbsp;·&nbsp; "+GEN_DE[g],
+        hint:set.note,a:a,pool:forms,why:why,
+        grid:{mode:set.key,case:c,gender:g,open:true}});
+    });
+  });
+});
+add({topic:"artikel",kind:"mc",q:"Which of these is <b>not</b> a der-Wort?",a:"kein",
+  choices:["dieser","jeder","welcher","kein"],why:"<code>kein</code> is an ein-Wort. The der-Wörter from your notes are <code>dieser, jeder, jener, mancher, welcher, alle</code>.",
+  grid:{mode:"kein"}});
+add({topic:"artikel",kind:"mc",q:"<b>euer</b> + Dativ maskulin = ?",a:"eurem",
+  choices:["euerem","eurem","euerm","eueren"],why:"Add the ending, then delete the second <b>e</b> of the stem: <em>euer + em → eurem</em>.",
+  grid:{mode:"euer",case:"dat",gender:"m"}});
+add({topic:"artikel",kind:"type",q:"Ich fahre mit ___ Auto.",cue:"unser",a:"unserem",why:"<code>mit</code> → Dativ; neutrum Dativ on an ein-word is <em>-em</em>. <em>unser</em> keeps its <b>e</b> (unlike <em>euer</em>), so <em>unserem</em> is correct — <em>unsrem</em> is only spoken shorthand.",
+  grid:{mode:"kein",case:"dat",gender:"n"}});
+add({topic:"artikel",kind:"type",q:"___ Buch möchtest du lesen?",cue:"welch-",a:"Welches",why:"<code>welcher</code> is a der-Wort: neutrum Akkusativ = <em>welches</em>, same shape as <em>das</em>.",
+  grid:{mode:"dies",case:"akk",gender:"n"}});
+add({topic:"artikel",kind:"type",q:"Ich habe mit ___ Studenten gesprochen.",cue:"all-",a:"allen",why:"<code>alle</code> is a der-Wort; Dativ Plural = <em>-en</em>, matching <em>den</em>.",
+  grid:{mode:"dies",case:"dat",gender:"p"}});
+
+/* ============================================================
+   7 · ADJEKTIVENDUNGEN
+   ============================================================ */
+const ADJ_SETS = [
+  {key:"weak",  lbl:"nach einem der-Wort", ex:"der / dieser / jeder …", why:"After a der-Wort the article already shows the case, so the adjective only needs <b>-e</b> or <b>-en</b>. Everything from Dativ down is <b>-en</b>."},
+  {key:"mixed", lbl:"nach einem ein-Wort", ex:"ein / kein / mein …", why:"After an ein-Wort the adjective has to do the work wherever the article is bare: Nom. mask. <b>-er</b>, Nom./Akk. neutrum <b>-es</b>. Everywhere else it matches the weak pattern."},
+  {key:"strong",lbl:"ohne Artikel", ex:"kein Artikel", why:"With no article, the adjective carries the definite-article signal itself: <em>d<b>em</b> Wasser</em> → <em>heiß<b>em</b> Wasser</em>. One exception: Genitiv maskulin and neutrum take <b>-en</b>, not <em>-es</em> — <em>trotz kalt<b>en</b> Wetters</em>, because the noun's own <em>-s</em> already marks the case."}
+];
+const ADJ_CHOICES = ["-e","-en","-er","-es","-em"];
+ADJ_SETS.forEach(set=>{
+  CASES.forEach(c=>{["m","f","n","p"].forEach(g=>{
+    add({topic:"adjektiv",id:"adj-"+set.key+"-"+c+"-"+g,kind:"mc",
+      q:"<span class='qsm'>"+set.lbl+"</span> &nbsp;·&nbsp; "+CASE_DE[c]+" &nbsp;·&nbsp; "+GEN_DE[g],
+      hint:set.ex,a:TBL[set.key][c][g],pool:ADJ_CHOICES,why:set.why,
+      grid:{mode:set.key,case:c,gender:g,open:true}});
+  });});
+});
+function adj(sent,cue,ans,mode,cs,gender,why){
+  add({topic:"adjektiv",kind:"type",q:sent,cue:cue,a:ans,why:why,grid:{mode:mode,case:cs,gender:gender}});
+}
+adj("Ich habe ein ___ Auto.","neu","neues","mixed","akk","n","ein-Wort + Akkusativ neutrum → <b>-es</b>, because <em>ein</em> itself is bare and cannot show neutrum.");
+adj("Der ___ Mann wohnt hier.","alt","alte","weak","nom","m","der-Wort + Nominativ maskulin → <b>-e</b>.");
+adj("Ich kenne den ___ Mann.","alt","alten","weak","akk","m","der-Wort + Akkusativ maskulin → <b>-en</b>. Across the whole weak table only five cells are <em>-e</em> — the three Nominativ singulars and the feminine and neuter Akkusativ. This one is the odd cell in that top block, and it is the single most common slip.");
+adj("Ich fahre mit dem ___ Auto.","neu","neuen","weak","dat","n","Anything from Dativ downwards after a der-Wort is <b>-en</b>.");
+adj("Ein ___ Mann wartet draußen.","alt","alter","mixed","nom","m","ein-Wort + Nominativ maskulin → <b>-er</b>. The adjective supplies the maskulin signal.");
+adj("Ich trinke gern ___ Kaffee.","schwarz","schwarzen","strong","akk","m","No article → strong. Akkusativ maskulin = <b>-en</b>, mirroring <em>den</em>.");
+adj("Ich trinke ___ Milch.","kalt","kalte","strong","akk","f","No article, Akkusativ feminin → <b>-e</b>, mirroring <em>die</em>.");
+adj("Der Tee wird mit ___ Wasser gemacht.","heiß","heißem","strong","dat","n","No article, Dativ neutrum → <b>-em</b>, mirroring <em>dem</em>.");
+adj("Er hat ___ Freunde.","gut","gute","strong","akk","p","No article, Akkusativ Plural → <b>-e</b>, mirroring <em>die</em>.");
+adj("Die Farbe des ___ Autos gefällt mir.","neu","neuen","weak","gen","n","Genitiv is always <b>-en</b> after a der-Wort — and the noun adds <em>-s</em>.");
+adj("Das ist ein ___ Problem.","groß","großes","mixed","nom","n","ein-Wort + neutrum → <b>-es</b>, in Nominativ and Akkusativ alike.");
+adj("Sie ist eine ___ Ärztin.","bekannt","bekannte","mixed","nom","f","Feminine is <b>-e</b> in Nominativ and Akkusativ, whatever the article.");
+adj("Wir helfen den ___ Kindern.","klein","kleinen","weak","dat","p","Dativ Plural: <b>-en</b> on the adjective and an extra <b>-n</b> on the noun.");
+adj("Trotz des ___ Wetters bleiben wir hier.","schlecht","schlechten","weak","gen","n","<code>trotz</code> → Genitiv; after a der-Wort in Genitiv the ending is <b>-en</b>.");
+adj("Ich suche eine ___ Wohnung.","günstig","günstige","mixed","akk","f","Feminine Akkusativ → <b>-e</b>.");
+adj("Er wohnt in einer ___ Wohnung.","klein","kleinen","mixed","dat","f","<code>in</code> + <em>wo?</em> → Dativ; ein-Wort + Dativ → <b>-en</b>.");
+adj("Ich habe keine ___ Zeit.","frei","freie","mixed","akk","f","<em>keine</em> is an ein-Wort; feminine Akkusativ → <b>-e</b>.");
+adj("Das schmeckt nach ___ Kaffee.","frisch","frischem","strong","dat","m","<code>nach</code> → Dativ, no article → strong <b>-em</b>.");
+adj("___ Tag!","gut","Guten","strong","akk","m","The greeting is a frozen Akkusativ (<em>Ich wünsche Ihnen einen guten Tag</em>) → <b>-en</b>.");
+adj("Mit ___ Grüßen","freundlich","freundlichen","strong","dat","p","Letter closing: <code>mit</code> → Dativ Plural, no article → <b>-en</b>.");
+adj("Ich habe mit meinem ___ Kollegen gesprochen.","neu","neuen","mixed","dat","m","ein-Wort + Dativ → <b>-en</b>; <em>Kollege</em> is n-Deklination so the noun ends in <em>-n</em> too.");
+adj("___ Fisch gibt es hier jeden Freitag.","frisch","Frischen","strong","akk","m","<code>es gibt</code> takes an Akkusativ object. Fronted, no article → strong <b>-en</b>. (<em>jeden Freitag</em> is a second Akkusativ, the time one.)");
+
+/* ============================================================
+   8 · RELATIVPRONOMEN
+   ============================================================ */
+function rel(sent,ans,gender,cs,why,flag){
+  add({topic:"relativ",kind:"mc",q:sent,a:ans,pool:"rel",bonus:!!flag,flag:flag||null,
+    why:"Gender <b>"+GEN_DE[gender]+"</b> comes from the antecedent; case <b>"+CASE_DE[cs]+"</b> comes from the job inside the relative clause. "+why+" Remember the clause is subordinate, so the conjugated verb sits at the very end and a comma always opens it.",
+    grid:{mode:"rel",case:cs,gender:gender}});
+}
+rel("Der Mann, ___ dort steht, ist mein Chef.","der","m","nom","It is the subject of <em>steht</em>.");
+rel("Der Mann, ___ ich kenne, ist Arzt.","den","m","akk","It is the direct object of <em>kenne</em>.");
+rel("Der Mann, ___ ich helfe, ist mein Nachbar.","dem","m","dat","<code>helfen</code> is a dative verb.");
+rel("Die Frau, ___ neben mir sitzt, heißt Anna.","die","f","nom","Subject of <em>sitzt</em>.");
+rel("Die Frau, ___ ich gestern getroffen habe, ist Ärztin.","die","f","akk","Object of <em>treffen</em> — feminine Akkusativ looks like Nominativ.");
+rel("Die Frau, ___ ich das Buch gegeben habe, ist meine Chefin.","der","f","dat","She is the receiver: <code>geben</code> puts the person in Dativ.");
+rel("Das Kind, ___ dort spielt, ist mein Sohn.","das","n","nom","Subject of <em>spielt</em>.");
+rel("Das Buch, ___ ich gestern gekauft habe, ist gut.","das","n","akk","Object of <em>kaufen</em>.");
+rel("Die Leute, ___ dort warten, sind Touristen.","die","p","nom","Plural subject.");
+rel("Die Leute, ___ ich vertraue, sind meine Freunde.","denen","p","dat","<code>vertrauen</code> = Dativ, and the Dativ Plural relative pronoun is <b>denen</b>, not <em>den</em> — the one cell where your notes' shortcut breaks inside B1 territory.");
+rel("Der Film, über ___ wir gesprochen haben, war gut.","den","m","akk","The preposition decides: <code>sprechen über</code> is always Akkusativ.");
+rel("Das Haus, in ___ wir wohnen, ist alt.","dem","n","dat","<code>in</code> + <em>wo?</em> → Dativ.");
+rel("Der Kollege, mit ___ ich arbeite, kommt aus Polen.","dem","m","dat","<code>mit</code> is always Dativ.");
+rel("Die Stadt, in ___ ich geboren bin, liegt in Nigeria.","der","f","dat","<code>in</code> + <em>wo?</em> → Dativ feminin.");
+rel("Der Student, ___ ich geholfen habe, hat bestanden.","dem","m","dat","<code>helfen</code> = Dativ.");
+rel("Das Auto, ___ Farbe mir gefällt, gehört ihm.","dessen","n","gen","Possessive relative: 'whose colour'. Neutrum/maskulin Genitiv = <b>dessen</b>.","B2");
+rel("Die Frau, ___ Mann Arzt ist, wohnt nebenan.","deren","f","gen","Feminine and plural Genitiv = <b>deren</b>.","B2");
+rel("Die Kinder, ___ Eltern arbeiten, essen in der Schule.","deren","p","gen","Plural Genitiv = <b>deren</b>.","B2");
+add({topic:"relativ",kind:"mc",q:"„The man that I know“ auf Deutsch:",a:"Der Mann, den ich kenne",long:true,
+  choices:["Der Mann, den ich kenne","Der Mann ich kenne","Der Mann, ich kenne","Der Mann, dass ich kenne"],
+  why:"German has no droppable all-purpose 'that'. The relative pronoun is compulsory and must be inflected — and <code>dass</code> is a different word entirely (a conjunction).",
+  grid:{mode:"rel",case:"akk",gender:"m"}});
+add({topic:"relativ",kind:"mc",q:"Wo steht das Verb? „Das Buch, das ich gestern gekauft ___, ist gut.“",a:"habe",
+  choices:["habe","hab ich","ich habe","—"],why:"Relative clauses are subordinate clauses: the conjugated verb goes last, then a comma closes the clause.",
+  grid:{mode:"rel",case:"akk",gender:"n"}});
+
+/* ============================================================
+   9 · PRONOMEN
+   ============================================================ */
+const PERS = [["ich","mich","mir"],["du","dich","dir"],["er","ihn","ihm"],["es","es","ihm"],
+  ["sie (sg.)","sie","ihr"],["wir","uns","uns"],["ihr","euch","euch"],["sie (Pl.)","sie","ihnen"],["Sie","Sie","Ihnen"]];
+PERS.forEach(([p,a,d])=>{
+  add({topic:"pronomen",kind:"mc",q:"<b>"+p+"</b> im <b>Akkusativ</b>",a:a,pool:"pers",
+    why:"Personal pronoun, Akkusativ. Dativ of <em>"+p+"</em> is <em>"+d+"</em> — always learn the pair together.",grid:{mode:"def",case:"akk"}});
+  add({topic:"pronomen",kind:"mc",q:"<b>"+p+"</b> im <b>Dativ</b>",a:d,pool:"pers",
+    why:"Personal pronoun, Dativ. Akkusativ of <em>"+p+"</em> is <em>"+a+"</em>.",grid:{mode:"def",case:"dat"}});
+});
+function pro(sent,cue,ans,cs,why){
+  add({topic:"pronomen",kind:"type",q:sent,cue:cue,a:ans,why:why,grid:{mode:"def",case:cs}});
+}
+pro("Ich sehe ___.","er","ihn","akk","<code>sehen</code> takes a direct object → Akkusativ <em>ihn</em>.");
+pro("Ich helfe ___.","er","ihm","dat","<code>helfen</code> is a dative verb → <em>ihm</em>.");
+pro("Gehört das Buch ___?","du","dir","dat","<code>gehören</code> = Dativ.");
+pro("Ich rufe ___ an.","sie (Singular)","sie","akk","Akkusativ of <em>sie</em> is unchanged — that ambiguity is normal.");
+pro("Ich schreibe ___ eine E-Mail.","sie (Singular)","ihr","dat","Two objects: the person is the receiver → Dativ <em>ihr</em>.");
+pro("Wir danken ___ herzlich.","Sie (formal)","Ihnen","dat","<code>danken</code> = Dativ; formal <em>Sie</em> → <em>Ihnen</em>, capitalised.");
+pro("Ich glaube ___ nicht.","sie (Plural)","ihnen","dat","<code>glauben</code> + person = Dativ; plural <em>ihnen</em> is lowercase.");
+pro("Er fragt ___ nach dem Weg.","ihr","euch","akk","<code>fragen</code> takes Akkusativ — one of the few verbs where English and German agree awkwardly.");
+const REFL = [["ich","mich","mir"],["du","dich","dir"],["er / es / sie","sich","sich"],["wir","uns","uns"],["ihr","euch","euch"],["sie / Sie","sich","sich"]];
+REFL.forEach(([p,a,d])=>{
+  add({topic:"pronomen",kind:"mc",q:"Reflexiv: <b>"+p+"</b> — Akkusativ / Dativ",a:a+" / "+d,long:true,
+    choices:["mich / mir","dich / dir","sich / sich","uns / uns","euch / euch"],
+    why:"Only <em>ich</em> and <em>du</em> have different reflexive forms for the two cases (<em>mich/mir</em>, <em>dich/dir</em>). From the third person on it is simply <em>sich</em>.",
+    grid:{mode:"def"}});
+});
+pro("Ich wasche ___.","reflexiv","mich","akk","No other object, so the reflexive pronoun <em>is</em> the direct object → Akkusativ.");
+pro("Ich wasche ___ die Hände.","reflexiv","mir","dat","Now <em>die Hände</em> is the direct object, so the reflexive drops to Dativ. That single contrast is the whole rule.");
+pro("Er interessiert ___ für Musik.","reflexiv","sich","akk","Third person is <em>sich</em> in both cases.");
+pro("Wir freuen ___ auf den Urlaub.","reflexiv","uns","akk","<code>sich freuen auf</code> + Akkusativ.");
+pro("Kannst du ___ das vorstellen?","reflexiv","dir","dat","<code>sich etwas vorstellen</code> (to imagine) takes a Dativ reflexive; <code>sich vorstellen</code> (to introduce oneself) takes Akkusativ.");
+pro("Setzt ___ bitte!","reflexiv (ihr)","euch","akk","Imperative for <em>ihr</em>.");
+pro("Ich kaufe ___ ein neues Handy.","reflexiv","mir","dat","There is already an Akkusativ object, so the reflexive is Dativ.");
+
+/* ============================================================
+   10 · WER / WEN / WEM / WESSEN
+   ============================================================ */
+function wq(sent,ans,cs,why){
+  add({topic:"wer",kind:"mc",q:sent,a:ans,choices:["Wer","Wen","Wem","Wessen"],
+    why:why+" <code>wer</code> follows the der-pattern with no gender and no plural: <b>wer · wen · wem · wessen</b>.",
+    grid:{mode:"def",case:cs}});
+}
+wq("___ kommt heute Abend?","Wer","nom","Subject of <em>kommen</em> → Nominativ.");
+wq("___ siehst du dort?","Wen","akk","Direct object → Akkusativ.");
+wq("___ hilfst du?","Wem","dat","<code>helfen</code> = Dativ.");
+wq("___ Auto ist das?","Wessen","gen","Possession → Genitiv.");
+wq("Mit ___ sprichst du?","Wem","dat","<code>mit</code> is always Dativ.");
+wq("Für ___ ist das Geschenk?","Wen","akk","<code>für</code> is always Akkusativ.");
+wq("___ gehört das Handy?","Wem","dat","<code>gehören</code> = Dativ.");
+wq("Von ___ hast du das gehört?","Wem","dat","<code>von</code> is always Dativ.");
+wq("___ hat dich angerufen?","Wer","nom","Subject → Nominativ.");
+
+/* ============================================================
+   11 · NOMEN-ENDUNGEN
+   ============================================================ */
+function nom(sent,cue,ans,why,cs,gender){
+  add({topic:"nomen",kind:"type",q:sent,cue:cue,a:ans,why:why,grid:{mode:"def",case:cs,gender:gender}});
+}
+nom("Ich spiele mit den ___.","Kind (Pl.)","Kindern","Dativ Plural adds <b>-n</b> to the noun.","dat","p");
+nom("Der Rauch kommt aus den ___.","Haus (Pl.)","Häusern","Plural <em>Häuser</em> + Dativ <b>-n</b> = <em>Häusern</em>.","dat","p");
+nom("Er fährt gern mit alten ___.","Auto (Pl.)","Autos","No extra <b>-n</b>: plurals ending in <b>-s</b> are exempt.","dat","p");
+nom("Ich arbeite mit vielen ___.","Frau (Pl.)","Frauen","No extra <b>-n</b>: the plural <em>Frauen</em> already ends in <b>-n</b>.","dat","p");
+nom("Das ist das Auto des ___.","Mann","Mannes","Genitiv maskulin adds <b>-es</b> — one-syllable nouns prefer the fuller <em>-es</em>.","gen","m");
+nom("Die Farbe des ___ gefällt mir.","Auto","Autos","Genitiv neutrum: <b>-s</b> is enough for a multi-syllable noun.","gen","n");
+nom("Das Spielzeug des ___ liegt dort.","Kind","Kindes","Genitiv neutrum, one syllable → <b>-es</b>.","gen","n");
+nom("Das ist ___ Auto.","Anna","Annas","Names simply take <b>-s</b>, no apostrophe in standard German.","gen","f");
+nom("Ich kenne den ___.","Student","Studenten","n-Deklination: <em>-ent</em> nouns add <b>-en</b> in every case but Nominativ singular.","akk","m");
+nom("Ich helfe dem ___.","Junge","Jungen","n-Deklination: masculine nouns ending in <b>-e</b>.","dat","m");
+nom("Das ist das Problem des ___.","Mensch","Menschen","<em>Mensch</em> is on the irregular n-Deklination list with <em>Herr, Nachbar, Bauer</em>.","gen","m");
+nom("Ich sehe ___ Meier auf der Straße.","Herr","Herrn","<em>Herr</em> takes <b>-n</b> in the singular (and <em>-en</em> in the plural): <em>Herrn Meier</em>.","akk","m");
+nom("Ich spreche mit meinem ___.","Kollege","Kollegen","n-Deklination.","dat","m");
+nom("Der Name des ___ ist Ali.","Nachbar","Nachbarn","n-Deklination.","gen","m");
+nom("Ich frage den ___.","Journalist","Journalisten","n-Deklination: <em>-ist</em>.","akk","m");
+nom("Wir gratulieren dem ___.","Biologe","Biologen","n-Deklination: <em>-oge</em>.","dat","m");
+add({topic:"nomen",kind:"mc",q:"Which plural does <b>not</b> take an extra -n in the Dativ Plural?",a:"die Hotels",
+  choices:["die Kinder","die Häuser","die Hotels","die Bücher"],
+  why:"Plurals already ending in <b>-n</b> or <b>-s</b> are exempt: <em>mit den Hotels</em>, not <s>Hotelsn</s>.",grid:{mode:"def",case:"dat",gender:"p"}});
+
+/* ============================================================
+   12 · WORTSTELLUNG
+   ============================================================ */
+function ws(q,a,others,why){
+  add({topic:"stellung",kind:"mc",q:q,a:a,choices:[a].concat(others),long:true,why:why,grid:{mode:"def"}});
+}
+ws("Zwei Nomen: <em>geben · das Kind · das Buch</em>","Ich gebe dem Kind das Buch.",
+  ["Ich gebe das Buch dem Kind.","Ich gebe dem Kind dem Buch.","Ich gebe das Buch das Kind."],
+  "Noun + noun → <b>Dativ before Akkusativ</b>.");
+ws("Ersetze <em>das Buch</em> durch ein Pronomen.","Ich gebe es dem Kind.",
+  ["Ich gebe dem Kind es.","Ich gebe dem Kind ihn.","Ich gebe es ihm dem Kind."],
+  "One pronoun → <b>the pronoun goes first</b>, whichever case it is.");
+ws("Ersetze <em>das Kind</em> durch ein Pronomen.","Ich gebe ihm das Buch.",
+  ["Ich gebe das Buch ihm.","Ich gebe ihn das Buch.","Ich gebe das Buch es."],
+  "One pronoun → it moves in front of the noun.");
+ws("Ersetze beide durch Pronomen.","Ich gebe es ihm.",
+  ["Ich gebe ihm es.","Ich gebe ihn ihm.","Ich gebe ihm ihn."],
+  "Two pronouns → the order flips: <b>Akkusativ before Dativ</b>.");
+ws("<em>schenken · seine Frau · ein Ring</em>","Er schenkt seiner Frau einen Ring.",
+  ["Er schenkt einen Ring seiner Frau.","Er schenkt seine Frau einen Ring.","Er schenkt seiner Frau ein Ring."],
+  "Two nouns → Dativ first, and <code>schenken</code> puts the receiver in Dativ.");
+ws("Beide als Pronomen: <em>Er schenkt seiner Frau einen Ring.</em>","Er schenkt ihn ihr.",
+  ["Er schenkt ihr ihn.","Er schenkt sie ihr.","Er schenkt ihr sie."],
+  "Two pronouns → Akkusativ (<em>ihn</em>, for <em>den Ring</em>) before Dativ (<em>ihr</em>).");
+ws("Nur die Sache als Pronomen: <em>Ich zeige dem Touristen den Weg.</em>","Ich zeige ihn dem Touristen.",
+  ["Ich zeige dem Touristen ihn.","Ich zeige es dem Touristen.","Ich zeige ihm den Weg."],
+  "One pronoun first. <em>der Weg</em> is maskulin → <em>ihn</em>.");
+ws("Nur die Person als Pronomen: <em>Ich zeige dem Touristen den Weg.</em>","Ich zeige ihm den Weg.",
+  ["Ich zeige den Weg ihm.","Ich zeige ihn den Weg.","Ich zeige ihm ihn."],
+  "One pronoun first.");
+
+/* ============================================================
+   13 · BAUEN (production)
+   ============================================================ */
+function bau(en,cue,ans,cs,gender,mode,why,alts){
+  add({topic:"bauen",kind:"type",q:en,cue:cue,a:ans,alts:alts||[],why:why,grid:{mode:mode,case:cs,gender:gender}});
+}
+bau("with the old car","mit + der Wagen + alt","mit dem alten Wagen","dat","m","weak","<code>mit</code> → Dativ. der-Wort + Dativ → adjective <b>-en</b>.");
+bau("for my little sister","für + meine Schwester + klein","für meine kleine Schwester","akk","f","mixed","<code>für</code> → Akkusativ. Feminine Akkusativ: <em>meine</em> + <b>-e</b>.");
+bau("without a good reason","ohne + ein Grund + gut","ohne einen guten Grund","akk","m","mixed","<code>ohne</code> → Akkusativ maskulin: <em>einen</em> + <b>-en</b>.");
+bau("because of the bad weather","wegen + das Wetter + schlecht","wegen des schlechten Wetters","gen","n","weak","<code>wegen</code> → Genitiv: <em>des</em> + <b>-en</b>, and the noun adds <b>-s</b>.");
+bau("during the long trip","während + die Reise + lang","während der langen Reise","gen","f","weak","<code>während</code> → Genitiv feminin: <em>der</em> + <b>-en</b>; feminine nouns take no Genitiv -s.");
+bau("despite the high price","trotz + der Preis + hoch","trotz des hohen Preises","gen","m","weak","<code>trotz</code> → Genitiv. Note <em>hoch</em> loses its <b>c</b> before an ending: <em>hohen</em>.");
+bau("next to the big window","neben + das Fenster + groß (wo?)","neben dem großen Fenster","dat","n","weak","<em>wo?</em> → Dativ neutrum.");
+bau("through the dark forest","durch + der Wald + dunkel","durch den dunklen Wald","akk","m","weak","<code>durch</code> → Akkusativ. <em>dunkel</em> drops its <b>e</b>: <em>dunklen</em>.");
+bau("after the long day","nach + der Tag + lang","nach dem langen Tag","dat","m","weak","<code>nach</code> → Dativ.");
+bau("against the new law","gegen + das Gesetz + neu","gegen das neue Gesetz","akk","n","weak","<code>gegen</code> → Akkusativ; neutrum Akkusativ = <em>das</em> + <b>-e</b>.");
+bau("from a good friend (m)","von + ein Freund + gut","von einem guten Freund","dat","m","mixed","<code>von</code> → Dativ; ein-Wort + Dativ → <b>-en</b>.");
+bau("in a small town (wo?)","in + eine Stadt + klein","in einer kleinen Stadt","dat","f","mixed","<em>wo?</em> → Dativ feminin: <em>einer</em> + <b>-en</b>.");
+bau("onto the white table (wohin?)","auf + der Tisch + weiß","auf den weißen Tisch","akk","m","weak","<em>wohin?</em> → Akkusativ maskulin: <em>den</em> + <b>-en</b>.");
+bau("with my nice friends","mit + meine Freunde + nett","mit meinen netten Freunden","dat","p","mixed","<code>mit</code> → Dativ Plural: <em>meinen</em> + <b>-en</b>, and the noun adds <b>-n</b>.");
+bau("since last year","seit + letzt- + das Jahr","seit letztem Jahr","dat","n","strong","<code>seit</code> → Dativ. No article at all → strong ending <b>-em</b>.");
+bau("I help the new colleague (m).","helfen + der Kollege + neu","Ich helfe dem neuen Kollegen.","dat","m","weak","<code>helfen</code> → Dativ, plus n-Deklination on <em>Kollege</em>.");
+bau("the colour of the new house","die Farbe + das Haus + neu","die Farbe des neuen Hauses","gen","n","weak","Genitiv neutrum: <em>des</em> + <b>-en</b> + noun <b>-es</b>.");
+bau("I'm giving my brother a book.","geben + mein Bruder + ein Buch","Ich gebe meinem Bruder ein Buch.","dat","m","mixed","Receiver in Dativ, thing in Akkusativ, Dativ noun first.");
+bau("I see no free seat.","sehen + kein Platz + frei","Ich sehe keinen freien Platz.","akk","m","mixed","<code>sehen</code> → Akkusativ; <em>keinen</em> + <b>-en</b>.");
+bau("He is a good doctor.","sein + ein Arzt + gut","Er ist ein guter Arzt.","nom","m","mixed","<code>sein</code> keeps it Nominativ; <em>ein</em> is bare, so the adjective shows maskulin with <b>-er</b>.");
+bau("every day","jeder + der Tag","jeden Tag","akk","m","weak","Time with no preposition → Akkusativ; <em>jeder</em> is a der-Wort.");
+bau("I'm waiting for the last bus.","warten auf + der Bus + letzt-","Ich warte auf den letzten Bus.","akk","m","weak","<code>warten auf</code> is a fixed combination and always takes Akkusativ.");
+bau("out of the old house","aus + das Haus + alt","aus dem alten Haus","dat","n","weak","<code>aus</code> → Dativ.");
+bau("I thank the friendly woman.","danken + die Frau + freundlich","Ich danke der freundlichen Frau.","dat","f","weak","<code>danken</code> → Dativ feminin: <em>der</em> + <b>-en</b>.");
+
+/* ============================================================
+   14 · FESTE VERB + PRÄPOSITION (bonus — beyond the notes)
+   ============================================================ */
+const FESTE = [
+  ["warten auf","Akkusativ","to wait for"],["sich freuen auf","Akkusativ","to look forward to"],
+  ["denken an","Akkusativ","to think of"],["sich erinnern an","Akkusativ","to remember"],
+  ["sprechen über","Akkusativ","to talk about"],["sich interessieren für","Akkusativ","to be interested in"],
+  ["sich ärgern über","Akkusativ","to be annoyed about"],["bitten um","Akkusativ","to ask for"],
+  ["teilnehmen an","Dativ","to take part in"],["arbeiten bei","Dativ","to work at"],
+  ["Angst haben vor","Dativ","to be afraid of"],["einladen zu","Dativ","to invite to"],
+  ["sich treffen mit","Dativ","to meet with"],["helfen bei","Dativ","to help with"]
+];
+FESTE.forEach(([v,c,en])=>{
+  add({topic:"feste",kind:"mc",bonus:true,q:"<b>"+v+"</b> + welcher Kasus?",hint:en,a:c,
+    choices:["Akkusativ","Dativ","Genitiv","Nominativ"],
+    why:"A fixed verb + preposition pair. The case is <b>frozen into the combination</b> — with <code>an, auf, über, vor, in</code> the wohin/wo test does <em>not</em> apply. Learn each pair as one unit.",
+    grid:{mode:"def",case:c==="Akkusativ"?"akk":"dat"}});
+});
+
+/* ============================================================
+   ENGINE
+   ============================================================ */
+const POOLS = {
+  wech:["der","die","das","den","dem","des"],
+  rel:["der","die","das","den","dem","denen","dessen","deren"],
+  pers:["mich","mir","dich","dir","ihn","ihm","es","sie","ihr","uns","euch","ihnen","Ihnen","Sie"]
+};
+/* Box gaps. n = how many other answers must pass, t = how much real time.
+   The first boxes are spaced by answers so an item actually comes back inside
+   a session; the last boxes are spaced by days, so "sicher" cannot be faked
+   in one sitting. */
+const BOX_LAG = [{n:0,t:0},{n:8,t:0},{n:25,t:0},{n:60,t:20*36e5},{n:0,t:3*24*36e5},{n:0,t:8*24*36e5}];
+const MASTER_BOX = 4;
+const KEY = "kasus.b1.v3";
+
+const S = {
+  prog:{}, stats:{streak:0, best:0, answered:0, correct:0, day:"", dayCount:0},
+  extras:true, view:"drill", mode:"mix", topic:null,
+  queue:[], cur:null, answered:false, lastRight:false, given:"",
+  exam:null, dirty:false
+};
+
+/* ---- storage ---- */
+const HAS_STORE = (typeof window!=="undefined" && window.storage && typeof window.storage.get==="function");
+async function load(){
+  if(!HAS_STORE) return;
+  try{
+    const r = await window.storage.get(KEY, false);
+    if(r && r.value){
+      const d = JSON.parse(r.value);
+      if(d.prog) S.prog = d.prog;
+      if(d.stats) S.stats = Object.assign(S.stats, d.stats);
+      if(typeof d.extras === "boolean") S.extras = d.extras;
+    }
+  }catch(e){ /* first run: nothing saved yet */ }
+}
+let saveT=null;
+function save(){
+  S.dirty = true;
+  if(!HAS_STORE) return;
+  clearTimeout(saveT);
+  saveT = setTimeout(async ()=>{
+    try{ await window.storage.set(KEY, JSON.stringify({prog:S.prog, stats:S.stats, extras:S.extras}), false); S.dirty=false; }
+    catch(e){ /* keep going in memory */ }
+  }, 700);
+}
+
+/* ---- helpers ---- */
+const byId = {}; BANK.forEach(i=>byId[i.id]=i);
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+function P(id){ const p = S.prog[id] || (S.prog[id]={b:0,d:0,n:0,s:0,r:0,w:0});
+  if(p.d===undefined) p.d=0; if(p.n===undefined) p.n=0; return p; }
+function has(id){ return !!S.prog[id]; }
+function isBonus(it){ return it.bonus || (TOPIC_BY_ID[it.topic]||{}).bonus; }
+function pool(it){
+  if(it.choices) return it.choices;
+  const p = typeof it.pool === "string" ? POOLS[it.pool] : it.pool;
+  if(!p) return [it.a];
+  if(p.length<=5) return p;
+  const others = shuffle(p.filter(x=>x!==it.a)).slice(0,3);
+  return others.concat([it.a]);
+}
+const CONTR = [[/\bam\b/g,"an dem"],[/\bim\b/g,"in dem"],[/\bins\b/g,"in das"],[/\bans\b/g,"an das"],
+  [/\bzum\b/g,"zu dem"],[/\bzur\b/g,"zu der"],[/\bvom\b/g,"von dem"],[/\bbeim\b/g,"bei dem"],[/\baufs\b/g,"auf das"]];
+function norm(s){
+  let t = String(s||"").toLowerCase().replace(/[.,!?;:„“"']/g," ").replace(/\s+/g," ").trim();
+  CONTR.forEach(([re,to])=>{ t = t.replace(re,to); });
+  return t.replace(/ß/g,"ss").replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/\s+/g," ").trim();
+}
+function check(it,given){
+  const g = norm(given);
+  if(!g) return false;
+  if(g === norm(it.a)) return true;
+  return (it.alts||[]).some(x=>norm(x)===g);
+}
+
+/* ---- candidate set + queue ---- */
+function candidates(){
+  return BANK.filter(it=>{
+    if(!S.extras && isBonus(it)) return false;
+    if(S.mode==="topic" && S.topic) return it.topic===S.topic;
+    if(S.mode==="fehler") { const p=S.prog[it.id]; return p && p.w>0 && p.b<MASTER_BOX; }
+    return true;
+  });
+}
+function refill(){
+  const now = Date.now(), ans = S.stats.answered;
+  const cand = candidates();
+  if(!cand.length) return;
+  const inQ = new Set(S.queue);
+  const due = [], fresh = [], rest = [];
+  cand.forEach(it=>{
+    if(inQ.has(it.id) || (S.cur && S.cur.id===it.id)) return;
+    const p = S.prog[it.id];
+    if(!p) fresh.push(it);
+    else if(p.d<=now && p.n<=ans) due.push(it);
+    else rest.push(it);
+  });
+  due.sort((a,b)=> (S.prog[a.id].b - S.prog[b.id].b) || (S.prog[a.id].d - S.prog[b.id].d));
+  const fr = shuffle(fresh), rs = shuffle(rest);
+  const out = [];
+  // 2 due : 1 new, and no new material at all while a backlog is waiting
+  const room = due.length < 12;
+  let di=0, fi=0;
+  while(out.length<14 && (di<due.length || (room && fi<fr.length))){
+    if(di<due.length) out.push(due[di++].id);
+    if(di<due.length) out.push(due[di++].id);
+    if(room && fi<fr.length) out.push(fr[fi++].id);
+  }
+  let ri=0;
+  while(out.length<10 && ri<rs.length) out.push(rs[ri++].id);
+  S.queue = S.queue.concat(out);
+}
+function nextItem(){
+  if(S.queue.length<5) refill();
+  const id = S.queue.shift();
+  S.cur = id ? byId[id] : null;
+  S.answered = false; S.given = "";
+  if(S.cur) P(S.cur.id);
+}
+
+/* ---- grading ---- */
+function grade(right){
+  const it = S.cur, p = P(it.id);
+  p.s++;
+  const st = S.stats;
+  st.answered++;
+  const today = new Date().toISOString().slice(0,10);
+  if(st.day !== today){ st.day = today; st.dayCount = 0; }
+  st.dayCount++;
+  if(right){
+    p.r++; p.b = Math.min(5, p.b+1);
+    p.d = Date.now() + BOX_LAG[p.b].t;
+    p.n = st.answered + BOX_LAG[p.b].n;
+    st.correct++; st.streak++; st.best = Math.max(st.best, st.streak);
+  }else{
+    p.w++; p.b = Math.max(0, p.b-2);
+    p.d = Date.now(); p.n = 0;
+    st.streak = 0;
+    const pos = Math.min(S.queue.length, 3+Math.floor(Math.random()*3));
+    S.queue.splice(pos, 0, it.id);
+  }
+  save();
+}
+
+/* ---- mastery numbers ---- */
+function topicStats(tid){
+  const items = BANK.filter(i=>i.topic===tid);
+  let mastered=0, learning=0, touched=0, right=0, seen=0;
+  items.forEach(i=>{
+    const p = S.prog[i.id];
+    if(!p) return;
+    touched++; right+=p.r; seen+=p.s;
+    if(p.b>=MASTER_BOX) mastered++; else if(p.b>=2) learning++;
+  });
+  return {total:items.length, mastered, learning, touched, acc: seen? Math.round(right/seen*100):null};
+}
+function overall(){
+  let m=0, t=0;
+  BANK.forEach(i=>{ if(!S.extras && isBonus(i)) return; t++; const p=S.prog[i.id]; if(p&&p.b>=MASTER_BOX) m++; });
+  return {m:m, t:t, pct: t? Math.round(m/t*100):0};
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+const $main = document.getElementById("main");
+const $tabs = document.getElementById("tabs");
+const $hud  = document.getElementById("hud");
+const VIEWS = [["drill","Üben"],["tabellen","Tabellen"],["fortschritt","Fortschritt"]];
+
+function renderTabs(){
+  $tabs.innerHTML = VIEWS.map(([k,l])=>
+    '<button role="tab" data-v="'+k+'" aria-selected="'+(S.view===k)+'">'+l+'</button>').join("");
+}
+function renderHud(){
+  const o = overall();
+  const st = S.stats;
+  $hud.innerHTML =
+    '<span class="pill'+(st.streak>=5?' hot':'')+'">Serie&nbsp;<b>'+st.streak+'</b></span>'+
+    '<span class="pill hide-s">Heute&nbsp;<b>'+st.dayCount+'</b></span>'+
+    '<span class="pill">Sicher&nbsp;<b>'+o.pct+'%</b></span>';
+}
+
+/* ---- Kasusraster ---- */
+function raster(g){
+  const mode = (g && g.mode) || "def";
+  const tbl = TBL[mode] || TBL.def;
+  const show = !!(g && (g.open || S.answered));
+  const cs = show ? (g && g.case) : null, gd = show ? (g && g.gender) : null;
+  const reveal = S.answered;
+  let h = '<h3>Kasusraster</h3><table class="rtable"><thead><tr><th></th><th>MASK</th><th>FEM</th><th>NEUT</th><th>PL</th></tr></thead><tbody>';
+  CASES.forEach(c=>{
+    const on = c===cs;
+    h += '<tr class="'+(on?"rowon":"")+'"><th>'+CASE_SHORT[c]+'</th>';
+    ["m","f","n","p"].forEach(gg=>{
+      const cell = on && gg===gd;
+      const v = tbl[c][gg];
+      h += '<td class="'+(cell?"cellon":"")+(cell&&reveal?" reveal":"")+'">'+(cell&&!reveal?"?":esc(v))+'</td>';
+    });
+    h += '</tr>';
+  });
+  h += '</tbody></table><div class="rcap">'+esc(GRID_CAP[mode]||"")+'</div>';
+  return h;
+}
+
+/* ---- side mastery list ---- */
+function sideList(){
+  const rows = TOPICS.filter(t=>S.extras||!t.bonus).map(t=>{
+    const s = topicStats(t.id);
+    const pct = s.total? Math.round(s.mastered/s.total*100):0;
+    return '<button class="mrow" data-topic="'+t.id+'" title="'+esc(t.nm)+'">'+
+      '<span><span class="lbl">'+esc(t.de)+'</span><span class="bar"><i class="'+(pct===100?"full":"")+'" style="width:'+pct+'%"></i></span></span>'+
+      '<span class="mnum">'+pct+'%</span></button>';
+  }).join("");
+  return '<div class="side"><h3>Sicher beherrscht</h3><div class="mastery">'+rows+'</div></div>';
+}
+
+/* ---- question card ---- */
+function cardHTML(){
+  const it = S.cur;
+  if(!it) return '<div class="card ruled"><p class="empty">'+(S.mode==="fehler"
+      ? "Your Fehlerheft is empty. Nothing you have got wrong is still unlearnt — every past mistake has climbed back to box 4 or higher."
+      : "Nothing due in this selection. Everything here is scheduled for a later review, which is exactly what you want. Switch topic, or come back tomorrow.")+'</p></div>';
+  const p = P(it.id);
+  const t = TOPIC_BY_ID[it.topic];
+  const g = it.grid||{};
+  const open = !!g.open || S.answered;
+  let chips = '<span class="chip solid">'+esc(t.de)+'</span>';
+  if(g.case && open) chips += '<span class="chip">'+CASE_DE[g.case]+'</span>';
+  if(g.gender && open) chips += '<span class="chip '+g.gender+'">'+GEN_DE[g.gender]+'</span>';
+  if(isBonus(it)) chips += '<span class="chip bonus">'+esc(it.flag ? it.flag+" · über B1 hinaus" : "+ über die Notizen hinaus")+'</span>';
+  chips += '<span class="chip box">Box '+p.b+'/5</span>';
+
+  let q = it.q;
+  if(S.answered && it.kind==="type" && (q.match(/___/g)||[]).length===1){
+    q = q.replace("___", '<span class="gap '+(S.lastRight?"filled":"bad")+'">'+esc(it.a)+'</span>');
+  }
+  let h = '<div class="card ruled"><div class="qmeta">'+chips+'</div>';
+  h += '<p class="qtext">'+q+'</p>';
+  if(it.hint) h += '<p class="qhint">'+esc(it.hint)+'</p>';
+  if(it.cue)  h += '<p class="qcue">→ '+esc(it.cue)+'</p>';
+
+  if(it.kind==="mc"){
+    const opts = S.answered ? S.shownOpts : (S.shownOpts = shuffle(pool(it)));
+    h += '<div class="choices'+(it.long?"":" wide")+'">';
+    opts.forEach((o,i)=>{
+      let cls = "ch"+(it.long?" long":"");
+      if(S.answered){
+        if(o===it.a) cls += " right";
+        else if(o===S.given) cls += " wrong";
+      }
+      h += '<button class="'+cls+'" data-opt="'+esc(o)+'"'+(S.answered?" disabled":"")+'>'+
+           '<kbd>'+(i+1)+'</kbd><span class="txt">'+esc(o)+'</span></button>';
+    });
+    h += '</div>';
+  }else{
+    const cls = S.answered ? (S.lastRight?"right":"wrong") : "";
+    h += '<div class="typerow"><input class="answer '+cls+'" id="ans" autocomplete="off" autocorrect="off" '+
+         'autocapitalize="off" spellcheck="false" placeholder="Antwort eingeben…" value="'+esc(S.given)+'"'+
+         (S.answered?" disabled":"")+'>'+
+         (S.answered?'':'<button class="btn" id="checkBtn">Prüfen</button>')+'</div>';
+    if(!S.answered) h += '<div class="umlauts">'+["ä","ö","ü","ß","Ä","Ö","Ü"].map(c=>'<button data-ins="'+c+'">'+c+'</button>').join("")+'</div>';
+  }
+
+  if(S.answered){
+    h += '<div class="verdict"><div class="vhead">'+
+         '<span class="vlabel '+(S.lastRight?"ok":"no")+'">'+(S.lastRight?"Richtig":"Falsch")+'</span>'+
+         '<span class="vsol">'+esc(it.a)+'</span>';
+    if(S.lastRight && S.given && norm(S.given)===norm(it.a) && S.given.trim()!==it.a)
+      h += '<span class="hintkey">geschrieben: '+esc(S.given.trim())+'</span>';
+    h += '</div><p class="why">'+it.why+'</p>'+
+         '<div class="vnext"><button class="btn" id="nextBtn">Weiter</button>'+
+         '<span class="hintkey">Enter</span></div></div>';
+  }
+  h += '</div>';
+  return h;
+}
+
+function modeBar(){
+  const modes = [["mix","Gemischt"],["topic","Ein Thema"],["fehler","Fehlerheft"],["pruefung","Prüfung"]];
+  let h = '<div class="modebar">';
+  modes.forEach(([k,l])=>{ h += '<button class="mode" data-mode="'+k+'" aria-pressed="'+(S.mode===k)+'">'+l+'</button>'; });
+  h += '<button class="mode" data-extras="1" aria-pressed="'+S.extras+'">+ Extras</button></div>';
+  if(S.mode==="topic"){
+    h += '<div class="modebar">'+TOPICS.filter(t=>S.extras||!t.bonus).map(t=>
+      '<button class="mode" data-topic="'+t.id+'" aria-pressed="'+(S.topic===t.id)+'">'+esc(t.de)+'</button>').join("")+'</div>';
+  }
+  return h;
+}
+
+/* ---- exam ---- */
+function startExam(){
+  const cand = shuffle(candidates());
+  const seen = cand.filter(i=>has(i.id)), fresh = cand.filter(i=>!has(i.id));
+  const list = seen.slice(0,18).concat(fresh.slice(0, 25-Math.min(18,seen.length))).slice(0,25);
+  S.exam = {list:shuffle(list), i:0, right:0, miss:[]};
+  S.queue = []; S.cur = S.exam.list[0]; S.answered=false; S.given="";
+  if(S.cur) P(S.cur.id);
+}
+function examResult(){
+  const e = S.exam, n = e.list.length;
+  const pct = Math.round(e.right/n*100);
+  const pass = pct>=90;
+  let h = '<div class="card ruled"><div class="result">'+
+    '<div class="big" style="color:'+(pass?"var(--ok)":"var(--no)")+'">'+pct+'%</div>'+
+    '<div class="cap">'+e.right+' von '+n+' richtig</div>'+
+    '<p class="msg">'+(pass
+      ? "That is exam standard. Run it again on a different day — a score you can repeat cold is the one that counts."
+      : "Below 90%. The misses below went straight back into your queue at a lower box, so they will come round again soon.")+'</p>';
+  if(e.miss.length){
+    h += '<div class="misslist">';
+    e.miss.forEach(m=>{
+      h += '<div class="miss">'+m.q.replace(/<[^>]+>/g,"")+'<br><span class="sol">'+esc(m.a)+'</span>'+
+           (m.g?' &nbsp;·&nbsp; <span class="yours">'+esc(m.g)+'</span>':'')+'</div>';
+    });
+    h += '</div>';
+  }
+  h += '<div class="vnext" style="justify-content:center"><button class="btn" id="againBtn">Noch einmal</button>'+
+       '<button class="btn ghost" id="backBtn">Zurück zum Üben</button></div></div></div>';
+  return h;
+}
+
+function renderDrill(){
+  let body;
+  if(S.mode==="pruefung"){
+    if(!S.exam) startExam();
+    body = (S.exam && S.exam.i>=S.exam.list.length) ? examResult() : cardHTML();
+  }else{
+    if(!S.cur) nextItem();
+    body = cardHTML();
+  }
+  const gridSrc = (S.mode==="pruefung" && S.exam && S.exam.i>=S.exam.list.length) ? null : (S.cur&&S.cur.grid);
+  $main.innerHTML = '<div class="cols"><aside><div class="raster">'+raster(gridSrc)+'</div>'+sideList()+'</aside>'+
+    '<section>'+modeBar()+
+    (S.mode==="pruefung"&&S.exam&&S.exam.i<S.exam.list.length
+      ? '<div class="modebar"><span class="chip solid">Frage '+(S.exam.i+1)+' / '+S.exam.list.length+'</span>'+
+        '<span class="chip box">kein Feedback bis zum Ende</span></div>' : '')+
+    body+'</section></div>';
+  const inp = document.getElementById("ans");
+  const pointer = !window.matchMedia || window.matchMedia("(hover: hover)").matches;
+  if(inp && !S.answered && pointer) inp.focus();
+  renderHud();
+}
+
+/* ============================================================
+   TABELLEN (reference)
+   ============================================================ */
+function refTable(key,label,rows){
+  const t = TBL[key];
+  const cs = rows||CASES;
+  let h = '<div class="scroller"><table class="ref"><thead><tr><th>'+esc(label)+'</th><th>MASKULIN</th><th>FEMININ</th><th>NEUTRUM</th><th>PLURAL</th></tr></thead><tbody>';
+  cs.forEach(c=>{
+    h += '<tr><th>'+CASE_DE[c]+'</th>'+["m","f","n","p"].map(g=>'<td>'+esc(t[c][g])+'</td>').join("")+'</tr>';
+  });
+  return h+'</tbody></table></div>';
+}
+function renderRef(){
+  $main.innerHTML =
+  '<div class="panel"><h2>Wie entscheidet sich der Kasus?</h2>'+
+  '<p class="sub">Work down the list. The first rule that applies wins — you never reach step 4 if a preposition already answered the question.</p>'+
+  '<h4>1 · Steht eine Präposition da? Dann entscheidet sie.</h4>'+
+  '<ul class="reflist">'+
+  '<li><b>Immer Akkusativ:</b> <code>durch, für, gegen, ohne, um, bis, entlang</code></li>'+
+  '<li><b>Immer Dativ:</b> <code>aus, außer, bei, mit, nach, seit, von, zu, ab, gegenüber</code></li>'+
+  '<li><b>Immer Genitiv:</b> <code>wegen, während, trotz, (an)statt</code></li>'+
+  '<li><b>Wechselpräpositionen:</b> <code>an, auf, hinter, in, neben, über, unter, vor, zwischen</code></li></ul>'+
+  '<p class="reflist" style="padding-left:0;list-style:none">Wechselpräpositionen take <b>Akkusativ</b> when the sentence marks a change of position — something crosses into a new place: <em>Ich gehe in die Küche.</em> They take <b>Dativ</b> for a stable position: <em>Ich bin in der Küche.</em> Movement on its own is not enough: <em>Ich jogge im Park</em> (moving around inside) vs <em>Ich jogge in den Park</em> (crossing in).</p>'+
+  '<div class="note"><b>Beyond your notes</b>Some verbs come welded to a preposition, and the case is frozen: <code>warten auf</code> + Akk., <code>sich freuen auf</code> + Akk., <code>denken an</code> + Akk., <code>teilnehmen an</code> + Dat., <code>Angst haben vor</code> + Dat. Here the wohin/wo test does not apply — learn the pair as one word. These appear in the <em>feste Verbindungen</em> topic, flagged in amber.</div>'+
+
+  '<h4>2 · Legt das Verb den Kasus fest?</h4>'+
+  '<ul class="reflist">'+
+  '<li><b>Nominativ (Kopulaverben):</b> <code>sein, werden, bleiben</code> — the noun renames the subject: <em>Er ist ein guter Arzt.</em></li>'+
+  '<li><b>Nur Dativ:</b> <code>'+DAT_VERBS.join(", ")+'</code></li>'+
+  '<li><b>Dativ + Akkusativ:</b> <code>'+DA_VERBS.join(", ")+'</code> — person in the Dativ, thing in the Akkusativ.</li></ul>'+
+
+  '<h4>3 · Ist es eine Zeitangabe?</h4>'+
+  '<ul class="reflist">'+
+  '<li>Definite time or duration <b>without</b> a preposition → <b>Akkusativ</b>: <em>jeden Tag, nächste Woche, letzten Sommer, einen Monat lang</em>.</li>'+
+  '<li>With <code>an, in, vor, seit, nach, ab, zu, bei</code> → <b>Dativ</b>: <em>am Montag, im Juli, vor einem Jahr, seit zwei Jahren</em>.</li></ul>'+
+
+  '<h4>4 · Sonst nach der Funktion</h4>'+
+  '<div class="scroller"><table class="ref plain"><thead><tr><th>KASUS</th><th>AUFGABE</th><th>FRAGE</th><th>BEISPIEL</th></tr></thead><tbody>'+
+  '<tr><th>Nominativ</th><td>Subjekt</td><td>Wer? Was?</td><td>Der Mann ist mein Bruder</td></tr>'+
+  '<tr><th>Akkusativ</th><td>direktes Objekt</td><td>Wen? Was?</td><td>Ich sehe den Mann</td></tr>'+
+  '<tr><th>Dativ</th><td>indirektes Objekt</td><td>Wem?</td><td>Ich gebe dem Mann das Buch</td></tr>'+
+  '<tr><th>Genitiv</th><td>Besitz „von“</td><td>Wessen?</td><td>das Auto des Mannes</td></tr>'+
+  '</tbody></table></div></div>'+
+
+  '<div class="panel"><h2>Artikelwörter</h2>'+
+  '<p class="sub">Two patterns, and that is all. der-Wörter copy the definite article exactly; ein-Wörter copy it too, except for three bare cells.</p>'+
+  '<h4>Bestimmter Artikel</h4>'+refTable("def","")+
+  '<h4>der-Wörter — dieser, jeder, jener, mancher, welcher, alle</h4>'+refTable("dies","dieser")+
+  '<h4>Unbestimmter Artikel — kein Plural</h4>'+refTable("ein","ein")+
+  '<h4>ein-Wörter — kein, mein, dein, sein, ihr, unser, euer, Ihr</h4>'+refTable("kein","kein")+
+  '<p class="reflist" style="padding-left:0;list-style:none">The three bare cells are <b>Nominativ maskulin</b> and <b>Nominativ / Akkusativ neutrum</b>. <code>euer</code> drops its second <b>e</b> whenever an ending is added: <em>eurem</em>, not <s>euerem</s>.</p>'+
+  refTable("euer","euer")+
+  '<div class="note"><b>Correction to your notes</b>The Genitiv row of your <em>kein</em> table reads <code>manches / mancher / keines / keiner</code> — the first two cells were copied over from the <em>mancher</em> table above it. The correct row is <b>keines · keiner · keines · keiner</b>, as shown here.</div></div>'+
+
+  '<div class="panel"><h2>Adjektivendungen</h2>'+
+  '<p class="sub">One question decides which table: what comes in front of the adjective?</p>'+
+  '<h4>Nach einem der-Wort · schwach</h4>'+refTable("weak","Endung")+
+  '<h4>Nach einem ein-Wort · gemischt</h4>'+refTable("mixed","Endung")+
+  '<h4>Ohne Artikel · stark</h4>'+refTable("strong","Endung")+
+  '<p class="reflist" style="padding-left:0;list-style:none">Shortcut worth having: <b>everything from the Dativ down is -en</b>, in the weak and mixed tables alike. The only cells you really have to think about are the top two rows.</p></div>'+
+
+  '<div class="panel"><h2>Relativpronomen</h2>'+
+  '<p class="sub">Gender and number come from the antecedent. Case comes from the job inside the relative clause. The two are decided separately.</p>'+
+  refTable("rel","Relativpron.")+
+  '<div class="note"><b>Correction to your notes</b>Your notes say the relative pronouns are identical to the definite articles. That holds for 14 of the 16 cells. Two exceptions:<br><br><b>Dativ Plural = denen</b> is inside B1 and is drilled normally — <em>Die Leute, denen ich vertraue</em>. Relative clauses in the Nominativ, Akkusativ and Dativ, including with prepositions, are standard telc B1 material.<br><br><b>Genitiv = dessen / deren</b> is usually catalogued at B2, not B1. It is drilled here only under Extras and marked „B2“. For telc B1 you need to recognise it in a reading text or as a Sprachbaustein distractor; you will not be asked to produce it. Do not spend October on it.</div>'+
+  '<ul class="reflist">'+
+  '<li><em>Der Mann, <b>der</b> dort steht</em> — maskulin from <em>Mann</em>, Nominativ because it is the subject of <em>steht</em>.</li>'+
+  '<li><em>Der Mann, <b>den</b> ich kenne</em> — maskulin, Akkusativ as the object of <em>kenne</em>.</li>'+
+  '<li><em>Der Mann, <b>dem</b> ich helfe</em> — maskulin, Dativ because <em>helfen</em> takes the Dativ.</li></ul>'+
+  '<p class="reflist" style="padding-left:0;list-style:none">German has no droppable all-purpose „that“. The pronoun is compulsory and inflected, the clause is subordinate so the conjugated verb goes last, and a comma always opens it: <em>Das Buch, das ich gestern gekauft <b>habe</b>, ist gut.</em></p></div>'+
+
+  '<div class="panel"><h2>Pronomen</h2>'+
+  '<h4>Personalpronomen</h4><div class="scroller"><table class="ref plain"><thead><tr><th>PERSON</th><th>AKKUSATIV</th><th>DATIV</th><th>PERSON</th><th>AKK. / DAT.</th></tr></thead><tbody>'+
+  '<tr><th>ich</th><td>mich</td><td>mir</td><th>wir</th><td>uns / uns</td></tr>'+
+  '<tr><th>du</th><td>dich</td><td>dir</td><th>ihr</th><td>euch / euch</td></tr>'+
+  '<tr><th>er</th><td>ihn</td><td>ihm</td><th>sie (Pl.)</th><td>sie / ihnen</td></tr>'+
+  '<tr><th>es</th><td>es</td><td>ihm</td><th>Sie</th><td>Sie / Ihnen</td></tr>'+
+  '<tr><th>sie</th><td>sie</td><td>ihr</td><th>—</th><td>—</td></tr></tbody></table></div>'+
+  '<h4>Reflexivpronomen</h4>'+
+  '<p class="reflist" style="padding-left:0;list-style:none">Identical to the personal pronouns except that everything from the third person on is <b>sich</b>. Only <em>ich</em> and <em>du</em> distinguish the cases: <em>mich / mir</em>, <em>dich / dir</em>. The Dativ appears when there is already an accusative object: <em>Ich wasche <b>mich</b></em> but <em>Ich wasche <b>mir</b> die Hände</em>.</p>'+
+  '<h4>Fragewort wer</h4><div class="scroller"><table class="ref plain"><thead><tr><th>FRAGE</th><th>NOMINATIV</th><th>AKKUSATIV</th><th>DATIV</th><th>GENITIV</th></tr></thead>'+
+  '<tbody><tr><th>wer</th><td>wer</td><td>wen</td><td>wem</td><td>wessen</td></tr></tbody></table></div></div>'+
+
+  '<div class="panel"><h2>Wenn sich das Nomen selbst ändert</h2>'+
+  '<ul class="reflist">'+
+  '<li><b>Dativ Plural</b> adds <b>-n</b>, unless the plural already ends in <b>-n</b> or <b>-s</b>: <em>mit den Kindern, aus den Häusern</em> — but <em>mit den Autos</em>.</li>'+
+  '<li><b>Genitiv maskulin / neutrum</b> adds <b>-s</b> or <b>-es</b>. Use <em>-es</em> after <em>-s, -ß, -z, -tsch</em> and with most one-syllable nouns: <em>des Autos, des Mannes, des Kindes</em>. Names just take <em>-s</em>: <em>Annas Auto</em>.</li>'+
+  '<li><b>n-Deklination:</b> some masculine nouns take <b>-n / -en</b> in every case but the Nominativ singular — nouns in <em>-e</em> (Junge, Kunde, Kollege), in <em>-ent / -ant / -ist / -oge</em> (Student, Praktikant, Journalist, Biologe), plus <em>Herr, Mensch, Nachbar, Bauer</em>: <em>der Student → den / dem / des Studenten</em>; <em>Herr Meier → Herrn Meier</em>.</li></ul></div>'+
+
+  '<div class="panel"><h2>Objekte und Wortstellung</h2>'+
+  '<div class="scroller"><table class="ref plain"><thead><tr><th>SITUATION</th><th>REGEL</th><th>BEISPIEL</th></tr></thead><tbody>'+
+  '<tr><th>Nomen + Nomen</th><td>Dativ vor Akkusativ</td><td>Ich gebe dem Kind das Buch.</td></tr>'+
+  '<tr><th>ein Pronomen</th><td>das Pronomen zuerst</td><td>Ich gebe es dem Kind. / Ich gebe ihm das Buch.</td></tr>'+
+  '<tr><th>zwei Pronomen</th><td>Akkusativ vor Dativ</td><td>Ich gebe es ihm.</td></tr>'+
+  '</tbody></table></div></div>';
+}
+
+/* ============================================================
+   FORTSCHRITT
+   ============================================================ */
+function renderProg(){
+  const o = overall(), st = S.stats;
+  const acc = st.answered ? Math.round(st.correct/st.answered*100) : 0;
+  const weak = TOPICS.filter(t=>S.extras||!t.bonus).map(t=>({t:t,s:topicStats(t.id)}))
+    .filter(x=>x.s.touched>3 && x.s.acc!==null).sort((a,b)=>a.s.acc-b.s.acc).slice(0,3);
+  let h = '<div class="panel"><h2>Fortschritt</h2>'+
+    '<p class="sub">Each item climbs a box every time you get it right and drops two every time you miss it. The first boxes come back within the session; box 4 is only reachable a day later, so <b>sicher</b> always means you got it right again cold. Nothing here can be mastered in one sitting.</p>'+
+    '<div class="statgrid">'+
+    '<div class="stat"><div class="k">Sicher</div><div class="v">'+o.pct+'<small>%</small></div></div>'+
+    '<div class="stat"><div class="k">Items</div><div class="v">'+o.m+'<small>/'+o.t+'</small></div></div>'+
+    '<div class="stat"><div class="k">Trefferquote</div><div class="v">'+acc+'<small>%</small></div></div>'+
+    '<div class="stat"><div class="k">Beantwortet</div><div class="v">'+st.answered+'</div></div>'+
+    '<div class="stat"><div class="k">Beste Serie</div><div class="v">'+st.best+'</div></div>'+
+    '</div>';
+  if(weak.length) h += '<h4>Momentan am schwächsten</h4><p class="reflist" style="padding-left:0;list-style:none">'+
+    weak.map(x=>'<b>'+esc(x.t.de)+'</b> ('+x.s.acc+'%)').join(' · ')+
+    ' — pick one under <em>Ein Thema</em> and hammer it for ten minutes.</p>';
+  h += '</div><div class="panel"><h2>Themen</h2><div class="tprog">';
+  TOPICS.filter(t=>S.extras||!t.bonus).forEach(t=>{
+    const s = topicStats(t.id);
+    const m = s.total? s.mastered/s.total*100:0;
+    const l = s.total? s.learning/s.total*100:0;
+    const k = s.total? (s.touched-s.mastered-s.learning)/s.total*100:0;
+    h += '<div class="tp"><div class="r1"><span><span class="nm">'+esc(t.de)+'</span> <span class="de">'+esc(t.nm)+'</span></span>'+
+      '<span class="num">'+s.mastered+'/'+s.total+(s.acc!==null?' · '+s.acc+'%':'')+'</span></div>'+
+      '<div class="bigbar"><span class="s5" style="width:'+m+'%"></span><span class="s3" style="width:'+l+'%"></span>'+
+      '<span class="s1" style="width:'+k+'%"></span></div></div>';
+  });
+  h += '</div><div class="legend"><span><i class="s5" style="background:var(--ok)"></i>sicher (Box 4–5)</span>'+
+    '<span><i class="s3" style="background:var(--m)"></i>im Aufbau (Box 2–3)</span>'+
+    '<span><i class="s1" style="background:#9FB4C4"></i>neu / wackelig</span>'+
+    '<span><i style="background:#DCE4E9;border:1px solid var(--rule)"></i>noch nie gesehen</span></div>'+
+    '<div class="vnext"><button class="btn ghost sm" id="resetBtn">Fortschritt löschen</button>'+
+    '<span class="hintkey">'+(HAS_STORE?"gespeichert auf diesem Gerät":"nicht speicherbar in dieser Ansicht — Fortschritt gilt nur für diese Sitzung")+'</span></div></div>';
+  $main.innerHTML = h;
+}
+
+function render(){
+  renderTabs();
+  if(S.view==="drill") renderDrill();
+  else if(S.view==="tabellen"){ renderRef(); renderHud(); }
+  else { renderProg(); renderHud(); }
+}
+
+/* ============================================================
+   EVENTS
+   ============================================================ */
+function submit(given){
+  if(S.answered || !S.cur) return;
+  const it = S.cur;
+  const right = it.kind==="mc" ? (given===it.a) : check(it,given);
+  S.given = given;
+  if(S.mode==="pruefung" && S.exam){
+    grade(right);
+    if(right) S.exam.right++; else S.exam.miss.push({q:it.q, a:it.a, g:given});
+    S.exam.i++;
+    S.cur = S.exam.list[S.exam.i] || null;
+    S.answered = false; S.given = "";
+    if(S.cur) P(S.cur.id);
+    render();
+    return;
+  }
+  S.answered = true; S.lastRight = right;
+  grade(right);
+  render();
+}
+function next(){
+  if(S.mode==="pruefung") return;
+  nextItem(); render();
+}
+function setMode(m){
+  S.mode = m;
+  if(m==="topic" && !S.topic) S.topic = "prep";
+  S.exam = null; S.queue = []; S.cur = null; S.answered = false; S.given = "";
+  if(m==="pruefung") startExam();
+  render();
+}
+
+document.addEventListener("click", function(e){
+  const el = e.target.closest("[data-v],[data-mode],[data-topic],[data-extras],[data-opt],[data-ins],#checkBtn,#nextBtn,#againBtn,#backBtn,#resetBtn");
+  if(!el) return;
+  if(el.dataset.v){ S.view = el.dataset.v; render(); return; }
+  if(el.dataset.extras!==undefined){ S.extras=!S.extras; S.queue=[]; S.cur=null; S.answered=false; if(S.mode==="pruefung") startExam(); save(); render(); return; }
+  if(el.dataset.mode){ setMode(el.dataset.mode); return; }
+  if(el.dataset.topic){
+    S.topic = el.dataset.topic; S.view="drill";
+    S.mode = "topic";
+    S.exam=null; S.queue=[]; S.cur=null; S.answered=false; render(); return;
+  }
+  if(el.dataset.opt!==undefined){ submit(el.dataset.opt); return; }
+  if(el.dataset.ins){
+    const i = document.getElementById("ans");
+    if(i){ const s=i.selectionStart||i.value.length; i.value = i.value.slice(0,s)+el.dataset.ins+i.value.slice(i.selectionEnd||s); i.focus(); i.selectionStart=i.selectionEnd=s+1; }
+    return;
+  }
+  if(el.id==="checkBtn"){ const i=document.getElementById("ans"); submit(i?i.value:""); return; }
+  if(el.id==="nextBtn"){ next(); return; }
+  if(el.id==="againBtn"){ startExam(); render(); return; }
+  if(el.id==="backBtn"){ setMode("mix"); return; }
+  if(el.id==="resetBtn"){
+    if(el.dataset.armed){
+      S.prog={}; S.stats={streak:0,best:0,answered:0,correct:0,day:"",dayCount:0};
+      S.queue=[]; S.cur=null; S.exam=null; S.answered=false; S.armed=false; save(); render();
+    }else{
+      el.dataset.armed="1"; el.textContent="Wirklich? Noch einmal klicken"; el.style.borderColor="var(--no)"; el.style.color="var(--no)";
+    }
+    return;
+  }
+});
+
+document.addEventListener("keydown", function(e){
+  if(e.metaKey||e.ctrlKey||e.altKey) return;
+  const inInput = e.target && e.target.tagName==="INPUT";
+  if(e.key==="Enter"){
+    if(S.view!=="drill") return;
+    e.preventDefault();
+    if(S.answered) next();
+    else if(S.cur && S.cur.kind==="type"){ const i=document.getElementById("ans"); submit(i?i.value:""); }
+    return;
+  }
+  if(e.key==="Escape" && S.view==="drill" && S.mode!=="pruefung"){ e.preventDefault(); next(); return; }
+  if(inInput) return;
+  if(/^[1-9]$/.test(e.key) && S.view==="drill" && !S.answered && S.cur && S.cur.kind==="mc"){
+    const b = document.querySelectorAll(".choices .ch");
+    const n = parseInt(e.key,10)-1;
+    if(b[n]){ e.preventDefault(); b[n].click(); }
+  }
+});
+
+/* ---- go ---- */
+(async function init(){
+  await load();
+  render();
+})();
+</script>
+</body>
+</html>
