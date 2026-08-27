@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pluralformen — German plural practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12172B;
+    --ink-2:#1B2340;
+    --ink-3:#28325A;
+    --paper:#EDE9E0;
+    --muted:#8E97B4;
+    --der:#5B9DD9;
+    --die:#E5677E;
+    --das:#4FBF9F;
+    --gold:#E8B84B;
+    --ui:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
+    --serif:'Source Serif 4',Georgia,'Times New Roman',serif;
+    --mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+    --accent:var(--der);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:var(--ui);
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:24px 16px 64px;
+  }
+  .app{width:100%;max-width:560px}
+
+  /* ---------- header ---------- */
+  header{border-bottom:1px solid var(--ink-3);padding-bottom:18px;margin-bottom:26px}
+  .eyebrow{
+    font-family:var(--mono);font-size:11px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--muted);margin:0 0 6px;
+  }
+  h1{
+    font-family:var(--serif);font-weight:600;font-size:32px;
+    letter-spacing:-.02em;margin:0 0 2px;
+  }
+  h1 .u{color:var(--gold)}
+  .sub{font-size:13px;color:var(--muted);margin:0}
+
+  /* ---------- modes ---------- */
+  .modes{display:flex;gap:6px;margin:20px 0 22px;flex-wrap:wrap}
+  .mode{
+    font-family:var(--ui);font-size:12px;font-weight:500;letter-spacing:.04em;
+    background:none;border:1px solid var(--ink-3);color:var(--muted);
+    padding:7px 13px;border-radius:2px;cursor:pointer;transition:.15s;
+  }
+  .mode:hover{color:var(--paper);border-color:var(--muted)}
+  .mode[aria-selected="true"]{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+  .mode:disabled{opacity:.35;cursor:not-allowed}
+
+  /* ---------- progress ---------- */
+  .status{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:22px}
+  .vowels{font-family:var(--serif);font-size:22px;letter-spacing:.12em;line-height:1;color:var(--ink-3)}
+  .vowels span{transition:color .3s}
+  .vowels span.on{color:var(--gold)}
+  .tally{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+  .tally b{color:var(--paper);font-weight:400}
+
+  /* ---------- card ---------- */
+  .card{
+    background:var(--ink-2);border:1px solid var(--ink-3);border-radius:3px;
+    padding:28px 24px 24px;position:relative;
+  }
+  .card::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+    background:var(--accent);transition:background .25s;
+  }
+  .artikel{
+    display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--accent);border:1px solid currentColor;
+    padding:3px 8px;border-radius:2px;margin-bottom:14px;
+  }
+  .wort{
+    font-family:var(--serif);font-size:clamp(30px,9vw,42px);font-weight:400;
+    letter-spacing:-.015em;line-height:1.1;margin:0 0 4px;
+  }
+  .frame{font-size:14px;color:var(--muted);margin:0 0 20px;font-family:var(--serif)}
+  .frame b{color:var(--paper);font-weight:400}
+
+  /* ---------- input ---------- */
+  .field{display:flex;align-items:stretch;border:1px solid var(--ink-3);border-radius:2px;background:var(--ink);overflow:hidden}
+  .field:focus-within{border-color:var(--accent)}
+  .prefix{
+    font-family:var(--serif);font-size:19px;color:var(--muted);
+    padding:12px 4px 12px 14px;display:flex;align-items:center;user-select:none;
+  }
+  input[type=text]{
+    flex:1;min-width:0;background:none;border:none;outline:none;color:var(--paper);
+    font-family:var(--serif);font-size:19px;padding:12px 14px 12px 6px;
+  }
+  input[type=text]::placeholder{color:#4A5478}
+
+  .keys{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap;align-items:center}
+  .key{
+    font-family:var(--serif);font-size:16px;line-height:1;
+    background:none;border:1px solid var(--ink-3);color:var(--paper);
+    width:38px;height:34px;border-radius:2px;cursor:pointer;transition:.15s;
+  }
+  .key:hover{border-color:var(--accent);color:var(--accent)}
+  .go{
+    margin-left:auto;font-family:var(--ui);font-size:13px;font-weight:600;letter-spacing:.04em;
+    background:var(--paper);color:var(--ink);border:1px solid var(--paper);
+    padding:0 20px;height:34px;border-radius:2px;cursor:pointer;transition:.15s;
+  }
+  .go:hover{background:var(--gold);border-color:var(--gold)}
+
+  /* ---------- feedback ---------- */
+  .out{margin-top:20px;padding-top:18px;border-top:1px solid var(--ink-3);display:none}
+  .out.show{display:block;animation:rise .25s ease-out}
+  @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .verdict{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin:0 0 8px}
+  .verdict.ok{color:var(--das)}
+  .verdict.no{color:var(--die)}
+  .answer{font-family:var(--serif);font-size:28px;line-height:1.15;margin:0 0 12px}
+  .answer .uml{color:var(--gold);display:inline-block;animation:pop .4s ease-out}
+  @keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.32) translateY(-2px)}100%{transform:scale(1)}}
+  .answer .suf{border-bottom:2px solid var(--accent);padding-bottom:1px}
+  .rule{font-family:var(--serif);font-size:14px;line-height:1.5;color:var(--muted);margin:0}
+  .rule::before{
+    content:"Rule";font-family:var(--mono);font-size:10px;letter-spacing:.16em;
+    text-transform:uppercase;color:#5A6488;display:block;margin-bottom:4px;
+  }
+  .shake{animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+  .legend{
+    margin-top:26px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;
+    color:#5A6488;line-height:1.9;
+  }
+  .legend b{font-weight:400}
+  .legend .d1{color:var(--gold)}
+  .legend .d2{color:var(--der)}
+  .reset{
+    background:none;border:none;color:#5A6488;font-family:var(--mono);font-size:11px;
+    letter-spacing:.06em;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px;
+  }
+  .reset:hover{color:var(--die)}
+  .empty{font-family:var(--serif);font-size:16px;color:var(--muted);line-height:1.6}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <p class="eyebrow">A2 → B1 · Substantive</p>
+    <h1>Plural<span class="u">f</span>ormen</h1>
+    <p class="sub">Type the plural. The reveal shows you what changed and why.</p>
+  </header>
+
+  <div class="modes" role="tablist">
+    <button class="mode" role="tab" aria-selected="true" data-mode="plural">Plural</button>
+    <button class="mode" role="tab" aria-selected="false" data-mode="dativ">Dative &minus;n</button>
+    <button class="mode" role="tab" aria-selected="false" data-mode="hard">Missed words <span id="hardCount"></span></button>
+  </div>
+
+  <div class="status">
+    <div class="vowels" id="vowels" aria-hidden="true"></div>
+    <div class="tally"><b id="right">0</b> right / <b id="asked">0</b> asked</div>
+  </div>
+
+  <div class="card" id="card">
+    <div id="stage"></div>
+  </div>
+
+  <p class="legend">
+    <b class="d1">gold</b> = stem vowel took an umlaut &nbsp;·&nbsp; <b class="d2">underline</b> = plural ending<br>
+    <button class="reset" id="reset">Clear saved progress</button>
+  </p>
+
+</div>
+
+<script>
+/* ---------------- data ---------------- */
+/* s = singular, g = gender, p = accepted plurals, e = length of plural suffix, r = rule */
+const NOUNS = [
+  // feminine -(e)n
+  {s:"Wohnung",g:"die",p:["Wohnungen"],e:2,r:"Feminine nouns in -ung always take -en. No umlaut, ever."},
+  {s:"Zeitung",g:"die",p:["Zeitungen"],e:2,r:"Feminine -ung → -en."},
+  {s:"Blume",g:"die",p:["Blumen"],e:1,r:"Feminine nouns ending in -e just add -n."},
+  {s:"Frage",g:"die",p:["Fragen"],e:1,r:"Feminine -e → add -n."},
+  {s:"Straße",g:"die",p:["Straßen","Strassen"],e:1,r:"Feminine -e → add -n."},
+  {s:"Schwester",g:"die",p:["Schwestern"],e:1,r:"Feminine -er → add -n (unlike masculine -er, which adds nothing)."},
+  {s:"Regel",g:"die",p:["Regeln"],e:1,r:"Feminine -el → add -n."},
+  {s:"Universität",g:"die",p:["Universitäten"],e:2,r:"Feminine -ität → -en."},
+  {s:"Möglichkeit",g:"die",p:["Möglichkeiten"],e:2,r:"Feminine -keit → -en."},
+  {s:"Freundschaft",g:"die",p:["Freundschaften"],e:2,r:"Feminine -schaft → -en."},
+  {s:"Erfahrung",g:"die",p:["Erfahrungen"],e:2,r:"Feminine -ung → -en."},
+  {s:"Zahl",g:"die",p:["Zahlen"],e:2,r:"Most feminine nouns take -(e)n, even the short ones."},
+  {s:"Uhr",g:"die",p:["Uhren"],e:2,r:"Feminine → -en."},
+  {s:"Tür",g:"die",p:["Türen"],e:2,r:"Feminine → -en. The ü is already there in the singular."},
+  {s:"Lehrerin",g:"die",p:["Lehrerinnen"],e:3,r:"Feminine -in doubles the n: -in → -innen."},
+  {s:"Ärztin",g:"die",p:["Ärztinnen"],e:3,r:"-in → -innen. Always doubled."},
+  // feminine umlaut + -e
+  {s:"Hand",g:"die",p:["Hände"],e:1,r:"One of the small closed set of feminine nouns taking umlaut + -e."},
+  {s:"Stadt",g:"die",p:["Städte"],e:1,r:"Irregular feminine: umlaut + -e. Worth memorising as a group with Hand, Nacht, Kraft, Wand."},
+  {s:"Nacht",g:"die",p:["Nächte"],e:1,r:"Feminine exception: umlaut + -e."},
+  {s:"Kraft",g:"die",p:["Kräfte"],e:1,r:"Feminine exception: umlaut + -e."},
+  {s:"Wand",g:"die",p:["Wände"],e:1,r:"Feminine exception: umlaut + -e."},
+  {s:"Maus",g:"die",p:["Mäuse"],e:1,r:"au → äu, plus -e. Feminine exception."},
+  {s:"Kuh",g:"die",p:["Kühe"],e:1,r:"Feminine exception: umlaut + -e."},
+  {s:"Wurst",g:"die",p:["Würste"],e:1,r:"Feminine exception: umlaut + -e."},
+  {s:"Mutter",g:"die",p:["Mütter"],e:0,r:"Umlaut only, no ending. Same for Tochter → Töchter."},
+  {s:"Tochter",g:"die",p:["Töchter"],e:0,r:"Umlaut only, no ending."},
+  // masculine -e
+  {s:"Hund",g:"der",p:["Hunde"],e:1,r:"Typical masculine: add -e, no umlaut available."},
+  {s:"Tag",g:"der",p:["Tage"],e:1,r:"Masculine + -e — but no umlaut here, despite the a. You have to learn which ones umlaut."},
+  {s:"Stuhl",g:"der",p:["Stühle"],e:1,r:"Masculine: umlaut + -e."},
+  {s:"Baum",g:"der",p:["Bäume"],e:1,r:"au → äu, plus -e."},
+  {s:"Sohn",g:"der",p:["Söhne"],e:1,r:"Masculine: umlaut + -e."},
+  {s:"Zug",g:"der",p:["Züge"],e:1,r:"Masculine: umlaut + -e."},
+  {s:"Platz",g:"der",p:["Plätze"],e:1,r:"Masculine: umlaut + -e."},
+  {s:"Arzt",g:"der",p:["Ärzte"],e:1,r:"Masculine: umlaut + -e."},
+  {s:"Fluss",g:"der",p:["Flüsse"],e:1,r:"Masculine: umlaut + -e. The ss stays ss after a short vowel."},
+  {s:"Stein",g:"der",p:["Steine"],e:1,r:"Add -e. ei can never take an umlaut — only a, o, u, au can."},
+  {s:"Brief",g:"der",p:["Briefe"],e:1,r:"Add -e. ie never umlauts."},
+  {s:"Freund",g:"der",p:["Freunde"],e:1,r:"Add -e, no umlaut possible."},
+  {s:"Schuh",g:"der",p:["Schuhe"],e:1,r:"Add -e, no umlaut here."},
+  {s:"König",g:"der",p:["Könige"],e:1,r:"Masculine -ig → -e, never with a new umlaut."},
+  {s:"Bus",g:"der",p:["Busse"],e:2,r:"Add -e; the single s doubles after a short vowel."},
+  {s:"Preis",g:"der",p:["Preise"],e:1,r:"Add -e."},
+  // masculine zero
+  {s:"Lehrer",g:"der",p:["Lehrer"],e:0,r:"Masculine -er → no change at all. Only the article tells you it's plural."},
+  {s:"Schlüssel",g:"der",p:["Schlüssel"],e:0,r:"Masculine -el → no ending, no change."},
+  {s:"Wagen",g:"der",p:["Wagen"],e:0,r:"Masculine -en → no change."},
+  {s:"Apfel",g:"der",p:["Äpfel"],e:0,r:"Masculine -el → no ending, but the stem takes an umlaut."},
+  {s:"Vater",g:"der",p:["Väter"],e:0,r:"Masculine -er → no ending + umlaut."},
+  {s:"Bruder",g:"der",p:["Brüder"],e:0,r:"Masculine -er → no ending + umlaut."},
+  {s:"Garten",g:"der",p:["Gärten"],e:0,r:"Masculine -en → no ending + umlaut."},
+  {s:"Mantel",g:"der",p:["Mäntel"],e:0,r:"Masculine -el → no ending + umlaut."},
+  {s:"Vogel",g:"der",p:["Vögel"],e:0,r:"Masculine -el → no ending + umlaut."},
+  // weak masculines
+  {s:"Junge",g:"der",p:["Jungen"],e:1,r:"Weak (n-)noun: takes -n in every case except nominative singular."},
+  {s:"Student",g:"der",p:["Studenten"],e:2,r:"Weak noun in -ent → -en. Also the accusative/dative singular form."},
+  {s:"Kollege",g:"der",p:["Kollegen"],e:1,r:"Weak noun ending in -e → -n."},
+  {s:"Mensch",g:"der",p:["Menschen"],e:2,r:"Weak noun → -en. Irregular member of the group."},
+  {s:"Nachbar",g:"der",p:["Nachbarn"],e:1,r:"Weak noun → -n."},
+  {s:"Herr",g:"der",p:["Herren"],e:2,r:"Herr is odd: -n in the singular cases, -en in the plural."},
+  {s:"Name",g:"der",p:["Namen"],e:1,r:"Weak noun in -e → -n."},
+  {s:"Polizist",g:"der",p:["Polizisten"],e:2,r:"Weak noun in -ist → -en."},
+  {s:"Professor",g:"der",p:["Professoren"],e:2,r:"Masculine -or → -oren, and the stress moves onto the o: Profe-SSO-ren."},
+  {s:"Motor",g:"der",p:["Motoren"],e:2,r:"Masculine -or → -oren with a stress shift."},
+  // neuter -er + umlaut
+  {s:"Buch",g:"das",p:["Bücher"],e:2,r:"Short neuter noun → -er + umlaut. A very productive pattern."},
+  {s:"Haus",g:"das",p:["Häuser"],e:2,r:"Neuter → -er, au → äu."},
+  {s:"Land",g:"das",p:["Länder"],e:2,r:"Neuter → -er + umlaut."},
+  {s:"Glas",g:"das",p:["Gläser"],e:2,r:"Neuter → -er + umlaut."},
+  {s:"Dorf",g:"das",p:["Dörfer"],e:2,r:"Neuter → -er + umlaut."},
+  {s:"Blatt",g:"das",p:["Blätter"],e:2,r:"Neuter → -er + umlaut."},
+  {s:"Rad",g:"das",p:["Räder"],e:2,r:"Neuter → -er + umlaut."},
+  {s:"Kind",g:"das",p:["Kinder"],e:2,r:"Neuter → -er. No umlaut because i cannot take one."},
+  {s:"Bild",g:"das",p:["Bilder"],e:2,r:"Neuter → -er, no umlaut possible."},
+  {s:"Ei",g:"das",p:["Eier"],e:2,r:"Neuter → -er, ei never umlauts."},
+  {s:"Kleid",g:"das",p:["Kleider"],e:2,r:"Neuter → -er."},
+  {s:"Wort",g:"das",p:["Wörter","Worte"],e:2,r:"Two plurals: Wörter = separate words, Worte = words in connected speech ('his last words')."},
+  // neuter -e
+  {s:"Jahr",g:"das",p:["Jahre"],e:1,r:"Neuter → -e, and neuter -e plurals never take an umlaut."},
+  {s:"Spiel",g:"das",p:["Spiele"],e:1,r:"Neuter → -e."},
+  {s:"Tier",g:"das",p:["Tiere"],e:1,r:"Neuter → -e."},
+  {s:"Brot",g:"das",p:["Brote"],e:1,r:"Neuter → -e, no umlaut."},
+  {s:"Geschenk",g:"das",p:["Geschenke"],e:1,r:"Neuter → -e."},
+  {s:"Problem",g:"das",p:["Probleme"],e:1,r:"Neuter → -e."},
+  {s:"Instrument",g:"das",p:["Instrumente"],e:1,r:"Neuter -ment → -e."},
+  // neuter zero
+  {s:"Mädchen",g:"das",p:["Mädchen"],e:0,r:"Every -chen and -lein noun is neuter and never changes in the plural."},
+  {s:"Brötchen",g:"das",p:["Brötchen"],e:0,r:"-chen → no change."},
+  {s:"Fenster",g:"das",p:["Fenster"],e:0,r:"Neuter -er → no change, no umlaut."},
+  {s:"Zimmer",g:"das",p:["Zimmer"],e:0,r:"Neuter -er → no change."},
+  {s:"Messer",g:"das",p:["Messer"],e:0,r:"Neuter -er → no change."},
+  {s:"Gebäude",g:"das",p:["Gebäude"],e:0,r:"Ge- …-e nouns → no change."},
+  // neuter special
+  {s:"Museum",g:"das",p:["Museen"],e:2,r:"Latin -um is dropped and replaced by -en."},
+  {s:"Zentrum",g:"das",p:["Zentren"],e:2,r:"-um → -en, and the stem loses its final vowel."},
+  {s:"Datum",g:"das",p:["Daten"],e:2,r:"-um → -en."},
+  {s:"Ergebnis",g:"das",p:["Ergebnisse"],e:2,r:"-nis doubles the s: -nis → -nisse."},
+  {s:"Erlebnis",g:"das",p:["Erlebnisse"],e:2,r:"-nis → -nisse."},
+  {s:"Auge",g:"das",p:["Augen"],e:1,r:"Irregular neuter taking -n. Same group: Ohr, Bett, Hemd, Herz."},
+  {s:"Ohr",g:"das",p:["Ohren"],e:2,r:"Irregular neuter taking -en."},
+  {s:"Bett",g:"das",p:["Betten"],e:2,r:"Irregular neuter taking -en."},
+  {s:"Hemd",g:"das",p:["Hemden"],e:2,r:"Irregular neuter taking -en."},
+  {s:"Herz",g:"das",p:["Herzen"],e:2,r:"Irregular neuter taking -en."},
+  {s:"Thema",g:"das",p:["Themen"],e:2,r:"Greek loan: -a → -en."},
+  {s:"Praktikum",g:"das",p:["Praktika"],e:1,r:"Latin -um → -a. Keeps its original plural."},
+  // -s
+  {s:"Auto",g:"das",p:["Autos"],e:1,r:"Nouns ending in a vowel other than -e take -s."},
+  {s:"Büro",g:"das",p:["Büros"],e:1,r:"Final -o → -s."},
+  {s:"Kino",g:"das",p:["Kinos"],e:1,r:"Final -o → -s."},
+  {s:"Sofa",g:"das",p:["Sofas"],e:1,r:"Final -a → -s."},
+  {s:"Oma",g:"die",p:["Omas"],e:1,r:"Final -a → -s."},
+  {s:"Hotel",g:"das",p:["Hotels"],e:1,r:"Loanword → -s."},
+  {s:"Restaurant",g:"das",p:["Restaurants"],e:1,r:"Loanword → -s."},
+  {s:"Team",g:"das",p:["Teams"],e:1,r:"Loanword → -s."},
+  {s:"Handy",g:"das",p:["Handys"],e:1,r:"Loanword → -s. German spelling keeps the y: Handys, not Handies."},
+  {s:"Party",g:"die",p:["Partys"],e:1,r:"→ -s, spelled the German way: Partys."},
+  {s:"Chef",g:"der",p:["Chefs"],e:1,r:"Loanword → -s."},
+  {s:"Park",g:"der",p:["Parks"],e:1,r:"Loanword → -s."},
+  // meaning splits
+  {s:"Bank",g:"die",p:["Bänke","Banken"],e:1,r:"Two plurals: Bänke = benches, Banken = financial banks."},
+  {s:"Stock",g:"der",p:["Stöcke","Stockwerke"],e:1,r:"Stöcke = sticks; the floors of a building are Stockwerke."}
+];
+
+const DATIV = [
+  {pre:"Ich spiele mit",pl:"die Kinder",a:["den Kindern","Kindern"],r:"Kinder does not end in -n or -s, so the dative plural adds -n."},
+  {pre:"Wir wohnen in",pl:"die Häuser",a:["den Häusern","Häusern"],r:"-er plural → add -n in the dative."},
+  {pre:"Er kommt mit",pl:"die Freunde",a:["den Freunden","Freunden"],r:"-e plural → add -n in the dative."},
+  {pre:"Sie spricht mit",pl:"die Frauen",a:["den Frauen","Frauen"],r:"No change: the plural already ends in -n."},
+  {pre:"Wir fahren mit",pl:"die Autos",a:["den Autos","Autos"],r:"No change: -s plurals never take the dative -n."},
+  {pre:"Der Ball liegt zwischen",pl:"die Bäume",a:["den Bäumen","Bäumen"],r:"-e plural → add -n."},
+  {pre:"Die Kinder spielen auf",pl:"die Straßen",a:["den Straßen","Straßen","den Strassen","Strassen"],r:"No change: already ends in -n."},
+  {pre:"Wir sehen uns nach",pl:"die Ferien",a:["den Ferien","Ferien"],r:"No change: already ends in -n."},
+  {pre:"Ich habe es von",pl:"die Lehrer",a:["den Lehrern","Lehrern"],r:"Zero-ending plural → add -n in the dative. This is where Lehrer finally changes shape."},
+  {pre:"Wir waren bei",pl:"die Nachbarn",a:["den Nachbarn","Nachbarn"],r:"No change: already ends in -n."},
+  {pre:"Sie lernt aus",pl:"die Bücher",a:["den Büchern","Büchern"],r:"-er plural → add -n."},
+  {pre:"Der Zug fährt zwischen",pl:"die Städte",a:["den Städten","Städten"],r:"-e plural → add -n."},
+  {pre:"Ich gehe zu",pl:"die Ärzte",a:["den Ärzten","Ärzten"],r:"-e plural → add -n."},
+  {pre:"Wir schlafen in",pl:"die Hotels",a:["den Hotels","Hotels"],r:"No change: -s plurals are exempt."},
+  {pre:"Er arbeitet mit",pl:"die Kollegen",a:["den Kollegen","Kollegen"],r:"No change: already ends in -n."},
+  {pre:"Die Katze sitzt unter",pl:"die Blätter",a:["den Blättern","Blättern"],r:"-er plural → add -n."}
+];
+
+/* ---------------- state ---------------- */
+const COLOR = {der:"var(--der)",die:"var(--die)",das:"var(--das)"};
+let mode = "plural";
+let queue = [];
+let current = null;
+let answered = false;
+let right = 0, asked = 0, streak = 0;
+let missed = [];
+
+const $ = id => document.getElementById(id);
+const stage = $("stage"), card = $("card");
+
+/* ---------------- storage (degrades quietly) ---------------- */
+async function load(){
+  try{
+    const r = await window.storage.get("plural:missed");
+    if(r && r.value) missed = JSON.parse(r.value);
+  }catch(e){ /* first run or storage unavailable */ }
+  paintHardCount();
+}
+async function save(){
+  try{ await window.storage.set("plural:missed", JSON.stringify(missed)); }catch(e){}
+}
+
+/* ---------------- helpers ---------------- */
+const norm = s => s.toLowerCase().trim().replace(/\s+/g," ")
+  .replace(/^die\s+/,"").replace(/^den\s+/,"")
+  .replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss");
+
+const shuffle = a => a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
+
+function paintHardCount(){
+  $("hardCount").textContent = missed.length ? "· " + missed.length : "";
+  document.querySelector('[data-mode="hard"]').disabled = missed.length === 0 && mode !== "hard";
+}
+
+function paintVowels(){
+  const row = [];
+  for(let i=0;i<10;i++) row.push(`<span class="${i<streak?"on":""}">${i<streak?"ä":"a"}</span>`);
+  $("vowels").innerHTML = row.join("");
+}
+
+/* marks umlauted stem vowels and the plural suffix in the revealed answer */
+function decorate(sing, plur, endLen){
+  const stem = plur.length - endLen;
+  let out = "";
+  for(let i=0;i<plur.length;i++){
+    const ch = plur[i];
+    const isNew = "äöüÄÖÜ".includes(ch) && !sing.includes(ch);
+    if(i < stem) out += isNew ? `<span class="uml">${ch}</span>` : ch;
+    else out += (out.includes('<span class="suf">') ? ch : `<span class="suf">${ch}`);
+  }
+  if(endLen > 0) out += "</span>";
+  return out;
+}
+
+/* underlines only the -n the dative actually adds; nothing if the form is unchanged */
+function decorateDativ(nomPhrase, datPhrase){
+  const nom = nomPhrase.replace(/^die\s+/,"");
+  const dat = datPhrase.replace(/^den\s+/,"");
+  return dat.length === nom.length + 1
+    ? `den ${nom}<span class="suf">${dat.slice(-1)}</span>`
+    : `den ${dat}`;
+}
+
+/* ---------------- rendering ---------------- */
+function nextItem(){
+  if(!queue.length) buildQueue();
+  current = queue.shift();
+  answered = false;
+  render();
+}
+
+function buildQueue(){
+  if(mode === "plural") queue = shuffle(NOUNS.slice());
+  else if(mode === "dativ") queue = shuffle(DATIV.slice());
+  else queue = shuffle(missed.map(k => NOUNS.find(n=>n.s===k)).filter(Boolean));
+}
+
+function render(){
+  if(mode === "hard" && !current){
+    stage.innerHTML = `<p class="empty">Nothing saved yet. Words you get wrong land here, and stay here until you clear them.</p>`;
+    return;
+  }
+  const isD = mode === "dativ";
+  const g = isD ? "die" : current.g;
+  document.documentElement.style.setProperty("--accent", COLOR[g]);
+
+  stage.innerHTML = isD ? `
+    <span class="artikel">Dative plural</span>
+    <p class="wort">${current.pl}</p>
+    <p class="frame">${current.pre} <b>____</b>.</p>
+    <div class="field">
+      <span class="prefix">den</span>
+      <input type="text" id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="…">
+    </div>` : `
+    <span class="artikel">${current.g}</span>
+    <p class="wort">${current.s}</p>
+    <p class="frame">What is the plural?</p>
+    <div class="field">
+      <span class="prefix">die</span>
+      <input type="text" id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="…">
+    </div>`;
+
+  stage.innerHTML += `
+    <div class="keys">
+      <button class="key" data-ch="ä">ä</button>
+      <button class="key" data-ch="ö">ö</button>
+      <button class="key" data-ch="ü">ü</button>
+      <button class="key" data-ch="ß">ß</button>
+      <button class="go" id="go">Check</button>
+    </div>
+    <div class="out" id="out"></div>`;
+
+  $("go").addEventListener("click", submit);
+  stage.querySelectorAll(".key").forEach(k =>
+    k.addEventListener("click", () => {
+      const inp = $("ans");
+      inp.value += k.dataset.ch; inp.focus();
+    })
+  );
+  const inp = $("ans");
+  inp.addEventListener("keydown", e => { if(e.key === "Enter") submit(); });
+  inp.focus();
+}
+
+function submit(){
+  if(answered){ nextItem(); return; }
+  const inp = $("ans");
+  const given = inp.value;
+  if(!given.trim()) return;
+
+  const isD = mode === "dativ";
+  const accept = isD ? current.a : current.p;
+  const ok = accept.some(a => norm(a) === norm(given));
+
+  asked++; $("asked").textContent = asked;
+  if(ok){
+    right++; streak = Math.min(streak + 1, 10);
+    $("right").textContent = right;
+  }else{
+    streak = 0;
+    if(!isD && !missed.includes(current.s)){ missed.push(current.s); save(); paintHardCount(); }
+    card.classList.add("shake");
+    setTimeout(()=>card.classList.remove("shake"), 320);
+  }
+  if(ok && mode === "hard"){
+    missed = missed.filter(m => m !== current.s); save(); paintHardCount();
+  }
+  paintVowels();
+
+  const shown = isD
+    ? decorateDativ(current.pl, current.a[0])
+    : `die ${decorate(current.s, current.p[0], current.e)}`;
+  const extra = (!isD && current.p.length > 1) ? ` · also <em>die ${current.p[1]}</em>` : "";
+
+  const out = $("out");
+  out.innerHTML = `
+    <p class="verdict ${ok?"ok":"no"}">${ok?"Correct":"Not quite"}</p>
+    <p class="answer">${shown}${extra}</p>
+    <p class="rule">${current.r}</p>`;
+  out.classList.add("show");
+  answered = true;
+  inp.blur();
+  $("go").textContent = "Next";
+  $("go").focus();
+}
+
+/* ---------------- wiring ---------------- */
+document.querySelectorAll(".mode").forEach(btn =>
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".mode").forEach(b => b.setAttribute("aria-selected","false"));
+    btn.setAttribute("aria-selected","true");
+    mode = btn.dataset.mode;
+    queue = []; current = null; streak = 0; paintVowels();
+    if(mode === "hard" && !missed.length){ render(); return; }
+    nextItem();
+  })
+);
+
+$("reset").addEventListener("click", async () => {
+  missed = []; right = 0; asked = 0; streak = 0;
+  $("right").textContent = 0; $("asked").textContent = 0;
+  paintVowels(); paintHardCount(); save();
+  if(mode === "hard"){ current = null; render(); }
+});
+
+paintVowels();
+load();
+nextItem();
+</script>
+</body>
+</html>
