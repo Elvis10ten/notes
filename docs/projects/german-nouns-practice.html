@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Substantive — German noun practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=Newsreader:opsz,wght@6..72,400;6..72,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#E7E8E2;
+    --ink:#16181A;
+    --ink-soft:#5A5F63;
+    --grid:rgba(22,24,26,.055);
+    --rule:rgba(22,24,26,.16);
+    --der:#1B4E8F;
+    --die:#A62B3E;
+    --das:#2C6E52;
+    --sans:'Archivo','Helvetica Neue',Arial,sans-serif;
+    --serif:'Newsreader',Georgia,serif;
+    --mono:'Space Mono','Courier New',monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background-color:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),
+                     linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:22px 22px;
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.5;
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:660px;margin:0 auto;padding:28px 18px 80px}
+
+  /* ---------- header ---------- */
+  .eyebrow{
+    font-family:var(--mono);font-size:11px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--ink-soft);margin:0 0 14px
+  }
+  .hero{
+    font-weight:800;font-size:clamp(46px,17vw,88px);line-height:.86;
+    letter-spacing:-.045em;margin:0 0 18px
+  }
+  .hero span{display:block}
+  .hero .m{color:var(--der)}
+  .hero .f{color:var(--die)}
+  .hero .n{color:var(--das)}
+  .standfirst{
+    font-family:var(--serif);font-size:18px;line-height:1.45;
+    max-width:34em;margin:0 0 22px;color:var(--ink)
+  }
+
+  /* ---------- progress ---------- */
+  .meter{border-top:1.5px solid var(--ink);padding-top:12px;margin-bottom:6px}
+  .ticks{display:flex;gap:3px;align-items:flex-end;height:20px}
+  .tick{flex:1;height:9px;border:1.2px solid var(--rule);background:transparent;transition:height .18s ease,background .18s ease}
+  .tick.ok{background:var(--ink);border-color:var(--ink);height:20px}
+  .tick.no{border-color:var(--ink);height:20px;
+    background:repeating-linear-gradient(45deg,var(--ink) 0 1.5px,transparent 1.5px 4px)}
+  .count{
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-soft);margin-top:8px
+  }
+
+  /* ---------- parts ---------- */
+  .part{margin-top:44px}
+  .part-head{display:flex;align-items:baseline;gap:12px;border-bottom:1.5px solid var(--ink);padding-bottom:8px}
+  .part-num{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--ink-soft)}
+  .part-title{font-weight:800;font-size:22px;letter-spacing:-.02em;margin:0}
+  .part-note{font-family:var(--serif);font-size:15.5px;color:var(--ink-soft);margin:10px 0 0}
+
+  ul.items{list-style:none;margin:0;padding:0}
+  li.item{display:flex;gap:12px;padding:18px 0;border-bottom:1px solid var(--rule)}
+  .marker{
+    flex:0 0 26px;height:26px;border:1.5px solid var(--rule);
+    font-family:var(--mono);font-size:12px;display:flex;align-items:center;justify-content:center;
+    color:var(--ink-soft);margin-top:2px
+  }
+  .item.done-ok .marker{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+  .item.done-no .marker{border-color:var(--ink);color:var(--ink);
+    background:repeating-linear-gradient(45deg,rgba(22,24,26,.18) 0 2px,transparent 2px 5px)}
+  .body{flex:1;min-width:0}
+
+  .word{font-family:var(--serif);font-size:27px;line-height:1.15;letter-spacing:-.01em}
+  .sentence{font-family:var(--serif);font-size:19px;line-height:1.75}
+  .hint{
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-soft);border:1.2px solid var(--rule);padding:2px 7px;margin-left:2px;white-space:nowrap
+  }
+  .plus{color:var(--ink-soft);font-family:var(--sans);font-weight:600}
+
+  /* ---------- controls ---------- */
+  .choices{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+  .choice{
+    font-family:var(--sans);font-weight:800;font-size:17px;letter-spacing:-.01em;
+    padding:9px 20px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);
+    cursor:pointer;transition:background .14s ease,color .14s ease
+  }
+  .choice:hover:not(:disabled){background:rgba(22,24,26,.07)}
+  .choice:disabled{cursor:default;opacity:.32}
+  .choice.picked{color:#fff;opacity:1}
+  .choice.picked[data-v="der"]{background:var(--der);border-color:var(--der)}
+  .choice.picked[data-v="die"]{background:var(--die);border-color:var(--die)}
+  .choice.picked[data-v="das"]{background:var(--das);border-color:var(--das)}
+  .choice.reveal{opacity:1;border-style:dashed}
+  .choice.wrong{opacity:1;background:transparent;color:var(--ink-soft);
+    border-color:var(--rule);text-decoration:line-through}
+
+  input.blank{
+    font-family:var(--serif);font-size:19px;color:var(--ink);
+    width:5.2em;padding:1px 6px;margin:0 2px;background:transparent;
+    border:0;border-bottom:1.8px solid var(--ink);border-radius:0;text-align:center
+  }
+  input.blank:focus{outline:none;background:rgba(22,24,26,.06)}
+  input.blank:disabled{opacity:1;border-bottom-style:dotted}
+  .row{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
+  input.free{
+    font-family:var(--serif);font-size:19px;color:var(--ink);flex:1 1 150px;min-width:0;
+    padding:7px 10px;background:transparent;border:1.5px solid var(--rule);border-radius:0
+  }
+  input.free:focus{outline:none;border-color:var(--ink)}
+  input.free:disabled{opacity:1;border-style:dotted}
+  .check{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    padding:9px 16px;border:1.5px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer
+  }
+  .check:disabled{opacity:.3;cursor:default}
+  :focus-visible{outline:2.5px solid var(--ink);outline-offset:2px}
+
+  /* ---------- feedback ---------- */
+  .fb{margin-top:12px;padding-left:12px;border-left:2.5px solid var(--ink);overflow:hidden}
+  .fb.grow{animation:grow .22s ease-out}
+  @keyframes grow{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+  .verdict{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+  .answer{font-family:var(--serif);font-size:20px;margin:3px 0 4px}
+  .answer .a-der{color:var(--der);font-weight:600}
+  .answer .a-die{color:var(--die);font-weight:600}
+  .answer .a-das{color:var(--das);font-weight:600}
+  .why{font-size:14.5px;line-height:1.55;color:var(--ink-soft);margin:0}
+  .why b{color:var(--ink);font-weight:600}
+
+  /* ---------- result ---------- */
+  .result{margin-top:48px;border:1.5px solid var(--ink);padding:22px 20px;background:rgba(255,255,255,.35)}
+  .result[hidden]{display:none}
+  .r-label{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft)}
+  .r-score{font-weight:800;font-size:58px;line-height:1;letter-spacing:-.04em;margin:6px 0 2px}
+  .r-score small{font-size:24px;color:var(--ink-soft);letter-spacing:-.02em}
+  .tally{display:grid;grid-template-columns:1fr auto;gap:2px 14px;margin:18px 0 0;font-size:14.5px}
+  .tally dt{border-bottom:1px dotted var(--rule);padding:5px 0}
+  .tally dd{margin:0;padding:5px 0;font-family:var(--mono);font-size:13px;border-bottom:1px dotted var(--rule)}
+  .again{margin-top:20px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;padding:10px 18px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+  .again:hover{background:var(--ink);color:var(--paper)}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="eyebrow">Deutsch · Substantive · A2 → B1</p>
+  <h1 class="hero"><span class="m">der</span><span class="f">die</span><span class="n">das</span></h1>
+  <p class="standfirst">35 items on gender, plural, case and the n-declension. Answer one at a time — each one explains itself as soon as you commit.</p>
+
+  <div class="meter">
+    <div class="ticks" id="ticks" aria-hidden="true"></div>
+    <p class="count" id="count">0 answered · 0 correct</p>
+  </div>
+
+  <main id="sheet"></main>
+
+  <section class="result" id="result" hidden>
+    <p class="r-label">Ergebnis</p>
+    <p class="r-score"><span id="rScore">0</span><small>/35</small></p>
+    <p class="why" id="rWord"></p>
+    <dl class="tally" id="rTally"></dl>
+    <button class="again" id="again">Nochmal</button>
+  </section>
+
+</div>
+
+<script>
+const PARTS = [
+  {
+    title:'Genus', note:'Which article? The ending is usually the giveaway.',
+    kind:'choice',
+    items:[
+      {q:'Wohnung',      a:'die', why:'The suffix <b>-ung</b> on a verb is always feminine: wohnen → die Wohnung. Careful — nouns that only happen to end in those letters follow the verb-stem rule and are masculine: der Sprung, der Schwung.'},
+      {q:'Mädchen',      a:'das', why:'<b>-chen</b> is always neuter, even for a person. Gender is grammatical, not biological.'},
+      {q:'Motor',        a:'der', why:'Nouns in <b>-or</b> are masculine for people and devices: der Motor, der Doktor, der Traktor. Exceptions: das Labor, das Chlor.'},
+      {q:'Gebäude',      a:'das', why:'The <b>Ge-</b> collective prefix gives neuter: das Gebäude, das Gemüse, das Gepäck.'},
+      {q:'Freiheit',     a:'die', why:'<b>-heit</b> and <b>-keit</b> are always feminine.'},
+      {q:'Frühling',     a:'der', why:'<b>-ling</b> is masculine — and seasons are masculine too, so this one is doubly safe.'},
+      {q:'Dokument',     a:'das', why:'Latinate nouns in <b>-ment</b> are neuter: das Dokument, das Experiment, das Instrument. One common exception: <b>der</b> Moment, a moment in time.'},
+      {q:'Universität',  a:'die', why:'<b>-tät</b> is feminine, like all the -ion / -tät / -ik / -ur endings.'},
+      {q:'Schwimmen',    a:'das', why:'An infinitive used as a noun is always neuter and has no plural.'},
+      {q:'Käse',         a:'der', why:'A trap. <b>-e</b> is feminine about 90% of the time, but der Käse, der Name and der Junge break it.'}
+    ]
+  },
+  {
+    title:'Plural', note:'Type the plural form. The article is always "die" — just the noun is enough.',
+    kind:'text', strip:true,
+    items:[
+      {q:'der Tag',      g:'der', a:['tage'],       show:'die Tage',       why:'Many masculine nouns take <b>-e</b>. No umlaut here.'},
+      {q:'das Kind',     g:'das', a:['kinder'],     show:'die Kinder',     why:'Neuter nouns often take <b>-er</b>. No umlaut possible on an i.'},
+      {q:'die Lehrerin', g:'die', a:['lehrerinnen'],show:'die Lehrerinnen',why:'Feminine <b>-in</b> doubles the n before <b>-nen</b>.'},
+      {q:'das Auto',     g:'das', a:['autos'],      show:'die Autos',      why:'Loanwords take <b>-s</b>.'},
+      {q:'der Lehrer',   g:'der', a:['lehrer'],     show:'die Lehrer',     why:'Masculine nouns in <b>-er</b>, <b>-el</b>, <b>-en</b> usually stay unchanged. Only the article tells you it is plural.'},
+      {q:'das Buch',     g:'das', a:['bücher'],     show:'die Bücher',     why:'<b>-er</b> plus umlaut where the vowel allows it: Buch → Bücher.'},
+      {q:'die Wohnung',  g:'die', a:['wohnungen'],  show:'die Wohnungen',  why:'Around 90% of feminine nouns take <b>-(e)n</b>.'},
+      {q:'der Stuhl',    g:'der', a:['stühle'],     show:'die Stühle',     why:'<b>-e</b> plus umlaut: Stuhl → Stühle.'}
+    ]
+  },
+  {
+    title:'Kasus', note:'Fill in the missing article. Watch the preposition — it decides the case.',
+    kind:'gap',
+    items:[
+      {s:['Ich fahre mit ','__',' Bus zur Arbeit.'], a:['dem'], why:'<b>mit</b> always takes the dative. Der Bus → dem Bus.'},
+      {s:['Wir gehen in ','__',' Stadt.'],           a:['die'], why:'<b>in</b> is two-way. Movement toward a place → accusative. Die Stadt is unchanged in the accusative.'},
+      {s:['Wir wohnen in ','__',' Stadt.'],          a:['der'], why:'Same preposition, no movement → dative. Die Stadt → der Stadt. Compare this with the item above.'},
+      {s:['Sie hilft ','__',' Kindern.'],            a:['den'], why:'<b>helfen</b> takes the dative. Note the extra <b>-n</b> on Kindern — dative plural always adds it.'},
+      {s:['Der Titel ','__',' Buches gefällt mir.'], a:['des'], why:'Genitive neuter: <b>des</b>, and the noun itself picks up <b>-es</b>.'},
+      {s:['Er kauft Blumen für ','__',' Lehrerin.'], a:['die'], why:'<b>für</b> takes the accusative — but feminine nouns look identical in nominative and accusative.'},
+      {s:['Nach ','__',' Arbeit spiele ich Fußball.'],a:['der'],why:'<b>nach</b> takes the dative. Die Arbeit → der Arbeit.'},
+      {s:['Ich sehe ','__',' Mann dort.'],           a:['den'], why:'Accusative masculine: der → <b>den</b>. Masculine is the only gender that visibly changes here.'}
+    ]
+  },
+  {
+    title:'n-Deklination', note:'These masculine nouns add an ending everywhere except the nominative singular. Type the correct form.',
+    kind:'gap',
+    items:[
+      {s:['Ich kenne den ','__','.'],                hint:'Student', a:['studenten'], show:'Ich kenne den Studenten.',                why:'<b>-ent</b> nouns naming people are n-nouns: den Studenten, dem Studenten, des Studenten. Inanimate ones are not — der Moment stays des Moments.'},
+      {s:['Wir sprechen mit dem ','__','.'],         hint:'Kollege',  a:['kollegen'],  show:'Wir sprechen mit dem Kollegen.',         why:'Masculine nouns in <b>-e</b> for people: der Kollege → dem Kollegen.'},
+      {s:['Das ist das Auto des ','__','.'],         hint:'Nachbar',  a:['nachbarn'],  show:'Das ist das Auto des Nachbarn.',         why:'Nachbar is one of the short irregular n-nouns — no genitive -s, just <b>-n</b>.'},
+      {s:['Kennst du den ','__',' dort?'],           hint:'Herr',     a:['herrn'],     show:'Kennst du den Herrn dort?',              why:'Herr is unusual: <b>-n</b> in the singular (den Herrn), <b>-en</b> in the plural (die Herren).'},
+      {s:['Die Bedeutung des ','__',' ist unklar.'], hint:'Name',     a:['namens'],    show:'Die Bedeutung des Namens ist unklar.',   why:'A mixed noun: <b>-n</b> in the accusative and dative, but <b>-ns</b> in the genitive. Same for Gedanke, Wille and Glaube. Herz belongs here too, though it stays bare in the accusative.'}
+    ]
+  },
+  {
+    title:'Komposita', note:'A compound takes the gender of its last element. Nothing else matters.',
+    kind:'choice',
+    items:[
+      {q:'Haus + Tür → Haustür',            a:'die', why:'<b>die Tür</b> is last, so die Haustür — das Haus has no say.'},
+      {q:'Zeit + Plan → Zeitplan',          a:'der', why:'<b>der Plan</b> is last, so der Zeitplan.'},
+      {q:'Wein + Glas → Weinglas',          a:'das', why:'<b>das Glas</b> is last, so das Weinglas.'},
+      {q:'Wasser + Flasche → Wasserflasche',a:'die', why:'<b>die Flasche</b> is last, so die Wasserflasche.'}
+    ]
+  }
+];
+
+const ROMAN = ['I','II','III','IV','V'];
+const TOTAL = PARTS.reduce((n,p)=>n+p.items.length,0);
+let state = [];
+
+function norm(s,strip){
+  let t = String(s).toLowerCase().trim()
+    .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
+    .replace(/\s+/g,' ');
+  if(strip) t = t.replace(/^(der|die|das)\s+/,'');
+  return t;
+}
+function el(tag,cls,html){
+  const n=document.createElement(tag);
+  if(cls) n.className=cls;
+  if(html!=null) n.innerHTML=html;
+  return n;
+}
+function colored(article,noun){
+  return '<span class="a-'+article+'">'+article+'</span> '+noun;
+}
+
+function build(){
+  const sheet=document.getElementById('sheet');
+  sheet.innerHTML='';
+  state=[];
+  let idx=0;
+
+  PARTS.forEach((part,pi)=>{
+    const sec=el('section','part');
+    const head=el('div','part-head');
+    head.appendChild(el('span','part-num','Teil '+ROMAN[pi]));
+    head.appendChild(el('h2','part-title',part.title));
+    sec.appendChild(head);
+    sec.appendChild(el('p','part-note',part.note));
+
+    const list=el('ul','items');
+    part.items.forEach(item=>{
+      const i=idx++;
+      state.push({answered:false,correct:false,part:pi,gender:part.kind==='choice'?item.a:null});
+
+      const li=el('li','item');
+      li.appendChild(el('div','marker',String(i+1)));
+      const body=el('div','body');
+
+      // ---- prompt ----
+      if(part.kind==='choice'){
+        body.appendChild(el('div','word',item.q.replace(/\+/g,'<span class="plus">+</span>')));
+      }else if(part.kind==='text'){
+        const g=item.g;
+        body.appendChild(el('div','word','<span class="a-'+g+'">'+g+'</span> '+item.q.replace(/^(der|die|das)\s+/,'')));
+      }else{
+        const s=el('div','sentence');
+        s.appendChild(document.createTextNode(item.s[0]));
+        const inp=document.createElement('input');
+        inp.type='text'; inp.className='blank'; inp.autocapitalize='off';
+        inp.autocomplete='off'; inp.spellcheck=false;
+        inp.setAttribute('aria-label','Answer for item '+(i+1));
+        s.appendChild(inp);
+        s.appendChild(document.createTextNode(item.s[2]));
+        if(item.hint){ s.appendChild(el('span','hint',item.hint)); }
+        body.appendChild(s);
+        li.dataset.input='blank';
+      }
+
+      // ---- controls ----
+      const fb=el('div','fb'); fb.hidden=true;
+
+      if(part.kind==='choice'){
+        const row=el('div','choices');
+        ['der','die','das'].forEach(v=>{
+          const b=el('button','choice',v);
+          b.dataset.v=v; b.type='button';
+          b.addEventListener('click',()=>{
+            if(state[i].answered) return;
+            const ok = v===item.a;
+            if(ok){
+              b.classList.add('picked');
+            }else{
+              b.classList.add('wrong');
+              row.querySelector('[data-v="'+item.a+'"]').classList.add('picked','reveal');
+            }
+            row.querySelectorAll('button').forEach(x=>x.disabled=true);
+            settle(li,fb,i,ok,colored(item.a,item.q.split('→').pop().trim()),item.why);
+          });
+          row.appendChild(b);
+        });
+        body.appendChild(row);
+      }else if(part.kind==='text'){
+        const row=el('div','row');
+        const inp=document.createElement('input');
+        inp.type='text'; inp.className='free'; inp.placeholder='Plural…';
+        inp.autocapitalize='off'; inp.autocomplete='off'; inp.spellcheck=false;
+        inp.setAttribute('aria-label','Plural of '+item.q);
+        const btn=el('button','check','Prüfen'); btn.type='button';
+        const go=()=>{
+          if(state[i].answered) return;
+          const ok=item.a.some(a=>norm(a,true)===norm(inp.value,true));
+          inp.disabled=true; btn.disabled=true;
+          settle(li,fb,i,ok,item.show,item.why);
+        };
+        btn.addEventListener('click',go);
+        inp.addEventListener('keydown',e=>{if(e.key==='Enter')go();});
+        row.appendChild(inp); row.appendChild(btn);
+        body.appendChild(row);
+      }else{
+        const inp=body.querySelector('input.blank');
+        const row=el('div','row');
+        const btn=el('button','check','Prüfen'); btn.type='button';
+        const go=()=>{
+          if(state[i].answered) return;
+          const ok=item.a.some(a=>norm(a,false)===norm(inp.value,false));
+          inp.disabled=true; btn.disabled=true;
+          const full=item.show||(item.s[0]+item.a[0]+item.s[2]);
+          settle(li,fb,i,ok,full,item.why);
+        };
+        btn.addEventListener('click',go);
+        inp.addEventListener('keydown',e=>{if(e.key==='Enter')go();});
+        row.appendChild(btn);
+        body.appendChild(row);
+      }
+
+      body.appendChild(fb);
+      li.appendChild(body);
+      list.appendChild(li);
+    });
+
+    sec.appendChild(list);
+    sheet.appendChild(sec);
+  });
+
+  const ticks=document.getElementById('ticks');
+  ticks.innerHTML='';
+  for(let i=0;i<TOTAL;i++) ticks.appendChild(el('div','tick'));
+  document.getElementById('result').hidden=true;
+  update();
+}
+
+function settle(li,fb,i,ok,answerHTML,why){
+  state[i].answered=true;
+  state[i].correct=ok;
+  li.classList.add(ok?'done-ok':'done-no');
+  fb.innerHTML='';
+  fb.appendChild(el('p','verdict',ok?'Richtig':'Noch nicht'));
+  fb.appendChild(el('p','answer',answerHTML));
+  fb.appendChild(el('p','why',why));
+  fb.hidden=false;
+  fb.classList.add('grow');
+  update();
+}
+
+function update(){
+  const ticks=document.getElementById('ticks').children;
+  let done=0,right=0;
+  state.forEach((s,i)=>{
+    ticks[i].className='tick'+(s.answered?(s.correct?' ok':' no'):'');
+    if(s.answered){done++; if(s.correct)right++;}
+  });
+  document.getElementById('count').textContent=done+' answered · '+right+' correct';
+  if(done===TOTAL) finish(right);
+}
+
+function finish(right){
+  const r=document.getElementById('result');
+  document.getElementById('rScore').textContent=right;
+  const pct=Math.round(right/TOTAL*100);
+  let msg;
+  if(pct>=90) msg='Solid. The endings are doing the work for you now — push into weak nouns and genitive next.';
+  else if(pct>=70) msg='A good working level. Look at which Teil cost you the most and drill that one alone.';
+  else if(pct>=50) msg='The patterns are half-settled. Learn each new noun as article + word + plural and this section climbs fast.';
+  else msg='Worth going back to the reference sheet first, then running this again — the ending tables cover most of what tripped you up.';
+  document.getElementById('rWord').textContent=msg;
+
+  const tally=document.getElementById('rTally');
+  tally.innerHTML='';
+  PARTS.forEach((p,pi)=>{
+    const sub=state.filter(s=>s.part===pi);
+    const c=sub.filter(s=>s.correct).length;
+    tally.appendChild(el('dt',null,'Teil '+ROMAN[pi]+' — '+p.title));
+    tally.appendChild(el('dd',null,c+'/'+sub.length));
+  });
+  ['der','die','das'].forEach(g=>{
+    const sub=state.filter(s=>s.gender===g);
+    if(!sub.length) return;
+    const c=sub.filter(s=>s.correct).length;
+    tally.appendChild(el('dt',null,'Gender guesses · '+g));
+    tally.appendChild(el('dd',null,c+'/'+sub.length));
+  });
+
+  r.hidden=false;
+}
+
+document.getElementById('again').addEventListener('click',()=>{
+  build();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+build();
+</script>
+</body>
+</html>
