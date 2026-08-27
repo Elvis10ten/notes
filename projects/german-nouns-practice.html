@@ -2,455 +2,1458 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Substantive — German noun practice</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GENUS — German noun gender trainer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=Newsreader:opsz,wght@6..72,400;6..72,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --paper:#E7E8E2;
-    --ink:#16181A;
-    --ink-soft:#5A5F63;
-    --grid:rgba(22,24,26,.055);
-    --rule:rgba(22,24,26,.16);
-    --der:#1B4E8F;
-    --die:#A62B3E;
-    --das:#2C6E52;
-    --sans:'Archivo','Helvetica Neue',Arial,sans-serif;
-    --serif:'Newsreader',Georgia,serif;
-    --mono:'Space Mono','Courier New',monospace;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
-  body{
-    background-color:var(--paper);
-    background-image:linear-gradient(var(--grid) 1px,transparent 1px),
-                     linear-gradient(90deg,var(--grid) 1px,transparent 1px);
-    background-size:22px 22px;
-    color:var(--ink);
-    font-family:var(--sans);
-    font-size:16px;
-    line-height:1.5;
-    -webkit-text-size-adjust:100%;
-  }
-  .wrap{max-width:660px;margin:0 auto;padding:28px 18px 80px}
+:root{
+  --paper:#FAFAF7; --grid:#E4E9ED; --ink:#16181B; --muted:#63696F;
+  --line:#DCDED8; --card:#FFFFFF;
+  --der:#1D4E89; --die:#B5323C; --das:#2C7A55;
+  --der-bg:#E8EEF6; --die-bg:#F8EAEB; --das-bg:#E7F1EC;
+  --serif:'Newsreader',Georgia,'Iowan Old Style','Times New Roman',serif;
+  --sans:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+  --r:10px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  margin:0;font-family:var(--sans);color:var(--ink);background-color:var(--paper);
+  background-image:
+    repeating-linear-gradient(to right,var(--grid) 0 1px,transparent 1px 24px),
+    repeating-linear-gradient(to bottom,var(--grid) 0 1px,transparent 1px 24px);
+  display:flex;flex-direction:column;
+  font-size:16px;line-height:1.5;
+  overscroll-behavior:none;
+}
+button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
+button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 
-  /* ---------- header ---------- */
-  .eyebrow{
-    font-family:var(--mono);font-size:11px;letter-spacing:.18em;
-    text-transform:uppercase;color:var(--ink-soft);margin:0 0 14px
-  }
-  .hero{
-    font-weight:800;font-size:clamp(46px,17vw,88px);line-height:.86;
-    letter-spacing:-.045em;margin:0 0 18px
-  }
-  .hero span{display:block}
-  .hero .m{color:var(--der)}
-  .hero .f{color:var(--die)}
-  .hero .n{color:var(--das)}
-  .standfirst{
-    font-family:var(--serif);font-size:18px;line-height:1.45;
-    max-width:34em;margin:0 0 22px;color:var(--ink)
-  }
+/* ---------- header ---------- */
+header{
+  display:flex;align-items:center;gap:14px;
+  padding:calc(10px + env(safe-area-inset-top)) 16px 10px;
+  border-bottom:1px solid var(--line);background:rgba(250,250,247,.94);
+  backdrop-filter:blur(8px);position:sticky;top:0;z-index:20;
+}
+.brand{font-family:var(--serif);font-size:19px;font-weight:600;letter-spacing:.22em;line-height:1}
+.brand em{font-style:normal;color:var(--die)}
+.meter{flex:1;min-width:0}
+.meter-top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.04em;margin-bottom:4px}
+.bar{height:6px;background:#EAEBE6;border-radius:99px;overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.bar .m-der{background:var(--der)} .bar .m-die{background:var(--die)} .bar .m-das{background:var(--das)}
+.icon-btn{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;color:var(--muted);flex:none}
+.icon-btn:hover{background:#EFF0EC;color:var(--ink)}
+.icon-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 
-  /* ---------- progress ---------- */
-  .meter{border-top:1.5px solid var(--ink);padding-top:12px;margin-bottom:6px}
-  .ticks{display:flex;gap:3px;align-items:flex-end;height:20px}
-  .tick{flex:1;height:9px;border:1.2px solid var(--rule);background:transparent;transition:height .18s ease,background .18s ease}
-  .tick.ok{background:var(--ink);border-color:var(--ink);height:20px}
-  .tick.no{border-color:var(--ink);height:20px;
-    background:repeating-linear-gradient(45deg,var(--ink) 0 1.5px,transparent 1.5px 4px)}
-  .count{
-    font-family:var(--mono);font-size:11px;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--ink-soft);margin-top:8px
-  }
+/* ---------- layout ---------- */
+main{flex:1;display:flex;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.wrap{width:100%;max-width:660px;margin:0 auto;padding:0 16px 24px;flex:1;display:flex;flex-direction:column}
+.view{display:none;flex:1;flex-direction:column}
+.view.on{display:flex}
 
-  /* ---------- parts ---------- */
-  .part{margin-top:44px}
-  .part-head{display:flex;align-items:baseline;gap:12px;border-bottom:1.5px solid var(--ink);padding-bottom:8px}
-  .part-num{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--ink-soft)}
-  .part-title{font-weight:800;font-size:22px;letter-spacing:-.02em;margin:0}
-  .part-note{font-family:var(--serif);font-size:15.5px;color:var(--ink-soft);margin:10px 0 0}
+/* ---------- drill card ---------- */
+.stage{flex:1;display:flex;flex-direction:column;justify-content:center;padding:20px 0 8px;min-height:230px}
+.eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:14px}
+.eyebrow b{color:var(--ink);font-weight:500}
+.prompt{
+  font-family:var(--serif);font-weight:500;text-align:center;
+  font-size:clamp(2rem,8.5vw,3.5rem);line-height:1.12;letter-spacing:-.015em;
+  overflow-wrap:anywhere;
+}
+.prompt.small{font-size:clamp(1.25rem,4.6vw,1.75rem);line-height:1.32;font-weight:400}
+.subprompt{text-align:center;color:var(--muted);font-size:14px;margin-top:12px;line-height:1.45}
+.blank{color:var(--muted);letter-spacing:.06em}
 
-  ul.items{list-style:none;margin:0;padding:0}
-  li.item{display:flex;gap:12px;padding:18px 0;border-bottom:1px solid var(--rule)}
-  .marker{
-    flex:0 0 26px;height:26px;border:1.5px solid var(--rule);
-    font-family:var(--mono);font-size:12px;display:flex;align-items:center;justify-content:center;
-    color:var(--ink-soft);margin-top:2px
-  }
-  .item.done-ok .marker{background:var(--ink);border-color:var(--ink);color:var(--paper)}
-  .item.done-no .marker{border-color:var(--ink);color:var(--ink);
-    background:repeating-linear-gradient(45deg,rgba(22,24,26,.18) 0 2px,transparent 2px 5px)}
-  .body{flex:1;min-width:0}
+/* ---------- gender bar (signature) ---------- */
+.genus{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+.g{
+  position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px 4px 14px;font-family:var(--serif);font-size:24px;font-weight:500;
+  transition:transform .1s,background .12s,border-color .12s;
+}
+.g::before{content:'';position:absolute;left:0;right:0;top:0;height:3px;border-radius:var(--r) var(--r) 0 0}
+.g .kbd{display:block;font-family:var(--mono);font-size:9.5px;color:var(--muted);margin-top:5px;letter-spacing:.08em}
+.g[data-g=der]{color:var(--der)} .g[data-g=der]::before{background:var(--der)}
+.g[data-g=die]{color:var(--die)} .g[data-g=die]::before{background:var(--die)}
+.g[data-g=das]{color:var(--das)} .g[data-g=das]::before{background:var(--das)}
+.g:not(:disabled):hover[data-g=der]{background:var(--der-bg);border-color:var(--der)}
+.g:not(:disabled):hover[data-g=die]{background:var(--die-bg);border-color:var(--die)}
+.g:not(:disabled):hover[data-g=das]{background:var(--das-bg);border-color:var(--das)}
+.g:not(:disabled):active{transform:translateY(1px)}
+.g.right[data-g=der]{background:var(--der);color:#fff;border-color:var(--der)}
+.g.right[data-g=die]{background:var(--die);color:#fff;border-color:var(--die)}
+.g.right[data-g=das]{background:var(--das);color:#fff;border-color:var(--das)}
+.g.right .kbd{color:rgba(255,255,255,.7)}
+.g.wrong{background:#F3F3F0;color:var(--muted)!important;border-color:var(--line);text-decoration:line-through}
+.g.wrong::before{background:var(--line)}
+.g.dim{opacity:.42}
+.g:disabled{cursor:default}
 
-  .word{font-family:var(--serif);font-size:27px;line-height:1.15;letter-spacing:-.01em}
-  .sentence{font-family:var(--serif);font-size:19px;line-height:1.75}
-  .hint{
-    font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--ink-soft);border:1.2px solid var(--rule);padding:2px 7px;margin-left:2px;white-space:nowrap
-  }
-  .plus{color:var(--ink-soft);font-family:var(--sans);font-weight:600}
+/* ---------- multiple choice ---------- */
+.mc{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.opt{
+  display:flex;gap:11px;align-items:flex-start;text-align:left;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:13px 14px;font-size:15.5px;line-height:1.4;transition:background .12s,border-color .12s;
+}
+.opt .n{font-family:var(--mono);font-size:11px;color:var(--muted);padding-top:3px;flex:none;width:12px}
+.opt:not(:disabled):hover{border-color:var(--ink);background:#FCFCFA}
+.opt.right{border-color:var(--das);background:var(--das-bg)}
+.opt.right .n{color:var(--das)}
+.opt.wrong{border-color:var(--die);background:var(--die-bg)}
+.opt.wrong .n{color:var(--die)}
+.opt.dim{opacity:.45}
+.opt:disabled{cursor:default}
 
-  /* ---------- controls ---------- */
-  .choices{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-  .choice{
-    font-family:var(--sans);font-weight:800;font-size:17px;letter-spacing:-.01em;
-    padding:9px 20px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);
-    cursor:pointer;transition:background .14s ease,color .14s ease
-  }
-  .choice:hover:not(:disabled){background:rgba(22,24,26,.07)}
-  .choice:disabled{cursor:default;opacity:.32}
-  .choice.picked{color:#fff;opacity:1}
-  .choice.picked[data-v="der"]{background:var(--der);border-color:var(--der)}
-  .choice.picked[data-v="die"]{background:var(--die);border-color:var(--die)}
-  .choice.picked[data-v="das"]{background:var(--das);border-color:var(--das)}
-  .choice.reveal{opacity:1;border-style:dashed}
-  .choice.wrong{opacity:1;background:transparent;color:var(--ink-soft);
-    border-color:var(--rule);text-decoration:line-through}
+/* ---------- typed input ---------- */
+.type-row{display:flex;gap:8px;margin-top:6px}
+.type-row input{
+  flex:1;min-width:0;font-family:var(--serif);font-size:22px;padding:13px 15px;
+  border:1px solid var(--line);border-radius:var(--r);background:var(--card);color:var(--ink);
+}
+.type-row input::placeholder{color:#B9BDC2;font-size:17px;font-family:var(--sans)}
+.type-row input.right{border-color:var(--das);background:var(--das-bg)}
+.type-row input.wrong{border-color:var(--die);background:var(--die-bg)}
+.btn{
+  background:var(--ink);color:var(--paper);border-radius:var(--r);padding:0 20px;
+  font-size:15px;font-weight:500;flex:none;
+}
+.btn:hover{background:#33373C}
+.btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.btn.ghost:hover{background:#F1F2EE;color:var(--ink)}
+.umlauts{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.umlauts button{
+  font-family:var(--serif);font-size:17px;width:40px;height:36px;border:1px solid var(--line);
+  border-radius:8px;background:var(--card);color:var(--muted)
+}
+.umlauts button:hover{color:var(--ink);border-color:var(--ink)}
 
-  input.blank{
-    font-family:var(--serif);font-size:19px;color:var(--ink);
-    width:5.2em;padding:1px 6px;margin:0 2px;background:transparent;
-    border:0;border-bottom:1.8px solid var(--ink);border-radius:0;text-align:center
-  }
-  input.blank:focus{outline:none;background:rgba(22,24,26,.06)}
-  input.blank:disabled{opacity:1;border-bottom-style:dotted}
-  .row{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
-  input.free{
-    font-family:var(--serif);font-size:19px;color:var(--ink);flex:1 1 150px;min-width:0;
-    padding:7px 10px;background:transparent;border:1.5px solid var(--rule);border-radius:0
-  }
-  input.free:focus{outline:none;border-color:var(--ink)}
-  input.free:disabled{opacity:1;border-style:dotted}
-  .check{
-    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-    padding:9px 16px;border:1.5px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer
-  }
-  .check:disabled{opacity:.3;cursor:default}
-  :focus-visible{outline:2.5px solid var(--ink);outline-offset:2px}
+/* ---------- feedback ---------- */
+.fb{margin-top:14px;border-left:3px solid var(--line);padding:2px 0 2px 14px;animation:rise .18s ease-out;cursor:pointer}
+@keyframes rise{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.fb.ok{border-color:var(--das)} .fb.no{border-color:var(--die)}
+.fb-head{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:5px}
+.verdict{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase}
+.fb.ok .verdict{color:var(--das)} .fb.no .verdict{color:var(--die)}
+.rule-name{font-size:13.5px;font-weight:600}
+.fb p{margin:0;font-size:14.5px;line-height:1.55;color:#3A3E44}
+.fb p + p{margin-top:6px}
+.fb .tip{color:var(--muted);font-size:13.5px}
+.fb .de{font-family:var(--serif);font-size:15.5px}
 
-  /* ---------- feedback ---------- */
-  .fb{margin-top:12px;padding-left:12px;border-left:2.5px solid var(--ink);overflow:hidden}
-  .fb.grow{animation:grow .22s ease-out}
-  @keyframes grow{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
-  .verdict{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
-  .answer{font-family:var(--serif);font-size:20px;margin:3px 0 4px}
-  .answer .a-der{color:var(--der);font-weight:600}
-  .answer .a-die{color:var(--die);font-weight:600}
-  .answer .a-das{color:var(--das);font-weight:600}
-  .why{font-size:14.5px;line-height:1.55;color:var(--ink-soft);margin:0}
-  .why b{color:var(--ink);font-weight:600}
+.footbar{display:flex;align-items:center;gap:12px;padding-top:14px;margin-top:auto;border-top:1px solid var(--line)}
+.pill{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.03em}
+.pill b{color:var(--ink);font-weight:500}
+.spacer{flex:1}
+.hintline{font-family:var(--mono);font-size:10.5px;color:#7B8087;text-align:center;padding-top:9px}
 
-  /* ---------- result ---------- */
-  .result{margin-top:48px;border:1.5px solid var(--ink);padding:22px 20px;background:rgba(255,255,255,.35)}
-  .result[hidden]{display:none}
-  .r-label{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft)}
-  .r-score{font-weight:800;font-size:58px;line-height:1;letter-spacing:-.04em;margin:6px 0 2px}
-  .r-score small{font-size:24px;color:var(--ink-soft);letter-spacing:-.02em}
-  .tally{display:grid;grid-template-columns:1fr auto;gap:2px 14px;margin:18px 0 0;font-size:14.5px}
-  .tally dt{border-bottom:1px dotted var(--rule);padding:5px 0}
-  .tally dd{margin:0;padding:5px 0;font-family:var(--mono);font-size:13px;border-bottom:1px dotted var(--rule)}
-  .again{margin-top:20px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;
-    text-transform:uppercase;padding:10px 18px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
-  .again:hover{background:var(--ink);color:var(--paper)}
+/* ---------- session end ---------- */
+.done{text-align:center;padding:34px 0}
+.done h2{font-family:var(--serif);font-size:30px;font-weight:500;margin:0 0 6px}
+.done .score{font-family:var(--mono);font-size:13px;color:var(--muted);margin-bottom:22px}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0 24px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px 8px}
+.stat .v{font-family:var(--mono);font-size:21px;font-weight:500}
+.stat .k{font-size:11px;color:var(--muted);margin-top:2px}
 
-  @media (prefers-reduced-motion:reduce){
-    *{animation:none!important;transition:none!important}
-  }
+/* ---------- Regelkarte ---------- */
+.sec-title{font-family:var(--serif);font-size:25px;font-weight:500;margin:22px 0 3px}
+.sec-sub{color:var(--muted);font-size:14px;margin:0 0 18px;line-height:1.5}
+.fam{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:22px 0 9px;display:flex;align-items:center;gap:10px}
+.fam::after{content:'';flex:1;height:1px;background:var(--line)}
+.rules{display:flex;flex-direction:column;gap:6px}
+.rule-row{
+  display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r);padding:11px 13px;text-align:left;width:100%;
+}
+.rule-row:hover{border-color:var(--ink)}
+.dot{width:8px;height:8px;border-radius:99px;flex:none}
+.dot.der{background:var(--der)} .dot.die{background:var(--die)} .dot.das{background:var(--das)} .dot.mix{background:var(--muted)}
+.rule-row .nm{font-family:var(--serif);font-size:16px;flex:1;min-width:0}
+.rule-row .ct{font-family:var(--mono);font-size:10.5px;color:var(--muted);flex:none}
+.mini{width:56px;height:5px;background:#EAEBE6;border-radius:99px;overflow:hidden;flex:none}
+.mini i{display:block;height:100%;background:var(--ink)}
+.mini i.full{background:var(--das)}
+
+/* ---------- detail panel ---------- */
+.detail{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-top:10px}
+.detail h3{font-family:var(--serif);font-size:20px;font-weight:500;margin:0 0 6px}
+.detail .tip{font-size:14.5px;color:#3A3E44;line-height:1.55;margin:0 0 14px}
+.words{display:flex;flex-wrap:wrap;gap:5px}
+.w{font-family:var(--serif);font-size:14.5px;padding:4px 9px;border-radius:99px;border:1px solid var(--line);background:var(--paper)}
+.w.der{color:var(--der);border-color:#C6D5E7} .w.die{color:var(--die);border-color:#EBCFD1} .w.das{color:var(--das);border-color:#C7DFD3}
+.w.exc{font-style:italic}
+.w.done{box-shadow:inset 0 0 0 1px currentColor}
+.legend{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin:12px 0 0;line-height:1.6}
+
+/* ---------- stats ---------- */
+.bias{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+.bias-row{display:flex;align-items:center;gap:11px}
+.bias-lab{font-family:var(--serif);font-size:17px;width:44px;flex:none}
+.bias-lab.der{color:var(--der)} .bias-lab.die{color:var(--die)} .bias-lab.das{color:var(--das)}
+.bias-track{flex:1;height:22px;background:#EFF0EC;border-radius:5px;position:relative;overflow:hidden}
+.bias-track i{position:absolute;left:0;top:0;bottom:0;opacity:.3}
+.bias-track u{position:absolute;top:0;bottom:0;width:2px;background:var(--ink);text-decoration:none}
+.bias-track i.der{background:var(--der)} .bias-track i.die{background:var(--die)} .bias-track i.das{background:var(--das)}
+.bias-num{font-family:var(--mono);font-size:11px;color:var(--muted);width:74px;flex:none;text-align:right}
+
+/* ---------- settings ---------- */
+.opts{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.chip{
+  border:1px solid var(--line);background:var(--card);border-radius:99px;padding:7px 14px;font-size:13.5px;
+}
+.chip:hover{border-color:var(--ink)}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.field{margin-top:22px}
+.field h4{font-size:13px;font-weight:600;margin:0 0 2px}
+.field p{font-size:13px;color:var(--muted);margin:0;line-height:1.5}
+.danger{color:var(--die);border-color:#EBCFD1}
+.danger:hover{background:var(--die);color:#fff;border-color:var(--die)}
+.saved{font-family:var(--mono);font-size:10.5px;color:var(--muted)}
+
+/* ---------- nav ---------- */
+nav{
+  display:flex;border-top:1px solid var(--line);background:rgba(250,250,247,.95);
+  backdrop-filter:blur(8px);padding-bottom:env(safe-area-inset-bottom);position:sticky;bottom:0;z-index:20;
+}
+nav button{
+  flex:1;padding:11px 4px 10px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);border-top:2px solid transparent;margin-top:-1px;
+}
+nav button[aria-current=page]{color:var(--ink);border-top-color:var(--ink)}
+
+.empty{text-align:center;color:var(--muted);padding:46px 16px;font-size:15px;line-height:1.6}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (min-width:620px){ .g{font-size:27px;padding:19px 4px 16px} }
 </style>
 </head>
 <body>
-<div class="wrap">
-
-  <p class="eyebrow">Deutsch · Substantive · A2 → B1</p>
-  <h1 class="hero"><span class="m">der</span><span class="f">die</span><span class="n">das</span></h1>
-  <p class="standfirst">35 items on gender, plural, case and the n-declension. Answer one at a time — each one explains itself as soon as you commit.</p>
-
+<header>
+  <div class="brand">G<em>E</em>NUS</div>
   <div class="meter">
-    <div class="ticks" id="ticks" aria-hidden="true"></div>
-    <p class="count" id="count">0 answered · 0 correct</p>
+    <div class="meter-top"><span id="mLabel">—</span><span id="mPct">0%</span></div>
+    <div class="bar"><i class="m-der" id="bDer"></i><i class="m-die" id="bDie"></i><i class="m-das" id="bDas"></i></div>
   </div>
+  <button class="icon-btn" id="toSettings" title="Settings" aria-label="Settings">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+  </button>
+</header>
 
-  <main id="sheet"></main>
+<main>
+  <div class="wrap">
+    <section class="view on" id="v-drill"></section>
+    <section class="view" id="v-rules"></section>
+    <section class="view" id="v-stats"></section>
+    <section class="view" id="v-set"></section>
+  </div>
+</main>
 
-  <section class="result" id="result" hidden>
-    <p class="r-label">Ergebnis</p>
-    <p class="r-score"><span id="rScore">0</span><small>/35</small></p>
-    <p class="why" id="rWord"></p>
-    <dl class="tally" id="rTally"></dl>
-    <button class="again" id="again">Nochmal</button>
-  </section>
-
-</div>
+<nav>
+  <button data-view="drill" aria-current="page">Drill</button>
+  <button data-view="rules">Rules</button>
+  <button data-view="stats">Stats</button>
+</nav>
 
 <script>
-const PARTS = [
-  {
-    title:'Genus', note:'Which article? The ending is usually the giveaway.',
-    kind:'choice',
-    items:[
-      {q:'Wohnung',      a:'die', why:'The suffix <b>-ung</b> on a verb is always feminine: wohnen → die Wohnung. Careful — nouns that only happen to end in those letters follow the verb-stem rule and are masculine: der Sprung, der Schwung.'},
-      {q:'Mädchen',      a:'das', why:'<b>-chen</b> is always neuter, even for a person. Gender is grammatical, not biological.'},
-      {q:'Motor',        a:'der', why:'Nouns in <b>-or</b> are masculine for people and devices: der Motor, der Doktor, der Traktor. Exceptions: das Labor, das Chlor.'},
-      {q:'Gebäude',      a:'das', why:'The <b>Ge-</b> collective prefix gives neuter: das Gebäude, das Gemüse, das Gepäck.'},
-      {q:'Freiheit',     a:'die', why:'<b>-heit</b> and <b>-keit</b> are always feminine.'},
-      {q:'Frühling',     a:'der', why:'<b>-ling</b> is masculine — and seasons are masculine too, so this one is doubly safe.'},
-      {q:'Dokument',     a:'das', why:'Latinate nouns in <b>-ment</b> are neuter: das Dokument, das Experiment, das Instrument. One common exception: <b>der</b> Moment, a moment in time.'},
-      {q:'Universität',  a:'die', why:'<b>-tät</b> is feminine, like all the -ion / -tät / -ik / -ur endings.'},
-      {q:'Schwimmen',    a:'das', why:'An infinitive used as a noun is always neuter and has no plural.'},
-      {q:'Käse',         a:'der', why:'A trap. <b>-e</b> is feminine about 90% of the time, but der Käse, der Name and der Junge break it.'}
-    ]
-  },
-  {
-    title:'Plural', note:'Type the plural form. The article is always "die" — just the noun is enough.',
-    kind:'text', strip:true,
-    items:[
-      {q:'der Tag',      g:'der', a:['tage'],       show:'die Tage',       why:'Many masculine nouns take <b>-e</b>. No umlaut here.'},
-      {q:'das Kind',     g:'das', a:['kinder'],     show:'die Kinder',     why:'Neuter nouns often take <b>-er</b>. No umlaut possible on an i.'},
-      {q:'die Lehrerin', g:'die', a:['lehrerinnen'],show:'die Lehrerinnen',why:'Feminine <b>-in</b> doubles the n before <b>-nen</b>.'},
-      {q:'das Auto',     g:'das', a:['autos'],      show:'die Autos',      why:'Loanwords take <b>-s</b>.'},
-      {q:'der Lehrer',   g:'der', a:['lehrer'],     show:'die Lehrer',     why:'Masculine nouns in <b>-er</b>, <b>-el</b>, <b>-en</b> usually stay unchanged. Only the article tells you it is plural.'},
-      {q:'das Buch',     g:'das', a:['bücher'],     show:'die Bücher',     why:'<b>-er</b> plus umlaut where the vowel allows it: Buch → Bücher.'},
-      {q:'die Wohnung',  g:'die', a:['wohnungen'],  show:'die Wohnungen',  why:'Around 90% of feminine nouns take <b>-(e)n</b>.'},
-      {q:'der Stuhl',    g:'der', a:['stühle'],     show:'die Stühle',     why:'<b>-e</b> plus umlaut: Stuhl → Stühle.'}
-    ]
-  },
-  {
-    title:'Kasus', note:'Fill in the missing article. Watch the preposition — it decides the case.',
-    kind:'gap',
-    items:[
-      {s:['Ich fahre mit ','__',' Bus zur Arbeit.'], a:['dem'], why:'<b>mit</b> always takes the dative. Der Bus → dem Bus.'},
-      {s:['Wir gehen in ','__',' Stadt.'],           a:['die'], why:'<b>in</b> is two-way. Movement toward a place → accusative. Die Stadt is unchanged in the accusative.'},
-      {s:['Wir wohnen in ','__',' Stadt.'],          a:['der'], why:'Same preposition, no movement → dative. Die Stadt → der Stadt. Compare this with the item above.'},
-      {s:['Sie hilft ','__',' Kindern.'],            a:['den'], why:'<b>helfen</b> takes the dative. Note the extra <b>-n</b> on Kindern — dative plural always adds it.'},
-      {s:['Der Titel ','__',' Buches gefällt mir.'], a:['des'], why:'Genitive neuter: <b>des</b>, and the noun itself picks up <b>-es</b>.'},
-      {s:['Er kauft Blumen für ','__',' Lehrerin.'], a:['die'], why:'<b>für</b> takes the accusative — but feminine nouns look identical in nominative and accusative.'},
-      {s:['Nach ','__',' Arbeit spiele ich Fußball.'],a:['der'],why:'<b>nach</b> takes the dative. Die Arbeit → der Arbeit.'},
-      {s:['Ich sehe ','__',' Mann dort.'],           a:['den'], why:'Accusative masculine: der → <b>den</b>. Masculine is the only gender that visibly changes here.'}
-    ]
-  },
-  {
-    title:'n-Deklination', note:'These masculine nouns add an ending everywhere except the nominative singular. Type the correct form.',
-    kind:'gap',
-    items:[
-      {s:['Ich kenne den ','__','.'],                hint:'Student', a:['studenten'], show:'Ich kenne den Studenten.',                why:'<b>-ent</b> nouns naming people are n-nouns: den Studenten, dem Studenten, des Studenten. Inanimate ones are not — der Moment stays des Moments.'},
-      {s:['Wir sprechen mit dem ','__','.'],         hint:'Kollege',  a:['kollegen'],  show:'Wir sprechen mit dem Kollegen.',         why:'Masculine nouns in <b>-e</b> for people: der Kollege → dem Kollegen.'},
-      {s:['Das ist das Auto des ','__','.'],         hint:'Nachbar',  a:['nachbarn'],  show:'Das ist das Auto des Nachbarn.',         why:'Nachbar is one of the short irregular n-nouns — no genitive -s, just <b>-n</b>.'},
-      {s:['Kennst du den ','__',' dort?'],           hint:'Herr',     a:['herrn'],     show:'Kennst du den Herrn dort?',              why:'Herr is unusual: <b>-n</b> in the singular (den Herrn), <b>-en</b> in the plural (die Herren).'},
-      {s:['Die Bedeutung des ','__',' ist unklar.'], hint:'Name',     a:['namens'],    show:'Die Bedeutung des Namens ist unklar.',   why:'A mixed noun: <b>-n</b> in the accusative and dative, but <b>-ns</b> in the genitive. Same for Gedanke, Wille and Glaube. Herz belongs here too, though it stays bare in the accusative.'}
-    ]
-  },
-  {
-    title:'Komposita', note:'A compound takes the gender of its last element. Nothing else matters.',
-    kind:'choice',
-    items:[
-      {q:'Haus + Tür → Haustür',            a:'die', why:'<b>die Tür</b> is last, so die Haustür — das Haus has no say.'},
-      {q:'Zeit + Plan → Zeitplan',          a:'der', why:'<b>der Plan</b> is last, so der Zeitplan.'},
-      {q:'Wein + Glas → Weinglas',          a:'das', why:'<b>das Glas</b> is last, so das Weinglas.'},
-      {q:'Wasser + Flasche → Wasserflasche',a:'die', why:'<b>die Flasche</b> is last, so die Wasserflasche.'}
-    ]
-  }
+/* ============================================================
+   RULES — each rule declares the gender it predicts.
+   family: 'ending' | 'meaning' | 'formation'
+   ============================================================ */
+const RULES = {
+  /* --- Masculine endings --- */
+  e_ismus:   {g:'der', name:'-ismus', family:'ending', tip:'Always masculine. der Kapitalismus, der Tourismus.'},
+  e_ling:    {g:'der', name:'-ling', family:'ending', tip:'Always masculine. der Lehrling, der Frühling.'},
+  e_ist:     {g:'der', name:'-ist', family:'ending', tip:'Masculine (a male person). The female form takes -in: die Polizistin.'},
+  e_igich:   {g:'der', name:'-ig / -ich', family:'ending', tip:'Masculine. der Honig, der Teppich. Watch out: das Reisig, das Reich.'},
+  e_antent:  {g:'der', name:'-ant / -ent', family:'ending', tip:'Reliable for people: der Student, der Praktikant. Non-persons are often neuter: das Talent, das Prozent.'},
+  e_oreur:   {g:'der', name:'-or / -eur / -är', family:'ending', tip:'Masculine. der Motor, der Ingenieur, der Sekretär. Exceptions: das Labor, das Tor, das Moor, das Chlor, das Militär.'},
+  e_er:      {g:'der', name:'-er', family:'ending', tip:'Only reliable as an agent suffix on a verb: fahren → der Fahrer. Plain nouns ending in -er go every which way: die Mutter, das Fenster.'},
+  e_stem:    {g:'der', name:'Verb stem, no suffix', family:'ending', tip:'fliegen → der Flug, springen → der Sprung. Exceptions: das Spiel, das Bad, das Grab.'},
+
+  /* --- Feminine endings --- */
+  e_heit:    {g:'die', name:'-heit / -keit', family:'ending', tip:'Always feminine. die Freiheit, die Möglichkeit.'},
+  e_schaft:  {g:'die', name:'-schaft', family:'ending', tip:'Always feminine. die Freundschaft, die Wissenschaft.'},
+  e_ung:     {g:'die', name:'-ung', family:'ending', tip:'Feminine when it is the suffix on a verb: wohnen → die Wohnung. A stem that merely ends in those letters is masculine: der Sprung, der Schwung.'},
+  e_ei:      {g:'die', name:'-ei', family:'ending', tip:'Feminine as a suffix. die Bäckerei, die Polizei. Not the same as a stem ending in -ei: das Ei, der Brei.'},
+  e_in:      {g:'die', name:'-in (female person)', family:'ending', tip:'Always feminine when it makes a female form: die Lehrerin. Loanwords that merely end in -in are unrelated: der Termin, das Benzin.'},
+  e_iontaet: {g:'die', name:'-ion / -tät / -ik / -ur', family:'ending', tip:'Feminine. die Nation, die Universität, die Musik, die Natur. Exceptions: das Ion, das Stadion, das Abitur, das Futur, das Mosaik, der Atlantik, der Pazifik.'},
+  e_anzenz:  {g:'die', name:'-anz / -enz / -age / -ie', family:'ending', tip:'Feminine. die Distanz, die Konferenz, die Garage, die Energie. Exceptions: das Genie, das Knie, das Image.'},
+  e_e:       {g:'die', name:'-e', family:'ending', tip:'~90% feminine. Most masculine exceptions are n-declension nouns for male people and animals: der Junge, der Kollege, der Löwe.'},
+
+  /* --- Neuter endings --- */
+  e_chen:    {g:'das', name:'-chen / -lein', family:'ending', tip:'Always neuter, whatever the base noun was. die Stadt → das Städtchen. But der Kuchen and der Knochen are not diminutives.'},
+  e_inf:     {g:'das', name:'Nominalised infinitive', family:'ending', tip:'Always neuter. essen → das Essen, leben → das Leben.'},
+  e_um:      {g:'das', name:'-um', family:'ending', tip:'Neuter. das Zentrum, das Museum. Exceptions: der Konsum, der Irrtum, der Reichtum. Not the same as a stem in -aum: der Baum, der Traum.'},
+  e_ment:    {g:'das', name:'-ment', family:'ending', tip:'Neuter. das Dokument, das Experiment. Exceptions: der Moment (point in time), der Zement.'},
+  e_ma:      {g:'das', name:'-ma', family:'ending', tip:'Neuter for Greek-derived nouns. das Thema, das Klima. Exception: die Firma.'},
+  e_tum:     {g:'das', name:'-tum', family:'ending', tip:'Neuter. das Eigentum, das Wachstum. Exceptions: der Reichtum, der Irrtum.'},
+  e_ge:      {g:'das', name:'Ge- prefix', family:'ending', tip:'Usually neuter. das Gebäude, das Gemüse. Plenty of exceptions: der Gedanke, der Geruch, die Geduld, die Geschichte.'},
+  e_nis:     {g:'das', name:'-nis', family:'ending', tip:'Usually neuter. das Ergebnis, das Erlebnis. Exceptions: die Erlaubnis, die Kenntnis, die Erkenntnis, die Finsternis.'},
+
+  /* --- Meaning categories --- */
+  c_day:     {g:'der', name:'Days', family:'meaning', tip:'der Montag, der Freitag. (Short for "der Tag".)'},
+  c_month:   {g:'der', name:'Months', family:'meaning', tip:'der Januar, der Mai.'},
+  c_season:  {g:'der', name:'Seasons', family:'meaning', tip:'der Frühling, der Sommer, der Herbst, der Winter.'},
+  c_compass: {g:'der', name:'Compass points', family:'meaning', tip:'der Norden, der Süden, der Osten, der Westen.'},
+  c_weather: {g:'der', name:'Weather that falls or blows', family:'meaning', tip:'der Regen, der Wind, der Schnee. But die Sonne, die Wolke, das Gewitter.'},
+  c_booze:   {g:'der', name:'Alcoholic drinks', family:'meaning', tip:'der Wein, der Schnaps. Beer is the odd one out: das Bier.'},
+  c_car:     {g:'der', name:'Car makes', family:'meaning', tip:'der VW, der BMW — short for "der Wagen".'},
+  c_tree:    {g:'die', name:'Trees', family:'meaning', tip:'die Eiche, die Buche. Exception: der Ahorn.'},
+  c_plant:   {g:'die', name:'Flowers and fruits', family:'meaning', tip:'die Rose, die Banane. Exceptions: der Apfel, der Pfirsich.'},
+  c_number:  {g:'die', name:'Numerals as nouns', family:'meaning', tip:'die Eins, die Drei — the school-grade sense too.'},
+  c_ship:    {g:'die', name:'Ships', family:'meaning', tip:'die Titanic, die Bismarck — feminine even when named after a man.'},
+  c_plane:   {g:'die', name:'Planes', family:'meaning', tip:'die Boeing, die Cessna.'},
+  c_moto:    {g:'die', name:'Motorcycles', family:'meaning', tip:'die BMW as a motorcycle, der BMW as a car — same name, different gender.'},
+  c_young:   {g:'das', name:'Young beings', family:'meaning', tip:'das Kind, das Baby, das Kalb. Exception: der Welpe.'},
+  c_metal:   {g:'das', name:'Metals', family:'meaning', tip:'das Gold, das Eisen. Exceptions: der Stahl, die Bronze.'},
+  c_letter:  {g:'das', name:'Letters and colours', family:'meaning', tip:'das A, das Blau.'},
+  c_lang:    {g:'das', name:'Languages', family:'meaning', tip:'das Deutsch, das Englisch.'},
+  c_place:   {g:'das', name:'Countries and cities', family:'meaning', tip:'All cities and most countries are neuter — visible once you add an adjective: das schöne Berlin. Exceptions: die Schweiz, die Türkei, der Iran.'},
+
+  /* --- Formation topics (drilled with written questions) --- */
+  f_comp:    {g:null, name:'Compound nouns', family:'formation', tip:'The last element decides everything: das Haus + die Tür → die Haustür.'},
+  f_dim:     {g:'das', name:'Diminutives', family:'formation', tip:'-chen / -lein are always neuter and umlaut the stem vowel where they can.'},
+  f_nom:     {g:null, name:'Turning words into nouns', family:'formation', tip:'Infinitive → neuter noun. Verb stem alone → masculine noun.'},
+  f_adj:     {g:null, name:'Adjectival nouns', family:'formation', tip:'der Deutsche / ein Deutscher — they keep declining like adjectives.'},
+  f_etwas:   {g:'das', name:'After etwas, nichts, viel, wenig, alles', family:'formation', tip:'The adjective is capitalised and neuter: etwas Neues, nichts Gutes, alles Gute.'},
+  g_basic:   {g:null, name:'How gender works', family:'formation', tip:'Every German noun carries a gender, a number and a case. Gender is grammatical, not biological, and roughly 80% of it is predictable from the ending or the meaning category.'},
+  f_trap:    {g:null, name:'Suffix vs. ending', family:'formation', tip:'A suffix is added to a word. An ending is just the letters a word happens to finish with.'}
+};
+/* [word, gender, ruleKey, isException, note] */
+const NOUNS_A = [
+/* -ismus */
+["Kapitalismus","der","e_ismus",0,""],["Sozialismus","der","e_ismus",0,""],["Tourismus","der","e_ismus",0,""],
+["Journalismus","der","e_ismus",0,""],["Optimismus","der","e_ismus",0,""],["Pessimismus","der","e_ismus",0,""],
+["Realismus","der","e_ismus",0,""],["Mechanismus","der","e_ismus",0,""],["Organismus","der","e_ismus",0,""],
+["Kommunismus","der","e_ismus",0,""],["Egoismus","der","e_ismus",0,""],
+
+/* -ling */
+["Lehrling","der","e_ling",0,""],["Frühling","der","e_ling",0,"Also a season, and seasons are masculine too — two rules agreeing."],
+["Schmetterling","der","e_ling",0,""],["Säugling","der","e_ling",0,""],["Flüchtling","der","e_ling",0,""],
+["Liebling","der","e_ling",0,""],["Zwilling","der","e_ling",0,""],["Feigling","der","e_ling",0,""],
+["Häftling","der","e_ling",0,""],["Neuling","der","e_ling",0,""],
+
+/* -ist */
+["Polizist","der","e_ist",0,""],["Tourist","der","e_ist",0,""],["Journalist","der","e_ist",0,""],
+["Pianist","der","e_ist",0,""],["Optimist","der","e_ist",0,""],["Egoist","der","e_ist",0,""],
+["Artist","der","e_ist",0,""],["Komponist","der","e_ist",0,""],["Terrorist","der","e_ist",0,""],
+["Spezialist","der","e_ist",0,""],
+
+/* -ig / -ich */
+["Honig","der","e_igich",0,""],["Teppich","der","e_igich",0,""],["Essig","der","e_igich",0,""],
+["König","der","e_igich",0,""],["Käfig","der","e_igich",0,""],["Bereich","der","e_igich",0,""],["Teich","der","e_igich",0,""],["Rettich","der","e_igich",0,""],
+["Kranich","der","e_igich",0,""],["Zweig","der","e_igich",0,""],
+["Reisig","das","e_igich",1,"Brushwood. The classic -ig exception."],
+["Reich","das","e_igich",1,"Not the suffix -ich at all — the word simply ends in those letters."],
+
+/* -ant / -ent */
+["Student","der","e_antent",0,""],["Praktikant","der","e_antent",0,""],["Präsident","der","e_antent",0,""],
+["Assistent","der","e_antent",0,""],["Demonstrant","der","e_antent",0,""],["Musikant","der","e_antent",0,""],
+["Elefant","der","e_antent",0,""],["Diamant","der","e_antent",0,""],["Konsonant","der","e_antent",0,""],
+["Lieferant","der","e_antent",0,""],["Dirigent","der","e_antent",0,""],["Patient","der","e_antent",0,""],
+["Klient","der","e_antent",0,""],
+["Talent","das","e_antent",1,"Not a person — so neuter."],["Patent","das","e_antent",1,"Not a person — so neuter."],
+["Prozent","das","e_antent",1,"Not a person — so neuter."],["Restaurant","das","e_antent",1,"Not a person — so neuter."],
+
+/* -or / -eur / -är */
+["Motor","der","e_oreur",0,""],["Doktor","der","e_oreur",0,""],["Professor","der","e_oreur",0,""],
+["Autor","der","e_oreur",0,""],["Direktor","der","e_oreur",0,""],["Traktor","der","e_oreur",0,""],
+["Reaktor","der","e_oreur",0,""],["Ingenieur","der","e_oreur",0,""],["Friseur","der","e_oreur",0,""],
+["Masseur","der","e_oreur",0,""],["Regisseur","der","e_oreur",0,""],["Sekretär","der","e_oreur",0,""],
+["Millionär","der","e_oreur",0,""],["Funktionär","der","e_oreur",0,""],["Korridor","der","e_oreur",0,""],
+["Labor","das","e_oreur",1,""],["Chlor","das","e_oreur",1,""],["Tor","das","e_oreur",1,"Gate or goal."],
+["Moor","das","e_oreur",1,""],["Militär","das","e_oreur",1,"das Militär = the armed forces. der Militär = a military man, but that's rare and dated."],
+
+/* -er */
+["Fahrer","der","e_er",0,"fahren → der Fahrer. The agent suffix, so reliable."],
+["Lehrer","der","e_er",0,"lehren → der Lehrer."],["Computer","der","e_er",0,""],["Drucker","der","e_er",0,"drucken → der Drucker."],
+["Sprecher","der","e_er",0,""],["Bäcker","der","e_er",0,""],["Arbeiter","der","e_er",0,""],["Wecker","der","e_er",0,"wecken → der Wecker."],
+["Schalter","der","e_er",0,""],["Verkäufer","der","e_er",0,""],["Schauspieler","der","e_er",0,""],["Fernseher","der","e_er",0,""],
+["Staubsauger","der","e_er",0,""],["Sender","der","e_er",0,""],["Rechner","der","e_er",0,""],["Zuschauer","der","e_er",0,""],
+["Mutter","die","e_er",1,"No verb behind it — so the agent rule never applied."],
+["Tochter","die","e_er",1,""],["Butter","die","e_er",1,""],["Schwester","die","e_er",1,""],["Nummer","die","e_er",1,""],
+["Feder","die","e_er",1,""],["Leiter","die","e_er",1,"die Leiter = ladder. der Leiter = the person in charge."],
+["Kammer","die","e_er",1,""],["Mauer","die","e_er",1,""],["Dauer","die","e_er",1,""],
+["Fenster","das","e_er",1,""],["Wasser","das","e_er",1,""],["Zimmer","das","e_er",1,""],["Messer","das","e_er",1,""],
+["Theater","das","e_er",1,""],["Alter","das","e_er",1,""],["Ufer","das","e_er",1,""],["Wetter","das","e_er",1,""],
+["Fieber","das","e_er",1,""],["Feuer","das","e_er",1,""],["Lager","das","e_er",1,""],["Silber","das","e_er",1,"Also a metal, and metals are neuter — two reasons for das."],
+["Muster","das","e_er",1,""],["Pflaster","das","e_er",1,""],["Abenteuer","das","e_er",1,""],["Orchester","das","e_er",1,""],
+
+/* verb stem, no suffix */
+["Flug","der","e_stem",0,"fliegen → der Flug."],["Sprung","der","e_stem",0,"springen → der Sprung. Not the -ung suffix."],
+["Beginn","der","e_stem",0,"beginnen → der Beginn."],["Schwung","der","e_stem",0,"schwingen → der Schwung. Not the -ung suffix."],
+["Ruf","der","e_stem",0,"rufen → der Ruf."],["Schlaf","der","e_stem",0,"schlafen → der Schlaf."],["Kauf","der","e_stem",0,"kaufen → der Kauf."],
+["Verkauf","der","e_stem",0,""],["Besuch","der","e_stem",0,"besuchen → der Besuch."],["Versuch","der","e_stem",0,""],
+["Anfang","der","e_stem",0,"anfangen → der Anfang."],["Gang","der","e_stem",0,"gehen → der Gang."],["Fall","der","e_stem",0,"fallen → der Fall."],
+["Schnitt","der","e_stem",0,"schneiden → der Schnitt."],["Gruß","der","e_stem",0,"grüßen → der Gruß."],["Blick","der","e_stem",0,""],
+["Wurf","der","e_stem",0,"werfen → der Wurf."],["Griff","der","e_stem",0,"greifen → der Griff."],["Biss","der","e_stem",0,""],
+["Riss","der","e_stem",0,""],["Streit","der","e_stem",0,""],["Schrei","der","e_stem",0,""],["Zug","der","e_stem",0,"ziehen → der Zug."],
+["Schluss","der","e_stem",0,""],["Beweis","der","e_stem",0,"beweisen → der Beweis."],["Verlust","der","e_stem",0,""],
+["Ursprung","der","e_stem",0,"entspringen → der Ursprung. Again not the -ung suffix."],
+["Spiel","das","e_stem",1,"spielen → das Spiel."],["Bad","das","e_stem",1,""],["Grab","das","e_stem",1,""],
+["Lob","das","e_stem",1,""],["Verbot","das","e_stem",1,""],["Angebot","das","e_stem",1,""],
+["Schrift","die","e_stem",1,"schreiben → die Schrift. Feminine, not masculine."],
+
+/* -heit / -keit */
+["Freiheit","die","e_heit",0,""],["Gesundheit","die","e_heit",0,""],["Krankheit","die","e_heit",0,""],
+["Wahrheit","die","e_heit",0,""],["Schönheit","die","e_heit",0,""],["Sicherheit","die","e_heit",0,""],
+["Kindheit","die","e_heit",0,""],["Dummheit","die","e_heit",0,""],["Möglichkeit","die","e_heit",0,""],
+["Schwierigkeit","die","e_heit",0,""],["Einsamkeit","die","e_heit",0,""],["Gerechtigkeit","die","e_heit",0,""],
+["Aufmerksamkeit","die","e_heit",0,""],["Dankbarkeit","die","e_heit",0,""],["Fähigkeit","die","e_heit",0,""],
+["Geschwindigkeit","die","e_heit",0,"Starts with Ge- but the -keit suffix wins."],["Persönlichkeit","die","e_heit",0,""],
+
+/* -schaft */
+["Freundschaft","die","e_schaft",0,""],["Mannschaft","die","e_schaft",0,""],["Gesellschaft","die","e_schaft",0,"Ge- prefix loses to the -schaft suffix."],
+["Wissenschaft","die","e_schaft",0,""],["Wirtschaft","die","e_schaft",0,""],["Landschaft","die","e_schaft",0,""],
+["Botschaft","die","e_schaft",0,""],["Herrschaft","die","e_schaft",0,""],["Eigenschaft","die","e_schaft",0,""],
+["Nachbarschaft","die","e_schaft",0,""],["Leidenschaft","die","e_schaft",0,""],["Bereitschaft","die","e_schaft",0,""],
+
+/* -ung */
+["Wohnung","die","e_ung",0,"wohnen + -ung."],["Zeitung","die","e_ung",0,""],["Rechnung","die","e_ung",0,""],
+["Meinung","die","e_ung",0,""],["Bedeutung","die","e_ung",0,""],["Übung","die","e_ung",0,""],["Prüfung","die","e_ung",0,""],
+["Lösung","die","e_ung",0,""],["Erfahrung","die","e_ung",0,""],["Entscheidung","die","e_ung",0,""],["Verbindung","die","e_ung",0,""],
+["Bewegung","die","e_ung",0,""],["Ordnung","die","e_ung",0,""],["Werbung","die","e_ung",0,""],["Umgebung","die","e_ung",0,""],
+["Erinnerung","die","e_ung",0,""],["Ausbildung","die","e_ung",0,""],["Erklärung","die","e_ung",0,""],["Regierung","die","e_ung",0,""],
+["Verwaltung","die","e_ung",0,""],["Einladung","die","e_ung",0,""],["Wiederholung","die","e_ung",0,""],
+
+/* -ei */
+["Bäckerei","die","e_ei",0,""],["Metzgerei","die","e_ei",0,""],["Polizei","die","e_ei",0,""],["Partei","die","e_ei",0,""],
+["Datei","die","e_ei",0,""],["Konditorei","die","e_ei",0,""],["Malerei","die","e_ei",0,""],["Bücherei","die","e_ei",0,""],
+["Molkerei","die","e_ei",0,""],["Wäscherei","die","e_ei",0,""],
+["Ei","das","e_ei",1,"The whole word is the stem — there is no suffix here."],
+["Brei","der","e_ei",1,"No suffix."],["Papagei","der","e_ei",1,"No suffix."],["Blei","das","e_ei",1,"No suffix — and it is a metal, which is its own reason for neuter."],
+
+/* -in */
+["Lehrerin","die","e_in",0,""],["Ärztin","die","e_in",0,""],["Freundin","die","e_in",0,""],["Studentin","die","e_in",0,""],
+["Königin","die","e_in",0,""],["Nachbarin","die","e_in",0,""],["Kollegin","die","e_in",0,""],["Chefin","die","e_in",0,""],
+["Schülerin","die","e_in",0,""],["Kellnerin","die","e_in",0,""],["Löwin","die","e_in",0,""],
+["Termin","der","e_in",1,"A loanword, not a female form."],["Benzin","das","e_in",1,"A loanword, not a female form."],
+["Vitamin","das","e_in",1,""],["Delfin","der","e_in",1,""],["Magazin","das","e_in",1,""],["Kamin","der","e_in",1,""],
+
+/* -ion / -tät / -ik / -ur */
+["Nation","die","e_iontaet",0,""],["Situation","die","e_iontaet",0,""],["Information","die","e_iontaet",0,""],
+["Diskussion","die","e_iontaet",0,""],["Region","die","e_iontaet",0,""],["Religion","die","e_iontaet",0,""],
+["Position","die","e_iontaet",0,""],["Portion","die","e_iontaet",0,""],["Explosion","die","e_iontaet",0,""],
+["Universität","die","e_iontaet",0,""],["Qualität","die","e_iontaet",0,""],["Realität","die","e_iontaet",0,""],
+["Aktivität","die","e_iontaet",0,""],["Identität","die","e_iontaet",0,""],["Nationalität","die","e_iontaet",0,""],
+["Musik","die","e_iontaet",0,""],["Politik","die","e_iontaet",0,""],["Technik","die","e_iontaet",0,""],
+["Fabrik","die","e_iontaet",0,""],["Kritik","die","e_iontaet",0,""],["Grammatik","die","e_iontaet",0,""],
+["Mathematik","die","e_iontaet",0,""],["Klinik","die","e_iontaet",0,""],["Natur","die","e_iontaet",0,""],
+["Kultur","die","e_iontaet",0,""],["Figur","die","e_iontaet",0,""],["Temperatur","die","e_iontaet",0,""],
+["Literatur","die","e_iontaet",0,""],["Struktur","die","e_iontaet",0,""],["Frisur","die","e_iontaet",0,""],
+["Ion","das","e_iontaet",1,""],["Stadion","das","e_iontaet",1,""],["Abitur","das","e_iontaet",1,""],
+["Futur","das","e_iontaet",1,""],["Mosaik","das","e_iontaet",1,""],["Atlantik","der","e_iontaet",1,""],["Pazifik","der","e_iontaet",1,""],
+
+/* -anz / -enz / -age / -ie */
+["Distanz","die","e_anzenz",0,""],["Toleranz","die","e_anzenz",0,""],["Bilanz","die","e_anzenz",0,""],
+["Substanz","die","e_anzenz",0,""],["Konferenz","die","e_anzenz",0,""],["Existenz","die","e_anzenz",0,""],
+["Intelligenz","die","e_anzenz",0,""],["Konkurrenz","die","e_anzenz",0,""],["Tendenz","die","e_anzenz",0,""],
+["Garage","die","e_anzenz",0,""],["Passage","die","e_anzenz",0,""],["Massage","die","e_anzenz",0,""],
+["Blamage","die","e_anzenz",0,""],["Etage","die","e_anzenz",0,""],["Energie","die","e_anzenz",0,""],
+["Familie","die","e_anzenz",0,""],["Industrie","die","e_anzenz",0,""],["Fantasie","die","e_anzenz",0,""],
+["Melodie","die","e_anzenz",0,""],["Chemie","die","e_anzenz",0,""],["Biologie","die","e_anzenz",0,""],
+["Demokratie","die","e_anzenz",0,""],["Theorie","die","e_anzenz",0,""],["Kopie","die","e_anzenz",0,""],
+["Batterie","die","e_anzenz",0,""],
+["Genie","das","e_anzenz",1,""],["Knie","das","e_anzenz",1,""],["Image","das","e_anzenz",1,""],
+
+/* -e */
+["Lampe","die","e_e",0,""],["Blume","die","e_e",0,""],["Straße","die","e_e",0,""],["Sprache","die","e_e",0,""],
+["Schule","die","e_e",0,""],["Woche","die","e_e",0,""],["Farbe","die","e_e",0,""],["Frage","die","e_e",0,""],
+["Reise","die","e_e",0,""],["Karte","die","e_e",0,""],["Seite","die","e_e",0,""],["Liebe","die","e_e",0,""],
+["Kirche","die","e_e",0,""],["Küche","die","e_e",0,""],["Nase","die","e_e",0,""],["Hose","die","e_e",0,""],
+["Tasche","die","e_e",0,""],["Suppe","die","e_e",0,""],["Grenze","die","e_e",0,""],["Stunde","die","e_e",0,""],
+["Minute","die","e_e",0,""],["Brille","die","e_e",0,""],["Flasche","die","e_e",0,""],["Katze","die","e_e",0,""],
+["Sache","die","e_e",0,""],["Hilfe","die","e_e",0,""],["Größe","die","e_e",0,""],["Klasse","die","e_e",0,""],
+["Pause","die","e_e",0,""],["Reihe","die","e_e",0,""],
+["Junge","der","e_e",1,"n-declension: a male person."],["Kollege","der","e_e",1,"n-declension: a male person."],
+["Kunde","der","e_e",1,"n-declension: a male person."],["Zeuge","der","e_e",1,"n-declension: a male person."],
+["Franzose","der","e_e",1,"n-declension: a male person."],["Löwe","der","e_e",1,"n-declension: a male animal."],
+["Affe","der","e_e",1,"n-declension: a male animal."],["Hase","der","e_e",1,"n-declension: a male animal."],
+["Bote","der","e_e",1,"n-declension: a male person."],["Erbe","der","e_e",1,"der Erbe = the heir. das Erbe = the inheritance."],
+["Neffe","der","e_e",1,"n-declension: a male person."],["Riese","der","e_e",1,"n-declension: a male person."],
+["Experte","der","e_e",1,"n-declension: a male person."],["Russe","der","e_e",1,"n-declension: a male person."],
+["Schwede","der","e_e",1,"n-declension: a male person."],["Türke","der","e_e",1,"n-declension: a male person."],
+["Grieche","der","e_e",1,"n-declension: a male person."],["Pole","der","e_e",1,"n-declension: a male person."],
+["Name","der","e_e",1,"Genuinely arbitrary."],["Käse","der","e_e",1,"Genuinely arbitrary."],
+["Buchstabe","der","e_e",1,"n-declension, but not a person — worth memorising."],
+["Wille","der","e_e",1,"Genuinely arbitrary."],
+["Auge","das","e_e",1,"Genuinely arbitrary."],["Ende","das","e_e",1,"Genuinely arbitrary."],
+["Interesse","das","e_e",1,"Genuinely arbitrary."]
+];
+/* [word, gender, ruleKey, isException, note] */
+const NOUNS_B = [
+/* -chen / -lein */
+["Mädchen","das","e_chen",0,"From die Magd, but the diminutive overrides it completely."],
+["Brötchen","das","e_chen",0,""],["Märchen","das","e_chen",0,""],["Häuschen","das","e_chen",0,""],
+["Hündchen","das","e_chen",0,""],["Städtchen","das","e_chen",0,""],["Büchlein","das","e_chen",0,""],
+["Fräulein","das","e_chen",0,"From die Frau — the diminutive overrides it."],["Kaninchen","das","e_chen",0,""],
+["Kätzchen","das","e_chen",0,""],["Bäumchen","das","e_chen",0,""],["Veilchen","das","e_chen",0,"A flower, so you might expect feminine — but the diminutive wins."],
+["Eichhörnchen","das","e_chen",0,""],["Plätzchen","das","e_chen",0,""],["Männchen","das","e_chen",0,""],
+["Kuchen","der","e_chen",1,"Not a diminutive — there is no *Kuch."],
+["Knochen","der","e_chen",1,"Not a diminutive."],["Drachen","der","e_chen",1,"Not a diminutive."],
+["Braten","der","e_chen",1,"Not a diminutive."],["Rechen","der","e_chen",1,"Not a diminutive."],
+
+/* nominalised infinitives */
+["Essen","das","e_inf",0,""],["Leben","das","e_inf",0,""],["Schwimmen","das","e_inf",0,""],["Lesen","das","e_inf",0,""],
+["Schreiben","das","e_inf",0,""],["Rauchen","das","e_inf",0,""],["Lernen","das","e_inf",0,""],["Sprechen","das","e_inf",0,""],
+["Trinken","das","e_inf",0,""],["Wandern","das","e_inf",0,""],["Verstehen","das","e_inf",0,""],["Denken","das","e_inf",0,""],
+["Singen","das","e_inf",0,""],["Tanzen","das","e_inf",0,""],["Warten","das","e_inf",0,""],["Fahren","das","e_inf",0,""],
+
+/* -um */
+["Zentrum","das","e_um",0,""],["Datum","das","e_um",0,""],["Museum","das","e_um",0,""],["Studium","das","e_um",0,""],
+["Publikum","das","e_um",0,""],["Album","das","e_um",0,""],["Praktikum","das","e_um",0,""],["Aquarium","das","e_um",0,""],
+["Gymnasium","das","e_um",0,""],["Individuum","das","e_um",0,""],["Maximum","das","e_um",0,""],["Minimum","das","e_um",0,""],
+["Visum","das","e_um",0,""],["Stadium","das","e_um",0,""],["Territorium","das","e_um",0,""],["Kriterium","das","e_um",0,""],
+["Konsum","der","e_um",1,""],["Irrtum","der","e_um",1,"Also one of the two -tum exceptions."],["Reichtum","der","e_um",1,"Also one of the two -tum exceptions."],
+["Baum","der","e_um",1,"Ends in -um by accident; the suffix is not there."],["Raum","der","e_um",1,"Ends in -um by accident."],
+["Traum","der","e_um",1,"Ends in -um by accident."],["Schaum","der","e_um",1,"Ends in -um by accident."],
+
+/* -ment */
+["Dokument","das","e_ment",0,""],["Experiment","das","e_ment",0,""],["Instrument","das","e_ment",0,""],
+["Argument","das","e_ment",0,""],["Element","das","e_ment",0,""],["Medikament","das","e_ment",0,""],
+["Parlament","das","e_ment",0,""],["Kompliment","das","e_ment",0,""],["Monument","das","e_ment",0,""],
+["Fundament","das","e_ment",0,""],["Temperament","das","e_ment",0,""],["Testament","das","e_ment",0,""],
+["Sortiment","das","e_ment",0,""],
+["Moment","der","e_ment",1,"der Moment = a point in time. das Moment = a factor or aspect."],["Zement","der","e_ment",1,""],
+
+/* -ma */
+["Thema","das","e_ma",0,""],["Klima","das","e_ma",0,""],["Drama","das","e_ma",0,""],["Komma","das","e_ma",0,""],
+["Dilemma","das","e_ma",0,""],["Schema","das","e_ma",0,""],["Dogma","das","e_ma",0,""],["Panorama","das","e_ma",0,""],
+["Aroma","das","e_ma",0,""],
+["Firma","die","e_ma",1,"From Italian, not Greek."],["Oma","die","e_ma",1,"A shortening of Großmama, not the Greek suffix."],
+
+/* -tum */
+["Eigentum","das","e_tum",0,""],["Wachstum","das","e_tum",0,""],["Christentum","das","e_tum",0,""],
+["Altertum","das","e_tum",0,""],["Herzogtum","das","e_tum",0,""],["Königtum","das","e_tum",0,""],
+["Bürgertum","das","e_tum",0,""],["Brauchtum","das","e_tum",0,""],["Heldentum","das","e_tum",0,""],
+
+/* Ge- */
+["Gebäude","das","e_ge",0,""],["Gemüse","das","e_ge",0,""],["Geschäft","das","e_ge",0,""],["Gespräch","das","e_ge",0,""],
+["Gesicht","das","e_ge",0,""],["Gefühl","das","e_ge",0,""],["Geschenk","das","e_ge",0,""],["Gewicht","das","e_ge",0,""],
+["Gebirge","das","e_ge",0,""],["Gepäck","das","e_ge",0,""],["Getränk","das","e_ge",0,""],["Gewitter","das","e_ge",0,"Weather, but not the falling-or-blowing kind — and Ge- gives neuter anyway."],
+["Gedicht","das","e_ge",0,""],["Geld","das","e_ge",0,""],["Gesetz","das","e_ge",0,""],["Gericht","das","e_ge",0,""],
+["Gebiet","das","e_ge",0,""],["Gewürz","das","e_ge",0,""],["Geräusch","das","e_ge",0,""],["Gehirn","das","e_ge",0,""],
+["Gedanke","der","e_ge",1,""],["Geruch","der","e_ge",1,""],["Geschmack","der","e_ge",1,""],["Gewinn","der","e_ge",1,""],
+["Gesang","der","e_ge",1,""],["Genuss","der","e_ge",1,""],["Gebrauch","der","e_ge",1,""],["Gegensatz","der","e_ge",1,""],
+["Geduld","die","e_ge",1,""],["Gefahr","die","e_ge",1,""],["Gemeinde","die","e_ge",1,""],["Geschichte","die","e_ge",1,""],
+["Gewalt","die","e_ge",1,""],["Geburt","die","e_ge",1,""],["Gestalt","die","e_ge",1,""],["Gegend","die","e_ge",1,""],
+
+/* -nis */
+["Ergebnis","das","e_nis",0,""],["Erlebnis","das","e_nis",0,""],["Geheimnis","das","e_nis",0,""],
+["Verhältnis","das","e_nis",0,""],["Verständnis","das","e_nis",0,""],["Zeugnis","das","e_nis",0,""],
+["Bedürfnis","das","e_nis",0,""],["Gefängnis","das","e_nis",0,""],["Hindernis","das","e_nis",0,""],
+["Ereignis","das","e_nis",0,""],["Gedächtnis","das","e_nis",0,""],["Gleichnis","das","e_nis",0,""],
+["Erlaubnis","die","e_nis",1,""],["Kenntnis","die","e_nis",1,""],["Erkenntnis","die","e_nis",1,""],
+["Finsternis","die","e_nis",1,""],["Wildnis","die","e_nis",1,""],["Besorgnis","die","e_nis",1,""],["Ersparnis","die","e_nis",1,""],
+
+/* ===== MEANING CATEGORIES ===== */
+/* days */
+["Montag","der","c_day",0,""],["Dienstag","der","c_day",0,""],["Mittwoch","der","c_day",0,""],["Donnerstag","der","c_day",0,""],
+["Freitag","der","c_day",0,""],["Samstag","der","c_day",0,""],["Sonntag","der","c_day",0,""],["Feiertag","der","c_day",0,""],
+["Werktag","der","c_day",0,""],
+
+/* months */
+["Januar","der","c_month",0,""],["Februar","der","c_month",0,""],["März","der","c_month",0,""],["April","der","c_month",0,""],
+["Mai","der","c_month",0,""],["Juni","der","c_month",0,""],["Juli","der","c_month",0,""],["August","der","c_month",0,""],
+["September","der","c_month",0,""],["Oktober","der","c_month",0,""],["November","der","c_month",0,""],["Dezember","der","c_month",0,""],
+
+/* seasons */
+["Sommer","der","c_season",0,""],["Winter","der","c_season",0,""],["Herbst","der","c_season",0,""],
+
+/* compass */
+["Norden","der","c_compass",0,""],["Süden","der","c_compass",0,""],["Osten","der","c_compass",0,""],["Westen","der","c_compass",0,""],
+["Nordosten","der","c_compass",0,""],["Südwesten","der","c_compass",0,""],
+
+/* weather */
+["Regen","der","c_weather",0,""],["Wind","der","c_weather",0,""],["Schnee","der","c_weather",0,""],["Nebel","der","c_weather",0,""],
+["Hagel","der","c_weather",0,""],["Sturm","der","c_weather",0,""],["Frost","der","c_weather",0,""],["Blitz","der","c_weather",0,""],
+["Donner","der","c_weather",0,""],
+["Sonne","die","c_weather",1,"Does not fall or blow — and it ends in -e."],["Wolke","die","c_weather",1,"Ends in -e."],
+["Hitze","die","c_weather",1,"Ends in -e."],["Kälte","die","c_weather",1,"Ends in -e."],["Eis","das","c_weather",1,""],
+
+/* alcohol */
+["Wein","der","c_booze",0,""],["Wodka","der","c_booze",0,""],["Schnaps","der","c_booze",0,""],["Sekt","der","c_booze",0,""],
+["Whisky","der","c_booze",0,""],["Rum","der","c_booze",0,""],["Likör","der","c_booze",0,""],["Champagner","der","c_booze",0,""],
+["Bier","das","c_booze",1,"The one drink the rule excludes."],
+
+/* car makes */
+["VW","der","c_car",0,"Short for der Wagen."],["BMW","der","c_car",0,"As a car. As a motorcycle it is die BMW."],
+["Mercedes","der","c_car",0,""],["Audi","der","c_car",0,""],["Porsche","der","c_car",0,""],["Opel","der","c_car",0,""],
+["Ferrari","der","c_car",0,""],
+
+/* trees */
+["Eiche","die","c_tree",0,""],["Buche","die","c_tree",0,""],["Birke","die","c_tree",0,""],["Tanne","die","c_tree",0,""],
+["Fichte","die","c_tree",0,""],["Linde","die","c_tree",0,""],["Kiefer","die","c_tree",0,"die Kiefer = pine. der Kiefer = jaw."],
+["Weide","die","c_tree",0,""],["Ulme","die","c_tree",0,""],["Pappel","die","c_tree",0,""],["Esche","die","c_tree",0,""],
+["Palme","die","c_tree",0,""],
+["Ahorn","der","c_tree",1,"The standard exception."],
+
+/* flowers and fruits */
+["Rose","die","c_plant",0,""],["Tulpe","die","c_plant",0,""],["Nelke","die","c_plant",0,""],["Lilie","die","c_plant",0,""],
+["Orchidee","die","c_plant",0,""],["Banane","die","c_plant",0,""],["Orange","die","c_plant",0,""],["Zitrone","die","c_plant",0,""],
+["Kirsche","die","c_plant",0,""],["Birne","die","c_plant",0,""],["Erdbeere","die","c_plant",0,""],["Traube","die","c_plant",0,""],
+["Melone","die","c_plant",0,""],["Ananas","die","c_plant",0,""],["Pflaume","die","c_plant",0,""],["Aprikose","die","c_plant",0,""],
+["Mandarine","die","c_plant",0,""],["Himbeere","die","c_plant",0,""],["Feige","die","c_plant",0,""],["Dattel","die","c_plant",0,""],
+["Apfel","der","c_plant",1,"The standard exception."],["Pfirsich","der","c_plant",1,"Masculine because of -ich."],
+
+/* numerals */
+["Eins","die","c_number",0,""],["Zwei","die","c_number",0,""],["Drei","die","c_number",0,""],["Vier","die","c_number",0,""],
+["Fünf","die","c_number",0,""],["Null","die","c_number",0,""],["Sechs","die","c_number",0,""],
+
+/* ships, planes, motorcycles */
+["Titanic","die","c_ship",0,""],["Bismarck","die","c_ship",0,"Named after a man, still feminine — the category decides."],
+["Queen Mary","die","c_ship",0,""],["Gorch Fock","die","c_ship",0,""],
+["Boeing","die","c_plane",0,""],["Concorde","die","c_plane",0,""],["Cessna","die","c_plane",0,""],
+["Harley-Davidson","die","c_moto",0,""],["Yamaha","die","c_moto",0,""],["Ducati","die","c_moto",0,""],
+["Vespa","die","c_moto",0,""],["Kawasaki","die","c_moto",0,""],
+
+/* young beings */
+["Kind","das","c_young",0,""],["Baby","das","c_young",0,""],["Kalb","das","c_young",0,""],["Fohlen","das","c_young",0,""],
+["Küken","das","c_young",0,""],["Lamm","das","c_young",0,""],["Ferkel","das","c_young",0,""],["Kitz","das","c_young",0,""],
+["Welpe","der","c_young",1,"n-declension animal, so masculine wins over the young-being rule."],
+
+/* metals */
+["Gold","das","c_metal",0,""],["Eisen","das","c_metal",0,""],["Kupfer","das","c_metal",0,""],["Zinn","das","c_metal",0,""],
+["Aluminium","das","c_metal",0,""],["Platin","das","c_metal",0,""],["Zink","das","c_metal",0,""],["Nickel","das","c_metal",0,""],
+["Messing","das","c_metal",0,""],["Quecksilber","das","c_metal",0,""],
+["Stahl","der","c_metal",1,"The standard exception."],["Bronze","die","c_metal",1,"An alloy, and it ends in -e."],
+
+/* letters and colours */
+["Blau","das","c_letter",0,""],["Rot","das","c_letter",0,""],["Grün","das","c_letter",0,""],["Gelb","das","c_letter",0,""],
+["Schwarz","das","c_letter",0,""],["Weiß","das","c_letter",0,""],
+
+/* languages */
+["Deutsch","das","c_lang",0,"das Deutsch. But der Deutsche = a German person, which is an adjectival noun."],
+["Englisch","das","c_lang",0,""],["Französisch","das","c_lang",0,""],["Spanisch","das","c_lang",0,""],
+["Chinesisch","das","c_lang",0,""],["Russisch","das","c_lang",0,""],
+
+/* countries and cities */
+["Berlin","das","c_place",0,"In normal use it takes no article at all; the neuter only surfaces once an adjective appears: das schöne Berlin."],
+["Deutschland","das","c_place",0,"Article-free in normal use, neuter once an adjective appears: das moderne Deutschland."],
+["Frankreich","das","c_place",0,""],["Italien","das","c_place",0,""],
+["Japan","das","c_place",0,""],["Belgien","das","c_place",0,""],["Hamburg","das","c_place",0,""],
+["Schweiz","die","c_place",1,""],["Türkei","die","c_place",1,"Also -ei, which is feminine anyway."],
+["Ukraine","die","c_place",1,""],["Slowakei","die","c_place",1,""],["Mongolei","die","c_place",1,""],
+["Iran","der","c_place",1,""],["Irak","der","c_place",1,""],["Sudan","der","c_place",1,""],
+["Libanon","der","c_place",1,""],["Jemen","der","c_place",1,""]
+];
+const NOUNS = NOUNS_A.concat(NOUNS_B);
+/* Written items.
+   type: 'gender'  -> answer is 'der' | 'die' | 'das'
+         'mc'      -> options array, a = index
+         'input'   -> a = canonical answer, alt = accepted alternatives
+*/
+const WRITTEN = [
+
+/* ===== COMPOUND NOUNS: which article? ===== */
+{t:'gender', r:'f_comp', q:'das Haus + die Tür', s:'Which article does the compound take?', a:'die', w:'Haustür', e:'The last element is die Tür, so the compound is die Haustür.'},
+{t:'gender', r:'f_comp', q:'das Kind + das Zimmer', s:'Which article does the compound take?', a:'das', w:'Kinderzimmer', e:'das Zimmer is last → das Kinderzimmer.'},
+{t:'gender', r:'f_comp', q:'die Zeit + der Plan', s:'Which article does the compound take?', a:'der', w:'Zeitplan', e:'der Plan is last → der Zeitplan.'},
+{t:'gender', r:'f_comp', q:'der Wein + das Glas', s:'Which article does the compound take?', a:'das', w:'Weinglas', e:'das Glas is last → das Weinglas.'},
+{t:'gender', r:'f_comp', q:'die Hand + der Schuh', s:'Which article does the compound take?', a:'der', w:'Handschuh', e:'der Schuh is last → der Handschuh.'},
+{t:'gender', r:'f_comp', q:'der Apfel + der Saft', s:'Which article does the compound take?', a:'der', w:'Apfelsaft', e:'der Saft is last → der Apfelsaft.'},
+{t:'gender', r:'f_comp', q:'das Auto + die Bahn', s:'Which article does the compound take?', a:'die', w:'Autobahn', e:'die Bahn is last → die Autobahn.'},
+{t:'gender', r:'f_comp', q:'die Woche + das Ende', s:'Which article does the compound take?', a:'das', w:'Wochenende', e:'das Ende is last → das Wochenende.'},
+{t:'gender', r:'f_comp', q:'der Fuß + der Ball', s:'Which article does the compound take?', a:'der', w:'Fußball', e:'der Ball is last → der Fußball.'},
+{t:'gender', r:'f_comp', q:'das Bier + der Garten', s:'Which article does the compound take?', a:'der', w:'Biergarten', e:'der Garten is last → der Biergarten.'},
+{t:'gender', r:'f_comp', q:'die Sonne + die Brille', s:'Which article does the compound take?', a:'die', w:'Sonnenbrille', e:'die Brille is last → die Sonnenbrille.'},
+{t:'gender', r:'f_comp', q:'der Tag + das Buch', s:'Which article does the compound take?', a:'das', w:'Tagebuch', e:'das Buch is last → das Tagebuch.'},
+{t:'gender', r:'f_comp', q:'krank + das Haus', s:'Which article does the compound take?', a:'das', w:'Krankenhaus', e:'das Haus is last → das Krankenhaus. The first element can even be an adjective; it changes nothing.'},
+{t:'gender', r:'f_comp', q:'das Jahr + die Zeit', s:'Which article does the compound take?', a:'die', w:'Jahreszeit', e:'die Zeit is last → die Jahreszeit.'},
+{t:'gender', r:'f_comp', q:'die Geburt + der Tag', s:'Which article does the compound take?', a:'der', w:'Geburtstag', e:'der Tag is last → der Geburtstag.'},
+{t:'gender', r:'f_comp', q:'die Arbeit + der Platz', s:'Which article does the compound take?', a:'der', w:'Arbeitsplatz', e:'der Platz is last → der Arbeitsplatz.'},
+{t:'gender', r:'f_comp', q:'fahren + das Rad', s:'Which article does the compound take?', a:'das', w:'Fahrrad', e:'das Rad is last → das Fahrrad.'},
+{t:'gender', r:'f_comp', q:'die Tasche + das Geld', s:'Which article does the compound take?', a:'das', w:'Taschengeld', e:'das Geld is last → das Taschengeld.'},
+{t:'gender', r:'f_comp', q:'kühl + der Schrank', s:'Which article does the compound take?', a:'der', w:'Kühlschrank', e:'der Schrank is last → der Kühlschrank.'},
+{t:'gender', r:'f_comp', q:'die Straße + die Bahn', s:'Which article does the compound take?', a:'die', w:'Straßenbahn', e:'die Bahn is last → die Straßenbahn.'},
+{t:'gender', r:'f_comp', q:'das Wasser + die Flasche', s:'Which article does the compound take?', a:'die', w:'Wasserflasche', e:'die Flasche is last → die Wasserflasche.'},
+{t:'gender', r:'f_comp', q:'der Brief + der Kasten', s:'Which article does the compound take?', a:'der', w:'Briefkasten', e:'der Kasten is last → der Briefkasten.'},
+{t:'gender', r:'f_comp', q:'die Wand + die Uhr', s:'Which article does the compound take?', a:'die', w:'Wanduhr', e:'die Uhr is last → die Wanduhr.'},
+{t:'gender', r:'f_comp', q:'das Land + die Karte', s:'Which article does the compound take?', a:'die', w:'Landkarte', e:'die Karte is last → die Landkarte.'},
+{t:'gender', r:'f_comp', q:'die Hand + das Tuch', s:'Which article does the compound take?', a:'das', w:'Handtuch', e:'das Tuch is last → das Handtuch.'},
+{t:'gender', r:'f_comp', q:'die Bahn + der Hof', s:'Which article does the compound take?', a:'der', w:'Bahnhof', e:'der Hof is last → der Bahnhof.'},
+{t:'gender', r:'f_comp', q:'das Haus + die Tür + der Schlüssel', s:'Which article does the compound take?', a:'der', w:'Haustürschlüssel', e:'Only the very last element counts → der Haustürschlüssel.'},
+{t:'gender', r:'f_comp', q:'das Buch + der Laden', s:'Which article does the compound take?', a:'der', w:'Buchladen', e:'der Laden is last → der Buchladen.'},
+{t:'gender', r:'f_comp', q:'der Zahn + die Bürste', s:'Which article does the compound take?', a:'die', w:'Zahnbürste', e:'die Bürste is last → die Zahnbürste.'},
+{t:'gender', r:'f_comp', q:'die Nacht + der Tisch', s:'Which article does the compound take?', a:'der', w:'Nachttisch', e:'der Tisch is last → der Nachttisch.'},
+{t:'gender', r:'f_comp', q:'der Fluss + das Ufer', s:'Which article does the compound take?', a:'das', w:'Flussufer', e:'das Ufer is last → das Flussufer.'},
+{t:'gender', r:'f_comp', q:'die Musik + die Schule', s:'Which article does the compound take?', a:'die', w:'Musikschule', e:'die Schule is last → die Musikschule.'},
+{t:'gender', r:'f_comp', q:'der Schnee + der Mann', s:'Which article does the compound take?', a:'der', w:'Schneemann', e:'der Mann is last → der Schneemann.'},
+{t:'gender', r:'f_comp', q:'krank + die Versicherung', s:'Which article does the compound take?', a:'die', w:'Krankenversicherung', e:'die Versicherung is last → die Krankenversicherung.'},
+{t:'gender', r:'f_comp', q:'das Kind + der Garten', s:'Which article does the compound take?', a:'der', w:'Kindergarten', e:'der Garten is last → der Kindergarten.'},
+{t:'gender', r:'f_comp', q:'die Sprache + der Kurs', s:'Which article does the compound take?', a:'der', w:'Sprachkurs', e:'der Kurs is last → der Sprachkurs.'},
+{t:'gender', r:'f_comp', q:'das Wasser + der Hahn', s:'Which article does the compound take?', a:'der', w:'Wasserhahn', e:'der Hahn is last → der Wasserhahn.'},
+{t:'gender', r:'f_comp', q:'die Zeitung + der Artikel', s:'Which article does the compound take?', a:'der', w:'Zeitungsartikel', e:'der Artikel is last → der Zeitungsartikel. The feminine -ung word in front is irrelevant.'},
+{t:'gender', r:'f_comp', q:'der Regen + der Schirm', s:'Which article does the compound take?', a:'der', w:'Regenschirm', e:'der Schirm is last → der Regenschirm.'},
+{t:'gender', r:'f_comp', q:'der Regen + der Bogen', s:'Which article does the compound take?', a:'der', w:'Regenbogen', e:'der Bogen is last → der Regenbogen.'},
+{t:'gender', r:'f_comp', q:'das Fenster + die Bank', s:'Which article does the compound take?', a:'die', w:'Fensterbank', e:'die Bank is last → die Fensterbank.'},
+{t:'gender', r:'f_comp', q:'die Universität + die Bibliothek', s:'Which article does the compound take?', a:'die', w:'Universitätsbibliothek', e:'die Bibliothek is last → die Universitätsbibliothek.'},
+{t:'gender', r:'f_comp', q:'die Butter + das Brot', s:'Which article does the compound take?', a:'das', w:'Butterbrot', e:'das Brot is last → das Butterbrot.'},
+{t:'gender', r:'f_comp', q:'der Wein + die Karte', s:'Which article does the compound take?', a:'die', w:'Weinkarte', e:'die Karte is last → die Weinkarte.'},
+{t:'gender', r:'f_comp', q:'das Auto + der Schlüssel', s:'Which article does the compound take?', a:'der', w:'Autoschlüssel', e:'der Schlüssel is last → der Autoschlüssel.'},
+{t:'gender', r:'f_comp', q:'die Hand + das Werk', s:'Which article does the compound take?', a:'das', w:'Handwerk', e:'das Werk is last → das Handwerk.'},
+{t:'gender', r:'f_comp', q:'das Haus + die Aufgabe', s:'Which article does the compound take?', a:'die', w:'Hausaufgabe', e:'die Aufgabe is last → die Hausaufgabe.'},
+{t:'gender', r:'f_comp', q:'der Tisch + die Decke', s:'Which article does the compound take?', a:'die', w:'Tischdecke', e:'die Decke is last → die Tischdecke.'},
+{t:'gender', r:'f_comp', q:'das Buch + die Handlung', s:'Which article does the compound take?', a:'die', w:'Buchhandlung', e:'die Handlung is last → die Buchhandlung.'},
+{t:'gender', r:'f_comp', q:'die Nacht + das Hemd', s:'Which article does the compound take?', a:'das', w:'Nachthemd', e:'das Hemd is last → das Nachthemd.'},
+{t:'gender', r:'f_comp', q:'die Stadt + das Zentrum', s:'Which article does the compound take?', a:'das', w:'Stadtzentrum', e:'das Zentrum is last → das Stadtzentrum.'},
+{t:'gender', r:'f_comp', q:'der Kopf + das Kissen', s:'Which article does the compound take?', a:'das', w:'Kopfkissen', e:'das Kissen is last → das Kopfkissen.'},
+{t:'gender', r:'f_comp', q:'das Land + die Wirtschaft', s:'Which article does the compound take?', a:'die', w:'Landwirtschaft', e:'die Wirtschaft is last → die Landwirtschaft.'},
+{t:'gender', r:'f_comp', q:'der Verkehr + das Mittel', s:'Which article does the compound take?', a:'das', w:'Verkehrsmittel', e:'das Mittel is last → das Verkehrsmittel.'},
+{t:'gender', r:'f_comp', q:'die Arbeit + das Amt', s:'Which article does the compound take?', a:'das', w:'Arbeitsamt', e:'das Amt is last → das Arbeitsamt.'},
+{t:'gender', r:'f_comp', q:'der Zug + die Fahrt', s:'Which article does the compound take?', a:'die', w:'Zugfahrt', e:'die Fahrt is last → die Zugfahrt.'},
+
+/* ===== DIMINUTIVES: produce the form ===== */
+{t:'input', r:'f_dim', q:'die Stadt → das ___', s:'Add -chen and umlaut where you can.', a:'Städtchen', alt:['Staedtchen'], e:'a → ä, so die Stadt → das Städtchen. Neuter, always.'},
+{t:'input', r:'f_dim', q:'der Hund → das ___', s:'Add -chen and umlaut where you can.', a:'Hündchen', alt:['Huendchen'], e:'u → ü, so der Hund → das Hündchen.'},
+{t:'input', r:'f_dim', q:'das Buch → das ___', s:'Add -lein and umlaut where you can.', a:'Büchlein', alt:['Buechlein'], e:'u → ü, so das Buch → das Büchlein.'},
+{t:'input', r:'f_dim', q:'der Baum → das ___', s:'Add -chen and umlaut where you can.', a:'Bäumchen', alt:['Baeumchen'], e:'au → äu, so der Baum → das Bäumchen.'},
+{t:'input', r:'f_dim', q:'die Blume → das ___', s:'Add -chen and umlaut where you can.', a:'Blümchen', alt:['Bluemchen'], e:'The final -e drops and u → ü: das Blümchen.'},
+{t:'input', r:'f_dim', q:'der Bruder → das ___', s:'Add -chen and umlaut where you can.', a:'Brüderchen', alt:['Bruederchen'], e:'u → ü, so das Brüderchen.'},
+{t:'input', r:'f_dim', q:'der Mann → das ___', s:'Add -chen and umlaut where you can.', a:'Männchen', alt:['Maennchen'], e:'a → ä, so das Männchen.'},
+{t:'input', r:'f_dim', q:'die Katze → das ___', s:'Add -chen and umlaut where you can.', a:'Kätzchen', alt:['Kaetzchen'], e:'The final -e drops and a → ä: das Kätzchen.'},
+{t:'input', r:'f_dim', q:'das Brot → das ___', s:'Add -chen and umlaut where you can.', a:'Brötchen', alt:['Broetchen'], e:'o → ö, so das Brötchen.'},
+{t:'input', r:'f_dim', q:'der Garten → das ___', s:'Add -chen and umlaut where you can.', a:'Gärtchen', alt:['Gaertchen'], e:'a → ä and the -en drops: das Gärtchen.'},
+{t:'input', r:'f_dim', q:'die Hand → das ___', s:'Add -chen and umlaut where you can.', a:'Händchen', alt:['Haendchen'], e:'a → ä, so das Händchen.'},
+{t:'input', r:'f_dim', q:'der Kopf → das ___', s:'Add -chen and umlaut where you can.', a:'Köpfchen', alt:['Koepfchen'], e:'o → ö, so das Köpfchen.'},
+{t:'input', r:'f_dim', q:'die Maus → das ___', s:'Add -chen and umlaut where you can.', a:'Mäuschen', alt:['Maeuschen'], e:'au → äu, so das Mäuschen.'},
+{t:'input', r:'f_dim', q:'das Haus → das ___', s:'Add -chen and umlaut where you can.', a:'Häuschen', alt:['Haeuschen'], e:'au → äu, so das Häuschen.'},
+{t:'input', r:'f_dim', q:'der Sohn → das ___', s:'Add -chen and umlaut where you can.', a:'Söhnchen', alt:['Soehnchen'], e:'o → ö, so das Söhnchen.'},
+{t:'input', r:'f_dim', q:'der Fluss → das ___', s:'Add -chen and umlaut where you can.', a:'Flüsschen', alt:['Fluesschen','Flüßchen'], e:'u → ü, so das Flüsschen.'},
+{t:'input', r:'f_dim', q:'der Tisch → das ___', s:'Add -chen and umlaut where you can.', a:'Tischchen', alt:[], e:'There is nothing to umlaut — i has no umlaut partner. das Tischchen.'},
+{t:'input', r:'f_dim', q:'das Bild → das ___', s:'Add -chen and umlaut where you can.', a:'Bildchen', alt:[], e:'i does not umlaut, so das Bildchen.'},
+{t:'input', r:'f_dim', q:'das Kind → das ___', s:'Add -chen and umlaut where you can.', a:'Kindchen', alt:[], e:'i does not umlaut, so das Kindchen.'},
+{t:'input', r:'f_dim', q:'die Tochter → das ___', s:'Add -chen and umlaut where you can.', a:'Töchterchen', alt:['Toechterchen'], e:'o → ö, so das Töchterchen.'},
+{t:'input', r:'f_dim', q:'der Wurm → das ___', s:'Add -chen and umlaut where you can.', a:'Würmchen', alt:['Wuermchen'], e:'u → ü, so das Würmchen.'},
+{t:'input', r:'f_dim', q:'der Kuss → das ___', s:'Add -chen and umlaut where you can.', a:'Küsschen', alt:['Kuesschen','Küßchen'], e:'u → ü, so das Küsschen.'},
+{t:'mc', r:'f_dim', q:'Which vowel pair is wrong for diminutive umlaut?', o:['a → ä','o → ö','au → äu','i → ü'], a:3, e:'Only a, o, u and au have umlaut partners: ä, ö, ü, äu. i, e and ei have none and stay put — das Tischchen, das Bildchen.'},
+{t:'gender', r:'f_dim', q:'Mädchen', s:'From die Magd. Which article?', a:'das', e:'-chen always wins. The gender of the base noun is irrelevant.'},
+{t:'gender', r:'f_dim', q:'Fräulein', s:'From die Frau. Which article?', a:'das', e:'-lein always wins, however feminine the base noun is.'},
+{t:'gender', r:'f_dim', q:'Veilchen', s:'A violet — a flower. Which article?', a:'das', e:'Flowers are feminine, but -chen overrides the meaning category.'},
+
+/* ===== TURNING WORDS INTO NOUNS ===== */
+{t:'input', r:'f_nom', q:'schwimmen → das ___', s:'Nominalise the infinitive.', a:'Schwimmen', alt:[], e:'The infinitive nominalises unchanged and is always neuter: das Schwimmen.'},
+{t:'input', r:'f_nom', q:'rauchen → das ___', s:'Nominalise the infinitive.', a:'Rauchen', alt:[], e:'das Rauchen. Neuter, like every nominalised infinitive.'},
+{t:'input', r:'f_nom', q:'beginnen → der ___', s:'Bare verb stem, no suffix.', a:'Beginn', alt:[], e:'Stripping the verb down to its stem gives a masculine noun: der Beginn.'},
+{t:'input', r:'f_nom', q:'fliegen → der ___', s:'Bare verb stem, no suffix.', a:'Flug', alt:[], e:'der Flug — verb stem with ablaut, masculine.'},
+{t:'input', r:'f_nom', q:'springen → der ___', s:'Bare verb stem, no suffix.', a:'Sprung', alt:[], e:'der Sprung. It ends in -ung but that is the stem, not the suffix.'},
+{t:'input', r:'f_nom', q:'rufen → der ___', s:'Bare verb stem, no suffix.', a:'Ruf', alt:[], e:'der Ruf.'},
+{t:'input', r:'f_nom', q:'kaufen → der ___', s:'Bare verb stem, no suffix.', a:'Kauf', alt:[], e:'der Kauf.'},
+{t:'input', r:'f_nom', q:'besuchen → der ___', s:'Bare verb stem, no suffix.', a:'Besuch', alt:[], e:'der Besuch.'},
+{t:'input', r:'f_nom', q:'wohnen → die ___', s:'Add the suffix -ung.', a:'Wohnung', alt:[], e:'wohnen + -ung → die Wohnung. Here -ung really is the suffix, so feminine.'},
+{t:'input', r:'f_nom', q:'prüfen → die ___', s:'Add the suffix -ung.', a:'Prüfung', alt:['Pruefung'], e:'die Prüfung.'},
+{t:'mc', r:'f_nom', q:'Which gender does a nominalised infinitive take?', o:['der','die','das','It depends on the verb'], a:2, e:'Always neuter: das Essen, das Leben, das Schwimmen. No exceptions.'},
+{t:'mc', r:'f_nom', q:'Both come from schwimmen. Which pair is right?', o:['das Schwimmen / der Schwimm','das Schwimmen / die Schwimmung','Only das Schwimmen exists','der Schwimmen / das Schwimm'], a:2, e:'Not every verb yields a bare-stem noun. The infinitive route always works; the stem route does not.'},
+{t:'gender', r:'f_nom', q:'___ Rauchen ist hier verboten.', s:'Which article belongs in front of Rauchen?', a:'das', e:'Nominalised infinitive → neuter.'},
+{t:'gender', r:'f_nom', q:'Verkauf', s:'From verkaufen, bare stem. Which article?', a:'der', e:'Verb stem with no suffix → masculine: der Verkauf.'},
+
+/* ===== ADJECTIVAL NOUNS ===== */
+{t:'input', r:'f_adj', q:'Der Deutsch___ arbeitet hier.', s:'Type the whole noun.', a:'Deutsche', alt:['-e','e'], e:'After der, weak ending -e: der Deutsche.'},
+{t:'input', r:'f_adj', q:'Ein Deutsch___ arbeitet hier.', s:'Type the whole noun.', a:'Deutscher', alt:['-er','er'], e:'ein carries no ending, so the noun must show it: ein Deutscher.'},
+{t:'input', r:'f_adj', q:'Die Deutsch___ sind pünktlich. (plural)', s:'Type the whole noun.', a:'Deutschen', alt:['-en','en'], e:'After die in the plural, weak -en: die Deutschen.'},
+{t:'input', r:'f_adj', q:'Viele Deutsch___ reisen gern.', s:'Type the whole noun.', a:'Deutsche', alt:['-e','e'], e:'viele is not a der-word, so the noun takes strong plural -e: viele Deutsche.'},
+{t:'input', r:'f_adj', q:'Ich kenne einen Deutsch___.', s:'Type the whole noun.', a:'Deutschen', alt:['-en','en'], e:'einen already shows accusative masculine, so the noun goes weak: einen Deutschen.'},
+{t:'input', r:'f_adj', q:'Ich helfe dem Deutsch___.', s:'Type the whole noun.', a:'Deutschen', alt:['-en','en'], e:'Dative masculine after dem → weak -en.'},
+{t:'input', r:'f_adj', q:'Sie ist eine Deutsch___.', s:'Type the whole noun.', a:'Deutsche', alt:['-e','e'], e:'Nominative feminine after eine → -e.'},
+{t:'input', r:'f_adj', q:'Er ist Angestellt___. (no article)', s:'Type the whole noun.', a:'Angestellter', alt:['-er','er'], e:'With no article at all the noun carries the strong ending: er ist Angestellter.'},
+{t:'input', r:'f_adj', q:'Die Angestellt___ hat gekündigt. (a woman)', s:'Type the whole noun.', a:'Angestellte', alt:['-e','e'], e:'Nominative feminine after die → -e.'},
+{t:'input', r:'f_adj', q:'Ein Angestellt___ hat angerufen.', s:'Type the whole noun.', a:'Angestellter', alt:['-er','er'], e:'ein shows nothing, so the noun shows -er.'},
+{t:'input', r:'f_adj', q:'Er ist ein alter Bekannt___ von mir.', s:'Type the whole noun.', a:'Bekannter', alt:['-er','er'], e:'ein Bekannter — the noun declines exactly like the adjective alter in front of it.'},
+{t:'input', r:'f_adj', q:'Der Reisend___ wartet am Gleis.', s:'Type the whole noun.', a:'Reisende', alt:['-e','e'], e:'After der → weak -e: der Reisende.'},
+{t:'input', r:'f_adj', q:'Ein Reisend___ wartet am Gleis.', s:'Type the whole noun.', a:'Reisender', alt:['-er','er'], e:'After ein → strong -er: ein Reisender.'},
+{t:'input', r:'f_adj', q:'Die Reisend___ warten am Gleis. (plural)', s:'Type the whole noun.', a:'Reisenden', alt:['-en','en'], e:'After die in the plural → weak -en.'},
+{t:'input', r:'f_adj', q:'Er ist Beamt___. (no article)', s:'Type the whole noun.', a:'Beamter', alt:['-er','er'], e:'No article, so strong -er: er ist Beamter.'},
+{t:'input', r:'f_adj', q:'Der Beamt___ prüft den Pass.', s:'Type the whole noun.', a:'Beamte', alt:['-e','e'], e:'After der → weak -e.'},
+{t:'input', r:'f_adj', q:'Ich helfe einem Krank___.', s:'Type the whole noun.', a:'Kranken', alt:['-en','en'], e:'einem already marks dative masculine, so the noun goes weak: einem Kranken.'},
+{t:'input', r:'f_adj', q:'Zwei Erwachsen___ und drei Kinder.', s:'Type the whole noun.', a:'Erwachsene', alt:['-e','e'], e:'A bare number is not a der-word, so strong plural -e: zwei Erwachsene.'},
+{t:'input', r:'f_adj', q:'Der Erwachsen___ zahlt mehr.', s:'Type the whole noun.', a:'Erwachsene', alt:['-e','e'], e:'After der → weak -e.'},
+{t:'input', r:'f_adj', q:'Mit den Jugendlich___. (plural dative)', s:'Type the whole noun.', a:'Jugendlichen', alt:['-en','en'], e:'Dative plural after den → -en.'},
+{t:'mc', r:'f_adj', q:'Why is it der Deutsche but ein Deutscher?', o:['Deutsche is plural, Deutscher is singular','The noun declines like an adjective, so the ending shifts with the article','Deutscher is the older form','ein always adds -er to any noun'], a:1, e:'Adjectival nouns never stop being adjectives grammatically. der already marks the case, so the noun goes weak (-e); ein marks nothing, so the noun goes strong (-er).'},
+
+/* ===== ETWAS / NICHTS / VIEL / WENIG / ALLES ===== */
+{t:'input', r:'f_etwas', q:'etwas Neu___', s:'Type the whole word.', a:'Neues', alt:['-es','es'], e:'After etwas the adjective is capitalised, neuter and strong: etwas Neues.'},
+{t:'input', r:'f_etwas', q:'nichts Gut___', s:'Type the whole word.', a:'Gutes', alt:['-es','es'], e:'nichts Gutes — strong neuter -es.'},
+{t:'input', r:'f_etwas', q:'alles Gut___', s:'Type the whole word.', a:'Gute', alt:['-e','e'], e:'alles behaves like a der-word, so the adjective goes weak: alles Gute. This is the one that breaks the pattern.'},
+{t:'input', r:'f_etwas', q:'viel Interessant___', s:'Type the whole word.', a:'Interessantes', alt:['-es','es'], e:'viel Interessantes — strong neuter -es.'},
+{t:'input', r:'f_etwas', q:'wenig Neu___', s:'Type the whole word.', a:'Neues', alt:['-es','es'], e:'wenig Neues — strong neuter -es.'},
+{t:'input', r:'f_etwas', q:'nichts Besonder___', s:'Type the whole word.', a:'Besonderes', alt:['-es','es'], e:'nichts Besonderes.'},
+{t:'input', r:'f_etwas', q:'etwas Schön___', s:'Type the whole word.', a:'Schönes', alt:['-es','es','Schoenes'], e:'etwas Schönes.'},
+{t:'input', r:'f_etwas', q:'alles Best___', s:'Type the whole word.', a:'Beste', alt:['-e','e'], e:'alles Beste — weak -e after alles.'},
+{t:'input', r:'f_etwas', q:'etwas Warm___', s:'Type the whole word.', a:'Warmes', alt:['-es','es'], e:'etwas Warmes.'},
+{t:'input', r:'f_etwas', q:'nichts Schlimm___', s:'Type the whole word.', a:'Schlimmes', alt:['-es','es'], e:'nichts Schlimmes.'},
+{t:'mc', r:'f_etwas', q:'Why is it etwas Gutes but alles Gute?', o:['Gute is a noun, Gutes is an adjective','alles works like a der-word and takes the weak ending','etwas is plural','There is no difference; both are correct either way'], a:1, e:'etwas, nichts, viel and wenig give no case signal, so the adjective goes strong (-es). alles gives one, so the adjective goes weak (-e).'},
+{t:'gender', r:'f_etwas', q:'etwas Neues', s:'Which gender is this capitalised adjective?', a:'das', e:'Always neuter after etwas, nichts, viel, wenig and alles.'},
+
+/* ===== SUFFIX VS. ENDING ===== */
+{t:'mc', r:'f_trap', q:'Which word actually contains the feminine suffix -ung?', o:['Sprung','Schwung','Wohnung','Ursprung'], a:2, e:'wohnen + -ung → die Wohnung. Sprung, Schwung and Ursprung are verb stems that happen to end in those letters.'},
+{t:'mc', r:'f_trap', q:'Which word contains the feminine suffix -ei?', o:['Ei','Brei','Bäckerei','Papagei'], a:2, e:'backen → Bäcker → die Bäckerei. The others are single stems with no suffix.'},
+{t:'mc', r:'f_trap', q:'Which word contains the female-person suffix -in?', o:['Termin','Benzin','Ärztin','Vitamin'], a:2, e:'Arzt + -in → die Ärztin. The rest are loanwords that merely end in -in.'},
+{t:'mc', r:'f_trap', q:'Which word contains the neuter suffix -um?', o:['Baum','Raum','Museum','Traum'], a:2, e:'Museum is a Latin -um noun. Baum, Raum and Traum end in -aum, which is just the stem.'},
+{t:'mc', r:'f_trap', q:'Which word is a real diminutive?', o:['Kuchen','Märchen','Knochen','Braten'], a:1, e:'Märchen is a diminutive of Mär. Kuchen, Knochen and Braten only look like -chen words.'},
+{t:'mc', r:'f_trap', q:'Which word contains the masculine agent suffix -er?', o:['Mutter','Fenster','Drucker','Wasser'], a:2, e:'drucken + -er → der Drucker. -er is only reliable when there is a verb behind it.'},
+{t:'mc', r:'f_trap', q:'Which -e noun is NOT feminine?', o:['Lampe','Blume','Junge','Grenze'], a:2, e:'der Junge is an n-declension noun for a male person, which is where most -e exceptions come from.'},
+{t:'mc', r:'f_trap', q:'Which -nis noun is feminine?', o:['Ergebnis','Kenntnis','Erlebnis','Zeugnis'], a:1, e:'die Kenntnis, along with die Erlaubnis, die Erkenntnis and die Finsternis.'},
+{t:'mc', r:'f_trap', q:'Which -or noun is neuter?', o:['Motor','Labor','Doktor','Traktor'], a:1, e:'das Labor, plus das Chlor, das Tor and das Moor.'},
+{t:'mc', r:'f_trap', q:'Which -ma noun is feminine?', o:['Thema','Klima','Firma','Komma'], a:2, e:'die Firma comes from Italian, not from the Greek -ma family.'},
+{t:'mc', r:'f_trap', q:'Which -ment noun is masculine?', o:['Dokument','Moment','Element','Instrument'], a:1, e:'der Moment as a point in time. das Moment exists too but means a factor or aspect.'},
+{t:'mc', r:'f_trap', q:'Which -ant/-ent noun is neuter?', o:['Student','Praktikant','Talent','Elefant'], a:2, e:'The rule is reliable for people. Non-persons like das Talent, das Patent and das Prozent go neuter.'},
+{t:'mc', r:'f_trap', q:'Which Ge- noun is feminine?', o:['Gebäude','Gemüse','Geduld','Gepäck'], a:2, e:'die Geduld, and also die Gefahr, die Geschichte, die Gewalt, die Geburt.'},
+{t:'mc', r:'f_trap', q:'Which -ich noun is neuter?', o:['Teppich','Reich','Bereich','Rettich'], a:1, e:'das Reich never had the suffix -ich; the word simply ends in those letters.'},
+{t:'mc', r:'f_trap', q:'die BMW or der BMW?', o:['die BMW is always wrong','der BMW for the car, die BMW for the motorcycle','die BMW for the car, der BMW for the motorcycle','Both mean the same thing'], a:1, e:'Car makes are masculine (der Wagen); motorcycles are feminine.'},
+{t:'mc', r:'f_trap', q:'Why is das Mädchen neuter when a Mädchen is female?', o:['German treats children as neuter','-chen is a diminutive suffix, and those are always neuter','It is an unexplained irregularity','Because it is a loanword'], a:1, e:'The diminutive suffix overrides everything, including the gender of die Magd underneath it.'},
+{t:'mc', r:'f_trap', q:'Which of these Ge- words is NOT a masculine exception?', o:['der Gedanke','der Geruch','der Geschmack','der Gebäude'], a:3, e:'It is das Gebäude. The other three are genuine masculine exceptions to the Ge- rule.'},
+{t:'mc', r:'f_trap', q:'die Leiter or der Leiter?', o:['They are the same word','die Leiter = ladder, der Leiter = the person in charge','die Leiter = manager, der Leiter = ladder','der Leiter does not exist'], a:1, e:'Same spelling, two genders, two meanings.'},
+{t:'mc', r:'f_trap', q:'Which country is NOT an exception to the country rule?', o:['Schweiz','Türkei','Iran','Frankreich'], a:3, e:'das Frankreich follows the rule — most countries are neuter. The other three are the exceptions.'},
+
+/* ===== HOW THE RULES INTERACT ===== */
+{t:'mc', r:'f_comp', q:'die Zeitung + der Artikel. Which article?', o:['der','die','das','Either der or die'], a:0, e:'Only the last element counts. der Artikel → der Zeitungsartikel, however feminine Zeitung is.'},
+{t:'mc', r:'f_comp', q:'What decides a compound noun\u2019s gender?', o:['The first element','The last element','The longest element','The stressed element'], a:1, e:'Always the last element, no matter how many parts the compound has.'},
+{t:'mc', r:'f_dim', q:'Which rule wins: flowers are feminine, or -chen is neuter?', o:['Flowers are feminine, so die Veilchen','-chen is neuter, so das Veilchen','Both are acceptable','Neither applies'], a:1, e:'das Veilchen. The diminutive suffix beats the meaning category every time.'},
+{t:'mc', r:'e_heit', q:'die Geschwindigkeit starts with Ge-, which suggests neuter. Why is it feminine?', o:['Ge- only applies to short words','The -keit suffix is at the end, and the end wins','Speed is conceptually feminine','It is an unexplained exception'], a:1, e:'German gender is decided at the right-hand edge of the word. A suffix beats a prefix.'},
+{t:'mc', r:'e_igich', q:'Fruits are feminine, but der Pfirsich is masculine. Why?', o:['It is a loanword','The -ich ending overrides the meaning category','Peaches are grammatically masculine in Latin','No reason, pure exception'], a:1, e:'Form beats meaning here: -ich makes it masculine despite being a fruit.'},
+{t:'mc', r:'c_metal', q:'das Silber is neuter for how many independent reasons?', o:['One','Two','None, it is an exception','Three'], a:1, e:'It is a metal, and it is one of the neuter -er nouns. Both point the same way.'},
+/* ===== HOW GENDER WORKS ===== */
+{t:'mc', r:'g_basic', q:'Which German nouns get capitalised?', o:['Only at the start of a sentence','Only proper nouns','Every noun, anywhere in the sentence','Only in formal writing'], a:2, e:'Every noun, always: Ich mag meine Frau. Position in the sentence is irrelevant.'},
+{t:'mc', r:'g_basic', q:'What does das M\u00e4dchen tell you about German gender?', o:['Gender follows biological sex','Gender is grammatical and can contradict biological sex','It is a mistake preserved by tradition','Only diminutives can break the pattern'], a:1, e:'Grammatical gender is a property of the word, not of the thing. Here the -chen suffix decides and biology does not get a vote.'},
+{t:'mc', r:'g_basic', q:'Roughly how much German noun gender is predictable from the ending or the meaning?', o:['About 20%','About 50%','About 80%','Effectively 100%'], a:2, e:'Around 80%. That is the part worth drilling as rules; the rest you learn word by word.'},
+{t:'mc', r:'g_basic', q:'What three things does every German noun carry?', o:['Gender, number, case','Gender, tense, case','Number, tense, mood','Gender, number, tense'], a:0, e:'Gender, number and case. Tense and mood belong to verbs.'},
+{t:'gender', r:'c_letter', q:'A \u2014 the letter itself', s:'Which article?', a:'das', e:'Letters are neuter: das A, das B, das Z.'},
+{t:'gender', r:'c_letter', q:'Z \u2014 the letter itself', s:'Which article?', a:'das', e:'Letters are neuter, like colours.'},
+{t:'gender', r:'c_moto', q:'BMW \u2014 the motorcycle', s:'Which article?', a:'die', e:'Motorcycles are feminine: die BMW. The car of the same name is der BMW.'},
 ];
 
-const ROMAN = ['I','II','III','IV','V'];
-const TOTAL = PARTS.reduce((n,p)=>n+p.items.length,0);
-let state = [];
+/* ============================================================
+   STORAGE — window.storage in the Claude artifact sandbox,
+   localStorage everywhere else. Whichever is available wins.
+   ============================================================ */
+const KEY = 'genus.v1';
+const Store = {
+  mode: 'memory',
+  async load(){
+    if (window.storage && window.storage.get){
+      try { const r = await window.storage.get(KEY); this.mode='synced';
+            if (r && r.value) return JSON.parse(r.value); } catch(e){ this.mode='synced'; }
+    }
+    try { const v = localStorage.getItem(KEY); if (this.mode==='memory') this.mode='local';
+          if (v) return JSON.parse(v); } catch(e){}
+    return null;
+  },
+  async save(o){
+    const s = JSON.stringify(o);
+    if (window.storage && window.storage.set){ try { await window.storage.set(KEY, s); } catch(e){} }
+    try { localStorage.setItem(KEY, s); } catch(e){}
+  }
+};
 
-function norm(s,strip){
-  let t = String(s).toLowerCase().trim()
-    .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
-    .replace(/\s+/g,' ');
-  if(strip) t = t.replace(/^(der|die|das)\s+/,'');
-  return t;
-}
-function el(tag,cls,html){
-  const n=document.createElement(tag);
-  if(cls) n.className=cls;
-  if(html!=null) n.innerHTML=html;
-  return n;
-}
-function colored(article,noun){
-  return '<span class="a-'+article+'">'+article+'</span> '+noun;
-}
+/* ============================================================
+   STATE
+   ============================================================ */
+const IVL = [0, 10*60e3, 60*60e3, 24*36e5, 4*24*36e5, 21*24*36e5];
+const MASTER = 5;                       // 5 correct answers, spread over 2+ weeks
+const GEN = ['der','die','das'];
 
-function build(){
-  const sheet=document.getElementById('sheet');
-  sheet.innerHTML='';
-  state=[];
-  let idx=0;
+let S = {
+  p:{}, scope:[], len:25,
+  ans:{der:0,die:0,das:0}, cor:{der:0,die:0,das:0}, hit:{der:0,die:0,das:0},
+  tot:0, right:0, streak:0, best:0, days:{}
+};
+let ITEMS = [], BYID = {}, queue = [], qi = 0, cur = null, locked = false;
+let sess = {n:0, right:0, mastered:0};
+let openRule = null, view = 'drill';
 
-  PARTS.forEach((part,pi)=>{
-    const sec=el('section','part');
-    const head=el('div','part-head');
-    head.appendChild(el('span','part-num','Teil '+ROMAN[pi]));
-    head.appendChild(el('h2','part-title',part.title));
-    sec.appendChild(head);
-    sec.appendChild(el('p','part-note',part.note));
+const $  = s => document.querySelector(s);
+const el = (t,c,x) => { const n=document.createElement(t); if(c)n.className=c; if(x!=null)n.textContent=x; return n; };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shuffle = a => { for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const today = () => new Date().toISOString().slice(0,10);
 
-    const list=el('ul','items');
-    part.items.forEach(item=>{
-      const i=idx++;
-      state.push({answered:false,correct:false,part:pi,gender:part.kind==='choice'?item.a:null});
+/* ============================================================
+   BUILD THE ITEM BANK
+   ============================================================ */
+/* Words that carry two genders with two meanings, where the rule name on the
+   card is not enough to tell you which one is being asked about. */
+const DISAMB = {
+  'Leiter':'the ladder',
+  'Erbe':'the heir, not the inheritance',
+  'Moment':'a point in time',
+  'Militär':'the armed forces',
+  'Tor':'a gate or a goal'
+};
 
-      const li=el('li','item');
-      li.appendChild(el('div','marker',String(i+1)));
-      const body=el('div','body');
+function buildItems(){
+  const out = [];
+  const long = t => t.length > 20 || t.includes('+') || t.includes(' ');
 
-      // ---- prompt ----
-      if(part.kind==='choice'){
-        body.appendChild(el('div','word',item.q.replace(/\+/g,'<span class="plus">+</span>')));
-      }else if(part.kind==='text'){
-        const g=item.g;
-        body.appendChild(el('div','word','<span class="a-'+g+'">'+g+'</span> '+item.q.replace(/^(der|die|das)\s+/,'')));
-      }else{
-        const s=el('div','sentence');
-        s.appendChild(document.createTextNode(item.s[0]));
-        const inp=document.createElement('input');
-        inp.type='text'; inp.className='blank'; inp.autocapitalize='off';
-        inp.autocomplete='off'; inp.spellcheck=false;
-        inp.setAttribute('aria-label','Answer for item '+(i+1));
-        s.appendChild(inp);
-        s.appendChild(document.createTextNode(item.s[2]));
-        if(item.hint){ s.appendChild(el('span','hint',item.hint)); }
-        body.appendChild(s);
-        li.dataset.input='blank';
-      }
+  NOUNS.forEach(([w,g,r,x,note]) => out.push({
+    id:'n:'+w, rule:r, kind:'gender', head:'Article', prompt:w, small:long(w),
+    sub:DISAMB[w] || '', answer:g, exc:!!x, note
+  }));
 
-      // ---- controls ----
-      const fb=el('div','fb'); fb.hidden=true;
-
-      if(part.kind==='choice'){
-        const row=el('div','choices');
-        ['der','die','das'].forEach(v=>{
-          const b=el('button','choice',v);
-          b.dataset.v=v; b.type='button';
-          b.addEventListener('click',()=>{
-            if(state[i].answered) return;
-            const ok = v===item.a;
-            if(ok){
-              b.classList.add('picked');
-            }else{
-              b.classList.add('wrong');
-              row.querySelector('[data-v="'+item.a+'"]').classList.add('picked','reveal');
-            }
-            row.querySelectorAll('button').forEach(x=>x.disabled=true);
-            settle(li,fb,i,ok,colored(item.a,item.q.split('→').pop().trim()),item.why);
-          });
-          row.appendChild(b);
-        });
-        body.appendChild(row);
-      }else if(part.kind==='text'){
-        const row=el('div','row');
-        const inp=document.createElement('input');
-        inp.type='text'; inp.className='free'; inp.placeholder='Plural…';
-        inp.autocapitalize='off'; inp.autocomplete='off'; inp.spellcheck=false;
-        inp.setAttribute('aria-label','Plural of '+item.q);
-        const btn=el('button','check','Prüfen'); btn.type='button';
-        const go=()=>{
-          if(state[i].answered) return;
-          const ok=item.a.some(a=>norm(a,true)===norm(inp.value,true));
-          inp.disabled=true; btn.disabled=true;
-          settle(li,fb,i,ok,item.show,item.why);
-        };
-        btn.addEventListener('click',go);
-        inp.addEventListener('keydown',e=>{if(e.key==='Enter')go();});
-        row.appendChild(inp); row.appendChild(btn);
-        body.appendChild(row);
-      }else{
-        const inp=body.querySelector('input.blank');
-        const row=el('div','row');
-        const btn=el('button','check','Prüfen'); btn.type='button';
-        const go=()=>{
-          if(state[i].answered) return;
-          const ok=item.a.some(a=>norm(a,false)===norm(inp.value,false));
-          inp.disabled=true; btn.disabled=true;
-          const full=item.show||(item.s[0]+item.a[0]+item.s[2]);
-          settle(li,fb,i,ok,full,item.why);
-        };
-        btn.addEventListener('click',go);
-        inp.addEventListener('keydown',e=>{if(e.key==='Enter')go();});
-        row.appendChild(btn);
-        body.appendChild(row);
-      }
-
-      body.appendChild(fb);
-      li.appendChild(body);
-      list.appendChild(li);
+  WRITTEN.forEach((it,i) => {
+    if (it.t === 'gender') out.push({
+      id:'w:'+i, rule:it.r, kind:'gender', head: it.r==='f_comp'?'Compound':'Article',
+      prompt:it.q, small:long(it.q), sub:it.s||'', answer:it.a, explain:it.e
     });
-
-    sec.appendChild(list);
-    sheet.appendChild(sec);
+    else if (it.t === 'mc') out.push({
+      id:'w:'+i, rule:it.r, kind:'mc', head:'Rule', prompt:it.q, small:true,
+      sub:it.s||'', opts:it.o, answer:it.a, explain:it.e
+    });
+    else out.push({
+      id:'w:'+i, rule:it.r, kind:'input', head:'Form', prompt:it.q, small:true,
+      sub:it.s||'', answer:it.a, alt:it.alt||[], explain:it.e
+    });
+    if (it.r === 'f_comp' && it.w) out.push({
+      id:'c:'+i, rule:'f_comp', kind:'gender', head:'Article', prompt:it.w, small:long(it.w),
+      sub:'A compound — what is its last element?', answer:it.a, explain:it.e
+    });
   });
 
-  const ticks=document.getElementById('ticks');
-  ticks.innerHTML='';
-  for(let i=0;i<TOTAL;i++) ticks.appendChild(el('div','tick'));
-  document.getElementById('result').hidden=true;
-  update();
-}
+  Object.keys(RULES).forEach(r => { if (RULES[r].g) out.push({
+    id:'r:'+r, rule:r, kind:'gender', head:'Rule', prompt:RULES[r].name, small:true,
+    sub:'Which gender does this rule predict?', answer:RULES[r].g, explain:RULES[r].tip
+  });});
 
-function settle(li,fb,i,ok,answerHTML,why){
-  state[i].answered=true;
-  state[i].correct=ok;
-  li.classList.add(ok?'done-ok':'done-no');
-  fb.innerHTML='';
-  fb.appendChild(el('p','verdict',ok?'Richtig':'Noch nicht'));
-  fb.appendChild(el('p','answer',answerHTML));
-  fb.appendChild(el('p','why',why));
-  fb.hidden=false;
-  fb.classList.add('grow');
-  update();
-}
-
-function update(){
-  const ticks=document.getElementById('ticks').children;
-  let done=0,right=0;
-  state.forEach((s,i)=>{
-    ticks[i].className='tick'+(s.answered?(s.correct?' ok':' no'):'');
-    if(s.answered){done++; if(s.correct)right++;}
-  });
-  document.getElementById('count').textContent=done+' answered · '+right+' correct';
-  if(done===TOTAL) finish(right);
-}
-
-function finish(right){
-  const r=document.getElementById('result');
-  document.getElementById('rScore').textContent=right;
-  const pct=Math.round(right/TOTAL*100);
-  let msg;
-  if(pct>=90) msg='Solid. The endings are doing the work for you now — push into weak nouns and genitive next.';
-  else if(pct>=70) msg='A good working level. Look at which Teil cost you the most and drill that one alone.';
-  else if(pct>=50) msg='The patterns are half-settled. Learn each new noun as article + word + plural and this section climbs fast.';
-  else msg='Worth going back to the reference sheet first, then running this again — the ending tables cover most of what tripped you up.';
-  document.getElementById('rWord').textContent=msg;
-
-  const tally=document.getElementById('rTally');
-  tally.innerHTML='';
-  PARTS.forEach((p,pi)=>{
-    const sub=state.filter(s=>s.part===pi);
-    const c=sub.filter(s=>s.correct).length;
-    tally.appendChild(el('dt',null,'Teil '+ROMAN[pi]+' — '+p.title));
-    tally.appendChild(el('dd',null,c+'/'+sub.length));
-  });
-  ['der','die','das'].forEach(g=>{
-    const sub=state.filter(s=>s.gender===g);
-    if(!sub.length) return;
-    const c=sub.filter(s=>s.correct).length;
-    tally.appendChild(el('dt',null,'Gender guesses · '+g));
-    tally.appendChild(el('dd',null,c+'/'+sub.length));
+  Object.keys(RULES).forEach(r => {
+    const R = RULES[r];
+    if (!R.g || R.family === 'formation') return;
+    const reg = NOUNS.filter(n => n[2]===r && !n[3]).map(n => n[0]);
+    if (reg.length < 3) return;
+    NOUNS.filter(n => n[2]===r && n[3]).forEach(n => out.push({
+      id:'x:'+r+':'+n[0], rule:r, kind:'odd', head:'Exception',
+      prompt:'Which one breaks the rule?', small:true,
+      sub:R.name + ' \u2192 ' + R.g, pool:reg, answer:n[0],
+      explain:(n[4] ? n[4]+' ' : '') + 'The others all follow the rule.'
+    }));
   });
 
-  r.hidden=false;
+  return out;
 }
 
-document.getElementById('again').addEventListener('click',()=>{
-  build();
-  window.scrollTo({top:0,behavior:'smooth'});
+/* ============================================================
+   SCOPE + SCHEDULING
+   ============================================================ */
+const inScope = it => !S.scope.length || S.scope.includes(RULES[it.rule].family);
+const scoped  = () => ITEMS.filter(inScope);
+const rec     = id => S.p[id] || [0,0,0,0];
+const boxOf   = id => rec(id)[0];
+const isMaster= id => boxOf(id) >= MASTER;
+
+function buildQueue(){
+  const now = Date.now(), pool = scoped();
+  const due = [], fresh = [], early = [];
+  pool.forEach(it => {
+    const r = S.p[it.id];
+    if (!r) fresh.push(it);
+    else if (r[1] <= now) due.push(it);
+    else early.push(it);
+  });
+  due.sort((a,b) => S.p[a.id][1] - S.p[b.id][1]);
+  shuffle(fresh);
+  early.sort((a,b) => (S.p[a.id][0] - S.p[b.id][0]) || (S.p[a.id][1] - S.p[b.id][1]));
+
+  const want = S.len || 9999;
+  let q = due.concat(fresh).slice(0, want);
+  if (q.length < want) q = q.concat(early.slice(0, want - q.length));
+  return shuffle(q);
+}
+
+function grade(it, ok){
+  const r = rec(it.id).slice();
+  const was = r[0];
+  if (ok) r[0] = Math.min(MASTER, r[0]+1);
+  else { r[0] = 0; r[3]++; }
+  r[1] = Date.now() + IVL[r[0]];
+  r[2]++;
+  S.p[it.id] = r;
+  if (ok && r[0] >= MASTER && was < MASTER) sess.mastered++;
+
+  S.tot++; if (ok) { S.right++; S.streak++; S.best = Math.max(S.best, S.streak); } else S.streak = 0;
+  sess.n++; if (ok) sess.right++;
+  S.days[today()] = (S.days[today()]||0) + 1;
+  Store.save(S);
+}
+
+/* ============================================================
+   ANSWER CHECKING
+   ============================================================ */
+const norm = s => String(s).trim().toLowerCase()
+  .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
+  .replace(/[^a-z]/g,'');
+
+function checkInput(it, raw){
+  if (!raw.trim()) return false;
+  const v = norm(raw);
+  return v === norm(it.answer) || (it.alt||[]).some(a => norm(a) === v);
+}
+
+/* ============================================================
+   DRILL VIEW
+   ============================================================ */
+function nextCard(){
+  if (qi >= queue.length) return renderDone();
+  cur = queue[qi]; locked = false;
+  if (cur.kind === 'odd'){
+    cur.opts = shuffle(shuffle(cur.pool.slice()).slice(0,3).concat([cur.answer]));
+  }
+  renderCard();
+}
+
+function renderCard(){
+  const it = cur, v = $('#v-drill');
+  v.innerHTML = '';
+
+  const stage = el('div','stage');
+  const eb = el('div','eyebrow');
+  eb.innerHTML = '<b>'+esc(it.head)+'</b> &nbsp;·&nbsp; ' + esc(RULES[it.rule].name);
+  stage.appendChild(eb);
+
+  const p = el('div','prompt' + (it.small?' small':''));
+  p.innerHTML = esc(it.prompt).replace(/_{2,}/g,'<span class="blank">___</span>');
+  stage.appendChild(p);
+  if (it.sub) stage.appendChild(el('div','subprompt', it.sub));
+  v.appendChild(stage);
+
+  const holder = el('div');
+  holder.id = 'answers';
+  v.appendChild(holder);
+
+  if (it.kind === 'gender')      buildGenderBar(holder);
+  else if (it.kind === 'input')  buildInput(holder);
+  else                           buildChoices(holder, it.opts, it.kind==='odd');
+
+  const foot = el('div','footbar');
+  const left = el('div','pill');
+  left.innerHTML = 'Card <b>'+(qi+1)+'</b> / '+queue.length;
+  const mid = el('div','pill');
+  mid.innerHTML = 'Session <b>'+sess.right+'/'+sess.n+'</b>';
+  const skip = el('button','btn ghost','Skip');
+  skip.id = 'nextBtn';
+  skip.style.padding = '7px 13px'; skip.style.fontSize = '13px';
+  skip.onclick = () => { if(!locked){ qi++; nextCard(); } else advance(); };
+  foot.append(left, el('div','spacer'), mid, skip);
+  v.appendChild(foot);
+  v.appendChild(el('div','hintline', it.kind==='input' ? 'Type your answer, then press Enter' : 'Keys 1 – ' + (it.kind==='gender'?'3':String(it.opts.length))));
+  updateMeter();
+}
+
+function buildGenderBar(holder){
+  const bar = el('div','genus');
+  GEN.forEach((g,i) => {
+    const b = el('button','g'); b.dataset.g = g;
+    b.innerHTML = esc(g) + '<span class="kbd">'+(i+1)+'</span>';
+    b.onclick = () => answerGender(g);
+    bar.appendChild(b);
+  });
+  holder.appendChild(bar);
+}
+
+function buildChoices(holder, opts, isOdd){
+  const box = el('div','mc');
+  opts.forEach((o,i) => {
+    const b = el('button','opt');
+    b.appendChild(el('span','n', String(i+1)));
+    const t = el('span','', o);
+    if (isOdd) t.style.fontFamily = 'var(--serif)', t.style.fontSize = '17px';
+    b.appendChild(t);
+    b.onclick = () => answerChoice(i);
+    box.appendChild(b);
+  });
+  holder.appendChild(box);
+}
+
+function buildInput(holder){
+  const row = el('div','type-row');
+  const inp = document.createElement('input');
+  inp.type='text'; inp.id='typed'; inp.autocomplete='off'; inp.autocapitalize='off';
+  inp.spellcheck=false; inp.placeholder='your answer';
+  inp.onkeydown = e => { if(e.key==='Enter'){ e.preventDefault(); locked ? advance() : answerTyped(); } };
+  const go = el('button','btn','Check');
+  go.onclick = () => locked ? advance() : answerTyped();
+  row.append(inp, go);
+  holder.appendChild(row);
+  const um = el('div','umlauts');
+  ['ä','ö','ü','ß'].forEach(ch => {
+    const b = el('button','',ch);
+    b.type='button';
+    b.onclick = () => { inp.value += ch; inp.focus(); };
+    um.appendChild(b);
+  });
+  holder.appendChild(um);
+  setTimeout(()=>inp.focus(),40);
+}
+
+/* ---------- answering ---------- */
+function answerGender(g){
+  if (locked) return; locked = true;
+  const it = cur, ok = g === it.answer;
+  S.ans[g]++; S.cor[it.answer]++; if (ok) S.hit[g]++;
+  document.querySelectorAll('.g').forEach(b => {
+    b.disabled = true;
+    const bg = b.dataset.g;
+    if (bg === it.answer) b.classList.add('right');
+    else if (bg === g)    b.classList.add('wrong');
+    else                  b.classList.add('dim');
+  });
+  finish(ok, it.answer);
+}
+
+function answerChoice(i){
+  if (locked) return; locked = true;
+  const it = cur;
+  const correctIdx = it.kind==='odd' ? it.opts.indexOf(it.answer) : it.answer;
+  const ok = i === correctIdx;
+  document.querySelectorAll('.opt').forEach((b,k) => {
+    b.disabled = true;
+    if (k === correctIdx) b.classList.add('right');
+    else if (k === i)     b.classList.add('wrong');
+    else                  b.classList.add('dim');
+  });
+  finish(ok, it.opts[correctIdx]);
+}
+
+function answerTyped(){
+  if (locked) return;
+  const inp = $('#typed');
+  if (!inp.value.trim()) return;
+  locked = true;
+  const ok = checkInput(cur, inp.value);
+  inp.classList.add(ok?'right':'wrong'); inp.blur();
+  finish(ok, cur.answer);
+}
+
+function finish(ok, correctText){
+  const it = cur;
+  grade(it, ok);
+  if (!ok) queue.splice(Math.min(qi+4, queue.length), 0, it);
+
+  const fb = el('div','fb ' + (ok?'ok':'no'));
+  const head = el('div','fb-head');
+  const v = el('span','verdict', ok ? 'Correct' : 'Not this time');
+  head.appendChild(v);
+  head.appendChild(el('span','rule-name', RULES[it.rule].name + (it.exc ? '  ·  exception' : '')));
+  fb.appendChild(head);
+
+  if (!ok){
+    const p = el('p');
+    p.innerHTML = 'Answer: <span class="de"><b>'+esc(correctText)+'</b></span>';
+    fb.appendChild(p);
+  }
+  const detail = it.explain || it.note;
+  if (detail) fb.appendChild(el('p','', detail));
+  const tip = RULES[it.rule].tip;
+  if (tip && tip !== detail) fb.appendChild(el('p','tip', tip));
+
+  const b = boxOf(it.id);
+  const prog = el('p','tip');
+  prog.textContent = b >= MASTER ? 'Mastered — next review in about three weeks.'
+                                 : 'Step ' + b + ' of ' + MASTER + ' toward mastery.';
+  fb.appendChild(prog);
+
+  fb.onclick = advance;
+  $('#answers').after(fb);
+  const nb = $('#nextBtn');
+  if (nb){ nb.className = 'btn'; nb.textContent = 'Continue'; }
+  const hint = $('#v-drill .hintline');
+  if (hint) hint.textContent = 'Tap Continue, or press Enter';
+  updateMeter();
+}
+
+function advance(){ if(!locked) return; qi++; nextCard(); }
+
+function renderDone(){
+  const v = $('#v-drill'); v.innerHTML = '';
+  const acc = sess.n ? Math.round(sess.right/sess.n*100) : 0;
+  const d = el('div','done');
+  d.appendChild(el('h2','', sess.n ? 'Session complete' : 'Nothing due right now'));
+  d.appendChild(el('div','score', sess.n
+    ? sess.right + ' of ' + sess.n + ' correct'
+    : 'Everything in scope is scheduled for later. Widen the scope in Settings, or come back after the next interval.'));
+  if (sess.n){
+    const row = el('div','stat-row');
+    [[acc+'%','accuracy'],[sess.mastered,'newly mastered'],[S.streak,'current streak']].forEach(([a,b])=>{
+      const s = el('div','stat'); s.appendChild(el('div','v',String(a))); s.appendChild(el('div','k',b)); row.appendChild(s);
+    });
+    d.appendChild(row);
+  }
+  const again = el('button','btn','Start another session');
+  again.onclick = startSession;
+  d.appendChild(again);
+  const rl = el('button','btn ghost','See the rules');
+  rl.style.marginLeft='8px'; rl.onclick = () => go('rules');
+  d.appendChild(rl);
+  v.appendChild(d);
+  updateMeter();
+}
+
+function startSession(rules){
+  const only = Array.isArray(rules) ? rules : null;
+  queue = only
+    ? shuffle(ITEMS.filter(i => only.includes(i.rule))).slice(0, S.len || 9999)
+    : buildQueue();
+  qi = 0; sess = {n:0, right:0, mastered:0};
+  go('drill');
+  if (!queue.length) renderDone(); else nextCard();
+}
+
+/* ============================================================
+   RULES VIEW
+   ============================================================ */
+const FAMS = [['ending','Rules by ending'],['meaning','Rules by meaning'],['formation','Word formation']];
+
+function ruleItems(r){ return ITEMS.filter(i => i.rule === r); }
+
+function renderRules(){
+  const v = $('#v-rules'); v.innerHTML = '';
+  v.appendChild(el('h2','sec-title','Regelkarte'));
+  v.appendChild(el('p','sec-sub','Every rule in your notes, with how far along you are. Tap one to see its words and drill it on its own.'));
+
+  FAMS.forEach(([fam,label]) => {
+    v.appendChild(el('div','fam',label));
+    const list = el('div','rules');
+    Object.keys(RULES).filter(r => RULES[r].family === fam).forEach(r => {
+      const R = RULES[r], items = ruleItems(r);
+      const done = items.filter(i => isMaster(i.id)).length;
+      const pct = items.length ? done/items.length : 0;
+
+      const row = el('button','rule-row');
+      row.appendChild(el('span','dot ' + (R.g || 'mix')));
+      row.appendChild(el('span','nm', R.name));
+      const mini = el('span','mini');
+      const fill = el('i'); fill.style.width = Math.round(pct*100)+'%';
+      if (pct === 1) fill.classList.add('full');
+      mini.appendChild(fill); row.appendChild(mini);
+      row.appendChild(el('span','ct', done + '/' + items.length));
+      row.onclick = () => { openRule = (openRule === r ? null : r); renderRules(); };
+      list.appendChild(row);
+
+      if (openRule === r){
+        const d = el('div','detail');
+        d.appendChild(el('h3','', R.name + (R.g ? '  \u2192  ' + R.g : '')));
+        d.appendChild(el('p','tip', R.tip));
+        const nouns = NOUNS.filter(n => n[2] === r);
+        if (nouns.length){
+          const words = el('div','words');
+          nouns.forEach(([w,g,rr,x]) => {
+            const c = el('span','w ' + g + (x?' exc':'') + (isMaster('n:'+w)?' done':''), g + ' ' + w);
+            words.appendChild(c);
+          });
+          d.appendChild(words);
+          d.appendChild(el('p','legend','italic = exception to this rule  ·  outlined = mastered'));
+        }
+        const btn = el('button','btn','Drill this rule');
+        btn.style.marginTop = '14px';
+        btn.onclick = e => { e.stopPropagation(); startSession([r]); };
+        d.appendChild(btn);
+        list.appendChild(d);
+      }
+    });
+    v.appendChild(list);
+  });
+}
+
+/* ============================================================
+   STATS VIEW
+   ============================================================ */
+function renderStats(){
+  const v = $('#v-stats'); v.innerHTML = '';
+  const pool = scoped();
+  const done = pool.filter(i => isMaster(i.id)).length;
+  const seen = pool.filter(i => S.p[i.id]).length;
+  const acc  = S.tot ? Math.round(S.right/S.tot*100) : 0;
+
+  v.appendChild(el('h2','sec-title','Where you stand'));
+  v.appendChild(el('p','sec-sub','Mastery means five correct answers on a card, spread over at least two weeks. Guessing your way there is close to impossible.'));
+
+  const row = el('div','stat-row');
+  [[done+' / '+pool.length,'mastered'],[seen-done,'in progress'],[pool.length-seen,'not started']].forEach(([a,b])=>{
+    const s = el('div','stat'); s.appendChild(el('div','v',String(a))); s.appendChild(el('div','k',b)); row.appendChild(s);
+  });
+  v.appendChild(row);
+
+  const row2 = el('div','stat-row');
+  [[acc+'%','lifetime accuracy'],[S.tot,'answers given'],[S.best,'best streak']].forEach(([a,b])=>{
+    const s = el('div','stat'); s.appendChild(el('div','v',String(a))); s.appendChild(el('div','k',b)); row2.appendChild(s);
+  });
+  v.appendChild(row2);
+
+  /* --- gender bias --- */
+  const totAns = GEN.reduce((a,g)=>a+S.ans[g],0);
+  v.appendChild(el('div','fam','Your gender bias'));
+  if (!totAns){
+    v.appendChild(el('p','sec-sub','Answer some article questions and this fills in.'));
+  } else {
+    v.appendChild(el('p','sec-sub','Bar = how often you reach for that article. Line = how often it is actually the answer. A bar sitting well past its line is a habit to break.'));
+    const wrap = el('div','bias');
+    GEN.forEach(g => {
+      const mine = S.ans[g]/totAns, real = S.cor[g]/Math.max(1,totAns);
+      const recall = S.cor[g] ? Math.round(S.hit[g]/S.cor[g]*100) : 0;
+      const r = el('div','bias-row');
+      r.appendChild(el('span','bias-lab '+g, g));
+      const t = el('span','bias-track');
+      const f = el('i',g); f.style.width = (mine*100)+'%';
+      const m = el('u'); m.style.left = 'calc('+(real*100)+'% - 1px)';
+      t.append(f,m); r.appendChild(t);
+      r.appendChild(el('span','bias-num', recall+'% recall'));
+      wrap.appendChild(r);
+    });
+    v.appendChild(wrap);
+  }
+
+  /* --- forecast --- */
+  const now = Date.now(), D = 864e5;
+  const dueNow = pool.filter(i => S.p[i.id] && S.p[i.id][1] <= now).length;
+  const d7 = pool.filter(i => S.p[i.id] && S.p[i.id][1] > now && S.p[i.id][1] <= now+7*D).length;
+  v.appendChild(el('div','fam','Review queue'));
+  const row3 = el('div','stat-row');
+  [[dueNow,'due now'],[d7,'due within 7 days'],[S.days[today()]||0,'answered today']].forEach(([a,b])=>{
+    const s = el('div','stat'); s.appendChild(el('div','v',String(a))); s.appendChild(el('div','k',b)); row3.appendChild(s);
+  });
+  v.appendChild(row3);
+
+  /* --- weakest cards --- */
+  const weak = pool.filter(i => rec(i.id)[3] > 0)
+    .sort((a,b) => rec(b.id)[3] - rec(a.id)[3]).slice(0,14);
+  if (weak.length){
+    v.appendChild(el('div','fam','Cards you keep losing'));
+    const words = el('div','words');
+    weak.forEach(i => {
+      const label = i.kind==='gender' && !i.prompt.includes('+') && GEN.includes(i.answer)
+        ? i.answer + ' ' + i.prompt : RULES[i.rule].name;
+      const c = el('span','w ' + (GEN.includes(i.answer)?i.answer:''), label + '  ×' + rec(i.id)[3]);
+      words.appendChild(c);
+    });
+    v.appendChild(words);
+    const b = el('button','btn','Drill only these');
+    b.style.marginTop='14px';
+    b.onclick = () => { queue = shuffle(weak.slice()); qi=0; sess={n:0,right:0,mastered:0}; go('drill'); nextCard(); };
+    v.appendChild(b);
+  }
+}
+
+/* ============================================================
+   SETTINGS
+   ============================================================ */
+function renderSet(){
+  const v = $('#v-set'); v.innerHTML = '';
+  v.appendChild(el('h2','sec-title','Settings'));
+  v.appendChild(el('p','sec-sub','Progress saves automatically. Storage in use: ' + Store.mode + '.'));
+
+  const f1 = el('div','field');
+  f1.appendChild(el('h4','','What to drill'));
+  f1.appendChild(el('p','','Narrowing the scope is how you get a rule to 100% instead of grinding all 1,000 cards at once.'));
+  const o1 = el('div','opts');
+  const mk = (label, val) => {
+    const c = el('button','chip',label);
+    const on = val === null ? !S.scope.length : S.scope.includes(val);
+    c.setAttribute('aria-pressed', on);
+    c.onclick = () => {
+      if (val === null) S.scope = [];
+      else { const i = S.scope.indexOf(val); i<0 ? S.scope.push(val) : S.scope.splice(i,1); }
+      Store.save(S); renderSet(); updateMeter();
+    };
+    o1.appendChild(c);
+  };
+  mk('Everything', null);
+  FAMS.forEach(([f,l]) => mk(l.replace('Rules by ','').replace(/^\w/,c=>c.toUpperCase()), f));
+  f1.appendChild(o1);
+  v.appendChild(f1);
+
+  const f2 = el('div','field');
+  f2.appendChild(el('h4','','Session length'));
+  f2.appendChild(el('p','','Cards per session. Wrong answers come back within the same session regardless.'));
+  const o2 = el('div','opts');
+  [[10,'10'],[25,'25'],[50,'50'],[0,'No limit']].forEach(([n,l]) => {
+    const c = el('button','chip',l);
+    c.setAttribute('aria-pressed', S.len === n);
+    c.onclick = () => { S.len = n; Store.save(S); renderSet(); };
+    o2.appendChild(c);
+  });
+  f2.appendChild(o2); v.appendChild(f2);
+
+  const f3 = el('div','field');
+  f3.appendChild(el('h4','','Start over'));
+  f3.appendChild(el('p','','Clears every box, streak and statistic. There is no undo.'));
+  const o3 = el('div','opts');
+  const rst = el('button','chip danger','Reset all progress');
+  let armed = false;
+  rst.onclick = () => {
+    if (!armed){ armed = true; rst.textContent = 'Tap again to erase everything'; setTimeout(()=>{armed=false;rst.textContent='Reset all progress';},4000); return; }
+    S = {p:{},scope:[],len:25,ans:{der:0,die:0,das:0},cor:{der:0,die:0,das:0},hit:{der:0,die:0,das:0},tot:0,right:0,streak:0,best:0,days:{}};
+    Store.save(S); renderSet(); updateMeter(); startSession();
+  };
+  o3.appendChild(rst); f3.appendChild(o3); v.appendChild(f3);
+
+  const f4 = el('div','field');
+  f4.appendChild(el('h4','','Bank'));
+  f4.appendChild(el('p','', ITEMS.length + ' cards across ' + Object.keys(RULES).length + ' rules: ' + NOUNS.length + ' nouns to gender, plus compounds, diminutives, nominalisations, adjectival endings and exception spotting.'));
+  v.appendChild(f4);
+}
+
+/* ============================================================
+   CHROME
+   ============================================================ */
+function updateMeter(){
+  const pool = scoped();
+  const m = {der:0,die:0,das:0};
+  let done = 0;
+  pool.forEach(i => { if (isMaster(i.id)){ done++; if (m[i.answer]!=null) m[i.answer]++; } });
+  const tot = Math.max(1, pool.length);
+  $('#bDer').style.width = (m.der/tot*100)+'%';
+  $('#bDie').style.width = (m.die/tot*100)+'%';
+  $('#bDas').style.width = (m.das/tot*100)+'%';
+  $('#mPct').textContent = Math.round(done/tot*100)+'%';
+  $('#mLabel').textContent = done + ' of ' + pool.length + ' mastered';
+}
+
+function go(name){
+  view = name;
+  ['drill','rules','stats','set'].forEach(n => $('#v-'+n).classList.toggle('on', n===name));
+  document.querySelectorAll('nav button').forEach(b => {
+    if (b.dataset.view === name) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
+  });
+  if (name === 'rules') renderRules();
+  if (name === 'stats') renderStats();
+  if (name === 'set')   renderSet();
+  document.querySelector('main').scrollTop = 0;
+}
+
+document.querySelectorAll('nav button').forEach(b => b.onclick = () => {
+  if (b.dataset.view === 'drill' && (!queue.length || qi >= queue.length)) return startSession();
+  go(b.dataset.view);
+});
+$('#toSettings').onclick = () => go('set');
+
+document.addEventListener('keydown', e => {
+  if (view !== 'drill' || !cur) return;
+  const typing = document.activeElement && document.activeElement.tagName === 'INPUT';
+  if ((e.key === 'Enter' || e.key === ' ') && locked){ e.preventDefault(); return advance(); }
+  if (typing) return;
+  if (/^[1-9]$/.test(e.key)){
+    const n = +e.key - 1;
+    if (locked) return;
+    if (cur.kind === 'gender'){ if (n < 3) answerGender(GEN[n]); }
+    else if (cur.kind !== 'input'){ if (n < cur.opts.length) answerChoice(n); }
+  }
 });
 
-build();
+/* ============================================================
+   INIT
+   ============================================================ */
+(async function init(){
+  ITEMS = buildItems();
+  ITEMS.forEach(i => BYID[i.id] = i);
+  const saved = await Store.load();
+  if (saved) S = Object.assign(S, saved);
+  ['ans','cor','hit'].forEach(k => S[k] = Object.assign({der:0,die:0,das:0}, S[k]||{}));
+  S.p = S.p || {}; S.days = S.days || {};
+  updateMeter();
+  startSession();
+})();
 </script>
 </body>
 </html>
