@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Präsens — German present tense drill</title>
+<style>
+:root{
+  --bg:#0E1116; --panel:#161A21; --panel2:#1D222B; --line:#2A313C; --line2:#39424F;
+  --fg:#E8ECF1; --dim:#9AA6B4; --dim2:#6E7A88;
+  --ok:#57C596; --no:#E4695E; --gold:#D9B26A; --cool:#7BA1E8;
+  --mono:ui-monospace,"SF Mono",'JetBrains Mono',Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --r:10px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--fg); font-family:var(--sans);
+  font-size:16px; line-height:1.5; -webkit-text-size-adjust:100%;
+  padding:0 0 env(safe-area-inset-bottom);
+}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:none}
+:focus-visible{outline:2px solid var(--cool);outline-offset:2px;border-radius:4px}
+
+.wrap{max-width:1000px;margin:0 auto;padding:0 16px 80px}
+
+/* ---------- top bar ---------- */
+.top{display:flex;align-items:center;gap:14px;padding:18px 0 10px;flex-wrap:wrap}
+.mark{font-family:var(--mono);font-weight:700;font-size:19px;letter-spacing:-.02em}
+.mark span{color:var(--dim2);font-weight:400}
+.ring{width:38px;height:38px;flex:0 0 38px}
+.ring text{font-family:var(--mono);font-size:11px;fill:var(--fg)}
+.tabs{display:flex;gap:2px;margin-left:auto;flex-wrap:wrap}
+.tab{padding:6px 11px;border-radius:999px;font-size:13px;color:var(--dim);
+     border:1px solid transparent;transition:none}
+.tab[aria-selected="true"]{color:var(--fg);background:var(--panel2);border-color:var(--line)}
+.tab:hover{color:var(--fg)}
+
+/* ---------- generic ---------- */
+.eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim2)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.muted{color:var(--dim)}
+.mono{font-family:var(--mono)}
+h2{font-size:15px;margin:0 0 10px;font-weight:600}
+hr{border:none;border-top:1px solid var(--line);margin:18px 0}
+
+/* ---------- drill layout ---------- */
+.stage{display:grid;grid-template-columns:1fr 232px;gap:16px;align-items:start}
+@media(max-width:820px){.stage{grid-template-columns:1fr}}
+
+.qcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+       padding:22px;min-height:300px;display:flex;flex-direction:column}
+.qhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:18px}
+.qbody{flex:1}
+.lemma{font-family:var(--mono);font-size:30px;font-weight:700;letter-spacing:-.02em;line-height:1.15}
+.gloss{color:var(--dim);font-size:14px;margin-top:2px}
+.ask{font-size:15px;color:var(--dim);margin:16px 0 6px}
+.chip{display:inline-block;font-family:var(--mono);font-size:14px;padding:3px 9px;
+      border:1px solid var(--line2);border-radius:999px;color:var(--fg);background:var(--panel2)}
+.sent{font-family:var(--mono);font-size:19px;line-height:1.7;margin:14px 0 4px}
+.gap{display:inline-block;min-width:96px;border-bottom:2px solid var(--line2);text-align:center;color:var(--dim2)}
+.strike{color:var(--no);text-decoration:line-through 1.5px}
+
+input[type=text]{
+  width:100%;background:var(--panel2);border:1px solid var(--line2);border-radius:8px;
+  padding:12px 14px;font-family:var(--mono);font-size:19px;outline:none;
+}
+input[type=text]:focus{border-color:var(--cool)}
+input[type=text].ok{border-color:var(--ok)}
+input[type=text].no{border-color:var(--no)}
+
+.keys{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.key{font-family:var(--mono);font-size:15px;padding:5px 12px;border:1px solid var(--line);
+     border-radius:7px;background:var(--panel2);color:var(--dim)}
+.key:hover{color:var(--fg);border-color:var(--line2)}
+
+.opts{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.opt{text-align:left;padding:11px 14px;border:1px solid var(--line);border-radius:8px;
+     background:var(--panel2);display:flex;gap:11px;align-items:flex-start;font-size:15px}
+.opt:hover{border-color:var(--line2)}
+.opt .n{font-family:var(--mono);color:var(--dim2);font-size:13px;padding-top:2px}
+.opt.sel{border-color:var(--cool)}
+.opt.right{border-color:var(--ok);background:rgba(87,197,150,.09)}
+.opt.wrong{border-color:var(--no);background:rgba(228,105,94,.09)}
+
+.pgrid{display:grid;grid-template-columns:88px 1fr;gap:8px 12px;align-items:center;margin-top:6px}
+.pgrid label{font-family:var(--mono);font-size:14px;color:var(--dim)}
+.pgrid input{font-size:16px;padding:8px 11px}
+
+.persons{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.pbtn{font-family:var(--mono);font-size:14px;padding:7px 13px;border:1px solid var(--line);
+      border-radius:8px;background:var(--panel2);color:var(--dim)}
+.pbtn.sel{border-color:var(--cool);color:var(--fg);background:rgba(123,161,232,.12)}
+.pbtn.right{border-color:var(--ok);color:var(--fg)}
+.pbtn.wrong{border-color:var(--no);color:var(--fg)}
+
+.actions{display:flex;gap:10px;align-items:center;margin-top:18px;flex-wrap:wrap}
+.btn{padding:11px 20px;border-radius:8px;background:var(--fg);color:#0E1116;font-weight:600;font-size:15px}
+.btn.ghost{background:none;border:1px solid var(--line2);color:var(--fg);font-weight:500}
+.btn.ghost:hover{border-color:var(--fg)}
+.btn:disabled{opacity:.4;cursor:default}
+.hint{font-size:12px;color:var(--dim2)}
+
+.fb{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
+.verdict{font-family:var(--mono);font-size:15px;font-weight:700;letter-spacing:.02em}
+.verdict.ok{color:var(--ok)} .verdict.no{color:var(--no)}
+.answer{font-family:var(--mono);font-size:22px;margin:6px 0 2px}
+.diag{font-size:14px;color:var(--fg);margin-top:8px}
+.rule{font-size:14px;color:var(--dim);margin-top:6px}
+.rule b{color:var(--fg);font-weight:600}
+.tagline{font-size:12px;color:var(--dim2);margin-top:10px}
+
+/* ---------- the ladder (signature) ---------- */
+.ladder{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+        padding:14px;position:sticky;top:14px}
+.ladder .eyebrow{margin-bottom:10px;display:block}
+.rung{display:grid;grid-template-columns:66px 1fr;gap:8px;align-items:baseline;
+      padding:6px 8px;border-radius:6px;border-left:2px solid transparent}
+.rung .p{font-size:12px;color:var(--dim2);font-family:var(--mono)}
+.rung .v{font-family:var(--mono);font-size:15px;color:var(--dim2);word-break:break-word}
+.rung.on{border-left-color:var(--cool);background:var(--panel2)}
+.rung.on .p{color:var(--cool)}
+.rung.rev .v{color:var(--fg)}
+.rung.rev.on .v{color:var(--cool)}
+.rung.diff .v{color:var(--gold)}
+.ladder .foot{font-size:11px;color:var(--dim2);margin-top:10px;border-top:1px solid var(--line);padding-top:9px}
+
+/* ---------- progress bar ---------- */
+.strip{display:flex;align-items:center;gap:12px;margin-top:14px;font-size:12px;color:var(--dim2)}
+.bar{flex:1;height:3px;background:var(--line);border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--cool)}
+
+/* ---------- progress tab ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px;margin-bottom:16px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:13px 15px}
+.stat .n{font-family:var(--mono);font-size:25px;font-weight:700;line-height:1.1}
+.stat .l{font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim2);margin-top:5px}
+
+.grow{display:grid;grid-template-columns:1fr 168px 66px;gap:12px;align-items:center;
+      padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.grow:last-child{border-bottom:none}
+.grow .nm{display:flex;flex-direction:column;gap:1px}
+.grow .sub{font-size:11.5px;color:var(--dim2)}
+.mb{height:7px;border-radius:4px;background:var(--line);overflow:hidden;display:flex}
+.mb i{display:block;height:100%}
+.mb .m{background:var(--gold)} .mb .l{background:var(--cool)} .mb .s{background:var(--line2)}
+.pct{font-family:var(--mono);font-size:14px;text-align:right;color:var(--dim)}
+
+.legend{display:flex;gap:14px;font-size:11.5px;color:var(--dim2);margin-top:12px;flex-wrap:wrap}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+
+.weak{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.weak span{font-family:var(--mono);font-size:13px;padding:4px 9px;border:1px solid var(--line);
+           border-radius:6px;color:var(--dim)}
+
+.togs{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.tog{font-size:13px;padding:6px 12px;border:1px solid var(--line);border-radius:999px;color:var(--dim2)}
+.tog.on{border-color:var(--line2);color:var(--fg);background:var(--panel2)}
+
+.sel-inline{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px;color:var(--dim)}
+.sel-inline select{background:var(--panel2);border:1px solid var(--line);border-radius:7px;
+                   padding:6px 9px;color:var(--fg);font-size:14px}
+
+/* ---------- focus / exam menus ---------- */
+.menu{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.mcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:15px;text-align:left}
+.mcard:hover{border-color:var(--line2)}
+.mcard .t{font-size:15px;font-weight:600;margin-bottom:3px}
+.mcard .d{font-size:12.5px;color:var(--dim2);line-height:1.45}
+.mcard .m{font-family:var(--mono);font-size:11.5px;color:var(--dim);margin-top:9px}
+
+/* ---------- notes ---------- */
+.notes{font-size:15px}
+.notes h3{font-size:15px;margin:22px 0 8px;font-weight:600}
+.notes h3:first-child{margin-top:0}
+.notes p{color:var(--dim);margin:8px 0}
+.notes table{border-collapse:collapse;width:100%;margin:10px 0;font-family:var(--mono);font-size:13.5px}
+.notes th,.notes td{border:1px solid var(--line);padding:6px 9px;text-align:left}
+.notes th{color:var(--dim2);font-weight:500;font-size:12px;letter-spacing:.05em;text-transform:uppercase}
+.notes b{color:var(--gold);font-weight:600}
+.notes code{font-family:var(--mono);background:var(--panel2);padding:1px 5px;border-radius:4px;font-size:13px}
+.notes ul{color:var(--dim);padding-left:20px}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;background:var(--panel2);
+       border:1px solid var(--line2);border-radius:8px;padding:9px 16px;font-size:14px;z-index:9}
+@media (prefers-reduced-motion:no-preference){
+  .toast{animation:pop .18s ease-out}
+  @keyframes pop{from{opacity:0;transform:translate(-50%,6px)}to{opacity:1;transform:translate(-50%,0)}}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <svg class="ring" viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="16.5" fill="none" stroke="#2A313C" stroke-width="3"></circle>
+      <circle id="ringArc" cx="20" cy="20" r="16.5" fill="none" stroke="#D9B26A" stroke-width="3"
+              stroke-linecap="round" stroke-dasharray="0 999" transform="rotate(-90 20 20)"></circle>
+      <text id="ringTxt" x="20" y="24" text-anchor="middle">0%</text>
+    </svg>
+    <div class="mark">Präsens <span>/ German 4</span></div>
+    <nav class="tabs" role="tablist" id="tabs"></nav>
+  </header>
+  <main id="view"></main>
+</div>
+<script>
+const DATA = {"verbs":[{"inf":"machen","en":"to do, to make","stem":"mach","forms":["mache","machst","macht","machen","macht","machen"],"grp":"regular","core":true,"tags":[],"tail":"am Wochenende einen Ausflug","alt":{},"why":["Stem mach- + -e. The ich-form never takes a vowel change.","Stem mach- + -st.","Stem mach- + -t → macht. Same form as ihr.","wir always copies the infinitive: machen.","Stem mach- + -t → macht. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: machen."],"err":{"1":"mächst","2":"mächt"}},{"inf":"spielen","en":"to play","stem":"spiel","forms":["spiele","spielst","spielt","spielen","spielt","spielen"],"grp":"regular","core":true,"tags":[],"tail":"jeden Samstag Fußball","alt":{},"why":["Stem spiel- + -e. The ich-form never takes a vowel change.","Stem spiel- + -st.","Stem spiel- + -t → spielt. Same form as ihr.","wir always copies the infinitive: spielen.","Stem spiel- + -t → spielt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: spielen."],"err":{"1":"spielest","2":"spielet","4":"spielet"}},{"inf":"kommen","en":"to come","stem":"komm","forms":["komme","kommst","kommt","kommen","kommt","kommen"],"grp":"regular","core":true,"tags":["double_mn"],"tail":"fast immer zu spät","alt":{},"why":["Stem komm- + -e. The ich-form never takes a vowel change.","Stem komm- + -st. The doubled -mm-/-nn- is easy to pronounce, so no linking -e-.","Stem komm- + -t → kommt. Same form as ihr. The doubled -mm-/-nn- is easy to pronounce, so no linking -e-.","wir always copies the infinitive: kommen.","Stem komm- + -t → kommt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: kommen."],"err":{"1":"kommest","2":"kommet","4":"kommet"}},{"inf":"gehen","en":"to go","stem":"geh","forms":["gehe","gehst","geht","gehen","geht","gehen"],"grp":"regular","core":true,"tags":["trap_e"],"tail":"am Abend ins Kino","alt":{},"why":["Stem geh- + -e. The ich-form never takes a vowel change.","Stem geh- + -st. The stem has an -e-, but only a closed group of strong verbs changes it. This one does not.","Stem geh- + -t → geht. Same form as ihr. The stem has an -e-, but only a closed group of strong verbs changes it. This one does not.","wir always copies the infinitive: gehen.","Stem geh- + -t → geht. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: gehen."],"err":{"1":"gehest","2":"gehet","4":"gehet"}},{"inf":"trinken","en":"to drink","stem":"trink","forms":["trinke","trinkst","trinkt","trinken","trinkt","trinken"],"grp":"regular","core":true,"tags":[],"tail":"jeden Morgen einen Kaffee","alt":{},"why":["Stem trink- + -e. The ich-form never takes a vowel change.","Stem trink- + -st.","Stem trink- + -t → trinkt. Same form as ihr.","wir always copies the infinitive: trinken.","Stem trink- + -t → trinkt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: trinken."],"err":{"1":"trinkest","2":"trinket","4":"trinket"}},{"inf":"singen","en":"to sing","stem":"sing","forms":["singe","singst","singt","singen","singt","singen"],"grp":"regular","core":false,"tags":[],"tail":"gern im Chor","alt":{},"why":["Stem sing- + -e. The ich-form never takes a vowel change.","Stem sing- + -st.","Stem sing- + -t → singt. Same form as ihr.","wir always copies the infinitive: singen.","Stem sing- + -t → singt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: singen."],"err":{"1":"singest","2":"singet","4":"singet"}},{"inf":"schreiben","en":"to write","stem":"schreib","forms":["schreibe","schreibst","schreibt","schreiben","schreibt","schreiben"],"grp":"regular","core":true,"tags":[],"tail":"eine E-Mail an den Chef","alt":{},"why":["Stem schreib- + -e. The ich-form never takes a vowel change.","Stem schreib- + -st.","Stem schreib- + -t → schreibt. Same form as ihr.","wir always copies the infinitive: schreiben.","Stem schreib- + -t → schreibt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: schreiben."],"err":{"1":"schreibest","2":"schreibet","4":"schreibet"}},{"inf":"bleiben","en":"to stay","stem":"bleib","forms":["bleibe","bleibst","bleibt","bleiben","bleibt","bleiben"],"grp":"regular","core":false,"tags":[],"tail":"heute lieber zu Hause","alt":{},"why":["Stem bleib- + -e. The ich-form never takes a vowel change.","Stem bleib- + -st.","Stem bleib- + -t → bleibt. Same form as ihr.","wir always copies the infinitive: bleiben.","Stem bleib- + -t → bleibt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: bleiben."],"err":{"1":"bleibest","2":"bleibet","4":"bleibet"}},{"inf":"kaufen","en":"to buy","stem":"kauf","forms":["kaufe","kaufst","kauft","kaufen","kauft","kaufen"],"grp":"regular","core":true,"tags":["trap_au"],"tail":"Brot beim Bäcker","alt":{},"why":["Stem kauf- + -e. The ich-form never takes a vowel change.","Stem kauf- + -st. The stem has -au-, but only laufen (and a few rare verbs) umlaut it. This one does not.","Stem kauf- + -t → kauft. Same form as ihr. The stem has -au-, but only laufen (and a few rare verbs) umlaut it. This one does not.","wir always copies the infinitive: kaufen.","Stem kauf- + -t → kauft. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: kaufen."],"err":{"1":"käufst","2":"käuft"}},{"inf":"fragen","en":"to ask","stem":"frag","forms":["frage","fragst","fragt","fragen","fragt","fragen"],"grp":"regular","core":true,"tags":["trap_a"],"tail":"den Busfahrer nach dem Weg","alt":{},"why":["Stem frag- + -e. The ich-form never takes a vowel change.","Stem frag- + -st. The stem has an -a-, but only a closed group of strong verbs umlauts. This one does not.","Stem frag- + -t → fragt. Same form as ihr. The stem has an -a-, but only a closed group of strong verbs umlauts. This one does not.","wir always copies the infinitive: fragen.","Stem frag- + -t → fragt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: fragen."],"err":{"1":"fragest","2":"fraget","4":"fraget"}},{"inf":"sagen","en":"to say","stem":"sag","forms":["sage","sagst","sagt","sagen","sagt","sagen"],"grp":"regular","core":true,"tags":["trap_a"],"tail":"immer die Wahrheit","alt":{},"why":["Stem sag- + -e. The ich-form never takes a vowel change.","Stem sag- + -st. The stem has an -a-, but only a closed group of strong verbs umlauts. This one does not.","Stem sag- + -t → sagt. Same form as ihr. The stem has an -a-, but only a closed group of strong verbs umlauts. This one does not.","wir always copies the infinitive: sagen.","Stem sag- + -t → sagt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: sagen."],"err":{"1":"sagest","2":"saget","4":"saget"}},{"inf":"hören","en":"to hear, to listen to","stem":"hör","forms":["höre","hörst","hört","hören","hört","hören"],"grp":"regular","core":true,"tags":[],"tail":"gern laute Musik","alt":{},"why":["Stem hör- + -e. The ich-form never takes a vowel change.","Stem hör- + -st.","Stem hör- + -t → hört. Same form as ihr.","wir always copies the infinitive: hören.","Stem hör- + -t → hört. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: hören."],"err":{"1":"hörest","2":"höret","4":"höret"}},{"inf":"suchen","en":"to look for","stem":"such","forms":["suche","suchst","sucht","suchen","sucht","suchen"],"grp":"regular","core":false,"tags":[],"tail":"eine neue Wohnung","alt":{},"why":["Stem such- + -e. The ich-form never takes a vowel change.","Stem such- + -st.","Stem such- + -t → sucht. Same form as ihr.","wir always copies the infinitive: suchen.","Stem such- + -t → sucht. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: suchen."],"err":{"1":"suchest","2":"suchet","4":"suchet"}},{"inf":"brauchen","en":"to need","stem":"brauch","forms":["brauche","brauchst","braucht","brauchen","braucht","brauchen"],"grp":"regular","core":true,"tags":["trap_au"],"tail":"mehr Zeit für das Projekt","alt":{},"why":["Stem brauch- + -e. The ich-form never takes a vowel change.","Stem brauch- + -st. The stem has -au-, but only laufen (and a few rare verbs) umlaut it. This one does not.","Stem brauch- + -t → braucht. Same form as ihr. The stem has -au-, but only laufen (and a few rare verbs) umlaut it. This one does not.","wir always copies the infinitive: brauchen.","Stem brauch- + -t → braucht. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: brauchen."],"err":{"1":"brauchest","2":"brauchet","4":"brauchet"}},{"inf":"lachen","en":"to laugh","stem":"lach","forms":["lache","lachst","lacht","lachen","lacht","lachen"],"grp":"regular","core":false,"tags":["trap_a"],"tail":"über den alten Film","alt":{},"why":["Stem lach- + -e. The ich-form never takes a vowel change.","Stem lach- + -st. The stem has an -a-, but only a closed group of strong verbs umlauts. This one does not.","Stem lach- + -t → lacht. Same form as ihr. The stem has an -a-, but only a closed group of strong verbs umlauts. This one does not.","wir always copies the infinitive: lachen.","Stem lach- + -t → lacht. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: lachen."],"err":{"1":"lächst","2":"lächt"}},{"inf":"leben","en":"to live","stem":"leb","forms":["lebe","lebst","lebt","leben","lebt","leben"],"grp":"regular","core":false,"tags":["trap_e"],"tail":"gern in einer großen Stadt","alt":{},"why":["Stem leb- + -e. The ich-form never takes a vowel change.","Stem leb- + -st. The stem has an -e-, but only a closed group of strong verbs changes it. This one does not.","Stem leb- + -t → lebt. Same form as ihr. The stem has an -e-, but only a closed group of strong verbs changes it. This one does not.","wir always copies the infinitive: leben.","Stem leb- + -t → lebt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: leben."],"err":{"1":"lebest","2":"lebet","4":"lebet"}},{"inf":"denken","en":"to think","stem":"denk","forms":["denke","denkst","denkt","denken","denkt","denken"],"grp":"regular","core":false,"tags":["trap_e"],"tail":"oft an früher","alt":{},"why":["Stem denk- + -e. The ich-form never takes a vowel change.","Stem denk- + -st. The stem has an -e-, but only a closed group of strong verbs changes it. This one does not.","Stem denk- + -t → denkt. Same form as ihr. The stem has an -e-, but only a closed group of strong verbs changes it. This one does not.","wir always copies the infinitive: denken.","Stem denk- + -t → denkt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: denken."],"err":{"1":"denkest","2":"denket","4":"denket"}},{"inf":"kennen","en":"to know (be acquainted)","stem":"kenn","forms":["kenne","kennst","kennt","kennen","kennt","kennen"],"grp":"regular","core":false,"tags":["trap_e","double_mn"],"tail":"diesen Film schon","alt":{},"why":["Stem kenn- + -e. The ich-form never takes a vowel change.","Stem kenn- + -st. The stem has an -e-, but only a closed group of strong verbs changes it. This one does not.","Stem kenn- + -t → kennt. Same form as ihr. The stem has an -e-, but only a closed group of strong verbs changes it. This one does not.","wir always copies the infinitive: kennen.","Stem kenn- + -t → kennt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: kennen."],"err":{"1":"kennest","2":"kennet","4":"kennet"}},{"inf":"stehen","en":"to stand","stem":"steh","forms":["stehe","stehst","steht","stehen","steht","stehen"],"grp":"regular","core":false,"tags":["trap_e"],"tail":"vor dem Haus","alt":{},"why":["Stem steh- + -e. The ich-form never takes a vowel change.","Stem steh- + -st. The stem has an -e-, but only a closed group of strong verbs changes it. This one does not.","Stem steh- + -t → steht. Same form as ihr. The stem has an -e-, but only a closed group of strong verbs changes it. This one does not.","wir always copies the infinitive: stehen.","Stem steh- + -t → steht. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: stehen."],"err":{"1":"stehest","2":"stehet","4":"stehet"}},{"inf":"legen","en":"to lay, to put","stem":"leg","forms":["lege","legst","legt","legen","legt","legen"],"grp":"regular","core":false,"tags":["trap_e"],"tail":"das Buch auf den Tisch","alt":{},"why":["Stem leg- + -e. The ich-form never takes a vowel change.","Stem leg- + -st. The stem has an -e-, but only a closed group of strong verbs changes it. This one does not.","Stem leg- + -t → legt. Same form as ihr. The stem has an -e-, but only a closed group of strong verbs changes it. This one does not.","wir always copies the infinitive: legen.","Stem leg- + -t → legt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: legen."],"err":{"1":"legest","2":"leget","4":"leget"}},{"inf":"rufen","en":"to call, to shout","stem":"ruf","forms":["rufe","rufst","ruft","rufen","ruft","rufen"],"grp":"regular","core":false,"tags":["trap_u"],"tail":"laut nach dem Hund","alt":{},"why":["Stem ruf- + -e. The ich-form never takes a vowel change.","Stem ruf- + -st. The stem has a -u-, and -u- never umlauts in the present tense.","Stem ruf- + -t → ruft. Same form as ihr. The stem has a -u-, and -u- never umlauts in the present tense.","wir always copies the infinitive: rufen.","Stem ruf- + -t → ruft. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: rufen."],"err":{"1":"rufest","2":"rufet","4":"rufet"}},{"inf":"schwimmen","en":"to swim","stem":"schwimm","forms":["schwimme","schwimmst","schwimmt","schwimmen","schwimmt","schwimmen"],"grp":"regular","core":false,"tags":["double_mn"],"tail":"zweimal pro Woche im See","alt":{},"why":["Stem schwimm- + -e. The ich-form never takes a vowel change.","Stem schwimm- + -st. The doubled -mm-/-nn- is easy to pronounce, so no linking -e-.","Stem schwimm- + -t → schwimmt. Same form as ihr. The doubled -mm-/-nn- is easy to pronounce, so no linking -e-.","wir always copies the infinitive: schwimmen.","Stem schwimm- + -t → schwimmt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: schwimmen."],"err":{"1":"schwimmest","2":"schwimmet","4":"schwimmet"}},{"inf":"kochen","en":"to cook","stem":"koch","forms":["koche","kochst","kocht","kochen","kocht","kochen"],"grp":"regular","core":false,"tags":[],"tail":"heute Abend eine Suppe","alt":{},"why":["Stem koch- + -e. The ich-form never takes a vowel change.","Stem koch- + -st.","Stem koch- + -t → kocht. Same form as ihr.","wir always copies the infinitive: kochen.","Stem koch- + -t → kocht. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: kochen."],"err":{"1":"kochest","2":"kochet","4":"kochet"}},{"inf":"besuchen","en":"to visit","stem":"besuch","forms":["besuche","besuchst","besucht","besuchen","besucht","besuchen"],"grp":"regular","core":false,"tags":[],"tail":"am Sonntag die Großeltern","alt":{},"why":["Stem besuch- + -e. The ich-form never takes a vowel change.","Stem besuch- + -st.","Stem besuch- + -t → besucht. Same form as ihr.","wir always copies the infinitive: besuchen.","Stem besuch- + -t → besucht. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: besuchen."],"err":{"1":"besuchest","2":"besuchet","4":"besuchet"}},{"inf":"verkaufen","en":"to sell","stem":"verkauf","forms":["verkaufe","verkaufst","verkauft","verkaufen","verkauft","verkaufen"],"grp":"regular","core":false,"tags":["trap_au"],"tail":"das alte Fahrrad","alt":{},"why":["Stem verkauf- + -e. The ich-form never takes a vowel change.","Stem verkauf- + -st. The stem has -au-, but only laufen (and a few rare verbs) umlaut it. This one does not.","Stem verkauf- + -t → verkauft. Same form as ihr. The stem has -au-, but only laufen (and a few rare verbs) umlaut it. This one does not.","wir always copies the infinitive: verkaufen.","Stem verkauf- + -t → verkauft. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: verkaufen."],"err":{"1":"verkäufst","2":"verkäuft"}},{"inf":"verstehen","en":"to understand","stem":"versteh","forms":["verstehe","verstehst","versteht","verstehen","versteht","verstehen"],"grp":"regular","core":true,"tags":["trap_e"],"tail":"die Frage nicht","alt":{},"why":["Stem versteh- + -e. The ich-form never takes a vowel change.","Stem versteh- + -st. The stem has an -e-, but only a closed group of strong verbs changes it. This one does not.","Stem versteh- + -t → versteht. Same form as ihr. The stem has an -e-, but only a closed group of strong verbs changes it. This one does not.","wir always copies the infinitive: verstehen.","Stem versteh- + -t → versteht. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: verstehen."],"err":{"1":"verstehest","2":"verstehet","4":"verstehet"}},{"inf":"zeigen","en":"to show","stem":"zeig","forms":["zeige","zeigst","zeigt","zeigen","zeigt","zeigen"],"grp":"regular","core":false,"tags":[],"tail":"den Touristen den Weg","alt":{},"why":["Stem zeig- + -e. The ich-form never takes a vowel change.","Stem zeig- + -st.","Stem zeig- + -t → zeigt. Same form as ihr.","wir always copies the infinitive: zeigen.","Stem zeig- + -t → zeigt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: zeigen."],"err":{"1":"zeigest","2":"zeiget","4":"zeiget"}},{"inf":"üben","en":"to practise","stem":"üb","forms":["übe","übst","übt","üben","übt","üben"],"grp":"regular","core":false,"tags":[],"tail":"jeden Tag Grammatik","alt":{},"why":["Stem üb- + -e. The ich-form never takes a vowel change.","Stem üb- + -st.","Stem üb- + -t → übt. Same form as ihr.","wir always copies the infinitive: üben.","Stem üb- + -t → übt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: üben."],"err":{"1":"übest","2":"übet","4":"übet"}},{"inf":"glauben","en":"to believe","stem":"glaub","forms":["glaube","glaubst","glaubt","glauben","glaubt","glauben"],"grp":"regular","core":false,"tags":["trap_au"],"tail":"die Geschichte nicht","alt":{},"why":["Stem glaub- + -e. The ich-form never takes a vowel change.","Stem glaub- + -st. The stem has -au-, but only laufen (and a few rare verbs) umlaut it. This one does not.","Stem glaub- + -t → glaubt. Same form as ihr. The stem has -au-, but only laufen (and a few rare verbs) umlaut it. This one does not.","wir always copies the infinitive: glauben.","Stem glaub- + -t → glaubt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: glauben."],"err":{"1":"gläubst","2":"gläubt"}},{"inf":"lieben","en":"to love","stem":"lieb","forms":["liebe","liebst","liebt","lieben","liebt","lieben"],"grp":"regular","core":true,"tags":[],"tail":"diese Stadt sehr","alt":{},"why":["Stem lieb- + -e. The ich-form never takes a vowel change.","Stem lieb- + -st.","Stem lieb- + -t → liebt. Same form as ihr.","wir always copies the infinitive: lieben.","Stem lieb- + -t → liebt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: lieben."],"err":{"1":"liebest","2":"liebet","4":"liebet"}},{"inf":"holen","en":"to fetch","stem":"hol","forms":["hole","holst","holt","holen","holt","holen"],"grp":"regular","core":false,"tags":[],"tail":"das Paket von der Post","alt":{},"why":["Stem hol- + -e. The ich-form never takes a vowel change.","Stem hol- + -st.","Stem hol- + -t → holt. Same form as ihr.","wir always copies the infinitive: holen.","Stem hol- + -t → holt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: holen."],"err":{"1":"holest","2":"holet","4":"holet"}},{"inf":"malen","en":"to paint","stem":"mal","forms":["male","malst","malt","malen","malt","malen"],"grp":"regular","core":false,"tags":["trap_a"],"tail":"ein Bild für die Schule","alt":{},"why":["Stem mal- + -e. The ich-form never takes a vowel change.","Stem mal- + -st. The stem has an -a-, but only a closed group of strong verbs umlauts. This one does not.","Stem mal- + -t → malt. Same form as ihr. The stem has an -a-, but only a closed group of strong verbs umlauts. This one does not.","wir always copies the infinitive: malen.","Stem mal- + -t → malt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: malen."],"err":{"1":"mälst","2":"mält"}},{"inf":"weinen","en":"to cry","stem":"wein","forms":["weine","weinst","weint","weinen","weint","weinen"],"grp":"regular","core":false,"tags":[],"tail":"fast nie im Kino","alt":{},"why":["Stem wein- + -e. The ich-form never takes a vowel change.","Stem wein- + -st.","Stem wein- + -t → weint. Same form as ihr.","wir always copies the infinitive: weinen.","Stem wein- + -t → weint. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: weinen."],"err":{"1":"weinest","2":"weinet","4":"weinet"}},{"inf":"schicken","en":"to send","stem":"schick","forms":["schicke","schickst","schickt","schicken","schickt","schicken"],"grp":"regular","core":false,"tags":[],"tail":"das Formular per Post","alt":{},"why":["Stem schick- + -e. The ich-form never takes a vowel change.","Stem schick- + -st.","Stem schick- + -t → schickt. Same form as ihr.","wir always copies the infinitive: schicken.","Stem schick- + -t → schickt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: schicken."],"err":{"1":"schickest","2":"schicket","4":"schicket"}},{"inf":"hoffen","en":"to hope","stem":"hoff","forms":["hoffe","hoffst","hofft","hoffen","hofft","hoffen"],"grp":"regular","core":false,"tags":[],"tail":"auf besseres Wetter","alt":{},"why":["Stem hoff- + -e. The ich-form never takes a vowel change.","Stem hoff- + -st.","Stem hoff- + -t → hofft. Same form as ihr.","wir always copies the infinitive: hoffen.","Stem hoff- + -t → hofft. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: hoffen."],"err":{"1":"hoffest","2":"hoffet","4":"hoffet"}},{"inf":"lernen","en":"to learn","stem":"lern","forms":["lerne","lernst","lernt","lernen","lernt","lernen"],"grp":"regular","core":true,"tags":["trap_rn"],"tail":"seit einem Jahr Deutsch","alt":{},"why":["Stem lern- + -e. The ich-form never takes a vowel change.","Stem lern- + -st. The stem ends in -n after r, and l/r/h are excluded from the linking-e rule.","Stem lern- + -t → lernt. Same form as ihr. The stem ends in -n after r, and l/r/h are excluded from the linking-e rule.","wir always copies the infinitive: lernen.","Stem lern- + -t → lernt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: lernen."],"err":{"1":"lernest","2":"lernet","4":"lernet"}},{"inf":"wohnen","en":"to live, to reside","stem":"wohn","forms":["wohne","wohnst","wohnt","wohnen","wohnt","wohnen"],"grp":"regular","core":true,"tags":["trap_hn"],"tail":"seit 2020 in Berlin","alt":{},"why":["Stem wohn- + -e. The ich-form never takes a vowel change.","Stem wohn- + -st. The stem ends in -n after a silent h, which is excluded from the linking-e rule.","Stem wohn- + -t → wohnt. Same form as ihr. The stem ends in -n after a silent h, which is excluded from the linking-e rule.","wir always copies the infinitive: wohnen.","Stem wohn- + -t → wohnt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: wohnen."],"err":{"1":"wohnest","2":"wohnet","4":"wohnet"}},{"inf":"warnen","en":"to warn","stem":"warn","forms":["warne","warnst","warnt","warnen","warnt","warnen"],"grp":"regular","core":false,"tags":["trap_rn"],"tail":"vor dem großen Hund","alt":{},"why":["Stem warn- + -e. The ich-form never takes a vowel change.","Stem warn- + -st. The stem ends in -n after r, and l/r/h are excluded from the linking-e rule.","Stem warn- + -t → warnt. Same form as ihr. The stem ends in -n after r, and l/r/h are excluded from the linking-e rule.","wir always copies the infinitive: warnen.","Stem warn- + -t → warnt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: warnen."],"err":{"1":"warnest","2":"warnet","4":"warnet"}},{"inf":"turnen","en":"to do gymnastics","stem":"turn","forms":["turne","turnst","turnt","turnen","turnt","turnen"],"grp":"regular","core":false,"tags":["trap_rn"],"tail":"jeden Freitag in der Halle","alt":{},"why":["Stem turn- + -e. The ich-form never takes a vowel change.","Stem turn- + -st. The stem ends in -n after r, and l/r/h are excluded from the linking-e rule.","Stem turn- + -t → turnt. Same form as ihr. The stem ends in -n after r, and l/r/h are excluded from the linking-e rule.","wir always copies the infinitive: turnen.","Stem turn- + -t → turnt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: turnen."],"err":{"1":"turnest","2":"turnet","4":"turnet"}},{"inf":"filmen","en":"to film","stem":"film","forms":["filme","filmst","filmt","filmen","filmt","filmen"],"grp":"regular","core":false,"tags":["trap_lm"],"tail":"das Konzert mit dem Handy","alt":{},"why":["Stem film- + -e. The ich-form never takes a vowel change.","Stem film- + -st. The stem ends in -m after l, and l/r/h are excluded from the linking-e rule.","Stem film- + -t → filmt. Same form as ihr. The stem ends in -m after l, and l/r/h are excluded from the linking-e rule.","wir always copies the infinitive: filmen.","Stem film- + -t → filmt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: filmen."],"err":{"1":"filmest","2":"filmet","4":"filmet"}},{"inf":"arbeiten","en":"to work","stem":"arbeit","forms":["arbeite","arbeitest","arbeitet","arbeiten","arbeitet","arbeiten"],"grp":"linking_e","core":true,"tags":[],"tail":"seit fünf Jahren in Berlin","alt":{},"why":["Stem arbeit- + -e. The ich-form never takes a vowel change.","Stem arbeit- ends in -t → insert -e- before -st: arbeitest.","Stem arbeit- ends in -t → -et: arbeitet. Same form as ihr.","wir always copies the infinitive: arbeiten.","Stem arbeit- ends in -t → -et: arbeitet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: arbeiten."],"err":{"1":"arbeitst","2":"arbeitt","4":"arbeitt"}},{"inf":"finden","en":"to find","stem":"find","forms":["finde","findest","findet","finden","findet","finden"],"grp":"linking_e","core":true,"tags":[],"tail":"den Film ziemlich langweilig","alt":{},"why":["Stem find- + -e. The ich-form never takes a vowel change.","Stem find- ends in -d → insert -e- before -st: findest.","Stem find- ends in -d → -et: findet. Same form as ihr.","wir always copies the infinitive: finden.","Stem find- ends in -d → -et: findet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: finden."],"err":{"1":"findst","2":"findt","4":"findt"}},{"inf":"warten","en":"to wait","stem":"wart","forms":["warte","wartest","wartet","warten","wartet","warten"],"grp":"linking_e","core":true,"tags":[],"tail":"an der Haltestelle auf den Bus","alt":{},"why":["Stem wart- + -e. The ich-form never takes a vowel change.","Stem wart- ends in -t → insert -e- before -st: wartest.","Stem wart- ends in -t → -et: wartet. Same form as ihr.","wir always copies the infinitive: warten.","Stem wart- ends in -t → -et: wartet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: warten."],"err":{"1":"wartst","2":"wartt","4":"wartt"}},{"inf":"antworten","en":"to answer","stem":"antwort","forms":["antworte","antwortest","antwortet","antworten","antwortet","antworten"],"grp":"linking_e","core":true,"tags":[],"tail":"sofort auf die E-Mail","alt":{},"why":["Stem antwort- + -e. The ich-form never takes a vowel change.","Stem antwort- ends in -t → insert -e- before -st: antwortest.","Stem antwort- ends in -t → -et: antwortet. Same form as ihr.","wir always copies the infinitive: antworten.","Stem antwort- ends in -t → -et: antwortet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: antworten."],"err":{"1":"antwortst","2":"antwortt","4":"antwortt"}},{"inf":"reden","en":"to talk","stem":"red","forms":["rede","redest","redet","reden","redet","reden"],"grp":"linking_e","core":true,"tags":[],"tail":"zu viel im Unterricht","alt":{},"why":["Stem red- + -e. The ich-form never takes a vowel change.","Stem red- ends in -d → insert -e- before -st: redest.","Stem red- ends in -d → -et: redet. Same form as ihr.","wir always copies the infinitive: reden.","Stem red- ends in -d → -et: redet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: reden."],"err":{"1":"redst","2":"redt","4":"redt"}},{"inf":"baden","en":"to bathe","stem":"bad","forms":["bade","badest","badet","baden","badet","baden"],"grp":"linking_e","core":true,"tags":[],"tail":"gern im kalten Meer","alt":{},"why":["Stem bad- + -e. The ich-form never takes a vowel change.","Stem bad- ends in -d → insert -e- before -st: badest.","Stem bad- ends in -d → -et: badet. Same form as ihr.","wir always copies the infinitive: baden.","Stem bad- ends in -d → -et: badet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: baden."],"err":{"1":"badst","2":"badt","4":"badt"}},{"inf":"melden","en":"to report","stem":"meld","forms":["melde","meldest","meldet","melden","meldet","melden"],"grp":"linking_e","core":false,"tags":[],"tail":"den Schaden bei der Versicherung","alt":{},"why":["Stem meld- + -e. The ich-form never takes a vowel change.","Stem meld- ends in -d → insert -e- before -st: meldest.","Stem meld- ends in -d → -et: meldet. Same form as ihr.","wir always copies the infinitive: melden.","Stem meld- ends in -d → -et: meldet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: melden."],"err":{"1":"meldst","2":"meldt","4":"meldt"}},{"inf":"mieten","en":"to rent","stem":"miet","forms":["miete","mietest","mietet","mieten","mietet","mieten"],"grp":"linking_e","core":true,"tags":[],"tail":"eine Wohnung in Moabit","alt":{},"why":["Stem miet- + -e. The ich-form never takes a vowel change.","Stem miet- ends in -t → insert -e- before -st: mietest.","Stem miet- ends in -t → -et: mietet. Same form as ihr.","wir always copies the infinitive: mieten.","Stem miet- ends in -t → -et: mietet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: mieten."],"err":{"1":"mietst","2":"miett","4":"miett"}},{"inf":"bitten","en":"to ask (a favour)","stem":"bitt","forms":["bitte","bittest","bittet","bitten","bittet","bitten"],"grp":"linking_e","core":true,"tags":[],"tail":"den Kellner um die Rechnung","alt":{},"why":["Stem bitt- + -e. The ich-form never takes a vowel change.","Stem bitt- ends in -t → insert -e- before -st: bittest.","Stem bitt- ends in -t → -et: bittet. Same form as ihr.","wir always copies the infinitive: bitten.","Stem bitt- ends in -t → -et: bittet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: bitten."],"err":{"1":"bittst","2":"bitt","4":"bitt"}},{"inf":"schneiden","en":"to cut","stem":"schneid","forms":["schneide","schneidest","schneidet","schneiden","schneidet","schneiden"],"grp":"linking_e","core":false,"tags":[],"tail":"das Brot in dünne Scheiben","alt":{},"why":["Stem schneid- + -e. The ich-form never takes a vowel change.","Stem schneid- ends in -d → insert -e- before -st: schneidest.","Stem schneid- ends in -d → -et: schneidet. Same form as ihr.","wir always copies the infinitive: schneiden.","Stem schneid- ends in -d → -et: schneidet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: schneiden."],"err":{"1":"schneidst","2":"schneidt","4":"schneidt"}},{"inf":"retten","en":"to rescue","stem":"rett","forms":["rette","rettest","rettet","retten","rettet","retten"],"grp":"linking_e","core":false,"tags":[],"tail":"die Katze vom Baum","alt":{},"why":["Stem rett- + -e. The ich-form never takes a vowel change.","Stem rett- ends in -t → insert -e- before -st: rettest.","Stem rett- ends in -t → -et: rettet. Same form as ihr.","wir always copies the infinitive: retten.","Stem rett- ends in -t → -et: rettet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: retten."],"err":{"1":"rettst","2":"rett","4":"rett"}},{"inf":"senden","en":"to send","stem":"send","forms":["sende","sendest","sendet","senden","sendet","senden"],"grp":"linking_e","core":false,"tags":[],"tail":"die Unterlagen per E-Mail","alt":{},"why":["Stem send- + -e. The ich-form never takes a vowel change.","Stem send- ends in -d → insert -e- before -st: sendest.","Stem send- ends in -d → -et: sendet. Same form as ihr.","wir always copies the infinitive: senden.","Stem send- ends in -d → -et: sendet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: senden."],"err":{"1":"sendst","2":"sendt","4":"sendt"}},{"inf":"bilden","en":"to form","stem":"bild","forms":["bilde","bildest","bildet","bilden","bildet","bilden"],"grp":"linking_e","core":false,"tags":[],"tail":"einen Satz mit diesem Wort","alt":{},"why":["Stem bild- + -e. The ich-form never takes a vowel change.","Stem bild- ends in -d → insert -e- before -st: bildest.","Stem bild- ends in -d → -et: bildet. Same form as ihr.","wir always copies the infinitive: bilden.","Stem bild- ends in -d → -et: bildet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: bilden."],"err":{"1":"bildst","2":"bildt","4":"bildt"}},{"inf":"landen","en":"to land","stem":"land","forms":["lande","landest","landet","landen","landet","landen"],"grp":"linking_e","core":false,"tags":[],"tail":"pünktlich in Frankfurt","alt":{},"why":["Stem land- + -e. The ich-form never takes a vowel change.","Stem land- ends in -d → insert -e- before -st: landest.","Stem land- ends in -d → -et: landet. Same form as ihr.","wir always copies the infinitive: landen.","Stem land- ends in -d → -et: landet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: landen."],"err":{"1":"landst","2":"landt","4":"landt"}},{"inf":"leiden","en":"to suffer","stem":"leid","forms":["leide","leidest","leidet","leiden","leidet","leiden"],"grp":"linking_e","core":false,"tags":[],"tail":"unter dem Lärm im Haus","alt":{},"why":["Stem leid- + -e. The ich-form never takes a vowel change.","Stem leid- ends in -d → insert -e- before -st: leidest.","Stem leid- ends in -d → -et: leidet. Same form as ihr.","wir always copies the infinitive: leiden.","Stem leid- ends in -d → -et: leidet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: leiden."],"err":{"1":"leidst","2":"leidt","4":"leidt"}},{"inf":"heiraten","en":"to marry","stem":"heirat","forms":["heirate","heiratest","heiratet","heiraten","heiratet","heiraten"],"grp":"linking_e","core":false,"tags":[],"tail":"im Sommer in Italien","alt":{},"why":["Stem heirat- + -e. The ich-form never takes a vowel change.","Stem heirat- ends in -t → insert -e- before -st: heiratest.","Stem heirat- ends in -t → -et: heiratet. Same form as ihr.","wir always copies the infinitive: heiraten.","Stem heirat- ends in -t → -et: heiratet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: heiraten."],"err":{"1":"heiratst","2":"heiratt","4":"heiratt"}},{"inf":"rechnen","en":"to calculate","stem":"rechn","forms":["rechne","rechnest","rechnet","rechnen","rechnet","rechnen"],"grp":"linking_e","core":true,"tags":["cons_mn"],"tail":"mit einem langen Winter","alt":{},"why":["Stem rechn- + -e. The ich-form never takes a vowel change.","Stem rechn- ends in a consonant + -n → insert -e- before -st: rechnest.","Stem rechn- ends in a consonant + -n → -et: rechnet. Same form as ihr.","wir always copies the infinitive: rechnen.","Stem rechn- ends in a consonant + -n → -et: rechnet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: rechnen."],"err":{"1":"rechnst","2":"rechnt","4":"rechnt"}},{"inf":"öffnen","en":"to open","stem":"öffn","forms":["öffne","öffnest","öffnet","öffnen","öffnet","öffnen"],"grp":"linking_e","core":true,"tags":["cons_mn"],"tail":"das Fenster im Zimmer","alt":{},"why":["Stem öffn- + -e. The ich-form never takes a vowel change.","Stem öffn- ends in a consonant + -n → insert -e- before -st: öffnest.","Stem öffn- ends in a consonant + -n → -et: öffnet. Same form as ihr.","wir always copies the infinitive: öffnen.","Stem öffn- ends in a consonant + -n → -et: öffnet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: öffnen."],"err":{"1":"öffnst","2":"öffnt","4":"öffnt"}},{"inf":"atmen","en":"to breathe","stem":"atm","forms":["atme","atmest","atmet","atmen","atmet","atmen"],"grp":"linking_e","core":true,"tags":["cons_mn"],"tail":"ganz ruhig und tief","alt":{},"why":["Stem atm- + -e. The ich-form never takes a vowel change.","Stem atm- ends in a consonant + -m → insert -e- before -st: atmest.","Stem atm- ends in a consonant + -m → -et: atmet. Same form as ihr.","wir always copies the infinitive: atmen.","Stem atm- ends in a consonant + -m → -et: atmet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: atmen."],"err":{"1":"atmst","2":"atmt","4":"atmt"}},{"inf":"zeichnen","en":"to draw","stem":"zeichn","forms":["zeichne","zeichnest","zeichnet","zeichnen","zeichnet","zeichnen"],"grp":"linking_e","core":true,"tags":["cons_mn"],"tail":"ein Haus mit Bleistift","alt":{},"why":["Stem zeichn- + -e. The ich-form never takes a vowel change.","Stem zeichn- ends in a consonant + -n → insert -e- before -st: zeichnest.","Stem zeichn- ends in a consonant + -n → -et: zeichnet. Same form as ihr.","wir always copies the infinitive: zeichnen.","Stem zeichn- ends in a consonant + -n → -et: zeichnet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: zeichnen."],"err":{"1":"zeichnst","2":"zeichnt","4":"zeichnt"}},{"inf":"ordnen","en":"to arrange","stem":"ordn","forms":["ordne","ordnest","ordnet","ordnen","ordnet","ordnen"],"grp":"linking_e","core":false,"tags":["cons_mn"],"tail":"die Papiere auf dem Tisch","alt":{},"why":["Stem ordn- + -e. The ich-form never takes a vowel change.","Stem ordn- ends in a consonant + -n → insert -e- before -st: ordnest.","Stem ordn- ends in a consonant + -n → -et: ordnet. Same form as ihr.","wir always copies the infinitive: ordnen.","Stem ordn- ends in a consonant + -n → -et: ordnet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: ordnen."],"err":{"1":"ordnst","2":"ordnt","4":"ordnt"}},{"inf":"begegnen","en":"to meet, to run into","stem":"begegn","forms":["begegne","begegnest","begegnet","begegnen","begegnet","begegnen"],"grp":"linking_e","core":false,"tags":["cons_mn"],"tail":"einem alten Freund im Treppenhaus","alt":{},"why":["Stem begegn- + -e. The ich-form never takes a vowel change.","Stem begegn- ends in a consonant + -n → insert -e- before -st: begegnest.","Stem begegn- ends in a consonant + -n → -et: begegnet. Same form as ihr.","wir always copies the infinitive: begegnen.","Stem begegn- ends in a consonant + -n → -et: begegnet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: begegnen."],"err":{"1":"begegnst","2":"begegnt","4":"begegnt"}},{"inf":"trocknen","en":"to dry","stem":"trockn","forms":["trockne","trocknest","trocknet","trocknen","trocknet","trocknen"],"grp":"linking_e","core":false,"tags":["cons_mn"],"tail":"die Wäsche auf dem Balkon","alt":{},"why":["Stem trockn- + -e. The ich-form never takes a vowel change.","Stem trockn- ends in a consonant + -n → insert -e- before -st: trocknest.","Stem trockn- ends in a consonant + -n → -et: trocknet. Same form as ihr.","wir always copies the infinitive: trocknen.","Stem trockn- ends in a consonant + -n → -et: trocknet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: trocknen."],"err":{"1":"trocknst","2":"trocknt","4":"trocknt"}},{"inf":"widmen","en":"to dedicate","stem":"widm","forms":["widme","widmest","widmet","widmen","widmet","widmen"],"grp":"linking_e","core":false,"tags":["cons_mn"],"tail":"dem Projekt sehr viel Zeit","alt":{},"why":["Stem widm- + -e. The ich-form never takes a vowel change.","Stem widm- ends in a consonant + -m → insert -e- before -st: widmest.","Stem widm- ends in a consonant + -m → -et: widmet. Same form as ihr.","wir always copies the infinitive: widmen.","Stem widm- ends in a consonant + -m → -et: widmet. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: widmen."],"err":{"1":"widmst","2":"widmt","4":"widmt"}},{"inf":"reisen","en":"to travel","stem":"reis","forms":["reise","reist","reist","reisen","reist","reisen"],"grp":"sibilant","core":true,"tags":[],"tail":"jedes Jahr nach Italien","alt":{},"why":["Stem reis- + -e. The ich-form never takes a vowel change.","Stem reis- ends in -s → the du-ending collapses to -t, so du reist = er/sie/es reist.","Stem reis- + -t → reist. Same form as ihr.","wir always copies the infinitive: reisen.","Stem reis- + -t → reist. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: reisen."],"err":{"1":"reisst"}},{"inf":"heißen","en":"to be called","stem":"heiß","forms":["heiße","heißt","heißt","heißen","heißt","heißen"],"grp":"sibilant","core":true,"tags":[],"tail":null,"alt":{},"why":["Stem heiß- + -e. The ich-form never takes a vowel change.","Stem heiß- ends in -ß → the du-ending collapses to -t, so du heißt = er/sie/es heißt.","Stem heiß- + -t → heißt. Same form as ihr.","wir always copies the infinitive: heißen.","Stem heiß- + -t → heißt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: heißen."],"err":{"1":"heißst"}},{"inf":"tanzen","en":"to dance","stem":"tanz","forms":["tanze","tanzt","tanzt","tanzen","tanzt","tanzen"],"grp":"sibilant","core":true,"tags":[],"tail":"am liebsten Salsa","alt":{},"why":["Stem tanz- + -e. The ich-form never takes a vowel change.","Stem tanz- ends in -z → the du-ending collapses to -t, so du tanzt = er/sie/es tanzt.","Stem tanz- + -t → tanzt. Same form as ihr.","wir always copies the infinitive: tanzen.","Stem tanz- + -t → tanzt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: tanzen."],"err":{"1":"tanzst"}},{"inf":"sitzen","en":"to sit","stem":"sitz","forms":["sitze","sitzt","sitzt","sitzen","sitzt","sitzen"],"grp":"sibilant","core":true,"tags":[],"tail":"am Fenster im Zug","alt":{},"why":["Stem sitz- + -e. The ich-form never takes a vowel change.","Stem sitz- ends in -z → the du-ending collapses to -t, so du sitzt = er/sie/es sitzt.","Stem sitz- + -t → sitzt. Same form as ihr.","wir always copies the infinitive: sitzen.","Stem sitz- + -t → sitzt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: sitzen."],"err":{"1":"sitzst"}},{"inf":"putzen","en":"to clean","stem":"putz","forms":["putze","putzt","putzt","putzen","putzt","putzen"],"grp":"sibilant","core":true,"tags":[],"tail":"jeden Abend die Zähne","alt":{},"why":["Stem putz- + -e. The ich-form never takes a vowel change.","Stem putz- ends in -z → the du-ending collapses to -t, so du putzt = er/sie/es putzt.","Stem putz- + -t → putzt. Same form as ihr.","wir always copies the infinitive: putzen.","Stem putz- + -t → putzt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: putzen."],"err":{"1":"putzst"}},{"inf":"benutzen","en":"to use","stem":"benutz","forms":["benutze","benutzt","benutzt","benutzen","benutzt","benutzen"],"grp":"sibilant","core":true,"tags":[],"tail":"meistens das Fahrrad","alt":{},"why":["Stem benutz- + -e. The ich-form never takes a vowel change.","Stem benutz- ends in -z → the du-ending collapses to -t, so du benutzt = er/sie/es benutzt.","Stem benutz- + -t → benutzt. Same form as ihr.","wir always copies the infinitive: benutzen.","Stem benutz- + -t → benutzt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: benutzen."],"err":{"1":"benutzst"}},{"inf":"grüßen","en":"to greet","stem":"grüß","forms":["grüße","grüßt","grüßt","grüßen","grüßt","grüßen"],"grp":"sibilant","core":true,"tags":[],"tail":"den Hausmeister sehr freundlich","alt":{},"why":["Stem grüß- + -e. The ich-form never takes a vowel change.","Stem grüß- ends in -ß → the du-ending collapses to -t, so du grüßt = er/sie/es grüßt.","Stem grüß- + -t → grüßt. Same form as ihr.","wir always copies the infinitive: grüßen.","Stem grüß- + -t → grüßt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: grüßen."],"err":{"1":"grüßst"}},{"inf":"schließen","en":"to close","stem":"schließ","forms":["schließe","schließt","schließt","schließen","schließt","schließen"],"grp":"sibilant","core":true,"tags":[],"tail":"die Tür ganz leise","alt":{},"why":["Stem schließ- + -e. The ich-form never takes a vowel change.","Stem schließ- ends in -ß → the du-ending collapses to -t, so du schließt = er/sie/es schließt.","Stem schließ- + -t → schließt. Same form as ihr.","wir always copies the infinitive: schließen.","Stem schließ- + -t → schließt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: schließen."],"err":{"1":"schließst"}},{"inf":"niesen","en":"to sneeze","stem":"nies","forms":["niese","niest","niest","niesen","niest","niesen"],"grp":"sibilant","core":false,"tags":[],"tail":"im Frühling wegen der Pollen","alt":{},"why":["Stem nies- + -e. The ich-form never takes a vowel change.","Stem nies- ends in -s → the du-ending collapses to -t, so du niest = er/sie/es niest.","Stem nies- + -t → niest. Same form as ihr.","wir always copies the infinitive: niesen.","Stem nies- + -t → niest. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: niesen."],"err":{"1":"niesst"}},{"inf":"mixen","en":"to mix","stem":"mix","forms":["mixe","mixt","mixt","mixen","mixt","mixen"],"grp":"sibilant","core":false,"tags":[],"tail":"einen Saft aus Obst","alt":{},"why":["Stem mix- + -e. The ich-form never takes a vowel change.","Stem mix- ends in -x → the du-ending collapses to -t, so du mixt = er/sie/es mixt.","Stem mix- + -t → mixt. Same form as ihr.","wir always copies the infinitive: mixen.","Stem mix- + -t → mixt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: mixen."],"err":{"1":"mixst"}},{"inf":"boxen","en":"to box","stem":"box","forms":["boxe","boxt","boxt","boxen","boxt","boxen"],"grp":"sibilant","core":false,"tags":[],"tail":"zweimal pro Woche im Verein","alt":{},"why":["Stem box- + -e. The ich-form never takes a vowel change.","Stem box- ends in -x → the du-ending collapses to -t, so du boxt = er/sie/es boxt.","Stem box- + -t → boxt. Same form as ihr.","wir always copies the infinitive: boxen.","Stem box- + -t → boxt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: boxen."],"err":{"1":"boxst"}},{"inf":"heizen","en":"to heat","stem":"heiz","forms":["heize","heizt","heizt","heizen","heizt","heizen"],"grp":"sibilant","core":false,"tags":[],"tail":"im Winter mit Gas","alt":{},"why":["Stem heiz- + -e. The ich-form never takes a vowel change.","Stem heiz- ends in -z → the du-ending collapses to -t, so du heizt = er/sie/es heizt.","Stem heiz- + -t → heizt. Same form as ihr.","wir always copies the infinitive: heizen.","Stem heiz- + -t → heizt. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: heizen."],"err":{"1":"heizst"}},{"inf":"hassen","en":"to hate","stem":"hass","forms":["hasse","hasst","hasst","hassen","hasst","hassen"],"grp":"sibilant","core":false,"tags":[],"tail":"lange Meetings am Freitag","alt":{},"why":["Stem hass- + -e. The ich-form never takes a vowel change.","Stem hass- ends in -s → the du-ending collapses to -t, so du hasst = er/sie/es hasst.","Stem hass- + -t → hasst. Same form as ihr.","wir always copies the infinitive: hassen.","Stem hass- + -t → hasst. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: hassen."],"err":{}},{"inf":"küssen","en":"to kiss","stem":"küss","forms":["küsse","küsst","küsst","küssen","küsst","küssen"],"grp":"sibilant","core":false,"tags":[],"tail":"das Baby auf die Stirn","alt":{},"why":["Stem küss- + -e. The ich-form never takes a vowel change.","Stem küss- ends in -s → the du-ending collapses to -t, so du küsst = er/sie/es küsst.","Stem küss- + -t → küsst. Same form as ihr.","wir always copies the infinitive: küssen.","Stem küss- + -t → küsst. Same form as er/sie/es.","sie/Sie copies the infinitive, exactly like wir: küssen."],"err":{}},{"inf":"sammeln","en":"to collect","stem":"sammel","forms":["sammle","sammelst","sammelt","sammeln","sammelt","sammeln"],"grp":"eln","core":true,"tags":[],"tail":"alte Briefmarken","alt":{"0":["sammele"]},"why":["-eln verb: the ich-form drops the -e- of the stem sammel- → sammle.","Stem sammel- + -st. -eln/-ern verbs are regular outside the ich-form.","Stem sammel- + -t → sammelt.","The infinitive already ends in -n, so the ending is just -n: wir sammeln.","Stem sammel- + -t → sammelt.","sie/Sie takes the bare -n like wir: sammeln."],"err":{"3":"sammelen","5":"sammelen"}},{"inf":"lächeln","en":"to smile","stem":"lächel","forms":["lächle","lächelst","lächelt","lächeln","lächelt","lächeln"],"grp":"eln","core":true,"tags":[],"tail":"freundlich auf dem Foto","alt":{"0":["lächele"]},"why":["-eln verb: the ich-form drops the -e- of the stem lächel- → lächle.","Stem lächel- + -st. -eln/-ern verbs are regular outside the ich-form.","Stem lächel- + -t → lächelt.","The infinitive already ends in -n, so the ending is just -n: wir lächeln.","Stem lächel- + -t → lächelt.","sie/Sie takes the bare -n like wir: lächeln."],"err":{"3":"lächelen","5":"lächelen"}},{"inf":"klingeln","en":"to ring","stem":"klingel","forms":["klingle","klingelst","klingelt","klingeln","klingelt","klingeln"],"grp":"eln","core":true,"tags":[],"tail":"zweimal an der Haustür","alt":{"0":["klingele"]},"why":["-eln verb: the ich-form drops the -e- of the stem klingel- → klingle.","Stem klingel- + -st. -eln/-ern verbs are regular outside the ich-form.","Stem klingel- + -t → klingelt.","The infinitive already ends in -n, so the ending is just -n: wir klingeln.","Stem klingel- + -t → klingelt.","sie/Sie takes the bare -n like wir: klingeln."],"err":{"3":"klingelen","5":"klingelen"}},{"inf":"wechseln","en":"to change, to switch","stem":"wechsel","forms":["wechsle","wechselst","wechselt","wechseln","wechselt","wechseln"],"grp":"eln","core":true,"tags":[],"tail":"im Sommer die Wohnung","alt":{"0":["wechsele"]},"why":["-eln verb: the ich-form drops the -e- of the stem wechsel- → wechsle.","Stem wechsel- + -st. -eln/-ern verbs are regular outside the ich-form.","Stem wechsel- + -t → wechselt.","The infinitive already ends in -n, so the ending is just -n: wir wechseln.","Stem wechsel- + -t → wechselt.","sie/Sie takes the bare -n like wir: wechseln."],"err":{"3":"wechselen","5":"wechselen"}},{"inf":"handeln","en":"to act, to trade","stem":"handel","forms":["handle","handelst","handelt","handeln","handelt","handeln"],"grp":"eln","core":false,"tags":[],"tail":"schnell in einer Krise","alt":{"0":["handele"]},"why":["-eln verb: the ich-form drops the -e- of the stem handel- → handle.","Stem handel- + -st. -eln/-ern verbs are regular outside the ich-form.","Stem handel- + -t → handelt.","The infinitive already ends in -n, so the ending is just -n: wir handeln.","Stem handel- + -t → handelt.","sie/Sie takes the bare -n like wir: handeln."],"err":{"3":"handelen","5":"handelen"}},{"inf":"bügeln","en":"to iron","stem":"bügel","forms":["bügle","bügelst","bügelt","bügeln","bügelt","bügeln"],"grp":"eln","core":false,"tags":[],"tail":"die Hemden am Sonntag","alt":{"0":["bügele"]},"why":["-eln verb: the ich-form drops the -e- of the stem bügel- → bügle.","Stem bügel- + -st. -eln/-ern verbs are regular outside the ich-form.","Stem bügel- + -t → bügelt.","The infinitive already ends in -n, so the ending is just -n: wir bügeln.","Stem bügel- + -t → bügelt.","sie/Sie takes the bare -n like wir: bügeln."],"err":{"3":"bügelen","5":"bügelen"}},{"inf":"angeln","en":"to fish","stem":"angel","forms":["angle","angelst","angelt","angeln","angelt","angeln"],"grp":"eln","core":false,"tags":[],"tail":"am liebsten am See","alt":{"0":["angele"]},"why":["-eln verb: the ich-form drops the -e- of the stem angel- → angle.","Stem angel- + -st. -eln/-ern verbs are regular outside the ich-form.","Stem angel- + -t → angelt.","The infinitive already ends in -n, so the ending is just -n: wir angeln.","Stem angel- + -t → angelt.","sie/Sie takes the bare -n like wir: angeln."],"err":{"3":"angelen","5":"angelen"}},{"inf":"streicheln","en":"to stroke","stem":"streichel","forms":["streichle","streichelst","streichelt","streicheln","streichelt","streicheln"],"grp":"eln","core":false,"tags":[],"tail":"die Katze auf dem Sofa","alt":{"0":["streichele"]},"why":["-eln verb: the ich-form drops the -e- of the stem streichel- → streichle.","Stem streichel- + -st. -eln/-ern verbs are regular outside the ich-form.","Stem streichel- + -t → streichelt.","The infinitive already ends in -n, so the ending is just -n: wir streicheln.","Stem streichel- + -t → streichelt.","sie/Sie takes the bare -n like wir: streicheln."],"err":{"3":"streichelen","5":"streichelen"}},{"inf":"ändern","en":"to change","stem":"änder","forms":["ändere","änderst","ändert","ändern","ändert","ändern"],"grp":"ern","core":true,"tags":[],"tail":"den Termin noch einmal","alt":{"0":["ändre"]},"why":["-ern verb: the ich-form keeps the -e- → ändere.","Stem änder- + -st. -eln/-ern verbs are regular outside the ich-form.","Stem änder- + -t → ändert.","The infinitive already ends in -n, so the ending is just -n: wir ändern.","Stem änder- + -t → ändert.","sie/Sie takes the bare -n like wir: ändern."],"err":{"3":"änderen","5":"änderen"}},{"inf":"wandern","en":"to hike","stem":"wander","forms":["wandere","wanderst","wandert","wandern","wandert","wandern"],"grp":"ern","core":true,"tags":[],"tail":"im Sommer in den Bergen","alt":{"0":["wandre"]},"why":["-ern verb: the ich-form keeps the -e- → wandere.","Stem wander- + -st. -eln/-ern verbs are regular outside the ich-form.","Stem wander- + -t → wandert.","The infinitive already ends in -n, so the ending is just -n: wir wandern.","Stem wander- + -t → wandert.","sie/Sie takes the bare -n like wir: wandern."],"err":{"3":"wanderen","5":"wanderen"}},{"inf":"feiern","en":"to celebrate","stem":"feier","forms":["feiere","feierst","feiert","feiern","feiert","feiern"],"grp":"ern","core":true,"tags":[],"tail":"im Juni Geburtstag","alt":{"0":["feire"]},"why":["-ern verb: the ich-form keeps the -e- → feiere.","Stem feier- + -st. -eln/-ern verbs are regular outside the ich-form.","Stem feier- + -t → feiert.","The infinitive already ends in -n, so the ending is just -n: wir feiern.","Stem feier- + -t → feiert.","sie/Sie takes the bare -n like wir: feiern."],"err":{"3":"feieren","5":"feieren"}},{"inf":"verbessern","en":"to improve","stem":"verbesser","forms":["verbessere","verbesserst","verbessert","verbessern","verbessert","verbessern"],"grp":"ern","core":false,"tags":[],"tail":"jeden Tag die Aussprache","alt":{"0":["verbessre"]},"why":["-ern verb: the ich-form keeps the -e- → verbessere.","Stem verbesser- + -st. -eln/-ern verbs are regular outside the ich-form.","Stem verbesser- + -t → verbessert.","The infinitive already ends in -n, so the ending is just -n: wir verbessern.","Stem verbesser- + -t → verbessert.","sie/Sie takes the bare -n like wir: verbessern."],"err":{"3":"verbesseren","5":"verbesseren"}},{"inf":"erinnern","en":"to remind","stem":"erinner","forms":["erinnere","erinnerst","erinnert","erinnern","erinnert","erinnern"],"grp":"ern","core":true,"tags":[],"tail":"alle noch einmal an den Termin","alt":{"0":["erinnre"]},"why":["-ern verb: the ich-form keeps the -e- → erinnere.","Stem erinner- + -st. -eln/-ern verbs are regular outside the ich-form.","Stem erinner- + -t → erinnert.","The infinitive already ends in -n, so the ending is just -n: wir erinnern.","Stem erinner- + -t → erinnert.","sie/Sie takes the bare -n like wir: erinnern."],"err":{"3":"erinneren","5":"erinneren"}},{"inf":"klettern","en":"to climb","stem":"kletter","forms":["klettere","kletterst","klettert","klettern","klettert","klettern"],"grp":"ern","core":false,"tags":[],"tail":"gern auf hohe Bäume","alt":{"0":["klettre"]},"why":["-ern verb: the ich-form keeps the -e- → klettere.","Stem kletter- + -st. -eln/-ern verbs are regular outside the ich-form.","Stem kletter- + -t → klettert.","The infinitive already ends in -n, so the ending is just -n: wir klettern.","Stem kletter- + -t → klettert.","sie/Sie takes the bare -n like wir: klettern."],"err":{"3":"kletteren","5":"kletteren"}},{"inf":"ärgern","en":"to annoy","stem":"ärger","forms":["ärgere","ärgerst","ärgert","ärgern","ärgert","ärgern"],"grp":"ern","core":false,"tags":[],"tail":"den Hausmeister mit lauter Musik","alt":{"0":["ärgre"]},"why":["-ern verb: the ich-form keeps the -e- → ärgere.","Stem ärger- + -st. -eln/-ern verbs are regular outside the ich-form.","Stem ärger- + -t → ärgert.","The infinitive already ends in -n, so the ending is just -n: wir ärgern.","Stem ärger- + -t → ärgert.","sie/Sie takes the bare -n like wir: ärgern."],"err":{"3":"ärgeren","5":"ärgeren"}},{"inf":"füttern","en":"to feed","stem":"fütter","forms":["füttere","fütterst","füttert","füttern","füttert","füttern"],"grp":"ern","core":false,"tags":[],"tail":"die Enten im Park","alt":{"0":["füttre"]},"why":["-ern verb: the ich-form keeps the -e- → füttere.","Stem fütter- + -st. -eln/-ern verbs are regular outside the ich-form.","Stem fütter- + -t → füttert.","The infinitive already ends in -n, so the ending is just -n: wir füttern.","Stem fütter- + -t → füttert.","sie/Sie takes the bare -n like wir: füttern."],"err":{"3":"fütteren","5":"fütteren"}},{"inf":"zittern","en":"to shiver","stem":"zitter","forms":["zittere","zitterst","zittert","zittern","zittert","zittern"],"grp":"ern","core":false,"tags":[],"tail":"vor Kälte am Bahnhof","alt":{"0":["zittre"]},"why":["-ern verb: the ich-form keeps the -e- → zittere.","Stem zitter- + -st. -eln/-ern verbs are regular outside the ich-form.","Stem zitter- + -t → zittert.","The infinitive already ends in -n, so the ending is just -n: wir zittern.","Stem zitter- + -t → zittert.","sie/Sie takes the bare -n like wir: zittern."],"err":{"3":"zitteren","5":"zitteren"}},{"inf":"fahren","en":"to drive, to go","stem":"fahr","forms":["fahre","fährst","fährt","fahren","fahrt","fahren"],"grp":"a_ae","core":true,"tags":[],"tail":"mit dem Bus in die Stadt","alt":{},"why":["Stem fahr- + -e. The ich-form never takes a vowel change.","a → ä in du and er/sie/es only: fahr- → fähr-. Then + -st.","Changed stem fähr- + -t → fährt.","wir always copies the infinitive: fahren.","ihr uses the UNCHANGED stem fahr-: fahrt. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: fahren."],"err":{"1":"fahrst","2":"fahrt"}},{"inf":"schlafen","en":"to sleep","stem":"schlaf","forms":["schlafe","schläfst","schläft","schlafen","schlaft","schlafen"],"grp":"a_ae","core":true,"tags":[],"tail":"acht Stunden pro Nacht","alt":{},"why":["Stem schlaf- + -e. The ich-form never takes a vowel change.","a → ä in du and er/sie/es only: schlaf- → schläf-. Then + -st.","Changed stem schläf- + -t → schläft.","wir always copies the infinitive: schlafen.","ihr uses the UNCHANGED stem schlaf-: schlaft. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: schlafen."],"err":{"1":"schlafst","2":"schlaft"}},{"inf":"tragen","en":"to carry, to wear","stem":"trag","forms":["trage","trägst","trägt","tragen","tragt","tragen"],"grp":"a_ae","core":true,"tags":[],"tail":"im Winter einen dicken Mantel","alt":{},"why":["Stem trag- + -e. The ich-form never takes a vowel change.","a → ä in du and er/sie/es only: trag- → träg-. Then + -st.","Changed stem träg- + -t → trägt.","wir always copies the infinitive: tragen.","ihr uses the UNCHANGED stem trag-: tragt. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: tragen."],"err":{"1":"tragst","2":"tragt"}},{"inf":"fallen","en":"to fall","stem":"fall","forms":["falle","fällst","fällt","fallen","fallt","fallen"],"grp":"a_ae","core":true,"tags":[],"tail":"fast vom Stuhl","alt":{},"why":["Stem fall- + -e. The ich-form never takes a vowel change.","a → ä in du and er/sie/es only: fall- → fäll-. Then + -st.","Changed stem fäll- + -t → fällt.","wir always copies the infinitive: fallen.","ihr uses the UNCHANGED stem fall-: fallt. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: fallen."],"err":{"1":"fallst","2":"fallt"}},{"inf":"schlagen","en":"to hit","stem":"schlag","forms":["schlage","schlägst","schlägt","schlagen","schlagt","schlagen"],"grp":"a_ae","core":true,"tags":[],"tail":"den Nagel in die Wand","alt":{},"why":["Stem schlag- + -e. The ich-form never takes a vowel change.","a → ä in du and er/sie/es only: schlag- → schläg-. Then + -st.","Changed stem schläg- + -t → schlägt.","wir always copies the infinitive: schlagen.","ihr uses the UNCHANGED stem schlag-: schlagt. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: schlagen."],"err":{"1":"schlagst","2":"schlagt"}},{"inf":"fangen","en":"to catch","stem":"fang","forms":["fange","fängst","fängt","fangen","fangt","fangen"],"grp":"a_ae","core":true,"tags":[],"tail":"den Ball mit einer Hand","alt":{},"why":["Stem fang- + -e. The ich-form never takes a vowel change.","a → ä in du and er/sie/es only: fang- → fäng-. Then + -st.","Changed stem fäng- + -t → fängt.","wir always copies the infinitive: fangen.","ihr uses the UNCHANGED stem fang-: fangt. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: fangen."],"err":{"1":"fangst","2":"fangt"}},{"inf":"waschen","en":"to wash","stem":"wasch","forms":["wasche","wäschst","wäscht","waschen","wascht","waschen"],"grp":"a_ae","core":true,"tags":["sibilant_ish"],"tail":"am Samstag das Auto","alt":{},"why":["Stem wasch- + -e. The ich-form never takes a vowel change.","a → ä in du and er/sie/es only: wasch- → wäsch-. Then + -st.","Changed stem wäsch- + -t → wäscht.","wir always copies the infinitive: waschen.","ihr uses the UNCHANGED stem wasch-: wascht. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: waschen."],"err":{"1":"waschst","2":"wascht"}},{"inf":"wachsen","en":"to grow","stem":"wachs","forms":["wachse","wächst","wächst","wachsen","wachst","wachsen"],"grp":"a_ae","core":true,"tags":["sibilant"],"tail":"im Sommer sehr schnell","alt":{},"why":["Stem wachs- + -e. The ich-form never takes a vowel change.","a → ä in du and er/sie/es only: wachs- → wächs-. The changed stem ends in -s, so du takes only -t — du = er/sie/es.","Changed stem wächs- + -t → wächst, identical to the du-form.","wir always copies the infinitive: wachsen.","ihr uses the UNCHANGED stem wachs-: wachst. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: wachsen."],"err":{"1":"wachst","2":"wachst"}},{"inf":"lassen","en":"to let, to leave","stem":"lass","forms":["lasse","lässt","lässt","lassen","lasst","lassen"],"grp":"a_ae","core":true,"tags":["sibilant"],"tail":"das Handy zu Hause","alt":{},"why":["Stem lass- + -e. The ich-form never takes a vowel change.","a → ä in du and er/sie/es only: lass- → läss-. The changed stem ends in -s, so du takes only -t — du = er/sie/es.","Changed stem läss- + -t → lässt, identical to the du-form.","wir always copies the infinitive: lassen.","ihr uses the UNCHANGED stem lass-: lasst. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: lassen."],"err":{"1":"lasst","2":"lasst"}},{"inf":"verlassen","en":"to leave (a place)","stem":"verlass","forms":["verlasse","verlässt","verlässt","verlassen","verlasst","verlassen"],"grp":"a_ae","core":true,"tags":["sibilant"],"tail":"um sieben Uhr das Haus","alt":{},"why":["Stem verlass- + -e. The ich-form never takes a vowel change.","a → ä in du and er/sie/es only: verlass- → verläss-. The changed stem ends in -s, so du takes only -t — du = er/sie/es.","Changed stem verläss- + -t → verlässt, identical to the du-form.","wir always copies the infinitive: verlassen.","ihr uses the UNCHANGED stem verlass-: verlasst. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: verlassen."],"err":{"1":"verlasst","2":"verlasst"}},{"inf":"halten","en":"to hold, to stop","stem":"halt","forms":["halte","hältst","hält","halten","haltet","halten"],"grp":"a_ae","core":true,"tags":["linking_e","irregular"],"tail":"das Paket in der Hand","alt":{},"why":["Stem halt- + -e. The ich-form never takes a vowel change.","a → ä in du and er/sie/es only: halt- → hält-. A changed strong stem takes -st directly, with no linking -e-.","The changed stem hält- already ends in -t, so er/sie/es adds nothing: hält.","wir always copies the infinitive: halten.","ihr uses the UNCHANGED stem halt-: haltet. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: halten."],"err":{"1":"haltest","2":"haltet"}},{"inf":"braten","en":"to fry, to roast","stem":"brat","forms":["brate","brätst","brät","braten","bratet","braten"],"grp":"a_ae","core":true,"tags":["linking_e"],"tail":"ein Ei in der Pfanne","alt":{},"why":["Stem brat- + -e. The ich-form never takes a vowel change.","a → ä in du and er/sie/es only: brat- → brät-. A changed strong stem takes -st directly, with no linking -e-.","The changed stem brät- already ends in -t, so er/sie/es adds nothing: brät.","wir always copies the infinitive: braten.","ihr uses the UNCHANGED stem brat-: bratet. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: braten."],"err":{"1":"bratest","2":"bratet"}},{"inf":"raten","en":"to guess, to advise","stem":"rat","forms":["rate","rätst","rät","raten","ratet","raten"],"grp":"a_ae","core":true,"tags":["linking_e"],"tail":"die Lösung sofort","alt":{},"why":["Stem rat- + -e. The ich-form never takes a vowel change.","a → ä in du and er/sie/es only: rat- → rät-. A changed strong stem takes -st directly, with no linking -e-.","The changed stem rät- already ends in -t, so er/sie/es adds nothing: rät.","wir always copies the infinitive: raten.","ihr uses the UNCHANGED stem rat-: ratet. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: raten."],"err":{"1":"ratest","2":"ratet"}},{"inf":"laden","en":"to load","stem":"lad","forms":["lade","lädst","lädt","laden","ladet","laden"],"grp":"a_ae","core":true,"tags":["linking_e"],"tail":"die Kisten ins Auto","alt":{},"why":["Stem lad- + -e. The ich-form never takes a vowel change.","a → ä in du and er/sie/es only: lad- → läd-. A changed strong stem takes -st directly, with no linking -e-.","Changed stem läd- + -t → lädt.","wir always copies the infinitive: laden.","ihr uses the UNCHANGED stem lad-: ladet. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: laden."],"err":{"1":"ladest","2":"ladet"}},{"inf":"gefallen","en":"to please, to be liked","stem":"gefall","forms":["gefalle","gefällst","gefällt","gefallen","gefallt","gefallen"],"grp":"a_ae","core":true,"tags":[],"tail":null,"alt":{},"why":["Stem gefall- + -e. The ich-form never takes a vowel change.","a → ä in du and er/sie/es only: gefall- → gefäll-. Then + -st.","Changed stem gefäll- + -t → gefällt.","wir always copies the infinitive: gefallen.","ihr uses the UNCHANGED stem gefall-: gefallt. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: gefallen."],"err":{"1":"gefallst","2":"gefallt"}},{"inf":"laufen","en":"to run, to walk","stem":"lauf","forms":["laufe","läufst","läuft","laufen","lauft","laufen"],"grp":"au_aeu","core":true,"tags":[],"tail":"jeden Morgen im Park","alt":{},"why":["Stem lauf- + -e. The ich-form never takes a vowel change.","au → äu in du and er/sie/es only: lauf- → läuf-. Then + -st.","Changed stem läuf- + -t → läuft.","wir always copies the infinitive: laufen.","ihr uses the UNCHANGED stem lauf-: lauft. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: laufen."],"err":{"1":"laufst","2":"lauft"}},{"inf":"sprechen","en":"to speak","stem":"sprech","forms":["spreche","sprichst","spricht","sprechen","sprecht","sprechen"],"grp":"e_i","core":true,"tags":[],"tail":"drei Sprachen fließend","alt":{},"why":["Stem sprech- + -e. The ich-form never takes a vowel change.","e → i in du and er/sie/es only: sprech- → sprich-. Then + -st.","Changed stem sprich- + -t → spricht.","wir always copies the infinitive: sprechen.","ihr uses the UNCHANGED stem sprech-: sprecht. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: sprechen."],"err":{"1":"sprechst","2":"sprecht"}},{"inf":"helfen","en":"to help","stem":"helf","forms":["helfe","hilfst","hilft","helfen","helft","helfen"],"grp":"e_i","core":true,"tags":[],"tail":"einer Freundin beim Umzug","alt":{},"why":["Stem helf- + -e. The ich-form never takes a vowel change.","e → i in du and er/sie/es only: helf- → hilf-. Then + -st.","Changed stem hilf- + -t → hilft.","wir always copies the infinitive: helfen.","ihr uses the UNCHANGED stem helf-: helft. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: helfen."],"err":{"1":"helfst","2":"helft"}},{"inf":"geben","en":"to give","stem":"geb","forms":["gebe","gibst","gibt","geben","gebt","geben"],"grp":"e_i","core":true,"tags":[],"tail":"dem Kellner ein Trinkgeld","alt":{},"why":["Stem geb- + -e. The ich-form never takes a vowel change.","e → i in du and er/sie/es only: geb- → gib-. Then + -st.","Changed stem gib- + -t → gibt.","wir always copies the infinitive: geben.","ihr uses the UNCHANGED stem geb-: gebt. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: geben."],"err":{"1":"gebst","2":"gebt"}},{"inf":"treffen","en":"to meet","stem":"treff","forms":["treffe","triffst","trifft","treffen","trefft","treffen"],"grp":"e_i","core":true,"tags":[],"tail":"am Freitag alte Freunde","alt":{},"why":["Stem treff- + -e. The ich-form never takes a vowel change.","e → i in du and er/sie/es only: treff- → triff-. Then + -st.","Changed stem triff- + -t → trifft.","wir always copies the infinitive: treffen.","ihr uses the UNCHANGED stem treff-: trefft. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: treffen."],"err":{"1":"treffst","2":"trefft"}},{"inf":"werfen","en":"to throw","stem":"werf","forms":["werfe","wirfst","wirft","werfen","werft","werfen"],"grp":"e_i","core":true,"tags":[],"tail":"den Ball über den Zaun","alt":{},"why":["Stem werf- + -e. The ich-form never takes a vowel change.","e → i in du and er/sie/es only: werf- → wirf-. Then + -st.","Changed stem wirf- + -t → wirft.","wir always copies the infinitive: werfen.","ihr uses the UNCHANGED stem werf-: werft. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: werfen."],"err":{"1":"werfst","2":"werft"}},{"inf":"brechen","en":"to break","stem":"brech","forms":["breche","brichst","bricht","brechen","brecht","brechen"],"grp":"e_i","core":true,"tags":[],"tail":"das Brot in zwei Teile","alt":{},"why":["Stem brech- + -e. The ich-form never takes a vowel change.","e → i in du and er/sie/es only: brech- → brich-. Then + -st.","Changed stem brich- + -t → bricht.","wir always copies the infinitive: brechen.","ihr uses the UNCHANGED stem brech-: brecht. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: brechen."],"err":{"1":"brechst","2":"brecht"}},{"inf":"sterben","en":"to die","stem":"sterb","forms":["sterbe","stirbst","stirbt","sterben","sterbt","sterben"],"grp":"e_i","core":true,"tags":[],"tail":"fast vor Langeweile","alt":{},"why":["Stem sterb- + -e. The ich-form never takes a vowel change.","e → i in du and er/sie/es only: sterb- → stirb-. Then + -st.","Changed stem stirb- + -t → stirbt.","wir always copies the infinitive: sterben.","ihr uses the UNCHANGED stem sterb-: sterbt. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: sterben."],"err":{"1":"sterbst","2":"sterbt"}},{"inf":"essen","en":"to eat","stem":"ess","forms":["esse","isst","isst","essen","esst","essen"],"grp":"e_i","core":true,"tags":["sibilant"],"tail":"gern Reis mit Gemüse","alt":{},"why":["Stem ess- + -e. The ich-form never takes a vowel change.","e → i in du and er/sie/es only: ess- → iss-. The changed stem ends in -s, so du takes only -t — du = er/sie/es.","Changed stem iss- + -t → isst, identical to the du-form.","wir always copies the infinitive: essen.","ihr uses the UNCHANGED stem ess-: esst. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: essen."],"err":{"1":"esst","2":"esst"}},{"inf":"vergessen","en":"to forget","stem":"vergess","forms":["vergesse","vergisst","vergisst","vergessen","vergesst","vergessen"],"grp":"e_i","core":true,"tags":["sibilant"],"tail":"ständig den Schlüssel","alt":{},"why":["Stem vergess- + -e. The ich-form never takes a vowel change.","e → i in du and er/sie/es only: vergess- → vergiss-. The changed stem ends in -s, so du takes only -t — du = er/sie/es.","Changed stem vergiss- + -t → vergisst, identical to the du-form.","wir always copies the infinitive: vergessen.","ihr uses the UNCHANGED stem vergess-: vergesst. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: vergessen."],"err":{"1":"vergesst","2":"vergesst"}},{"inf":"messen","en":"to measure","stem":"mess","forms":["messe","misst","misst","messen","messt","messen"],"grp":"e_i","core":true,"tags":["sibilant"],"tail":"die Temperatur im Zimmer","alt":{},"why":["Stem mess- + -e. The ich-form never takes a vowel change.","e → i in du and er/sie/es only: mess- → miss-. The changed stem ends in -s, so du takes only -t — du = er/sie/es.","Changed stem miss- + -t → misst, identical to the du-form.","wir always copies the infinitive: messen.","ihr uses the UNCHANGED stem mess-: messt. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: messen."],"err":{"1":"messt","2":"messt"}},{"inf":"versprechen","en":"to promise","stem":"versprech","forms":["verspreche","versprichst","verspricht","versprechen","versprecht","versprechen"],"grp":"e_i","core":true,"tags":[],"tail":"eine schnelle Antwort","alt":{},"why":["Stem versprech- + -e. The ich-form never takes a vowel change.","e → i in du and er/sie/es only: versprech- → versprich-. Then + -st.","Changed stem versprich- + -t → verspricht.","wir always copies the infinitive: versprechen.","ihr uses the UNCHANGED stem versprech-: versprecht. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: versprechen."],"err":{"1":"versprechst","2":"versprecht"}},{"inf":"gelten","en":"to be valid","stem":"gelt","forms":["gelte","giltst","gilt","gelten","geltet","gelten"],"grp":"e_i","core":true,"tags":["linking_e"],"tail":null,"alt":{},"why":["Stem gelt- + -e. The ich-form never takes a vowel change.","e → i in du and er/sie/es only: gelt- → gilt-. A changed strong stem takes -st directly, with no linking -e-.","The changed stem gilt- already ends in -t, so er/sie/es adds nothing: gilt.","wir always copies the infinitive: gelten.","ihr uses the UNCHANGED stem gelt-: geltet. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: gelten."],"err":{"1":"geltest","2":"geltet"}},{"inf":"nehmen","en":"to take","stem":"nehm","forms":["nehme","nimmst","nimmt","nehmen","nehmt","nehmen"],"grp":"e_i","core":true,"tags":["irregular"],"tail":"jeden Tag die U-Bahn","alt":{},"why":["Stem nehm- + -e. The ich-form never takes a vowel change.","e → i in du and er/sie/es only: nehm- → nimm-. Then + -st.","Changed stem nimm- + -t → nimmt.","wir always copies the infinitive: nehmen.","ihr uses the UNCHANGED stem nehm-: nehmt. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: nehmen."],"err":{"1":"nehmst","2":"nehmt"}},{"inf":"treten","en":"to step, to kick","stem":"tret","forms":["trete","trittst","tritt","treten","tretet","treten"],"grp":"e_i","core":true,"tags":["irregular","linking_e"],"tail":"gegen den Ball","alt":{},"why":["Stem tret- + -e. The ich-form never takes a vowel change.","e → i in du and er/sie/es only: tret- → tritt-. A changed strong stem takes -st directly, with no linking -e-.","The changed stem tritt- already ends in -t, so er/sie/es adds nothing: tritt.","wir always copies the infinitive: treten.","ihr uses the UNCHANGED stem tret-: tretet. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: treten."],"err":{"1":"tretest","2":"tretet"}},{"inf":"sehen","en":"to see","stem":"seh","forms":["sehe","siehst","sieht","sehen","seht","sehen"],"grp":"e_ie","core":true,"tags":[],"tail":"am Abend einen Film","alt":{},"why":["Stem seh- + -e. The ich-form never takes a vowel change.","e → ie in du and er/sie/es only: seh- → sieh-. Then + -st.","Changed stem sieh- + -t → sieht.","wir always copies the infinitive: sehen.","ihr uses the UNCHANGED stem seh-: seht. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: sehen."],"err":{"1":"sehst","2":"seht"}},{"inf":"lesen","en":"to read","stem":"les","forms":["lese","liest","liest","lesen","lest","lesen"],"grp":"e_ie","core":true,"tags":["sibilant"],"tail":"jeden Tag die Zeitung","alt":{},"why":["Stem les- + -e. The ich-form never takes a vowel change.","e → ie in du and er/sie/es only: les- → lies-. The changed stem ends in -s, so du takes only -t — du = er/sie/es.","Changed stem lies- + -t → liest, identical to the du-form.","wir always copies the infinitive: lesen.","ihr uses the UNCHANGED stem les-: lest. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: lesen."],"err":{"1":"lest","2":"lest"}},{"inf":"empfehlen","en":"to recommend","stem":"empfehl","forms":["empfehle","empfiehlst","empfiehlt","empfehlen","empfehlt","empfehlen"],"grp":"e_ie","core":true,"tags":[],"tail":"das Restaurant am Markt","alt":{},"why":["Stem empfehl- + -e. The ich-form never takes a vowel change.","e → ie in du and er/sie/es only: empfehl- → empfiehl-. Then + -st.","Changed stem empfiehl- + -t → empfiehlt.","wir always copies the infinitive: empfehlen.","ihr uses the UNCHANGED stem empfehl-: empfehlt. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: empfehlen."],"err":{"1":"empfehlst","2":"empfehlt"}},{"inf":"stehlen","en":"to steal","stem":"stehl","forms":["stehle","stiehlst","stiehlt","stehlen","stehlt","stehlen"],"grp":"e_ie","core":true,"tags":[],"tail":"niemals etwas im Geschäft","alt":{},"why":["Stem stehl- + -e. The ich-form never takes a vowel change.","e → ie in du and er/sie/es only: stehl- → stiehl-. Then + -st.","Changed stem stiehl- + -t → stiehlt.","wir always copies the infinitive: stehlen.","ihr uses the UNCHANGED stem stehl-: stehlt. The vowel change never reaches ihr.","sie/Sie copies the infinitive, exactly like wir: stehlen."],"err":{"1":"stehlst","2":"stehlt"}},{"inf":"sein","en":"to be","stem":"sei","forms":["bin","bist","ist","sind","seid","sind"],"grp":"special","core":true,"tags":[],"tail":"heute ziemlich müde","alt":{},"why":["sein is suppletive — learn the whole paradigm by heart.","sein is suppletive — learn the whole paradigm by heart.","sein is suppletive — learn the whole paradigm by heart.","wir sind — not the infinitive. sein is the only verb where wir ≠ infinitive.","ihr seid (with -d). Do not confuse it with the preposition seit.","sie/Sie sind — same as wir."],"err":{"4":"seit"}},{"inf":"haben","en":"to have","stem":"hab","forms":["habe","hast","hat","haben","habt","haben"],"grp":"special","core":true,"tags":[],"tail":"am Montag keine Zeit","alt":{},"why":["Regular: hab- + -e.","Contracted: hab- + -st loses the -b- → hast.","Contracted: hab- + -t loses the -b- → hat.","wir haben = the infinitive.","ihr habt — regular -t on the full stem.","sie/Sie haben = the infinitive."],"err":{"1":"habst","2":"habt"}},{"inf":"werden","en":"to become","stem":"werd","forms":["werde","wirst","wird","werden","werdet","werden"],"grp":"special","core":true,"tags":[],"tail":"langsam nervös","alt":{},"why":["Regular: werd- + -e.","du wirst — vowel change e → i plus loss of the -d.","er wird — vowel change and no ending at all.","wir werden = the infinitive.","ihr werdet — unchanged stem werd- ends in -d, so it takes -et.","sie/Sie werden = the infinitive."],"err":{"1":"wirdst","2":"werdt"}},{"inf":"wissen","en":"to know (a fact)","stem":"wiss","forms":["weiß","weißt","weiß","wissen","wisst","wissen"],"grp":"special","core":true,"tags":[],"tail":"die Antwort leider nicht","alt":{},"why":["ich weiß — no ending, and the vowel changes (§4).","du weißt — the ß stem takes only -t.","er weiß — identical to the ich-form, with no ending.","wir wissen = the infinitive.","ihr wisst — back to the short stem wiss- + -t.","sie/Sie wissen = the infinitive."],"err":{"0":"wisse","2":"weißt","4":"wisset"}}],"groups":[{"key":"regular","name":"Regular endings","rule":"§1 – stem + -e / -st / -t / -en / -t / -en."},{"key":"linking_e","name":"Linking -e-","rule":"§2.1 – stem in -d, -t or consonant + -m/-n takes -e- before -st and -t."},{"key":"sibilant","name":"Sibilant stems","rule":"§2.2 – stem in -s, -ß, -z, -x, -tz: the du-ending collapses to -t."},{"key":"eln","name":"-eln verbs","rule":"§2.3 – ich-form drops the -e-; wir/sie take only -n."},{"key":"ern","name":"-ern verbs","rule":"§2.3 – ich-form keeps the -e-; wir/sie take only -n."},{"key":"a_ae","name":"Stem change a → ä","rule":"§3 – du and er/sie/es only."},{"key":"au_aeu","name":"Stem change au → äu","rule":"§3 – du and er/sie/es only."},{"key":"e_i","name":"Stem change e → i","rule":"§3 – du and er/sie/es only."},{"key":"e_ie","name":"Stem change e → ie","rule":"§3 – du and er/sie/es only."},{"key":"special","name":"sein / haben / werden / wissen","rule":"§4–5 – learn these as whole paradigms."}],"concepts":[{"id":"c1","kind":"mc","q":"German has no continuous form. How do you say “I am eating right now”?","opts":["Ich esse gerade.","Ich bin essend.","Ich bin am essen gerade.","Ich werde gerade essen."],"ans":0,"why":"There is only one present tense. Add an adverb (gerade, jetzt, im Moment) to stress “right now”.","disp":null},{"id":"c2","kind":"mc","q":"“Sie arbeitet.” can mean:","opts":["only “She works.”","only “She is working.”","both “She works.” and “She is working.”","“She worked.”"],"ans":2,"why":"One German present form covers both English presents.","disp":null},{"id":"c3","kind":"type","q":"Translate: “I am learning German at the moment.” (use im Moment)","opts":["ich lerne im moment deutsch","im moment lerne ich deutsch"],"ans":null,"why":"No continuous form: Ich lerne im Moment Deutsch.","disp":"Ich lerne im Moment Deutsch."},{"id":"c4","kind":"type","q":"Translate: “He is sleeping now.” (use jetzt)","opts":["er schläft jetzt","jetzt schläft er"],"ans":null,"why":"schlafen is a stem-changer: er schläft. Ich-form: ich schlafe.","disp":"Er schläft jetzt."},{"id":"c5","kind":"mc","q":"Apart from sein, werden and wissen, the ihr-form shares its ending with…","opts":["the er/sie/es-form","the ich-form","the wir-form","the du-form"],"ans":0,"why":"ihr and er/sie/es both take -t (and both take -et after -d/-t stems). A vowel change splits the forms but not the ending: er fährt / ihr fahrt. sein, werden and wissen break the pattern outright: er ist / ihr seid, er wird / ihr werdet, er weiß / ihr wisst.","disp":null},{"id":"c6","kind":"mc","q":"Why is it “du arbeitest” but “du lernst”?","opts":["arbeit- ends in -t, so it needs a linking -e-","arbeiten is a strong verb","lernen is irregular","arbeiten is a -ern verb"],"ans":0,"why":"§2.1: -d/-t stems insert -e- before -st/-t. lern- ends in -n after r, which is excluded.","disp":null},{"id":"c7","kind":"mc","q":"Why is it “du heißt” and not “du heißst”?","opts":["The stem already ends in a sibilant (-ß), so du takes only -t","heißen is a stem-changing verb","It is an -eln verb","There is a linking -e-"],"ans":0,"why":"§2.2: after -s, -ß, -z, -x, -tz the du-ending collapses to -t, so du and er/sie/es look identical.","disp":null},{"id":"c8","kind":"mc","q":"Which pair of forms is identical for every sibilant-stem verb (e.g. sitzen)?","opts":["du and er/sie/es","ich and er/sie/es","wir and ihr","ich and wir"],"ans":0,"why":"du sitzt = er sitzt. Only context tells them apart.","disp":null},{"id":"c9","kind":"mc","q":"Which verb does NOT change its stem vowel?","opts":["kaufen","laufen","fahren","sehen"],"ans":0,"why":"Only a small closed group changes. kaufen is regular: du kaufst. laufen → du läufst.","disp":null},{"id":"c10","kind":"mc","q":"In “ich sammle” / “ich ändere”, why the difference?","opts":["-eln drops the -e-, -ern keeps it","-ern drops the -e-, -eln keeps it","sammeln is irregular","ändern is a stem-changer"],"ans":0,"why":"§2.3: sammeln → ich sammle; ändern → ich ändere.","disp":null},{"id":"c11","kind":"mc","q":"What is the wir-form ending of -eln/-ern verbs?","opts":["-n (wir sammeln, wir ändern)","-en (wir sammelen)","-t","-st"],"ans":0,"why":"The infinitive already ends in -n, so wir/sie simply equal the infinitive.","disp":null},{"id":"c12","kind":"mc","q":"Which form is wrong?","opts":["er hältet","er hält","ihr haltet","du hältst"],"ans":0,"why":"halten: er hält takes no extra -e- despite the -t stem (§4). ihr haltet does.","disp":null},{"id":"c13","kind":"mc","q":"Which is correct for treten?","opts":["ihr tretet","ihr trittet","ihr trittst","ihr tritt"],"ans":0,"why":"The vowel change only hits du and er/sie/es: du trittst, er tritt, but ihr tretet.","disp":null},{"id":"c14","kind":"type","q":"Give the ich-form of wissen.","opts":["weiß"],"ans":null,"why":"wissen is irregular: ich weiß, du weißt, er weiß.","disp":"weiß"},{"id":"c15","kind":"mc","q":"Which is the correct du-form of werden?","opts":["wirst","wirdst","werdest","wirdest"],"ans":0,"why":"werden: ich werde, du wirst, er wird, wir werden, ihr werdet, sie werden.","disp":null},{"id":"c16","kind":"mc","q":"Why does “du hältst” have no linking -e-, while “du arbeitest” does?","opts":["The linking -e- only applies to regular stems, not to changed strong stems","halten is not really a -t stem","arbeiten is a strong verb","It is optional in both"],"ans":0,"why":"Where a strong verb changes its vowel, it takes -st/-t directly: du hältst, du brätst, du lädst.","disp":null},{"id":"c17","kind":"mc","q":"“Ihr” and “Sie” (formal) both mean “you”. Which endings do they take?","opts":["ihr: -t, Sie: -en","ihr: -en, Sie: -t","both -t","both -en"],"ans":0,"why":"ihr macht / Sie machen. The formal Sie always copies the infinitive.","disp":null},{"id":"c18","kind":"type","q":"Translate: “We are waiting for the bus.” (auf den Bus)","opts":["wir warten auf den bus"],"ans":null,"why":"warten → wir warten; no continuous form needed.","disp":"Wir warten auf den Bus."},{"id":"c19","kind":"mc","q":"Which sentence is correct?","opts":["Er rechnet mit Regen.","Er rechnt mit Regen.","Er rechnet mit Regen gerade am.","Er ist rechnend mit Regen."],"ans":0,"why":"rechnen has a consonant + -n stem, so er rechnet inserts -e-.","disp":null},{"id":"c20","kind":"type","q":"Give the er/sie/es-form of nehmen.","opts":["nimmt"],"ans":null,"why":"nehmen → du nimmst, er nimmt (§4).","disp":"nimmt"}],"subjects":[["Ich"],["Du","Du, Anna,"],["Er","Meine Schwester","Der Lehrer","Das Kind","Mein Kollege","Die Frau"],["Wir","Mein Bruder und ich"],["Ihr","Ihr beide"],["Die Kinder","Meine Eltern","Die Nachbarn","Die Gäste"]],"persons":["ich","du","er/sie/es","wir","ihr","sie/Sie"]};
+
+/* ============================================================ storage ==== */
+const Store = (function(){
+  let mode = 'memory', mem = {};
+  try { localStorage.setItem('__probe','1'); localStorage.removeItem('__probe'); mode='local'; }
+  catch(e){ if (typeof window !== 'undefined' && window.storage) mode = 'api'; }
+  return {
+    mode,
+    label: mode==='local' ? 'saved in this browser' :
+           mode==='api'   ? 'saved to app storage' : 'this session only — download the file to keep progress',
+    async get(k){
+      if(mode==='local'){ const s=localStorage.getItem(k); return s?JSON.parse(s):null; }
+      if(mode==='api'){ try{ const r=await window.storage.get(k); return r?JSON.parse(r.value):null; }catch(e){ return null; } }
+      return mem[k]||null;
+    },
+    async set(k,v){
+      const s=JSON.stringify(v);
+      if(mode==='local'){ try{ localStorage.setItem(k,s); }catch(e){} return; }
+      if(mode==='api'){ try{ await window.storage.set(k,s); }catch(e){} return; }
+      mem[k]=v;
+    }
+  };
+})();
+const KEY = 'praesens.v1';
+
+/* ============================================================ state ===== */
+const PERSONS = DATA.persons;
+const GROUP = {}; DATA.groups.forEach(g=>GROUP[g.key]=g);
+const TYPES = [
+  {k:'v', name:'Verb forms',     d:'One item per form, asked as conjugation, gap-fill or error-fixing in turn'},
+  {k:'w', name:'Read the form',  d:'Which persons can this form be?'},
+  {k:'r', name:'Name the rule',  d:'Why the form looks like that'},
+  {k:'p', name:'Full paradigm',  d:'All six forms from memory'},
+  {k:'x', name:'Concepts',       d:'No continuous form, rule logic'}
+];
+const FMTNAME = {c:'Conjugate', g:'Fill the gap', f:'Fix the error',
+                 w:'Read the form', r:'Name the rule', p:'Full paradigm', x:'Concept'};
+const BOX_MS = [0, 3*6e4, 25*6e4, 864e5, 3*864e5, 8*864e5, 21*864e5];
+const MASTER = 5;
+
+let P = {            // persisted
+  st:{}, settings:{ len:20, newMax:8, coreOnly:true, types:{}, groups:{} },
+  hist:{}, best:0, lastDay:null, streak:0
+};
+TYPES.forEach(t=>P.settings.types[t.k]=true);
+DATA.groups.forEach(g=>P.settings.groups[g.key]=true);
+P.settings.groups.concept = true;
+
+let ITEMS = [], BYID = {}, dirty=false;
+let tab='drill', session=null, toastT=null;
+
+/* ============================================================ items ===== */
+function buildItems(){
+  const out=[];
+  DATA.verbs.forEach((v,vi)=>{
+    for(let p=0;p<6;p++){
+      const fmts=['c'];
+      if(v.tail) fmts.push('g');
+      if(v.err[p]!==undefined) fmts.push('f');
+      out.push({id:'v|'+v.inf+'|'+p, t:'v', grp:v.grp, vi, p, fmts});
+    }
+    out.push({id:'r|'+v.inf, t:'r', grp:v.grp, vi});
+    out.push({id:'p|'+v.inf, t:'p', grp:v.grp, vi});
+    const map={};
+    v.forms.forEach((f,i)=>{ (map[f]=map[f]||[]).push(i); });
+    Object.keys(map).forEach(f=>{
+      const set=map[f];
+      if(set.length>=2 && !(set.length===2 && set[0]===3 && set[1]===5))
+        out.push({id:'w|'+v.inf+'|'+f, t:'w', grp:v.grp, vi, form:f, set});
+    });
+  });
+  DATA.concepts.forEach((c,ci)=>out.push({id:'x|'+c.id, t:'x', grp:'concept', ci}));
+  return out;
+}
+function hash(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619);} return h>>>0; }
+function inScope(it){
+  if(!P.settings.types[it.t]) return false;
+  if(it.grp==='concept') return !!P.settings.groups.concept;
+  if(!P.settings.groups[it.grp]) return false;
+  if(P.settings.coreOnly && it.vi!==undefined && !DATA.verbs[it.vi].core) return false;
+  return true;
+}
+/* a form is one piece of knowledge; the way it is asked rotates each showing */
+function fmtOf(it){
+  if(it.t!=='v') return it.t;
+  const s=P.st[it.id];
+  return it.fmts[(s?s.n:0) % it.fmts.length];
+}
+
+/* ============================================================ grading == */
+function norm(s){
+  return (s||'').toLowerCase().trim().replace(/\s+/g,' ').replace(/[.!?,;:]+$/,'');
+}
+function normWord(s){ return norm(s).replace(/[^\p{L}\u00df-]/gu,''); }
+function deUml(s){ return s.replace(/ä/g,'a').replace(/ö/g,'o').replace(/ü/g,'u').replace(/ß/g,'ss'); }
+
+function accepted(it){
+  const v=DATA.verbs[it.vi];
+  if(it.t==='v') return [v.forms[it.p]].concat(v.alt[it.p]||[]);
+  if(it.t==='x'){ const c=DATA.concepts[it.ci]; return c.kind==='type'? c.opts : null; }
+  return null;
+}
+function target(it){
+  const v=DATA.verbs[it.vi];
+  if(it.t==='v') return v.forms[it.p];
+  return null;
+}
+function checkWord(given, list){
+  const phrase = list.some(a=>a.indexOf(' ')>=0);
+  const f = phrase ? norm : normWord;
+  const g = f(given);
+  return list.some(a=>f(a)===g);
+}
+function isAlt(it,given){
+  const v=DATA.verbs[it.vi], list=v.alt[it.p]||[];
+  return list.some(a=>normWord(a)===normWord(given));
+}
+
+/* fine-grained diagnosis — the point of a rigorous drill */
+function diagnose(it, given){
+  const v=DATA.verbs[it.vi], want=target(it), g=normWord(given), w=normWord(want);
+  if(!g) return 'Nothing entered.';
+  const stripE = x => deUml(x).replace(/e/g,'');
+  const other = v.forms.map((f,i)=>({f:normWord(f),i})).filter(o=>o.f===g && o.i!==it.p);
+  if(other.length){
+    let m='That is the '+other.map(o=>PERSONS[o.i]).join(' / ')+'-form of '+v.inf+'.';
+    if(deUml(g)===deUml(w)) m+=' The stem vowel changes in du and er/sie/es only — everywhere else the stem stays put.';
+    return m;
+  }
+  if(deUml(g)===deUml(w))
+    return 'Right letters, wrong diacritics. The umlaut and the ß are part of the form, not decoration.';
+  if(w.length===g.length+1 && stripE(w)===stripE(g))
+    return 'An -e- is missing: this stem takes a linking -e- before the ending.';
+  if(g.length===w.length+1 && stripE(g)===stripE(w))
+    return 'One -e- too many: this stem does not take a linking -e-.';
+  if(g===w.replace(/t$/,'st') || g===w+'s')
+    return 'After -s, -ß, -z, -x and -tz the du-form takes only -t, never -st.';
+  if(v.err[it.p]!==undefined && normWord(v.err[it.p])===g)
+    return 'That is what you get by adding the plain ending and ignoring the rule for this stem.';
+  if(g.startsWith(v.stem) && !w.startsWith(v.stem))
+    return 'The stem vowel has to change for this person: ' + v.stem + '- → ' + w + '.';
+  if(!g.startsWith(v.stem.slice(0,2)))
+    return 'That is not a form of ' + v.inf + '.';
+  return 'Ending mismatch. Rebuild it from the stem ' + v.stem + '-.';
+}
+
+/* ============================================================ SRS ====== */
+function stOf(id){ return P.st[id]; }
+function grade(it, ok){
+  const now=Date.now();
+  let s=P.st[it.id] || {b:0,due:0,n:0,c:0,k:0,l:0};
+  s.n++;
+  if(ok){ s.c++; s.k++; s.b=Math.min(6,s.b+1); s.due=now+BOX_MS[s.b]; }
+  else  { s.k=0; s.l++; s.b = s.b<=2 ? 0 : s.b-2; s.due=now+6e4; }
+  s.last=now;
+  P.st[it.id]=s;
+  const d=dayKey(now);
+  P.hist[d]=P.hist[d]||[0,0]; P.hist[d][0]++; if(ok)P.hist[d][1]++;
+  if(P.lastDay!==d){
+    const y=dayKey(now-864e5);
+    P.streak = (P.lastDay===y)? (P.streak||0)+1 : 1;
+    P.lastDay=d;
+  }
+  save();
+  return s;
+}
+function dayKey(t){ const d=new Date(t); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+
+function dueCount(){ const now=Date.now(); return ITEMS.filter(i=>inScope(i)&&P.st[i.id]&&P.st[i.id].due<=now).length; }
+function scopeItems(){ return ITEMS.filter(inScope); }
+function masteryPct(){
+  const s=scopeItems(); if(!s.length) return 0;
+  return Math.round(100*s.filter(i=>P.st[i.id]&&P.st[i.id].b>=MASTER).length/s.length);
+}
+
+function buildQueue(n, filter, opts){
+  opts=opts||{};
+  const now=Date.now();
+  const pool=scopeItems().filter(filter||(()=>true));
+  const seen=pool.filter(i=>P.st[i.id]);
+  const due=seen.filter(i=>P.st[i.id].due<=now).sort((a,b)=>P.st[a.id].due-P.st[b.id].due);
+  const q=due.slice(0,n);
+  const perVerb={};
+  q.forEach(i=>{ if(i.vi!==undefined) perVerb[i.vi]=(perVerb[i.vi]||0)+1; });
+  const newMax = opts.newMax!==undefined ? opts.newMax : P.settings.newMax;
+  if(q.length<n && newMax>0){
+    const fresh=pool.filter(i=>!P.st[i.id]);
+    fresh.sort((a,b)=>(a.vi===undefined?999:a.vi)-(b.vi===undefined?999:b.vi) || a.id.localeCompare(b.id));
+    let added=0;
+    for(const i of fresh){
+      if(q.length>=n || added>=newMax) break;
+      const k=i.vi===undefined?'x':i.vi;
+      if((perVerb[k]||0)>=3) continue;
+      perVerb[k]=(perVerb[k]||0)+1; q.push(i); added++;
+    }
+  }
+  if(q.length<n){
+    const rest=seen.filter(i=>q.indexOf(i)<0)
+      .sort((a,b)=>P.st[a.id].b-P.st[b.id].b || P.st[a.id].due-P.st[b.id].due);
+    q.push(...rest.slice(0,n-q.length));
+  }
+  return shuffle(q, now);
+}
+function shuffle(a, seed){
+  const r=a.slice(); let s=(seed||1)>>>0;
+  for(let i=r.length-1;i>0;i--){ s=(Math.imul(s,1103515245)+12345)>>>0; const j=s%(i+1); [r[i],r[j]]=[r[j],r[i]]; }
+  return r;
+}
+
+/* ============================================================ persist == */
+let saveT=null;
+function save(){
+  dirty=true;
+  clearTimeout(saveT);
+  saveT=setTimeout(()=>{ Store.set(KEY,P); dirty=false; }, 900);
+}
+async function load(){
+  const raw=await Store.get(KEY);
+  if(raw){
+    P.st = raw.st||{};
+    P.hist = raw.hist||{};
+    P.streak = raw.streak||0;
+    P.lastDay = raw.lastDay||null;
+    if(raw.settings){
+      P.settings.len = raw.settings.len||20;
+      P.settings.newMax = raw.settings.newMax!==undefined?raw.settings.newMax:8;
+      if(raw.settings.coreOnly!==undefined) P.settings.coreOnly=raw.settings.coreOnly;
+      TYPES.forEach(t=>{ if(raw.settings.types && raw.settings.types[t.k]!==undefined) P.settings.types[t.k]=raw.settings.types[t.k]; });
+      Object.keys(P.settings.groups).forEach(k=>{ if(raw.settings.groups && raw.settings.groups[k]!==undefined) P.settings.groups[k]=raw.settings.groups[k]; });
+    }
+  }
+}
+window.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden'&&dirty){ clearTimeout(saveT); Store.set(KEY,P); dirty=false; } });
+
+/* ============================================================ helpers == */
+const $ = s=>document.querySelector(s);
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function toast(msg){
+  const el=document.createElement('div'); el.className='toast'; el.textContent=msg;
+  document.body.appendChild(el); clearTimeout(toastT);
+  toastT=setTimeout(()=>el.remove(),1900);
+}
+function subjectFor(it){
+  const list=DATA.subjects[it.p];
+  return list[hash(it.id)%list.length];
+}
+
+/* ============================================================ tabs ===== */
+const TABS=[['drill','Drill'],['focus','Focus'],['exam','Exam'],['prog','Progress'],['notes','Notes']];
+function renderTabs(){
+  $('#tabs').innerHTML = TABS.map(([k,n])=>
+    '<button class="tab" role="tab" aria-selected="'+(tab===k)+'" data-tab="'+k+'">'+n+
+    (k==='drill'&&dueCount()? ' <span class="mono" style="color:var(--cool)">'+dueCount()+'</span>':'')+'</button>').join('');
+  $('#tabs').querySelectorAll('.tab').forEach(b=>b.onclick=()=>{ tab=b.dataset.tab; session=null; render(); });
+}
+function ringUpdate(){
+  const pct=masteryPct(), C=2*Math.PI*16.5;
+  $('#ringArc').setAttribute('stroke-dasharray', (C*pct/100).toFixed(1)+' 999');
+  $('#ringTxt').textContent = pct+'%';
+}
+function render(){
+  renderTabs(); ringUpdate();
+  const v=$('#view');
+  if(session) return renderRun(v);
+  if(tab==='drill') return renderDrill(v);
+  if(tab==='focus') return renderFocus(v);
+  if(tab==='exam')  return renderExam(v);
+  if(tab==='prog')  return renderProg(v);
+  if(tab==='notes') return renderNotes(v);
+}
+
+/* ============================================================ menus ==== */
+function renderDrill(v){
+  const due=dueCount(), fresh=scopeItems().filter(i=>!P.st[i.id]).length, tot=scopeItems().length;
+  const mastered=scopeItems().filter(i=>P.st[i.id]&&P.st[i.id].b>=MASTER).length;
+  v.innerHTML =
+  '<div class="card">'+
+    '<span class="eyebrow">Mixed session</span>'+
+    '<p class="muted" style="margin:10px 0 0;max-width:62ch">Everything due for review, plus a controlled number of new items. '+
+    'A form counts as mastered after '+MASTER+' correct answers at growing intervals; a slip drops it back.</p>'+
+    '<div class="stats" style="margin-top:16px">'+
+      stat(due,'due now')+stat(mastered,'mastered')+stat(fresh,'not seen yet')+stat(tot,'in scope')+
+    '</div>'+
+    '<div class="sel-inline" style="margin-bottom:14px">'+
+      '<span>Session length</span><select id="selLen">'+[10,20,30,50].map(n=>'<option '+(P.settings.len===n?'selected':'')+'>'+n+'</option>').join('')+'</select>'+
+      '<span style="margin-left:8px">New items per session</span><select id="selNew">'+[0,4,8,15,25].map(n=>'<option '+(P.settings.newMax===n?'selected':'')+'>'+n+'</option>').join('')+'</select>'+
+    '</div>'+
+    '<div class="actions"><button class="btn" id="go">Start session</button>'+
+    (due? '<button class="btn ghost" id="goDue">Review only what is due</button>':'')+
+    '</div>'+
+    '<p class="hint" style="margin-top:14px">Roughly 25 minutes a day carries the default scope to full mastery in about two months; '+
+    '12 minutes a day, about five. Progress '+Store.label+'.</p>'+
+  '</div>';
+  $('#selLen').onchange=e=>{ P.settings.len=+e.target.value; save(); };
+  $('#selNew').onchange=e=>{ P.settings.newMax=+e.target.value; save(); };
+  $('#go').onclick=()=>startSession(buildQueue(P.settings.len), 'Mixed session');
+  if($('#goDue')) $('#goDue').onclick=()=>startSession(buildQueue(P.settings.len,null,{newMax:0}), 'Due review');
+}
+function stat(n,l){ return '<div class="stat"><div class="n">'+n+'</div><div class="l">'+l+'</div></div>'; }
+
+function renderFocus(v){
+  const cards = DATA.groups.map(g=>{
+    const its=scopeItems().filter(i=>i.grp===g.key);
+    const m=its.filter(i=>P.st[i.id]&&P.st[i.id].b>=MASTER).length;
+    return '<button class="mcard" data-g="'+g.key+'"><div class="t">'+esc(g.name)+'</div>'+
+      '<div class="d">'+esc(g.rule)+'</div>'+
+      '<div class="m">'+m+' / '+its.length+' mastered</div></button>';
+  }).join('');
+  const cx=scopeItems().filter(i=>i.grp==='concept');
+  const cm=cx.filter(i=>P.st[i.id]&&P.st[i.id].b>=MASTER).length;
+  v.innerHTML=
+  '<div class="card" style="margin-bottom:14px">'+
+    '<span class="eyebrow">Focus on one rule</span>'+
+    '<p class="muted" style="margin:9px 0 0">Ignores the review schedule and hammers a single section until it is solid.</p>'+
+  '</div>'+
+  '<div class="menu">'+cards+
+    '<button class="mcard" data-g="concept"><div class="t">Concepts</div>'+
+    '<div class="d">§0 no continuous form, plus the logic behind the rules.</div>'+
+    '<div class="m">'+cm+' / '+cx.length+' mastered</div></button>'+
+  '</div>'+
+  '<div class="card" style="margin-top:14px">'+
+    '<span class="eyebrow">Or drill one exercise type</span>'+
+    '<div class="menu" style="margin-top:12px">'+TYPES.map(t=>{
+      const on=P.settings.types[t.k];
+      const its=scopeItems().filter(i=>i.t===t.k);
+      const m=its.filter(i=>P.st[i.id]&&P.st[i.id].b>=MASTER).length;
+      return '<button class="mcard" data-t="'+t.k+'"><div class="t">'+t.name+'</div><div class="d">'+t.d+'</div>'+
+        '<div class="m">'+(on? m+' / '+its.length+' mastered'
+                             : 'switched off in Progress ▸ Scope')+'</div></button>';
+    }).join('')+'</div>'+
+  '</div>';
+  v.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{
+    const g=b.dataset.g;
+    startSession(buildQueue(P.settings.len, i=>i.grp===g, {newMax:P.settings.len}), (GROUP[g]?GROUP[g].name:'Concepts'));
+  });
+  v.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{
+    const t=b.dataset.t;
+    startSession(buildQueue(P.settings.len, i=>i.t===t, {newMax:P.settings.len}), TYPES.find(x=>x.k===t).name);
+  });
+}
+
+function renderExam(v){
+  const best=P.best||0;
+  v.innerHTML=
+  '<div class="card">'+
+    '<span class="eyebrow">Exam simulation</span>'+
+    '<p class="muted" style="margin:10px 0 0;max-width:62ch">25 questions, no feedback until the end, weighted towards the rules you get wrong. '+
+    'Answers still count towards the review schedule. Best score so far: <span class="mono">'+best+'%</span>.</p>'+
+    '<div class="actions"><button class="btn" id="goEx">Start exam</button></div>'+
+  '</div>';
+  $('#goEx').onclick=()=>{
+    const pool=scopeItems();
+    const score=i=>{ const s=P.st[i.id]; if(!s) return 1.2; return 3 - Math.min(3,s.b) + (s.l||0)*0.6; };
+    const ranked=shuffle(pool,Date.now()).sort((a,b)=>score(b)-score(a)).slice(0,80);
+    startSession(shuffle(ranked,Date.now()).slice(0,25), 'Exam', true);
+  };
+}
+
+/* ============================================================ session == */
+function startSession(queue, title, exam){
+  if(!queue.length){ toast('Nothing in scope — enable more types or rules in Progress.'); return; }
+  session={ q:queue, i:0, title:title, exam:!!exam, right:0, done:0, log:[], answered:false, sel:null, picked:[] };
+  render();
+  setTimeout(focusInput,30);
+}
+function focusInput(){ const el=$('#ans')||document.querySelector('.pgrid input'); if(el) el.focus(); }
+
+function renderRun(v){
+  const s=session;
+  if(s.i>=s.q.length) return renderResult(v);
+  const it=s.q[s.i];
+  s.fmt=fmtOf(it);
+  v.innerHTML =
+    '<div class="stage">'+
+      '<div><div class="qcard" id="qcard">'+questionHTML(it,s.fmt)+'</div>'+
+        '<div class="strip"><span class="mono">'+(s.i+1)+' / '+s.q.length+'</span>'+
+        '<span class="bar"><i style="width:'+Math.round(100*s.i/s.q.length)+'%"></i></span>'+
+        '<span>'+esc(s.title)+(s.exam?' · no feedback until the end':'')+'</span>'+
+        '<button class="tab" id="quit">End</button></div>'+
+      '</div>'+
+      ladderHTML(it,false)+
+    '</div>';
+  $('#quit').onclick=()=>{ session=null; document.onkeydown=null; render(); };
+  wireQuestion(it);
+  setTimeout(focusInput,20);
+}
+
+function personChip(p){ return '<span class="chip">'+PERSONS[p]+'</span>'; }
+
+function questionHTML(it, fmt){
+  const v=DATA.verbs[it.vi];
+  const head=(lemma,gloss)=>'<div class="qhead"><div><div class="lemma">'+esc(lemma)+'</div>'+
+      (gloss?'<div class="gloss">'+esc(gloss)+'</div>':'')+'</div>'+
+      '<span class="eyebrow">'+esc(typeName(fmt))+'</span></div>';
+
+  if(fmt==='c'){
+    return head(v.inf, v.en)+
+      '<div class="qbody"><div class="ask">Write the '+PERSONS[it.p]+'-form.</div>'+
+      inputHTML()+'</div>'+actionsHTML();
+  }
+  if(fmt==='g'){
+    const subj=subjectFor(it);
+    return head(v.inf, v.en)+
+      '<div class="qbody"><div class="ask">Complete the sentence.</div>'+
+      '<div class="sent">'+esc(subj)+' <span class="gap">?</span> '+esc(v.tail)+'.</div>'+
+      inputHTML()+'</div>'+actionsHTML();
+  }
+  if(fmt==='f'){
+    const subj=subjectFor(it), bad=v.err[it.p];
+    const sent = v.tail
+      ? esc(subj)+' <span class="strike">'+esc(bad)+'</span> '+esc(v.tail)+'.'
+      : esc(subj)+' <span class="strike">'+esc(bad)+'</span>.';
+    return head(v.inf, v.en)+
+      '<div class="qbody"><div class="ask">This form is wrong. Write the correct one.</div>'+
+      '<div class="sent">'+sent+'</div>'+inputHTML()+'</div>'+actionsHTML();
+  }
+  if(fmt==='w'){
+    return head(it.form, 'a form of '+v.inf)+
+      '<div class="qbody"><div class="ask">Which persons can this form belong to? Pick every one that fits.</div>'+
+      '<div class="persons">'+PERSONS.map((p,i)=>'<button class="pbtn" data-p="'+i+'">'+p+'</button>').join('')+'</div></div>'+
+      actionsHTML();
+  }
+  if(fmt==='r'){
+    const opts=ruleOptions(it);
+    return head(v.inf, v.en)+
+      '<div class="qbody"><div class="ask">Which rule decides its du- and er/sie/es-forms?</div>'+
+      '<div class="opts">'+opts.map((o,i)=>'<button class="opt" data-o="'+i+'"><span class="n">'+(i+1)+'</span><span>'+esc(o.text)+'</span></button>').join('')+
+      '</div></div>'+actionsHTML();
+  }
+  if(fmt==='p'){
+    return head(v.inf, v.en)+
+      '<div class="qbody"><div class="ask">Write the complete paradigm.</div>'+
+      '<div class="pgrid">'+PERSONS.map((p,i)=>
+        '<label for="pf'+i+'">'+p+'</label><input type="text" id="pf'+i+'" autocomplete="off" autocapitalize="off" spellcheck="false">').join('')+
+      '</div>'+keysHTML()+'</div>'+actionsHTML();
+  }
+  if(fmt==='x'){
+    const c=DATA.concepts[it.ci];
+    if(c.kind==='mc'){
+      const opts=conceptOptions(it);
+      return '<div class="qhead"><div><div class="lemma" style="font-size:19px;font-family:var(--sans);font-weight:600">'+esc(c.q)+'</div></div>'+
+        '<span class="eyebrow">Concept</span></div>'+
+        '<div class="qbody"><div class="opts">'+opts.map((o,i)=>'<button class="opt" data-o="'+i+'"><span class="n">'+(i+1)+'</span><span>'+esc(o.text)+'</span></button>').join('')+'</div></div>'+
+        actionsHTML();
+    }
+    return '<div class="qhead"><div><div class="lemma" style="font-size:19px;font-family:var(--sans);font-weight:600">'+esc(c.q)+'</div></div>'+
+      '<span class="eyebrow">Concept</span></div>'+
+      '<div class="qbody">'+inputHTML()+'</div>'+actionsHTML();
+  }
+  return '';
+}
+function typeName(f){ return FMTNAME[f]||''; }
+function inputHTML(){
+  return '<input type="text" id="ans" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="type the form">'+keysHTML();
+}
+function keysHTML(){
+  return '<div class="keys">'+['ä','ö','ü','ß'].map(c=>'<button class="key" data-k="'+c+'">'+c+'</button>').join('')+
+    '<span class="hint" style="align-self:center;margin-left:4px">Enter to check</span></div>';
+}
+function actionsHTML(){
+  return '<div class="actions"><button class="btn" id="check">Check</button>'+
+    '<button class="btn ghost" id="skip">Skip</button></div><div id="fb" aria-live="polite"></div>';
+}
+
+/* For lassen, essen, lesen, wachsen, wissen … the sibilant rule genuinely also
+   governs the du-form, so it must never be offered as a "wrong" answer. */
+function sibilantAlsoApplies(v){
+  const du=v.forms[1];
+  const bare = du.endsWith('st') ? du.slice(0,-2) : (du.endsWith('t') ? du.slice(0,-1) : du);
+  return /[s\u00dfzx]$/.test(bare);
+}
+function ruleOptions(it){
+  const v=DATA.verbs[it.vi];
+  const pool=DATA.groups.filter(g=>g.key!==v.grp &&
+    !(g.key==='sibilant' && sibilantAlsoApplies(v)));
+  const h=hash(it.id);
+  const picks=[]; const used={};
+  for(let i=0;i<3;i++){ let j=(h>>>(i*3))%pool.length; while(used[j]) j=(j+1)%pool.length; used[j]=1; picks.push(pool[j]); }
+  const all=[{text:GROUP[v.grp].name+' — '+GROUP[v.grp].rule, ok:true}]
+    .concat(picks.map(g=>({text:g.name+' — '+g.rule, ok:false})));
+  return shuffle(all,h);
+}
+function conceptOptions(it){
+  const c=DATA.concepts[it.ci];
+  const h=hash(it.id);
+  return shuffle(c.opts.map((t,i)=>({text:t, ok:i===c.ans})), h);
+}
+
+function wireQuestion(it){
+  const s=session;
+  s.answered=false; s.sel=null; s.picked=[];
+  const card=$('#qcard');
+  card.querySelectorAll('.key').forEach(b=>b.onclick=()=>{
+    const el=document.activeElement && document.activeElement.tagName==='INPUT' ? document.activeElement : ($('#ans')||card.querySelector('.pgrid input'));
+    if(!el) return;
+    const p=el.selectionStart||el.value.length;
+    el.value=el.value.slice(0,p)+b.dataset.k+el.value.slice(el.selectionEnd||p);
+    el.focus(); el.setSelectionRange(p+1,p+1);
+  });
+  card.querySelectorAll('.pbtn').forEach(b=>b.onclick=()=>{
+    if(s.answered) return;
+    b.classList.toggle('sel');
+    const i=+b.dataset.p, k=s.picked.indexOf(i);
+    if(k<0) s.picked.push(i); else s.picked.splice(k,1);
+  });
+  card.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    if(s.answered) return;
+    card.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel'); s.sel=+b.dataset.o;
+  });
+  $('#check').onclick=()=>submit(it);
+  $('#skip').onclick=()=>{ if(!s.answered) submit(it,true); else next(); };
+  card.querySelectorAll('input[type=text]').forEach((el,i,all)=>{
+    el.onkeydown=e=>{
+      if(e.key==='Enter'){
+        e.preventDefault();
+        if(s.answered) next();
+        else if(it.t==='p' && i<all.length-1) all[i+1].focus();
+        else submit(it);
+      }
+    };
+  });
+  document.onkeydown=e=>{
+    if(!session) return;
+    if((s.fmt==='r'||(s.fmt==='x'&&DATA.concepts[it.ci].kind==='mc')) && !s.answered && /^[1-4]$/.test(e.key)){
+      const b=card.querySelector('.opt[data-o="'+(+e.key-1)+'"]'); if(b) b.click();
+    }
+    if(e.key==='Enter' && s.answered){ e.preventDefault(); next(); }
+  };
+}
+
+function submit(it, skipped){
+  const s=session; if(s.answered) return;
+  const card=$('#qcard');
+  const fmt=s.fmt;
+  let ok=false, given='';
+  if(fmt==='c'||fmt==='g'||fmt==='f'||(fmt==='x'&&DATA.concepts[it.ci].kind==='type')){
+    given=$('#ans').value;
+    ok = !skipped && checkWord(given, accepted(it));
+  } else if(fmt==='w'){
+    const want=it.set.slice().sort().join(',');
+    ok = !skipped && s.picked.slice().sort().join(',')===want;
+  } else if(fmt==='r'||fmt==='x'){
+    const opts = fmt==='r'? ruleOptions(it) : conceptOptions(it);
+    ok = !skipped && s.sel!==null && opts[s.sel].ok;
+  } else if(fmt==='p'){
+    const v=DATA.verbs[it.vi];
+    ok=true;
+    for(let i=0;i<6;i++){
+      const el=card.querySelector('#pf'+i);
+      const good=checkWord(el.value, [v.forms[i]].concat(v.alt[i]||[]));
+      el.classList.add(good?'ok':'no');
+      el.disabled=true;
+      if(!good){ ok=false; if(!el.value.trim()) el.value=''; }
+    }
+    if(skipped) ok=false;
+  }
+  s.answered=true; s.done++; if(ok) s.right++;
+  grade(it, ok);
+  s.log.push({it, ok, given});
+  if(s.exam){ next(); return; }
+  showFeedback(it, ok, given, skipped);
+}
+
+function showFeedback(it, ok, given, skipped){
+  const card=$('#qcard'), s=session;
+  const v=DATA.verbs[it.vi], fmt=s.fmt;
+  let html='<div class="fb"><div class="verdict '+(ok?'ok':'no')+'">'+(ok?'Correct':(skipped?'Skipped':'Not right'))+'</div>';
+
+  if(fmt==='c'||fmt==='g'||fmt==='f'||(fmt==='x'&&DATA.concepts[it.ci].kind==='type')){
+    const el=$('#ans'); el.classList.add(ok?'ok':'no'); el.disabled=true;
+    const c0 = fmt==='x' ? DATA.concepts[it.ci] : null;
+    const want = c0 ? (c0.disp || c0.opts[0]) : v.forms[it.p];
+    html+='<div class="answer">'+esc(want)+'</div>';
+    if(ok && fmt!=='x' && isAlt(it,given))
+      html+='<div class="diag">Accepted, but <b>'+esc(v.forms[it.p])+'</b> is the form to use in the exam.</div>';
+    if(!ok && !skipped) html+='<div class="diag">'+esc(fmt==='x'?'Compare your wording with the answer above.':diagnose(it,given))+'</div>';
+    if(fmt==='x') html+='<div class="rule">'+esc(DATA.concepts[it.ci].why)+'</div>';
+  }
+  if(fmt==='w'){
+    card.querySelectorAll('.pbtn').forEach(b=>{
+      const i=+b.dataset.p, should=it.set.indexOf(i)>=0, picked=s.picked.indexOf(i)>=0;
+      b.classList.remove('sel');
+      if(should) b.classList.add('right');
+      else if(picked) b.classList.add('wrong');
+    });
+    html+='<div class="answer">'+esc(it.form)+' = '+it.set.map(i=>PERSONS[i]).join(' · ')+'</div>';
+  }
+  if(fmt==='r'||(fmt==='x'&&DATA.concepts[it.ci].kind==='mc')){
+    const opts = fmt==='r'? ruleOptions(it) : conceptOptions(it);
+    card.querySelectorAll('.opt').forEach((b,i)=>{
+      b.classList.remove('sel');
+      if(opts[i].ok) b.classList.add('right');
+      else if(s.sel===i) b.classList.add('wrong');
+    });
+    if(fmt==='x') html+='<div class="rule">'+esc(DATA.concepts[it.ci].why)+'</div>';
+  }
+  if(fmt==='p'){
+    html+='<div class="answer" style="font-size:16px">'+v.forms.map((f,i)=>esc(f)).join(' · ')+'</div>';
+  }
+  if(it.vi!==undefined && it.p!==undefined)
+    html+='<div class="rule"><b>Why:</b> '+esc(v.why[it.p])+'</div>';
+  else if(it.vi!==undefined)
+    html+='<div class="rule"><b>Rule:</b> '+esc(GROUP[v.grp].name+' — '+GROUP[v.grp].rule)+'</div>';
+
+  const stt=P.st[it.id];
+  html+='<div class="tagline">Box '+stt.b+' of 6 · next review '+dueLabel(stt.due)+
+        (stt.n>1? ' · '+stt.c+'/'+stt.n+' correct so far':'')+'</div>';
+  html+='</div>';
+  $('#fb').innerHTML=html;
+  const st=$('#skip');
+  const willRequeue = !ok;
+  st.textContent = (!willRequeue && s.i+1>=s.q.length) ? 'Finish' : 'Next';
+  st.className='btn';
+  $('#check').disabled=true; $('#check').className='btn ghost';
+  st.focus();
+  // reveal the paradigm on the ladder
+  const lad=document.querySelector('.ladder');
+  if(lad && it.vi!==undefined) lad.outerHTML=ladderHTML(it,true);
+}
+function dueLabel(t){
+  const d=t-Date.now();
+  if(d<9e4) return 'in a minute';
+  if(d<36e5) return 'in '+Math.round(d/6e4)+' min';
+  if(d<864e5) return 'in '+Math.round(d/36e5)+' h';
+  return 'in '+Math.round(d/864e5)+' days';
+}
+function next(){
+  const s=session;
+  const last=s.log[s.log.length-1];
+  if(last && !last.ok && !s.exam) s.q.push(last.it);   // re-queue misses inside the session
+  s.i++;
+  document.onkeydown=null;
+  render();
+}
+
+function ladderHTML(it, reveal){
+  if(it.vi===undefined){
+    return '<aside class="ladder"><span class="eyebrow">Reminder</span>'+
+      '<div class="rung"><span class="p">endings</span><span class="v">-e -st -t</span></div>'+
+      '<div class="rung"><span class="p"></span><span class="v">-en -t -en</span></div>'+
+      '<div class="foot">One present tense only. Use gerade / jetzt / im Moment for “right now”.</div></aside>';
+  }
+  const v=DATA.verbs[it.vi];
+  const rows=PERSONS.map((p,i)=>{
+    const on = it.p===i;
+    const diff = reveal && (i===1||i===2) && v.forms[i]!==(v.stem+(i===1?'st':'t'));
+    const val = reveal ? v.forms[i] : (on?'?':'·');
+    return '<div class="rung'+(on?' on':'')+(reveal?' rev':'')+(diff?' diff':'')+'">'+
+      '<span class="p">'+p+'</span><span class="v">'+esc(val)+'</span></div>';
+  }).join('');
+  return '<aside class="ladder"><span class="eyebrow">'+esc(v.inf)+'</span>'+rows+
+    '<div class="foot">'+esc(GROUP[v.grp].name)+'</div></aside>';
+}
+
+/* ============================================================ result === */
+function renderResult(v){
+  const s=session, pct=s.done?Math.round(100*s.right/s.done):0;
+  if(s.exam && pct>(P.best||0)){ P.best=pct; save(); }
+  const wrong=s.log.filter(x=>!x.ok);
+  v.innerHTML=
+  '<div class="card">'+
+    '<span class="eyebrow">'+esc(s.title)+' complete</span>'+
+    '<div class="stats" style="margin-top:14px">'+
+      stat(pct+'%','accuracy')+stat(s.right,'correct')+stat(s.done-s.right,'missed')+stat(masteryPct()+'%','overall mastery')+
+    '</div>'+
+    (wrong.length? '<h2>Worth another look</h2><div style="margin-bottom:6px">'+
+      wrong.map(x=>{
+        const vb=DATA.verbs[x.it.vi];
+        if(!vb) return '<div class="grow" style="grid-template-columns:1fr"><div class="nm">'+esc(DATA.concepts[x.it.ci].q)+'</div></div>';
+        const want = x.it.p!==undefined? vb.forms[x.it.p] : vb.forms.join(' · ');
+        return '<div class="grow" style="grid-template-columns:150px 1fr">'+
+          '<div class="nm"><span class="mono">'+esc(vb.inf)+'</span><span class="sub">'+esc(x.it.p!==undefined?PERSONS[x.it.p]:'paradigm')+'</span></div>'+
+          '<div class="nm"><span class="mono" style="color:var(--gold)">'+esc(want)+'</span>'+
+          (x.it.p!==undefined?'<span class="sub">'+esc(vb.why[x.it.p])+'</span>':'')+'</div></div>';
+      }).join('')+'</div>' : '<p class="muted">Clean run.</p>')+
+    '<div class="actions">'+
+      (wrong.length?'<button class="btn" id="again">Redo the missed items</button>':'')+
+      '<button class="btn '+(wrong.length?'ghost':'')+'" id="more">New session</button>'+
+      '<button class="btn ghost" id="done">Back</button>'+
+    '</div>'+
+  '</div>';
+  if($('#again')) $('#again').onclick=()=>startSession(wrong.map(x=>x.it),'Repair round');
+  $('#more').onclick=()=>startSession(buildQueue(P.settings.len),'Mixed session');
+  $('#done').onclick=()=>{ session=null; tab='drill'; render(); };
+}
+
+/* ============================================================ progress = */
+function renderProg(v){
+  const scope=scopeItems();
+  const box=n=>scope.filter(i=>P.st[i.id]&&P.st[i.id].b===n).length;
+  const seen=scope.filter(i=>P.st[i.id]).length;
+  const mastered=scope.filter(i=>P.st[i.id]&&P.st[i.id].b>=MASTER).length;
+  let tot=0,cor=0; Object.keys(P.hist).forEach(d=>{tot+=P.hist[d][0];cor+=P.hist[d][1];});
+  const today=P.hist[dayKey(Date.now())]||[0,0];
+
+  const groupRows = DATA.groups.concat([{key:'concept',name:'Concepts',rule:'§0 and rule logic'}]).map(g=>{
+    const its=scope.filter(i=>i.grp===g.key);
+    const m=its.filter(i=>P.st[i.id]&&P.st[i.id].b>=MASTER).length;
+    const l=its.filter(i=>P.st[i.id]&&P.st[i.id].b<MASTER).length;
+    const n=its.length||1;
+    return '<div class="grow"><div class="nm"><span>'+esc(g.name)+'</span><span class="sub">'+esc(g.rule)+'</span></div>'+
+      '<div class="mb"><i class="m" style="width:'+(100*m/n)+'%"></i><i class="l" style="width:'+(100*l/n)+'%"></i></div>'+
+      '<div class="pct">'+Math.round(100*m/n)+'%</div></div>';
+  }).join('');
+
+  const weak = scope.filter(i=>P.st[i.id]&&P.st[i.id].l>0)
+    .sort((a,b)=>(P.st[b.id].l-P.st[a.id].l)||(P.st[a.id].b-P.st[b.id].b)).slice(0,18);
+
+  const days=[]; for(let k=13;k>=0;k--){ const d=dayKey(Date.now()-k*864e5); days.push([d,(P.hist[d]||[0,0])[0]]); }
+  const mx=Math.max(1,...days.map(d=>d[1]));
+
+  v.innerHTML=
+  '<div class="stats">'+
+    stat(masteryPct()+'%','mastered')+stat(seen,'items met')+stat(scope.length,'items in scope')+
+    stat(tot?Math.round(100*cor/tot)+'%':'—','lifetime accuracy')+stat(today[0],'answered today')+stat(P.streak||0,'day streak')+
+  '</div>'+
+
+  '<div class="card" style="margin-bottom:14px"><h2>Mastery by rule</h2>'+groupRows+
+    '<div class="legend"><span><i style="background:var(--gold)"></i>mastered (box '+MASTER+'+)</span>'+
+    '<span><i style="background:var(--cool)"></i>in progress</span><span><i style="background:var(--line)"></i>not met yet</span></div>'+
+  '</div>'+
+
+  '<div class="card" style="margin-bottom:14px"><h2>Review pipeline</h2>'+
+    '<div class="stats" style="margin:0">'+[0,1,2,3,4,5,6].map(n=>stat(box(n),'box '+n)).join('')+'</div>'+
+    '<p class="hint" style="margin-top:10px">Box 0 → 3 min, 1 → 25 min, 2 → 1 day, 3 → 3 days, 4 → 8 days, 5 → 21 days. A wrong answer drops an item two boxes.</p>'+
+  '</div>'+
+
+  '<div class="card" style="margin-bottom:14px"><h2>Last 14 days</h2>'+
+    '<div style="display:flex;gap:4px;align-items:flex-end;height:56px">'+
+      days.map(d=>'<div title="'+d[0]+': '+d[1]+'" style="flex:1;background:'+(d[1]?'var(--cool)':'var(--line)')+
+        ';height:'+Math.max(3,Math.round(52*d[1]/mx))+'px;border-radius:2px"></div>').join('')+
+    '</div>'+
+  '</div>'+
+
+  (weak.length? '<div class="card" style="margin-bottom:14px"><h2>Most-missed items</h2>'+
+    '<div class="weak">'+weak.map(i=>{
+      const vb=DATA.verbs[i.vi];
+      const lbl = vb ? (vb.inf+(i.p!==undefined?' · '+PERSONS[i.p]:'')) : 'concept';
+      return '<span>'+esc(lbl)+' <b style="color:var(--no)">'+P.st[i.id].l+'</b></span>';
+    }).join('')+'</div>'+
+    '<div class="actions"><button class="btn" id="drillWeak">Drill these now</button></div></div>' : '')+
+
+  '<div class="card" style="margin-bottom:14px"><h2>Scope</h2>'+
+    '<p class="hint" style="margin:0 0 8px">Mastery is measured over whatever is switched on here.</p>'+
+    '<div class="eyebrow" style="margin-top:12px">Exercise types</div>'+
+    '<div class="togs">'+TYPES.map(t=>'<button class="tog'+(P.settings.types[t.k]?' on':'')+'" data-ty="'+t.k+'">'+t.name+'</button>').join('')+'</div>'+
+    '<div class="eyebrow" style="margin-top:16px">Verbs</div>'+
+    '<div class="togs"><button class="tog'+(P.settings.coreOnly?' on':'')+'" id="togCore">'+
+      (P.settings.coreOnly?'Core 81 verbs':'All 133 verbs')+'</button></div>'+
+    '<p class="hint" style="margin:8px 0 0">The core set already covers every rule and every irregular verb. '+
+    'Switch it off to add 52 more verbs of the same patterns.</p>'+
+    '<div class="eyebrow" style="margin-top:16px">Rules</div>'+
+    '<div class="togs">'+DATA.groups.map(g=>'<button class="tog'+(P.settings.groups[g.key]?' on':'')+'" data-gr="'+g.key+'">'+esc(g.name)+'</button>').join('')+
+      '<button class="tog'+(P.settings.groups.concept?' on':'')+'" data-gr="concept">Concepts</button></div>'+
+  '</div>'+
+
+  '<div class="card"><h2>Your data</h2>'+
+    '<p class="hint" style="margin:0 0 10px">Progress '+Store.label+'. Export a backup before clearing your browser.</p>'+
+    '<div class="actions"><button class="btn ghost" id="exp">Export progress</button>'+
+    '<button class="btn ghost" id="imp">Import progress</button>'+
+    '<button class="btn ghost" id="reset" style="border-color:var(--no);color:var(--no)">Reset everything</button></div>'+
+    '<input type="file" id="file" accept="application/json" hidden>'+
+  '</div>';
+
+  v.querySelectorAll('[data-ty]').forEach(b=>b.onclick=()=>{
+    const k=b.dataset.ty;
+    if(P.settings.types[k] && TYPES.filter(t=>P.settings.types[t.k]).length===1){ toast('Keep at least one type on.'); return; }
+    P.settings.types[k]=!P.settings.types[k]; save(); render();
+  });
+  v.querySelectorAll('[data-gr]').forEach(b=>b.onclick=()=>{
+    const k=b.dataset.gr;
+    const on=Object.keys(P.settings.groups).filter(x=>P.settings.groups[x]);
+    if(P.settings.groups[k] && on.length===1){ toast('Keep at least one rule on.'); return; }
+    P.settings.groups[k]=!P.settings.groups[k]; save(); render();
+  });
+  $('#togCore').onclick=()=>{ P.settings.coreOnly=!P.settings.coreOnly; save(); render(); };
+  if($('#drillWeak')) $('#drillWeak').onclick=()=>startSession(shuffle(weak,Date.now()),'Weak spots');
+  $('#exp').onclick=()=>{
+    const blob=new Blob([JSON.stringify(P)],{type:'application/json'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob); a.download='praesens-progress-'+dayKey(Date.now())+'.json'; a.click();
+    URL.revokeObjectURL(a.href);
+  };
+  $('#imp').onclick=()=>$('#file').click();
+  $('#file').onchange=e=>{
+    const f=e.target.files[0]; if(!f) return;
+    const r=new FileReader();
+    r.onload=()=>{ try{
+        const d=JSON.parse(r.result);
+        if(!d.st) throw 0;
+        P.st=d.st; P.hist=d.hist||{}; P.streak=d.streak||0; P.lastDay=d.lastDay||null; P.best=d.best||0;
+        if(d.settings) P.settings=Object.assign(P.settings,d.settings);
+        save(); render(); toast('Progress restored.');
+      }catch(err){ toast('That file does not look like a progress export.'); } };
+    r.readAsText(f);
+  };
+  $('#reset').onclick=()=>{
+    if(!confirm('Delete all progress? This cannot be undone.')) return;
+    P.st={}; P.hist={}; P.streak=0; P.lastDay=null; P.best=0; save(); render(); toast('Progress cleared.');
+  };
+}
+
+/* ============================================================ notes ==== */
+function renderNotes(v){
+  v.innerHTML='<div class="card notes">'+NOTES_HTML+'</div>';
+}
+const NOTES_HTML = `
+<h3>§0 · There is no continuous form</h3>
+<p>One present tense covers both English presents. <code>Ich esse</code> = “I eat” <i>and</i> “I am eating”.
+To stress “right now”, add an adverb: <b>gerade</b>, <b>jetzt</b>, <b>im Moment</b>, <b>zurzeit</b>.</p>
+<p class="mono">Ich esse <b>jetzt</b>. · Sie arbeitet <b>gerade</b>. · Wir wohnen <b>zurzeit</b> in Berlin.</p>
+
+<h3>§1 · Regular endings</h3>
+<p>Drop <code>-en</code> from the infinitive, add the ending. <b>machen</b> → stem <b>mach-</b>.</p>
+<table><tr><th>Person</th><th>Ending</th><th>Form</th></tr>
+<tr><td>ich</td><td>-e</td><td>mach<b>e</b></td></tr>
+<tr><td>du</td><td>-st</td><td>mach<b>st</b></td></tr>
+<tr><td>er/sie/es</td><td>-t</td><td>mach<b>t</b></td></tr>
+<tr><td>wir</td><td>-en</td><td>mach<b>en</b></td></tr>
+<tr><td>ihr</td><td>-t</td><td>mach<b>t</b></td></tr>
+<tr><td>sie/Sie</td><td>-en</td><td>mach<b>en</b></td></tr></table>
+
+<h3>§2.1 · Linking -e-</h3>
+<p>Stem ends in <code>-d</code>, <code>-t</code>, or a consonant (but <b>not</b> l, r or h) + <code>-m</code>/<code>-n</code>
+→ insert <code>-e-</code>, otherwise it is unpronounceable.</p>
+<table><tr><th></th><th>arbeiten</th><th>finden</th><th>rechnen</th></tr>
+<tr><td>du</td><td>arbeit<b>e</b>st</td><td>find<b>e</b>st</td><td>rechn<b>e</b>st</td></tr>
+<tr><td>er/sie/es</td><td>arbeit<b>e</b>t</td><td>find<b>e</b>t</td><td>rechn<b>e</b>t</td></tr>
+<tr><td>ihr</td><td>arbeit<b>e</b>t</td><td>find<b>e</b>t</td><td>rechn<b>e</b>t</td></tr></table>
+<p>Applies to regular stems only. Where a strong verb changes its vowel (du/er only) it takes
+<code>-st</code>/<code>-t</code> directly: du h<b>ä</b>ltst, du br<b>ä</b>tst, du l<b>ä</b>dst.</p>
+<p>Excluded: lernen → du lernst · wohnen → du wohnst · filmen → du filmst · kommen → du kommst.</p>
+
+<h3>§2.2 · Sibilant stems</h3>
+<p>Stem in <code>-s</code>, <code>-ß</code>, <code>-z</code>, <code>-x</code>, <code>-tz</code>
+→ the du-ending collapses to <code>-t</code>, so <b>du = er/sie/es</b>.</p>
+<table><tr><th>reisen</th><th>heißen</th><th>tanzen</th><th>sitzen</th></tr>
+<tr><td>du reis<b>t</b></td><td>du heiß<b>t</b></td><td>du tanz<b>t</b></td><td>du sitz<b>t</b></td></tr></table>
+
+<h3>§2.3 · Infinitives in -eln / -ern</h3>
+<p>The stem keeps its <code>-e-</code> everywhere except the ich-form, and wir/sie take just
+<code>-n</code> (the infinitive already ends in -n).</p>
+<ul><li><code>-eln</code> → <b>drop</b> the -e-: sammeln → ich samm<b>le</b></li>
+<li><code>-ern</code> → <b>keep</b> the -e-: ändern → ich änd<b>ere</b></li></ul>
+<table><tr><th></th><th>sammeln</th><th>ändern</th></tr>
+<tr><td>ich</td><td>sammle</td><td>ändere</td></tr>
+<tr><td>du</td><td>sammelst</td><td>änderst</td></tr>
+<tr><td>er/sie/es</td><td>sammelt</td><td>ändert</td></tr>
+<tr><td>wir</td><td>sammeln</td><td>ändern</td></tr>
+<tr><td>ihr</td><td>sammelt</td><td>ändert</td></tr>
+<tr><td>sie/Sie</td><td>sammeln</td><td>ändern</td></tr></table>
+<p>Same pattern: lächeln, klingeln, wechseln, handeln (-eln); wandern, feiern, verbessern, erinnern (-ern).
+The imperative follows the ich-form: <i>Sammle!</i> but <i>Ändere!</i></p>
+
+<h3>§3 · Stem-changing verbs</h3>
+<p>A large group of strong verbs changes its stem vowel — but <b>only in du and er/sie/es</b>. Everything else is regular.</p>
+<table><tr><th>Change</th><th>Infinitive</th><th>du</th><th>er/sie/es</th></tr>
+<tr><td>a → ä</td><td>fahren, schlafen, tragen, fallen, halten, waschen, laden, braten, raten…</td><td>fährst, schläfst, trägst, fällst, hältst, wäschst, lädst, brätst, rätst</td><td>fährt, schläft, trägt, fällt, hält, wäscht, lädt, brät, rät</td></tr>
+<tr><td>au → äu</td><td>laufen</td><td>läufst</td><td>läuft</td></tr>
+<tr><td>e → i</td><td>sprechen, helfen, essen, geben, treffen, werfen, brechen, messen, gelten…</td><td>sprichst, hilfst, isst, gibst, triffst, wirfst, brichst, misst, giltst</td><td>spricht, hilft, isst, gibt, trifft, wirft, bricht, misst, gilt</td></tr>
+<tr><td>e → ie</td><td>sehen, lesen, empfehlen, stehlen</td><td>siehst, liest, empfiehlst, stiehlst</td><td>sieht, liest, empfiehlt, stiehlt</td></tr></table>
+<p>Traps that do <b>not</b> change: kaufen, brauchen, glauben, fragen, sagen, machen, lachen, malen,
+gehen, stehen, denken, kennen, leben, legen, rufen.</p>
+
+<h3>§4 · Irregular within the irregular</h3>
+<ul>
+<li><b>nehmen</b> → du <b>nimmst</b>, er <b>nimmt</b></li>
+<li><b>treten</b> → du <b>trittst</b>, er <b>tritt</b> — but ihr <b>tretet</b></li>
+<li><b>halten</b> → er <b>hält</b>, no extra -e- despite the -t stem</li>
+<li><b>wissen</b> → ich <b>weiß</b>, du <b>weißt</b>, er <b>weiß</b>, wir wissen, ihr wisst, sie wissen</li>
+</ul>
+
+<h3>§5 · sein, haben, werden</h3>
+<table><tr><th></th><th>sein</th><th>haben</th><th>werden</th></tr>
+<tr><td>ich</td><td>bin</td><td>habe</td><td>werde</td></tr>
+<tr><td>du</td><td>bist</td><td>hast</td><td>wirst</td></tr>
+<tr><td>er/sie/es</td><td>ist</td><td>hat</td><td>wird</td></tr>
+<tr><td>wir</td><td>sind</td><td>haben</td><td>werden</td></tr>
+<tr><td>ihr</td><td>seid</td><td>habt</td><td>werdet</td></tr>
+<tr><td>sie/Sie</td><td>sind</td><td>haben</td><td>werden</td></tr></table>
+`;
+
+/* ============================================================ boot ===== */
+(async function(){
+  ITEMS=buildItems(); ITEMS.forEach(i=>BYID[i.id]=i);
+  await load();
+  render();
+})();
+</script>
+</body>
+</html>
