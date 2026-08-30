@@ -1,0 +1,2225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>trennbar — German prefix verbs to mastery</title>
+<style>:root{
+  --ground:#0d1420; --panel:#141d2b; --raised:#1a2534; --line:#263242; --line-soft:#1f2b3a;
+  --ink:#e9eef4; --dim:#8ba0b5; --faint:#5d7086;
+  --trenn:#f2b134; --untrenn:#9d8cf5; --ok:#4fd1a5; --bad:#f2726f;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --r:10px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--ground); color:var(--ink); font-family:var(--sans);
+  font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased;
+  padding-bottom:56px;
+}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:none}
+:focus-visible{outline:2px solid var(--trenn);outline-offset:2px;border-radius:4px}
+
+/* ---------- shell ---------- */
+.top{
+  position:sticky;top:0;z-index:20;background:rgba(13,20,32,.92);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line-soft);
+}
+.top-in{max-width:820px;margin:0 auto;padding:12px 18px 0;display:flex;align-items:center;gap:14px}
+.mark{
+  font-family:var(--mono);font-size:13px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ink);display:flex;align-items:center;white-space:nowrap
+}
+.mark i{font-style:normal;color:var(--trenn)}
+.mark .gap{display:inline-block;width:16px;height:1px;background:var(--trenn);margin:0 6px;opacity:.7}
+.ring{margin-left:auto;display:flex;align-items:center;gap:9px}
+.ring svg{display:block}
+.ring b{font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.04em}
+.ring span{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block}
+.tabs{max-width:820px;margin:0 auto;padding:8px 18px 0;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{
+  font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--faint);padding:9px 12px;border-bottom:2px solid transparent;white-space:nowrap
+}
+.tabs button:hover{color:var(--dim)}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--trenn)}
+main{max-width:820px;margin:0 auto;padding:22px 18px 40px}
+.view{display:none}
+.view.on{display:block}
+
+/* ---------- shared bits ---------- */
+.eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.card{background:var(--panel);border:1px solid var(--line-soft);border-radius:var(--r);padding:20px}
+.muted{color:var(--dim)}
+h2{font-family:var(--serif);font-weight:600;font-size:22px;margin:0 0 6px;letter-spacing:-.01em}
+h3{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin:26px 0 10px;font-weight:500}
+.chip{
+  display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 8px;border-radius:99px;border:1px solid var(--line)
+}
+.chip.t{color:var(--trenn);border-color:rgba(242,177,52,.4);background:rgba(242,177,52,.08)}
+.chip.u{color:var(--untrenn);border-color:rgba(157,140,245,.4);background:rgba(157,140,245,.08)}
+.btn{
+  border:1px solid var(--line);border-radius:8px;padding:10px 16px;background:var(--raised);
+  font-size:14px;transition:border-color .15s,background .15s
+}
+.btn:hover{border-color:var(--faint)}
+.btn.primary{background:var(--trenn);color:#22190a;border-color:var(--trenn);font-weight:600}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{background:none}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* ---------- drill ---------- */
+.qmeta{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.ladder{display:flex;gap:3px;margin-left:auto}
+.ladder i{width:13px;height:4px;border-radius:2px;background:var(--line);display:block}
+.ladder i.on{background:var(--trenn)}
+.ladder i.max{background:var(--ok)}
+.task{font-size:14px;color:var(--dim);margin-bottom:10px}
+.prompt{font-family:var(--serif);font-size:27px;line-height:1.3;margin:0 0 4px;letter-spacing:-.015em}
+.prompt .en{color:var(--faint);font-size:17px;font-style:italic}
+.cue{
+  font-family:var(--mono);font-size:12.5px;color:var(--dim);background:var(--raised);
+  border:1px dashed var(--line);border-radius:8px;padding:9px 12px;margin:14px 0 0;letter-spacing:.02em
+}
+.opts{display:grid;gap:8px;margin-top:18px}
+.opt{
+  display:flex;gap:11px;align-items:flex-start;text-align:left;width:100%;
+  border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:var(--raised);
+  transition:border-color .12s,background .12s
+}
+.opt:hover:not(:disabled){border-color:var(--faint)}
+.opt kbd{
+  font-family:var(--mono);font-size:10.5px;color:var(--faint);border:1px solid var(--line);
+  border-radius:4px;padding:1px 5px;flex:none;margin-top:2px
+}
+.opt.pick-ok{border-color:var(--ok);background:rgba(79,209,165,.1)}
+.opt.pick-bad{border-color:var(--bad);background:rgba(242,114,111,.1)}
+.opt.reveal{border-color:var(--ok)}
+.opt:disabled{cursor:default;opacity:.85}
+.opt.pick-ok,.opt.pick-bad,.opt.reveal{opacity:1}
+.answer-in{
+  width:100%;margin-top:18px;background:var(--raised);border:1px solid var(--line);border-radius:8px;
+  padding:14px 15px;font-family:var(--serif);font-size:20px;line-height:1.4
+}
+.answer-in:focus{border-color:var(--trenn);outline:none}
+.answer-in.ok{border-color:var(--ok)}
+.answer-in.bad{border-color:var(--bad)}
+.acts{display:flex;gap:8px;margin-top:14px;align-items:center;flex-wrap:wrap}
+.hintline{font-size:13.5px;color:var(--dim);margin-top:10px}
+
+/* feedback */
+.fb{margin-top:16px;border-left:2px solid var(--line);padding:2px 0 2px 14px}
+.fb.good{border-color:var(--ok)}
+.fb.bad{border-color:var(--bad)}
+.fb .verdict{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase}
+.fb.good .verdict{color:var(--ok)}
+.fb.bad .verdict{color:var(--bad)}
+.fb .sol{font-family:var(--serif);font-size:19px;margin:6px 0 2px}
+.fb .yours{font-family:var(--serif);font-size:15px;color:var(--faint);text-decoration:line-through;margin-bottom:6px}
+.fb .why{font-size:14px;color:var(--dim);margin-top:6px}
+.tok-bad{color:var(--bad)}
+.tok-ok{color:var(--ok)}
+
+/* the prefix rail — the one flourish */
+.rail{margin:16px 0 4px;font-family:var(--serif);font-size:19px;display:flex;flex-wrap:wrap;align-items:center;gap:7px}
+.rail .socket{
+  display:inline-block;min-width:34px;height:1.35em;border:1px dashed var(--line);border-radius:5px;
+  opacity:0;transition:opacity .5s ease .35s
+}
+.rail.go .socket{opacity:1}
+.rail .pfx{
+  display:inline-block;padding:1px 9px;border-radius:6px;font-family:var(--mono);font-size:14px;
+  background:rgba(242,177,52,.14);color:var(--trenn);border:1px solid rgba(242,177,52,.45);
+  transform:translateX(-14px);opacity:0;transition:transform .55s cubic-bezier(.2,.9,.25,1),opacity .3s
+}
+.rail.go .pfx{transform:translateX(0);opacity:1}
+.rail .weldgroup{display:inline-flex;align-items:stretch}
+.rail.weld .pfx{
+  background:rgba(157,140,245,.14);color:var(--untrenn);border-color:rgba(157,140,245,.45);
+  transform:none;opacity:1;border-right:none;border-radius:6px 0 0 6px;display:flex;align-items:center
+}
+.rail .stem2{
+  display:flex;align-items:center;padding:1px 10px;border:1px solid rgba(157,140,245,.45);
+  border-left:none;border-radius:0 6px 6px 0
+}
+.rail.weld.go .weldgroup{animation:recoil .55s ease}
+@keyframes recoil{0%{transform:translateX(0)}20%{transform:translateX(6px)}44%{transform:translateX(-2px)}68%{transform:translateX(2px)}100%{transform:translateX(0)}}
+.rail .stem{display:inline-block}
+.rail .dots{color:var(--faint)}
+@media (prefers-reduced-motion:reduce){
+  .rail .pfx,.rail .socket{transition:none;transform:none;opacity:1}
+  .rail.weld.go .weldgroup{animation:none}
+}
+
+/* ---------- scope / settings ---------- */
+.scope{margin-top:18px;border-top:1px solid var(--line-soft);padding-top:14px}
+.scope summary{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);cursor:pointer;list-style:none}
+.scope summary::-webkit-details-marker{display:none}
+.scope summary::before{content:"▸ ";color:var(--line)}
+.scope[open] summary::before{content:"▾ "}
+.toggles{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.tg{
+  font-family:var(--mono);font-size:11px;letter-spacing:.06em;border:1px solid var(--line);
+  border-radius:99px;padding:5px 11px;color:var(--faint);background:none
+}
+.tg[aria-pressed="true"]{color:var(--ink);border-color:var(--faint);background:var(--raised)}
+.tg b{font-weight:400;color:var(--line);margin-left:5px}
+.tg[aria-pressed="true"] b{color:var(--faint)}
+.setrow{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:13.5px;color:var(--dim);flex-wrap:wrap}
+.setrow input[type=number]{width:64px;background:var(--raised);border:1px solid var(--line);border-radius:6px;padding:5px 8px}
+
+/* ---------- stats ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{background:var(--panel);border:1px solid var(--line-soft);border-radius:var(--r);padding:14px 16px}
+.stat b{display:block;font-family:var(--mono);font-size:25px;font-weight:500;letter-spacing:-.01em;margin-top:3px}
+.bars{display:grid;gap:9px;margin-top:6px}
+.bar-row{display:grid;grid-template-columns:1fr;gap:5px}
+.bar-lab{display:flex;justify-content:space-between;font-size:13px}
+.bar-lab span:last-child{font-family:var(--mono);font-size:11.5px;color:var(--faint)}
+.bar{height:6px;border-radius:3px;background:var(--raised);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--trenn);border-radius:3px;transition:width .5s}
+.bar i.full{background:var(--ok)}
+.contract{display:grid;gap:9px;margin-top:6px}
+.crit{display:flex;gap:11px;align-items:flex-start;font-size:14px}
+.crit .mk{font-family:var(--mono);font-size:13px;flex:none;width:18px;color:var(--faint)}
+.crit.done .mk{color:var(--ok)}
+.crit.done{color:var(--dim)}
+.leech{border-left:2px solid var(--bad);padding-left:12px;margin:10px 0;font-size:14px}
+.leech .q{font-family:var(--serif);font-size:16px}
+.leech .a{color:var(--dim);font-size:13.5px}
+
+/* ---------- reference ---------- */
+.ref p{color:var(--dim);font-size:15px}
+.ref table{width:100%;border-collapse:collapse;margin:10px 0 4px;font-size:14.5px}
+.ref th{
+  text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--faint);font-weight:500;padding:6px 10px 6px 0;border-bottom:1px solid var(--line)
+}
+.ref td{padding:7px 10px 7px 0;border-bottom:1px solid var(--line-soft);vertical-align:top}
+.ref td:first-child{font-family:var(--serif);font-size:16px;white-space:nowrap}
+.ref .de{font-family:var(--serif)}
+.ref code{font-family:var(--mono);font-size:13px;background:var(--raised);padding:1px 5px;border-radius:4px}
+.pfxlist{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
+.pfxlist span{font-family:var(--mono);font-size:13px;border:1px solid var(--line);border-radius:6px;padding:4px 9px}
+.pfxlist.t span{color:var(--trenn);border-color:rgba(242,177,52,.3)}
+.pfxlist.u span{color:var(--untrenn);border-color:rgba(157,140,245,.3)}
+.pfxlist.d span{color:var(--ink)}
+.note{border-left:2px solid var(--trenn);padding-left:13px;color:var(--dim);font-size:14.5px;margin:14px 0}
+.demo{background:var(--panel);border:1px solid var(--line-soft);border-radius:var(--r);padding:16px;margin:12px 0}
+
+/* ---------- exam ---------- */
+.exam-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+.pips{display:flex;gap:3px;flex-wrap:wrap;margin-top:12px}
+.pips i{width:7px;height:7px;border-radius:2px;background:var(--line);display:block}
+.pips i.ok{background:var(--ok)}
+.pips i.bad{background:var(--bad)}
+.score{font-family:var(--mono);font-size:44px;letter-spacing:-.02em}
+
+.toast{
+  position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--raised);
+  border:1px solid var(--line);border-radius:8px;padding:9px 16px;font-size:13.5px;
+  opacity:0;pointer-events:none;transition:opacity .25s;z-index:60
+}
+.toast.on{opacity:1}
+.warn{
+  background:rgba(242,177,52,.09);border:1px solid rgba(242,177,52,.3);border-radius:8px;
+  padding:10px 14px;font-size:13.5px;color:var(--dim);margin-bottom:16px
+}
+@media (max-width:560px){
+  .prompt{font-size:23px}
+  main{padding:18px 14px 30px}
+  .top-in,.tabs{padding-left:14px;padding-right:14px}
+  .answer-in{font-size:18px}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="mark">trenn<span class="gap"></span>bar</div>
+    <div class="ring">
+      <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="13" fill="none" stroke="#263242" stroke-width="3"/>
+        <circle id="ringArc" cx="16" cy="16" r="13" fill="none" stroke="#f2b134" stroke-width="3"
+                stroke-linecap="round" stroke-dasharray="0 82" transform="rotate(-90 16 16)"/>
+      </svg>
+      <div>
+        <b id="ringPct">0%</b>
+        <span id="ringSub">0 / 0</span>
+      </div>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button data-go="drillView" role="tab" aria-selected="true">Practice</button>
+    <button data-go="examView" role="tab" aria-selected="false">Exam</button>
+    <button data-go="statsView" role="tab" aria-selected="false">Progress</button>
+    <button data-go="refView" role="tab" aria-selected="false">Reference</button>
+    <button data-go="dataView" role="tab" aria-selected="false">Data</button>
+  </nav>
+</header>
+
+<main>
+  <div id="warn" class="warn" hidden>This browser is blocking localStorage, so nothing will be saved between sessions. Download the file and open it directly from your disk to keep your progress.</div>
+
+  <section id="drillView" class="view on">
+    <div id="drill"></div>
+    <details class="scope">
+      <summary>Scope</summary>
+      <div id="scopeBody"></div>
+    </details>
+  </section>
+
+  <section id="examView" class="view"><div id="examBody"></div></section>
+  <section id="statsView" class="view"><div id="statsBody"></div></section>
+  <section id="dataView" class="view"><div id="dataBody"></div></section>
+
+  <section id="refView" class="view ref">
+    <h2>Prefix verbs at a glance</h2>
+    <p>German builds whole families of verbs by attaching a prefix to a base verb. With a <span style="color:var(--trenn)">separable</span> verb (<span class="de">trennbar</span>) the prefix flies to the end of a main clause. With an <span style="color:var(--untrenn)">inseparable</span> one (<span class="de">untrennbar</span>) it stays welded on.</p>
+
+    <div class="demo">
+      <table>
+        <tr><th>Base</th><th>With a prefix</th><th>Meaning</th></tr>
+        <tr><td class="de"><b>kommen</b></td><td class="de"><b style="color:var(--trenn)">an</b>kommen</td><td>to arrive</td></tr>
+        <tr><td></td><td class="de"><b style="color:var(--untrenn)">be</b>kommen</td><td>to receive</td></tr>
+        <tr><td></td><td class="de"><b style="color:var(--trenn)">mit</b>kommen</td><td>to come along</td></tr>
+        <tr><td></td><td class="de"><b style="color:var(--untrenn)">ent</b>kommen</td><td>to escape</td></tr>
+        <tr><td></td><td class="de"><b style="color:var(--trenn)">um</b>kommen</td><td>to perish</td></tr>
+        <tr><td></td><td class="de"><b style="color:var(--trenn)">vor</b>kommen</td><td>to occur</td></tr>
+      </table>
+    </div>
+
+    <h3>1 · Always inseparable</h3>
+    <p>Eight prefixes, inseparable without exception and unstressed without exception. Their verbs form the participle with no <code>ge-</code>.</p>
+    <div class="pfxlist u"><span>be-</span><span>emp-</span><span>ent-</span><span>er-</span><span>ge-</span><span>miss-</span><span>ver-</span><span>zer-</span></div>
+    <table>
+      <tr><th>Verb</th><th>Meaning</th><th>Partizip II</th></tr>
+      <tr><td class="de">besuchen</td><td>to visit</td><td class="de">besucht</td></tr>
+      <tr><td class="de">empfehlen</td><td>to recommend</td><td class="de">empfohlen</td></tr>
+      <tr><td class="de">entscheiden</td><td>to decide</td><td class="de">entschieden</td></tr>
+      <tr><td class="de">erklären</td><td>to explain</td><td class="de">erklärt</td></tr>
+      <tr><td class="de">gehören</td><td>to belong</td><td class="de">gehört</td></tr>
+      <tr><td class="de">misslingen</td><td>to fail</td><td class="de">misslungen</td></tr>
+      <tr><td class="de">verstehen</td><td>to understand</td><td class="de">verstanden</td></tr>
+      <tr><td class="de">zerstören</td><td>to destroy</td><td class="de">zerstört</td></tr>
+    </table>
+
+    <h3>2 · Separable</h3>
+    <p>Mostly prepositions and adverbs. They are <b>always stressed</b>, and they come off the verb.</p>
+    <div class="pfxlist t"><span>ab-</span><span>an-</span><span>auf-</span><span>aus-</span><span>bei-</span><span>ein-</span><span>fest-</span><span>her-</span><span>hin-</span><span>los-</span><span>mit-</span><span>nach-</span><span>vor-</span><span>weg-</span><span>weiter-</span><span>zu-</span><span>zurück-</span><span>zusammen-</span><span>fern-</span><span>statt-</span><span>teil-</span><span>vorbei-</span><span>heraus-</span><span>hinein-</span><span>entlang-</span><span>voran-</span><span>hinzu-</span></div>
+    <table>
+      <tr><th>Verb</th><th>Meaning</th><th>Partizip II</th></tr>
+      <tr><td class="de">anrufen</td><td>to call (phone)</td><td class="de">angerufen</td></tr>
+      <tr><td class="de">aufstehen</td><td>to get up</td><td class="de">aufgestanden</td></tr>
+      <tr><td class="de">einkaufen</td><td>to shop</td><td class="de">eingekauft</td></tr>
+      <tr><td class="de">mitkommen</td><td>to come along</td><td class="de">mitgekommen</td></tr>
+      <tr><td class="de">stattfinden</td><td>to take place</td><td class="de">stattgefunden</td></tr>
+      <tr><td class="de">teilnehmen</td><td>to participate</td><td class="de">teilgenommen</td></tr>
+      <tr><td class="de">fernsehen</td><td>to watch TV</td><td class="de">ferngesehen</td></tr>
+      <tr><td class="de">umziehen</td><td>to move house</td><td class="de">umgezogen</td></tr>
+    </table>
+    <div class="note"><code>um-</code> is really a dual prefix (see 3). <span class="de">umziehen</span> is one of its permanently separable members.</div>
+
+    <h3>3 · Dual prefixes: sometimes one, sometimes the other</h3>
+    <div class="pfxlist d"><span>durch-</span><span>hinter-</span><span>über-</span><span>um-</span><span>unter-</span><span>voll-</span><span>wider-</span><span>wieder-</span></div>
+    <p>Here the difference carries meaning. The rough tendency: concrete or spatial senses tend to separate, with the prefix stressed; figurative senses tend not to, with the stem stressed.</p>
+    <table>
+      <tr><th>Infinitive</th><th style="color:var(--trenn)">Separable — prefix stressed</th><th style="color:var(--untrenn)">Inseparable — stem stressed</th></tr>
+      <tr><td class="de">umfahren</td><td class="de">Ich fahre den Baum <b>um</b>. <span class="muted">(knock over)</span></td><td class="de">Ich um<b>fah</b>re den Baum. <span class="muted">(drive around)</span></td></tr>
+      <tr><td class="de">übersetzen</td><td class="de">Der Fährmann setzt uns <b>über</b>. <span class="muted">(ferry across)</span></td><td class="de">Sie über<b>setzt</b> den Text. <span class="muted">(translate)</span></td></tr>
+      <tr><td class="de">durchschauen</td><td class="de">Ich schaue die Unterlagen <b>durch</b>. <span class="muted">(review)</span></td><td class="de">Ich durch<b>schaue</b> dich. <span class="muted">(see through)</span></td></tr>
+      <tr><td class="de">wiederholen</td><td class="de">Ich hole das Buch <b>wieder</b>. <span class="muted">(fetch back)</span></td><td class="de">Ich wieder<b>hole</b> den Satz. <span class="muted">(repeat)</span></td></tr>
+      <tr><td class="de">unterhalten</td><td class="de">Er hält den Schirm <b>unter</b>. <span class="muted">(hold under)</span></td><td class="de">Wir unter<b>halten</b> uns. <span class="muted">(converse)</span></td></tr>
+      <tr><td class="de">umstellen</td><td class="de">Ich stelle die Möbel <b>um</b>. <span class="muted">(rearrange)</span></td><td class="de">Die Polizei um<b>stellt</b> das Haus. <span class="muted">(surround)</span></td></tr>
+      <tr><td class="de">umgehen</td><td class="de">Er geht gut mit Kindern <b>um</b>. <span class="muted">(deal with)</span></td><td class="de">Er um<b>geht</b> das Problem. <span class="muted">(bypass)</span></td></tr>
+      <tr><td class="de">übergehen</td><td class="de">Wir gehen zum nächsten Punkt <b>über</b>. <span class="muted">(move on)</span></td><td class="de">Man hat mich über<b>gangen</b>. <span class="muted">(pass over)</span></td></tr>
+    </table>
+    <div class="note">The concrete-versus-figurative rule is a tendency, not a rule. <span class="de">umfahren</span> already breaks it: the inseparable reading (<span class="de">um den Baum herumfahren</span>) is itself spatial, while the separable one (knocking the tree over) is the one with the physical contact. A better cue for the inseparable readings: the object is directly affected or fully enclosed. Beyond that, stress and meaning have to be learned verb by verb — which is what the <b>Meaning</b> category in the practice deck is for.</div>
+
+    <table>
+      <tr><th style="color:var(--trenn)">Always separable</th><th style="color:var(--untrenn)">Always inseparable</th></tr>
+      <tr><td class="de"><b>unter</b>gehen <span class="muted">— to set, to sink</span></td><td class="de">unter<b>schreiben</b> <span class="muted">— to sign</span></td></tr>
+      <tr><td class="de"><b>unter</b>bringen <span class="muted">— to accommodate</span></td><td class="de">unter<b>brechen</b> <span class="muted">— to interrupt</span></td></tr>
+      <tr><td class="de"><b>durch</b>fallen <span class="muted">— to fail an exam</span></td><td class="de">um<b>armen</b> <span class="muted">— to hug</span></td></tr>
+      <tr><td class="de"><b>um</b>ziehen <span class="muted">— to move house</span></td><td class="de">über<b>holen</b> <span class="muted">— to overtake</span></td></tr>
+      <tr><td class="de"><b>wieder</b>sehen <span class="muted">— to see again</span></td><td class="de">wider<b>sprechen</b> <span class="muted">— to contradict</span></td></tr>
+      <tr><td class="de"><b>voll</b>tanken <span class="muted">— to fill the tank</span></td><td class="de">hinter<b>lassen</b> <span class="muted">— to leave behind</span></td></tr>
+      <tr><td class="de"><b>wider</b>spiegeln <span class="muted">— to reflect</span></td><td class="de">voll<b>enden</b> <span class="muted">— to complete</span></td></tr>
+    </table>
+    <div class="note"><code>hinter-</code> is formally a dual prefix, but in today's standard German it is inseparable in practice: <span class="de">hinterlassen, hinterfragen, hintergehen</span>.</div>
+
+    <h3>4 · Word order</h3>
+    <table>
+      <tr><th>Context</th><th style="color:var(--trenn)">anrufen</th><th style="color:var(--untrenn)">besuchen</th></tr>
+      <tr><td>Present or past, main clause</td><td class="de">Ich <b>rufe</b> dich <b>an</b>.</td><td class="de">Ich <b>besuche</b> dich.</td></tr>
+      <tr><td>Subordinate clause</td><td class="de">…, weil ich dich <b>anrufe</b>.</td><td class="de">…, weil ich dich <b>besuche</b>.</td></tr>
+      <tr><td>Perfect</td><td class="de">Ich habe dich <b>an</b>ge<b>rufen</b>.</td><td class="de">Ich habe dich <b>besucht</b>.</td></tr>
+      <tr><td>Modal verb</td><td class="de">Ich muss dich <b>anrufen</b>.</td><td class="de">Ich muss dich <b>besuchen</b>.</td></tr>
+      <tr><td>Future I</td><td class="de">Ich werde dich <b>anrufen</b>.</td><td class="de">Ich werde dich <b>besuchen</b>.</td></tr>
+      <tr><td>zu-infinitive</td><td class="de">Ich vergaß, dich <b>anzurufen</b>.</td><td class="de">Ich vergaß, dich <b>zu besuchen</b>.</td></tr>
+      <tr><td>Imperative</td><td class="de"><b>Ruf</b> mich <b>an</b>!</td><td class="de"><b>Besuch</b> mich!</td></tr>
+    </table>
+
+    <h3>5 · Where the ge- disappears</h3>
+    <p>A separable verb slots <code>ge-</code> between prefix and stem — <span class="de">an-ge-rufen</span>. Unless the stem itself cannot take a <code>ge-</code>: because it already starts with an inseparable prefix, or because it ends in <code>-ieren</code>.</p>
+    <table>
+      <tr><th>Verb</th><th>Partizip II</th><th>Why</th></tr>
+      <tr><td class="de">vorbereiten</td><td class="de">vorbereitet</td><td>stem <span class="de">bereiten</span> carries <code>be-</code></td></tr>
+      <tr><td class="de">anerkennen</td><td class="de">anerkannt</td><td>stem <span class="de">erkennen</span> carries <code>er-</code></td></tr>
+      <tr><td class="de">einbeziehen</td><td class="de">einbezogen</td><td>stem <span class="de">beziehen</span> carries <code>be-</code></td></tr>
+      <tr><td class="de">umbenennen</td><td class="de">umbenannt</td><td>stem <span class="de">benennen</span> carries <code>be-</code></td></tr>
+      <tr><td class="de">anprobieren</td><td class="de">anprobiert</td><td>stem ends in <code>-ieren</code></td></tr>
+      <tr><td class="de">hinzufügen</td><td class="de">hinzugefügt</td><td>stem <span class="de">fügen</span> is plain, so <code>ge-</code> stays</td></tr>
+    </table>
+
+    <h3>6 · The listening test</h3>
+    <p>When you are unsure, say the verb out loud. If the weight falls on the prefix, it separates. If it falls on the stem, it stays. That is the only test that works reliably for the dual prefixes — and in writing, some forms (subordinate clause, modal verb, future) are identical for both readings.</p>
+    <div class="demo">
+      <div class="rail go" style="margin:0"><span class="stem">ich</span><span class="socket"></span><span class="stem">rufe</span><span class="stem dots">…</span><span class="pfx">an</span></div>
+      <div class="eyebrow" style="margin-top:6px">separable — the prefix has left</div>
+      <div class="rail weld go" style="margin:18px 0 0"><span class="stem">ich</span><span class="weldgroup"><span class="pfx">be</span><span class="stem2">suche</span></span></div>
+      <div class="eyebrow" style="margin-top:6px">inseparable — the prefix stays put</div>
+    </div>
+  </section>
+</main>
+
+<div id="toast" class="toast"></div>
+
+<script>/* ============================================================
+   VERB DATABASE
+   fields:
+     inf   infinitive
+     mean  English meaning
+     sep   true = trennbar, false = untrennbar
+     pre   prefix
+     base  infinitive without the prefix
+     cls   'insep' | 'sep' | 'dual'   (prefix class)
+     core  true -> gets full sentence drills
+     subj  subject used in generated sentences
+     fin   finite present form (matching subj; for sep verbs: stem only)
+     prat  finite Präteritum form (matching subj; for sep verbs: stem only)
+     part  Partizip II (complete)
+     aux   'haben' | 'sein'
+     imp   du-imperative stem form, or null
+     impAlt optional alternative imperative form
+     mid   middle-field material for the sentence frames
+     midImp middle field for the imperative frame
+     note  one-line explanation shown in feedback
+     pair  id linking the two readings of a dual-prefix verb
+     ============================================================ */
+
+const VERBS = [
+/* ---------- 1. UNTRENNBAR: the eight fixed prefixes ---------- */
+{inf:"besuchen",mean:"to visit",sep:false,pre:"be",base:"suchen",cls:"insep",core:true,
+ subj:"Ich",fin:"besuche",prat:"besuchte",part:"besucht",aux:"haben",imp:"Besuch",impAlt:"Besuche",
+ mid:"dich",midImp:"mich"},
+{inf:"empfehlen",mean:"to recommend",sep:false,pre:"emp",base:"fehlen",cls:"insep",core:true,
+ subj:"Ich",fin:"empfehle",prat:"empfahl",part:"empfohlen",aux:"haben",imp:"Empfiehl",
+ mid:"dir ein Buch",midImp:"mir ein Buch"},
+{inf:"entscheiden",mean:"to decide",sep:false,pre:"ent",base:"scheiden",cls:"insep",core:true,
+ subj:"Ich",fin:"entscheide",prat:"entschied",part:"entschieden",aux:"haben",imp:"Entscheide",
+ mid:"das selbst",midImp:"das selbst"},
+{inf:"erklären",mean:"to explain",sep:false,pre:"er",base:"klären",cls:"insep",core:true,
+ subj:"Ich",fin:"erkläre",prat:"erklärte",part:"erklärt",aux:"haben",imp:"Erklär",impAlt:"Erkläre",
+ mid:"es dir",midImp:"es mir"},
+{inf:"gehören",mean:"to belong",sep:false,pre:"ge",base:"hören",cls:"insep",core:true,
+ subj:"Das Buch",fin:"gehört",prat:"gehörte",part:"gehört",aux:"haben",imp:null,
+ mid:"mir",midImp:""},
+{inf:"misslingen",mean:"to fail, go wrong",sep:false,pre:"miss",base:"lingen",cls:"insep",core:true,
+ subj:"Der Versuch",fin:"misslingt",prat:"misslang",part:"misslungen",aux:"sein",imp:null,
+ mid:"",midImp:""},
+{inf:"verstehen",mean:"to understand",sep:false,pre:"ver",base:"stehen",cls:"insep",core:true,
+ subj:"Ich",fin:"verstehe",prat:"verstand",part:"verstanden",aux:"haben",imp:"Versteh",impAlt:"Verstehe",
+ mid:"dich",midImp:"mich doch"},
+{inf:"zerstören",mean:"to destroy",sep:false,pre:"zer",base:"stören",cls:"insep",core:true,
+ subj:"Der Sturm",fin:"zerstört",prat:"zerstörte",part:"zerstört",aux:"haben",imp:null,
+ mid:"das Dach",midImp:""},
+{inf:"bekommen",mean:"to receive",sep:false,pre:"be",base:"kommen",cls:"insep",core:true,
+ subj:"Ich",fin:"bekomme",prat:"bekam",part:"bekommen",aux:"haben",imp:null,
+ mid:"ein Geschenk",midImp:""},
+{inf:"entkommen",mean:"to escape",sep:false,pre:"ent",base:"kommen",cls:"insep",core:false,
+ subj:"Der Dieb",fin:"entkommt",prat:"entkam",part:"entkommen",aux:"sein",imp:null,
+ mid:"der Polizei",midImp:""},
+{inf:"vergessen",mean:"to forget",sep:false,pre:"ver",base:"gessen",cls:"insep",core:true,
+ subj:"Ich",fin:"vergesse",prat:"vergaß",part:"vergessen",aux:"haben",imp:"Vergiss",
+ mid:"den Termin",midImp:"den Termin nicht"},
+{inf:"verlieren",mean:"to lose",sep:false,pre:"ver",base:"lieren",cls:"insep",core:true,
+ subj:"Ich",fin:"verliere",prat:"verlor",part:"verloren",aux:"haben",imp:"Verlier",impAlt:"Verliere",
+ mid:"den Schlüssel",midImp:"den Schlüssel nicht"},
+{inf:"beginnen",mean:"to begin",sep:false,pre:"be",base:"ginnen",cls:"insep",core:false,
+ subj:"Ich",fin:"beginne",prat:"begann",part:"begonnen",aux:"haben",imp:"Beginn",impAlt:"Beginne",
+ mid:"die Arbeit",midImp:"endlich"},
+{inf:"erfahren",mean:"to find out",sep:false,pre:"er",base:"fahren",cls:"insep",core:false,
+ subj:"Ich",fin:"erfahre",prat:"erfuhr",part:"erfahren",aux:"haben",imp:null,
+ mid:"die Wahrheit",midImp:""},
+{inf:"gewinnen",mean:"to win",sep:false,pre:"ge",base:"winnen",cls:"insep",core:false,
+ subj:"Ich",fin:"gewinne",prat:"gewann",part:"gewonnen",aux:"haben",imp:null,
+ mid:"das Spiel",midImp:""},
+{inf:"genießen",mean:"to enjoy",sep:false,pre:"ge",base:"nießen",cls:"insep",core:false,
+ subj:"Ich",fin:"genieße",prat:"genoss",part:"genossen",aux:"haben",imp:"Genieß",impAlt:"Genieße",
+ mid:"den Abend",midImp:"den Abend"},
+{inf:"geschehen",mean:"to happen",sep:false,pre:"ge",base:"schehen",cls:"insep",core:false,
+ subj:"So etwas",fin:"geschieht",prat:"geschah",part:"geschehen",aux:"sein",imp:null,
+ mid:"selten",midImp:""},
+{inf:"empfangen",mean:"to receive, welcome",sep:false,pre:"emp",base:"fangen",cls:"insep",core:false,
+ subj:"Ich",fin:"empfange",prat:"empfing",part:"empfangen",aux:"haben",imp:"Empfang",impAlt:"Empfange",
+ mid:"die Gäste",midImp:"die Gäste"},
+{inf:"entstehen",mean:"to arise, come about",sep:false,pre:"ent",base:"stehen",cls:"insep",core:false,
+ subj:"Ein Problem",fin:"entsteht",prat:"entstand",part:"entstanden",aux:"sein",imp:null,
+ mid:"",midImp:""},
+{inf:"versprechen",mean:"to promise",sep:false,pre:"ver",base:"sprechen",cls:"insep",core:true,
+ subj:"Ich",fin:"verspreche",prat:"versprach",part:"versprochen",aux:"haben",imp:"Versprich",
+ mid:"es dir",midImp:"es mir"},
+{inf:"bezahlen",mean:"to pay",sep:false,pre:"be",base:"zahlen",cls:"insep",core:true,
+ subj:"Ich",fin:"bezahle",prat:"bezahlte",part:"bezahlt",aux:"haben",imp:"Bezahl",impAlt:"Bezahle",
+ mid:"die Rechnung",midImp:"die Rechnung"},
+{inf:"verkaufen",mean:"to sell",sep:false,pre:"ver",base:"kaufen",cls:"insep",core:true,
+ subj:"Ich",fin:"verkaufe",prat:"verkaufte",part:"verkauft",aux:"haben",imp:"Verkauf",impAlt:"Verkaufe",
+ mid:"das Auto",midImp:"das Auto"},
+{inf:"benutzen",mean:"to use",sep:false,pre:"be",base:"nutzen",cls:"insep",core:false,
+ subj:"Ich",fin:"benutze",prat:"benutzte",part:"benutzt",aux:"haben",imp:"Benutz",impAlt:"Benutze",
+ mid:"den Aufzug",midImp:"den Aufzug"},
+{inf:"verbieten",mean:"to forbid",sep:false,pre:"ver",base:"bieten",cls:"insep",core:false,
+ subj:"Ich",fin:"verbiete",prat:"verbot",part:"verboten",aux:"haben",imp:"Verbiete",
+ mid:"es dir",midImp:"es mir nicht"},
+{inf:"entwickeln",mean:"to develop",sep:false,pre:"ent",base:"wickeln",cls:"insep",core:false,
+ subj:"Ich",fin:"entwickle",prat:"entwickelte",part:"entwickelt",aux:"haben",imp:"Entwickle",impAlt:"Entwickele",
+ mid:"eine Idee",midImp:"eine Idee"},
+{inf:"verlassen",mean:"to leave",sep:false,pre:"ver",base:"lassen",cls:"insep",core:false,
+ subj:"Ich",fin:"verlasse",prat:"verließ",part:"verlassen",aux:"haben",imp:"Verlass",impAlt:"Verlasse",
+ mid:"das Haus",midImp:"mich nicht"},
+{inf:"erinnern",mean:"to remind",sep:false,pre:"er",base:"innern",cls:"insep",core:false,
+ subj:"Ich",fin:"erinnere",prat:"erinnerte",part:"erinnert",aux:"haben",imp:"Erinnere",
+ mid:"dich daran",midImp:"mich daran"},
+{inf:"zerbrechen",mean:"to break to pieces",sep:false,pre:"zer",base:"brechen",cls:"insep",core:false,
+ subj:"Die Vase",fin:"zerbricht",prat:"zerbrach",part:"zerbrochen",aux:"sein",imp:null,
+ mid:"",midImp:""},
+{inf:"missverstehen",mean:"to misunderstand",sep:false,pre:"miss",base:"verstehen",cls:"insep",core:false,
+ subj:"Ich",fin:"missverstehe",prat:"missverstand",part:"missverstanden",aux:"haben",imp:null,
+ mid:"dich",midImp:""},
+{inf:"erreichen",mean:"to reach",sep:false,pre:"er",base:"reichen",cls:"insep",core:false,
+ subj:"Ich",fin:"erreiche",prat:"erreichte",part:"erreicht",aux:"haben",imp:"Erreich",impAlt:"Erreiche",
+ mid:"das Ziel",midImp:"das Ziel"},
+{inf:"erlauben",mean:"to allow",sep:false,pre:"er",base:"lauben",cls:"insep",core:false,
+ subj:"Ich",fin:"erlaube",prat:"erlaubte",part:"erlaubt",aux:"haben",imp:"Erlaub",impAlt:"Erlaube",
+ mid:"es dir",midImp:"es mir"},
+
+/* ---------- 2. TRENNBAR: clear separable prefixes ---------- */
+{inf:"anrufen",mean:"to call (phone)",sep:true,pre:"an",base:"rufen",cls:"sep",core:true,
+ subj:"Ich",fin:"rufe",prat:"rief",part:"angerufen",aux:"haben",imp:"Ruf",impAlt:"Rufe",
+ mid:"dich",midImp:"mich"},
+{inf:"aufstehen",mean:"to get up",sep:true,pre:"auf",base:"stehen",cls:"sep",core:true,
+ subj:"Ich",fin:"stehe",prat:"stand",part:"aufgestanden",aux:"sein",imp:"Steh",impAlt:"Stehe",
+ mid:"früh",midImp:"endlich"},
+{inf:"einkaufen",mean:"to shop",sep:true,pre:"ein",base:"kaufen",cls:"sep",core:true,
+ subj:"Ich",fin:"kaufe",prat:"kaufte",part:"eingekauft",aux:"haben",imp:"Kauf",impAlt:"Kaufe",
+ mid:"samstags",midImp:"bitte"},
+{inf:"mitkommen",mean:"to come along",sep:true,pre:"mit",base:"kommen",cls:"sep",core:true,
+ subj:"Ich",fin:"komme",prat:"kam",part:"mitgekommen",aux:"sein",imp:"Komm",impAlt:"Komme",
+ mid:"auch",midImp:""},
+{inf:"stattfinden",mean:"to take place",sep:true,pre:"statt",base:"finden",cls:"sep",core:true,
+ subj:"Das Konzert",fin:"findet",prat:"fand",part:"stattgefunden",aux:"haben",imp:null,
+ mid:"im Saal",midImp:""},
+{inf:"teilnehmen",mean:"to participate",sep:true,pre:"teil",base:"nehmen",cls:"sep",core:true,
+ subj:"Ich",fin:"nehme",prat:"nahm",part:"teilgenommen",aux:"haben",imp:"Nimm",
+ mid:"am Kurs",midImp:"am Kurs"},
+{inf:"fernsehen",mean:"to watch TV",sep:true,pre:"fern",base:"sehen",cls:"sep",core:true,
+ subj:"Ich",fin:"sehe",prat:"sah",part:"ferngesehen",aux:"haben",imp:null,
+ mid:"abends",midImp:""},
+{inf:"umziehen",mean:"to move house",sep:true,pre:"um",base:"ziehen",cls:"dual",core:true,
+ subj:"Ich",fin:"ziehe",prat:"zog",part:"umgezogen",aux:"sein",imp:null,
+ mid:"im Mai",midImp:""},
+{inf:"ankommen",mean:"to arrive",sep:true,pre:"an",base:"kommen",cls:"sep",core:true,
+ subj:"Der Zug",fin:"kommt",prat:"kam",part:"angekommen",aux:"sein",imp:null,
+ mid:"um acht",midImp:""},
+{inf:"abfahren",mean:"to depart",sep:true,pre:"ab",base:"fahren",cls:"sep",core:false,
+ subj:"Der Bus",fin:"fährt",prat:"fuhr",part:"abgefahren",aux:"sein",imp:null,
+ mid:"um zehn",midImp:""},
+{inf:"anfangen",mean:"to begin",sep:true,pre:"an",base:"fangen",cls:"sep",core:true,
+ subj:"Ich",fin:"fange",prat:"fing",part:"angefangen",aux:"haben",imp:"Fang",impAlt:"Fange",
+ mid:"sofort",midImp:"endlich"},
+{inf:"aufhören",mean:"to stop",sep:true,pre:"auf",base:"hören",cls:"sep",core:true,
+ subj:"Ich",fin:"höre",prat:"hörte",part:"aufgehört",aux:"haben",imp:"Hör",impAlt:"Höre",
+ mid:"damit",midImp:"damit"},
+{inf:"ausgehen",mean:"to go out",sep:true,pre:"aus",base:"gehen",cls:"sep",core:false,
+ subj:"Ich",fin:"gehe",prat:"ging",part:"ausgegangen",aux:"sein",imp:null,
+ mid:"heute",midImp:""},
+{inf:"einladen",mean:"to invite",sep:true,pre:"ein",base:"laden",cls:"sep",core:true,
+ subj:"Ich",fin:"lade",prat:"lud",part:"eingeladen",aux:"haben",imp:"Lad",impAlt:"Lade",
+ mid:"dich",midImp:"mich"},
+{inf:"vorstellen",mean:"to introduce",sep:true,pre:"vor",base:"stellen",cls:"sep",core:true,
+ subj:"Ich",fin:"stelle",prat:"stellte",part:"vorgestellt",aux:"haben",imp:"Stell",impAlt:"Stelle",
+ mid:"dir meinen Freund",midImp:"dich"},
+{inf:"zurückkommen",mean:"to come back",sep:true,pre:"zurück",base:"kommen",cls:"sep",core:true,
+ subj:"Ich",fin:"komme",prat:"kam",part:"zurückgekommen",aux:"sein",imp:"Komm",impAlt:"Komme",
+ mid:"spät",midImp:"bald"},
+{inf:"weitermachen",mean:"to carry on",sep:true,pre:"weiter",base:"machen",cls:"sep",core:false,
+ subj:"Ich",fin:"mache",prat:"machte",part:"weitergemacht",aux:"haben",imp:"Mach",impAlt:"Mache",
+ mid:"trotzdem",midImp:""},
+{inf:"zumachen",mean:"to close",sep:true,pre:"zu",base:"machen",cls:"sep",core:true,
+ subj:"Ich",fin:"mache",prat:"machte",part:"zugemacht",aux:"haben",imp:"Mach",impAlt:"Mache",
+ mid:"das Fenster",midImp:"das Fenster"},
+{inf:"losfahren",mean:"to set off",sep:true,pre:"los",base:"fahren",cls:"sep",core:false,
+ subj:"Ich",fin:"fahre",prat:"fuhr",part:"losgefahren",aux:"sein",imp:"Fahr",impAlt:"Fahre",
+ mid:"um sieben",midImp:""},
+{inf:"vorbeikommen",mean:"to drop by",sep:true,pre:"vorbei",base:"kommen",cls:"sep",core:false,
+ subj:"Ich",fin:"komme",prat:"kam",part:"vorbeigekommen",aux:"sein",imp:"Komm",impAlt:"Komme",
+ mid:"kurz",midImp:""},
+{inf:"festhalten",mean:"to hold on to",sep:true,pre:"fest",base:"halten",cls:"sep",core:false,
+ subj:"Ich",fin:"halte",prat:"hielt",part:"festgehalten",aux:"haben",imp:"Halt",impAlt:"Halte",
+ mid:"das Seil",midImp:"dich"},
+{inf:"entlanggehen",mean:"to walk along",sep:true,pre:"entlang",base:"gehen",cls:"sep",core:false,
+ subj:"Ich",fin:"gehe",prat:"ging",part:"entlanggegangen",aux:"sein",imp:"Geh",impAlt:"Gehe",
+ mid:"die Straße",midImp:"die Straße"},
+{inf:"vorankommen",mean:"to make progress",sep:true,pre:"voran",base:"kommen",cls:"sep",core:false,
+ subj:"Ich",fin:"komme",prat:"kam",part:"vorangekommen",aux:"sein",imp:null,
+ mid:"gut",midImp:""},
+{inf:"herausfinden",mean:"to find out",sep:true,pre:"heraus",base:"finden",cls:"sep",core:false,
+ subj:"Ich",fin:"finde",prat:"fand",part:"herausgefunden",aux:"haben",imp:"Find",impAlt:"Finde",
+ mid:"die Wahrheit",midImp:"die Wahrheit"},
+{inf:"hineingehen",mean:"to go inside",sep:true,pre:"hinein",base:"gehen",cls:"sep",core:false,
+ subj:"Ich",fin:"gehe",prat:"ging",part:"hineingegangen",aux:"sein",imp:"Geh",impAlt:"Gehe",
+ mid:"",midImp:""},
+{inf:"aufwachen",mean:"to wake up",sep:true,pre:"auf",base:"wachen",cls:"sep",core:false,
+ subj:"Ich",fin:"wache",prat:"wachte",part:"aufgewacht",aux:"sein",imp:null,
+ mid:"früh",midImp:""},
+{inf:"anziehen",mean:"to put on (clothes)",sep:true,pre:"an",base:"ziehen",cls:"sep",core:false,
+ subj:"Ich",fin:"ziehe",prat:"zog",part:"angezogen",aux:"haben",imp:"Zieh",impAlt:"Ziehe",
+ mid:"die Jacke",midImp:"die Jacke"},
+{inf:"abholen",mean:"to pick up",sep:true,pre:"ab",base:"holen",cls:"sep",core:true,
+ subj:"Ich",fin:"hole",prat:"holte",part:"abgeholt",aux:"haben",imp:"Hol",impAlt:"Hole",
+ mid:"dich",midImp:"mich"},
+{inf:"mitbringen",mean:"to bring along",sep:true,pre:"mit",base:"bringen",cls:"sep",core:true,
+ subj:"Ich",fin:"bringe",prat:"brachte",part:"mitgebracht",aux:"haben",imp:"Bring",impAlt:"Bringe",
+ mid:"Kuchen",midImp:"Kuchen"},
+{inf:"nachdenken",mean:"to think it over",sep:true,pre:"nach",base:"denken",cls:"sep",core:true,
+ subj:"Ich",fin:"denke",prat:"dachte",part:"nachgedacht",aux:"haben",imp:"Denk",impAlt:"Denke",
+ mid:"darüber",midImp:"darüber"},
+
+/* ---------- 3. TRENNBAR + Basis ohne ge- (die Fallen) ---------- */
+{inf:"vorbereiten",mean:"to prepare",sep:true,pre:"vor",base:"bereiten",cls:"sep",core:true,
+ subj:"Ich",fin:"bereite",prat:"bereitete",part:"vorbereitet",aux:"haben",imp:"Bereite",
+ mid:"das Essen",midImp:"das Essen"},
+{inf:"anerkennen",mean:"to recognise, acknowledge",sep:true,pre:"an",base:"erkennen",cls:"sep",core:true,
+ subj:"Ich",fin:"erkenne",prat:"erkannte",part:"anerkannt",aux:"haben",imp:null,
+ mid:"den Fehler",midImp:""},
+{inf:"anprobieren",mean:"to try on",sep:true,pre:"an",base:"probieren",cls:"sep",core:true,
+ subj:"Ich",fin:"probiere",prat:"probierte",part:"anprobiert",aux:"haben",imp:"Probier",impAlt:"Probiere",
+ mid:"die Schuhe",midImp:"die Schuhe"},
+{inf:"ausprobieren",mean:"to try out",sep:true,pre:"aus",base:"probieren",cls:"sep",core:false,
+ subj:"Ich",fin:"probiere",prat:"probierte",part:"ausprobiert",aux:"haben",imp:"Probier",impAlt:"Probiere",
+ mid:"das Rezept",midImp:"das Rezept"},
+{inf:"einbeziehen",mean:"to include",sep:true,pre:"ein",base:"beziehen",cls:"sep",core:false,
+ subj:"Ich",fin:"beziehe",prat:"bezog",part:"einbezogen",aux:"haben",imp:null,
+ mid:"alle",midImp:""},
+{inf:"abbestellen",mean:"to cancel (a subscription)",sep:true,pre:"ab",base:"bestellen",cls:"sep",core:false,
+ subj:"Ich",fin:"bestelle",prat:"bestellte",part:"abbestellt",aux:"haben",imp:"Bestell",impAlt:"Bestelle",
+ mid:"die Zeitung",midImp:"die Zeitung"},
+{inf:"aufbewahren",mean:"to store, keep",sep:true,pre:"auf",base:"bewahren",cls:"sep",core:true,
+ subj:"Ich",fin:"bewahre",prat:"bewahrte",part:"aufbewahrt",aux:"haben",imp:"Bewahr",impAlt:"Bewahre",
+ mid:"die Dokumente",midImp:"die Dokumente"},
+{inf:"umbenennen",mean:"to rename",sep:true,pre:"um",base:"benennen",cls:"dual",core:false,
+ subj:"Ich",fin:"benenne",prat:"benannte",part:"umbenannt",aux:"haben",imp:null,
+ mid:"die Datei",midImp:""},
+{inf:"hinzufügen",mean:"to add",sep:true,pre:"hinzu",base:"fügen",cls:"sep",core:true,
+ subj:"Ich",fin:"füge",prat:"fügte",part:"hinzugefügt",aux:"haben",imp:"Füg",impAlt:"Füge",
+ mid:"das Salz",midImp:"das Salz"},
+
+/* ---------- 4. WECHSELPRÄFIXE: feste trennbare Mitglieder ---------- */
+{inf:"untergehen",mean:"to set, to sink",sep:true,pre:"unter",base:"gehen",cls:"dual",core:true,
+ subj:"Die Sonne",fin:"geht",prat:"ging",part:"untergegangen",aux:"sein",imp:null,
+ mid:"um neun",midImp:""},
+{inf:"unterbringen",mean:"to accommodate",sep:true,pre:"unter",base:"bringen",cls:"dual",core:false,
+ subj:"Ich",fin:"bringe",prat:"brachte",part:"untergebracht",aux:"haben",imp:null,
+ mid:"die Gäste",midImp:""},
+{inf:"durchfallen",mean:"to fail an exam",sep:true,pre:"durch",base:"fallen",cls:"dual",core:true,
+ subj:"Ich",fin:"falle",prat:"fiel",part:"durchgefallen",aux:"sein",imp:null,
+ mid:"in Mathe",midImp:""},
+{inf:"wiedersehen",mean:"to see again",sep:true,pre:"wieder",base:"sehen",cls:"dual",core:true,
+ subj:"Ich",fin:"sehe",prat:"sah",part:"wiedergesehen",aux:"haben",imp:null,
+ mid:"dich",midImp:""},
+{inf:"volltanken",mean:"to fill up the tank",sep:true,pre:"voll",base:"tanken",cls:"dual",core:true,
+ subj:"Ich",fin:"tanke",prat:"tankte",part:"vollgetankt",aux:"haben",imp:"Tank",impAlt:"Tanke",
+ mid:"",midImp:""},
+{inf:"vorkommen",mean:"to occur, to happen",sep:true,pre:"vor",base:"kommen",cls:"sep",core:true,
+ subj:"So etwas",fin:"kommt",prat:"kam",part:"vorgekommen",aux:"sein",imp:null,
+ mid:"oft",midImp:""},
+{inf:"umkommen",mean:"to perish",sep:true,pre:"um",base:"kommen",cls:"dual",core:false,
+ subj:"Viele Tiere",fin:"kommen",prat:"kamen",part:"umgekommen",aux:"sein",imp:null,
+ mid:"bei dem Brand",midImp:""},
+{inf:"umtauschen",mean:"to exchange",sep:true,pre:"um",base:"tauschen",cls:"dual",core:false,
+ subj:"Ich",fin:"tausche",prat:"tauschte",part:"umgetauscht",aux:"haben",imp:"Tausch",impAlt:"Tausche",
+ mid:"die Hose",midImp:"die Hose"},
+{inf:"umfallen",mean:"to fall over",sep:true,pre:"um",base:"fallen",cls:"dual",core:false,
+ subj:"Die Vase",fin:"fällt",prat:"fiel",part:"umgefallen",aux:"sein",imp:null,
+ mid:"",midImp:""},
+{inf:"durchlesen",mean:"to read through",sep:true,pre:"durch",base:"lesen",cls:"dual",core:true,
+ subj:"Ich",fin:"lese",prat:"las",part:"durchgelesen",aux:"haben",imp:"Lies",
+ mid:"den Vertrag",midImp:"den Vertrag"},
+{inf:"durchführen",mean:"to carry out",sep:true,pre:"durch",base:"führen",cls:"dual",core:true,
+ subj:"Ich",fin:"führe",prat:"führte",part:"durchgeführt",aux:"haben",imp:"Führ",impAlt:"Führe",
+ mid:"das Projekt",midImp:"das Projekt"},
+{inf:"durchhalten",mean:"to hold out",sep:true,pre:"durch",base:"halten",cls:"dual",core:false,
+ subj:"Ich",fin:"halte",prat:"hielt",part:"durchgehalten",aux:"haben",imp:"Halt",impAlt:"Halte",
+ mid:"bis zum Ende",midImp:""},
+{inf:"widerspiegeln",mean:"to reflect (mirror)",sep:true,pre:"wider",base:"spiegeln",cls:"dual",core:true,
+ subj:"Das Ergebnis",fin:"spiegelt",prat:"spiegelte",part:"widergespiegelt",aux:"haben",imp:null,
+ mid:"die Realität",midImp:""},
+
+/* ---------- 5. WECHSELPRÄFIXE: feste untrennbare Mitglieder ---------- */
+{inf:"unterschreiben",mean:"to sign",sep:false,pre:"unter",base:"schreiben",cls:"dual",core:true,
+ subj:"Ich",fin:"unterschreibe",prat:"unterschrieb",part:"unterschrieben",aux:"haben",imp:"Unterschreib",impAlt:"Unterschreibe",
+ mid:"den Vertrag",midImp:"den Vertrag"},
+{inf:"unterbrechen",mean:"to interrupt",sep:false,pre:"unter",base:"brechen",cls:"dual",core:true,
+ subj:"Ich",fin:"unterbreche",prat:"unterbrach",part:"unterbrochen",aux:"haben",imp:"Unterbrich",
+ mid:"dich",midImp:"mich nicht"},
+{inf:"umarmen",mean:"to hug",sep:false,pre:"um",base:"armen",cls:"dual",core:true,
+ subj:"Ich",fin:"umarme",prat:"umarmte",part:"umarmt",aux:"haben",imp:"Umarm",impAlt:"Umarme",
+ mid:"dich",midImp:"mich"},
+{inf:"überholen",mean:"to overtake",sep:false,pre:"über",base:"holen",cls:"dual",core:true,
+ subj:"Ich",fin:"überhole",prat:"überholte",part:"überholt",aux:"haben",imp:null,
+ mid:"das Auto",midImp:""},
+{inf:"widersprechen",mean:"to contradict",sep:false,pre:"wider",base:"sprechen",cls:"dual",core:true,
+ subj:"Ich",fin:"widerspreche",prat:"widersprach",part:"widersprochen",aux:"haben",imp:"Widersprich",
+ mid:"dir",midImp:"mir nicht"},
+{inf:"hinterlassen",mean:"to leave behind",sep:false,pre:"hinter",base:"lassen",cls:"dual",core:true,
+ subj:"Ich",fin:"hinterlasse",prat:"hinterließ",part:"hinterlassen",aux:"haben",imp:"Hinterlass",impAlt:"Hinterlasse",
+ mid:"eine Nachricht",midImp:"eine Nachricht"},
+{inf:"hinterfragen",mean:"to question critically",sep:false,pre:"hinter",base:"fragen",cls:"dual",core:false,
+ subj:"Ich",fin:"hinterfrage",prat:"hinterfragte",part:"hinterfragt",aux:"haben",imp:"Hinterfrag",impAlt:"Hinterfrage",
+ mid:"alles",midImp:"alles"},
+{inf:"hintergehen",mean:"to deceive",sep:false,pre:"hinter",base:"gehen",cls:"dual",core:false,
+ subj:"Er",fin:"hintergeht",prat:"hinterging",part:"hintergangen",aux:"haben",imp:null,
+ mid:"mich",midImp:""},
+{inf:"überqueren",mean:"to cross",sep:false,pre:"über",base:"queren",cls:"dual",core:true,
+ subj:"Ich",fin:"überquere",prat:"überquerte",part:"überquert",aux:"haben",imp:"Überquer",impAlt:"Überquere",
+ mid:"die Straße",midImp:"die Straße"},
+{inf:"übernachten",mean:"to stay overnight",sep:false,pre:"über",base:"nachten",cls:"dual",core:false,
+ subj:"Ich",fin:"übernachte",prat:"übernachtete",part:"übernachtet",aux:"haben",imp:null,
+ mid:"im Hotel",midImp:""},
+{inf:"übernehmen",mean:"to take over",sep:false,pre:"über",base:"nehmen",cls:"dual",core:true,
+ subj:"Ich",fin:"übernehme",prat:"übernahm",part:"übernommen",aux:"haben",imp:"Übernimm",
+ mid:"die Verantwortung",midImp:"die Verantwortung"},
+{inf:"überraschen",mean:"to surprise",sep:false,pre:"über",base:"raschen",cls:"dual",core:false,
+ subj:"Ich",fin:"überrasche",prat:"überraschte",part:"überrascht",aux:"haben",imp:"Überrasch",impAlt:"Überrasche",
+ mid:"dich",midImp:"mich"},
+{inf:"überzeugen",mean:"to convince",sep:false,pre:"über",base:"zeugen",cls:"dual",core:false,
+ subj:"Ich",fin:"überzeuge",prat:"überzeugte",part:"überzeugt",aux:"haben",imp:"Überzeug",impAlt:"Überzeuge",
+ mid:"dich",midImp:"mich"},
+{inf:"übertreiben",mean:"to exaggerate",sep:false,pre:"über",base:"treiben",cls:"dual",core:false,
+ subj:"Du",fin:"übertreibst",prat:"übertriebst",part:"übertrieben",aux:"haben",imp:null,
+ mid:"immer",midImp:""},
+{inf:"überweisen",mean:"to transfer (money)",sep:false,pre:"über",base:"weisen",cls:"dual",core:true,
+ subj:"Ich",fin:"überweise",prat:"überwies",part:"überwiesen",aux:"haben",imp:"Überweis",impAlt:"Überweise",
+ mid:"das Geld",midImp:"das Geld"},
+{inf:"überfahren",mean:"to run (a red light)",sep:false,pre:"über",base:"fahren",cls:"dual",core:false,
+ subj:"Er",fin:"überfährt",prat:"überfuhr",part:"überfahren",aux:"haben",imp:null,
+ mid:"die rote Ampel",midImp:""},
+{inf:"überfliegen",mean:"to skim (a text)",sep:false,pre:"über",base:"fliegen",cls:"dual",core:false,
+ subj:"Ich",fin:"überfliege",prat:"überflog",part:"überflogen",aux:"haben",imp:null,
+ mid:"den Text",midImp:""},
+{inf:"überstehen",mean:"to get through, survive",sep:false,pre:"über",base:"stehen",cls:"dual",core:false,
+ subj:"Ich",fin:"überstehe",prat:"überstand",part:"überstanden",aux:"haben",imp:null,
+ mid:"die Prüfung",midImp:""},
+{inf:"unterschätzen",mean:"to underestimate",sep:false,pre:"unter",base:"schätzen",cls:"dual",core:false,
+ subj:"Ich",fin:"unterschätze",prat:"unterschätzte",part:"unterschätzt",aux:"haben",imp:null,
+ mid:"die Aufgabe",midImp:""},
+{inf:"unternehmen",mean:"to undertake, do",sep:false,pre:"unter",base:"nehmen",cls:"dual",core:false,
+ subj:"Ich",fin:"unternehme",prat:"unternahm",part:"unternommen",aux:"haben",imp:null,
+ mid:"etwas",midImp:""},
+{inf:"untersuchen",mean:"to examine",sep:false,pre:"unter",base:"suchen",cls:"dual",core:false,
+ subj:"Ich",fin:"untersuche",prat:"untersuchte",part:"untersucht",aux:"haben",imp:"Untersuch",impAlt:"Untersuche",
+ mid:"den Fall",midImp:"den Fall"},
+{inf:"unterstützen",mean:"to support",sep:false,pre:"unter",base:"stützen",cls:"dual",core:true,
+ subj:"Ich",fin:"unterstütze",prat:"unterstützte",part:"unterstützt",aux:"haben",imp:"Unterstütz",impAlt:"Unterstütze",
+ mid:"dich",midImp:"mich"},
+{inf:"unterrichten",mean:"to teach",sep:false,pre:"unter",base:"richten",cls:"dual",core:false,
+ subj:"Ich",fin:"unterrichte",prat:"unterrichtete",part:"unterrichtet",aux:"haben",imp:null,
+ mid:"Mathematik",midImp:""},
+{inf:"unterlassen",mean:"to refrain from",sep:false,pre:"unter",base:"lassen",cls:"dual",core:false,
+ subj:"Ich",fin:"unterlasse",prat:"unterließ",part:"unterlassen",aux:"haben",imp:"Unterlass",impAlt:"Unterlasse",
+ mid:"das",midImp:"das"},
+{inf:"durchqueren",mean:"to traverse",sep:false,pre:"durch",base:"queren",cls:"dual",core:false,
+ subj:"Wir",fin:"durchqueren",prat:"durchquerten",part:"durchquert",aux:"haben",imp:null,
+ mid:"die Wüste",midImp:""},
+{inf:"durchsuchen",mean:"to search (thoroughly)",sep:false,pre:"durch",base:"suchen",cls:"dual",core:false,
+ subj:"Die Polizei",fin:"durchsucht",prat:"durchsuchte",part:"durchsucht",aux:"haben",imp:null,
+ mid:"das Haus",midImp:""},
+{inf:"vollenden",mean:"to complete",sep:false,pre:"voll",base:"enden",cls:"dual",core:false,
+ subj:"Ich",fin:"vollende",prat:"vollendete",part:"vollendet",aux:"haben",imp:"Vollende",
+ mid:"die Arbeit",midImp:"die Arbeit"},
+{inf:"vollbringen",mean:"to accomplish",sep:false,pre:"voll",base:"bringen",cls:"dual",core:false,
+ subj:"Er",fin:"vollbringt",prat:"vollbrachte",part:"vollbracht",aux:"haben",imp:null,
+ mid:"ein Wunder",midImp:""},
+{inf:"widerlegen",mean:"to refute",sep:false,pre:"wider",base:"legen",cls:"dual",core:false,
+ subj:"Ich",fin:"widerlege",prat:"widerlegte",part:"widerlegt",aux:"haben",imp:null,
+ mid:"die These",midImp:""},
+{inf:"widerstehen",mean:"to resist",sep:false,pre:"wider",base:"stehen",cls:"dual",core:false,
+ subj:"Ich",fin:"widerstehe",prat:"widerstand",part:"widerstanden",aux:"haben",imp:null,
+ mid:"der Versuchung",midImp:""},
+
+/* ---------- 6. WECHSELPRÄFIXE: echte Minimalpaare ---------- */
+{inf:"umfahren",mean:"to knock down (by driving)",sep:true,pre:"um",base:"fahren",cls:"dual",core:true,pair:"umfahren",
+ subj:"Ich",fin:"fahre",prat:"fuhr",part:"umgefahren",aux:"haben",imp:null,
+ mid:"das Schild",midImp:""},
+{inf:"umfahren",mean:"to drive around",sep:false,pre:"um",base:"fahren",cls:"dual",core:true,pair:"umfahren",
+ subj:"Ich",fin:"umfahre",prat:"umfuhr",part:"umfahren",aux:"haben",imp:null,
+ mid:"den Stau",midImp:""},
+{inf:"übersetzen",mean:"to translate",sep:false,pre:"über",base:"setzen",cls:"dual",core:true,pair:"uebersetzen",
+ subj:"Ich",fin:"übersetze",prat:"übersetzte",part:"übersetzt",aux:"haben",imp:"Übersetz",impAlt:"Übersetze",
+ mid:"den Text",midImp:"den Text"},
+{inf:"übersetzen",mean:"to ferry across",sep:true,pre:"über",base:"setzen",cls:"dual",core:true,pair:"uebersetzen",
+ subj:"Der Fährmann",fin:"setzt",prat:"setzte",part:"übergesetzt",aux:"haben",imp:null,
+ mid:"uns",midImp:""},
+{inf:"durchschauen",mean:"to see through (a person)",sep:false,pre:"durch",base:"schauen",cls:"dual",core:true,pair:"durchschauen",
+ subj:"Ich",fin:"durchschaue",prat:"durchschaute",part:"durchschaut",aux:"haben",imp:null,
+ mid:"dich",midImp:""},
+{inf:"durchschauen",mean:"to look through, review",sep:true,pre:"durch",base:"schauen",cls:"dual",core:true,pair:"durchschauen",
+ subj:"Ich",fin:"schaue",prat:"schaute",part:"durchgeschaut",aux:"haben",imp:"Schau",impAlt:"Schaue",
+ mid:"die Unterlagen",midImp:"die Unterlagen"},
+{inf:"wiederholen",mean:"to repeat",sep:false,pre:"wieder",base:"holen",cls:"dual",core:true,pair:"wiederholen",
+ subj:"Ich",fin:"wiederhole",prat:"wiederholte",part:"wiederholt",aux:"haben",imp:"Wiederhol",impAlt:"Wiederhole",
+ mid:"den Satz",midImp:"den Satz"},
+{inf:"wiederholen",mean:"to fetch back",sep:true,pre:"wieder",base:"holen",cls:"dual",core:true,pair:"wiederholen",
+ subj:"Ich",fin:"hole",prat:"holte",part:"wiedergeholt",aux:"haben",imp:null,
+ mid:"das Buch",midImp:""},
+{inf:"unterhalten",mean:"to entertain",sep:false,pre:"unter",base:"halten",cls:"dual",core:true,pair:"unterhalten",
+ subj:"Der Clown",fin:"unterhält",prat:"unterhielt",part:"unterhalten",aux:"haben",imp:null,
+ mid:"die Kinder",midImp:""},
+{inf:"unterhalten",mean:"to hold underneath",sep:true,pre:"unter",base:"halten",cls:"dual",core:true,pair:"unterhalten",
+ subj:"Er",fin:"hält",prat:"hielt",part:"untergehalten",aux:"haben",imp:null,
+ mid:"den Schirm",midImp:""},
+{inf:"umstellen",mean:"to surround",sep:false,pre:"um",base:"stellen",cls:"dual",core:true,pair:"umstellen",
+ subj:"Die Polizei",fin:"umstellt",prat:"umstellte",part:"umstellt",aux:"haben",imp:null,
+ mid:"das Haus",midImp:""},
+{inf:"umstellen",mean:"to rearrange",sep:true,pre:"um",base:"stellen",cls:"dual",core:true,pair:"umstellen",
+ subj:"Ich",fin:"stelle",prat:"stellte",part:"umgestellt",aux:"haben",imp:"Stell",impAlt:"Stelle",
+ mid:"die Möbel",midImp:"die Möbel"},
+{inf:"umgehen",mean:"to avoid, bypass",sep:false,pre:"um",base:"gehen",cls:"dual",core:true,pair:"umgehen",
+ subj:"Ich",fin:"umgehe",prat:"umging",part:"umgangen",aux:"haben",imp:null,
+ mid:"das Problem",midImp:""},
+{inf:"umgehen",mean:"to deal with",sep:true,pre:"um",base:"gehen",cls:"dual",core:true,pair:"umgehen",
+ subj:"Ich",fin:"gehe",prat:"ging",part:"umgegangen",aux:"sein",imp:null,
+ mid:"sorgsam mit dem Geld",midImp:""},
+{inf:"überziehen",mean:"to overdraw (an account)",sep:false,pre:"über",base:"ziehen",cls:"dual",core:true,pair:"ueberziehen",
+ subj:"Ich",fin:"überziehe",prat:"überzog",part:"überzogen",aux:"haben",imp:null,
+ mid:"mein Konto",midImp:""},
+{inf:"überziehen",mean:"to put on over",sep:true,pre:"über",base:"ziehen",cls:"dual",core:true,pair:"ueberziehen",
+ subj:"Ich",fin:"ziehe",prat:"zog",part:"übergezogen",aux:"haben",imp:"Zieh",impAlt:"Ziehe",
+ mid:"einen Pullover",midImp:"einen Pullover"},
+{inf:"übergehen",mean:"to pass over, ignore (a person)",sep:false,pre:"über",base:"gehen",cls:"dual",core:false,pair:"uebergehen",
+ subj:"Man",fin:"übergeht",prat:"überging",part:"übergangen",aux:"haben",imp:null,
+ mid:"mich",midImp:""},
+{inf:"übergehen",mean:"to move on to",sep:true,pre:"über",base:"gehen",cls:"dual",core:false,pair:"uebergehen",
+ subj:"Wir",fin:"gehen",prat:"gingen",part:"übergegangen",aux:"sein",imp:null,
+ mid:"zum nächsten Punkt",midImp:""},
+{inf:"unterstellen",mean:"to insinuate",sep:false,pre:"unter",base:"stellen",cls:"dual",core:false,pair:"unterstellen",
+ subj:"Er",fin:"unterstellt",prat:"unterstellte",part:"unterstellt",aux:"haben",imp:null,
+ mid:"mir Faulheit",midImp:""},
+{inf:"unterstellen",mean:"to park/put underneath",sep:true,pre:"unter",base:"stellen",cls:"dual",core:false,pair:"unterstellen",
+ subj:"Ich",fin:"stelle",prat:"stellte",part:"untergestellt",aux:"haben",imp:null,
+ mid:"das Fahrrad",midImp:""},
+{inf:"durchbrechen",mean:"to break through (a barrier)",sep:false,pre:"durch",base:"brechen",cls:"dual",core:false,pair:"durchbrechen",
+ subj:"Das Auto",fin:"durchbricht",prat:"durchbrach",part:"durchbrochen",aux:"haben",imp:null,
+ mid:"die Absperrung",midImp:""},
+{inf:"durchbrechen",mean:"to break in two",sep:true,pre:"durch",base:"brechen",cls:"dual",core:false,pair:"durchbrechen",
+ subj:"Ich",fin:"breche",prat:"brach",part:"durchgebrochen",aux:"haben",imp:"Brich",
+ mid:"den Stock",midImp:"den Stock"},
+{inf:"übertreten",mean:"to violate (a law)",sep:false,pre:"über",base:"treten",cls:"dual",core:false,pair:"uebertreten",
+ subj:"Er",fin:"übertritt",prat:"übertrat",part:"übertreten",aux:"haben",imp:null,
+ mid:"das Gesetz",midImp:""},
+{inf:"übertreten",mean:"to defect, convert",sep:true,pre:"über",base:"treten",cls:"dual",core:false,pair:"uebertreten",
+ subj:"Er",fin:"tritt",prat:"trat",part:"übergetreten",aux:"sein",imp:null,
+ mid:"zu einer anderen Partei",midImp:""},
+{inf:"umschreiben",mean:"to paraphrase",sep:false,pre:"um",base:"schreiben",cls:"dual",core:false,pair:"umschreiben",
+ subj:"Ich",fin:"umschreibe",prat:"umschrieb",part:"umschrieben",aux:"haben",imp:null,
+ mid:"den Begriff",midImp:""},
+{inf:"umschreiben",mean:"to rewrite",sep:true,pre:"um",base:"schreiben",cls:"dual",core:false,pair:"umschreiben",
+ subj:"Ich",fin:"schreibe",prat:"schrieb",part:"umgeschrieben",aux:"haben",imp:"Schreib",impAlt:"Schreibe",
+ mid:"den Text",midImp:"den Text"}
+];
+
+/* ============================================================
+   MINIMAL PAIRS — meaning discrimination
+   The German sentence is the material; the options are English so
+   that picking one is a real comprehension check.
+   ============================================================ */
+const PAIR_ITEMS = [
+ {id:"mp-umfahren-1",inf:"umfahren",sentence:"Ich fahre den Baum um.",right:"I hit the tree and knock it over.",
+  wrong:["I drive around the tree in an arc.","I move the tree to a different spot."],
+  why:"The prefix sits at the end of the clause, so the verb is separable: ÚMfahren means to knock over."},
+ {id:"mp-umfahren-2",inf:"umfahren",sentence:"Ich umfahre den Baum.",right:"I drive around the tree.",
+  wrong:["I hit the tree and knock it over.","I reverse towards the tree."],
+  why:"The prefix stays on the verb, so it is inseparable: umFAHren means to drive around."},
+ {id:"mp-uebersetzen-1",inf:"übersetzen",sentence:"Sie übersetzt den Text.",right:"She renders the text in another language.",
+  wrong:["She carries the text across to the other bank.","She sits down on the text."],
+  why:"Inseparable, überSETzen: to translate."},
+ {id:"mp-uebersetzen-2",inf:"übersetzen",sentence:"Der Fährmann setzt uns über.",right:"He takes us across to the other bank.",
+  wrong:["He translates what we are saying.","He sits down next to us."],
+  why:"Separable, ǗBERsetzen: to ferry across."},
+ {id:"mp-durchschauen-1",inf:"durchschauen",sentence:"Ich durchschaue dich.",right:"I can tell what you are really up to.",
+  wrong:["I am looking through a hole in your direction.","I am checking your paperwork."],
+  why:"Inseparable, durchSCHAUen: to see through a person."},
+ {id:"mp-durchschauen-2",inf:"durchschauen",sentence:"Ich schaue die Unterlagen durch.",right:"I look through the documents one by one.",
+  wrong:["I see through what the documents are really after.","I throw the documents away."],
+  why:"Separable, DÚRCHschauen: to look through, to review."},
+ {id:"mp-wiederholen-1",inf:"wiederholen",sentence:"Ich wiederhole den Satz.",right:"I say the sentence again.",
+  wrong:["I fetch the sentence from the next room.","I rewrite the sentence."],
+  why:"Inseparable, wiederHOlen: to repeat."},
+ {id:"mp-wiederholen-2",inf:"wiederholen",sentence:"Ich hole das Buch wieder.",right:"I fetch the book back.",
+  wrong:["I read the book again.","I buy the book a second time."],
+  why:"Separable, WÍEderholen: to fetch back."},
+ {id:"mp-unterhalten-1",inf:"unterhalten",sentence:"Wir unterhalten uns über den Film.",right:"We are talking to each other about the film.",
+  wrong:["We are holding the film underneath something.","We are paying for the film together."],
+  why:"Inseparable, unterHALten: to converse, to entertain."},
+ {id:"mp-unterhalten-2",inf:"unterhalten",sentence:"Er hält den Schirm unter.",right:"He holds the umbrella underneath.",
+  wrong:["He entertains the guests with the umbrella.","He repairs the umbrella."],
+  why:"Separable, ÚNterhalten: to hold something underneath."},
+ {id:"mp-umstellen-1",inf:"umstellen",sentence:"Die Polizei umstellt das Haus.",right:"The police form a ring around the house.",
+  wrong:["The police rearrange the furniture inside.","The police move the house elsewhere."],
+  why:"Inseparable, umSTELlen: to surround."},
+ {id:"mp-umstellen-2",inf:"umstellen",sentence:"Ich stelle die Möbel um.",right:"I rearrange the furniture.",
+  wrong:["I stand in a circle around the furniture.","I sell the furniture."],
+  why:"Separable, ÚMstellen: to rearrange."},
+ {id:"mp-umgehen-1",inf:"umgehen",sentence:"Er umgeht das Problem.",right:"He sidesteps the problem.",
+  wrong:["He handles the problem carefully.","He solves the problem for good."],
+  why:"Inseparable, umGEhen: to avoid, to bypass."},
+ {id:"mp-umgehen-2",inf:"umgehen",sentence:"Er geht gut mit Kindern um.",right:"He is good at dealing with children.",
+  wrong:["He walks in circles around the children.","He avoids children."],
+  why:"Separable, ÚMgehen: to deal with someone."},
+ {id:"mp-ueberziehen-1",inf:"überziehen",sentence:"Ich habe mein Konto überzogen.",right:"I spent more than the account held.",
+  wrong:["I laid a jacket over the account statement.","I closed the account."],
+  why:"Inseparable, überZIEhen, so the participle is überzogen."},
+ {id:"mp-ueberziehen-2",inf:"überziehen",sentence:"Ich habe einen Pullover übergezogen.",right:"I pulled a jumper on.",
+  wrong:["I paid too much for a jumper.","I washed the jumper."],
+  why:"Separable, ǗBERziehen, so the participle is über-ge-zogen."},
+ {id:"mp-uebergehen-1",inf:"übergehen",sentence:"Man hat mich bei der Beförderung übergangen.",right:"I was passed over for the promotion.",
+  wrong:["I was given the promotion.","They moved on to my proposal."],
+  why:"Inseparable, überGEhen: participle übergangen, perfect with haben."},
+ {id:"mp-uebergehen-2",inf:"übergehen",sentence:"Wir sind zum nächsten Punkt übergegangen.",right:"We moved on to the next item.",
+  wrong:["We skipped the next item.","We rejected the next item."],
+  why:"Separable, ǗBERgehen: participle übergegangen, perfect with sein."},
+ {id:"mp-uebertreten-1",inf:"übertreten",sentence:"Er hat das Gesetz übertreten.",right:"He broke the law.",
+  wrong:["He stepped across the border.","He amended the law."],
+  why:"Inseparable, überTREten: participle übertreten, perfect with haben."},
+ {id:"mp-uebertreten-2",inf:"übertreten",sentence:"Er ist zu einer anderen Partei übergetreten.",right:"He switched to another party.",
+  wrong:["He broke his party's rules.","He founded the party."],
+  why:"Separable, ǗBERtreten: participle übergetreten, perfect with sein."},
+ {id:"mp-umschreiben-1",inf:"umschreiben",sentence:"Ich umschreibe den Begriff.",right:"I explain the term in other words.",
+  wrong:["I write the whole text out again.","I write around the edge of the term."],
+  why:"Inseparable, umSCHREIben: to paraphrase."},
+ {id:"mp-umschreiben-2",inf:"umschreiben",sentence:"Ich schreibe den Text um.",right:"I redraft the text.",
+  wrong:["I explain the text in other words.","I cross the text out."],
+  why:"Separable, ÚMschreiben: to rewrite."},
+ {id:"mp-durchbrechen-1",inf:"durchbrechen",sentence:"Das Auto durchbrach die Absperrung.",right:"The car smashed through the barrier.",
+  wrong:["The car broke into two pieces.","The car stopped in front of the barrier."],
+  why:"Inseparable, durchBREchen: to break through something."},
+ {id:"mp-durchbrechen-2",inf:"durchbrechen",sentence:"Ich breche den Stock durch.",right:"I snap the stick in two.",
+  wrong:["I break my way through the stick.","I throw the stick away."],
+  why:"Separable, DÚRCHbrechen: to break in two."}
+];
+
+/* ============================================================
+   ERROR SPOTTING — pick the correct sentence
+   ============================================================ */
+const ERROR_ITEMS = [
+ {id:"er-1",q:"Which sentence is correct?",right:"Ich habe dich gestern angerufen.",
+  wrong:["Ich habe dich gestern anrufen.","Ich habe dich gestern gerufen an.","Ich habe dich gestern geanruft."],
+  why:"With separable verbs the ge- sits between prefix and stem: an-ge-rufen."},
+ {id:"er-2",q:"Which sentence is correct?",right:"Ich habe meine Eltern besucht.",
+  wrong:["Ich habe meine Eltern gebesucht.","Ich habe meine Eltern besuchen.","Ich habe meine Eltern besucht ge."],
+  why:"Inseparable verbs form the participle without ge-: besucht."},
+ {id:"er-3",q:"Which sentence is correct?",right:"Ich vergaß, dich anzurufen.",
+  wrong:["Ich vergaß, dich zu anrufen.","Ich vergaß, dich anrufen zu.","Ich vergaß, dich zu anzurufen."],
+  why:"With separable verbs zu goes between prefix and stem, all as one word: anzurufen."},
+ {id:"er-4",q:"Which sentence is correct?",right:"Ich vergaß, dich zu besuchen.",
+  wrong:["Ich vergaß, dich zubesuchen.","Ich vergaß, dich bezusuchen.","Ich vergaß, dich besuchen zu."],
+  why:"With inseparable verbs zu stands in front as a separate word: zu besuchen."},
+ {id:"er-5",q:"Which sentence is correct?",right:"…, weil ich dich morgen anrufe.",
+  wrong:["…, weil ich dich morgen rufe an.","…, weil ich dich morgen an rufe.","…, weil ich rufe dich morgen an."],
+  why:"In a subordinate clause the verb goes last and the prefix rejoins it: anrufe."},
+ {id:"er-6",q:"Which sentence is correct?",right:"Ich muss dich morgen anrufen.",
+  wrong:["Ich muss dich morgen an rufen.","Ich muss dich morgen anzurufen.","Ich muss dich an morgen rufen."],
+  why:"After a modal verb comes the full infinitive: no zu, one word."},
+ {id:"er-7",q:"Which sentence is correct?",right:"Ruf mich bitte an!",
+  wrong:["Anruf mich bitte!","Ruf an mich bitte!","Rufe mich bitte anzu!"],
+  why:"In the imperative the prefix detaches just as in a main clause and goes last."},
+ {id:"er-8",q:"Which sentence is correct?",right:"Ich habe das Essen vorbereitet.",
+  wrong:["Ich habe das Essen vorgebereitet.","Ich habe das Essen vorbereitn.","Ich habe das Essen gevorbereitet."],
+  why:"The stem bereiten already carries the inseparable be-, so there is no ge-."},
+ {id:"er-9",q:"Which sentence is correct?",right:"Ich habe die Schuhe anprobiert.",
+  wrong:["Ich habe die Schuhe angeprobiert.","Ich habe die Schuhe angeprobt.","Ich habe die Schuhe anzuprobieren."],
+  why:"Verbs ending in -ieren never take ge-, not even behind a separable prefix."},
+ {id:"er-10",q:"Which sentence is correct?",right:"Der Kurs hat gestern stattgefunden.",
+  wrong:["Der Kurs hat gestern stattfindet.","Der Kurs ist gestern stattgefunden.","Der Kurs hat gestern gestattfunden."],
+  why:"statt-ge-funden, and stattfinden forms the perfect with haben."},
+ {id:"er-11",q:"Which sentence is correct?",right:"Wir haben uns lange unterhalten.",
+  wrong:["Wir haben uns lange untergehalten.","Wir haben uns lange unterhaltet.","Wir haben uns lange unterhalten ge."],
+  why:"sich unterhalten, to converse, is inseparable and its participle equals the infinitive."},
+ {id:"er-12",q:"Which sentence is correct?",right:"Sie hat den Vertrag unterschrieben.",
+  wrong:["Sie hat den Vertrag untergeschrieben.","Sie hat den Vertrag unterschreibt.","Sie hat den Vertrag unter geschrieben."],
+  why:"unterschreiben is inseparable: no ge-, participle unterschrieben."},
+ {id:"er-13",q:"Which sentence is correct?",right:"Die Sonne ist um neun untergegangen.",
+  wrong:["Die Sonne ist um neun untergangen.","Die Sonne hat um neun untergegangen.","Die Sonne ist um neun gegangen unter."],
+  why:"untergehen is separable, unter-ge-gangen, and takes sein."},
+ {id:"er-14",q:"Which sentence says that you drove around the traffic jam?",right:"Ich habe den Stau umfahren.",
+  wrong:["Ich habe den Stau umgefahren.","Ich bin den Stau umfahren.","Ich habe den Stau umfahrt."],
+  why:"umFAHren, to drive around, is inseparable, so the participle is umfahren without ge-."},
+ {id:"er-15",q:"Which sentence says that you knocked the sign over?",right:"Ich habe das Schild umgefahren.",
+  wrong:["Ich habe das Schild umfahren.","Ich bin das Schild umgefahren.","Ich habe das Schild umfahrt."],
+  why:"ÚMfahren, to knock over, is separable: um-ge-fahren."},
+ {id:"er-16",q:"Which sentence is correct?",right:"Sie ruft ihre Mutter jeden Sonntag an.",
+  wrong:["Sie anruft ihre Mutter jeden Sonntag.","Sie ruft an ihre Mutter jeden Sonntag.","Sie ruft ihre Mutter an jeden Sonntag."],
+  why:"In a main clause the prefix flies right to the end, behind everything else."},
+ {id:"er-17",q:"Which sentence is correct?",right:"Er hat mir empfohlen, das Buch zu lesen.",
+  wrong:["Er hat mir geempfohlen, das Buch zu lesen.","Er hat mir empfehlt, das Buch zu lesen.","Er hat mir empfohlen, das Buch zulesen."],
+  why:"emp- is inseparable, so the participle is empfohlen, without ge-."},
+ {id:"er-18",q:"Which sentence is correct?",right:"Der Zug fuhr pünktlich ab.",
+  wrong:["Der Zug abfuhr pünktlich.","Der Zug fuhr ab pünktlich.","Der Zug fuhr pünktlich abzu."],
+  why:"The prefix detaches in the simple past too, in a main clause."},
+ {id:"er-19",q:"Which sentence is correct?",right:"Es ist wichtig, den Vertrag durchzulesen.",
+  wrong:["Es ist wichtig, den Vertrag zu durchlesen.","Es ist wichtig, den Vertrag durchlesen zu.","Es ist wichtig, den Vertrag durchzu lesen."],
+  why:"durchlesen is separable, so zu goes in the middle: durchzulesen."},
+ {id:"er-20",q:"Which sentence is correct if you mean translating the text?",right:"Es ist wichtig, den Text zu übersetzen.",
+  wrong:["Es ist wichtig, den Text überzusetzen.","Es ist wichtig, den Text zu überzusetzen.","Es ist wichtig, den Text übersetzen zu."],
+  why:"übersetzen, to translate, is inseparable, so zu is a separate word."},
+ {id:"er-21",q:"Which sentence is correct?",right:"Ich habe die Datei umbenannt.",
+  wrong:["Ich habe die Datei umgebenannt.","Ich habe die Datei umbenennt.","Ich habe die Datei umgenannt."],
+  why:"The stem benennen carries be-, so there is no ge-: umbenannt."},
+ {id:"er-22",q:"Which sentence is correct?",right:"Wir haben das Projekt letzte Woche durchgeführt.",
+  wrong:["Wir haben das Projekt letzte Woche durchführt.","Wir haben das Projekt letzte Woche durchgeführen.","Wir sind das Projekt letzte Woche durchgeführt."],
+  why:"durchführen is separable, durch-ge-führt, perfect with haben."},
+ {id:"er-23",q:"Which sentence is correct?",right:"Er hat mir nie widersprochen.",
+  wrong:["Er hat mir nie widergesprochen.","Er hat mir nie widersprecht.","Er hat mir nie wider gesprochen."],
+  why:"widersprechen is inseparable: widersprochen."},
+ {id:"er-24",q:"Which sentence is correct?",right:"Das Ergebnis spiegelt die Stimmung wider.",
+  wrong:["Das Ergebnis widerspiegelt die Stimmung.","Das Ergebnis spiegelt wider die Stimmung.","Das Ergebnis spiegelt die Stimmung wieder."],
+  why:"widerspiegeln, unlike widersprechen, is separable, and it is spelled wider-, not wieder-."},
+ {id:"er-25",q:"Which sentence is correct?",right:"Ich bin gestern früh aufgestanden.",
+  wrong:["Ich habe gestern früh aufgestanden.","Ich bin gestern früh aufstanden.","Ich bin gestern früh gestanden auf."],
+  why:"aufstehen is separable, auf-ge-standen, and takes sein."},
+ {id:"er-26",q:"Which sentence is correct?",right:"Kannst du bitte das Fenster zumachen?",
+  wrong:["Kannst du bitte das Fenster zu machen?","Kannst du bitte das Fenster zuzumachen?","Kannst du bitte zumachen das Fenster?"],
+  why:"After a modal verb the infinitive stays in one piece at the end."},
+ {id:"er-27",q:"Which sentence is correct?",right:"Ich werde dich morgen abholen.",
+  wrong:["Ich werde dich morgen abzuholen.","Ich werde dich morgen ab holen.","Ich werde dich morgen abgeholt."],
+  why:"Future I is werden plus the full infinitive, with no zu."},
+ {id:"er-28",q:"Which sentence is correct?",right:"Ich habe die Dokumente sicher aufbewahrt.",
+  wrong:["Ich habe die Dokumente sicher aufgebewahrt.","Ich habe die Dokumente sicher aufbewahren.","Ich habe die Dokumente sicher aufgewahrt."],
+  why:"The stem bewahren carries be-, so there is no ge-: aufbewahrt."},
+ {id:"er-29",q:"Which sentence is correct?",right:"Der Versuch ist leider misslungen.",
+  wrong:["Der Versuch ist leider gemisslungen.","Der Versuch hat leider misslungen.","Der Versuch ist leider misslingt."],
+  why:"miss- is inseparable, so no ge-, and misslingen takes sein."},
+ {id:"er-30",q:"Which sentence is correct?",right:"Sie hat mich am Bahnhof umarmt.",
+  wrong:["Sie hat mich am Bahnhof umgearmt.","Sie hat mich am Bahnhof angeumarmt.","Sie armte mich am Bahnhof um."],
+  why:"umarmen is inseparable: umarmt, and it does not split in a main clause either."},
+ {id:"er-31",q:"Which sentence is correct?",right:"Ich habe das Geld schon überwiesen.",
+  wrong:["Ich habe das Geld schon übergewiesen.","Ich habe das Geld schon überweist.","Ich habe das Geld schon geüberwiesen."],
+  why:"überweisen is inseparable: überwiesen."},
+ {id:"er-32",q:"Which sentence is correct?",right:"Wann fängst du mit der Arbeit an?",
+  wrong:["Wann anfängst du mit der Arbeit?","Wann fängst an du mit der Arbeit?","Wann fängst du mit der Arbeit anzu?"],
+  why:"In a question too, the detached prefix goes right at the end."},
+ {id:"er-33",q:"Which sentence is correct?",right:"Ich möchte mich kurz vorstellen.",
+  wrong:["Ich möchte mich kurz vorzustellen.","Ich möchte mich kurz vor stellen.","Ich möchte mich kurz vorgestellt."],
+  why:"After a modal verb: full infinitive, no zu."},
+ {id:"er-34",q:"Which sentence is correct?",right:"Er hat den Fehler nie anerkannt.",
+  wrong:["Er hat den Fehler nie angeerkannt.","Er hat den Fehler nie anerkennt.","Er hat den Fehler nie angekannt."],
+  why:"anerkennen is separable, but the stem erkennen carries er-, so there is no ge-."},
+ {id:"er-35",q:"Which sentence is correct?",right:"Bitte unterbrich mich nicht!",
+  wrong:["Bitte unterbrech mich nicht!","Bitte brich mich nicht unter!","Bitte unterbreche mich nicht unter!"],
+  why:"unterbrechen is inseparable, and in the imperative e becomes i: unterbrich."}
+];
+
+/* ============================================================
+   RULE QUESTIONS — the system itself
+   ============================================================ */
+const RULE_ITEMS = [
+ {id:"ru-1",q:"Which prefix can never separate?",right:"zer-",wrong:["ab-","fest-","zurück-"],
+  why:"The eight that never separate: be-, emp-, ent-, er-, ge-, miss-, ver-, zer-."},
+ {id:"ru-2",q:"Which prefix can never separate?",right:"emp-",wrong:["ein-","weiter-","vorbei-"],
+  why:"be-, emp-, ent-, er-, ge-, miss-, ver- and zer- never come off the verb."},
+ {id:"ru-3",q:"Which prefix is NOT one of the eight inseparable ones?",right:"mit-",
+  wrong:["be-","ent-","ge-"],why:"mit- is separable; be-, ent- and ge- are inseparable."},
+ {id:"ru-4",q:"How can you hear whether a prefix separates?",right:"Separable prefixes are stressed, inseparable ones are not.",
+  wrong:["Separable prefixes are unstressed, inseparable ones are stressed.","By how long the prefix is.","Both carry equal stress."],
+  why:"Stress is the reliable test: ÁNrufen against beSÚchen."},
+ {id:"ru-5",q:"Where does ge- go in the participle of a separable verb?",right:"Between the prefix and the stem.",
+  wrong:["Right at the front.","Right at the end.","ge- is always dropped."],
+  why:"an-ge-rufen, ein-ge-kauft, auf-ge-standen."},
+ {id:"ru-6",q:"Why is it vorbereitet and not the form with ge- in the middle?",right:"Because the stem bereiten already carries the inseparable be-.",
+  wrong:["Because vor- is not a real prefix.","Because vorbereiten is inseparable.","Because the verb is weak."],
+  why:"No ge- when the stem itself starts with an inseparable prefix or ends in -ieren."},
+ {id:"ru-7",q:"Why is it anprobiert and not the form with ge- in the middle?",right:"Because verbs ending in -ieren never take ge-.",
+  wrong:["Because an- is inseparable.","Because probieren is a loanword and has no participle.","Because the verb is reflexive."],
+  why:"-ieren verbs always form the participle without ge-: studiert, anprobiert."},
+ {id:"ru-8",q:"Where does zu go in the zu-infinitive of a separable verb?",right:"Between prefix and stem, all as one word.",
+  wrong:["As a separate word in front of the verb.","After the verb.","zu is dropped with separable verbs."],
+  why:"anzurufen, durchzulesen, vorzubereiten."},
+ {id:"ru-9",q:"Where does zu go in the zu-infinitive of an inseparable verb?",right:"As a separate word in front of the verb.",
+  wrong:["Between prefix and stem.","At the end of the clause.","zu is dropped with inseparable verbs."],
+  why:"zu besuchen, zu übersetzen, zu unterschreiben."},
+ {id:"ru-10",q:"What happens to the prefix in a subordinate clause?",right:"It rejoins the verb, which moves to the end.",
+  wrong:["It stays detached at the end of the clause.","It disappears.","It moves to the front of the clause."],
+  why:"…, weil ich dich anrufe — never with the prefix left stranded."},
+ {id:"ru-11",q:"What happens after a modal verb?",right:"The full infinitive stands at the end, one word, no zu.",
+  wrong:["The prefix stays detached.","The zu-infinitive is used.","The participle is used."],
+  why:"Ich muss dich anrufen. Ich muss dich besuchen."},
+ {id:"ru-12",q:"How does the prefix behave in the imperative?",right:"Like a main clause: it detaches and goes last.",
+  wrong:["It stays on the verb.","It goes in front of the verb.","Separable verbs have no imperative."],
+  why:"Ruf mich an! Steh auf! Mach das Fenster zu!"},
+ {id:"ru-13",q:"Which group can be separable OR inseparable?",right:"durch-, hinter-, über-, um-, unter-, voll-, wider-, wieder-",
+  wrong:["be-, emp-, ent-, er-, ge-, miss-, ver-, zer-","ab-, an-, auf-, aus-, ein-, mit-","only über- and unter-"],
+  why:"These are the eight dual prefixes."},
+ {id:"ru-14",q:"Among the dual prefixes, the rough tendency is:",right:"Concrete or spatial tends to separate, figurative tends not to.",
+  wrong:["Concrete tends not to separate, figurative does.","Always separable with strong verbs.","Meaning makes no difference."],
+  why:"A tendency, not a rule — umfahren already breaks it."},
+ {id:"ru-15",q:"Why is umfahren awkward for the concrete-versus-figurative rule of thumb?",
+  right:"The inseparable reading, driving around something, is itself spatial.",
+  wrong:["Because both readings sound identical.","Because umfahren only exists as an inseparable verb.","Because um- is not a dual prefix."],
+  why:"A better cue: in the inseparable readings the object is directly affected or fully enclosed."},
+ {id:"ru-16",q:"Which verb always separates?",right:"untergehen",wrong:["unterschreiben","unterbrechen","unterstützen"],
+  why:"untergehen, of the sun or a ship, always splits: geht unter, untergegangen."},
+ {id:"ru-17",q:"Which verb never separates?",right:"umarmen",wrong:["umziehen","umtauschen","umfallen"],
+  why:"umarmen: ich umarme dich, ich habe dich umarmt."},
+ {id:"ru-18",q:"Which verb never separates?",right:"überholen",wrong:["überziehen (to pull a jumper on)","übersetzen (to ferry across)","übertreten (to switch parties)"],
+  why:"überholen, to overtake a car, is inseparable: überholt."},
+ {id:"ru-19",q:"Which verb separates even though its prefix almost never does?",
+  right:"widerspiegeln",wrong:["widersprechen","widerlegen","widerstehen"],
+  why:"widerspiegeln is the separable exception: spiegelt wider, widergespiegelt."},
+ {id:"ru-20",q:"What is the Partizip II of bekommen?",right:"bekommen",wrong:["bekommt","gebekommen","bekommt ge"],
+  why:"Some inseparable strong verbs have a participle identical to the infinitive."},
+ {id:"ru-21",q:"When does a separable verb take NO ge- in the participle?",
+  right:"When the stem itself starts with an inseparable prefix or ends in -ieren.",
+  wrong:["When the prefix has more than one syllable.","When the verb is strong.","When the perfect is formed with sein."],
+  why:"vorbereitet, anerkannt, einbezogen, anprobiert."},
+ {id:"ru-22",q:"Which statement about hinter- holds in standard German?",
+  right:"It counts as a dual prefix but is inseparable in practice.",
+  wrong:["It always separates.","It belongs to the eight fixed inseparable prefixes.","It only occurs in nouns."],
+  why:"hinterlassen, hinterfragen, hintergehen are all inseparable."},
+ {id:"ru-23",q:"Der Fährmann setzt uns über. Which stress is right?",right:"ǗBERsetzen — stress on the prefix",
+  wrong:["überSETzen — stress on the stem","both syllables stressed equally","stress on the final syllable"],
+  why:"The prefix is detached, so the verb is separable, so the prefix is stressed."},
+ {id:"ru-24",q:"How do you hear the difference between umfahren meaning to drive around and umfahren meaning to knock over?",
+  right:"Drive around stresses the stem; knock over stresses the prefix.",
+  wrong:["Drive around stresses the prefix.","They sound identical.","The difference is only in the object's article."],
+  why:"umFAHren is to drive around and inseparable; ÚMfahren is to knock over and separable."},
+ {id:"ru-25",q:"Which auxiliary fits: Ich ___ zum nächsten Punkt übergegangen.",right:"bin",
+  wrong:["habe","werde","wurde"],
+  why:"The separable übergehen, a transition, takes sein."},
+ {id:"ru-26",q:"Which form fits: Man hat mich bei der Beförderung ___.",right:"übergangen",
+  wrong:["übergegangen","übergeht","übergehen gewesen"],
+  why:"The inseparable übergehen, to ignore someone, gives übergangen with haben."}
+];
+
+
+</script>
+<script>/* ============================================================
+   ITEM GENERATOR
+   Interface language is English; German appears only where it is
+   the material being learned. Every answer is derived from the
+   explicitly stored forms, never from guessed morphology.
+   ============================================================ */
+
+const PLURAL_SUBJ = ["Wir", "Viele Tiere"];
+const INSEP_FIXED = ["be", "emp", "ent", "er", "ge", "miss", "ver", "zer"];
+
+function personOf(subj) {
+  if (subj === "Ich") return "ich";
+  if (subj === "Du") return "du";
+  if (PLURAL_SUBJ.indexOf(subj) !== -1) return "pl";
+  return "s3";
+}
+const AUXF = {
+  ich: { haben: "habe", sein: "bin" },
+  du:  { haben: "hast", sein: "bist" },
+  pl:  { haben: "haben", sein: "sind" },
+  s3:  { haben: "hat", sein: "ist" }
+};
+const MUSSF = { ich: "muss", du: "musst", pl: "müssen", s3: "muss" };
+const WERDF = { ich: "werde", du: "wirst", pl: "werden", s3: "wird" };
+
+function j() {
+  return Array.prototype.slice.call(arguments).filter(function (x) {
+    return x !== null && x !== undefined && String(x).length > 0;
+  }).join(" ");
+}
+function lc(s) { return s.charAt(0).toLowerCase() + s.slice(1); }
+function slug(s) {
+  return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 28);
+}
+
+/* ---------- sentence builders ---------- */
+const SENT = {
+  praes: function (v) { return j(v.subj, v.fin, v.mid, v.sep ? v.pre : "") + "."; },
+  prat:  function (v) { return j(v.subj, v.prat, v.mid, v.sep ? v.pre : "") + "."; },
+  perf:  function (v) { return j(v.subj, AUXF[personOf(v.subj)][v.aux], v.mid, v.part) + "."; },
+  neben: function (v) { return j("weil", lc(v.subj), v.mid, v.sep ? v.pre + v.fin : v.fin); },
+  modal: function (v) { return j(v.subj, MUSSF[personOf(v.subj)], v.mid, v.inf) + "."; },
+  futur: function (v) { return j(v.subj, WERDF[personOf(v.subj)], v.mid, v.inf) + "."; },
+  zu:    function (v) { return j("Es ist möglich,", v.mid, zuInf(v)) + "."; },
+  imp:   function (v) { return j(v.imp, v.midImp, v.sep ? v.pre : "") + "!"; }
+};
+function zuInf(v) { return v.sep ? (v.pre + "zu" + v.base) : ("zu " + v.inf); }
+function impAltSentence(v) {
+  if (!v.impAlt) return null;
+  return j(v.impAlt, v.midImp, v.sep ? v.pre : "") + "!";
+}
+
+/* ---------- explanations, built from the record itself ---------- */
+function hyphPart(v) {
+  if (v.sep && v.part.indexOf(v.pre + "ge") === 0) {
+    return v.pre + "-ge-" + v.part.slice(v.pre.length + 2);
+  }
+  return v.part;
+}
+function stemBlocker(v) {
+  if (/ieren$/.test(v.base)) return "ends in -ieren";
+  for (let i = 0; i < INSEP_FIXED.length; i++) {
+    const p = INSEP_FIXED[i];
+    if (v.base.indexOf(p) === 0 && v.base.length > p.length + 2) {
+      return "already carries the inseparable " + p + "-";
+    }
+  }
+  return "takes no ge- of its own";
+}
+/* hand-written nuance where the pattern alone undersells the point */
+const EXTRA = {
+  "anfangen|to begin": "Compare the inseparable beginnen, which gives begonnen.",
+  "verkaufen|to sell": "Compare the separable einkaufen, which gives eingekauft.",
+  "widerspiegeln|to reflect (mirror)": "Note the spelling: wider-, not wieder-. Every other common wider- verb is inseparable.",
+  "hinterlassen|to leave behind": "In practice every common hinter- verb behaves this way.",
+  "hinterfragen|to question critically": "In practice every common hinter- verb behaves this way.",
+  "hintergehen|to deceive": "In practice every common hinter- verb behaves this way.",
+  "vollenden|to complete": "Compare the separable volltanken, which gives vollgetankt.",
+  "volltanken|to fill up the tank": "Compare the inseparable vollenden, which gives vollendet.",
+  "wiedersehen|to see again": "The separable counterpart to the inseparable wiederholen, to repeat.",
+  "missverstehen|to misunderstand": "Doubly inseparable: miss- sits on top of ver-.",
+  "bekommen|to receive": "A useful contrast with the separable ankommen and mitkommen."
+};
+function noteFor(v) {
+  const bits = [];
+  if (v.cls === "insep") {
+    if (v.pre === "ge") {
+      bits.push("ge- is the inseparable prefix here, so the participle takes no second ge-: " + v.part + ".");
+    } else {
+      bits.push(v.pre + "- is one of the eight prefixes that never separate, and it is always unstressed. The participle drops ge-: " + v.part + ".");
+    }
+  } else if (v.cls === "sep") {
+    if (v.part.indexOf(v.pre + "ge") !== 0) {
+      bits.push("Separable, but the stem " + v.base + " " + stemBlocker(v) + ", so no ge- is added: " + v.part + ".");
+    } else {
+      bits.push(v.pre + "- separates and takes the stress — " + SENT.praes(v) + " The ge- goes between prefix and stem: " + hyphPart(v) + ".");
+    }
+  } else {
+    if (v.pair) {
+      bits.push(v.sep
+        ? "Stress on the prefix means it comes off — " + SENT.praes(v) + " Participle " + hyphPart(v) + "."
+        : "Stress on the stem means it stays put — " + SENT.praes(v) + " Participle " + v.part + ", with no ge-.");
+    } else if (v.sep) {
+      bits.push(v.pre + "- is a dual prefix, but " + v.inf + " always separates — " + SENT.praes(v) + " Participle " + hyphPart(v) + ".");
+    } else {
+      bits.push(v.pre + "- is a dual prefix; " + v.inf + " is always inseparable, with the stress on the stem. Participle " + v.part + ".");
+    }
+  }
+  if (v.part === v.inf) bits.push("The participle is identical to the infinitive.");
+  if (v.aux === "sein") bits.push("Perfect with sein: " + SENT.perf(v));
+  const x = EXTRA[v.inf + "|" + v.mean];
+  if (x) bits.push(x);
+  return bits.join(" ");
+}
+
+/* ---------- task descriptions ---------- */
+const TASK = {
+  praes: { label: "Present · main clause", ask: "Write the main clause in the present tense." },
+  prat:  { label: "Präteritum · main clause", ask: "Write the main clause in the simple past." },
+  perf:  { label: "Perfect", ask: "Write the sentence in the perfect tense." },
+  neben: { label: "Subordinate clause with weil", ask: "Write the weil-clause only, without a full stop." },
+  modal: { label: "Modal verb müssen", ask: "Write the sentence with müssen." },
+  futur: { label: "Future I", ask: "Write the sentence in the future with werden." },
+  zu:    { label: "zu-infinitive", ask: "Complete the sentence: Es ist möglich, …" },
+  imp:   { label: "Imperative (du)", ask: "Write the du-imperative." }
+};
+const SENT_ORDER = ["praes", "perf", "neben", "zu", "prat", "modal", "imp", "futur"];
+
+function why(type, v) {
+  const twin = v.pair ? " Both readings are spelled identically here — only the stress tells them apart." : "";
+  switch (type) {
+    case "praes":
+      return v.sep
+        ? "In a main clause the prefix flies to the end: " + v.fin + " … " + v.pre + "."
+        : "The prefix stays welded to the verb: " + v.fin + ".";
+    case "prat":
+      return v.sep
+        ? "The prefix comes off in the simple past too: " + v.prat + " … " + v.pre + "."
+        : "Inseparable, so the verb stays in one piece: " + v.prat + ".";
+    case "perf":
+      return "Participle: " + hyphPart(v) + " · perfect with " + v.aux + ".";
+    case "neben":
+      return (v.sep
+        ? "In a subordinate clause the prefix rejoins the verb at the end: " + v.pre + v.fin + "."
+        : "The whole verb moves to the end: " + v.fin + ".") + twin;
+    case "modal":
+    case "futur":
+      return "The full infinitive stands at the end as a single word: " + v.inf + "." + twin;
+    case "zu":
+      return v.sep
+        ? "Separable, so zu goes inside the word: " + zuInf(v) + "."
+        : "Inseparable, so zu is a separate word: " + zuInf(v) + ".";
+    case "imp":
+      return v.sep
+        ? "The imperative behaves like a main clause: " + v.pre + "- detaches and goes last."
+        : "Inseparable, so the prefix stays on the verb.";
+    default:
+      return noteFor(v);
+  }
+}
+
+/* ---------- item construction ---------- */
+function buildItems(VERBS, PAIR_ITEMS, ERROR_ITEMS, RULE_ITEMS) {
+  const items = [];
+  const seenIds = {};
+  function push(it) {
+    if (seenIds[it.id]) throw new Error("duplicate id: " + it.id);
+    seenIds[it.id] = 1;
+    items.push(it);
+  }
+
+  VERBS.forEach(function (v, idx) {
+    const key = v.inf + "~" + slug(v.mean);
+    const head = v.inf + " — " + v.mean;
+    const rail = { pre: v.pre, base: v.base, sep: v.sep };
+    const note = noteFor(v);
+    const pushV = function (it) { it.rail = rail; push(it); };
+
+    /* 1. separable or inseparable */
+    pushV({
+      id: "class:" + key, cat: "Classification", cls: v.cls, kind: "choice",
+      prompt: head, task: "Separable or inseparable?",
+      options: ["separable", "inseparable"],
+      answer: v.sep ? "separable" : "inseparable",
+      why: note, verb: v.inf
+    });
+
+    /* 2. stress — only where it actually decides something */
+    if (v.cls === "dual") {
+      pushV({
+        id: "stress:" + key, cat: "Stress", cls: v.cls, kind: "choice",
+        prompt: head, task: "Where does the stress fall?",
+        options: [
+          "on the prefix — " + v.pre.toUpperCase() + "-" + v.base,
+          "on the stem — " + v.pre + "-" + v.base.toUpperCase()
+        ],
+        answer: v.sep
+          ? "on the prefix — " + v.pre.toUpperCase() + "-" + v.base
+          : "on the stem — " + v.pre + "-" + v.base.toUpperCase(),
+        why: (v.sep ? "Separable means a stressed prefix. " : "Inseparable means an unstressed prefix. ") + note,
+        verb: v.inf
+      });
+    }
+
+    /* 3. Partizip II */
+    pushV({
+      id: "part:" + key, cat: "Participle", cls: v.cls, kind: "text",
+      prompt: head, task: "What is the Partizip II?",
+      answer: v.part, accept: [v.part],
+      why: note, verb: v.inf,
+      hint: v.sep ? "Separable — so where does the ge- go, if anywhere?" : "Inseparable — does it need a ge- at all?"
+    });
+
+    if (!v.core) return;
+
+    /* 4. haben or sein */
+    pushV({
+      id: "aux:" + key, cat: "Auxiliary", cls: v.cls, kind: "choice",
+      prompt: head, task: "Perfect with haben or sein?",
+      options: ["haben", "sein"], answer: v.aux,
+      why: "Perfect: " + SENT.perf(v), verb: v.inf
+    });
+
+    /* 5. sentence building — four required per verb, the rest optional */
+    const avail = SENT_ORDER.filter(function (t) {
+      if (t === "zu") return v.subj === "Ich";
+      if (t === "imp") return !!v.imp;
+      return true;
+    });
+    const start = idx % avail.length;
+    const rotated = avail.slice(start).concat(avail.slice(0, start));
+    const required = {};
+    rotated.slice(0, 4).forEach(function (t) { required[t] = 1; });
+
+    avail.forEach(function (t) {
+      const sentence = SENT[t](v);
+      const accept = [sentence];
+      if (t === "imp") {
+        const alt = impAltSentence(v);
+        if (alt) accept.push(alt);
+      }
+      /* the prompt shows the lead-in, so accept the completion on its own too */
+      if (t === "zu") accept.push(sentence.replace(/^Es ist möglich,\s*/, ""));
+      pushV({
+        id: t + ":" + key, cat: "Word order", sub: TASK[t].label, cls: v.cls, kind: "text",
+        prompt: head, task: TASK[t].ask,
+        cue: (t === "imp" ? (v.midImp ? "du · " + v.midImp + " · " + v.inf : "du · " + v.inf)
+                          : (t === "zu" ? (v.mid ? v.mid + " · " + v.inf : v.inf)
+                                        : j(v.subj, "·", v.mid ? v.mid + " ·" : "", v.inf))),
+        answer: sentence, accept: accept,
+        why: why(t, v), verb: v.inf,
+        optional: !required[t]
+      });
+    });
+  });
+
+  /* 6. meaning discrimination on the real minimal pairs */
+  PAIR_ITEMS.forEach(function (p) {
+    push({
+      id: "mean:" + p.id, cat: "Meaning", cls: "dual", kind: "choice",
+      prompt: p.sentence, task: "What does this sentence mean?",
+      options: [p.right].concat(p.wrong), answer: p.right,
+      why: p.why, verb: p.inf, shuffle: true
+    });
+  });
+
+  /* 7. error spotting */
+  ERROR_ITEMS.forEach(function (e) {
+    push({
+      id: "err:" + e.id, cat: "Error spotting", cls: "mix", kind: "choice",
+      prompt: "", task: e.q,
+      options: [e.right].concat(e.wrong), answer: e.right,
+      why: e.why, shuffle: true
+    });
+  });
+
+  /* 8. the rules themselves */
+  RULE_ITEMS.forEach(function (r) {
+    push({
+      id: "rule:" + r.id, cat: "Rules", cls: "mix", kind: "choice",
+      prompt: "", task: r.q,
+      options: [r.right].concat(r.wrong), answer: r.right,
+      why: r.why, shuffle: true
+    });
+  });
+
+  return items;
+}
+
+
+</script>
+<script>/* ============================================================
+   TRENNBAR — drill engine
+   ============================================================ */
+const ITEMS = buildItems(VERBS, PAIR_ITEMS, ERROR_ITEMS, RULE_ITEMS);
+const BY_ID = {};
+ITEMS.forEach(function (i) { BY_ID[i.id] = i; });
+
+const CATS = ["Classification", "Stress", "Participle", "Auxiliary", "Word order", "Meaning", "Error spotting", "Rules"];
+const MIN = 60000, HOUR = 60 * MIN, DAY = 24 * HOUR;
+const INTERVALS = [0, 12 * MIN, 5 * HOUR, DAY, 3 * DAY, 8 * DAY, 21 * DAY];
+const MASTER_BOX = 5;          /* 5 correct answers, each after a longer gap */
+const LEECH_AT = 4;
+const KEY = "trennbar.v1";
+
+/* ---------- storage (localStorage, memory fallback) ---------- */
+let memStore = null;
+const store = {
+  read: function () {
+    if (memStore) return memStore;
+    try {
+      const raw = localStorage.getItem(KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) { memStore = memStore || {}; return null; }
+  },
+  write: function (obj) {
+    try { localStorage.setItem(KEY, JSON.stringify(obj)); }
+    catch (e) { memStore = obj; showWarn(); }
+  }
+};
+let storageOK = true;
+try { localStorage.setItem(KEY + ".probe", "1"); localStorage.removeItem(KEY + ".probe"); }
+catch (e) { storageOK = false; }
+
+/* ---------- state ---------- */
+const fresh = function () {
+  return {
+    v: 1,
+    cards: {},                 /* id -> {b,due,s,r,w,l,seen} */
+    settings: { cats: CATS.reduce(function (a, c) { a[c] = true; return a; }, {}), full: false, newPerDay: 20 },
+    newLog: {},                /* yyyy-mm-dd -> count of new cards started */
+    days: {},                  /* yyyy-mm-dd -> answers that day */
+    exams: []
+  };
+};
+let ST = Object.assign(fresh(), store.read() || {});
+ST.settings = Object.assign(fresh().settings, ST.settings || {});
+ST.settings.cats = CATS.reduce(function (a, c) {
+  a[c] = ST.settings.cats[c] !== false; return a;
+}, {});
+ST.cards = ST.cards || {};
+ST.newLog = ST.newLog || {};
+ST.days = ST.days || {};
+ST.exams = ST.exams || [];
+
+function save() { store.write(ST); }
+function today() { return new Date().toISOString().slice(0, 10); }
+function card(id) {
+  if (!ST.cards[id]) ST.cards[id] = { b: 0, due: 0, s: 0, r: 0, w: 0, l: 0, seen: 0 };
+  return ST.cards[id];
+}
+
+/* ---------- scope ---------- */
+function inScope(it) {
+  if (!ST.settings.cats[it.cat]) return false;
+  if (it.optional && !ST.settings.full) return false;
+  return true;
+}
+function scopeItems() { return ITEMS.filter(inScope); }
+
+function isMastered(id) { const c = ST.cards[id]; return !!c && c.b >= MASTER_BOX; }
+function stats() {
+  const sc = scopeItems();
+  let mastered = 0, learning = 0, unseen = 0, due = 0;
+  const now = Date.now();
+  sc.forEach(function (it) {
+    const c = ST.cards[it.id];
+    if (!c || !c.seen) { unseen++; return; }
+    if (c.b >= MASTER_BOX) mastered++; else learning++;
+    if (c.due <= now) due++;
+  });
+  return { total: sc.length, mastered: mastered, learning: learning, unseen: unseen, due: due };
+}
+
+/* ---------- scheduling ---------- */
+/* Answering a card before it is due is practice, not progress: the box only
+   climbs when the spacing has actually elapsed. Otherwise a single long sitting
+   could push everything to "gemeistert" and the mastery claim would be a lie. */
+function gradedEarly(it) {
+  const c = ST.cards[it.id];
+  return !!c && c.seen > 0 && c.due > Date.now();
+}
+function grade(it, correct) {
+  const c = card(it.id);
+  const now = Date.now();
+  const early = c.seen > 0 && c.due > now;
+  c.seen++;
+  if (!ST.days[today()]) ST.days[today()] = 0;
+  ST.days[today()]++;
+  if (correct) {
+    c.r++; c.s++;
+    if (!early) {
+      c.b = Math.min(MASTER_BOX + 1, c.b + 1);
+      c.due = now + INTERVALS[Math.min(c.b, INTERVALS.length - 1)];
+    }
+  } else {
+    c.w++; c.s = 0; c.l++;
+    c.b = Math.max(0, c.b - 2);
+    c.due = now + INTERVALS[Math.min(c.b, INTERVALS.length - 1)];
+  }
+  save();
+}
+
+let queue = [], current = null, reins = {}, aheadMode = false, parked = [], nextDue = 0;
+
+function buildQueue() {
+  const now = Date.now();
+  reins = {};
+  aheadMode = false;
+  const sc = scopeItems();
+  const seenDue = [], neu = [], ahead = [];
+  sc.forEach(function (it) {
+    const c = ST.cards[it.id];
+    if (!c || !c.seen) { neu.push(it); return; }
+    if (c.due <= now) seenDue.push(it); else ahead.push(it);
+  });
+  seenDue.sort(function (a, b) { return ST.cards[a.id].due - ST.cards[b.id].due; });
+  /* struggling cards first among the due ones */
+  seenDue.sort(function (a, b) { return (ST.cards[b.id].l || 0) - (ST.cards[a.id].l || 0); });
+
+  const usedToday = ST.newLog[today()] || 0;
+  const room = Math.max(0, (ST.settings.newPerDay | 0) - usedToday);
+  shuffle(neu);
+  const intro = neu.slice(0, room);
+
+  queue = interleave(seenDue, intro);
+  nextDue = 0;
+  if (!queue.length) {
+    ahead.sort(function (a, b) { return ST.cards[a.id].due - ST.cards[b.id].due; });
+    parked = ahead;
+    if (ahead.length) nextDue = ST.cards[ahead[0].id].due;
+  }
+}
+function startFree() {
+  queue = parked.slice(0, 20);
+  aheadMode = true;
+  nextCard();
+}
+function whenDue(t) {
+  const m = Math.round((t - Date.now()) / 60000);
+  if (m <= 1) return "any moment";
+  if (m < 60) return "in " + m + " minutes";
+  const h = Math.round(m / 60);
+  if (h < 24) return "in " + h + (h === 1 ? " hour" : " hours");
+  const dys = Math.round(h / 24);
+  return "in " + dys + (dys === 1 ? " day" : " days");
+}
+function interleave(a, b) {
+  const out = [], ratio = b.length ? Math.max(1, Math.round(a.length / b.length)) : 1;
+  let i = 0, k = 0;
+  while (i < a.length || k < b.length) {
+    for (let n = 0; n < ratio && i < a.length; n++) out.push(a[i++]);
+    if (k < b.length) out.push(b[k++]);
+  }
+  return out;
+}
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  }
+  return arr;
+}
+
+/* ---------- answer checking ---------- */
+function norm(s) {
+  return String(s).toLowerCase()
+    .replace(/[\u2018\u2019\u201c\u201d]/g, "'")
+    .replace(/\u2026/g, "")
+    .replace(/^[\s.,;:]+/, "")
+    .replace(/[.!?,;:\s]+$/, "")
+    .replace(/ß/g, "ss")
+    .replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+function checkText(it, input) {
+  const n = norm(input);
+  return it.accept.some(function (a) { return norm(a) === n; });
+}
+
+/* token diff so the feedback shows exactly which word broke */
+function lcsMark(correctToks, userToks) {
+  const a = correctToks.map(norm), b = userToks.map(norm);
+  const m = a.length, n = b.length;
+  const dp = [];
+  for (let i = 0; i <= m; i++) { dp.push(new Array(n + 1).fill(0)); }
+  for (let i = m - 1; i >= 0; i--)
+    for (let j = n - 1; j >= 0; j--)
+      dp[i][j] = a[i] === b[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+  const keep = new Array(m).fill(false);
+  let i = 0, j = 0;
+  while (i < m && j < n) {
+    if (a[i] === b[j]) { keep[i] = true; i++; j++; }
+    else if (dp[i + 1][j] >= dp[i][j + 1]) i++; else j++;
+  }
+  return keep;
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+const $ = function (s) { return document.querySelector(s); };
+const el = function (tag, cls, txt) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (txt !== undefined) e.textContent = txt;
+  return e;
+};
+function showWarn() { const w = $("#warn"); if (w) w.hidden = false; }
+let toastT;
+function toast(msg) {
+  const t = $("#toast"); t.textContent = msg; t.classList.add("on");
+  clearTimeout(toastT); toastT = setTimeout(function () { t.classList.remove("on"); }, 1800);
+}
+
+/* ---------- header ---------- */
+function paintRing() {
+  const st = stats();
+  const pct = st.total ? Math.round(100 * st.mastered / st.total) : 0;
+  const C = 2 * Math.PI * 13;
+  $("#ringArc").setAttribute("stroke-dasharray", (C * pct / 100).toFixed(1) + " " + C.toFixed(1));
+  $("#ringPct").textContent = pct + "%";
+  $("#ringSub").textContent = st.mastered + " / " + st.total;
+}
+
+/* ---------- drill ---------- */
+let answered = false, examMode = null, wasEarly = false;
+
+function nextCard() {
+  if (!queue.length) buildQueue();
+  current = queue.shift() || null;
+  answered = false;
+  paintCard();
+}
+
+function paintCard() {
+  const host = $("#drill");
+  host.innerHTML = "";
+  paintRing();
+  if (!current) {
+    const st = stats();
+    const c = el("div", "card");
+    c.appendChild(el("h2", null, st.unseen ? "Done for today." : "Nothing due."));
+    c.appendChild(el("p", "muted",
+      (nextDue ? "The next card is due " + whenDue(nextDue) + ". " : "") +
+      (st.unseen ? st.unseen + " cards have not had their first outing yet — they come tomorrow, or raise the daily limit under Scope. " : "") +
+      "You can keep practising, but it will not count towards progress: a card only moves up once the interval has genuinely passed."));
+    const acts = el("div", "acts");
+    if (parked.length) {
+      const f = el("button", "btn primary", "Free practice · 20 cards");
+      f.onclick = startFree;
+      acts.appendChild(f);
+    }
+    const ex = el("button", "btn ghost", "Take the exam");
+    ex.onclick = function () { go("examView"); };
+    acts.appendChild(ex);
+    c.appendChild(acts);
+    host.appendChild(c);
+    return;
+  }
+  const it = current, c = card(it.id);
+  const wrap = el("div", "card");
+
+  /* meta line */
+  const meta = el("div", "qmeta");
+  meta.appendChild(el("span", "eyebrow", it.sub ? it.cat + " · " + it.sub : it.cat));
+  if (it.rail) {
+    const ch = el("span", "chip " + (it.rail.sep ? "t" : "u"), it.rail.sep ? "separable" : "inseparable");
+    ch.hidden = true; ch.id = "sepChip"; meta.appendChild(ch);
+  }
+  const lad = el("div", "ladder");
+  for (let i = 0; i < MASTER_BOX + 1; i++) {
+    const seg = el("i");
+    if (i < c.b) seg.className = c.b > MASTER_BOX ? "on max" : (i === MASTER_BOX ? "max" : "on");
+    lad.appendChild(seg);
+  }
+  lad.title = "Level " + Math.min(c.b, MASTER_BOX) + " of " + MASTER_BOX;
+  meta.appendChild(lad);
+  wrap.appendChild(meta);
+  if (aheadMode) wrap.appendChild(el("div", "hintline",
+    "Free practice — this card is not due, so getting it right will not move it up a level."));
+
+  wrap.appendChild(el("div", "task", it.task));
+  if (it.prompt) {
+    const p = el("p", "prompt");
+    const dash = it.prompt.indexOf(" — ");
+    if (dash > -1) {
+      p.appendChild(document.createTextNode(it.prompt.slice(0, dash)));
+      p.appendChild(el("span", "en", "  " + it.prompt.slice(dash + 3)));
+    } else { p.textContent = it.prompt; }
+    wrap.appendChild(p);
+  }
+  if (it.cue) wrap.appendChild(el("div", "cue", it.cue));
+
+  if (it.kind === "choice") paintChoice(wrap, it);
+  else paintText(wrap, it);
+
+  host.appendChild(wrap);
+  const fld = $("#field");
+  if (fld) fld.focus();
+}
+
+function paintChoice(wrap, it) {
+  const opts = it.shuffle ? shuffle(it.options.slice()) : it.options.slice();
+  const box = el("div", "opts");
+  opts.forEach(function (o, i) {
+    const b = el("button", "opt");
+    b.appendChild(el("kbd", null, String(i + 1)));
+    b.appendChild(el("span", null, o));
+    b.dataset.val = o;
+    b.onclick = function () { submit(o); };
+    box.appendChild(b);
+  });
+  wrap.appendChild(box);
+  wrap.appendChild(el("div", "acts")).id = "acts";
+}
+
+function paintText(wrap, it) {
+  const inp = document.createElement("input");
+  inp.className = "answer-in"; inp.id = "field"; inp.type = "text";
+  inp.autocomplete = "off"; inp.autocapitalize = "off"; inp.spellcheck = false;
+  inp.placeholder = it.cat === "Participle" ? "Partizip II …" : "Your answer …";
+  inp.onkeydown = function (e) {
+    if (e.key === "Enter") { e.preventDefault(); if (!answered) submit(inp.value); else nextCard(); }
+  };
+  wrap.appendChild(inp);
+
+  const acts = el("div", "acts"); acts.id = "acts";
+  const ok = el("button", "btn primary", "Check");
+  ok.onclick = function () { submit(inp.value); };
+  acts.appendChild(ok);
+  if (it.hint) {
+    const h = el("button", "btn ghost", "Hint");
+    h.onclick = function () { h.remove(); wrap.insertBefore(el("div", "hintline", it.hint), acts); };
+    acts.appendChild(h);
+  }
+  const skip = el("button", "btn ghost", "Show answer");
+  skip.onclick = function () { submit("", true); };
+  acts.appendChild(skip);
+  wrap.appendChild(acts);
+  wrap.appendChild(el("div", "umlaut-help hintline", "You can type ä ö ü ß as ae oe ue ss."));
+}
+
+function submit(val, gaveUp) {
+  if (answered || !current) return;
+  answered = true;
+  const it = current;
+  const ok = gaveUp ? false : (it.kind === "choice" ? val === it.answer : checkText(it, val));
+
+  if (examMode) { examAnswer(it, ok, val); return; }
+
+  if (!ST.cards[it.id] || !ST.cards[it.id].seen) {
+    ST.newLog[today()] = (ST.newLog[today()] || 0) + 1;
+  }
+  wasEarly = gradedEarly(it);
+  grade(it, ok);
+  if (!ok) {
+    const n = (reins[it.id] = (reins[it.id] || 0) + 1);
+    if (n <= 3) queue.splice(Math.min(3 + 7 * n, queue.length), 0, it);
+  }
+
+  /* lock the controls */
+  document.querySelectorAll(".opt").forEach(function (b) {
+    b.disabled = true;
+    if (b.dataset.val === it.answer) b.classList.add(ok ? "pick-ok" : "reveal");
+    if (!ok && b.dataset.val === val) b.classList.add("pick-bad");
+  });
+  const fld = $("#field");
+  if (fld) { fld.disabled = true; fld.classList.add(ok ? "ok" : "bad"); }
+
+  paintFeedback(it, ok, val, gaveUp);
+  paintRing();
+}
+
+function paintFeedback(it, ok, val, gaveUp) {
+  const acts = $("#acts");
+  acts.innerHTML = "";
+  const fb = el("div", "fb " + (ok ? "good" : "bad"));
+  fb.appendChild(el("div", "verdict", ok ? "Correct" : (gaveUp ? "Answer" : "Not quite")));
+
+  if (!ok && it.kind === "text") {
+    if (val && val.trim()) fb.appendChild(el("div", "yours", val.trim()));
+    const sol = el("div", "sol");
+    const cT = it.answer.split(" ");
+    const uT = String(val || "").trim().split(/\s+/).filter(Boolean);
+    const keep = lcsMark(cT, uT);
+    cT.forEach(function (t, i) {
+      sol.appendChild(el("span", keep[i] ? null : "tok-bad", t));
+      if (i < cT.length - 1) sol.appendChild(document.createTextNode(" "));
+    });
+    fb.appendChild(sol);
+  } else if (!ok) {
+    fb.appendChild(el("div", "sol", it.answer));
+  } else if (it.kind === "text") {
+    fb.appendChild(el("div", "sol", it.answer));
+  }
+
+  if (it.rail) rail(fb, it);
+  if (it.why) fb.appendChild(el("div", "why", it.why));
+  if (ok && wasEarly) fb.appendChild(el("div", "why",
+    "Counts as practice, not progress — this card was not due yet."));
+  acts.parentNode.insertBefore(fb, acts);
+
+  const chip = $("#sepChip"); if (chip) chip.hidden = false;
+
+  const nx = el("button", "btn primary", "Next  ↵");
+  nx.onclick = nextCard;
+  acts.appendChild(nx);
+  nx.focus();
+}
+
+/* the one flourish: the prefix either flies to the end of the clause or stays welded on */
+function stem1(b) {
+  if (/(el|er)n$/.test(b)) return b.slice(0, -1) + "e";
+  if (/en$/.test(b)) return b.slice(0, -2) + "e";
+  return b;
+}
+function rail(host, it) {
+  const r = it.rail;
+  const box = el("div", "rail" + (r.sep ? "" : " weld"));
+  box.appendChild(el("span", "stem", "ich"));
+  if (r.sep) {
+    box.appendChild(el("span", "socket"));
+    box.appendChild(el("span", "stem", stem1(r.base)));
+    box.appendChild(el("span", "stem dots", "…"));
+    box.appendChild(el("span", "pfx", r.pre));
+  } else {
+    const weld = el("span", "weldgroup");
+    weld.appendChild(el("span", "pfx", r.pre));
+    weld.appendChild(el("span", "stem2", stem1(r.base)));
+    box.appendChild(weld);
+  }
+  host.appendChild(box);
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () { box.classList.add("go"); });
+  });
+}
+
+/* ---------- scope panel ---------- */
+function paintScope() {
+  const host = $("#scopeBody");
+  host.innerHTML = "";
+  const tg = el("div", "toggles");
+  CATS.forEach(function (c) {
+    const n = ITEMS.filter(function (i) { return i.cat === c && (!i.optional || ST.settings.full); }).length;
+    const b = el("button", "tg");
+    b.innerHTML = "";
+    b.appendChild(document.createTextNode(c));
+    b.appendChild(el("b", null, n));
+    b.setAttribute("aria-pressed", ST.settings.cats[c] ? "true" : "false");
+    b.onclick = function () {
+      const on = Object.keys(ST.settings.cats).filter(function (k) { return ST.settings.cats[k]; });
+      if (ST.settings.cats[c] && on.length === 1) { toast("At least one category has to stay on."); return; }
+      ST.settings.cats[c] = !ST.settings.cats[c];
+      save(); paintScope(); buildQueue(); nextCard();
+    };
+    tg.appendChild(b);
+  });
+  host.appendChild(tg);
+
+  const row = el("div", "setrow");
+  const full = el("button", "tg");
+  full.textContent = "All sentence forms per verb";
+  full.setAttribute("aria-pressed", ST.settings.full ? "true" : "false");
+  full.onclick = function () {
+    ST.settings.full = !ST.settings.full; save(); paintScope(); buildQueue(); nextCard();
+  };
+  row.appendChild(full);
+
+  const lab = el("label", null, "New cards per day");
+  const num = document.createElement("input");
+  num.type = "number"; num.min = "0"; num.max = "80"; num.value = ST.settings.newPerDay;
+  num.onchange = function () {
+    ST.settings.newPerDay = Math.max(0, Math.min(80, parseInt(num.value || "0", 10)));
+    num.value = ST.settings.newPerDay; save(); buildQueue();
+  };
+  lab.appendChild(num);
+  row.appendChild(lab);
+  host.appendChild(row);
+
+  const st = stats();
+  host.appendChild(el("div", "setrow muted",
+    st.total + " cards in scope · " + st.due + " due · " + st.unseen + " never seen · "
+    + (ST.days[today()] || 0) + " answered today"));
+}
+
+/* ============================================================
+   EXAM
+   ============================================================ */
+function startExam() {
+  const pool = scopeItems();
+  const perCat = {};
+  pool.forEach(function (i) { (perCat[i.cat] = perCat[i.cat] || []).push(i); });
+  const picks = [];
+  Object.keys(perCat).forEach(function (k) { shuffle(perCat[k]); picks.push(perCat[k].shift()); });
+  const rest = shuffle(pool.filter(function (i) { return picks.indexOf(i) === -1; }));
+  while (picks.length < 30 && rest.length) picks.push(rest.shift());
+  examMode = { list: shuffle(picks), i: 0, results: [] };
+  answered = false;
+  paintExam();
+}
+function paintExam() {
+  const host = $("#examBody");
+  host.innerHTML = "";
+  const m = examMode;
+  if (!m) {
+    const c = el("div", "card");
+    c.appendChild(el("h2", null, "Exam"));
+    c.appendChild(el("p", "muted", "30 questions from your current scope, with no feedback and no hints along the way. You pass at 90%. Exam answers do not affect your review schedule."));
+    const b = el("button", "btn primary", "Start the exam");
+    b.onclick = startExam;
+    c.appendChild(el("div", "acts")).appendChild(b);
+    if (ST.exams.length) {
+      const h = el("h3", null, "Previous attempts");
+      host.appendChild(c); host.appendChild(h);
+      ST.exams.slice().reverse().slice(0, 8).forEach(function (e) {
+        const r = el("div", "setrow");
+        r.appendChild(el("span", null, new Date(e.t).toLocaleDateString("en-GB")));
+        r.appendChild(el("span", "eyebrow", e.score + " / " + e.n + "  ·  " + Math.round(100 * e.score / e.n) + "%  ·  " + (e.pass ? "passed" : "not passed")));
+        host.appendChild(r);
+      });
+      return;
+    }
+    host.appendChild(c);
+    return;
+  }
+  if (m.i >= m.list.length) return examResults();
+
+  current = m.list[m.i];
+  answered = false;
+  const it = current;
+  const wrap = el("div", "card");
+  const head = el("div", "exam-head");
+  head.appendChild(el("span", "eyebrow", "Question " + (m.i + 1) + " of " + m.list.length));
+  head.appendChild(el("span", "eyebrow", it.cat));
+  wrap.appendChild(head);
+  wrap.appendChild(el("div", "task", it.task));
+  if (it.prompt) wrap.appendChild(el("p", "prompt", it.prompt));
+  if (it.cue) wrap.appendChild(el("div", "cue", it.cue));
+  const saveHint = it.hint; it.hint = null;
+  if (it.kind === "choice") paintChoice(wrap, it); else paintText(wrap, it);
+  it.hint = saveHint;
+  host.appendChild(wrap);
+
+  const pips = el("div", "pips");
+  m.results.forEach(function (r) { pips.appendChild(el("i", r.ok ? "ok" : "bad")); });
+  host.appendChild(pips);
+  const f = $("#field"); if (f) f.focus();
+}
+function examAnswer(it, ok, val) {
+  examMode.results.push({ id: it.id, ok: ok, val: val });
+  examMode.i++;
+  paintExam();
+}
+function examResults() {
+  const m = examMode, host = $("#examBody");
+  const score = m.results.filter(function (r) { return r.ok; }).length;
+  const pct = Math.round(100 * score / m.results.length);
+  const pass = pct >= 90;
+  ST.exams.push({ t: Date.now(), score: score, n: m.results.length, pass: pass });
+  save();
+  examMode = null;
+  host.innerHTML = "";
+  const c = el("div", "card");
+  c.appendChild(el("div", "eyebrow", pass ? "Passed" : "Not passed"));
+  c.appendChild(el("div", "score", pct + "%"));
+  c.appendChild(el("p", "muted", score + " of " + m.results.length + " correct. " +
+    (pass ? "That is exam standard." : "You need 90% to pass.")));
+  const b = el("button", "btn primary", "New exam");
+  b.onclick = startExam;
+  c.appendChild(el("div", "acts")).appendChild(b);
+  host.appendChild(c);
+
+  const bad = m.results.filter(function (r) { return !r.ok; });
+  if (bad.length) {
+    host.appendChild(el("h3", null, "Worth reviewing"));
+    bad.forEach(function (r) {
+      const it = BY_ID[r.id];
+      const d = el("div", "leech");
+      d.appendChild(el("div", "q", it.prompt || it.task));
+      d.appendChild(el("div", "a", "→ " + it.answer));
+      d.appendChild(el("div", "a muted", it.why || ""));
+      host.appendChild(d);
+    });
+  }
+  paintRing();
+}
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+function paintStats() {
+  const host = $("#statsBody");
+  host.innerHTML = "";
+  const st = stats();
+
+  const g = el("div", "grid");
+  [["Mastered", st.mastered + " / " + st.total],
+   ["In progress", st.learning],
+   ["Due now", st.due],
+   ["Answered today", ST.days[today()] || 0]].forEach(function (p) {
+    const s = el("div", "stat");
+    s.appendChild(el("div", "eyebrow", p[0]));
+    s.appendChild(el("b", null, String(p[1])));
+    g.appendChild(s);
+  });
+  host.appendChild(g);
+
+  /* per category */
+  host.appendChild(el("h3", null, "Mastery by category"));
+  const bars = el("div", "bars");
+  CATS.forEach(function (cat) {
+    const list = ITEMS.filter(function (i) { return i.cat === cat && inScope(i); });
+    if (!list.length) return;
+    const done = list.filter(function (i) { return isMastered(i.id); }).length;
+    const pct = Math.round(100 * done / list.length);
+    const row = el("div", "bar-row");
+    const lab = el("div", "bar-lab");
+    lab.appendChild(el("span", null, cat));
+    lab.appendChild(el("span", null, done + "/" + list.length));
+    row.appendChild(lab);
+    const bar = el("div", "bar");
+    const fill = el("i", pct === 100 ? "full" : null);
+    fill.style.width = pct + "%";
+    bar.appendChild(fill);
+    row.appendChild(bar);
+    bars.appendChild(row);
+  });
+  host.appendChild(bars);
+
+  /* accuracy where it hurts */
+  host.appendChild(el("h3", null, "Accuracy"));
+  const acc = el("div", "bars");
+  CATS.forEach(function (cat) {
+    let r = 0, w = 0;
+    ITEMS.filter(function (i) { return i.cat === cat; }).forEach(function (i) {
+      const c = ST.cards[i.id]; if (c) { r += c.r; w += c.w; }
+    });
+    if (r + w === 0) return;
+    const pct = Math.round(100 * r / (r + w));
+    const row = el("div", "bar-row");
+    const lab = el("div", "bar-lab");
+    lab.appendChild(el("span", null, cat));
+    lab.appendChild(el("span", null, pct + "%  (" + (r + w) + ")"));
+    row.appendChild(lab);
+    const bar = el("div", "bar");
+    const fill = el("i", pct >= 90 ? "full" : null);
+    fill.style.width = pct + "%";
+    bar.appendChild(fill); row.appendChild(bar); acc.appendChild(row);
+  });
+  if (!acc.children.length) acc.appendChild(el("p", "muted", "No answers yet."));
+  host.appendChild(acc);
+
+  /* mastery contract */
+  host.appendChild(el("h3", null, "When the topic counts as mastered"));
+  const con = el("div", "contract");
+  const passed = ST.exams.some(function (e) { return e.pass; });
+  const dayCount = Object.keys(ST.days).length;
+  [[st.mastered === st.total && st.total > 0, "Every card in scope answered correctly five times, each after a longer gap (" + st.mastered + " / " + st.total + ")"],
+   [passed, "One exam passed at 90% or better" + (ST.exams.length ? "" : " — no attempt yet")],
+   [dayCount >= 5, "Practised on at least five separate days (" + dayCount + " / 5)"],
+   [leeches().length === 0, "No stubborn cards left open (" + leeches().length + ")"]
+  ].forEach(function (p) {
+    const d = el("div", "crit" + (p[0] ? " done" : ""));
+    d.appendChild(el("div", "mk", p[0] ? "✓" : "○"));
+    d.appendChild(el("div", null, p[1]));
+    con.appendChild(d);
+  });
+  host.appendChild(con);
+
+  /* leeches */
+  const lx = leeches();
+  if (lx.length) {
+    host.appendChild(el("h3", null, "Stubborn cards (" + lx.length + ")"));
+    lx.slice(0, 12).forEach(function (it) {
+      const c = ST.cards[it.id];
+      const d = el("div", "leech");
+      d.appendChild(el("div", "q", (it.prompt || it.task)));
+      d.appendChild(el("div", "a", "→ " + it.answer + "   ·   missed " + c.w + " times"));
+      if (it.why) d.appendChild(el("div", "a muted", it.why));
+      host.appendChild(d);
+    });
+  }
+}
+function leeches() {
+  return scopeItems().filter(function (i) {
+    const c = ST.cards[i.id];
+    return c && c.l >= LEECH_AT && c.b < MASTER_BOX;
+  }).sort(function (a, b) { return ST.cards[b.id].l - ST.cards[a.id].l; });
+}
+
+/* ============================================================
+   DATA
+   ============================================================ */
+function paintData() {
+  const host = $("#dataBody");
+  host.innerHTML = "";
+  const c = el("div", "card");
+  c.appendChild(el("h2", null, "Back up your progress"));
+  c.appendChild(el("p", "muted", storageOK
+    ? "Progress lives in this browser's localStorage. It disappears if you clear site data, so export it now and then."
+    : "This browser will not allow localStorage, so progress only lasts for this session. Download the file and open it straight from your disk."));
+  const acts = el("div", "acts");
+  const exp = el("button", "btn", "Export");
+  exp.onclick = function () {
+    const blob = new Blob([JSON.stringify(ST)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "trennbar-progress-" + today() + ".json";
+    a.click(); URL.revokeObjectURL(a.href);
+  };
+  acts.appendChild(exp);
+
+  const imp = el("button", "btn", "Import");
+  const file = document.createElement("input");
+  file.type = "file"; file.accept = "application/json"; file.style.display = "none";
+  file.onchange = function () {
+    const f = file.files[0]; if (!f) return;
+    const rd = new FileReader();
+    rd.onload = function () {
+      try {
+        const o = JSON.parse(rd.result);
+        if (!o || typeof o !== "object" || !o.cards) throw new Error("bad");
+        ST = Object.assign(fresh(), o);
+        ST.settings = Object.assign(fresh().settings, ST.settings || {});
+        save(); buildQueue(); nextCard(); paintScope(); paintData();
+        toast("Progress imported.");
+      } catch (e) { toast("That file is not a valid export."); }
+    };
+    rd.readAsText(f);
+  };
+  imp.onclick = function () { file.click(); };
+  acts.appendChild(imp); acts.appendChild(file);
+
+  const res = el("button", "btn ghost", "Reset everything");
+  res.onclick = function () {
+    if (!confirm("This deletes all of your progress. Continue?")) return;
+    ST = fresh(); save(); buildQueue(); nextCard(); paintScope(); paintData(); paintRing();
+    toast("Reset.");
+  };
+  acts.appendChild(res);
+  c.appendChild(acts);
+  host.appendChild(c);
+
+  const info = el("div", "card"); info.style.marginTop = "12px";
+  info.appendChild(el("h2", null, "What is in the deck"));
+  const ul = el("div", "bars");
+  [["Verbs", VERBS.length], ["of those separable", VERBS.filter(function (v) { return v.sep; }).length],
+   ["of those inseparable", VERBS.filter(function (v) { return !v.sep; }).length],
+   ["with a dual prefix", VERBS.filter(function (v) { return v.cls === "dual"; }).length],
+   ["questions in total", ITEMS.length]].forEach(function (p) {
+    const r = el("div", "bar-lab");
+    r.appendChild(el("span", null, p[0]));
+    r.appendChild(el("span", null, String(p[1])));
+    ul.appendChild(r);
+  });
+  info.appendChild(ul);
+  host.appendChild(info);
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+const VIEWS = ["drillView", "examView", "statsView", "refView", "dataView"];
+function go(id) {
+  VIEWS.forEach(function (v) { $("#" + v).classList.toggle("on", v === id); });
+  document.querySelectorAll(".tabs button").forEach(function (b) {
+    b.setAttribute("aria-selected", b.dataset.go === id ? "true" : "false");
+  });
+  if (id === "statsView") paintStats();
+  if (id === "dataView") paintData();
+  if (id === "examView" && !examMode) paintExam();
+  if (id === "drillView") { paintScope(); if (!current) nextCard(); }
+  window.scrollTo(0, 0);
+}
+
+document.addEventListener("keydown", function (e) {
+  if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+  if (e.key === "Enter" && answered) { e.preventDefault(); examMode ? paintExam() : nextCard(); return; }
+  if (/^[1-4]$/.test(e.key) && !answered) {
+    const b = document.querySelectorAll("#" + (examMode ? "examBody" : "drill") + " .opt")[+e.key - 1];
+    if (b) { e.preventDefault(); b.click(); }
+  }
+});
+
+/* boot */
+function boot() {
+  document.querySelectorAll(".tabs button").forEach(function (b) {
+    b.onclick = function () { go(b.dataset.go); };
+  });
+  if (!storageOK) showWarn();
+  buildQueue();
+  nextCard();
+  paintScope();
+  paintRing();
+  go("drillView");
+}
+boot();
+</script>
+</body>
+</html>
