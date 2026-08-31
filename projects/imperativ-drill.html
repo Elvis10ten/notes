@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Imperativ — Drill</title>
+<style>
+  
+  :root{color-scheme:light}
+  :root{
+    --ink:#121A24; --grau:#5C6675; --linie:#D6DAE0;
+    --blatt:#E9ECEF; --platte:#FFFFFF;
+    --blau:#0B4A9B; --blau-tief:#08376F; --blau-hell:#E7EEF8;
+    --gruen:#14795A; --gruen-hell:#E4F1EB;
+    --rot:#AF2A1B; --rot-hell:#FBE9E6;
+    --gelb:#E8B317;
+    --r:6px;
+    --sans:"Inter","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--blatt); color:var(--ink); font-family:var(--sans);
+    font-size:17px; line-height:1.5; -webkit-font-smoothing:antialiased;
+    padding:0 16px 64px; overflow-y:scroll;
+  }
+  .wrap{max-width:660px;margin:0 auto}
+
+  /* ---------- header ---------- */
+  header{padding:26px 0 18px}
+  .top{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
+  h1{font-size:23px;font-weight:800;letter-spacing:-.02em;margin:0}
+  h1 span{font-weight:400;color:var(--grau)}
+  .mastery{font-size:14px;color:var(--grau);white-space:nowrap}
+  .mastery b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+  nav{display:flex;gap:2px;margin-top:16px;border-bottom:1px solid var(--linie)}
+  nav button{
+    appearance:none;background:none;border:0;border-bottom:3px solid transparent;
+    font:inherit;font-size:15px;color:var(--grau);padding:8px 12px;margin-bottom:-1px;
+    cursor:pointer;border-radius:3px 3px 0 0;
+  }
+  nav button:hover{color:var(--ink);background:#fff8}
+  nav button[aria-selected="true"]{color:var(--blau);border-bottom-color:var(--blau);font-weight:650}
+  nav button:focus-visible,.plate button:focus-visible,input:focus-visible{
+    outline:2px solid var(--blau);outline-offset:2px}
+
+  /* ---------- the sign plate ---------- */
+  .plate{
+    position:relative;background:var(--platte);border:1px solid var(--linie);
+    border-radius:var(--r);padding:26px 26px 24px 34px;margin-top:22px;
+    box-shadow:0 1px 0 rgba(18,26,36,.04);
+  }
+  .plate::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:10px;background:var(--blau);
+    border-radius:var(--r) 0 0 var(--r);transition:background .18s ease;
+  }
+  .plate.ok::before{background:var(--gruen)}
+  .plate.no::before{background:var(--rot)}
+  @media (prefers-reduced-motion:reduce){.plate::before{transition:none}}
+
+  .meta{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--grau);
+        margin-bottom:14px;align-items:center}
+  .tag{background:var(--blau-hell);color:var(--blau-tief);padding:2px 9px;border-radius:20px;
+       font-size:12.5px;font-weight:600}
+  .q{font-size:22px;line-height:1.35;font-weight:600;letter-spacing:-.01em;margin:0}
+  .q b{font-weight:800}
+  .sub{color:var(--grau);font-size:15.5px;margin-top:6px;font-style:italic}
+
+  /* ---------- answering ---------- */
+  .answer{margin-top:20px}
+  input[type=text]{
+    width:100%;font:inherit;font-size:21px;font-weight:600;padding:12px 14px;
+    border:1px solid var(--linie);border-radius:var(--r);background:#fff;color:var(--ink);
+  }
+  input[type=text]::placeholder{font-weight:400;color:#A9B1BA}
+  .opts{display:grid;gap:8px}
+  .opt{
+    display:flex;align-items:center;gap:12px;text-align:left;width:100%;
+    font:inherit;font-size:18px;padding:12px 14px;background:#fff;cursor:pointer;
+    border:1px solid var(--linie);border-radius:var(--r);color:var(--ink);
+  }
+  .opt:hover:not(:disabled){border-color:var(--blau);background:var(--blau-hell)}
+  .opt .k{
+    flex:none;width:24px;height:24px;border-radius:4px;background:var(--blatt);
+    color:var(--grau);font-size:13px;font-weight:700;display:grid;place-items:center;
+  }
+  .opt.pick{border-color:var(--blau);background:var(--blau-hell)}
+  .opt.right{border-color:var(--gruen);background:var(--gruen-hell)}
+  .opt.right .k{background:var(--gruen);color:#fff}
+  .opt.wrong{border-color:var(--rot);background:var(--rot-hell)}
+  .opt.wrong .k{background:var(--rot);color:#fff}
+  .opt:disabled{cursor:default}
+
+  .slot{
+    min-height:56px;border:1px dashed var(--linie);border-radius:var(--r);background:#fff;
+    padding:9px;display:flex;flex-wrap:wrap;gap:7px;align-content:flex-start;
+  }
+  .slot:empty::after{content:"Tippe die Wörter der Reihe nach an";color:#A9B1BA;font-size:15px;padding:6px 4px}
+  .bank{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+  .tile{
+    font:inherit;font-size:17px;font-weight:600;padding:7px 13px;background:#fff;cursor:pointer;
+    border:1px solid var(--linie);border-radius:5px;color:var(--ink);
+  }
+  .tile:hover{border-color:var(--blau);background:var(--blau-hell)}
+  .tile.used{visibility:hidden}
+  .slot .tile{background:var(--blau-hell);border-color:#BBD0EA}
+
+  .row{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap}
+  .btn{
+    font:inherit;font-size:16px;font-weight:650;padding:11px 20px;border-radius:var(--r);
+    border:1px solid var(--blau);background:var(--blau);color:#fff;cursor:pointer;
+  }
+  .btn:hover{background:var(--blau-tief);border-color:var(--blau-tief)}
+  .btn.ghost{background:#fff;color:var(--blau)}
+  .btn.ghost:hover{background:var(--blau-hell)}
+  .btn.quiet{background:#fff;color:var(--grau);border-color:var(--linie)}
+  .btn.quiet:hover{color:var(--ink);border-color:var(--grau)}
+  .hintline{font-size:14px;color:var(--grau)}
+  kbd{font-family:inherit;font-size:12px;background:var(--blatt);border:1px solid var(--linie);
+      border-bottom-width:2px;border-radius:4px;padding:1px 5px;color:var(--grau)}
+
+  /* ---------- verdict ---------- */
+  .verdict{margin-top:18px;padding-top:16px;border-top:1px solid var(--linie)}
+  .call{font-size:17px;font-weight:700;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+  .call.ok{color:var(--gruen)} .call.no{color:var(--rot)}
+  .call .sol{color:var(--ink);font-weight:800}
+  .diag{margin-top:7px;font-size:16px;color:var(--rot);font-weight:600}
+  .why{margin-top:9px;font-size:16px;color:#2A3543;line-height:1.55}
+
+  /* ---------- panels ---------- */
+  .panel{background:var(--platte);border:1px solid var(--linie);border-radius:var(--r);
+         padding:22px 24px;margin-top:22px}
+  .panel h2{font-size:17px;margin:0 0 4px;font-weight:750}
+  .panel p.lead{margin:0 0 18px;color:var(--grau);font-size:15px}
+  .cat{display:grid;grid-template-columns:1fr auto;gap:4px 14px;align-items:center;
+       padding:9px 0;border-top:1px solid #EDF0F3}
+  .cat:first-of-type{border-top:0}
+  .cat .name{font-size:16px;font-weight:600}
+  .cat .name em{font-style:normal;color:var(--grau);font-weight:400;font-size:14px}
+  .cat .num{font-size:14px;color:var(--grau);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bar{grid-column:1/-1;height:7px;background:var(--blatt);border-radius:4px;overflow:hidden;display:flex}
+  .bar i{display:block;height:100%}
+  .bar .m{background:var(--gruen)} .bar .p{background:var(--blau)} .bar .w{background:var(--gelb)}
+  .catbtn{grid-column:1/-1;justify-self:start;margin-top:6px}
+
+  table{border-collapse:collapse;width:100%;font-size:15.5px;margin:10px 0 18px}
+  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid #EDF0F3;vertical-align:top}
+  th{font-weight:700;font-size:13.5px;color:var(--grau)}
+  .rules h3{font-size:16px;margin:24px 0 6px;font-weight:750}
+  .rules h3:first-child{margin-top:4px}
+  .rules p,.rules li{font-size:15.5px;line-height:1.6}
+  .rules ul{margin:8px 0;padding-left:20px}
+  .de{font-weight:700}
+  .note{background:var(--blau-hell);border-radius:var(--r);padding:12px 14px;font-size:15px;margin:14px 0}
+
+  .done{text-align:center;padding:14px 0 6px}
+  .done .big{font-size:40px;font-weight:800;letter-spacing:-.03em}
+  .scorelist{margin-top:14px;font-size:15.5px}
+  .scorelist div{padding:7px 0;border-top:1px solid #EDF0F3}
+  .foot{margin-top:26px;font-size:13.5px;color:var(--grau);display:flex;
+        justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .foot button{font:inherit;font-size:13.5px;color:var(--grau);background:none;border:0;
+               cursor:pointer;text-decoration:underline;padding:0}
+  .hide{display:none !important}
+  @media (max-width:560px){
+    body{font-size:16px;padding:0 12px 48px}
+    .plate{padding:20px 18px 20px 26px}
+    .q{font-size:20px} h1{font-size:20px}
+    nav button{padding:8px 9px;font-size:14px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="top">
+    <h1>Imperativ <span>· the German imperative · telc B1</span></h1>
+    <div class="mastery" id="mastery"></div>
+  </div>
+  <nav role="tablist">
+    <button role="tab" id="t-drill" aria-controls="v-drill" aria-selected="true">Practice</button>
+    <button role="tab" id="t-stats" aria-controls="v-stats" aria-selected="false">Progress</button>
+    <button role="tab" id="t-exam" aria-controls="v-exam" aria-selected="false">Test</button>
+    <button role="tab" id="t-rules" aria-controls="v-rules" aria-selected="false">Rules</button>
+  </nav>
+</header>
+
+<main>
+  <section id="v-drill" role="tabpanel" aria-labelledby="t-drill"></section>
+  <section id="v-stats" role="tabpanel" aria-labelledby="t-stats" class="hide"></section>
+  <section id="v-exam" role="tabpanel" aria-labelledby="t-exam" class="hide"></section>
+  <section id="v-rules" role="tabpanel" aria-labelledby="t-rules" class="hide"></section>
+</main>
+
+<div class="foot">
+  <span id="footinfo"></span>
+  <span><button id="reset">Clear progress</button></span>
+</div>
+</div>
+
+<script>
+const ITEMS = [{"id":"du-geben","cat":"stem","type":"type","q":"<b>geben</b> — imperative, du-form","sub":"du gibst · give","a":"Gib!","alts":[],"why":"du gibst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Gib!","tag":"rule i — e → i / ie"},{"id":"mc-geben","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>geben</b>","sub":"du gibst","opts":["Geb!","Gibe!","Gib!","Gibst!"],"ans":2,"why":"du gibst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Gib!","tag":"rule i — e → i / ie"},{"id":"du-nehmen","cat":"stem","type":"type","q":"<b>nehmen</b> — imperative, du-form","sub":"du nimmst · take","a":"Nimm!","alts":[],"why":"du nimmst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Nimm!","tag":"rule i — e → i / ie"},{"id":"mc-nehmen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>nehmen</b>","sub":"du nimmst","opts":["Nehm!","Nimme!","Nimm!","Nimmst!"],"ans":2,"why":"du nimmst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Nimm!","tag":"rule i — e → i / ie"},{"id":"du-lesen","cat":"stem","type":"type","q":"<b>lesen</b> — imperative, du-form","sub":"du liest · read","a":"Lies!","alts":[],"why":"du liest changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Lies!","tag":"rule i — e → i / ie"},{"id":"mc-lesen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>lesen</b>","sub":"du liest","opts":["Liese!","Liest!","Les!","Lies!"],"ans":3,"why":"du liest changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Lies!","tag":"rule i — e → i / ie"},{"id":"du-sehen","cat":"stem","type":"type","q":"<b>sehen</b> — imperative, du-form","sub":"du siehst · see, look","a":"Sieh!","alts":["Siehe!"],"why":"du siehst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Sieh!","tag":"rule i — e → i / ie"},{"id":"mc-sehen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>sehen</b>","sub":"du siehst","opts":["Seh!","Sieh!","Siehst!"],"ans":1,"why":"du siehst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Sieh!","tag":"rule i — e → i / ie"},{"id":"du-essen","cat":"stem","type":"type","q":"<b>essen</b> — imperative, du-form","sub":"du isst · eat","a":"Iss!","alts":[],"why":"du isst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Iss!","tag":"rule i — e → i / ie"},{"id":"mc-essen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>essen</b>","sub":"du isst","opts":["Isse!","Ess!","Isst!","Iss!"],"ans":3,"why":"du isst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Iss!","tag":"rule i — e → i / ie"},{"id":"du-helfen","cat":"stem","type":"type","q":"<b>helfen</b> — imperative, du-form","sub":"du hilfst · help","a":"Hilf!","alts":[],"why":"du hilfst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Hilf!","tag":"rule i — e → i / ie"},{"id":"mc-helfen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>helfen</b>","sub":"du hilfst","opts":["Hilfst!","Hilf!","Helf!","Hilfe!"],"ans":1,"why":"du hilfst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Hilf!","tag":"rule i — e → i / ie"},{"id":"du-sprechen","cat":"stem","type":"type","q":"<b>sprechen</b> — imperative, du-form","sub":"du sprichst · speak","a":"Sprich!","alts":[],"why":"du sprichst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Sprich!","tag":"rule i — e → i / ie"},{"id":"mc-sprechen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>sprechen</b>","sub":"du sprichst","opts":["Sprich!","Sprech!","Sprichst!","Spriche!"],"ans":0,"why":"du sprichst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Sprich!","tag":"rule i — e → i / ie"},{"id":"du-vergessen","cat":"stem","type":"type","q":"<b>vergessen</b> — imperative, du-form","sub":"du vergisst · forget","a":"Vergiss!","alts":[],"why":"du vergisst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Vergiss!","tag":"rule i — e → i / ie"},{"id":"mc-vergessen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>vergessen</b>","sub":"du vergisst","opts":["Vergisst!","Vergess!","Vergiss!","Vergisse!"],"ans":2,"why":"du vergisst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Vergiss!","tag":"rule i — e → i / ie"},{"id":"du-treffen","cat":"stem","type":"type","q":"<b>treffen</b> — imperative, du-form","sub":"du triffst · meet","a":"Triff!","alts":[],"why":"du triffst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Triff!","tag":"rule i — e → i / ie"},{"id":"mc-treffen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>treffen</b>","sub":"du triffst","opts":["Treff!","Triffst!","Triff!","Triffe!"],"ans":2,"why":"du triffst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Triff!","tag":"rule i — e → i / ie"},{"id":"du-werfen","cat":"stem","type":"type","q":"<b>werfen</b> — imperative, du-form","sub":"du wirfst · throw","a":"Wirf!","alts":[],"why":"du wirfst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Wirf!","tag":"rule i — e → i / ie"},{"id":"mc-werfen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>werfen</b>","sub":"du wirfst","opts":["Wirf!","Werf!","Wirfe!","Wirfst!"],"ans":0,"why":"du wirfst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Wirf!","tag":"rule i — e → i / ie"},{"id":"du-brechen","cat":"stem","type":"type","q":"<b>brechen</b> — imperative, du-form","sub":"du brichst · break","a":"Brich!","alts":[],"why":"du brichst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Brich!","tag":"rule i — e → i / ie"},{"id":"mc-brechen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>brechen</b>","sub":"du brichst","opts":["Brich!","Briche!","Brech!","Brichst!"],"ans":0,"why":"du brichst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Brich!","tag":"rule i — e → i / ie"},{"id":"du-messen","cat":"stem","type":"type","q":"<b>messen</b> — imperative, du-form","sub":"du misst · measure","a":"Miss!","alts":[],"why":"du misst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Miss!","tag":"rule i — e → i / ie"},{"id":"mc-messen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>messen</b>","sub":"du misst","opts":["Miss!","Mess!","Misse!","Misst!"],"ans":0,"why":"du misst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Miss!","tag":"rule i — e → i / ie"},{"id":"du-empfehlen","cat":"stem","type":"type","q":"<b>empfehlen</b> — imperative, du-form","sub":"du empfiehlst · recommend","a":"Empfiehl!","alts":[],"why":"du empfiehlst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Empfiehl!","tag":"rule i — e → i / ie"},{"id":"mc-empfehlen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>empfehlen</b>","sub":"du empfiehlst","opts":["Empfehl!","Empfiehle!","Empfiehl!","Empfiehlst!"],"ans":2,"why":"du empfiehlst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Empfiehl!","tag":"rule i — e → i / ie"},{"id":"du-stehlen","cat":"stem","type":"type","q":"<b>stehlen</b> — imperative, du-form","sub":"du stiehlst · steal","a":"Stiehl!","alts":[],"why":"du stiehlst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Stiehl!","tag":"rule i — e → i / ie"},{"id":"mc-stehlen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>stehlen</b>","sub":"du stiehlst","opts":["Stehl!","Stiehle!","Stiehlst!","Stiehl!"],"ans":3,"why":"du stiehlst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Stiehl!","tag":"rule i — e → i / ie"},{"id":"du-treten","cat":"stem","type":"type","q":"<b>treten</b> — imperative, du-form","sub":"du trittst · step","a":"Tritt!","alts":[],"why":"du trittst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Tritt!","tag":"rule i — e → i / ie"},{"id":"mc-treten","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>treten</b>","sub":"du trittst","opts":["Trittst!","Tret!","Tritt!","Tritte!"],"ans":2,"why":"du trittst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Tritt!","tag":"rule i — e → i / ie"},{"id":"du-befehlen","cat":"stem","type":"type","q":"<b>befehlen</b> — imperative, du-form","sub":"du befiehlst · order, command","a":"Befiehl!","alts":[],"why":"du befiehlst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Befiehl!","tag":"rule i — e → i / ie"},{"id":"mc-befehlen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>befehlen</b>","sub":"du befiehlst","opts":["Befiehle!","Befiehl!","Befehl!","Befiehlst!"],"ans":1,"why":"du befiehlst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Befiehl!","tag":"rule i — e → i / ie"},{"id":"du-werben","cat":"stem","type":"type","q":"<b>werben</b> — imperative, du-form","sub":"du wirbst · advertise","a":"Wirb!","alts":[],"why":"du wirbst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Wirb!","tag":"rule i — e → i / ie"},{"id":"mc-werben","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>werben</b>","sub":"du wirbst","opts":["Wirb!","Wirbe!","Werb!","Wirbst!"],"ans":0,"why":"du wirbst changes e → i/ie. Rule i: keep the change, strip the ending, never add -e → Wirb!","tag":"rule i — e → i / ie"},{"id":"du-fahren","cat":"stem","type":"type","q":"<b>fahren</b> — imperative, du-form","sub":"du fährst · drive, go","a":"Fahr!","alts":["Fahre!"],"why":"du fährst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Fahr!","tag":"rule ii — drop the umlaut"},{"id":"mc-fahren","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>fahren</b>","sub":"du fährst","opts":["Fährst!","Fahr!","Fähre!","Fähr!"],"ans":1,"why":"du fährst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Fahr!","tag":"rule ii — drop the umlaut"},{"id":"du-laufen","cat":"stem","type":"type","q":"<b>laufen</b> — imperative, du-form","sub":"du läufst · run","a":"Lauf!","alts":["Laufe!"],"why":"du läufst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Lauf!","tag":"rule ii — drop the umlaut"},{"id":"mc-laufen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>laufen</b>","sub":"du läufst","opts":["Läufe!","Läuf!","Lauf!","Läufst!"],"ans":2,"why":"du läufst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Lauf!","tag":"rule ii — drop the umlaut"},{"id":"du-schlafen","cat":"stem","type":"type","q":"<b>schlafen</b> — imperative, du-form","sub":"du schläfst · sleep","a":"Schlaf!","alts":["Schlafe!"],"why":"du schläfst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Schlaf!","tag":"rule ii — drop the umlaut"},{"id":"mc-schlafen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>schlafen</b>","sub":"du schläfst","opts":["Schläfe!","Schlaf!","Schläfst!","Schläf!"],"ans":1,"why":"du schläfst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Schlaf!","tag":"rule ii — drop the umlaut"},{"id":"du-tragen","cat":"stem","type":"type","q":"<b>tragen</b> — imperative, du-form","sub":"du trägst · carry, wear","a":"Trag!","alts":["Trage!"],"why":"du trägst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Trag!","tag":"rule ii — drop the umlaut"},{"id":"mc-tragen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>tragen</b>","sub":"du trägst","opts":["Träge!","Trägst!","Trag!","Träg!"],"ans":2,"why":"du trägst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Trag!","tag":"rule ii — drop the umlaut"},{"id":"du-halten","cat":"stem","type":"type","q":"<b>halten</b> — imperative, du-form","sub":"du hältst · stop, hold","a":"Halt!","alts":["Halte!"],"why":"du hältst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Halt!","tag":"rule ii — drop the umlaut"},{"id":"mc-halten","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>halten</b>","sub":"du hältst","opts":["Hälte!","Hältst!","Hält!","Halt!"],"ans":3,"why":"du hältst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Halt!","tag":"rule ii — drop the umlaut"},{"id":"du-stoßen","cat":"stem","type":"type","q":"<b>stoßen</b> — imperative, du-form","sub":"du stößt · push","a":"Stoß!","alts":["Stoße!"],"why":"du stößt takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Stoß!","tag":"rule ii — drop the umlaut"},{"id":"mc-stoßen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>stoßen</b>","sub":"du stößt","opts":["Stöße!","Stoß!","Stößt!","Stöß!"],"ans":1,"why":"du stößt takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Stoß!","tag":"rule ii — drop the umlaut"},{"id":"du-fallen","cat":"stem","type":"type","q":"<b>fallen</b> — imperative, du-form","sub":"du fällst · fall","a":"Fall!","alts":["Falle!"],"why":"du fällst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Fall!","tag":"rule ii — drop the umlaut"},{"id":"mc-fallen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>fallen</b>","sub":"du fällst","opts":["Fäll!","Fall!","Fälle!","Fällst!"],"ans":1,"why":"du fällst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Fall!","tag":"rule ii — drop the umlaut"},{"id":"du-waschen","cat":"stem","type":"type","q":"<b>waschen</b> — imperative, du-form","sub":"du wäschst · wash","a":"Wasch!","alts":["Wasche!"],"why":"du wäschst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Wasch!","tag":"rule ii — drop the umlaut"},{"id":"mc-waschen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>waschen</b>","sub":"du wäschst","opts":["Wäschst!","Wasch!","Wäsch!","Wäsche!"],"ans":1,"why":"du wäschst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Wasch!","tag":"rule ii — drop the umlaut"},{"id":"du-fangen","cat":"stem","type":"type","q":"<b>fangen</b> — imperative, du-form","sub":"du fängst · catch","a":"Fang!","alts":["Fange!"],"why":"du fängst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Fang!","tag":"rule ii — drop the umlaut"},{"id":"mc-fangen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>fangen</b>","sub":"du fängst","opts":["Fäng!","Fängst!","Fänge!","Fang!"],"ans":3,"why":"du fängst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Fang!","tag":"rule ii — drop the umlaut"},{"id":"du-lassen","cat":"stem","type":"type","q":"<b>lassen</b> — imperative, du-form","sub":"du lässt · let, leave","a":"Lass!","alts":["Lasse!"],"why":"du lässt takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Lass!","tag":"rule ii — drop the umlaut"},{"id":"mc-lassen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>lassen</b>","sub":"du lässt","opts":["Lässe!","Läss!","Lass!","Lässt!"],"ans":2,"why":"du lässt takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Lass!","tag":"rule ii — drop the umlaut"},{"id":"du-schlagen","cat":"stem","type":"type","q":"<b>schlagen</b> — imperative, du-form","sub":"du schlägst · beat (e.g. eggs)","a":"Schlag!","alts":["Schlage!"],"why":"du schlägst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Schlag!","tag":"rule ii — drop the umlaut"},{"id":"mc-schlagen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>schlagen</b>","sub":"du schlägst","opts":["Schlägst!","Schläg!","Schläge!","Schlag!"],"ans":3,"why":"du schlägst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Schlag!","tag":"rule ii — drop the umlaut"},{"id":"du-raten","cat":"stem","type":"type","q":"<b>raten</b> — imperative, du-form","sub":"du rätst · guess, advise","a":"Rate!","alts":["Rat!"],"why":"du rätst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Rate!","tag":"rule ii — drop the umlaut"},{"id":"mc-raten","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>raten</b>","sub":"du rätst","opts":["Rätst!","Räte!","Rät!","Rate!"],"ans":3,"why":"du rätst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Rate!","tag":"rule ii — drop the umlaut"},{"id":"du-blasen","cat":"stem","type":"type","q":"<b>blasen</b> — imperative, du-form","sub":"du bläst · blow","a":"Blas!","alts":["Blase!"],"why":"du bläst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Blas!","tag":"rule ii — drop the umlaut"},{"id":"mc-blasen","cat":"stem","type":"mc","q":"Which form is correct? — du-imperative of <b>blasen</b>","sub":"du bläst","opts":["Blas!","Bläs!","Bläst!","Bläse!"],"ans":0,"why":"du bläst takes an umlaut. Rule ii: throw the umlaut away and stop — no -e either → Blas!","tag":"rule ii — drop the umlaut"},{"id":"du-arbeiten","cat":"due","type":"type","q":"<b>arbeiten</b> — imperative, du-form","sub":"du arbeitest · work","a":"Arbeite!","alts":[],"why":"No stem change, and the stem arbeit- ends in -t, so the -e is obligatory → Arbeite!","tag":"rule iii — obligatory -e"},{"id":"mc-arbeiten","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>arbeiten</b>","sub":"du arbeitest","opts":["Arbeite!","Arbeitest!","Arbeit!","Arbeitet!"],"ans":0,"why":"No stem change, and the stem arbeit- ends in -t, so the -e is obligatory → Arbeite!","tag":"rule iii — obligatory -e"},{"id":"du-warten","cat":"due","type":"type","q":"<b>warten</b> — imperative, du-form","sub":"du wartest · wait","a":"Warte!","alts":[],"why":"No stem change, and the stem wart- ends in -t, so the -e is obligatory → Warte!","tag":"rule iii — obligatory -e"},{"id":"mc-warten","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>warten</b>","sub":"du wartest","opts":["Wartet!","Wart!","Wartest!","Warte!"],"ans":3,"why":"No stem change, and the stem wart- ends in -t, so the -e is obligatory → Warte!","tag":"rule iii — obligatory -e"},{"id":"du-finden","cat":"due","type":"type","q":"<b>finden</b> — imperative, du-form","sub":"du findest · find","a":"Finde!","alts":[],"why":"No stem change, and the stem find- ends in -d, so the -e is obligatory → Finde!","tag":"rule iii — obligatory -e"},{"id":"mc-finden","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>finden</b>","sub":"du findest","opts":["Findest!","Findet!","Finde!","Find!"],"ans":2,"why":"No stem change, and the stem find- ends in -d, so the -e is obligatory → Finde!","tag":"rule iii — obligatory -e"},{"id":"du-antworten","cat":"due","type":"type","q":"<b>antworten</b> — imperative, du-form","sub":"du antwortest · answer","a":"Antworte!","alts":[],"why":"No stem change, and the stem antwort- ends in -t, so the -e is obligatory → Antworte!","tag":"rule iii — obligatory -e"},{"id":"mc-antworten","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>antworten</b>","sub":"du antwortest","opts":["Antworte!","Antwort!","Antwortet!","Antwortest!"],"ans":0,"why":"No stem change, and the stem antwort- ends in -t, so the -e is obligatory → Antworte!","tag":"rule iii — obligatory -e"},{"id":"du-reden","cat":"due","type":"type","q":"<b>reden</b> — imperative, du-form","sub":"du redest · talk","a":"Rede!","alts":[],"why":"No stem change, and the stem red- ends in -d, so the -e is obligatory → Rede!","tag":"rule iii — obligatory -e"},{"id":"mc-reden","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>reden</b>","sub":"du redest","opts":["Red!","Rede!","Redet!","Redest!"],"ans":1,"why":"No stem change, and the stem red- ends in -d, so the -e is obligatory → Rede!","tag":"rule iii — obligatory -e"},{"id":"du-baden","cat":"due","type":"type","q":"<b>baden</b> — imperative, du-form","sub":"du badest · bathe","a":"Bade!","alts":[],"why":"No stem change, and the stem bad- ends in -d, so the -e is obligatory → Bade!","tag":"rule iii — obligatory -e"},{"id":"mc-baden","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>baden</b>","sub":"du badest","opts":["Bade!","Bad!","Badet!","Badest!"],"ans":0,"why":"No stem change, and the stem bad- ends in -d, so the -e is obligatory → Bade!","tag":"rule iii — obligatory -e"},{"id":"du-melden","cat":"due","type":"type","q":"<b>melden</b> — imperative, du-form","sub":"du meldest · report","a":"Melde!","alts":[],"why":"No stem change, and the stem meld- ends in -d, so the -e is obligatory → Melde!","tag":"rule iii — obligatory -e"},{"id":"mc-melden","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>melden</b>","sub":"du meldest","opts":["Meldest!","Meldet!","Melde!","Meld!"],"ans":2,"why":"No stem change, and the stem meld- ends in -d, so the -e is obligatory → Melde!","tag":"rule iii — obligatory -e"},{"id":"du-bilden","cat":"due","type":"type","q":"<b>bilden</b> — imperative, du-form","sub":"du bildest · form, build","a":"Bilde!","alts":[],"why":"No stem change, and the stem bild- ends in -d, so the -e is obligatory → Bilde!","tag":"rule iii — obligatory -e"},{"id":"mc-bilden","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>bilden</b>","sub":"du bildest","opts":["Bildet!","Bildest!","Bilde!","Bild!"],"ans":2,"why":"No stem change, and the stem bild- ends in -d, so the -e is obligatory → Bilde!","tag":"rule iii — obligatory -e"},{"id":"du-beenden","cat":"due","type":"type","q":"<b>beenden</b> — imperative, du-form","sub":"du beendest · finish","a":"Beende!","alts":[],"why":"No stem change, and the stem beend- ends in -d, so the -e is obligatory → Beende!","tag":"rule iii — obligatory -e"},{"id":"mc-beenden","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>beenden</b>","sub":"du beendest","opts":["Beendest!","Beend!","Beendet!","Beende!"],"ans":3,"why":"No stem change, and the stem beend- ends in -d, so the -e is obligatory → Beende!","tag":"rule iii — obligatory -e"},{"id":"du-schneiden","cat":"due","type":"type","q":"<b>schneiden</b> — imperative, du-form","sub":"du schneidest · cut","a":"Schneide!","alts":[],"why":"No stem change, and the stem schneid- ends in -d, so the -e is obligatory → Schneide!","tag":"rule iii — obligatory -e"},{"id":"mc-schneiden","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>schneiden</b>","sub":"du schneidest","opts":["Schneidet!","Schneidest!","Schneid!","Schneide!"],"ans":3,"why":"No stem change, and the stem schneid- ends in -d, so the -e is obligatory → Schneide!","tag":"rule iii — obligatory -e"},{"id":"du-entscheiden","cat":"due","type":"type","q":"<b>entscheiden</b> — imperative, du-form","sub":"du entscheidest · decide","a":"Entscheide!","alts":[],"why":"No stem change, and the stem entscheid- ends in -d, so the -e is obligatory → Entscheide!","tag":"rule iii — obligatory -e"},{"id":"mc-entscheiden","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>entscheiden</b>","sub":"du entscheidest","opts":["Entscheide!","Entscheidest!","Entscheid!","Entscheidet!"],"ans":0,"why":"No stem change, and the stem entscheid- ends in -d, so the -e is obligatory → Entscheide!","tag":"rule iii — obligatory -e"},{"id":"du-mieten","cat":"due","type":"type","q":"<b>mieten</b> — imperative, du-form","sub":"du mietest · rent","a":"Miete!","alts":[],"why":"No stem change, and the stem miet- ends in -t, so the -e is obligatory → Miete!","tag":"rule iii — obligatory -e"},{"id":"mc-mieten","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>mieten</b>","sub":"du mietest","opts":["Mietest!","Mietet!","Miete!","Miet!"],"ans":2,"why":"No stem change, and the stem miet- ends in -t, so the -e is obligatory → Miete!","tag":"rule iii — obligatory -e"},{"id":"du-retten","cat":"due","type":"type","q":"<b>retten</b> — imperative, du-form","sub":"du rettest · rescue","a":"Rette!","alts":[],"why":"No stem change, and the stem rett- ends in -t, so the -e is obligatory → Rette!","tag":"rule iii — obligatory -e"},{"id":"mc-retten","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>retten</b>","sub":"du rettest","opts":["Rett!","Rette!","Rettet!","Rettest!"],"ans":1,"why":"No stem change, and the stem rett- ends in -t, so the -e is obligatory → Rette!","tag":"rule iii — obligatory -e"},{"id":"du-heiraten","cat":"due","type":"type","q":"<b>heiraten</b> — imperative, du-form","sub":"du heiratest · marry","a":"Heirate!","alts":[],"why":"No stem change, and the stem heirat- ends in -t, so the -e is obligatory → Heirate!","tag":"rule iii — obligatory -e"},{"id":"mc-heiraten","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>heiraten</b>","sub":"du heiratest","opts":["Heirate!","Heiratet!","Heirat!","Heiratest!"],"ans":0,"why":"No stem change, and the stem heirat- ends in -t, so the -e is obligatory → Heirate!","tag":"rule iii — obligatory -e"},{"id":"du-landen","cat":"due","type":"type","q":"<b>landen</b> — imperative, du-form","sub":"du landest · land","a":"Lande!","alts":[],"why":"No stem change, and the stem land- ends in -d, so the -e is obligatory → Lande!","tag":"rule iii — obligatory -e"},{"id":"mc-landen","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>landen</b>","sub":"du landest","opts":["Landet!","Land!","Landest!","Lande!"],"ans":3,"why":"No stem change, and the stem land- ends in -d, so the -e is obligatory → Lande!","tag":"rule iii — obligatory -e"},{"id":"du-beobachten","cat":"due","type":"type","q":"<b>beobachten</b> — imperative, du-form","sub":"du beobachtest · observe","a":"Beobachte!","alts":[],"why":"No stem change, and the stem beobacht- ends in -t, so the -e is obligatory → Beobachte!","tag":"rule iii — obligatory -e"},{"id":"mc-beobachten","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>beobachten</b>","sub":"du beobachtest","opts":["Beobachtest!","Beobachtet!","Beobachte!","Beobacht!"],"ans":2,"why":"No stem change, and the stem beobacht- ends in -t, so the -e is obligatory → Beobachte!","tag":"rule iii — obligatory -e"},{"id":"du-atmen","cat":"due","type":"type","q":"<b>atmen</b> — imperative, du-form","sub":"du atmest · breathe","a":"Atme!","alts":[],"why":"No stem change, and the stem atm- ends in consonant + m, so the -e is obligatory → Atme!","tag":"rule iii — obligatory -e"},{"id":"mc-atmen","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>atmen</b>","sub":"du atmest","opts":["Atm!","Atme!","Atmet!","Atmest!"],"ans":1,"why":"No stem change, and the stem atm- ends in consonant + m, so the -e is obligatory → Atme!","tag":"rule iii — obligatory -e"},{"id":"du-rechnen","cat":"due","type":"type","q":"<b>rechnen</b> — imperative, du-form","sub":"du rechnest · calculate","a":"Rechne!","alts":[],"why":"No stem change, and the stem rechn- ends in consonant + n, so the -e is obligatory → Rechne!","tag":"rule iii — obligatory -e"},{"id":"mc-rechnen","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>rechnen</b>","sub":"du rechnest","opts":["Rechnest!","Rechnet!","Rechn!","Rechne!"],"ans":3,"why":"No stem change, and the stem rechn- ends in consonant + n, so the -e is obligatory → Rechne!","tag":"rule iii — obligatory -e"},{"id":"du-öffnen","cat":"due","type":"type","q":"<b>öffnen</b> — imperative, du-form","sub":"du öffnest · open","a":"Öffne!","alts":[],"why":"No stem change, and the stem öffn- ends in consonant + n, so the -e is obligatory → Öffne!","tag":"rule iii — obligatory -e"},{"id":"mc-öffnen","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>öffnen</b>","sub":"du öffnest","opts":["Öffne!","Öffnet!","Öffnest!","Öffn!"],"ans":0,"why":"No stem change, and the stem öffn- ends in consonant + n, so the -e is obligatory → Öffne!","tag":"rule iii — obligatory -e"},{"id":"du-zeichnen","cat":"due","type":"type","q":"<b>zeichnen</b> — imperative, du-form","sub":"du zeichnest · draw","a":"Zeichne!","alts":[],"why":"No stem change, and the stem zeichn- ends in consonant + n, so the -e is obligatory → Zeichne!","tag":"rule iii — obligatory -e"},{"id":"mc-zeichnen","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>zeichnen</b>","sub":"du zeichnest","opts":["Zeichnet!","Zeichne!","Zeichnest!","Zeichn!"],"ans":1,"why":"No stem change, and the stem zeichn- ends in consonant + n, so the -e is obligatory → Zeichne!","tag":"rule iii — obligatory -e"},{"id":"du-trocknen","cat":"due","type":"type","q":"<b>trocknen</b> — imperative, du-form","sub":"du trocknest · dry","a":"Trockne!","alts":[],"why":"No stem change, and the stem trockn- ends in consonant + n, so the -e is obligatory → Trockne!","tag":"rule iii — obligatory -e"},{"id":"mc-trocknen","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>trocknen</b>","sub":"du trocknest","opts":["Trockn!","Trockne!","Trocknest!","Trocknet!"],"ans":1,"why":"No stem change, and the stem trockn- ends in consonant + n, so the -e is obligatory → Trockne!","tag":"rule iii — obligatory -e"},{"id":"du-widmen","cat":"due","type":"type","q":"<b>widmen</b> — imperative, du-form","sub":"du widmest · dedicate","a":"Widme!","alts":[],"why":"No stem change, and the stem widm- ends in consonant + m, so the -e is obligatory → Widme!","tag":"rule iii — obligatory -e"},{"id":"mc-widmen","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>widmen</b>","sub":"du widmest","opts":["Widm!","Widme!","Widmet!","Widmest!"],"ans":1,"why":"No stem change, and the stem widm- ends in consonant + m, so the -e is obligatory → Widme!","tag":"rule iii — obligatory -e"},{"id":"du-begegnen","cat":"due","type":"type","q":"<b>begegnen</b> — imperative, du-form","sub":"du begegnest · encounter","a":"Begegne!","alts":[],"why":"No stem change, and the stem begegn- ends in consonant + n, so the -e is obligatory → Begegne!","tag":"rule iii — obligatory -e"},{"id":"mc-begegnen","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>begegnen</b>","sub":"du begegnest","opts":["Begegnest!","Begegne!","Begegn!","Begegnet!"],"ans":1,"why":"No stem change, and the stem begegn- ends in consonant + n, so the -e is obligatory → Begegne!","tag":"rule iii — obligatory -e"},{"id":"du-entschuldigen","cat":"due","type":"type","q":"<b>entschuldigen</b> — imperative, du-form","sub":"du entschuldigst · excuse","a":"Entschuldige!","alts":[],"why":"No stem change, and the stem entschuldig- ends in the suffix -ig, so the -e is obligatory → Entschuldige!","tag":"rule iii — obligatory -e"},{"id":"mc-entschuldigen","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>entschuldigen</b>","sub":"du entschuldigst","opts":["Entschuldigst!","Entschuldigt!","Entschuldige!","Entschuldig!"],"ans":2,"why":"No stem change, and the stem entschuldig- ends in the suffix -ig, so the -e is obligatory → Entschuldige!","tag":"rule iii — obligatory -e"},{"id":"du-erledigen","cat":"due","type":"type","q":"<b>erledigen</b> — imperative, du-form","sub":"du erledigst · get done","a":"Erledige!","alts":[],"why":"No stem change, and the stem erledig- ends in the suffix -ig, so the -e is obligatory → Erledige!","tag":"rule iii — obligatory -e"},{"id":"mc-erledigen","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>erledigen</b>","sub":"du erledigst","opts":["Erledigst!","Erledig!","Erledigt!","Erledige!"],"ans":3,"why":"No stem change, and the stem erledig- ends in the suffix -ig, so the -e is obligatory → Erledige!","tag":"rule iii — obligatory -e"},{"id":"du-besichtigen","cat":"due","type":"type","q":"<b>besichtigen</b> — imperative, du-form","sub":"du besichtigst · view, tour","a":"Besichtige!","alts":[],"why":"No stem change, and the stem besichtig- ends in the suffix -ig, so the -e is obligatory → Besichtige!","tag":"rule iii — obligatory -e"},{"id":"mc-besichtigen","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>besichtigen</b>","sub":"du besichtigst","opts":["Besichtige!","Besichtigst!","Besichtig!","Besichtigt!"],"ans":0,"why":"No stem change, and the stem besichtig- ends in the suffix -ig, so the -e is obligatory → Besichtige!","tag":"rule iii — obligatory -e"},{"id":"du-beschäftigen","cat":"due","type":"type","q":"<b>beschäftigen</b> — imperative, du-form","sub":"du beschäftigst · occupy","a":"Beschäftige!","alts":[],"why":"No stem change, and the stem beschäftig- ends in the suffix -ig, so the -e is obligatory → Beschäftige!","tag":"rule iii — obligatory -e"},{"id":"mc-beschäftigen","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>beschäftigen</b>","sub":"du beschäftigst","opts":["Beschäftigst!","Beschäftige!","Beschäftigt!","Beschäftig!"],"ans":1,"why":"No stem change, and the stem beschäftig- ends in the suffix -ig, so the -e is obligatory → Beschäftige!","tag":"rule iii — obligatory -e"},{"id":"du-verteidigen","cat":"due","type":"type","q":"<b>verteidigen</b> — imperative, du-form","sub":"du verteidigst · defend","a":"Verteidige!","alts":[],"why":"No stem change, and the stem verteidig- ends in the suffix -ig, so the -e is obligatory → Verteidige!","tag":"rule iii — obligatory -e"},{"id":"mc-verteidigen","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>verteidigen</b>","sub":"du verteidigst","opts":["Verteidigt!","Verteidige!","Verteidigst!","Verteidig!"],"ans":1,"why":"No stem change, and the stem verteidig- ends in the suffix -ig, so the -e is obligatory → Verteidige!","tag":"rule iii — obligatory -e"},{"id":"du-sammeln","cat":"due","type":"type","q":"<b>sammeln</b> — imperative, du-form","sub":"du sammelst · collect","a":"Sammle!","alts":["Sammele!"],"why":"Verbs in -eln take the -e and drop the stem -e: sammel- → sammle → Sammle!","tag":"verbs in -eln"},{"id":"mc-sammeln","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>sammeln</b>","sub":"du sammelst","opts":["Sammle!","Sammel!","Sammelst!","Sammelt!"],"ans":0,"why":"Verbs in -eln take the -e and drop the stem -e: sammel- → sammle → Sammle!","tag":"verbs in -eln"},{"id":"du-lächeln","cat":"due","type":"type","q":"<b>lächeln</b> — imperative, du-form","sub":"du lächelst · smile","a":"Lächle!","alts":["Lächele!"],"why":"Verbs in -eln take the -e and drop the stem -e: lächel- → lächle → Lächle!","tag":"verbs in -eln"},{"id":"mc-lächeln","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>lächeln</b>","sub":"du lächelst","opts":["Lächelt!","Lächel!","Lächelst!","Lächle!"],"ans":3,"why":"Verbs in -eln take the -e and drop the stem -e: lächel- → lächle → Lächle!","tag":"verbs in -eln"},{"id":"du-klingeln","cat":"due","type":"type","q":"<b>klingeln</b> — imperative, du-form","sub":"du klingelst · ring","a":"Klingle!","alts":["Klingele!"],"why":"Verbs in -eln take the -e and drop the stem -e: klingel- → klingle → Klingle!","tag":"verbs in -eln"},{"id":"mc-klingeln","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>klingeln</b>","sub":"du klingelst","opts":["Klingelt!","Klingelst!","Klingel!","Klingle!"],"ans":3,"why":"Verbs in -eln take the -e and drop the stem -e: klingel- → klingle → Klingle!","tag":"verbs in -eln"},{"id":"du-handeln","cat":"due","type":"type","q":"<b>handeln</b> — imperative, du-form","sub":"du handelst · act, deal","a":"Handle!","alts":["Handele!"],"why":"Verbs in -eln take the -e and drop the stem -e: handel- → handle → Handle!","tag":"verbs in -eln"},{"id":"mc-handeln","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>handeln</b>","sub":"du handelst","opts":["Handel!","Handelst!","Handelt!","Handle!"],"ans":3,"why":"Verbs in -eln take the -e and drop the stem -e: handel- → handle → Handle!","tag":"verbs in -eln"},{"id":"du-wechseln","cat":"due","type":"type","q":"<b>wechseln</b> — imperative, du-form","sub":"du wechselst · change, swap","a":"Wechsle!","alts":["Wechsele!"],"why":"Verbs in -eln take the -e and drop the stem -e: wechsel- → wechsle → Wechsle!","tag":"verbs in -eln"},{"id":"mc-wechseln","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>wechseln</b>","sub":"du wechselst","opts":["Wechselst!","Wechsle!","Wechsel!","Wechselt!"],"ans":1,"why":"Verbs in -eln take the -e and drop the stem -e: wechsel- → wechsle → Wechsle!","tag":"verbs in -eln"},{"id":"du-bügeln","cat":"due","type":"type","q":"<b>bügeln</b> — imperative, du-form","sub":"du bügelst · iron","a":"Bügle!","alts":["Bügele!"],"why":"Verbs in -eln take the -e and drop the stem -e: bügel- → bügle → Bügle!","tag":"verbs in -eln"},{"id":"mc-bügeln","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>bügeln</b>","sub":"du bügelst","opts":["Bügle!","Bügelst!","Bügel!","Bügelt!"],"ans":0,"why":"Verbs in -eln take the -e and drop the stem -e: bügel- → bügle → Bügle!","tag":"verbs in -eln"},{"id":"du-angeln","cat":"due","type":"type","q":"<b>angeln</b> — imperative, du-form","sub":"du angelst · fish","a":"Angle!","alts":["Angele!"],"why":"Verbs in -eln take the -e and drop the stem -e: angel- → angle → Angle!","tag":"verbs in -eln"},{"id":"mc-angeln","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>angeln</b>","sub":"du angelst","opts":["Angel!","Angelst!","Angelt!","Angle!"],"ans":3,"why":"Verbs in -eln take the -e and drop the stem -e: angel- → angle → Angle!","tag":"verbs in -eln"},{"id":"du-ändern","cat":"due","type":"type","q":"<b>ändern</b> — imperative, du-form","sub":"du änderst · change, alter","a":"Ändere!","alts":["Ändre!"],"why":"Verbs in -ern take the -e and keep the stem -e: änder- → ändere → Ändere!","tag":"verbs in -ern"},{"id":"mc-ändern","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>ändern</b>","sub":"du änderst","opts":["Änder!","Ändert!","Änderst!","Ändere!"],"ans":3,"why":"Verbs in -ern take the -e and keep the stem -e: änder- → ändere → Ändere!","tag":"verbs in -ern"},{"id":"du-feiern","cat":"due","type":"type","q":"<b>feiern</b> — imperative, du-form","sub":"du feierst · celebrate","a":"Feiere!","alts":["Feire!"],"why":"Verbs in -ern take the -e and keep the stem -e: feier- → feiere → Feiere!","tag":"verbs in -ern"},{"id":"mc-feiern","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>feiern</b>","sub":"du feierst","opts":["Feier!","Feierst!","Feiert!","Feiere!"],"ans":3,"why":"Verbs in -ern take the -e and keep the stem -e: feier- → feiere → Feiere!","tag":"verbs in -ern"},{"id":"du-wandern","cat":"due","type":"type","q":"<b>wandern</b> — imperative, du-form","sub":"du wanderst · hike","a":"Wandere!","alts":["Wandre!"],"why":"Verbs in -ern take the -e and keep the stem -e: wander- → wandere → Wandere!","tag":"verbs in -ern"},{"id":"mc-wandern","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>wandern</b>","sub":"du wanderst","opts":["Wander!","Wandere!","Wanderst!","Wandert!"],"ans":1,"why":"Verbs in -ern take the -e and keep the stem -e: wander- → wandere → Wandere!","tag":"verbs in -ern"},{"id":"du-verbessern","cat":"due","type":"type","q":"<b>verbessern</b> — imperative, du-form","sub":"du verbesserst · improve","a":"Verbessere!","alts":["Verbessre!"],"why":"Verbs in -ern take the -e and keep the stem -e: verbesser- → verbessere → Verbessere!","tag":"verbs in -ern"},{"id":"mc-verbessern","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>verbessern</b>","sub":"du verbesserst","opts":["Verbessere!","Verbessert!","Verbesser!","Verbesserst!"],"ans":0,"why":"Verbs in -ern take the -e and keep the stem -e: verbesser- → verbessere → Verbessere!","tag":"verbs in -ern"},{"id":"du-erinnern","cat":"due","type":"type","q":"<b>erinnern</b> — imperative, du-form","sub":"du erinnerst · remind","a":"Erinnere!","alts":["Erinnre!"],"why":"Verbs in -ern take the -e and keep the stem -e: erinner- → erinnere → Erinnere!","tag":"verbs in -ern"},{"id":"mc-erinnern","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>erinnern</b>","sub":"du erinnerst","opts":["Erinner!","Erinnere!","Erinnert!","Erinnerst!"],"ans":1,"why":"Verbs in -ern take the -e and keep the stem -e: erinner- → erinnere → Erinnere!","tag":"verbs in -ern"},{"id":"du-füttern","cat":"due","type":"type","q":"<b>füttern</b> — imperative, du-form","sub":"du fütterst · feed","a":"Füttere!","alts":["Füttre!"],"why":"Verbs in -ern take the -e and keep the stem -e: fütter- → füttere → Füttere!","tag":"verbs in -ern"},{"id":"mc-füttern","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>füttern</b>","sub":"du fütterst","opts":["Füttere!","Füttert!","Fütter!","Fütterst!"],"ans":0,"why":"Verbs in -ern take the -e and keep the stem -e: fütter- → füttere → Füttere!","tag":"verbs in -ern"},{"id":"du-klettern","cat":"due","type":"type","q":"<b>klettern</b> — imperative, du-form","sub":"du kletterst · climb","a":"Klettere!","alts":["Klettre!"],"why":"Verbs in -ern take the -e and keep the stem -e: kletter- → klettere → Klettere!","tag":"verbs in -ern"},{"id":"mc-klettern","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>klettern</b>","sub":"du kletterst","opts":["Kletterst!","Kletter!","Klettere!","Klettert!"],"ans":2,"why":"Verbs in -ern take the -e and keep the stem -e: kletter- → klettere → Klettere!","tag":"verbs in -ern"},{"id":"du-ärgern","cat":"due","type":"type","q":"<b>ärgern</b> — imperative, du-form","sub":"du ärgerst · annoy","a":"Ärgere!","alts":["Ärgre!"],"why":"Verbs in -ern take the -e and keep the stem -e: ärger- → ärgere → Ärgere!","tag":"verbs in -ern"},{"id":"mc-ärgern","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of <b>ärgern</b>","sub":"du ärgerst","opts":["Ärgere!","Ärgerst!","Ärgert!","Ärger!"],"ans":0,"why":"Verbs in -ern take the -e and keep the stem -e: ärger- → ärgere → Ärgere!","tag":"verbs in -ern"},{"id":"du-kommen","cat":"du","type":"type","q":"<b>kommen</b> — imperative, du-form","sub":"du kommst · come","a":"Komm!","alts":["Komme!"],"why":"No stem change, and the stem komm- triggers nothing in rule iii, so the bare stem is the form (Komme! exists but sounds dated) → Komm!","tag":"rule iii — no -e needed"},{"id":"du-gehen","cat":"du","type":"type","q":"<b>gehen</b> — imperative, du-form","sub":"du gehst · go","a":"Geh!","alts":["Gehe!"],"why":"No stem change, and the stem geh- triggers nothing in rule iii, so the bare stem is the form (Gehe! exists but sounds dated) → Geh!","tag":"rule iii — no -e needed"},{"id":"du-machen","cat":"du","type":"type","q":"<b>machen</b> — imperative, du-form","sub":"du machst · do, make","a":"Mach!","alts":["Mache!"],"why":"No stem change, and the stem mach- triggers nothing in rule iii, so the bare stem is the form (Mache! exists but sounds dated) → Mach!","tag":"rule iii — no -e needed"},{"id":"du-spielen","cat":"du","type":"type","q":"<b>spielen</b> — imperative, du-form","sub":"du spielst · play","a":"Spiel!","alts":["Spiele!"],"why":"No stem change, and the stem spiel- triggers nothing in rule iii, so the bare stem is the form (Spiele! exists but sounds dated) → Spiel!","tag":"rule iii — no -e needed"},{"id":"du-kaufen","cat":"du","type":"type","q":"<b>kaufen</b> — imperative, du-form","sub":"du kaufst · buy","a":"Kauf!","alts":["Kaufe!"],"why":"No stem change, and the stem kauf- triggers nothing in rule iii, so the bare stem is the form (Kaufe! exists but sounds dated) → Kauf!","tag":"rule iii — no -e needed"},{"id":"du-hören","cat":"du","type":"type","q":"<b>hören</b> — imperative, du-form","sub":"du hörst · hear, listen","a":"Hör!","alts":["Höre!"],"why":"No stem change, and the stem hör- triggers nothing in rule iii, so the bare stem is the form (Höre! exists but sounds dated) → Hör!","tag":"rule iii — no -e needed"},{"id":"du-fragen","cat":"du","type":"type","q":"<b>fragen</b> — imperative, du-form","sub":"du fragst · ask","a":"Frag!","alts":["Frage!"],"why":"No stem change, and the stem frag- triggers nothing in rule iii, so the bare stem is the form (Frage! exists but sounds dated) → Frag!","tag":"rule iii — no -e needed"},{"id":"du-sagen","cat":"du","type":"type","q":"<b>sagen</b> — imperative, du-form","sub":"du sagst · say","a":"Sag!","alts":["Sage!"],"why":"No stem change, and the stem sag- triggers nothing in rule iii, so the bare stem is the form (Sage! exists but sounds dated) → Sag!","tag":"rule iii — no -e needed"},{"id":"du-bleiben","cat":"du","type":"type","q":"<b>bleiben</b> — imperative, du-form","sub":"du bleibst · stay","a":"Bleib!","alts":["Bleibe!"],"why":"No stem change, and the stem bleib- triggers nothing in rule iii, so the bare stem is the form (Bleibe! exists but sounds dated) → Bleib!","tag":"rule iii — no -e needed"},{"id":"du-schreiben","cat":"du","type":"type","q":"<b>schreiben</b> — imperative, du-form","sub":"du schreibst · write","a":"Schreib!","alts":["Schreibe!"],"why":"No stem change, and the stem schreib- triggers nothing in rule iii, so the bare stem is the form (Schreibe! exists but sounds dated) → Schreib!","tag":"rule iii — no -e needed"},{"id":"du-trinken","cat":"du","type":"type","q":"<b>trinken</b> — imperative, du-form","sub":"du trinkst · drink","a":"Trink!","alts":["Trinke!"],"why":"No stem change, and the stem trink- triggers nothing in rule iii, so the bare stem is the form (Trinke! exists but sounds dated) → Trink!","tag":"rule iii — no -e needed"},{"id":"du-denken","cat":"du","type":"type","q":"<b>denken</b> — imperative, du-form","sub":"du denkst · think","a":"Denk!","alts":["Denke!"],"why":"No stem change, and the stem denk- triggers nothing in rule iii, so the bare stem is the form (Denke! exists but sounds dated) → Denk!","tag":"rule iii — no -e needed"},{"id":"du-singen","cat":"du","type":"type","q":"<b>singen</b> — imperative, du-form","sub":"du singst · sing","a":"Sing!","alts":["Singe!"],"why":"No stem change, and the stem sing- triggers nothing in rule iii, so the bare stem is the form (Singe! exists but sounds dated) → Sing!","tag":"rule iii — no -e needed"},{"id":"du-rufen","cat":"du","type":"type","q":"<b>rufen</b> — imperative, du-form","sub":"du rufst · call","a":"Ruf!","alts":["Rufe!"],"why":"No stem change, and the stem ruf- triggers nothing in rule iii, so the bare stem is the form (Rufe! exists but sounds dated) → Ruf!","tag":"rule iii — no -e needed"},{"id":"du-suchen","cat":"du","type":"type","q":"<b>suchen</b> — imperative, du-form","sub":"du suchst · search","a":"Such!","alts":["Suche!"],"why":"No stem change, and the stem such- triggers nothing in rule iii, so the bare stem is the form (Suche! exists but sounds dated) → Such!","tag":"rule iii — no -e needed"},{"id":"du-zeigen","cat":"du","type":"type","q":"<b>zeigen</b> — imperative, du-form","sub":"du zeigst · show","a":"Zeig!","alts":["Zeige!"],"why":"No stem change, and the stem zeig- triggers nothing in rule iii, so the bare stem is the form (Zeige! exists but sounds dated) → Zeig!","tag":"rule iii — no -e needed"},{"id":"du-holen","cat":"du","type":"type","q":"<b>holen</b> — imperative, du-form","sub":"du holst · fetch","a":"Hol!","alts":["Hole!"],"why":"No stem change, and the stem hol- triggers nothing in rule iii, so the bare stem is the form (Hole! exists but sounds dated) → Hol!","tag":"rule iii — no -e needed"},{"id":"du-stellen","cat":"du","type":"type","q":"<b>stellen</b> — imperative, du-form","sub":"du stellst · put, place","a":"Stell!","alts":["Stelle!"],"why":"No stem change, and the stem stell- triggers nothing in rule iii, so the bare stem is the form (Stelle! exists but sounds dated) → Stell!","tag":"rule iii — no -e needed"},{"id":"du-legen","cat":"du","type":"type","q":"<b>legen</b> — imperative, du-form","sub":"du legst · lay, put","a":"Leg!","alts":["Lege!"],"why":"No stem change, and the stem leg- triggers nothing in rule iii, so the bare stem is the form (Lege! exists but sounds dated) → Leg!","tag":"rule iii — no -e needed"},{"id":"du-üben","cat":"du","type":"type","q":"<b>üben</b> — imperative, du-form","sub":"du übst · practise","a":"Üb!","alts":["Übe!"],"why":"No stem change, and the stem üb- triggers nothing in rule iii, so the bare stem is the form (Übe! exists but sounds dated) → Üb!","tag":"rule iii — no -e needed"},{"id":"du-wohnen","cat":"du","type":"type","q":"<b>wohnen</b> — imperative, du-form","sub":"du wohnst · live, reside","a":"Wohn!","alts":["Wohne!"],"why":"No stem change, and the stem wohn- triggers nothing in rule iii, so the bare stem is the form (Wohne! exists but sounds dated) → Wohn!","tag":"rule iii — no -e needed"},{"id":"du-schwimmen","cat":"du","type":"type","q":"<b>schwimmen</b> — imperative, du-form","sub":"du schwimmst · swim","a":"Schwimm!","alts":["Schwimme!"],"why":"No stem change, and the stem schwimm- triggers nothing in rule iii, so the bare stem is the form (Schwimme! exists but sounds dated) → Schwimm!","tag":"rule iii — no -e needed"},{"id":"du-tanzen","cat":"du","type":"type","q":"<b>tanzen</b> — imperative, du-form","sub":"du tanzt · dance","a":"Tanz!","alts":["Tanze!"],"why":"No stem change, and the stem tanz- triggers nothing in rule iii, so the bare stem is the form (Tanze! exists but sounds dated) → Tanz!","tag":"rule iii — no -e needed"},{"id":"du-sitzen","cat":"du","type":"type","q":"<b>sitzen</b> — imperative, du-form","sub":"du sitzt · sit","a":"Sitz!","alts":["Sitze!"],"why":"No stem change, and the stem sitz- triggers nothing in rule iii, so the bare stem is the form (Sitze! exists but sounds dated) → Sitz!","tag":"rule iii — no -e needed"},{"id":"du-grüßen","cat":"du","type":"type","q":"<b>grüßen</b> — imperative, du-form","sub":"du grüßt · greet","a":"Grüß!","alts":["Grüße!"],"why":"No stem change, and the stem grüß- triggers nothing in rule iii, so the bare stem is the form (Grüße! exists but sounds dated) → Grüß!","tag":"rule iii — no -e needed"},{"id":"du-putzen","cat":"du","type":"type","q":"<b>putzen</b> — imperative, du-form","sub":"du putzt · clean","a":"Putz!","alts":["Putze!"],"why":"No stem change, and the stem putz- triggers nothing in rule iii, so the bare stem is the form (Putze! exists but sounds dated) → Putz!","tag":"rule iii — no -e needed"},{"id":"du-schließen","cat":"du","type":"type","q":"<b>schließen</b> — imperative, du-form","sub":"du schließt · close","a":"Schließ!","alts":["Schließe!"],"why":"No stem change, and the stem schließ- triggers nothing in rule iii, so the bare stem is the form (Schließe! exists but sounds dated) → Schließ!","tag":"rule iii — no -e needed"},{"id":"du-genießen","cat":"du","type":"type","q":"<b>genießen</b> — imperative, du-form","sub":"du genießt · enjoy","a":"Genieß!","alts":["Genieße!"],"why":"No stem change, and the stem genieß- triggers nothing in rule iii, so the bare stem is the form (Genieße! exists but sounds dated) → Genieß!","tag":"rule iii — no -e needed"},{"id":"du-benutzen","cat":"du","type":"type","q":"<b>benutzen</b> — imperative, du-form","sub":"du benutzt · use","a":"Benutz!","alts":["Benutze!"],"why":"No stem change, and the stem benutz- triggers nothing in rule iii, so the bare stem is the form (Benutze! exists but sounds dated) → Benutz!","tag":"rule iii — no -e needed"},{"id":"du-lernen","cat":"du","type":"type","q":"<b>lernen</b> — imperative, du-form","sub":"du lernst · learn","a":"Lern!","alts":["Lerne!"],"why":"No stem change, and the stem lern- triggers nothing in rule iii, so the bare stem is the form (Lerne! exists but sounds dated) → Lern!","tag":"rule iii — no -e needed"},{"id":"du-filmen","cat":"du","type":"type","q":"<b>filmen</b> — imperative, du-form","sub":"du filmst · film","a":"Film!","alts":["Filme!"],"why":"No stem change, and the stem film- triggers nothing in rule iii, so the bare stem is the form (Filme! exists but sounds dated) → Film!","tag":"rule iii — no -e needed"},{"id":"du-wärmen","cat":"du","type":"type","q":"<b>wärmen</b> — imperative, du-form","sub":"du wärmst · warm","a":"Wärm!","alts":["Wärme!"],"why":"No stem change, and the stem wärm- triggers nothing in rule iii, so the bare stem is the form (Wärme! exists but sounds dated) → Wärm!","tag":"rule iii — no -e needed"},{"id":"du-turnen","cat":"du","type":"type","q":"<b>turnen</b> — imperative, du-form","sub":"du turnst · do gymnastics","a":"Turn!","alts":["Turne!"],"why":"No stem change, and the stem turn- triggers nothing in rule iii, so the bare stem is the form (Turne! exists but sounds dated) → Turn!","tag":"rule iii — no -e needed"},{"id":"du-planen","cat":"du","type":"type","q":"<b>planen</b> — imperative, du-form","sub":"du planst · plan","a":"Plan!","alts":["Plane!"],"why":"No stem change, and the stem plan- triggers nothing in rule iii, so the bare stem is the form (Plane! exists but sounds dated) → Plan!","tag":"rule iii — no -e needed"},{"id":"du-glauben","cat":"du","type":"type","q":"<b>glauben</b> — imperative, du-form","sub":"du glaubst · believe","a":"Glaub!","alts":["Glaube!"],"why":"No stem change, and the stem glaub- triggers nothing in rule iii, so the bare stem is the form (Glaube! exists but sounds dated) → Glaub!","tag":"rule iii — no -e needed"},{"id":"du-probieren","cat":"du","type":"type","q":"<b>probieren</b> — imperative, du-form","sub":"du probierst · try, taste","a":"Probier!","alts":["Probiere!"],"why":"No stem change, and the stem probier- triggers nothing in rule iii, so the bare stem is the form (Probiere! exists but sounds dated) → Probier!","tag":"rule iii — no -e needed"},{"id":"du-telefonieren","cat":"du","type":"type","q":"<b>telefonieren</b> — imperative, du-form","sub":"du telefonierst · phone","a":"Telefonier!","alts":["Telefoniere!"],"why":"No stem change, and the stem telefonier- triggers nothing in rule iii, so the bare stem is the form (Telefoniere! exists but sounds dated) → Telefonier!","tag":"rule iii — no -e needed"},{"id":"du-erklären","cat":"du","type":"type","q":"<b>erklären</b> — imperative, du-form","sub":"du erklärst · explain","a":"Erklär!","alts":["Erkläre!"],"why":"No stem change, and the stem erklär- triggers nothing in rule iii, so the bare stem is the form (Erkläre! exists but sounds dated) → Erklär!","tag":"rule iii — no -e needed"},{"id":"du-besuchen","cat":"du","type":"type","q":"<b>besuchen</b> — imperative, du-form","sub":"du besuchst · visit","a":"Besuch!","alts":["Besuche!"],"why":"No stem change, and the stem besuch- triggers nothing in rule iii, so the bare stem is the form (Besuche! exists but sounds dated) → Besuch!","tag":"rule iii — no -e needed"},{"id":"du-versuchen","cat":"du","type":"type","q":"<b>versuchen</b> — imperative, du-form","sub":"du versuchst · try","a":"Versuch!","alts":["Versuche!"],"why":"No stem change, and the stem versuch- triggers nothing in rule iii, so the bare stem is the form (Versuche! exists but sounds dated) → Versuch!","tag":"rule iii — no -e needed"},{"id":"du-verstehen","cat":"du","type":"type","q":"<b>verstehen</b> — imperative, du-form","sub":"du verstehst · understand","a":"Versteh!","alts":["Verstehe!"],"why":"No stem change, and the stem versteh- triggers nothing in rule iii, so the bare stem is the form (Verstehe! exists but sounds dated) → Versteh!","tag":"rule iii — no -e needed"},{"id":"du-bezahlen","cat":"du","type":"type","q":"<b>bezahlen</b> — imperative, du-form","sub":"du bezahlst · pay","a":"Bezahl!","alts":["Bezahle!"],"why":"No stem change, and the stem bezahl- triggers nothing in rule iii, so the bare stem is the form (Bezahle! exists but sounds dated) → Bezahl!","tag":"rule iii — no -e needed"},{"id":"du-wiederholen","cat":"du","type":"type","q":"<b>wiederholen</b> — imperative, du-form","sub":"du wiederholst · repeat","a":"Wiederhol!","alts":["Wiederhole!"],"why":"No stem change, and the stem wiederhol- triggers nothing in rule iii, so the bare stem is the form (Wiederhole! exists but sounds dated) → Wiederhol!","tag":"rule iii — no -e needed"},{"id":"du-übersetzen","cat":"du","type":"type","q":"<b>übersetzen</b> — imperative, du-form","sub":"du übersetzt · translate","a":"Übersetz!","alts":["Übersetze!"],"why":"No stem change, and the stem übersetz- triggers nothing in rule iii, so the bare stem is the form (Übersetze! exists but sounds dated) → Übersetz!","tag":"rule iii — no -e needed"},{"id":"du-unterschreiben","cat":"du","type":"type","q":"<b>unterschreiben</b> — imperative, du-form","sub":"du unterschreibst · sign","a":"Unterschreib!","alts":["Unterschreibe!"],"why":"No stem change, and the stem unterschreib- triggers nothing in rule iii, so the bare stem is the form (Unterschreibe! exists but sounds dated) → Unterschreib!","tag":"rule iii — no -e needed"},{"id":"du-schauen","cat":"du","type":"type","q":"<b>schauen</b> — imperative, du-form","sub":"du schaust · look","a":"Schau!","alts":["Schaue!"],"why":"No stem change, and the stem schau- triggers nothing in rule iii, so the bare stem is the form (Schaue! exists but sounds dated) → Schau!","tag":"rule iii — no -e needed"},{"id":"ihr-geben","cat":"ihr","type":"type","q":"<b>geben</b> — imperative, ihr-form","sub":"du gibst · give","a":"Gebt!","why":"The ihr form never takes the stem change: du gibst, but ihr gebt → Gebt! Present-tense ihr form, pronoun deleted, nothing else.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-lesen","cat":"ihr","type":"type","q":"<b>lesen</b> — imperative, ihr-form","sub":"du liest · read","a":"Lest!","why":"The ihr form never takes the stem change: du liest, but ihr lest → Lest! Present-tense ihr form, pronoun deleted, nothing else.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-essen","cat":"ihr","type":"type","q":"<b>essen</b> — imperative, ihr-form","sub":"du isst · eat","a":"Esst!","why":"The ihr form never takes the stem change: du isst, but ihr esst → Esst! Present-tense ihr form, pronoun deleted, nothing else.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-sprechen","cat":"ihr","type":"type","q":"<b>sprechen</b> — imperative, ihr-form","sub":"du sprichst · speak","a":"Sprecht!","why":"The ihr form never takes the stem change: du sprichst, but ihr sprecht → Sprecht! Present-tense ihr form, pronoun deleted, nothing else.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-treffen","cat":"ihr","type":"type","q":"<b>treffen</b> — imperative, ihr-form","sub":"du triffst · meet","a":"Trefft!","why":"The ihr form never takes the stem change: du triffst, but ihr trefft → Trefft! Present-tense ihr form, pronoun deleted, nothing else.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-brechen","cat":"ihr","type":"type","q":"<b>brechen</b> — imperative, ihr-form","sub":"du brichst · break","a":"Brecht!","why":"The ihr form never takes the stem change: du brichst, but ihr brecht → Brecht! Present-tense ihr form, pronoun deleted, nothing else.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-empfehlen","cat":"ihr","type":"type","q":"<b>empfehlen</b> — imperative, ihr-form","sub":"du empfiehlst · recommend","a":"Empfehlt!","why":"The ihr form never takes the stem change: du empfiehlst, but ihr empfehlt → Empfehlt! Present-tense ihr form, pronoun deleted, nothing else.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-treten","cat":"ihr","type":"type","q":"<b>treten</b> — imperative, ihr-form","sub":"du trittst · step","a":"Tretet!","why":"The ihr form never takes the stem change: du trittst, but ihr tretet → Tretet! Present-tense ihr form, pronoun deleted, nothing else.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-werben","cat":"ihr","type":"type","q":"<b>werben</b> — imperative, ihr-form","sub":"du wirbst · advertise","a":"Werbt!","why":"The ihr form never takes the stem change: du wirbst, but ihr werbt → Werbt! Present-tense ihr form, pronoun deleted, nothing else.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-laufen","cat":"ihr","type":"type","q":"<b>laufen</b> — imperative, ihr-form","sub":"du läufst · run","a":"Lauft!","why":"The ihr form never takes the stem change: du läufst, but ihr lauft → Lauft! Present-tense ihr form, pronoun deleted, nothing else.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-tragen","cat":"ihr","type":"type","q":"<b>tragen</b> — imperative, ihr-form","sub":"du trägst · carry, wear","a":"Tragt!","why":"The ihr form never takes the stem change: du trägst, but ihr tragt → Tragt! Present-tense ihr form, pronoun deleted, nothing else.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-stoßen","cat":"ihr","type":"type","q":"<b>stoßen</b> — imperative, ihr-form","sub":"du stößt · push","a":"Stoßt!","why":"The ihr form never takes the stem change: du stößt, but ihr stoßt → Stoßt! Present-tense ihr form, pronoun deleted, nothing else.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-waschen","cat":"ihr","type":"type","q":"<b>waschen</b> — imperative, ihr-form","sub":"du wäschst · wash","a":"Wascht!","why":"The ihr form never takes the stem change: du wäschst, but ihr wascht → Wascht! Present-tense ihr form, pronoun deleted, nothing else.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-lassen","cat":"ihr","type":"type","q":"<b>lassen</b> — imperative, ihr-form","sub":"du lässt · let, leave","a":"Lasst!","why":"The ihr form never takes the stem change: du lässt, but ihr lasst → Lasst! Present-tense ihr form, pronoun deleted, nothing else.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-raten","cat":"ihr","type":"type","q":"<b>raten</b> — imperative, ihr-form","sub":"du rätst · guess, advise","a":"Ratet!","why":"The ihr form never takes the stem change: du rätst, but ihr ratet → Ratet! Present-tense ihr form, pronoun deleted, nothing else.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-finden","cat":"ihr","type":"type","q":"<b>finden</b> — imperative, ihr-form","sub":"du findest · find","a":"Findet!","why":"ihr findet: the stem find- ends in -d, so the ending is -et → Findet!","tag":"ihr = present tense, no pronoun"},{"id":"ihr-melden","cat":"ihr","type":"type","q":"<b>melden</b> — imperative, ihr-form","sub":"du meldest · report","a":"Meldet!","why":"ihr meldet: the stem meld- ends in -d, so the ending is -et → Meldet!","tag":"ihr = present tense, no pronoun"},{"id":"ihr-entscheiden","cat":"ihr","type":"type","q":"<b>entscheiden</b> — imperative, ihr-form","sub":"du entscheidest · decide","a":"Entscheidet!","why":"ihr entscheidet: the stem entscheid- ends in -d, so the ending is -et → Entscheidet!","tag":"ihr = present tense, no pronoun"},{"id":"ihr-landen","cat":"ihr","type":"type","q":"<b>landen</b> — imperative, ihr-form","sub":"du landest · land","a":"Landet!","why":"ihr landet: the stem land- ends in -d, so the ending is -et → Landet!","tag":"ihr = present tense, no pronoun"},{"id":"ihr-öffnen","cat":"ihr","type":"type","q":"<b>öffnen</b> — imperative, ihr-form","sub":"du öffnest · open","a":"Öffnet!","why":"ihr öffnet: the stem öffn- ends in consonant + n, so the ending is -et → Öffnet!","tag":"ihr = present tense, no pronoun"},{"id":"ihr-begegnen","cat":"ihr","type":"type","q":"<b>begegnen</b> — imperative, ihr-form","sub":"du begegnest · encounter","a":"Begegnet!","why":"ihr begegnet: the stem begegn- ends in consonant + n, so the ending is -et → Begegnet!","tag":"ihr = present tense, no pronoun"},{"id":"ihr-beschäftigen","cat":"ihr","type":"type","q":"<b>beschäftigen</b> — imperative, ihr-form","sub":"du beschäftigst · occupy","a":"Beschäftigt!","why":"ihr beschäftigt → Beschäftigt! Just the present-tense form without the pronoun.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-klingeln","cat":"ihr","type":"type","q":"<b>klingeln</b> — imperative, ihr-form","sub":"du klingelst · ring","a":"Klingelt!","why":"ihr klingelt → Klingelt! Just the present-tense form without the pronoun.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-angeln","cat":"ihr","type":"type","q":"<b>angeln</b> — imperative, ihr-form","sub":"du angelst · fish","a":"Angelt!","why":"ihr angelt → Angelt! Just the present-tense form without the pronoun.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-verbessern","cat":"ihr","type":"type","q":"<b>verbessern</b> — imperative, ihr-form","sub":"du verbesserst · improve","a":"Verbessert!","why":"ihr verbessert → Verbessert! Just the present-tense form without the pronoun.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-ärgern","cat":"ihr","type":"type","q":"<b>ärgern</b> — imperative, ihr-form","sub":"du ärgerst · annoy","a":"Ärgert!","why":"ihr ärgert → Ärgert! Just the present-tense form without the pronoun.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-bleiben","cat":"ihr","type":"type","q":"<b>bleiben</b> — imperative, ihr-form","sub":"du bleibst · stay","a":"Bleibt!","why":"ihr bleibt → Bleibt! Just the present-tense form without the pronoun.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-stellen","cat":"ihr","type":"type","q":"<b>stellen</b> — imperative, ihr-form","sub":"du stellst · put, place","a":"Stellt!","why":"ihr stellt → Stellt! Just the present-tense form without the pronoun.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-schließen","cat":"ihr","type":"type","q":"<b>schließen</b> — imperative, ihr-form","sub":"du schließt · close","a":"Schließt!","why":"ihr schließt → Schließt! Just the present-tense form without the pronoun.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-probieren","cat":"ihr","type":"type","q":"<b>probieren</b> — imperative, ihr-form","sub":"du probierst · try, taste","a":"Probiert!","why":"ihr probiert → Probiert! Just the present-tense form without the pronoun.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-unterschreiben","cat":"ihr","type":"type","q":"<b>unterschreiben</b> — imperative, ihr-form","sub":"du unterschreibst · sign","a":"Unterschreibt!","why":"ihr unterschreibt → Unterschreibt! Just the present-tense form without the pronoun.","tag":"ihr = present tense, no pronoun"},{"id":"sie-geben","cat":"formal","type":"type","q":"<b>geben</b> — imperative, Sie-form","sub":"du gibst · give","a":"Geben Sie!","why":"Infinitive + Sie, in that order: Geben Sie! No stem change, no ending — only sein is different (Seien Sie!).","tag":"Sie = infinitive + Sie"},{"id":"sie-vergessen","cat":"formal","type":"type","q":"<b>vergessen</b> — imperative, Sie-form","sub":"du vergisst · forget","a":"Vergessen Sie!","why":"Infinitive + Sie, in that order: Vergessen Sie! No stem change, no ending — only sein is different (Seien Sie!).","tag":"Sie = infinitive + Sie"},{"id":"sie-treten","cat":"formal","type":"type","q":"<b>treten</b> — imperative, Sie-form","sub":"du trittst · step","a":"Treten Sie!","why":"Infinitive + Sie, in that order: Treten Sie! No stem change, no ending — only sein is different (Seien Sie!).","tag":"Sie = infinitive + Sie"},{"id":"sie-halten","cat":"formal","type":"type","q":"<b>halten</b> — imperative, Sie-form","sub":"du hältst · stop, hold","a":"Halten Sie!","why":"Infinitive + Sie, in that order: Halten Sie! No stem change, no ending — only sein is different (Seien Sie!).","tag":"Sie = infinitive + Sie"},{"id":"sie-raten","cat":"formal","type":"type","q":"<b>raten</b> — imperative, Sie-form","sub":"du rätst · guess, advise","a":"Raten Sie!","why":"Infinitive + Sie, in that order: Raten Sie! No stem change, no ending — only sein is different (Seien Sie!).","tag":"Sie = infinitive + Sie"},{"id":"sie-baden","cat":"formal","type":"type","q":"<b>baden</b> — imperative, Sie-form","sub":"du badest · bathe","a":"Baden Sie!","why":"Infinitive + Sie, in that order: Baden Sie! No stem change, no ending — only sein is different (Seien Sie!).","tag":"Sie = infinitive + Sie"},{"id":"sie-retten","cat":"formal","type":"type","q":"<b>retten</b> — imperative, Sie-form","sub":"du rettest · rescue","a":"Retten Sie!","why":"Infinitive + Sie, in that order: Retten Sie! No stem change, no ending — only sein is different (Seien Sie!).","tag":"Sie = infinitive + Sie"},{"id":"sie-zeichnen","cat":"formal","type":"type","q":"<b>zeichnen</b> — imperative, Sie-form","sub":"du zeichnest · draw","a":"Zeichnen Sie!","why":"Infinitive + Sie, in that order: Zeichnen Sie! No stem change, no ending — only sein is different (Seien Sie!).","tag":"Sie = infinitive + Sie"},{"id":"sie-beschäftigen","cat":"formal","type":"type","q":"<b>beschäftigen</b> — imperative, Sie-form","sub":"du beschäftigst · occupy","a":"Beschäftigen Sie!","why":"Infinitive + Sie, in that order: Beschäftigen Sie! No stem change, no ending — only sein is different (Seien Sie!).","tag":"Sie = infinitive + Sie"},{"id":"sie-bügeln","cat":"formal","type":"type","q":"<b>bügeln</b> — imperative, Sie-form","sub":"du bügelst · iron","a":"Bügeln Sie!","why":"Infinitive + Sie, in that order: Bügeln Sie! No stem change, no ending — only sein is different (Seien Sie!).","tag":"Sie = infinitive + Sie"},{"id":"sie-füttern","cat":"formal","type":"type","q":"<b>füttern</b> — imperative, Sie-form","sub":"du fütterst · feed","a":"Füttern Sie!","why":"Infinitive + Sie, in that order: Füttern Sie! No stem change, no ending — only sein is different (Seien Sie!).","tag":"Sie = infinitive + Sie"},{"id":"sie-kaufen","cat":"formal","type":"type","q":"<b>kaufen</b> — imperative, Sie-form","sub":"du kaufst · buy","a":"Kaufen Sie!","why":"Infinitive + Sie, in that order: Kaufen Sie! No stem change, no ending — only sein is different (Seien Sie!).","tag":"Sie = infinitive + Sie"},{"id":"sie-denken","cat":"formal","type":"type","q":"<b>denken</b> — imperative, Sie-form","sub":"du denkst · think","a":"Denken Sie!","why":"Infinitive + Sie, in that order: Denken Sie! No stem change, no ending — only sein is different (Seien Sie!).","tag":"Sie = infinitive + Sie"},{"id":"sie-legen","cat":"formal","type":"type","q":"<b>legen</b> — imperative, Sie-form","sub":"du legst · lay, put","a":"Legen Sie!","why":"Infinitive + Sie, in that order: Legen Sie! No stem change, no ending — only sein is different (Seien Sie!).","tag":"Sie = infinitive + Sie"},{"id":"sie-putzen","cat":"formal","type":"type","q":"<b>putzen</b> — imperative, Sie-form","sub":"du putzt · clean","a":"Putzen Sie!","why":"Infinitive + Sie, in that order: Putzen Sie! No stem change, no ending — only sein is different (Seien Sie!).","tag":"Sie = infinitive + Sie"},{"id":"sie-turnen","cat":"formal","type":"type","q":"<b>turnen</b> — imperative, Sie-form","sub":"du turnst · do gymnastics","a":"Turnen Sie!","why":"Infinitive + Sie, in that order: Turnen Sie! No stem change, no ending — only sein is different (Seien Sie!).","tag":"Sie = infinitive + Sie"},{"id":"sie-versuchen","cat":"formal","type":"type","q":"<b>versuchen</b> — imperative, Sie-form","sub":"du versuchst · try","a":"Versuchen Sie!","why":"Infinitive + Sie, in that order: Versuchen Sie! No stem change, no ending — only sein is different (Seien Sie!).","tag":"Sie = infinitive + Sie"},{"id":"wir-geben","cat":"formal","type":"type","q":"<b>geben</b> — imperative, wir-form","sub":"“let's …” · give","a":"Geben wir!","why":"Infinitive + wir = the let's-form: Geben wir!","tag":"wir = infinitive + wir"},{"id":"wir-fallen","cat":"formal","type":"type","q":"<b>fallen</b> — imperative, wir-form","sub":"“let's …” · fall","a":"Fallen wir!","why":"Infinitive + wir = the let's-form: Fallen wir!","tag":"wir = infinitive + wir"},{"id":"wir-atmen","cat":"formal","type":"type","q":"<b>atmen</b> — imperative, wir-form","sub":"“let's …” · breathe","a":"Atmen wir!","why":"Infinitive + wir = the let's-form: Atmen wir!","tag":"wir = infinitive + wir"},{"id":"wir-erinnern","cat":"formal","type":"type","q":"<b>erinnern</b> — imperative, wir-form","sub":"“let's …” · remind","a":"Erinnern wir!","why":"Infinitive + wir = the let's-form: Erinnern wir!","tag":"wir = infinitive + wir"},{"id":"wir-üben","cat":"formal","type":"type","q":"<b>üben</b> — imperative, wir-form","sub":"“let's …” · practise","a":"Üben wir!","why":"Infinitive + wir = the let's-form: Üben wir!","tag":"wir = infinitive + wir"},{"id":"wir-wiederholen","cat":"formal","type":"type","q":"<b>wiederholen</b> — imperative, wir-form","sub":"“let's …” · repeat","a":"Wiederholen wir!","why":"Infinitive + wir = the let's-form: Wiederholen wir!","tag":"wir = infinitive + wir"},{"id":"ir-sein-du","cat":"irreg","type":"type","q":"sein — imperative, du-form","a":"Sei!","why":"sein is irregular in every form. du: Sei! — not the stem of the du-form (bist).","sub":"du bist …","tag":"4 irregulars"},{"id":"ir-sein-ihr","cat":"irreg","type":"type","q":"sein — imperative, ihr-form","a":"Seid!","why":"ihr seid → Seid! The ihr imperative is always the plain present-tense ihr form, even here.","sub":"ihr seid …","tag":"4 irregulars"},{"id":"ir-sein-sie","cat":"irreg","type":"type","q":"sein — imperative, Sie-form","a":"Seien Sie!","why":"sein is the one verb where the Sie form is not the infinitive: Seien Sie, not Sein Sie.","tag":"4 irregulars"},{"id":"ir-sein-wir","cat":"irreg","type":"type","q":"sein — imperative, wir-form","a":"Seien wir!","why":"Same stem as the Sie form: Seien wir ehrlich — let's be honest.","tag":"4 irregulars"},{"id":"ir-haben-du","cat":"irreg","type":"type","q":"haben — imperative, du-form","a":"Hab!","why":"Hab! (Habe! also exists but sounds heavier). Hab keine Angst!","alts":["Habe!"],"tag":"4 irregulars"},{"id":"ir-haben-ihr","cat":"irreg","type":"type","q":"haben — imperative, ihr-form","a":"Habt!","why":"ihr habt → Habt! Habt keine Angst!","tag":"4 irregulars"},{"id":"ir-haben-sie","cat":"irreg","type":"type","q":"haben — imperative, Sie-form","a":"Haben Sie!","why":"Regular pattern: infinitive + Sie. Haben Sie bitte etwas Geduld.","tag":"4 irregulars"},{"id":"ir-werden-du","cat":"irreg","type":"type","q":"werden — imperative, du-form","a":"Werde!","why":"Werde! keeps the -e — the du-form wirst does not feed the imperative here.","tag":"4 irregulars"},{"id":"ir-werden-ihr","cat":"irreg","type":"type","q":"werden — imperative, ihr-form","a":"Werdet!","why":"ihr werdet → Werdet!","tag":"4 irregulars"},{"id":"ir-werden-sie","cat":"irreg","type":"type","q":"werden — imperative, Sie-form","a":"Werden Sie!","why":"Infinitive + Sie: Werden Sie bitte nicht laut.","tag":"4 irregulars"},{"id":"ir-wissen-ihr","cat":"irreg","type":"type","q":"wissen — imperative, ihr-form","a":"Wisst!","why":"ihr wisst → Wisst! The du form Wisse! is literary and you will not need it in speech.","tag":"4 irregulars"},{"id":"ir-wissen-sie","cat":"irreg","type":"type","q":"wissen — imperative, Sie-form","a":"Wissen Sie!","why":"Infinitive + Sie. In practice you meet it as the filler Wissen Sie, …","tag":"4 irregulars"},{"id":"ir-mc-sein-sie","cat":"irreg","type":"mc","q":"You are speaking to an official: ___ Sie bitte so nett.","opts":["Seien","Sein","Sind","Seid"],"ans":0,"why":"sein breaks the infinitive+Sie pattern: Seien Sie. Every other verb would use the infinitive.","tag":"4 irregulars"},{"id":"ir-mc-sein-du","cat":"irreg","type":"mc","q":"To a friend: ___ bitte pünktlich!","opts":["Sei","Bist","Sein","Seist"],"ans":0,"why":"du-Imperativ of sein is Sei! — an irregular form you simply learn.","tag":"4 irregulars"},{"id":"ir-cl-angst","cat":"irreg","type":"type","q":"Fill the gap: ___ keine Angst! (haben, du)","a":"Hab","why":"haben + kein: Hab keine Angst! Angst is feminine, accusative → keine.","alts":["Habe"],"tag":"4 irregulars"},{"id":"ir-cl-ehrlich","cat":"irreg","type":"type","q":"Fill the gap: ___ ___ ehrlich — das war zu teuer. (sein, wir)","a":"Seien wir","why":"The wir-imperative makes a suggestion: Seien wir ehrlich = let's be honest.","tag":"4 irregulars"},{"id":"ir-mc-why","cat":"irreg","type":"mc","q":"Why is it Seien Sie! and not Sein Sie!?","opts":["sein is the only verb whose Sie-imperative is not the infinitive","Because Sie is plural here","Because the sentence is a request, not an order","Because sein has no imperative at all"],"ans":0,"why":"Every other verb: infinitive + Sie. sein alone uses the subjunctive stem seien.","tag":"4 irregulars"},{"id":"sep-b-aufstehen","cat":"sep","type":"build","q":"aufstehen — say it to a friend, politely","a":"Steh bitte auf!","why":"Prefix to the very end. bitte sits between verb and prefix.","tag":"prefix goes last"},{"id":"sep-b-anrufen","cat":"sep","type":"build","q":"anrufen — bitte deinen Freund, dich heute Abend anzurufen","a":"Ruf mich heute Abend an!","why":"Verb first, then the pronoun, then the time phrase, and an at the end.","tag":"prefix goes last"},{"id":"sep-b-zumachen","cat":"sep","type":"build","q":"zumachen — sag es zu mehreren Personen (ihr)","a":"Macht die Tür zu!","why":"ihr-Imperativ Macht + object + prefix zu.","tag":"prefix goes last"},{"id":"sep-b-mitkommen","cat":"sep","type":"build","q":"mitkommen — lade jemanden formell ein (Sie)","a":"Kommen Sie doch mit!","why":"Sie-form: infinitive + Sie, and mit still goes last.","tag":"prefix goes last"},{"id":"sep-b-aufhoeren","cat":"sep","type":"build","q":"aufhören — say it to a friend, exasperated","a":"Hör endlich auf!","why":"endlich sits before the prefix, like every other element.","tag":"prefix goes last"},{"id":"sep-b-einsteigen","cat":"sep","type":"build","q":"einsteigen — Durchsage im Zug (Sie)","a":"Steigen Sie bitte ein!","why":"Infinitive + Sie + bitte + prefix.","tag":"prefix goes last"},{"id":"sep-t-anfangen","cat":"sep","type":"type","q":"anfangen — imperative, du-form","a":"Fang an!","why":"du fängst an: umlaut is dropped (rule ii), prefix goes last → Fang an!","sub":"du fängst an","alts":["Fange an!"],"tag":"prefix goes last"},{"id":"sep-t-mitnehmen","cat":"sep","type":"type","q":"mitnehmen — imperative, du-form","a":"Nimm mit!","why":"du nimmst mit: the e→i change survives (rule i), prefix goes last → Nimm mit!","sub":"du nimmst mit","tag":"prefix goes last"},{"id":"sep-t-vorlesen","cat":"sep","type":"type","q":"vorlesen — imperative, du-form","a":"Lies vor!","why":"du liest vor → Lies vor! Stem in -s, so the du-ending is only -t.","sub":"du liest vor","tag":"prefix goes last"},{"id":"sep-t-fernsehen","cat":"sep","type":"type","q":"fernsehen — imperative, du-form","a":"Sieh fern!","why":"du siehst fern → Sieh fern! e→ie kept, no -e.","sub":"du siehst fern","tag":"prefix goes last"},{"id":"sep-t-einschalten","cat":"sep","type":"type","q":"einschalten — imperative, du-form","a":"Schalte ein!","why":"Stem schalt- ends in -t, so the -e is obligatory even with a prefix: Schalte ein!","sub":"du schaltest ein","tag":"prefix goes last"},{"id":"sep-t-einladen","cat":"sep","type":"type","q":"einladen — imperative, du-form","a":"Lade ein!","why":"Drop the umlaut AND obey rule iii: stem lad- ends in -d, so Lade ein! (Duden lad[e]!, so the short Lad ein! is also correct.)","sub":"du lädst ein","alts":["Lad ein!"],"tag":"prefix goes last"},{"id":"sep-t-aufraeumen","cat":"sep","type":"type","q":"aufräumen — imperative, du-form","a":"Räum auf!","why":"Stem räum- ends in -m after a vowel, so no -e: Räum auf!","sub":"du räumst auf","alts":["Räume auf!"],"tag":"prefix goes last"},{"id":"sep-t-wegwerfen","cat":"sep","type":"type","q":"wegwerfen — imperative, du-form","a":"Wirf weg!","why":"du wirfst weg → Wirf weg! e→i kept.","sub":"du wirfst weg","tag":"prefix goes last"},{"id":"sep-t-nachschlagen","cat":"sep","type":"type","q":"nachschlagen — imperative, du-form","a":"Schlag nach!","why":"du schlägst nach: umlaut dropped → Schlag nach!","sub":"du schlägst nach","alts":["Schlage nach!"],"tag":"prefix goes last"},{"id":"sep-t-aufpassen","cat":"sep","type":"type","q":"aufpassen — imperative, du-form","a":"Pass auf!","why":"Stem pass- ends in -ss, so the du-form is passt; strip the -t → Pass auf!","sub":"du passt auf","alts":["Passe auf!"],"tag":"prefix goes last"},{"id":"sep-b-abholen","cat":"sep","type":"build","q":"abholen — bitte jemanden, dich um acht abzuholen","a":"Hol mich um acht ab!","why":"Pronoun, then time, then prefix.","tag":"prefix goes last"},{"id":"sep-b-mitbringen","cat":"sep","type":"build","q":"mitbringen — bitte einen Freund, Kuchen mitzubringen","a":"Bring bitte Kuchen mit!","why":"bitte early, object next, prefix last.","alts":["Bring Kuchen bitte mit!"],"tag":"prefix goes last"},{"id":"sep-b-anziehen","cat":"sep","type":"build","q":"anziehen — sag es zu einem Kind","a":"Zieh die Jacke an!","why":"Object between verb and prefix.","tag":"prefix goes last"},{"id":"sep-b-ausmachen","cat":"sep","type":"build","q":"ausmachen — bitte jemanden, das Licht auszumachen","a":"Mach das Licht aus!","why":"Object between verb and prefix.","tag":"prefix goes last"},{"id":"sep-b-ausfuellen","cat":"sep","type":"build","q":"ausfüllen — at a government office, formal (Sie)","a":"Füllen Sie das Formular aus!","why":"Infinitive + Sie + object + prefix.","tag":"prefix goes last"},{"id":"sep-b-zurueckkommen","cat":"sep","type":"build","q":"zurückkommen — say it to several friends (ihr)","a":"Kommt bitte pünktlich zurück!","why":"ihr-form Kommt, prefix zurück at the end.","tag":"prefix goes last"},{"id":"sep-b-nachdenken","cat":"sep","type":"build","q":"nachdenken — advise someone to think it over calmly","a":"Denk in Ruhe darüber nach!","why":"Everything else first, prefix nach last.","alts":["Denk darüber in Ruhe nach!"],"tag":"prefix goes last"},{"id":"sep-b-zuhoeren","cat":"sep","type":"build","q":"zuhören — ask someone to listen to you","a":"Hör mir bitte zu!","why":"zuhören takes the dative: Hör mir zu.","tag":"prefix goes last"},{"id":"sep-mc-order","cat":"sep","type":"mc","q":"Which sentence is correct?","opts":["Ruf mich morgen an!","Ruf an mich morgen!","Anruf mich morgen!","Ruf morgen an mich!"],"ans":0,"why":"The prefix leaves the verb and parks at the end of the clause. Nothing may follow it.","tag":"prefix goes last"},{"id":"sep-mc-wiederholen","cat":"sep","type":"mc","q":"wiederholen (inseparable) — which sentence is correct?","opts":["Wiederhol den Satz bitte!","Hol den Satz bitte wieder!","Wiederhole den Satz bitte wieder!","Wieder hol den Satz bitte!"],"ans":0,"why":"wiederholen is inseparable (stress on -ho-), so nothing splits off: Wiederhol den Satz!","tag":"separable vs inseparable"},{"id":"sep-mc-uebersetzen","cat":"sep","type":"mc","q":"übersetzen (inseparable, 'translate') — which sentence is correct?","opts":["Übersetz den Text ins Deutsche!","Setz den Text ins Deutsche über!","Übersetze den Text ins Deutsche über!","Über setz den Text ins Deutsche!"],"ans":0,"why":"Inseparable übersetzen keeps its prefix. (The separable homograph übersetzen means to ferry someone across.)","tag":"separable vs inseparable"},{"id":"sep-mc-unterschreiben","cat":"sep","type":"mc","q":"unterschreiben (inseparable) — which sentence is correct?","opts":["Unterschreib bitte hier!","Schreib bitte hier unter!","Unter schreib bitte hier!","Unterschreibe hier bitte unter!"],"ans":0,"why":"Inseparable: the prefix stays put. Unterschreiben Sie bitte hier is the formal version.","tag":"separable vs inseparable"},{"id":"sep-mc-verstehen","cat":"sep","type":"mc","q":"verstehen (inseparable) — which sentence is correct?","opts":["Versteh mich nicht falsch!","Steh mich nicht falsch ver!","Verstehe mich nicht falsch ver!","Ver versteh mich nicht falsch!"],"ans":0,"why":"ver- is never separable. Compare trennbar aufstehen → Steh auf!","tag":"separable vs inseparable"},{"id":"sep-mc-negprefix","cat":"sep","type":"mc","q":"Where does nicht go with separable verbs?","opts":["Before the prefix: Mach die Tür nicht zu!","Nach dem Verb: Mach nicht die Tür zu!","Ganz am Ende: Mach die Tür zu nicht!","Before the verb: Nicht mach die Tür zu!"],"ans":0,"why":"nicht lands late but still before the prefix — the prefix is always the last word.","tag":"negation + prefix"},{"id":"sep-t-cl-aufstehen","cat":"sep","type":"type","q":"Write the whole sentence (ihr): aufstehen, bitte","a":"Steht bitte auf!","why":"ihr steht auf → Steht bitte auf! Prefix at the end.","tag":"prefix goes last"},{"id":"sep-t-cl-umsteigen","cat":"sep","type":"type","q":"Write the whole sentence (Sie): umsteigen, bitte, am Hauptbahnhof","a":"Steigen Sie bitte am Hauptbahnhof um!","why":"Infinitive + Sie, then bitte, then the place, prefix um at the very end.","alts":["Steigen Sie am Hauptbahnhof bitte um!"],"tag":"prefix goes last"},{"id":"sep-b-absagen","cat":"sep","type":"build","q":"absagen — bitte jemanden, den Termin abzusagen","a":"Sag den Termin bitte ab!","why":"Object, bitte, prefix.","alts":["Sag bitte den Termin ab!"],"tag":"prefix goes last"},{"id":"sep-b-aufschreiben","cat":"sep","type":"build","q":"aufschreiben — rate jemandem, sich die Adresse aufzuschreiben","a":"Schreib dir die Adresse auf!","why":"Dative pronoun dir, then object, then prefix.","tag":"prefix goes last"},{"id":"sep-b-mitmachen","cat":"sep","type":"build","q":"mitmachen — sag es zu einer Gruppe von Freunden (ihr)","a":"Macht alle mit!","why":"ihr-form + alle + prefix.","tag":"prefix goes last"},{"id":"sep-b-weitermachen","cat":"sep","type":"build","q":"weitermachen — sag es formell (Sie)","a":"Machen Sie bitte weiter!","why":"Infinitive + Sie + bitte + prefix.","tag":"prefix goes last"},{"id":"neg-b-nicht1","cat":"neg","type":"build","q":"Tell a friend not to: das nicht machen","a":"Mach das nicht!","why":"nicht comes after the object pronoun das.","tag":"negation"},{"id":"neg-b-nicht2","cat":"neg","type":"build","q":"Remind a friend about his key (vergessen + nicht)","a":"Vergiss deinen Schlüssel nicht!","why":"nicht lands late — after the object.","tag":"negation"},{"id":"neg-b-nicht3","cat":"neg","type":"build","q":"Say: die Tür nicht zumachen","a":"Mach die Tür nicht zu!","why":"nicht goes before the prefix, never after it.","tag":"negation"},{"id":"neg-b-kein1","cat":"neg","type":"build","q":"Beruhige jemanden (haben + Angst)","a":"Hab keine Angst!","why":"Nouns are negated with kein-, not nicht. Angst → keine Angst.","tag":"kein vs nicht"},{"id":"neg-b-kein2","cat":"neg","type":"build","q":"Ask for quiet (machen + Lärm)","a":"Mach keinen Lärm!","why":"der Lärm, accusative → keinen Lärm.","tag":"kein vs nicht"},{"id":"neg-b-nie","cat":"neg","type":"build","q":"Say: das nie wieder sagen","a":"Sag das nie wieder!","why":"nie wieder replaces nicht entirely — never say nicht nie.","tag":"negation"},{"id":"neg-t-schnell","cat":"neg","type":"type","q":"Fill the gap: Fahr ___ so schnell!","a":"nicht","why":"An adverb like schnell is negated with nicht, not kein.","tag":"kein vs nicht"},{"id":"neg-t-sorgen","cat":"neg","type":"type","q":"Fill the gap (Sie): Machen Sie sich ___ Sorgen!","a":"neither","why":"die Sorgen is a plural noun → keine Sorgen.","tag":"kein vs nicht"},{"id":"neg-mc-place1","cat":"neg","type":"mc","q":"Which sentence is correct?","opts":["Ruf ihn nicht mehr an!","Ruf nicht ihn mehr an!","Ruf ihn an nicht mehr!","Nicht ruf ihn mehr an!"],"ans":0,"why":"Pronoun straight after the verb, then nicht mehr, then the prefix.","tag":"negation"},{"id":"neg-mc-place2","cat":"neg","type":"mc","q":"Which sentence is correct?","opts":["Sprich nicht so laut!","Sprich so laut nicht!","Nicht sprich so laut!","Sprich nicht so laut nicht!"],"ans":0,"why":"nicht sits in front of the phrase it negates (so laut).","tag":"negation"},{"id":"neg-mc-keinnicht","cat":"neg","type":"mc","q":"___ Zeit verlieren! What fits?","opts":["Verlier keine","Verlier nicht","Verliere nicht keine","Nicht verlier"],"ans":0,"why":"die Zeit is a noun without an article → kein-. Verlier keine Zeit!","tag":"kein vs nicht"},{"id":"neg-b-ihr","cat":"neg","type":"build","q":"Say to two children: nicht so laut sein","a":"Seid nicht so laut!","why":"ihr-Imperativ of sein is Seid, then nicht.","tag":"negation"},{"id":"neg-b-ernst","cat":"neg","type":"build","q":"Reassure someone: das nicht so ernst nehmen","a":"Nimm das nicht so ernst!","why":"e→i in Nimm, then object, then nicht.","tag":"negation"},{"id":"neg-b-warten","cat":"neg","type":"build","q":"Say: nicht auf mich warten","a":"Warte nicht auf mich!","why":"Stem wart- ends in -t → Warte. nicht before the prepositional phrase.","tag":"negation"},{"id":"neg-inf-rauchen","cat":"inf","type":"type","q":"Sign at a station: Bitte nicht ___. (rauchen)","a":"rauchen","why":"Signs use the bare infinitive, addressed to nobody in particular — no personal ending.","tag":"bare infinitive"},{"id":"neg-inf-schuetteln","cat":"inf","type":"type","q":"On a bottle: Vor Gebrauch ___. (schütteln)","a":"schütteln","why":"Instructions on packaging: infinitive, verb at the very end.","tag":"bare infinitive"},{"id":"neg-inf-abstand","cat":"inf","type":"type","q":"Sign: Bitte Abstand ___. (halten)","a":"halten","why":"Bare infinitive on signage. As a personal command it would be Halt Abstand!","tag":"bare infinitive"},{"id":"neg-b-rezept","cat":"inf","type":"build","q":"Recipe step: dice the onions and fry them (infinitive form)","a":"Zwiebeln klein schneiden und anbraten.","why":"Recipes stay in the infinitive; the separable prefix stays attached (anbraten, not brat an).","tag":"bare infinitive"},{"id":"neg-b-zug","cat":"inf","type":"build","q":"Sign on a train door: do not open before the train stops","a":"Nicht öffnen, bevor der Zug hält.","why":"nicht precedes the infinitive on signs.","tag":"bare infinitive"},{"id":"neg-mc-inf1","cat":"inf","type":"mc","q":"A sign on an escalator. Which form is typical?","opts":["Rechts stehen, links gehen.","Steh rechts, geh links!","Stehen Sie rechts, gehen Sie links!","Rechts stehst du, links gehst du."],"ans":0,"why":"Impersonal signage takes the bare infinitive. The other forms are correct German but address someone.","tag":"bare infinitive"},{"id":"neg-mc-inf2","cat":"inf","type":"mc","q":"U-Bahn announcement in Berlin:","opts":["Zurückbleiben, bitte!","Bleib zurück, bitte!","Zurück bleiben Sie, bitte!","Bleiben zurück, bitte!"],"ans":0,"why":"Announcements use the infinitive with the prefix still attached: zurückbleiben.","tag":"bare infinitive"},{"id":"neg-mc-inf3","cat":"inf","type":"mc","q":"What is different about the infinitive on signs?","opts":["The separable prefix stays attached to the verb","The verb always comes first","You always need bitte","You need a pronoun"],"ans":0,"why":"Nicht rauchen / Zurückbleiben keep the prefix; the imperative splits it off: Rauch nicht!","tag":"bare infinitive"},{"id":"neg-t-lehnen","cat":"inf","type":"type","q":"Sign on a train: Nicht aus dem Fenster ___. (lehnen)","a":"lehnen","why":"Bare infinitive, verb last.","tag":"bare infinitive"},{"id":"neg-t-rasen","cat":"inf","type":"type","q":"Sign in a park: Den Rasen nicht ___. (betreten)","a":"betreten","why":"Bare infinitive; betreten is inseparable so nothing splits.","tag":"bare infinitive"},{"id":"neg-mc-kein1","cat":"neg","type":"mc","q":"kein or nicht? — ___ Fotos machen!","opts":["Mach keine Fotos!","Mach nicht Fotos!","Mach kein Fotos!","Mach nichts Fotos!"],"ans":0,"why":"A noun without an article is negated with kein-, and it agrees: Fotos is plural → keine.","tag":"nicht or kein"},{"id":"neg-mc-kein2","cat":"neg","type":"mc","q":"kein or nicht? — Komm ___ zu spät!","opts":["nicht","kein","neither","nichts"],"ans":0,"why":"There is no noun to negate here — zu spät is an adverbial, so it takes nicht.","tag":"nicht or kein"},{"id":"neg-mc-trenn","cat":"neg","type":"mc","q":"Where does nicht go with a separable verb?","opts":["Before the prefix: Mach das Licht nicht aus!","After the prefix: Mach das Licht aus nicht!","Before the verb: Nicht mach das Licht aus!","At the start: Nicht mach aus das Licht!"],"ans":0,"why":"nicht comes late in the sentence but still in front of the separated prefix, because the prefix is glued to the very end: Mach das Licht nicht aus!","tag":"where nicht goes"},{"id":"neg-b-fenster","cat":"neg","type":"build","q":"Say to a friend: das Fenster nicht öffnen","a":"Öffne das Fenster nicht!","why":"Stem öffn- ends in a cluster + n, so the -e is obligatory; a definite object comes before nicht: Öffne das Fenster nicht!","tag":"where nicht goes"},{"id":"neg-b-wartet","cat":"neg","type":"build","q":"Say to two friends: nicht auf mich warten","a":"Wartet nicht auf mich!","why":"Plural of people you duz → ihr-form Wartet, and nicht goes in front of the prepositional phrase: Wartet nicht auf mich!","tag":"ihr and nicht"},{"id":"neg-t-rauch","cat":"neg","type":"type","q":"Politely ask a friend not to smoke (rauchen + bitte)","a":"Rauch bitte nicht!","why":"bitte sits right after the verb, nicht at the end: Rauch bitte nicht! (Rauch nicht, bitte! works too.)","alts":["Rauche bitte nicht!","Rauch nicht, bitte!"],"tag":"softened negation"},{"id":"inf-t-druecken","cat":"inf","type":"type","q":"Instruction manual: Den Knopf 3 Sekunden ___. (drücken)","a":"drücken","why":"Instructions use the plain infinitive, at the very end of the sentence.","tag":"infinitive on signs"},{"id":"inf-t-lagern","cat":"inf","type":"type","q":"On the packaging: Kühl und trocken ___. (lagern)","a":"lagern","why":"Standard packaging German: no person is addressed, so the infinitive stands alone.","tag":"infinitive on signs"},{"id":"inf-mc-warum","cat":"inf","type":"mc","q":"Why do signs so often use the infinitive?","opts":["It addresses everyone and sounds neutral","It is politer than the Sie-form","It is the ihr-form","It is the only form without a verb"],"ans":0,"why":"A sign has no particular addressee, so it avoids choosing between du, ihr and Sie.","tag":"infinitive on signs"},{"id":"inf-b-notfall","cat":"inf","type":"build","q":"Sign by an emergency exit: in an emergency, break the pane (infinitive form)","a":"Im Notfall die Scheibe einschlagen.","why":"Infinitive at the end and the prefix stays attached: einschlagen, not schlag ein.","tag":"infinitive on signs"},{"id":"inf-mc-praefix","cat":"inf","type":"mc","q":"Which line is the infinitive form for a sign?","opts":["Bitte die Türen freihalten.","Bitte halt die Türen frei.","Bitte haltet die Türen frei.","Bitte die Türen frei halten Sie."],"ans":0,"why":"The infinitive keeps the prefix on the verb (freihalten) and puts it last.","tag":"infinitive on signs"},{"id":"par-t-bitte","cat":"part","type":"type","q":"Fill the gap: Komm ___ um acht. (the plain softener)","a":"bitte","why":"bitte is the neutral politeness marker and fits every register.","tag":"particles"},{"id":"par-t-mal","cat":"part","type":"type","q":"Fill the gap: Guck ___! (casual, 'just have a look')","a":"mal","why":"mal makes a command small and casual — the single most common softener in speech.","tag":"particles"},{"id":"par-t-doch","cat":"part","type":"type","q":"Fill the gap: Komm ___ mit! (friendly nudge, 'go on')","a":"doch","why":"doch pushes in a friendly way: come on, join us.","tag":"particles"},{"id":"par-t-einfach","cat":"part","type":"type","q":"Fill the gap: Ruf mich ___ an. ('just — no fuss')","a":"einfach","why":"einfach removes the fuss: just call me, it's no trouble.","tag":"particles"},{"id":"par-t-ruhig","cat":"part","type":"type","q":"Fill the gap: Nimm dir ___ noch etwas. (reassuring, 'feel free')","a":"ruhig","why":"ruhig here means feel free, go ahead — not quietly.","tag":"particles"},{"id":"par-t-dochmal","cat":"part","type":"type","q":"Fill the gap: Probier das ___ ___. (the everyday pairing)","a":"doch mal","why":"doch mal is the everyday pairing: friendly urging plus casualness.","tag":"particles"},{"id":"par-mc-ruhig","cat":"part","type":"mc","q":"Nimm dir ruhig noch etwas. What does ruhig mean here?","opts":["Feel free / go ahead","Quietly","Slowly","Seriously"],"ans":0,"why":"As a modal particle ruhig reassures. The adverb ruhig (quietly) is a different use: Sitz ruhig!","tag":"particles"},{"id":"par-mc-mal","cat":"part","type":"mc","q":"Warte mal. What does mal do here?","opts":["It makes the request small and casual","It makes it more formal","It negates the request","It makes it more urgent"],"ans":0,"why":"mal shrinks a command to a small favour: hang on a second.","tag":"particles"},{"id":"par-mc-doch","cat":"part","type":"mc","q":"Frag ihn doch. What does doch do here?","opts":["A friendly nudge — go on","A prohibition","A question","Formal politeness"],"ans":0,"why":"doch nudges: go on, ask him.","tag":"particles"},{"id":"par-mc-place","cat":"part","type":"mc","q":"Where do the particles go in an imperative?","opts":["Right after the verb and any pronouns","Always at the end","Before the verb","Right before the separable prefix"],"ans":0,"why":"Verb — pronoun — particle — rest — prefix: Ruf mich doch mal an!","tag":"particles"},{"id":"par-b-dochmal","cat":"part","type":"build","q":"Casually ask a friend to call you (anrufen + doch mal)","a":"Ruf mich doch mal an!","why":"Pronoun first, then the particles, prefix last.","tag":"particles"},{"id":"par-b-ruhig","cat":"part","type":"build","q":"Offer someone another slice of cake (nehmen + ruhig)","a":"Nimm dir ruhig noch ein Stück!","why":"Dative dir, then ruhig, then the object.","tag":"particles"},{"id":"par-b-einfach","cat":"part","type":"build","q":"Say: einfach anrufen, wenn etwas ist","a":"Ruf mich einfach an!","why":"einfach between pronoun and prefix.","tag":"particles"},{"id":"par-b-bitte-sie","cat":"part","type":"build","q":"Formal: einen Moment warten (Sie + bitte)","a":"Warten Sie bitte einen Moment!","why":"Infinitive + Sie, then bitte.","alts":["Warten Sie einen Moment, bitte!"],"tag":"particles"},{"id":"par-mc-harsh","cat":"part","type":"mc","q":"Which version sounds least brusque?","opts":["Komm doch mal mit!","Komm mit!","Du kommst mit!","Mitkommen!"],"ans":0,"why":"Particles are the main tool for taking the edge off an imperative.","tag":"particles"},{"id":"par-mc-einfach","cat":"part","type":"mc","q":"Which particle fits: 'no fuss, just do it'?","opts":["einfach","ruhig","bitte","mal"],"ans":0,"why":"einfach = just, without making a thing of it.","tag":"particles"},{"id":"par-mc-context","cat":"part","type":"mc","q":"A friend hesitates before jumping into the water. What do you say?","opts":["Spring doch!","Spring bitte!","Spring einfach nicht!","Springen Sie!"],"ans":0,"why":"doch is the encouraging nudge in exactly this situation.","tag":"particles"},{"id":"par-t-sagmal","cat":"part","type":"type","q":"Fill the gap: ___ ___, hast du kurz Zeit? (sagen + particle)","a":"Sag mal","why":"Sag mal … opens a casual question — a fixed everyday phrase.","tag":"particles"},{"id":"par-t-hoermal","cat":"part","type":"type","q":"Fill the gap: ___ ___ zu! (hören, du + particle, 'listen a sec')","a":"Hör mal","why":"Hör mal zu! — verb, particle, prefix.","tag":"particles"},{"id":"par-mc-two","cat":"part","type":"mc","q":"Which word order is correct?","opts":["Probier das doch mal!","Probier das mal doch!","Doch mal probier das!","Probier doch das mal!"],"ans":0,"why":"doch mal is a fixed pair in that order, and it follows the object pronoun das here.","tag":"particles"},{"id":"who-mc-chef","cat":"who","type":"mc","q":"You are talking to your boss. How do you ask for a moment?","opts":["Warten Sie bitte einen Moment.","Warte bitte einen Moment.","Wartet bitte einen Moment.","Warten wir bitte einen Moment."],"ans":0,"why":"Formal, one person → Sie-form: infinitive + Sie.","tag":"choosing the form"},{"id":"who-mc-kinder","cat":"who","type":"mc","q":"You are talking to two children you address with du.","opts":["Seid leise!","Sei leise!","Seien Sie leise!","Seien wir leise!"],"ans":0,"why":"Several people, informal → ihr-form Seid.","tag":"choosing the form"},{"id":"who-mc-kolleg","cat":"who","type":"mc","q":"Three colleagues you address with du should come along.","opts":["Kommt doch mit!","Komm doch mit!","Kommen Sie doch mit!","Kommen wir doch mit!"],"ans":0,"why":"Informal plural is the ihr-form, whatever the setting.","tag":"choosing the form"},{"id":"who-mc-plural-sie","cat":"who","type":"mc","q":"Two customers should take a seat (formal).","opts":["Nehmen Sie bitte Platz.","Nehmt bitte Platz.","Nimm bitte Platz.","Nehmen wir bitte Platz."],"ans":0,"why":"Sie covers formal singular and plural — there is no separate formal plural.","tag":"choosing the form"},{"id":"who-mc-wir","cat":"who","type":"mc","q":"You suggest something to your group: ins Kino gehen.","opts":["Gehen wir ins Kino!","Geht ins Kino!","Geh ins Kino!","Gehen Sie ins Kino!"],"ans":0,"why":"The wir-form is the let's-form: infinitive + wir.","tag":"choosing the form"},{"id":"who-t-freund","cat":"who","type":"type","q":"To your best friend (mitkommen): ___ ___!","a":"Komm mit","why":"One person, informal → du-form without pronoun.","tag":"choosing the form"},{"id":"who-t-amt","cat":"who","type":"type","q":"In an email to a company (schicken): ___ ___ mir bitte die Rechnung.","a":"Schicken Sie","why":"Written formal register → Sie-form.","tag":"choosing the form"},{"id":"who-t-gruppe","cat":"who","type":"type","q":"Write the whole sentence to your two flatmates: die Küche aufräumen, bitte","a":"Räumt bitte die Küche auf!","why":"Informal plural → ihr räumt auf → Räumt bitte die Küche auf!","alts":["Räumt die Küche bitte auf!"],"tag":"choosing the form"},{"id":"who-mc-pronoun","cat":"who","type":"mc","q":"The du-imperative of mitkommen is Komm mit! — why no du?","opts":["The imperative drops the pronoun du","du always comes before the verb","You have to use the Sie-form","The sentence needs a question mark"],"ans":0,"why":"du and ihr disappear in the imperative. Only Sie and wir stay: Kommen Sie mit! (A stressed du is possible for contrast — Geh du voran! — but the plain imperative, and the exam answer, is the form without a pronoun.)","tag":"choosing the form"},{"id":"who-mc-sieform","cat":"who","type":"mc","q":"Which forms always keep their pronoun?","opts":["Sie and wir","du and ihr","only Sie","neither"],"ans":0,"why":"Kommen Sie! / Kommen wir! keep the pronoun; Komm! / Kommt! drop it.","tag":"choosing the form"},{"id":"who-mc-mix","cat":"who","type":"mc","q":"A waiter to a guest:","opts":["Kommen Sie bitte mit, Ihr Tisch ist frei.","Komm bitte mit, dein Tisch ist frei.","Kommt bitte mit, euer Tisch ist frei.","Kommen wir mit, unser Tisch ist frei."],"ans":0,"why":"Service situations are Sie by default, and the possessive follows: Ihr Tisch.","tag":"choosing the form"},{"id":"who-t-wir-pause","cat":"who","type":"type","q":"Suggestion to the team (machen): ___ ___ eine Pause!","a":"Machen wir","why":"Infinitive + wir = let's make a break.","tag":"choosing the form"},{"id":"who-mc-shop","cat":"who","type":"mc","q":"You ask a shop assistant for help.","opts":["Helfen Sie mir bitte kurz.","Hilf mir bitte kurz.","Helft mir bitte kurz.","Helfen wir mir bitte kurz."],"ans":0,"why":"Sie-form. Turning it into a question — Können Sie mir kurz helfen? — is politer still.","tag":"choosing the form"},{"id":"who-mc-family","cat":"who","type":"mc","q":"To your sister on the phone (anrufen, später):","opts":["Ruf mich später an!","Rufen Sie mich später an!","Ruft mich später an!","Rufen wir mich später an!"],"ans":0,"why":"Family and friends: du-form.","tag":"choosing the form"},{"id":"who-t-doctor","cat":"who","type":"type","q":"Write the whole sentence: doctor to a patient — einatmen, tief, bitte","a":"Atmen Sie bitte tief ein!","why":"Sie-form of einatmen: infinitive + Sie, then bitte and tief, prefix ein last.","alts":["Atmen Sie tief ein, bitte!","Atmen Sie bitte tief ein."],"tag":"choosing the form"},{"id":"who-mc-two-in-one","cat":"who","type":"mc","q":"One sentence to a colleague you address with Sie, and her colleague:","opts":["Kommen Sie beide bitte kurz her.","Kommt beide bitte kurz her.","Komm beide bitte kurz her.","Kommen wir beide bitte kurz her."],"ans":0,"why":"Two people you address formally are still Sie.","tag":"choosing the form"},{"id":"who-mc-sign","cat":"who","type":"mc","q":"A public sign addresses nobody in particular. Which form?","opts":["Infinitive: Bitte nicht rauchen.","du-form: Rauch bitte nicht.","ihr-form: Raucht bitte nicht.","wir-form: Rauchen wir bitte nicht."],"ans":0,"why":"Impersonal instructions default to the infinitive.","tag":"choosing the form"},{"id":"who-t-sie-plural","cat":"who","type":"type","q":"To two neighbours you address with Sie (sein, leise): ___ ___ bitte leise.","a":"Seien Sie","why":"Formal plural is identical to formal singular: Seien Sie.","tag":"choosing the form"},{"id":"who-mc-teacher","cat":"who","type":"mc","q":"A teacher to her class (whom she addresses with du):","opts":["Öffnet bitte eure Bücher.","Öffne bitte deine Bücher.","Öffnen Sie bitte Ihre Bücher.","Öffnen wir bitte unsere Bücher."],"ans":0,"why":"A class the teacher duzt is ihr — and the possessive agrees: eure.","tag":"choosing the form"},{"id":"ref-t-setzen-du","cat":"refl","type":"type","q":"sich setzen — imperative, du-form","a":"Setz dich!","why":"Reflexive pronoun follows the verb: du → dich.","alts":["Setze dich!"],"tag":"reflexive"},{"id":"ref-t-setzen-ihr","cat":"refl","type":"type","q":"sich setzen — imperative, ihr-form","a":"Setzt euch!","why":"ihr setzt euch → Setzt euch!","tag":"reflexive"},{"id":"ref-t-setzen-sie","cat":"refl","type":"type","q":"sich setzen — imperative, Sie-form","a":"Setzen Sie sich!","why":"Formal keeps sich: Setzen Sie sich, bitte.","tag":"reflexive"},{"id":"ref-t-beeilen-du","cat":"refl","type":"type","q":"sich beeilen — imperative, du-form","a":"Beeil dich!","why":"Stem beeil- needs no -e. Beeil dich!","alts":["Beeile dich!"],"tag":"reflexive"},{"id":"ref-t-beeilen-ihr","cat":"refl","type":"type","q":"sich beeilen — imperative, ihr-form","a":"Beeilt euch!","why":"ihr beeilt euch → Beeilt euch!","tag":"reflexive"},{"id":"ref-t-beruhigen","cat":"refl","type":"type","q":"sich beruhigen — imperative, du-form","a":"Beruhige dich!","why":"Stem beruhig- ends in the suffix -ig, so the -e is obligatory: Beruhige dich!","tag":"reflexive"},{"id":"ref-t-anmelden","cat":"refl","type":"type","q":"sich anmelden — imperative, du-form","a":"Melde dich an!","why":"Stem meld- ends in -d → -e obligatory; reflexive pronoun after the verb; prefix last.","tag":"reflexive"},{"id":"ref-t-ausruhen","cat":"refl","type":"type","q":"sich ausruhen — imperative, du-form","a":"Ruh dich aus!","why":"Verb, pronoun, prefix: Ruh dich aus!","alts":["Ruhe dich aus!"],"tag":"reflexive"},{"id":"ref-b-aerger","cat":"refl","type":"build","q":"Reassure someone (sich ärgern, nicht)","a":"Ärgere dich nicht!","why":"-ern verb: keep the stem -e and add -e → Ärgere. nicht at the end.","tag":"reflexive"},{"id":"ref-b-anziehen","cat":"refl","type":"build","q":"Say to a child: sich warm anziehen","a":"Zieh dich warm an!","why":"Pronoun straight after the verb, prefix last.","tag":"reflexive"},{"id":"ref-b-sorgen","cat":"refl","type":"build","q":"Beruhige eine Kundin formell (sich Sorgen machen)","a":"Machen Sie sich keine Sorgen!","why":"Sie-form + sich + kein-.","tag":"reflexive"},{"id":"ref-b-haende","cat":"refl","type":"build","q":"Say to a child: sich die Hände waschen","a":"Wasch dir die Hände!","why":"With a body part and an object the pronoun is dative: dir.","tag":"reflexive"},{"id":"ref-mc-pronoun","cat":"refl","type":"mc","q":"Which reflexive pronoun goes with the ihr-form?","opts":["euch","dich","sich","uns"],"ans":0,"why":"du → dich, ihr → euch, Sie → sich, wir → uns.","tag":"reflexive"},{"id":"ref-mc-order","cat":"refl","type":"mc","q":"Which sentence is correct?","opts":["Setz dich doch bitte hin!","Setz doch dich bitte hin!","Dich setz doch bitte hin!","Setz dich hin doch bitte!"],"ans":0,"why":"The reflexive pronoun comes first, right after the verb; the prefix stays last.","tag":"reflexive"},{"id":"ref-t-entschuldigen","cat":"refl","type":"type","q":"sich entschuldigen — imperative, du-form (bei ihr)","a":"Entschuldige dich bei ihr!","why":"Stem entschuldig- takes the obligatory -e, then the pronoun.","tag":"reflexive"},{"id":"ref-mc-sie","cat":"refl","type":"mc","q":"Formal: which form is correct?","opts":["Beeilen Sie sich bitte!","Beeilen Sie euch bitte!","Beeilen Sie dich bitte!","Beeil Sie sich bitte!"],"ans":0,"why":"The Sie-form takes sich.","tag":"reflexive"},{"id":"due-mc-which1","cat":"due","type":"mc","q":"Which verb needs the -e in the imperative?","opts":["atmen → Atme!","filmen → Film!","lernen → Lern!","kommen → Komm!"],"ans":0,"why":"atm- is consonant + m. In lern- and film- the m/n follows l or r, and komm- is m after m — no -e in those.","tag":"rule iii — obligatory -e"},{"id":"due-mc-which2","cat":"due","type":"mc","q":"Which verb does NOT need the -e?","opts":["wohnen → Wohn!","rechnen → Rechne!","öffnen → Öffne!","zeichnen → Zeichne!"],"ans":0,"why":"wohn- has n after h, which behaves like l and r. The other three have a real consonant cluster before the n.","tag":"rule iii — obligatory -e"},{"id":"due-mc-why","cat":"due","type":"mc","q":"Why is it Atme! but Lern!?","opts":["After consonant + m/n you need -e, but not after l, r, m, n, h","Because atmen is irregular","Because lernen is a weak verb","Because atmen has two syllables"],"ans":0,"why":"Your notes say consonant + m/n but not l/r; h, m and n behave the same way as l and r: wohn-, komm-, lern-, film- all take the bare stem.","tag":"rule iii — obligatory -e"},{"id":"due-mc-ig","cat":"due","type":"mc","q":"Which form is correct?","opts":["Entschuldige dich!","Entschuldig dich!","Entschuldigst dich!","Entschuldiget dich!"],"ans":0,"why":"Stems in the suffix -ig always take the -e in the imperative.","tag":"rule iii — obligatory -e"},{"id":"ihr-mc-ig","cat":"ihr","type":"mc","q":"Entschuldige! is the du-form. What is the ihr-form?","opts":["Entschuldigt!","Entschuldiget!","Entschuldige!","Entschuldigen!"],"ans":0,"why":"The -e of the imperative and the -et of the present tense are different rules. -ig triggers only the first: Entschuldige! but ihr entschuldigt.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-mc-stem","cat":"ihr","type":"mc","q":"du nimmst → Nimm! What is the ihr-form of nehmen?","opts":["Nehmt!","Nimmt!","Nimmt ihr!","Nehmet!"],"ans":0,"why":"Stem changes live only in the du-form. The ihr imperative is the plain present-tense form.","tag":"ihr = present tense, no pronoun"},{"id":"ihr-mc-umlaut","cat":"ihr","type":"mc","q":"du fährst → Fahr! What is the ihr-form of fahren?","opts":["Fahrt!","Fährt!","Fahret!","Fährst!"],"ans":0,"why":"No umlaut in the ihr form to begin with: ihr fahrt.","tag":"ihr = present tense, no pronoun"},{"id":"due-mc-eln","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of klingeln","opts":["Klingle!","Klingel!","Klingelst!","Klinglest!"],"ans":0,"why":"-eln verbs add the -e and drop the stem -e: klingel- → klingle.","tag":"verbs in -eln"},{"id":"due-mc-ern","cat":"due","type":"mc","q":"Which form is correct? — du-imperative of wandern","opts":["Wandere!","Wander!","Wanderst!","Wandret!"],"ans":0,"why":"-ern verbs add the -e and keep the stem -e: wander- → wandere.","tag":"verbs in -ern"},{"id":"du-mc-dated","cat":"du","type":"mc","q":"Komm! oder Komme! — was gilt heute?","opts":["Komm! — das -e ist hier optional und klingt altmodisch","Komme! — das -e ist Pflicht","Beide sind gleich häufig","Komme! ist die ihr-form"],"ans":0,"why":"Outside the obligatory cases the -e survives only in older or very formal writing.","tag":"rule iii — no -e needed"}];
+
+const CATS = {
+  du:    ["du-form: plain stems",       "kommen → Komm!"],
+  due:   ["du-form: the obligatory -e", "arbeiten → Arbeite!"],
+  stem:  ["du-form: stem changes",      "geben → Gib! · fahren → Fahr!"],
+  ihr:   ["The ihr-form",               "ihr gebt → Gebt!"],
+  formal:["Sie- and wir-forms",         "Kommen Sie! · Gehen wir!"],
+  irreg: ["The four irregulars",        "sein, haben, werden, wissen"],
+  sep:   ["Separable verbs",            "anrufen → Ruf an!"],
+  neg:   ["Negation",                   "Mach das nicht! · Hab keine Angst!"],
+  inf:   ["The infinitive on signs",    "Nicht rauchen · Zurückbleiben, bitte!"],
+  part:  ["Modal particles",            "doch, mal, ruhig, einfach"],
+  who:   ["Which form for whom?",       "du, ihr, Sie or wir"],
+  refl:  ["Reflexive verbs",            "Setz dich! · Beeil dich!"],
+};
+const CATKEYS = Object.keys(CATS);
+
+//--PURE-START--  (unit-tested block)
+const MIN=60000, HOUR=60*MIN, DAY=24*HOUR;
+const INTERVALS=[0, 12*MIN, DAY, 3*DAY, 7*DAY, 21*DAY];
+const MASTER_BOX=4;
+
+function norm(s){
+  return (s||"").toString().toLowerCase()
+    .replace(/[„“”"'‚‘’]/g,"")
+    .replace(/[!?.,;:…]/g," ")
+    .replace(/ß/g,"ss")
+    .replace(/\s+/g," ").trim();
+}
+function hasUmlaut(s){ return /[äöü]/.test(s); }
+function expandAe(s){ return s.replace(/ae/g,"ä").replace(/oe/g,"ö").replace(/ue/g,"ü"); }
+
+function accepted(item){
+  return [item.a].concat(item.alts||[]);
+}
+function isCorrect(item, given){
+  const g = norm(given);
+  if(!g) return false;
+  for(const a of accepted(item)){
+    const n = norm(a);
+    if(g === n) return true;
+    if(hasUmlaut(n) && expandAe(g) === n) return true;
+  }
+  return false;
+}
+
+/* Tell the learner what kind of mistake they made, not just that they made one. */
+function diagnose(item, given){
+  const g = norm(given), a = norm(item.a);
+  if(!g) return "";
+  if(g === a + "e") return "You added an -e that this verb does not take.";
+  if(g + "e" === a) return "The obligatory -e is missing.";
+  if(/\b(du|ihr)\b/.test(g) && !/\b(du|ihr)\b/.test(a))
+    return "The du- and ihr-imperative drop the pronoun.";
+  if(/(st|est)$/.test(g.split(" ")[0]) && !/(st|est)$/.test(a.split(" ")[0]))
+    return "That is the present-tense du-form — the ending has to go.";
+  if(hasUmlaut(g.split(" ")[0]) && !hasUmlaut(a.split(" ")[0]))
+    return "The umlaut is dropped in the imperative.";
+  if(!hasUmlaut(g.split(" ")[0]) && hasUmlaut(a.split(" ")[0]))
+    return "This stem needs an umlaut.";
+  const gw = g.split(" "), aw = a.split(" ");
+  if(gw.length === aw.length && gw.slice().sort().join() === aw.slice().sort().join())
+    return "Right words, wrong order.";
+  if(aw.length > 1 && gw.length === 1) return "The whole sentence was asked for.";
+  return "";
+}
+
+function tilesOf(ans){ return ans.split(/\s+/).map(w=>w.replace(/[!?.,;:„“”"']/g,"")).filter(Boolean); }
+
+function fresh(){ return {box:0, due:0, seen:0, right:0, wrong:0, last:0}; }
+function grade(rec, ok, now){
+  const r = Object.assign(fresh(), rec);
+  r.seen++; r.last = now;
+  if(ok){ r.right++; r.box = Math.min(5, r.box + 1); }
+  else  { r.wrong++; r.box = Math.max(0, r.box - 2); }
+  r.due = now + INTERVALS[r.box];
+  return r;
+}
+function isMastered(rec){ return !!rec && rec.box >= MASTER_BOX; }
+
+function categoryStats(items, prog){
+  const out = {};
+  for(const it of items){
+    const c = out[it.cat] || (out[it.cat] = {total:0, mastered:0, started:0, shaky:0});
+    const r = prog[it.id];
+    c.total++;
+    if(isMastered(r)) c.mastered++;
+    else if(r && r.seen){ c.started++; if(r.wrong > r.right) c.shaky++; }
+  }
+  return out;
+}
+function masteryPct(items, prog){
+  if(!items.length) return 0;
+  return Math.round(100 * items.filter(i=>isMastered(prog[i.id])).length / items.length);
+}
+
+/* due first (weakest box first), then unseen items up to a cap, then, if the user
+   keeps going, whatever is furthest from mastery. */
+function buildQueue(items, prog, now, opts){
+  opts = opts || {};
+  const pool = opts.cat ? items.filter(i=>i.cat===opts.cat) : items;
+  const seen = [], unseen = [];
+  for(const it of pool){
+    const r = prog[it.id];
+    if(!r || !r.seen) unseen.push(it);
+    else if(r.due <= now || opts.ignoreSchedule) seen.push(it);
+  }
+  seen.sort((a,b)=>{
+    const ra=prog[a.id], rb=prog[b.id];
+    return ra.box - rb.box || ra.due - rb.due;
+  });
+  const newCap = opts.newCap == null ? 24 : opts.newCap;
+  return seen.concat(unseen.slice(0, newCap));
+}
+
+function pickExam(items, prog, n){
+  const per = {}; CATKEYS.forEach(c=>per[c]=[]);
+  items.forEach(i=>{ if(per[i.cat]) per[i.cat].push(i); });
+  CATKEYS.forEach(c=>{
+    per[c].sort((a,b)=>{
+      const ra=prog[a.id]||fresh(), rb=prog[b.id]||fresh();
+      return (ra.box - rb.box) || (rb.wrong - ra.wrong) || Math.random()-0.5;
+    });
+  });
+  const out = [];
+  let i = 0;
+  while(out.length < n){
+    let added = 0;
+    for(const c of CATKEYS){ if(per[c][i]){ out.push(per[c][i]); added++; if(out.length>=n) break; } }
+    if(!added) break;
+    i++;
+  }
+  return shuffle(out, Date.now());
+}
+
+function shuffle(arr, seed){
+  const a = arr.slice();
+  let s = seed >>> 0 || 1;
+  const rnd = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
+  for(let i=a.length-1;i>0;i--){ const j = Math.floor(rnd()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+//--PURE-END--
+
+/* ---------- storage: window.storage in the artifact, localStorage in a saved
+   copy of this file, memory as a last resort. Same async shape either way. ---- */
+const KEY = "imperativ.drill.v1";
+const Store = {
+  mem: null,
+  async load(){
+    try{ if(window.storage){ const r = await window.storage.get(KEY); if(r && r.value) return JSON.parse(r.value); } }catch(e){}
+    try{ const v = localStorage.getItem(KEY); if(v) return JSON.parse(v); }catch(e){}
+    return this.mem;
+  },
+  async save(obj){
+    this.mem = obj;
+    const s = JSON.stringify(obj);
+    try{ if(window.storage){ await window.storage.set(KEY, s); return "cloud"; } }catch(e){}
+    try{ localStorage.setItem(KEY, s); return "local"; }catch(e){}
+    return "memory";
+  },
+  async clear(){
+    this.mem = null;
+    try{ if(window.storage) await window.storage.delete(KEY); }catch(e){}
+    try{ localStorage.removeItem(KEY); }catch(e){}
+  }
+};
+
+/* ---------- state ---------- */
+let prog = {};            // id -> record
+let store = "memory";
+let view = "drill";
+let queue = [], cur = null, answered = false, session = {right:0, done:0};
+let mode = {cat:null, ignoreSchedule:false};
+let picked = [];          // build-mode word slots
+let root = null;          // the card currently on screen: #v-drill or #v-exam
+let exam = null;
+
+const $ = s => document.querySelector(s);
+const el = (t, cls, txt) => { const e = document.createElement(t); if(cls) e.className = cls; if(txt!=null) e.textContent = txt; return e; };
+const esc = s => s.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+
+let saveTimer = null;
+function persist(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async ()=>{ store = await Store.save({v:1, prog}); paintFoot(); }, 250);
+}
+
+/* ---------- drill ---------- */
+function nextItem(){
+  answered = false; picked = [];
+  if(!queue.length) queue = buildQueue(ITEMS, prog, Date.now(), mode);
+  cur = queue.shift() || null;
+  paintDrill();
+}
+
+function paintDrill(){
+  const v = $("#v-drill"); v.innerHTML = ""; root = v;
+  answered = false; picked = [];   // a freshly drawn card is always open for an answer
+  if(!cur){
+    const p = el("div","panel");
+    const due = buildQueue(ITEMS, prog, Date.now(), {cat:mode.cat}).length;
+    p.appendChild(el("h2", null, due ? "Ready when you are" : "Nothing due right now"));
+    const lead = el("p","lead");
+    lead.textContent = due
+      ? "There are questions waiting."
+      : "The gap between repetitions is the point — but you can keep going anyway.";
+    p.appendChild(lead);
+    const row = el("div","row");
+    const a = el("button","btn","Keep practising");
+    a.onclick = ()=>{ mode.ignoreSchedule = true; queue = buildQueue(ITEMS, prog, Date.now(), mode); nextItem(); };
+    row.appendChild(a);
+    if(mode.cat){
+      const b = el("button","btn ghost","All rules");
+      b.onclick = ()=>{ mode = {cat:null, ignoreSchedule:false}; queue = []; nextItem(); };
+      row.appendChild(b);
+    }
+    p.appendChild(row); v.appendChild(p);
+    return;
+  }
+
+  const plate = el("div","plate");
+  const meta = el("div","meta");
+  const left = el("div");
+  left.appendChild(el("span","tag", cur.tag || CATS[cur.cat][0]));
+  meta.appendChild(left);
+  const rec = prog[cur.id];
+  meta.appendChild(el("span", null, mode.cat ? CATS[cur.cat][0] : "Stufe " + ((rec&&rec.box)||0) + "/5"));
+  plate.appendChild(meta);
+
+  const q = el("p","q"); q.innerHTML = cur.q; plate.appendChild(q);
+  if(cur.sub) plate.appendChild(el("div","sub", cur.sub));
+
+  const ans = el("div","answer"); plate.appendChild(ans);
+  const vd = el("div","verdict hide"); vd.setAttribute("role","status"); plate.appendChild(vd);
+  v.appendChild(plate);
+
+  if(cur.type === "mc") renderMC(ans);
+  else if(cur.type === "build") renderBuild(ans);
+  else renderType(ans);
+
+  const foot = el("div","row");
+  foot.appendChild(el("span","hintline", session.done
+    ? `${session.right}/${session.done} right this session`
+    : "Enter to check"));
+  v.appendChild(foot);
+}
+
+function renderType(box){
+  const i = document.createElement("input");
+  i.type = "text"; i.className = "inp"; i.autocomplete = "off"; i.autocapitalize = "off";
+  i.spellcheck = false; i.placeholder = "Type your answer";
+  box.appendChild(i);
+  const row = el("div","row");
+  const b = el("button","btn","Check"); b.onclick = submit;
+  row.appendChild(b);
+  const s = el("button","btn quiet","Reveal"); s.onclick = ()=>submit(true);
+  row.appendChild(s);
+  row.appendChild(el("span","hintline","ae oe ue works instead of ä ö ü"));
+  box.appendChild(row);
+  i.focus();
+  i.onkeydown = e => { if(e.key === "Enter"){ e.preventDefault(); submit(); } };
+}
+
+function renderMC(box){
+  const g = el("div","opts");
+  cur.opts.forEach((o, k)=>{
+    const b = el("button","opt"); b.dataset.k = k;
+    b.appendChild(el("span","k", String(k+1)));
+    b.appendChild(el("span", null, o));
+    b.onclick = ()=>{ if(!answered) submitMC(k); };
+    g.appendChild(b);
+  });
+  box.appendChild(g);
+  box.appendChild(el("div","hintline")).innerHTML =
+    "Mit <kbd>1</kbd>–<kbd>" + cur.opts.length + "</kbd> geht es schneller";
+}
+
+function renderBuild(box){
+  const slot = el("div","slot"); box.appendChild(slot);
+  const bank = el("div","bank"); box.appendChild(bank);
+  const solved = tilesOf(cur.a);
+  let words = shuffle(solved, cur.id.length * 7919 + cur.a.length);
+  if(solved.length > 1 && words.join(" ") === solved.join(" ")) words = words.slice(1).concat(words[0]);
+  words.forEach((w, k)=>{
+    const t = el("button","tile", w); t.dataset.k = k;
+    t.onclick = ()=>{ if(answered) return; picked.push({w, k}); paintTiles(); };
+    bank.appendChild(t);
+  });
+  const row = el("div","row");
+  const b = el("button","btn","Check"); b.onclick = submit; row.appendChild(b);
+  const u = el("button","btn quiet","Clear tiles"); u.onclick = ()=>{ if(!answered){ picked = []; paintTiles(); } };
+  row.appendChild(u);
+  const s = el("button","btn quiet","Reveal"); s.onclick = ()=>submit(true); row.appendChild(s);
+  box.appendChild(row);
+  paintTiles();
+}
+function paintTiles(){
+  const slot = root.querySelector(".slot"); slot.innerHTML = "";
+  picked.forEach((p, idx)=>{
+    const t = el("button","tile", p.w);
+    t.onclick = ()=>{ if(answered) return; picked.splice(idx,1); paintTiles(); };
+    slot.appendChild(t);
+  });
+  const used = new Set(picked.map(p=>p.k));
+  [...root.querySelector(".bank").children].forEach(t=> t.classList.toggle("used", used.has(+t.dataset.k)));
+}
+
+function submitMC(k){
+  answered = true;
+  const ok = k === cur.ans;
+  [...root.querySelectorAll(".opt")].forEach(b=>{
+    b.disabled = true;
+    const i = +b.dataset.k;
+    if(i === cur.ans) b.classList.add("right");
+    else if(i === k) b.classList.add("wrong");
+  });
+  finish(ok, cur.opts[k]);
+}
+
+function submit(reveal){
+  if(answered) return;
+  let given = "";
+  if(cur.type === "build") given = picked.map(p=>p.w).join(" ");
+  else given = (root.querySelector(".inp") || {}).value || "";
+  if(reveal !== true && !norm(given)) return;
+  answered = true;
+  const ok = reveal === true ? false : isCorrect(cur, given);
+  if(reveal === true) given = "";
+  finish(ok, given, reveal === true);
+}
+
+function finish(ok, given, revealed){
+  if(exam){ return examAnswer(ok); }
+  session.done++; if(ok) session.right++;
+  prog[cur.id] = grade(prog[cur.id], ok, Date.now());
+  if(!ok) queue.splice(Math.min(4, queue.length), 0, cur);   // come back soon
+  persist();
+
+  const plate = root.querySelector(".plate");
+  plate.classList.add(ok ? "ok" : "no");
+  const v = root.querySelector(".verdict"); v.className = "verdict"; v.innerHTML = "";
+  const call = el("div", "call " + (ok ? "ok" : "no"));
+  call.appendChild(el("span", null, ok ? "Correct." : (revealed ? "Answer:" : "Not quite.")));
+  if(!ok) call.appendChild(el("span","sol", cur.type === "mc" ? cur.opts[cur.ans] : cur.a));
+  v.appendChild(call);
+  if(!ok && !revealed && cur.type !== "mc"){
+    const d = diagnose(cur, given);
+    if(d) v.appendChild(el("div","diag", d));
+  }
+  if(!ok && (cur.alts||[]).length) v.appendChild(el("div","hintline","Also accepted: " + cur.alts.join(" · ")));
+  v.appendChild(el("div","why", cur.why));
+  const row = el("div","row");
+  const n = el("button","btn next","Next"); n.onclick = nextItem;
+  row.appendChild(n);
+  row.appendChild(el("span","hintline","Enter"));
+  v.appendChild(row);
+  paintMastery();
+  n.focus();
+}
+
+/* ---------- stats ---------- */
+function paintStats(){
+  const v = $("#v-stats"); v.innerHTML = "";
+  const st = categoryStats(ITEMS, prog);
+  const p = el("div","panel");
+  p.appendChild(el("h2", null, "Mastery by rule"));
+  p.appendChild(el("p","lead",
+    "A question counts as secure once you have had it right four times in a row, spread over several days. Green is secure, blue is started, yellow is shaky."));
+  CATKEYS.forEach(c=>{
+    const s = st[c] || {total:0, mastered:0, started:0, shaky:0};
+    const d = el("div","cat");
+    const nm = el("div","name"); nm.textContent = CATS[c][0] + " ";
+    nm.appendChild(el("em", null, "· " + CATS[c][1]));
+    d.appendChild(nm);
+    d.appendChild(el("div","num", s.mastered + "/" + s.total));
+    const bar = el("div","bar");
+    const m = el("i","m"), pr = el("i","p"), w = el("i","w");
+    const tot = s.total || 1;
+    m.style.width = (100*s.mastered/tot) + "%";
+    pr.style.width = (100*Math.max(0, s.started - s.shaky)/tot) + "%";
+    w.style.width = (100*s.shaky/tot) + "%";
+    bar.append(m, pr, w); d.appendChild(bar);
+    const b = el("button","btn ghost catbtn", "Practise this rule");
+    b.onclick = ()=>{ mode = {cat:c, ignoreSchedule:true}; queue = []; go("drill"); nextItem(); };
+    d.appendChild(b);
+    p.appendChild(d);
+  });
+  v.appendChild(p);
+
+  const soon = el("div","panel");
+  soon.appendChild(el("h2", null, "Due"));
+  const now = Date.now();
+  const dueNow = ITEMS.filter(i=>prog[i.id] && prog[i.id].seen && prog[i.id].due <= now).length;
+  const later = ITEMS.filter(i=>prog[i.id] && prog[i.id].due > now)
+                     .sort((a,b)=>prog[a.id].due - prog[b.id].due)[0];
+  const unseen = ITEMS.filter(i=>!prog[i.id] || !prog[i.id].seen).length;
+  const l = el("p","lead");
+  l.textContent = dueNow + " due for review · " + unseen + " never seen"
+    + (later ? " · next review " + when(prog[later.id].due - now) : "");
+  soon.appendChild(l);
+  v.appendChild(soon);
+}
+function when(ms){
+  if(ms < HOUR) return "in " + Math.max(1, Math.round(ms/MIN)) + " min";
+  if(ms < DAY) return "in " + Math.round(ms/HOUR) + " h";
+  return "in " + Math.round(ms/DAY) + " days";
+}
+
+/* ---------- exam ---------- */
+function paintExam(){
+  const v = $("#v-exam"); v.innerHTML = ""; root = v;
+  if(!exam){
+    const p = el("div","panel");
+    p.appendChild(el("h2", null, "Test mode"));
+    p.appendChild(el("p","lead",
+      "22 questions across all twelve rules, with no explanations along the way. The selection favours whatever you are least sure of. At the end you see which rule cost you points."));
+    const b = el("button","btn","Start the test");
+    b.onclick = ()=>{
+      exam = {items: pickExam(ITEMS, prog, 22), i:0, right:0, log:[], t0:Date.now()};
+      cur = exam.items[0]; answered = false; picked = [];
+      paintExamItem();
+    };
+    p.appendChild(b); v.appendChild(p);
+    return;
+  }
+  paintExamItem();
+}
+function paintExamItem(){
+  const v = $("#v-exam"); v.innerHTML = ""; root = v;
+  if(exam.i >= exam.items.length) return paintExamResult();
+  cur = exam.items[exam.i]; answered = false; picked = [];
+  const plate = el("div","plate");
+  const meta = el("div","meta");
+  meta.appendChild(el("span","tag", "Question " + (exam.i+1) + " of " + exam.items.length));
+  meta.appendChild(el("span", null, CATS[cur.cat][0]));
+  plate.appendChild(meta);
+  const q = el("p","q"); q.innerHTML = cur.q; plate.appendChild(q);
+  if(cur.sub) plate.appendChild(el("div","sub", cur.sub));
+  const ans = el("div","answer"); plate.appendChild(ans);
+  v.appendChild(plate);
+  if(cur.type === "mc") renderMC(ans);
+  else if(cur.type === "build") renderBuild(ans);
+  else renderType(ans);
+}
+function examAnswer(ok){
+  exam.log.push({item:cur, ok});
+  if(ok) exam.right++;
+  prog[cur.id] = grade(prog[cur.id], ok, Date.now());
+  persist();
+  exam.i++;
+  paintExamItem();
+}
+function paintExamResult(){
+  const v = $("#v-exam"); v.innerHTML = ""; root = v;
+  const p = el("div","panel");
+  const d = el("div","done");
+  d.appendChild(el("div","big", exam.right + "/" + exam.items.length));
+  const mins = Math.max(1, Math.round((Date.now()-exam.t0)/MIN));
+  d.appendChild(el("div","lead", "in " + mins + " min"));
+  p.appendChild(d);
+  const wrong = exam.log.filter(x=>!x.ok);
+  if(wrong.length){
+    p.appendChild(el("h2", null, "Not there yet"));
+    const list = el("div","scorelist");
+    wrong.forEach(x=>{
+      const r = el("div");
+      r.innerHTML = "<b class='de'>" + esc(x.item.type === "mc" ? x.item.opts[x.item.ans] : x.item.a)
+        + "</b> — " + esc(x.item.why);
+      list.appendChild(r);
+    });
+    p.appendChild(list);
+  } else {
+    p.appendChild(el("p","lead","All correct. The review schedule carries on regardless."));
+  }
+  const row = el("div","row");
+  const again = el("button","btn","Another test");
+  again.onclick = ()=>{ exam = null; paintExam(); };
+  const back = el("button","btn ghost","Back to practice");
+  back.onclick = ()=>{ exam = null; queue = []; go("drill"); nextItem(); };
+  row.append(again, back); p.appendChild(row);
+  v.appendChild(p);
+  paintMastery();
+}
+
+/* ---------- rules ---------- */
+const RULES = `
+<div class="panel rules">
+<h3>The four forms of address</h3>
+<table>
+<tr><th>Address</th><th>How it is built</th><th>Example</th></tr>
+<tr><td>du — one person, informal</td><td>verb stem, no pronoun</td><td class="de">Komm!</td></tr>
+<tr><td>ihr — several, informal</td><td>= present-tense ihr-form, no pronoun</td><td class="de">Kommt!</td></tr>
+<tr><td>Sie — formal, singular and plural</td><td>infinitive + Sie</td><td class="de">Kommen Sie!</td></tr>
+<tr><td>wir — &ldquo;let's&rdquo;</td><td>infinitive + wir</td><td class="de">Kommen wir!</td></tr>
+</table>
+
+<h3>The du-form in three checks</h3>
+<p>Start from the present-tense du-form and strike the ending and the pronoun: du komm<b>st</b> → <span class="de">Komm!</span>
+After a stem in -s, -ß or -z the ending is only <b>-t</b>: du lie<b>st</b> → <span class="de">Lies!</span></p>
+<p><b>i. Does the du-form change e → i/ie?</b> Keep the change, never add an -e.<br>
+geben → du gibst → <span class="de">Gib!</span> · nehmen → <span class="de">Nimm!</span> · lesen → <span class="de">Lies!</span> ·
+sehen → <span class="de">Sieh!</span> · essen → <span class="de">Iss!</span> · helfen → <span class="de">Hilf!</span> ·
+sprechen → <span class="de">Sprich!</span> · vergessen → <span class="de">Vergiss!</span> · treffen → <span class="de">Triff!</span> ·
+werfen → <span class="de">Wirf!</span></p>
+<p><b>ii. Does the du-form take an umlaut (a → ä, au → äu, o → ö)?</b> Throw the umlaut away.<br>
+fahren → du fährst → <span class="de">Fahr!</span> · laufen → <span class="de">Lauf!</span> · schlafen → <span class="de">Schlaf!</span> ·
+tragen → <span class="de">Trag!</span> · halten → <span class="de">Halt!</span> · stoßen → <span class="de">Stoß!</span><br>
+Losing the umlaut is all that happens — check iii still applies:
+raten → du rätst → <span class="de">Rate!</span> · einladen → du lädst ein → <span class="de">Lade ein!</span></p>
+<p><b>iii. Otherwise: do you need an -e?</b> It is obligatory after stems in <b>-d</b>, <b>-t</b>, <b>-ig</b>
+and after consonant + <b>m/n</b>. Everywhere else it is optional and sounds old-fashioned (Komme!, Gehe!).<br>
+<span class="de">Arbeite! Warte! Finde! Entschuldige! Atme! Rechne! Öffne!</span></p>
+<div class="note"><b>A correction to your notes.</b> With consonant + m/n, it is not only l and r that are
+exceptions but also h, m and n: <span class="de">Wohn! Komm! Lern! Film!</span> — but
+<span class="de">Atme! Rechne! Öffne! Zeichne! Trockne!</span>, because those are real consonant clusters.
+</div>
+<div class="note"><b>A second correction.</b> Check ii does <i>not</i> switch off check iii. With the strong
+umlaut verbs whose stem ends in -t/-d, both forms are correct, because the present tense has no -e either
+(<span class="de">du hältst, du rätst, du lädst</span> — not <i>du haltest</i>). Duden therefore writes
+<span class="de">halt[e]!, rat[e]!, lad[e]!</span>. This app asks for the dictionary form
+(<span class="de">Rate! Lade ein!</span>) but always accepts the short one too.
+Weak verbs get no such choice: <span class="de">Arbeite! Melde! Warte!</span></div>
+<p><b>Verbs in -eln / -ern</b> take the -e; <b>-eln</b> drops the stem -e in the process, <b>-ern</b> keeps it:
+sammeln → <span class="de">Sammle!</span> · lächeln → <span class="de">Lächle!</span> · ändern → <span class="de">Ändere!</span></p>
+
+<h3>The ihr-form</h3>
+<p>Identical to the present tense. Strike the pronoun and you are done. No stem changes, no exceptions —
+not even sein (ihr seid → <span class="de">Seid!</span>).<br>
+ihr gebt → <span class="de">Gebt!</span> · ihr fahrt → <span class="de">Fahrt!</span> · ihr arbeitet → <span class="de">Arbeitet!</span></p>
+<div class="note">The obligatory -e of the imperative and the -et of the present tense are two different
+rules. Only the first is triggered by -ig: <span class="de">Entschuldige!</span> but <span class="de">ihr entschuldigt</span>.</div>
+
+<div class="note">A stressed <span class="de">du</span> is possible for contrast —
+<span class="de">Geh du voran!</span>, <span class="de">Frag du ihn!</span> — but the neutral request,
+and the exam answer, has no pronoun.</div>
+
+<h3>The Sie-form</h3>
+<p>Infinitive + Sie, in that order. sein is the only exception: <span class="de">Seien Sie!</span><br>
+<span class="de">Kommen Sie bitte herein. · Nehmen Sie Platz. · Warten Sie einen Moment.</span></p>
+
+<h3>The four irregulars</h3>
+<table>
+<tr><th></th><th>sein</th><th>haben</th><th>werden</th><th>wissen</th></tr>
+<tr><td>du</td><td class="de">Sei!</td><td class="de">Hab!</td><td class="de">Werde!</td><td class="de">Wisse! (lit.)</td></tr>
+<tr><td>ihr</td><td class="de">Seid!</td><td class="de">Habt!</td><td class="de">Werdet!</td><td class="de">Wisst!</td></tr>
+<tr><td>Sie</td><td class="de">Seien Sie!</td><td class="de">Haben Sie!</td><td class="de">Werden Sie!</td><td class="de">Wissen Sie!</td></tr>
+<tr><td>wir</td><td class="de">Seien wir!</td><td class="de">Haben wir!</td><td></td><td></td></tr>
+</table>
+
+<h3>Separable verbs</h3>
+<p>The prefix moves to the end — nothing stands behind it.<br>
+aufstehen → <span class="de">Steh bitte auf!</span> · anrufen → <span class="de">Ruf mich heute Abend an!</span> ·
+zumachen → <span class="de">Macht die Tür zu!</span> · mitkommen → <span class="de">Kommen Sie doch mit!</span> ·
+aufhören → <span class="de">Hör endlich auf!</span> · einsteigen → <span class="de">Steigen Sie bitte ein!</span></p>
+
+<h3>Negation and the impersonal request</h3>
+<p><b>nicht</b> comes late but still before the prefix; nouns are negated with <b>kein-</b>.<br>
+<span class="de">Mach das nicht! · Vergiss deinen Schlüssel nicht! · Mach die Tür nicht zu! ·
+Hab keine Angst! · Mach keinen Lärm! · Sag das nie wieder!</span></p>
+<p><b>The bare infinitive</b> is used for signs, instructions and recipes — addressed to nobody in
+particular. The separable prefix stays attached to the verb.<br>
+<span class="de">Bitte nicht rauchen. · Nicht öffnen, bevor der Zug hält. · Vor Gebrauch schütteln. ·
+Zwiebeln klein schneiden und anbraten. · Bitte Abstand halten.</span></p>
+
+<h3>Particles — how to stop the imperative sounding brusque</h3>
+<table>
+<tr><th>Particle</th><th>Effect</th><th>Example</th></tr>
+<tr><td>bitte</td><td>the plain softener</td><td class="de">Komm bitte um acht.</td></tr>
+<tr><td>mal</td><td>casual, a small thing, &ldquo;just&rdquo;</td><td class="de">Guck mal! · Warte mal.</td></tr>
+<tr><td>doch</td><td>a friendly nudge, &ldquo;go on&rdquo;</td><td class="de">Komm doch mit! · Frag ihn doch.</td></tr>
+<tr><td>doch mal</td><td>the everyday pairing</td><td class="de">Probier das doch mal.</td></tr>
+<tr><td>einfach</td><td>&ldquo;just — no fuss&rdquo;</td><td class="de">Ruf mich einfach an.</td></tr>
+<tr><td>ruhig</td><td>reassuring, &ldquo;feel free&rdquo;</td><td class="de">Nimm dir ruhig noch etwas.</td></tr>
+</table>
+<p>Order: verb — pronoun — particle — the rest — prefix. <span class="de">Ruf mich doch mal an!</span></p>
+</div>`;
+
+/* ---------- chrome ---------- */
+function paintMastery(){
+  const pct = masteryPct(ITEMS, prog);
+  const seen = ITEMS.filter(i=>prog[i.id] && prog[i.id].seen).length;
+  $("#mastery").innerHTML = "<b>" + pct + "%</b> secure · " + seen + "/" + ITEMS.length + " started";
+  paintFoot();
+}
+function paintFoot(){
+  const where = store === "cloud" ? "saved" : store === "local"
+    ? "saved in this browser" : "this session only";
+  $("#footinfo").textContent = ITEMS.length + " questions · progress " + where;
+}
+function go(name){
+  view = name;
+  ["drill","stats","exam","rules"].forEach(n=>{
+    $("#v-" + n).classList.toggle("hide", n !== name);
+    $("#t-" + n).setAttribute("aria-selected", String(n === name));
+  });
+  if(name === "stats") paintStats();
+  if(name === "exam") paintExam();
+  if(name === "rules") $("#v-rules").innerHTML = RULES;
+  window.scrollTo({top:0, behavior:"instant"});
+}
+$("#t-drill").onclick = ()=>{ exam = null; go("drill"); if(!cur) nextItem(); else paintDrill(); };
+$("#t-stats").onclick = ()=>{ exam = null; go("stats"); };
+$("#t-exam").onclick  = ()=> go("exam");
+$("#t-rules").onclick = ()=>{ exam = null; go("rules"); };
+$("#reset").onclick = async ()=>{
+  if(!confirm("This clears all progress. Continue?")) return;
+  prog = {}; await Store.clear(); queue = []; session = {right:0, done:0}; exam = null;
+  nextItem(); go("drill"); paintMastery();
+};
+
+document.addEventListener("keydown", e=>{
+  if(view === "rules" || view === "stats") return;
+  const t = e.target || {};
+  if(t.tagName === "INPUT") return;              // the field runs its own Enter handler
+  if(!answered && cur && cur.type === "mc" && /^[1-9]$/.test(e.key)){
+    const k = +e.key - 1;
+    if(k < cur.opts.length){ e.preventDefault(); submitMC(k); }
+    return;
+  }
+  if(e.key === "Enter" && answered && !exam){
+    if(t.tagName === "BUTTON") return;           // the button's own click already fires
+    e.preventDefault(); nextItem();
+  }
+});
+
+/* a small handle on the running state — handy in the console, used by the tests */
+window.app = {
+  ITEMS, CATS, tilesOf, isCorrect, buildQueue, categoryStats, masteryPct,
+  get cur(){ return cur; }, get prog(){ return prog; }, get queue(){ return queue; },
+};
+
+(async function boot(){
+  const saved = await Store.load();
+  if(saved && saved.prog) prog = saved.prog;
+  store = await Store.save({v:1, prog});
+  queue = buildQueue(ITEMS, prog, Date.now(), mode);
+  nextItem(); paintMastery();
+})();
+</script>
+</body>
+</html>
