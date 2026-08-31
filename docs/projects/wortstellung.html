@@ -1,0 +1,2437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wortstellung — German word order</title>
+<meta name="color-scheme" content="light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EDEEF0; --card:#fff; --ink:#16202B; --ink2:#4E5A69; --ink3:#7C8794;
+  --rule:#D5D9DE; --rule2:#E7EAEE;
+  --kl:#2C46B8; --kl-bg:#E8EBF9;
+  --vf:#8E6110; --vf-bg:#F7EFDF;
+  --nf:#1A6558; --nf-bg:#E1EFEC;
+  --mf:#5E6A79; --mf-bg:#F1F3F5;
+  --bad:#A32B20; --bad-bg:#FBECEA;
+  --good:#1A6558; --good-bg:#E4F0ED;
+  --sans:'Archivo',ui-sans-serif,system-ui,'Segoe UI',Roboto,sans-serif;
+  --serif:'Source Serif 4',Charter,Georgia,'Times New Roman',serif;
+  --r:3px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:16px;line-height:1.55;
+  background-image:linear-gradient(var(--rule2) 1px,transparent 1px),linear-gradient(90deg,var(--rule2) 1px,transparent 1px);
+  background-size:26px 26px;
+}
+h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.011em}
+h1{font-size:1.5rem;line-height:1.25}
+h2{font-size:.9375rem;color:var(--ink2);font-weight:600}
+p{margin:0}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--kl);outline-offset:2px}
+
+/* ── chrome ── */
+header{
+  position:sticky;top:0;z-index:20;background:rgba(237,238,240,.94);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);
+}
+.bar{max-width:60rem;margin:0 auto;padding:.7rem 1.25rem;display:flex;align-items:center;gap:1rem}
+.mark{font-family:var(--serif);font-size:1.0625rem;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+.meter{flex:1;max-width:15rem;margin-right:auto;min-width:60px;display:flex;align-items:center;gap:.55rem}
+.mtrack{flex:1;height:5px;background:var(--rule);border-radius:99px;overflow:hidden}
+#meter-fill{height:100%;background:var(--kl);width:0;transition:width .5s cubic-bezier(.2,.7,.3,1)}
+#meter-num{font-size:.75rem;font-variant-numeric:tabular-nums;color:var(--ink2);font-weight:500}
+.nav{display:flex;gap:.15rem}
+.nav button{padding:.3rem .6rem;font-size:.8125rem;color:var(--ink2);border-radius:var(--r)}
+.nav button[aria-current=page]{background:var(--ink);color:#fff}
+main{max-width:60rem;margin:0 auto;padding:1.75rem 1.25rem 5rem}
+
+/* ── field frame (the signature) ── */
+.framewrap{margin:1rem 0 0}
+.framenote{font-size:.75rem;color:var(--ink3);margin-bottom:.35rem}
+.frame{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  background:var(--card);border:1px solid var(--rule);border-radius:var(--r);
+}
+.fcol{padding:.5rem .65rem .6rem;border-right:1px solid var(--rule2);min-width:0}
+.fcol:nth-of-type(5){border-right:0}
+.flab{display:block;font-size:.625rem;font-weight:600;color:var(--ink3);margin-bottom:.25rem;line-height:1.3}
+.fval{font-family:var(--serif);font-size:.9375rem;line-height:1.35;overflow-wrap:break-word}
+.f-vf{background:var(--vf-bg)} .f-vf .flab{color:var(--vf)}
+.f-lk,.f-rk{background:var(--kl-bg)} .f-lk .flab,.f-rk .flab{color:var(--kl)}
+.f-lk .fval,.f-rk .fval{font-weight:600;color:var(--kl)}
+.f-mf{background:var(--card)}
+.f-nf{background:var(--nf-bg)} .f-nf .flab{color:var(--nf)}
+.clamp{grid-column:1/-1;grid-row:2;display:grid;grid-template-columns:repeat(10,1fr)}
+.clamp i{
+  grid-column:4/8;height:12px;border:2px solid var(--kl);border-top:0;border-radius:0 0 2px 2px;
+  transform-origin:center;animation:clampin .45s cubic-bezier(.3,.8,.3,1) both;
+}
+.frame::after{
+  content:'Satzklammer';grid-column:1/-1;grid-row:3;text-align:center;
+  font-size:.625rem;font-weight:600;color:var(--kl);padding:.1rem 0 .3rem;
+}
+@keyframes clampin{from{transform:scaleX(.15);opacity:0}to{transform:scaleX(1);opacity:1}}
+
+/* ── home ── */
+.hero{margin-bottom:2.25rem}
+.heroText{max-width:34rem}
+.hero h1{font-family:var(--serif);font-size:clamp(1.5rem,4.4vw,2rem);line-height:1.18;letter-spacing:-.02em}
+.lede{color:var(--ink2);margin-top:.5rem;font-size:.9375rem;max-width:36rem}
+.actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem;margin:0 0 2.25rem}
+.btn{
+  display:block;text-align:left;background:var(--card);border:1px solid var(--rule);
+  border-radius:var(--r);padding:.7rem .85rem;transition:border-color .15s,background .15s;
+}
+.btn strong{display:block;font-size:.9375rem;font-weight:600}
+.btn span{display:block;font-size:.75rem;color:var(--ink3);margin-top:.1rem}
+.btn:hover:not(:disabled){border-color:var(--ink3)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn.primary span{color:#A8B4C2}
+.btn.primary:hover{background:#0D1620}
+.topics h2{margin-bottom:.6rem}
+.tlist{background:var(--card);border:1px solid var(--rule);border-radius:var(--r);overflow:hidden}
+.topic{
+  display:block;width:100%;text-align:left;padding:.6rem .85rem .7rem;
+  border-bottom:1px solid var(--rule2);transition:background .12s;
+}
+.topic:last-child{border-bottom:0}
+.topic:hover:not(.static){background:#F6F7F9}
+.topic.static{cursor:default}
+.thead{display:flex;align-items:baseline;justify-content:space-between;gap:1rem}
+.tno{font-size:.6875rem;color:var(--ink3);font-variant-numeric:tabular-nums;margin-right:.5rem;font-weight:600}
+.tname{min-width:0}
+.tde{display:block;font-family:var(--serif);font-size:1rem;font-weight:600}
+.ten{display:block;font-size:.75rem;color:var(--ink3);line-height:1.4}
+.tnum{text-align:right;font-size:.8125rem;font-variant-numeric:tabular-nums;color:var(--ink2);white-space:nowrap}
+.tpct{display:block;font-weight:600}
+.tcount{display:block;font-size:.6875rem;color:var(--ink3)}
+.tbar{position:relative;height:3px;background:var(--rule);border-radius:99px;margin-top:.5rem;overflow:hidden}
+.tbar .fill{position:absolute;left:0;top:0;height:100%;background:var(--kl);border-radius:99px}
+.tbar .part{position:absolute;left:0;top:0;height:100%;background:#BDC6EC;border-radius:99px}
+.cert{background:var(--good-bg);border:1px solid var(--good);border-radius:var(--r);padding:.9rem 1rem;margin-top:1.5rem}
+.cert h2{color:var(--good)}
+.cert p{font-size:.875rem;color:var(--ink2);margin-top:.3rem}
+
+/* ── drill ── */
+.sessbar{margin-bottom:1rem}
+.sprog{height:3px;background:var(--rule);border-radius:99px;overflow:hidden}
+.spfill{height:100%;background:var(--ink);transition:width .35s}
+.smeta{display:flex;align-items:center;gap:.6rem;margin-top:.45rem;font-size:.75rem;color:var(--ink3)}
+.smeta>span:first-child{font-weight:500;color:var(--ink2)}
+.pips{display:inline-flex;gap:3px;flex:1}
+.pip{width:5px;height:5px;border-radius:99px;background:var(--rule);display:inline-block}
+.pip.on{background:var(--kl)}
+.scount{font-variant-numeric:tabular-nums}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:var(--r);padding:1.1rem 1.15rem 1.25rem}
+.prompt p{margin-bottom:.35rem}
+.prompt .ask{font-size:.9375rem;color:var(--ink2)}
+.prompt .given{font-family:var(--serif);font-size:1.25rem;line-height:1.4;color:var(--ink)}
+.answer{margin-top:1.1rem}
+.stem{font-family:var(--serif);font-size:1.0625rem;color:var(--ink2)}
+.stem.tail{margin-top:.4rem}
+.line{
+  min-height:3rem;border-bottom:2px solid var(--ink);padding:.4rem .1rem .5rem;
+  display:flex;flex-wrap:wrap;gap:.3rem;align-items:center;margin:.5rem 0 .9rem;
+}
+.linehint{font-size:.8125rem;color:var(--ink3)}
+.tokrow{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center}
+.tok{
+  font-family:var(--serif);font-size:1rem;background:var(--card);border:1px solid var(--rule);
+  border-radius:var(--r);padding:.28rem .55rem;display:inline-flex;align-items:center;gap:.35rem;
+  transition:border-color .12s,background .12s;
+}
+.tok:hover:not(.spent){border-color:var(--ink)}
+.tok .tnum{font-family:var(--sans);font-size:.625rem;color:var(--ink3);font-variant-numeric:tabular-nums}
+.tok.spent{opacity:.32;cursor:default}
+.tok.in{background:var(--kl-bg);border-color:#BDC6EC}
+.tok.sel{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tok.good{background:var(--good-bg);border-color:var(--good);color:var(--good)}
+.tok.bad{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
+.tokfix{font-family:var(--serif);font-size:1.0625rem;padding:.15rem 0}
+.slots{gap:.1rem;line-height:2.4}
+.gap{
+  min-width:1.35rem;height:1.9rem;border-bottom:2px dotted var(--ink3);border-radius:2px;
+  font-family:var(--serif);font-size:1rem;padding:0 .2rem;color:var(--kl);
+}
+.gap:hover{background:var(--kl-bg);border-bottom-color:var(--kl)}
+.gap.sel{background:var(--kl-bg);border-bottom:2px solid var(--kl);font-weight:600}
+.gap.good{background:var(--good-bg);border-bottom:2px solid var(--good);color:var(--good);font-weight:600}
+.gap.bad{background:var(--bad-bg);border-bottom:2px solid var(--bad);color:var(--bad)}
+.fixed{font-family:var(--serif);font-size:1.0625rem;color:var(--ink2);margin-right:.2rem}
+.opts{display:flex;flex-direction:column;gap:.35rem}
+.opt{
+  display:flex;gap:.6rem;align-items:baseline;text-align:left;background:var(--card);
+  border:1px solid var(--rule);border-radius:var(--r);padding:.5rem .7rem;transition:border-color .12s;
+}
+.opt:hover{border-color:var(--ink3)}
+.onum{font-size:.6875rem;color:var(--ink3);font-variant-numeric:tabular-nums;min-width:.7rem}
+.otxt{font-size:.9375rem}
+.otxt.de{font-family:var(--serif);font-size:1.0625rem}
+.opt.sel{border-color:var(--ink);background:#F7F8F9}
+.opt.good{border-color:var(--good);background:var(--good-bg)}
+.opt.bad{border-color:var(--bad);background:var(--bad-bg)}
+.input{
+  width:100%;font-family:var(--serif);font-size:1.125rem;padding:.5rem .1rem;
+  border:0;border-bottom:2px solid var(--ink);background:transparent;border-radius:0;
+}
+.input::placeholder{font-family:var(--sans);font-size:.9375rem;color:var(--ink3)}
+.feedback{display:none}
+.feedback.on{display:block;margin-top:1.1rem;padding-top:.9rem;border-top:1px solid var(--rule2)}
+.verdict{font-size:.8125rem;font-weight:600}
+.feedback.right .verdict{color:var(--good)}
+.feedback.wrong .verdict,.feedback.shown .verdict{color:var(--bad)}
+.solution{font-family:var(--serif);font-size:1.1875rem;line-height:1.4;margin-top:.25rem}
+.explain{font-size:.875rem;color:var(--ink2);margin-top:.45rem;max-width:44rem}
+.foot{display:flex;align-items:center;gap:1rem;margin-top:1rem}
+.btn.go{background:var(--ink);border-color:var(--ink);color:#fff;padding:.5rem 1.4rem;font-weight:600;font-size:.9375rem;text-align:center}
+.btn.go:hover{background:#0D1620}
+.linkbtn{font-size:.8125rem;color:var(--ink3);text-decoration:underline;text-underline-offset:3px}
+.linkbtn:hover{color:var(--ink)}
+
+/* ── result ── */
+.result h1{font-family:var(--serif)}
+.missed{margin:1.75rem 0}
+.missed h2{margin-bottom:.6rem}
+.missrow{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--bad);border-radius:var(--r);padding:.65rem .8rem;margin-bottom:.4rem}
+.mtopic{font-size:.6875rem;font-weight:600;color:var(--ink3)}
+.msol{font-family:var(--serif);font-size:1.0625rem;margin-top:.15rem}
+.mexp{font-size:.8125rem;color:var(--ink2);margin-top:.25rem}
+
+/* ── progress ── */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.6rem;margin:1.25rem 0 2rem}
+.stat{background:var(--card);border:1px solid var(--rule);border-radius:var(--r);padding:.7rem .8rem}
+.sv{display:block;font-size:1.5rem;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums}
+.sk{display:block;font-size:.75rem;color:var(--ink3);margin-top:.15rem}
+.tools{margin-top:2rem;border-top:1px solid var(--rule);padding-top:1.25rem}
+.tools p{font-size:.875rem;color:var(--ink2);margin:.35rem 0 .8rem;max-width:34rem}
+.toolrow{display:flex;flex-wrap:wrap;gap:.4rem}
+.btn.small{padding:.4rem .8rem;font-size:.8125rem;font-weight:500}
+.btn.small.danger{color:var(--bad);border-color:#E4C4C0}
+
+/* ── reference ── */
+.ref h1{font-family:var(--serif);margin-bottom:1.25rem}
+.refsec{border-top:1px solid var(--rule);padding:1.1rem 0}
+.refsec h2{font-family:var(--serif);font-size:1.0625rem;color:var(--ink);margin-bottom:.5rem}
+.refsec p{font-size:.9375rem;color:var(--ink2);max-width:44rem;margin-bottom:.5rem}
+.refsec ul{margin:.25rem 0 .5rem;padding-left:1.1rem;max-width:44rem}
+.refsec li{font-size:.9375rem;margin-bottom:.28rem;color:var(--ink2)}
+.refsec li i{font-family:var(--serif);font-style:normal;font-size:1.0625rem;color:var(--ink)}
+.refsec li b{font-weight:600;color:var(--ink)}
+
+#toast{
+  position:fixed;left:50%;bottom:1.25rem;transform:translate(-50%,140%);
+  background:var(--ink);color:#fff;font-size:.8125rem;padding:.55rem .9rem;border-radius:var(--r);
+  transition:transform .25s cubic-bezier(.2,.8,.3,1);z-index:60;max-width:90vw;text-align:center;
+}
+#toast.on{transform:translate(-50%,0)}
+
+@media (max-width:720px){
+  .frame{grid-template-columns:1fr}
+  .fcol{border-right:0;border-bottom:1px solid var(--rule2);display:flex;gap:.6rem;align-items:baseline}
+  .fcol:nth-of-type(5){border-bottom:0}
+  .flab{margin:0;min-width:6.5rem;flex:none}
+  .clamp,.frame::after{display:none}
+  main{padding:1.25rem 1rem 4rem}
+  .bar{padding:.55rem 1rem;flex-wrap:wrap;gap:.6rem}
+  .mark{flex:1}
+  .meter{order:3;flex-basis:100%;max-width:none}
+  .nav button{padding:.3rem .5rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <span class="mark">Wortstellung</span>
+    <span class="meter"><span class="mtrack"><span id="meter-fill"></span></span><span id="meter-num">0%</span></span>
+    <nav class="nav">
+      <button data-v="home">Drill</button>
+      <button data-v="progress">Progress</button>
+      <button data-v="reference">Reference</button>
+    </nav>
+  </div>
+</header>
+<main id="main"></main>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+/* Wortstellung — question bank.
+   i=id t=topic k=kind q=prompt s=stem x=tail o=options c=correct
+   tk=tokens a=accepted answers w=word-to-insert e=explanation f=field breakdown */
+
+const TOPICS = [
+  { id: 'feld',        n: 'Das Feldermodell',       en: 'The five fields of the sentence frame' },
+  { id: 'v2',          n: 'Verbzweitstellung',      en: 'The finite verb is the second element' },
+  { id: 'v1',          n: 'Verberststellung',       en: 'Questions, imperatives, wenn-less conditionals' },
+  { id: 'klammer',     n: 'Die rechte Klammer',     en: 'What waits at the end of the clause' },
+  { id: 'nebensatz',   n: 'Verbletztstellung',      en: 'Subordinate clauses send the verb to the end' },
+  { id: 'konnektoren', n: 'Konnektoren',            en: 'Three kinds of connector, three structures' },
+  { id: 'mittelfeld',  n: 'Im Mittelfeld',          en: 'TeKaMoLo and the order of objects' },
+  { id: 'negation',    n: 'Die Stellung von nicht', en: 'Sentence negation and partial negation' },
+  { id: 'nachfeld',    n: 'Das Nachfeld',           en: 'What is allowed to follow the bracket' }
+];
+
+const BANK_A = [
+
+/* ─────────────── 1. DAS FELDERMODELL ─────────────── */
+
+{ i:'feld-01', t:'feld', k:'mc',
+  q:'Gestern habe ich meinem Bruder ein Buch geschenkt.\nWhat occupies the Vorfeld?',
+  o:['Gestern','habe','ich','geschenkt'], c:0,
+  e:'The Vorfeld holds exactly one element — here the temporal adverb Gestern. The subject ich has been pushed into the Mittelfeld.',
+  f:{vf:'Gestern', lk:'habe', mf:'ich meinem Bruder ein Buch', rk:'geschenkt', nf:'—'} },
+
+{ i:'feld-02', t:'feld', k:'mc',
+  q:'Gestern habe ich meinem Bruder ein Buch geschenkt.\nWhat is in the right bracket?',
+  o:['ein Buch','geschenkt','habe','meinem Bruder'], c:1,
+  e:'The right bracket takes the non-finite verb parts. Here that is the past participle geschenkt.',
+  f:{vf:'Gestern', lk:'habe', mf:'ich meinem Bruder ein Buch', rk:'geschenkt', nf:'—'} },
+
+{ i:'feld-03', t:'feld', k:'mc',
+  q:'Gestern habe ich meinem Bruder ein Buch geschenkt.\nWhat is in the left bracket?',
+  o:['Gestern','ich','habe','geschenkt'], c:2,
+  e:'In a main clause the left bracket is the finite verb — the one carrying person and tense. That is habe.',
+  f:{vf:'Gestern', lk:'habe', mf:'ich meinem Bruder ein Buch', rk:'geschenkt', nf:'—'} },
+
+{ i:'feld-04', t:'feld', k:'mc',
+  q:'Gestern habe ich meinem Bruder ein Buch geschenkt.\nWhat is in the Mittelfeld?',
+  o:['ich meinem Bruder ein Buch','meinem Bruder ein Buch geschenkt','Gestern ich','ein Buch'], c:0,
+  e:'The Mittelfeld is everything sitting between the two brackets: subject, objects and adverbials.',
+  f:{vf:'Gestern', lk:'habe', mf:'ich meinem Bruder ein Buch', rk:'geschenkt', nf:'—'} },
+
+{ i:'feld-05', t:'feld', k:'mc',
+  q:'Morgen will ich nach Berlin fahren.\nWhat is in the right bracket?',
+  o:['nach Berlin','will','fahren','nach Berlin fahren'], c:2,
+  e:'Only the non-finite verb belongs to the bracket. nach Berlin is a normal Mittelfeld element that happens to sit right before it.',
+  f:{vf:'Morgen', lk:'will', mf:'ich nach Berlin', rk:'fahren', nf:'—'} },
+
+{ i:'feld-06', t:'feld', k:'mc',
+  q:'Morgen will ich nach Berlin fahren.\nWhat is in the Mittelfeld?',
+  o:['ich','ich nach Berlin','nach Berlin fahren','Morgen ich'], c:1,
+  e:'Everything between will and fahren is Mittelfeld: the subject ich plus the local phrase nach Berlin.',
+  f:{vf:'Morgen', lk:'will', mf:'ich nach Berlin', rk:'fahren', nf:'—'} },
+
+{ i:'feld-07', t:'feld', k:'mc',
+  q:'Er hat mir gesagt, dass er kommt.\nWhat is in the Nachfeld?',
+  o:['mir','gesagt','dass er kommt','hat'], c:2,
+  e:'Subordinate clauses are routinely pushed out past the right bracket into the Nachfeld rather than sitting inside the Mittelfeld.',
+  f:{vf:'Er', lk:'hat', mf:'mir', rk:'gesagt', nf:', dass er kommt'} },
+
+{ i:'feld-08', t:'feld', k:'mc',
+  q:'Er hat mir gesagt, dass er kommt.\nWhat is in the right bracket?',
+  o:['hat','mir','gesagt','kommt'], c:2,
+  e:'gesagt is the participle of the main clause. kommt belongs to the embedded clause, which has its own frame.',
+  f:{vf:'Er', lk:'hat', mf:'mir', rk:'gesagt', nf:', dass er kommt'} },
+
+{ i:'feld-09', t:'feld', k:'mc',
+  q:'Ich rufe dich morgen an.\nWhat is in the right bracket?',
+  o:['an','rufe','morgen','dich'], c:0,
+  e:'A stranded separable prefix occupies the right bracket on its own.',
+  f:{vf:'Ich', lk:'rufe', mf:'dich morgen', rk:'an', nf:'—'} },
+
+{ i:'feld-10', t:'feld', k:'mc',
+  q:'Ich fahre morgen nach Berlin.\nWhat is in the right bracket?',
+  o:['fahre','nach Berlin','morgen nach Berlin','nothing — it is empty'], c:3,
+  e:'A simple tense with a non-separable verb leaves the right bracket empty. The frame is still there, just unfilled.',
+  f:{vf:'Ich', lk:'fahre', mf:'morgen nach Berlin', rk:'—', nf:'—'} },
+
+{ i:'feld-11', t:'feld', k:'mc',
+  q:'Weil ich müde bin, bleibe ich zu Hause.\nWhat occupies the Vorfeld of the main clause?',
+  o:['Weil','Weil ich müde bin','bleibe','ich'], c:1,
+  e:'A whole subordinate clause counts as one element, so it can fill the Vorfeld by itself. That is why bleibe comes straight after the comma.',
+  f:{vf:'Weil ich müde bin', lk:'bleibe', mf:'ich zu Hause', rk:'—', nf:'—'} },
+
+{ i:'feld-12', t:'feld', k:'mc',
+  q:'…, weil ich müde bin.\nIn this subordinate clause, what fills the left bracket?',
+  o:['ich','weil','müde','bin'], c:1,
+  e:'The same frame covers subordinate clauses. The subordinating conjunction takes the slot the finite verb would otherwise hold.',
+  f:{vf:'—', lk:'weil', mf:'ich müde', rk:'bin', nf:'—'} },
+
+{ i:'feld-13', t:'feld', k:'mc',
+  q:'…, weil ich müde bin.\nIn this subordinate clause, what fills the right bracket?',
+  o:['weil','ich','müde','bin'], c:3,
+  e:'Because the conjunction has taken the left bracket, the finite verb is pushed all the way to the right bracket.',
+  f:{vf:'—', lk:'weil', mf:'ich müde', rk:'bin', nf:'—'} },
+
+{ i:'feld-14', t:'feld', k:'mc',
+  q:'How many elements fit in the Vorfeld?',
+  o:['Exactly one','One or two','Any number','None — it is always empty'], c:0,
+  e:'Exactly one constituent. That constituent can be long — a whole subordinate clause or a heavy prepositional phrase — but it is still one element.' },
+
+{ i:'feld-15', t:'feld', k:'mc',
+  q:'What fills the left bracket in a main clause?',
+  o:['The subject','The finite verb','Any non-finite verb','A conjunction'], c:1,
+  e:'The finite verb — the form inflected for person and tense.' },
+
+{ i:'feld-16', t:'feld', k:'mc',
+  q:'What fills the left bracket in a subordinate clause?',
+  o:['The finite verb','The subject','The subordinating conjunction','Nothing'], c:2,
+  e:'The conjunction takes the left bracket, which is exactly why the finite verb has nowhere to go but the right bracket.' },
+
+{ i:'feld-17', t:'feld', k:'mc',
+  q:'Ich hätte das machen können.\nWhat is in the right bracket?',
+  o:['können','machen','machen können','das machen können'], c:2,
+  e:'A whole verb cluster sits in the right bracket. Only the finite hätte stays in the left bracket.',
+  f:{vf:'Ich', lk:'hätte', mf:'das', rk:'machen können', nf:'—'} },
+
+{ i:'feld-18', t:'feld', k:'pick',
+  q:'Click the finite verb.', tk:['Ich','habe','das Buch','gestern','gelesen'], c:1,
+  e:'habe carries person and tense, so it is the finite verb and holds the left bracket. gelesen is the participle in the right bracket.',
+  f:{vf:'Ich', lk:'habe', mf:'das Buch gestern', rk:'gelesen', nf:'—'} },
+
+{ i:'feld-19', t:'feld', k:'pick',
+  q:'Click the element that fills the right bracket.', tk:['Sie','ist','gestern','nach Hause','gefahren'], c:4,
+  e:'gefahren is the past participle. nach Hause is a local adverbial in the Mittelfeld, not part of the bracket.',
+  f:{vf:'Sie', lk:'ist', mf:'gestern nach Hause', rk:'gefahren', nf:'—'} },
+
+{ i:'feld-20', t:'feld', k:'mc',
+  q:'Das Fenster hat er nicht zugemacht.\nWhat occupies the Vorfeld?',
+  o:['Das Fenster','hat','er','zugemacht'], c:0,
+  e:'The accusative object has been fronted. The subject er then follows the finite verb inside the Mittelfeld.',
+  f:{vf:'Das Fenster', lk:'hat', mf:'er nicht', rk:'zugemacht', nf:'—'} },
+
+{ i:'feld-21', t:'feld', k:'mc',
+  q:'Fährst du morgen nach Berlin?\nWhat occupies the Vorfeld?',
+  o:['Fährst','du','morgen','Nothing — the Vorfeld is empty'], c:3,
+  e:'Yes/no questions leave the Vorfeld empty, which is why the finite verb appears to be first.',
+  f:{vf:'—', lk:'Fährst', mf:'du morgen nach Berlin', rk:'—', nf:'—'} },
+
+{ i:'feld-22', t:'feld', k:'mc',
+  q:'Sie ist krank.\nWhat is in the right bracket?',
+  o:['ist','krank','Sie','nothing'], c:1,
+  e:'A predicate adjective with sein or werden behaves like a verb part and takes the right bracket.',
+  f:{vf:'Sie', lk:'ist', mf:'—', rk:'krank', nf:'—'} },
+
+{ i:'feld-23', t:'feld', k:'mc',
+  q:'Er wird nächstes Jahr Arzt.\nWhat is in the right bracket?',
+  o:['wird','nächstes Jahr','Arzt','nothing'], c:2,
+  e:'The predicate noun Arzt completes werden and therefore sits in the right bracket, after the time phrase.',
+  f:{vf:'Er', lk:'wird', mf:'nächstes Jahr', rk:'Arzt', nf:'—'} },
+
+{ i:'feld-24', t:'feld', k:'mc',
+  q:'Which field is defined as "everything else"?',
+  o:['Vorfeld','Mittelfeld','Nachfeld','Right bracket'], c:1,
+  e:'The Mittelfeld is the residue: subject, objects, adverbials, negation — everything that is not fronted and not part of the verb frame.' },
+
+{ i:'feld-25', t:'feld', k:'mc',
+  q:'Ich habe versucht, ihn anzurufen.\nWhat is in the Nachfeld?',
+  o:['versucht','ihn','ihn anzurufen','anzurufen'], c:2,
+  e:'The whole zu-infinitive group moves out past the right bracket into the Nachfeld.',
+  f:{vf:'Ich', lk:'habe', mf:'—', rk:'versucht', nf:', ihn anzurufen'} },
+
+{ i:'feld-26', t:'feld', k:'mc',
+  q:'Mit meinem besten Freund aus Nigeria fahre ich morgen nach Berlin.\nHow many elements are in the Vorfeld?',
+  o:['One','Three','Five','Six'], c:0,
+  e:'The entire prepositional phrase is a single constituent, so V2 is respected even though six words precede the verb.',
+  f:{vf:'Mit meinem besten Freund aus Nigeria', lk:'fahre', mf:'ich morgen nach Berlin', rk:'—', nf:'—'} },
+
+{ i:'feld-27', t:'feld', k:'mc',
+  q:'Does the field model apply to subordinate clauses too?',
+  o:['No, they have a separate system','Yes — same frame, different fillers','Only for relative clauses','Only when the clause comes first'], c:1,
+  e:'Same frame. The conjunction fills the left bracket and the finite verb the right, and the Vorfeld stays empty.' },
+
+{ i:'feld-28', t:'feld', k:'mc',
+  q:'Ich fahre Auto.\nWhat is in the right bracket?',
+  o:['fahre','Auto','Ich','nothing'], c:1,
+  e:'Fixed verb-noun pairs like Auto fahren or Klavier spielen behave as one predicate, so the bare noun takes the right bracket.',
+  f:{vf:'Ich', lk:'fahre', mf:'—', rk:'Auto', nf:'—'} },
+
+{ i:'feld-29', t:'feld', k:'mc',
+  q:'Er hat mehr gearbeitet als ich.\nWhat is in the Nachfeld?',
+  o:['mehr','gearbeitet','als ich','hat'], c:2,
+  e:'Comparison phrases with als or wie are one of the few things allowed to sit after the right bracket.',
+  f:{vf:'Er', lk:'hat', mf:'mehr', rk:'gearbeitet', nf:'als ich'} },
+
+{ i:'feld-30', t:'feld', k:'pick',
+  q:'Click the finite verb.', tk:['Morgen','will','ich','nach Berlin','fahren'], c:1,
+  e:'The modal will is finite and holds the left bracket; the infinitive fahren waits in the right bracket.',
+  f:{vf:'Morgen', lk:'will', mf:'ich nach Berlin', rk:'fahren', nf:'—'} },
+
+{ i:'feld-31', t:'feld', k:'mc',
+  q:'Gestern habe ich gearbeitet.\nWhich field is the subject in?',
+  o:['Vorfeld','Left bracket','Mittelfeld','Right bracket'], c:2,
+  e:'When something else takes the Vorfeld, the subject drops into the Mittelfeld — normally straight after the finite verb.' },
+
+{ i:'feld-32', t:'feld', k:'mc',
+  q:'Which of these may sit in the Nachfeld?',
+  o:['The subject','The finite verb','A comparison with als','The negation nicht'], c:2,
+  e:'The Nachfeld takes overflow: subordinate clauses, zu-infinitives, purpose clauses, comparisons and spoken afterthoughts.' },
+
+{ i:'feld-33', t:'feld', k:'pick',
+  q:'Click the first word of the Nachfeld.', tk:['Er','hat','mir','gesagt','dass','er','kommt'], c:4,
+  e:'Everything from dass onwards sits outside the frame of the main clause.',
+  f:{vf:'Er', lk:'hat', mf:'mir', rk:'gesagt', nf:', dass er kommt'} },
+
+{ i:'feld-34', t:'feld', k:'mc',
+  q:'Ich muss das Fenster zumachen.\nWhat is in the right bracket?',
+  o:['zu','machen','zumachen','das Fenster zumachen'], c:2,
+  e:'With a modal, the separable verb appears as a whole infinitive in the right bracket — the prefix does not strand.',
+  f:{vf:'Ich', lk:'muss', mf:'das Fenster', rk:'zumachen', nf:'—'} },
+
+/* ─────────────── 2. VERBZWEITSTELLUNG ─────────────── */
+
+{ i:'v2-01', t:'v2', k:'order', q:'Build the sentence. Start with: Ich',
+  tk:['nach Berlin','fahre','Ich','morgen'], a:['Ich fahre morgen nach Berlin'],
+  e:'Neutral order: subject in the Vorfeld, finite verb second, then time before place.',
+  f:{vf:'Ich', lk:'fahre', mf:'morgen nach Berlin', rk:'—', nf:'—'} },
+
+{ i:'v2-02', t:'v2', k:'order', q:'Same words. Now start with: Morgen',
+  tk:['nach Berlin','fahre','ich','Morgen'], a:['Morgen fahre ich nach Berlin'],
+  e:'The verb stays in second position, so the subject has to move behind it into the Mittelfeld.',
+  f:{vf:'Morgen', lk:'fahre', mf:'ich nach Berlin', rk:'—', nf:'—'} },
+
+{ i:'v2-03', t:'v2', k:'order', q:'Same words. Now start with: Nach Berlin',
+  tk:['nach Berlin','fahre','ich','morgen'], a:['Nach Berlin fahre ich morgen'],
+  e:'Any single constituent can take the Vorfeld — including a directional phrase. V2 is unaffected.',
+  f:{vf:'Nach Berlin', lk:'fahre', mf:'ich morgen', rk:'—', nf:'—'} },
+
+{ i:'v2-04', t:'v2', k:'order', q:'Start with the prepositional phrase.',
+  tk:['morgen','fahre','Mit meinem besten Freund aus Nigeria','ich','nach Berlin'],
+  a:['Mit meinem besten Freund aus Nigeria fahre ich morgen nach Berlin'],
+  e:'Six words, one element. Length is irrelevant — only constituent count matters for V2.',
+  f:{vf:'Mit meinem besten Freund aus Nigeria', lk:'fahre', mf:'ich morgen nach Berlin', rk:'—', nf:'—'} },
+
+{ i:'v2-05', t:'v2', k:'order', q:'Start with the weil-clause.',
+  tk:['fahre','Weil ich Urlaub habe','ich','nach Berlin'],
+  a:['Weil ich Urlaub habe fahre ich nach Berlin'],
+  e:'Written: Weil ich Urlaub habe, fahre ich nach Berlin. The subordinate clause is one element, so the main verb follows immediately after the comma.',
+  f:{vf:'Weil ich Urlaub habe', lk:'fahre', mf:'ich nach Berlin', rk:'—', nf:'—'} },
+
+{ i:'v2-06', t:'v2', k:'mc', q:'Which sentence is correct?',
+  o:['Morgen ich fahre nach Berlin.','Morgen fahre ich nach Berlin.'], c:1,
+  e:'Morgen already fills the Vorfeld. Putting ich in front of the verb would give the verb third position.' },
+
+{ i:'v2-07', t:'v2', k:'mc', q:'Which sentence is correct?',
+  o:['Gestern wir haben Fußball gespielt.','Gestern haben wir Fußball gespielt.'], c:1,
+  e:'One element before the finite verb, never two.' },
+
+{ i:'v2-08', t:'v2', k:'cloze', q:'Rewrite with heute in the Vorfeld:\nIch arbeite heute zu Hause.',
+  a:['Heute arbeite ich zu Hause'],
+  e:'Fronting an adverbial forces subject-verb inversion. Nothing else changes.',
+  f:{vf:'Heute', lk:'arbeite', mf:'ich zu Hause', rk:'—', nf:'—'} },
+
+{ i:'v2-09', t:'v2', k:'cloze', q:'Rewrite with in Berlin in the Vorfeld:\nIch wohne seit 2020 in Berlin.',
+  a:['In Berlin wohne ich seit 2020'],
+  e:'The local phrase moves to the front; the time phrase stays in the Mittelfeld.',
+  f:{vf:'In Berlin', lk:'wohne', mf:'ich seit 2020', rk:'—', nf:'—'} },
+
+{ i:'v2-10', t:'v2', k:'cloze', q:'Rewrite with seit 2020 in the Vorfeld:\nIch wohne seit 2020 in Berlin.',
+  a:['Seit 2020 wohne ich in Berlin'],
+  e:'Same sentence, different emphasis. The Vorfeld is the position for what the sentence is anchored on.',
+  f:{vf:'Seit 2020', lk:'wohne', mf:'ich in Berlin', rk:'—', nf:'—'} },
+
+{ i:'v2-11', t:'v2', k:'cloze', q:'Rewrite with das Buch in the Vorfeld:\nIch habe das Buch gestern gelesen.',
+  a:['Das Buch habe ich gestern gelesen'],
+  e:'The accusative object is fronted, the participle stays in the right bracket, the subject drops behind the verb.',
+  f:{vf:'Das Buch', lk:'habe', mf:'ich gestern', rk:'gelesen', nf:'—'} },
+
+{ i:'v2-12', t:'v2', k:'cloze', q:'Rewrite with meinem Bruder in the Vorfeld:\nIch habe meinem Bruder ein Buch geschenkt.',
+  a:['Meinem Bruder habe ich ein Buch geschenkt'],
+  e:'A dative object can take the Vorfeld just as easily as a subject or an adverbial.',
+  f:{vf:'Meinem Bruder', lk:'habe', mf:'ich ein Buch', rk:'geschenkt', nf:'—'} },
+
+{ i:'v2-13', t:'v2', k:'mc', q:'In a declarative main clause, how many elements come before the finite verb?',
+  o:['Exactly one','At most two','As many as needed','None'], c:0,
+  e:'That is the whole V2 rule. Everything else about main clause order follows from it.' },
+
+{ i:'v2-14', t:'v2', k:'mc', q:'Is "Mit meinem besten Freund" one element or three?',
+  o:['One','Two','Three','It depends on the verb'], c:0,
+  e:'A prepositional phrase is a single constituent no matter how many words it contains.' },
+
+{ i:'v2-15', t:'v2', k:'mc', q:'If something other than the subject takes the Vorfeld, where does the subject go?',
+  o:['It is dropped','Into the Mittelfeld, usually right after the verb','Into the Nachfeld','Into the right bracket'], c:1,
+  e:'It slots into the Mittelfeld, normally immediately behind the finite verb.' },
+
+{ i:'v2-16', t:'v2', k:'order', q:'Build the question.',
+  tk:['du','fährst','Wann','nach Berlin'], a:['Wann fährst du nach Berlin'],
+  e:'W-questions are ordinary V2: the question word simply occupies the Vorfeld.',
+  f:{vf:'Wann', lk:'fährst', mf:'du nach Berlin', rk:'—', nf:'—'} },
+
+{ i:'v2-17', t:'v2', k:'order', q:'Build the question.',
+  tk:['er','hat','Warum','das','gemacht'], a:['Warum hat er das gemacht'],
+  e:'Warum takes the Vorfeld, hat is second, and the participle waits in the right bracket.',
+  f:{vf:'Warum', lk:'hat', mf:'er das', rk:'gemacht', nf:'—'} },
+
+{ i:'v2-18', t:'v2', k:'mc', q:'Which sentence is correct?',
+  o:['Deshalb ich bin müde.','Deshalb bin ich müde.'], c:1,
+  e:'deshalb is a conjunctional adverb and takes the Vorfeld itself, so the finite verb must follow it directly.' },
+
+{ i:'v2-19', t:'v2', k:'cloze', q:'Rewrite with gestern Abend in the Vorfeld:\nWir sind gestern Abend ins Kino gegangen.',
+  a:['Gestern Abend sind wir ins Kino gegangen'],
+  e:'gestern Abend is one time expression, so it counts as one element.',
+  f:{vf:'Gestern Abend', lk:'sind', mf:'wir ins Kino', rk:'gegangen', nf:'—'} },
+
+{ i:'v2-20', t:'v2', k:'order', q:'Start with: Am Wochenende',
+  tk:['ich','spiele','Am Wochenende','Fußball'], a:['Am Wochenende spiele ich Fußball'],
+  e:'Fußball spielen is a fixed verb-noun pair, so Fußball sits at the end in the right bracket.',
+  f:{vf:'Am Wochenende', lk:'spiele', mf:'ich', rk:'Fußball', nf:'—'} },
+
+{ i:'v2-21', t:'v2', k:'mc', q:'Which of these can fill the Vorfeld on its own?',
+  o:['Morgen ich','Weil ich müde bin','fahre ich','ich morgen'], c:1,
+  e:'A complete subordinate clause is one constituent. The other options are two elements glued together.' },
+
+{ i:'v2-22', t:'v2', k:'cloze', q:'Rewrite with nach der Arbeit in the Vorfeld:\nIch gehe nach der Arbeit ins Fitnessstudio.',
+  a:['Nach der Arbeit gehe ich ins Fitnessstudio'],
+  e:'Temporal prepositional phrase to the front, subject behind the verb.',
+  f:{vf:'Nach der Arbeit', lk:'gehe', mf:'ich ins Fitnessstudio', rk:'—', nf:'—'} },
+
+{ i:'v2-23', t:'v2', k:'order', q:'Start with: Letztes Jahr',
+  tk:['habe','Letztes Jahr','ich','in Barcelona','gearbeitet'],
+  a:['Letztes Jahr habe ich in Barcelona gearbeitet'],
+  e:'Time in the Vorfeld, subject then place in the Mittelfeld, participle in the right bracket.',
+  f:{vf:'Letztes Jahr', lk:'habe', mf:'ich in Barcelona', rk:'gearbeitet', nf:'—'} },
+
+{ i:'v2-24', t:'v2', k:'mc', q:'Which sentence is correct?',
+  o:['Heute Abend ich koche Pasta.','Heute Abend koche ich Pasta.'], c:1,
+  e:'Heute Abend occupies the Vorfeld, so koche must come next.' },
+
+{ i:'v2-25', t:'v2', k:'cloze', q:'Rewrite so that the dass-clause is in the Vorfeld:\nIch weiß, dass er kommt.',
+  a:['Dass er kommt weiß ich','Dass er kommt, weiß ich'],
+  e:'Written: Dass er kommt, weiß ich. Even a full clause is just one element, so weiß follows immediately.',
+  f:{vf:'Dass er kommt', lk:'weiß', mf:'ich', rk:'—', nf:'—'} },
+
+{ i:'v2-26', t:'v2', k:'mc', q:'A sentence opens with a subordinate clause. What comes immediately after the comma?',
+  o:['The subject of the main clause','The finite verb of the main clause','A second conjunction','The participle'], c:1,
+  e:'The subordinate clause is the Vorfeld, so position two — the finite verb — comes next.' },
+
+{ i:'v2-27', t:'v2', k:'order', q:'Start with the obwohl-clause.',
+  tk:['spazieren','gehe','Obwohl es regnet','ich'], a:['Obwohl es regnet gehe ich spazieren'],
+  e:'Written: Obwohl es regnet, gehe ich spazieren.',
+  f:{vf:'Obwohl es regnet', lk:'gehe', mf:'ich', rk:'spazieren', nf:'—'} },
+
+{ i:'v2-28', t:'v2', k:'cloze', q:'Rewrite with ihm in the Vorfeld:\nIch habe ihm das Geld gegeben.',
+  a:['Ihm habe ich das Geld gegeben'],
+  e:'Even an unstressed pronoun can be fronted for contrast.',
+  f:{vf:'Ihm', lk:'habe', mf:'ich das Geld', rk:'gegeben', nf:'—'} },
+
+{ i:'v2-29', t:'v2', k:'pick', q:'Click the finite verb.',
+  tk:['Trotz des Regens','sind','wir','spazieren','gegangen'], c:1,
+  e:'sind is finite and second. Trotz des Regens is one prepositional element in the Vorfeld.',
+  f:{vf:'Trotz des Regens', lk:'sind', mf:'wir', rk:'spazieren gegangen', nf:'—'} },
+
+{ i:'v2-30', t:'v2', k:'cloze', q:'Rewrite with morgen früh in the Vorfeld:\nIch muss morgen früh aufstehen.',
+  a:['Morgen früh muss ich aufstehen'],
+  e:'The modal stays in second position and the infinitive stays in the right bracket.',
+  f:{vf:'Morgen früh', lk:'muss', mf:'ich', rk:'aufstehen', nf:'—'} },
+
+{ i:'v2-31', t:'v2', k:'order', q:'Start with: Vielleicht',
+  tk:['später','kommt','Vielleicht','er'], a:['Vielleicht kommt er später'],
+  e:'Sentence adverbs like vielleicht occupy the Vorfeld like anything else and trigger inversion.',
+  f:{vf:'Vielleicht', lk:'kommt', mf:'er später', rk:'—', nf:'—'} },
+
+{ i:'v2-32', t:'v2', k:'mc', q:'Nach Berlin fahre ich morgen.\nWhy is this correct?',
+  o:['Because nach Berlin is the subject','Because the Vorfeld may hold any one element','Because fahren is irregular','Because morgen is at the end'], c:1,
+  e:'The Vorfeld is not the subject position. It is the one-element slot, and any constituent may take it.' }
+
+];
+
+
+const BANK_B = [
+
+/* ─────────────── 3. VERBERSTSTELLUNG ─────────────── */
+
+{ i:'v1-01', t:'v1', k:'order', q:'Build the yes/no question.',
+  tk:['du','Fährst','morgen','nach Berlin'], a:['Fährst du morgen nach Berlin'],
+  e:'Yes/no questions leave the Vorfeld empty, so the finite verb comes first.',
+  f:{vf:'—', lk:'Fährst', mf:'du morgen nach Berlin', rk:'—', nf:'—'} },
+
+{ i:'v1-02', t:'v1', k:'order', q:'Build the yes/no question.',
+  tk:['das Buch','Hast','du','gelesen'], a:['Hast du das Buch gelesen'],
+  e:'The auxiliary opens the clause; the participle still waits in the right bracket.',
+  f:{vf:'—', lk:'Hast', mf:'du das Buch', rk:'gelesen', nf:'—'} },
+
+{ i:'v1-03', t:'v1', k:'order', q:'Build the imperative (du).',
+  tk:['das Fenster','Mach','zu','bitte'], a:['Mach bitte das Fenster zu','Mach das Fenster bitte zu'],
+  e:'Imperatives are verb-first. The separable prefix zu still strands in the right bracket.',
+  f:{vf:'—', lk:'Mach', mf:'bitte das Fenster', rk:'zu', nf:'—'} },
+
+{ i:'v1-04', t:'v1', k:'order', q:'Build the imperative (Sie).',
+  tk:['bitte','Machen','das Fenster','Sie','zu'], a:['Machen Sie bitte das Fenster zu','Machen Sie das Fenster bitte zu'],
+  e:'The Sie-imperative keeps its pronoun, and it goes straight after the verb.',
+  f:{vf:'—', lk:'Machen', mf:'Sie bitte das Fenster', rk:'zu', nf:'—'} },
+
+{ i:'v1-05', t:'v1', k:'order', q:'Build the conditional without wenn.',
+  tk:['ich','Hätte','Zeit','würde','ich','kommen'], a:['Hätte ich Zeit würde ich kommen'],
+  e:'Written: Hätte ich Zeit, würde ich kommen. Dropping wenn leaves the left bracket free for the finite verb.',
+  fn:'conditional clause only', f:{vf:'—', lk:'Hätte', mf:'ich Zeit', rk:'—', nf:'—'} },
+
+{ i:'v1-06', t:'v1', k:'mc', q:'Wann fährst du?\nIs this verb-first or verb-second?',
+  o:['Verb-first — it is a question','Verb-second — the W-word fills the Vorfeld'], c:1,
+  e:'W-questions are ordinary V2. Only yes/no questions, imperatives and wenn-less conditionals are genuinely verb-first.' },
+
+{ i:'v1-07', t:'v1', k:'mc', q:'What is in the Vorfeld of a yes/no question?',
+  o:['The finite verb','The subject','Nothing','The question word'], c:2,
+  e:'It stays empty. That empty Vorfeld is precisely what signals a yes/no question.' },
+
+{ i:'v1-08', t:'v1', k:'order', q:'Build the imperative (du).',
+  tk:['an','mich','Ruf','morgen'], a:['Ruf mich morgen an'],
+  e:'Verb first, prefix last. The pronoun object comes early in the Mittelfeld.',
+  f:{vf:'—', lk:'Ruf', mf:'mich morgen', rk:'an', nf:'—'} },
+
+{ i:'v1-09', t:'v1', k:'order', q:'Build the yes/no question.',
+  tk:['mir','Kannst','du','helfen'], a:['Kannst du mir helfen'],
+  e:'Modal first, infinitive in the right bracket.',
+  f:{vf:'—', lk:'Kannst', mf:'du mir', rk:'helfen', nf:'—'} },
+
+{ i:'v1-10', t:'v1', k:'cloze', q:'Turn into a yes/no question:\nDu kommst morgen.',
+  a:['Kommst du morgen'],
+  e:'Empty the Vorfeld and the verb slides into first position.' },
+
+{ i:'v1-11', t:'v1', k:'cloze', q:'Turn into a yes/no question:\nEr hat das Buch gelesen.',
+  a:['Hat er das Buch gelesen'],
+  e:'Only the finite verb moves. The participle keeps its place in the right bracket.' },
+
+{ i:'v1-12', t:'v1', k:'cloze', q:'Rewrite without wenn:\nWenn ich Zeit hätte, würde ich kommen.',
+  a:['Hätte ich Zeit würde ich kommen','Hätte ich Zeit, würde ich kommen'],
+  e:'Remove wenn and promote the finite verb to first position. Meaning is unchanged; the register is a little more formal.' },
+
+{ i:'v1-13', t:'v1', k:'cloze', q:'Rewrite without wenn:\nWenn du mich brauchst, ruf mich an.',
+  a:['Brauchst du mich ruf mich an','Brauchst du mich, ruf mich an'],
+  e:'Same operation in the present tense: the conjunction goes, the finite verb takes the front.' },
+
+{ i:'v1-14', t:'v1', k:'mc', q:'Does the Sie-imperative keep its pronoun?',
+  o:['No — Machen bitte das Fenster zu!','Yes — Machen Sie bitte das Fenster zu!'], c:1,
+  e:'The Sie-form always keeps Sie, directly after the verb. The du- and ihr-forms drop the pronoun.' },
+
+{ i:'v1-15', t:'v1', k:'order', q:'Build the imperative (Sie).',
+  tk:['leise','Seien','bitte','Sie'], a:['Seien Sie bitte leise'],
+  e:'Irregular imperative of sein. The predicate adjective still ends up in the right bracket.',
+  f:{vf:'—', lk:'Seien', mf:'Sie bitte', rk:'leise', nf:'—'} },
+
+{ i:'v1-16', t:'v1', k:'order', q:'Build the yes/no question (ihr).',
+  tk:['mit','heute Abend','Kommt','ihr'], a:['Kommt ihr heute Abend mit'],
+  e:'mitkommen is separable, so mit strands at the end even in a verb-first clause.',
+  f:{vf:'—', lk:'Kommt', mf:'ihr heute Abend', rk:'mit', nf:'—'} },
+
+{ i:'v1-17', t:'v1', k:'mc', q:'Which sentence has an empty Vorfeld?',
+  o:['Wann kommst du?','Kommst du morgen?','Morgen kommst du.','Du kommst morgen.'], c:1,
+  e:'Only the yes/no question. In the W-question, wann is sitting in the Vorfeld.' },
+
+{ i:'v1-18', t:'v1', k:'order', q:'Build the imperative (du).',
+  tk:['früher','auf','Steh','bitte'], a:['Steh bitte früher auf'],
+  e:'aufstehen splits: Steh takes the left bracket, auf the right.',
+  f:{vf:'—', lk:'Steh', mf:'bitte früher', rk:'auf', nf:'—'} },
+
+{ i:'v1-19', t:'v1', k:'mc', q:'Hätte ich Zeit, würde ich kommen.\nWhat has replaced wenn?',
+  o:['Nothing — wenn is simply optional in writing','The finite verb, moved into first position','The subject','A comma'], c:1,
+  e:'The finite verb takes over the job of marking the clause as conditional by occupying the position wenn had.' },
+
+{ i:'v1-20', t:'v1', k:'cloze', q:'Ask about the time:\nEr kommt um acht.',
+  a:['Wann kommt er'],
+  e:'W-questions stay V2 — the question word fills the Vorfeld and the verb stays second.' },
+
+{ i:'v1-21', t:'v1', k:'order', q:'Build the imperative (du).',
+  tk:['nicht','Vergiss','deinen Schlüssel'], a:['Vergiss deinen Schlüssel nicht'],
+  e:'Verb first, and nicht sits as late as it can — after the definite object, since the right bracket is empty.',
+  f:{vf:'—', lk:'Vergiss', mf:'deinen Schlüssel nicht', rk:'—', nf:'—'} },
+
+{ i:'v1-22', t:'v1', k:'mc', q:'Mach das Fenster zu!\nWhere is the prefix zu?',
+  o:['In the Vorfeld','In the left bracket','In the Mittelfeld','In the right bracket'], c:3,
+  e:'A stranded prefix always lands in the right bracket, whatever the clause type.' },
+
+/* ─────────────── 4. DIE RECHTE KLAMMER ─────────────── */
+
+{ i:'kl-01', t:'klammer', k:'order', q:'Build the sentence. Start with: Ich',
+  tk:['gelesen','habe','das Buch','Ich'], a:['Ich habe das Buch gelesen'],
+  e:'Perfect tense: finite habe in the left bracket, participle gelesen in the right.',
+  f:{vf:'Ich', lk:'habe', mf:'das Buch', rk:'gelesen', nf:'—'} },
+
+{ i:'kl-02', t:'klammer', k:'order', q:'Build the sentence. Start with: Ich',
+  tk:['arbeiten','muss','Ich','heute'], a:['Ich muss heute arbeiten'],
+  e:'The infinitive after a modal goes to the right bracket.',
+  f:{vf:'Ich', lk:'muss', mf:'heute', rk:'arbeiten', nf:'—'} },
+
+{ i:'kl-03', t:'klammer', k:'order', q:'Build the sentence. Start with: Ich',
+  tk:['an','rufe','dich','Ich','morgen'], a:['Ich rufe dich morgen an'],
+  e:'anrufen splits in a main clause with a simple tense.',
+  f:{vf:'Ich', lk:'rufe', mf:'dich morgen', rk:'an', nf:'—'} },
+
+{ i:'kl-04', t:'klammer', k:'order', q:'Build the sentence. Start with: Er',
+  tk:['Arzt','wird','nächstes Jahr','Er'], a:['Er wird nächstes Jahr Arzt'],
+  e:'A predicate noun with werden belongs to the right bracket, after the time phrase.',
+  f:{vf:'Er', lk:'wird', mf:'nächstes Jahr', rk:'Arzt', nf:'—'} },
+
+{ i:'kl-05', t:'klammer', k:'order', q:'Build the sentence. Start with: Ich',
+  tk:['können','hätte','machen','das','Ich'], a:['Ich hätte das machen können'],
+  e:'In a verb cluster the modal comes last: machen können, not können machen.',
+  f:{vf:'Ich', lk:'hätte', mf:'das', rk:'machen können', nf:'—'} },
+
+{ i:'kl-06', t:'klammer', k:'mc', q:'Ich mache das Fenster zu.\nWhat is in the right bracket?',
+  o:['zu','mache','das Fenster','zumachen'], c:0,
+  e:'With a simple tense the prefix separates and strands alone at the end.' },
+
+{ i:'kl-07', t:'klammer', k:'mc', q:'Ich muss das Fenster zumachen.\nWhat is in the right bracket?',
+  o:['zu','muss','zumachen','das Fenster'], c:2,
+  e:'With a modal the separable verb appears as one infinitive, so it never splits.' },
+
+{ i:'kl-08', t:'klammer', k:'order', q:'Build the sentence. Start with: Du',
+  tk:['ausfüllen','musst','das Formular','Du'], a:['Du musst das Formular ausfüllen'],
+  e:'Separable infinitive stays whole after a modal.',
+  f:{vf:'Du', lk:'musst', mf:'das Formular', rk:'ausfüllen', nf:'—'} },
+
+{ i:'kl-09', t:'klammer', k:'order', q:'Build the sentence. Start with: Wir',
+  tk:['geflogen','sind','nach Paris','Wir','letzte Woche'],
+  a:['Wir sind letzte Woche nach Paris geflogen'],
+  e:'Motion verbs form the perfect with sein. Time before place in the Mittelfeld, participle at the end.',
+  f:{vf:'Wir', lk:'sind', mf:'letzte Woche nach Paris', rk:'geflogen', nf:'—'} },
+
+{ i:'kl-10', t:'klammer', k:'order', q:'Build the sentence. Start with: Er',
+  tk:['angerufen','hat','mich','Er','gestern'], a:['Er hat mich gestern angerufen'],
+  e:'In the perfect, the separable verb rejoins as one participle: angerufen.',
+  f:{vf:'Er', lk:'hat', mf:'mich gestern', rk:'angerufen', nf:'—'} },
+
+{ i:'kl-11', t:'klammer', k:'order', q:'Build the sentence. Start with: Ich',
+  tk:['aufstehen','werde','morgen früh','Ich'], a:['Ich werde morgen früh aufstehen'],
+  e:'Future tense: werden is finite, the full infinitive closes the bracket.',
+  f:{vf:'Ich', lk:'werde', mf:'morgen früh', rk:'aufstehen', nf:'—'} },
+
+{ i:'kl-12', t:'klammer', k:'order', q:'Build the sentence. Start with: Das Konzert',
+  tk:['angefangen','hat','um acht','Das Konzert'], a:['Das Konzert hat um acht angefangen'],
+  e:'anfangen forms its participle with the prefix reattached.',
+  f:{vf:'Das Konzert', lk:'hat', mf:'um acht', rk:'angefangen', nf:'—'} },
+
+{ i:'kl-13', t:'klammer', k:'mc', q:'Which of these does NOT belong in the right bracket?',
+  o:['A past participle','A separable prefix','The subject','A predicate adjective after sein'], c:2,
+  e:'The subject lives in the Vorfeld or the Mittelfeld. It is never part of the verb frame.' },
+
+{ i:'kl-14', t:'klammer', k:'order', q:'Build the sentence. Start with: Sie',
+  tk:['Klavier','spielt','seit zehn Jahren','Sie'], a:['Sie spielt seit zehn Jahren Klavier'],
+  e:'Klavier spielen is a fixed verb-noun pair, so Klavier behaves like a verb part.',
+  f:{vf:'Sie', lk:'spielt', mf:'seit zehn Jahren', rk:'Klavier', nf:'—'} },
+
+{ i:'kl-15', t:'klammer', k:'order', q:'Build the sentence. Start with: Ich',
+  tk:['Auto','fahre','jeden Tag','Ich'], a:['Ich fahre jeden Tag Auto'],
+  e:'Auto fahren behaves as one predicate; the bare noun closes the bracket.',
+  f:{vf:'Ich', lk:'fahre', mf:'jeden Tag', rk:'Auto', nf:'—'} },
+
+{ i:'kl-16', t:'klammer', k:'mc', q:'Why does Auto sit in the right bracket in "Ich fahre Auto"?',
+  o:['Because it is a noun','Because it is the accusative object','Because Auto fahren is a fixed verb-noun pair','Because it is short'], c:2,
+  e:'A bare noun locked to a verb is treated as part of the predicate, not as a normal object. Compare: Ich fahre den Wagen in die Garage.' },
+
+{ i:'kl-17', t:'klammer', k:'order', q:'Build the sentence. Start with: Ich',
+  tk:['müssen','habe','arbeiten','den ganzen Tag','Ich'],
+  a:['Ich habe den ganzen Tag arbeiten müssen'],
+  e:'A modal with a dependent infinitive uses the Ersatzinfinitiv in the perfect: arbeiten müssen, not arbeiten gemusst.',
+  f:{vf:'Ich', lk:'habe', mf:'den ganzen Tag', rk:'arbeiten müssen', nf:'—'} },
+
+{ i:'kl-18', t:'klammer', k:'order', q:'Build the sentence. Start with: Ich',
+  tk:['können','habe','kommen','nicht','Ich','gestern'],
+  a:['Ich habe gestern nicht kommen können'],
+  e:'nicht sits as late as possible but still in front of the whole right bracket.',
+  f:{vf:'Ich', lk:'habe', mf:'gestern nicht', rk:'kommen können', nf:'—'} },
+
+{ i:'kl-19', t:'klammer', k:'mc', q:'Ich habe arbeiten müssen.\nWhy müssen and not gemusst?',
+  o:['A spelling exception','The Ersatzinfinitiv: a modal with a dependent infinitive uses the infinitive form','müssen has no participle','Because of the auxiliary haben'], c:1,
+  e:'When a modal governs another infinitive, the perfect uses the infinitive form instead of the participle.' },
+
+{ i:'kl-20', t:'klammer', k:'order', q:'Build the sentence. Start with: Sie',
+  tk:['krank','ist','seit gestern','Sie'], a:['Sie ist seit gestern krank'],
+  e:'The predicate adjective after sein closes the bracket, after the time phrase.',
+  f:{vf:'Sie', lk:'ist', mf:'seit gestern', rk:'krank', nf:'—'} },
+
+{ i:'kl-21', t:'klammer', k:'order', q:'Build the sentence. Start with: Er',
+  tk:['geworden','ist','Vater','letztes Jahr','Er'], a:['Er ist letztes Jahr Vater geworden'],
+  e:'Both the predicate noun and the participle are in the right bracket, in that order.',
+  f:{vf:'Er', lk:'ist', mf:'letztes Jahr', rk:'Vater geworden', nf:'—'} },
+
+{ i:'kl-22', t:'klammer', k:'pick', q:'Click the element in the right bracket.',
+  tk:['Ich','möchte','heute Abend','ins Kino','gehen'], c:4,
+  e:'ins Kino is a local adverbial in the Mittelfeld. Only the infinitive gehen is part of the frame.',
+  f:{vf:'Ich', lk:'möchte', mf:'heute Abend ins Kino', rk:'gehen', nf:'—'} },
+
+{ i:'kl-23', t:'klammer', k:'order', q:'Build the sentence. Start with: Wir',
+  tk:['lösen','müssen','das Problem','Wir'], a:['Wir müssen das Problem lösen'],
+  e:'Object in the Mittelfeld, infinitive in the right bracket.',
+  f:{vf:'Wir', lk:'müssen', mf:'das Problem', rk:'lösen', nf:'—'} },
+
+{ i:'kl-24', t:'klammer', k:'order', q:'Build the sentence. Start with: Ich',
+  tk:['verloren','habe','meinen Schlüssel','Ich'], a:['Ich habe meinen Schlüssel verloren'],
+  e:'Inseparable ver- takes no ge- in the participle, but the placement rule is the same.',
+  f:{vf:'Ich', lk:'habe', mf:'meinen Schlüssel', rk:'verloren', nf:'—'} },
+
+{ i:'kl-25', t:'klammer', k:'mc', q:'Ich rufe dich an.\nWhat is the right bracket?',
+  o:['rufe','dich','an','rufe an'], c:2,
+  e:'The prefix alone. The finite part of the verb stays in the left bracket.' },
+
+{ i:'kl-26', t:'klammer', k:'order', q:'Build the sentence. Start with: Der Zug',
+  tk:['an','kommt','um acht','Der Zug'], a:['Der Zug kommt um acht an'],
+  e:'ankommen splits in a simple tense, so an lands at the end.',
+  f:{vf:'Der Zug', lk:'kommt', mf:'um acht', rk:'an', nf:'—'} },
+
+{ i:'kl-27', t:'klammer', k:'order', q:'Build the sentence. Start with: Ich',
+  tk:['um','ziehe','nächsten Monat','Ich'], a:['Ich ziehe nächsten Monat um'],
+  e:'umziehen is separable; the prefix strands in the right bracket.',
+  f:{vf:'Ich', lk:'ziehe', mf:'nächsten Monat', rk:'um', nf:'—'} },
+
+{ i:'kl-28', t:'klammer', k:'order', q:'Build the sentence. Start with: Das',
+  tk:['sollen','hätte','sagen','nicht','ich','Das'], a:['Das hätte ich nicht sagen sollen'],
+  e:'Two-part right bracket: sagen sollen. nicht stops just short of it.',
+  f:{vf:'Das', lk:'hätte', mf:'ich nicht', rk:'sagen sollen', nf:'—'} },
+
+{ i:'kl-29', t:'klammer', k:'mc', q:'Which cluster order is correct?',
+  o:['Ich hätte das können machen.','Ich hätte das machen können.'], c:1,
+  e:'The governing modal comes last in the cluster; the infinitive it governs comes first.' },
+
+/* ─────────────── 5. VERBLETZTSTELLUNG ─────────────── */
+
+{ i:'ns-01', t:'nebensatz', k:'order', q:'Complete the sentence.', s:'Ich bleibe zu Hause,',
+  tk:['bin','weil','müde','ich'], a:['weil ich müde bin'],
+  e:'After a subordinating conjunction the finite verb goes to the very end.',
+  f:{vf:'—', lk:'weil', mf:'ich müde', rk:'bin', nf:'—'} },
+
+{ i:'ns-02', t:'nebensatz', k:'order', q:'Complete the sentence.', s:'Ich weiß nicht,',
+  tk:['kommt','ob','morgen','er'], a:['ob er morgen kommt'],
+  e:'ob introduces an indirect yes/no question and behaves like any other subordinator.',
+  f:{vf:'—', lk:'ob', mf:'er morgen', rk:'kommt', nf:'—'} },
+
+{ i:'ns-03', t:'nebensatz', k:'order', q:'Complete the sentence.', s:'Er sagt,',
+  tk:['ankommt','dass','um acht','der Zug'], a:['dass der Zug um acht ankommt'],
+  e:'The separable verb rejoins at the end: an + kommt becomes ankommt.',
+  f:{vf:'—', lk:'dass', mf:'der Zug um acht', rk:'ankommt', nf:'—'} },
+
+{ i:'ns-04', t:'nebensatz', k:'order', q:'Complete the sentence.', s:'Ich freue mich,',
+  tk:['kannst','wenn','besuchen','du','mich'], a:['wenn du mich besuchen kannst'],
+  e:'The finite modal goes last; the infinitive it governs sits immediately before it.',
+  f:{vf:'—', lk:'wenn', mf:'du mich', rk:'besuchen kannst', nf:'—'} },
+
+{ i:'ns-05', t:'nebensatz', k:'order', q:'Complete the sentence.', s:'Sie glaubt,',
+  tk:['habe','dass','gelesen','das Buch','ich'], a:['dass ich das Buch gelesen habe'],
+  e:'The auxiliary is the finite verb, so it takes the final position — after the participle.',
+  f:{vf:'—', lk:'dass', mf:'ich das Buch', rk:'gelesen habe', nf:'—'} },
+
+{ i:'ns-06', t:'nebensatz', k:'order', q:'Complete the sentence.', s:'Ich weiß,',
+  tk:['können','dass','hätte','machen','das','ich'], a:['dass ich das hätte machen können'],
+  e:'Double-infinitive exception: with two infinitives the finite verb jumps in front of the cluster instead of going last.',
+  f:{vf:'—', lk:'dass', mf:'ich das', rk:'hätte machen können', nf:'—'} },
+
+{ i:'ns-07', t:'nebensatz', k:'order', q:'Build the whole sentence, starting with the weil-clause.',
+  tk:['bin','ich','Weil','bleibe','müde','ich','zu Hause'],
+  a:['Weil ich müde bin bleibe ich zu Hause'],
+  e:'Written: Weil ich müde bin, bleibe ich zu Hause. The clause is the Vorfeld, so bleibe comes straight after it.',
+  f:{vf:'Weil ich müde bin', lk:'bleibe', mf:'ich zu Hause', rk:'—', nf:'—'} },
+
+{ i:'ns-08', t:'nebensatz', k:'mc', q:'Where does the finite verb go in a subordinate clause?',
+  o:['Second position','First position','At the very end','Directly after the subject'], c:2,
+  e:'The conjunction has taken the left bracket, so the finite verb is pushed into the right bracket at the end.' },
+
+{ i:'ns-09', t:'nebensatz', k:'mc', q:'Which is correct?',
+  o:['…, dass der Zug um acht an kommt.','…, dass der Zug um acht ankommt.'], c:1,
+  e:'In verb-final position the prefix has nothing to strand away from, so it rejoins the stem as one word.' },
+
+{ i:'ns-10', t:'nebensatz', k:'mc', q:'Which is correct?',
+  o:['Ich weiß, dass ich das machen können hätte.','Ich weiß, dass ich das hätte machen können.'], c:1,
+  e:'The double-infinitive exception. With two infinitives, the finite verb moves in front of the cluster.' },
+
+{ i:'ns-11', t:'nebensatz', k:'order', q:'Complete the relative clause.', s:'Der Mann,', x:', ist mein Chef.',
+  tk:['steht','der','dort'], a:['der dort steht'],
+  e:'Relative clauses are verb-final too. The relative pronoun takes the left bracket.',
+  f:{vf:'—', lk:'der', mf:'dort', rk:'steht', nf:'—'} },
+
+{ i:'ns-12', t:'nebensatz', k:'order', q:'Complete the indirect question.', s:'Ich weiß nicht,',
+  tk:['kommt','wann','er'], a:['wann er kommt'],
+  e:'Indirect questions are verb-final. Compare the direct question: Wann kommt er?',
+  f:{vf:'—', lk:'wann', mf:'er', rk:'kommt', nf:'—'} },
+
+{ i:'ns-13', t:'nebensatz', k:'cloze', q:'Join with weil:\nIch bin müde. Ich habe schlecht geschlafen.',
+  a:['Ich bin müde weil ich schlecht geschlafen habe','Ich bin müde, weil ich schlecht geschlafen habe'],
+  e:'habe moves from second position to the very end, behind the participle.' },
+
+{ i:'ns-14', t:'nebensatz', k:'cloze', q:'Join with obwohl, putting the obwohl-clause first:\nEs regnet. Ich gehe spazieren.',
+  a:['Obwohl es regnet gehe ich spazieren','Obwohl es regnet, gehe ich spazieren'],
+  e:'The fronted clause fills the Vorfeld, so the main clause verb gehe comes immediately after it.' },
+
+{ i:'ns-15', t:'nebensatz', k:'order', q:'Complete the sentence.', s:'Ich trinke einen Kaffee,',
+  tk:['gehe','bevor','zur Arbeit','ich'], a:['bevor ich zur Arbeit gehe'],
+  e:'bevor is subordinating, so gehe goes last.',
+  f:{vf:'—', lk:'bevor', mf:'ich zur Arbeit', rk:'gehe', nf:'—'} },
+
+{ i:'ns-16', t:'nebensatz', k:'order', q:'Build the whole sentence, starting with the nachdem-clause.',
+  tk:['hatte','ich','Nachdem','gegessen','ging','ich','schlafen'],
+  a:['Nachdem ich gegessen hatte ging ich schlafen'],
+  e:'Written: Nachdem ich gegessen hatte, ging ich schlafen. nachdem normally takes the earlier of two tenses.',
+  f:{vf:'Nachdem ich gegessen hatte', lk:'ging', mf:'ich', rk:'schlafen', nf:'—'} },
+
+{ i:'ns-17', t:'nebensatz', k:'order', q:'Complete the sentence.', s:'Ich spreche langsam,',
+  tk:['verstehst','damit','mich','du'], a:['damit du mich verstehst'],
+  e:'damit expresses purpose and is subordinating, so the verb goes to the end.',
+  f:{vf:'—', lk:'damit', mf:'du mich', rk:'verstehst', nf:'—'} },
+
+{ i:'ns-18', t:'nebensatz', k:'order', q:'Complete the sentence.', s:'Ruf mich an,',
+  tk:['hast','falls','Zeit','du'], a:['falls du Zeit hast'],
+  e:'falls behaves exactly like wenn in the conditional sense.',
+  f:{vf:'—', lk:'falls', mf:'du Zeit', rk:'hast', nf:'—'} },
+
+{ i:'ns-19', t:'nebensatz', k:'order', q:'Complete the sentence.', s:'Ich rufe dich an,',
+  tk:['bin','sobald','zu Hause','ich'], a:['sobald ich zu Hause bin'],
+  e:'sobald is subordinating; bin lands in final position.',
+  f:{vf:'—', lk:'sobald', mf:'ich zu Hause', rk:'bin', nf:'—'} },
+
+{ i:'ns-20', t:'nebensatz', k:'order', q:'Complete the sentence.', s:'Ich warte,',
+  tk:['aufhört','bis','der Regen'], a:['bis der Regen aufhört'],
+  e:'Another separable verb reunited at the end: aufhören.',
+  f:{vf:'—', lk:'bis', mf:'der Regen', rk:'aufhört', nf:'—'} },
+
+{ i:'ns-21', t:'nebensatz', k:'order', q:'Build the whole sentence, starting with the seitdem-clause.',
+  tk:['wohnt','er','Seitdem','in Berlin','spricht','er','besser','Deutsch'],
+  a:['Seitdem er in Berlin wohnt spricht er besser Deutsch'],
+  e:'Written: Seitdem er in Berlin wohnt, spricht er besser Deutsch.',
+  f:{vf:'Seitdem er in Berlin wohnt', lk:'spricht', mf:'er besser', rk:'Deutsch', nf:'—'} },
+
+{ i:'ns-22', t:'nebensatz', k:'order', q:'Complete the sentence.', s:'Er lernt Deutsch,',
+  tk:['liest','indem','jeden Tag','er'], a:['indem er jeden Tag liest'],
+  e:'indem describes the means. It is subordinating like the rest.',
+  f:{vf:'—', lk:'indem', mf:'er jeden Tag', rk:'liest', nf:'—'} },
+
+{ i:'ns-23', t:'nebensatz', k:'order', q:'Complete the sentence.', s:'Es hat so stark geregnet,',
+  tk:['sind','sodass','geblieben','zu Hause','wir'], a:['sodass wir zu Hause geblieben sind'],
+  e:'sodass introduces a consequence, and the finite sind goes to the end.',
+  f:{vf:'—', lk:'sodass', mf:'wir zu Hause', rk:'geblieben sind', nf:'—'} },
+
+{ i:'ns-24', t:'nebensatz', k:'order', q:'Complete the sentence.', s:'Ich weiß nicht,',
+  tk:['hat','ob','angerufen','mich','er'], a:['ob er mich angerufen hat'],
+  e:'The participle comes first, then the finite auxiliary in last position.',
+  f:{vf:'—', lk:'ob', mf:'er mich', rk:'angerufen hat', nf:'—'} },
+
+{ i:'ns-25', t:'nebensatz', k:'order', q:'Complete the relative clause.', s:'Das ist der Kollege,',
+  tk:['habe','mit dem','gesprochen','gestern','ich'], a:['mit dem ich gestern gesprochen habe'],
+  e:'A preposition plus relative pronoun still counts as the left bracket of the relative clause.',
+  f:{vf:'—', lk:'mit dem', mf:'ich gestern', rk:'gesprochen habe', nf:'—'} },
+
+{ i:'ns-26', t:'nebensatz', k:'order', q:'Complete the relative clause.', s:'Die Frau,', x:', ist Ärztin.',
+  tk:['habe','die','getroffen','gestern','ich'], a:['die ich gestern getroffen habe'],
+  e:'Here die is the accusative object of the relative clause, but it still opens the clause.',
+  f:{vf:'—', lk:'die', mf:'ich gestern', rk:'getroffen habe', nf:'—'} },
+
+{ i:'ns-27', t:'nebensatz', k:'mc', q:'Which is correct?',
+  o:['Ich bleibe zu Hause, weil ich bin müde.','Ich bleibe zu Hause, weil ich müde bin.'], c:1,
+  e:'weil is subordinating, not coordinating. The finite verb has to go to the end. Only denn keeps V2.' },
+
+{ i:'ns-28', t:'nebensatz', k:'mc', q:'Is a comma required between a main clause and a subordinate clause?',
+  o:['Yes, always','Only if the subordinate clause comes first','Only with dass','No'], c:0,
+  e:'German always separates the two clauses with a comma, in either order.' },
+
+{ i:'ns-29', t:'nebensatz', k:'order', q:'Complete the sentence.', s:'Ich habe gehört,',
+  tk:['bist','dass','umgezogen','du'], a:['dass du umgezogen bist'],
+  e:'Participle then finite auxiliary, both at the end.',
+  f:{vf:'—', lk:'dass', mf:'du', rk:'umgezogen bist', nf:'—'} },
+
+{ i:'ns-30', t:'nebensatz', k:'order', q:'Complete the sentence.', s:'Wir sind zu Hause geblieben,',
+  tk:['hat','weil','geregnet','es'], a:['weil es geregnet hat'],
+  e:'Same pattern: participle, then finite verb last.',
+  f:{vf:'—', lk:'weil', mf:'es', rk:'geregnet hat', nf:'—'} },
+
+{ i:'ns-31', t:'nebensatz', k:'order', q:'Build the whole sentence, starting with the wenn-clause.',
+  tk:['habe','ich','Wenn','Zeit','komme','ich','vorbei'],
+  a:['Wenn ich Zeit habe komme ich vorbei'],
+  e:'Written: Wenn ich Zeit habe, komme ich vorbei. Note vorbei stranding in the right bracket of the main clause.',
+  f:{vf:'Wenn ich Zeit habe', lk:'komme', mf:'ich', rk:'vorbei', nf:'—'} },
+
+{ i:'ns-32', t:'nebensatz', k:'order', q:'Complete the sentence.', s:'Ich lerne Deutsch,',
+  tk:['ist','obwohl','schwer','es'], a:['obwohl es schwer ist'],
+  e:'The predicate adjective comes before the finite verb, which is last.',
+  f:{vf:'—', lk:'obwohl', mf:'es schwer', rk:'ist', nf:'—'} },
+
+{ i:'ns-33', t:'nebensatz', k:'order', q:'Complete the indirect question.', s:'Sie fragt,',
+  tk:['bin','warum','gekommen','nicht','ich'], a:['warum ich nicht gekommen bin'],
+  e:'nicht stays in the Mittelfeld, in front of the whole verb cluster at the end.',
+  f:{vf:'—', lk:'warum', mf:'ich nicht', rk:'gekommen bin', nf:'—'} },
+
+{ i:'ns-34', t:'nebensatz', k:'mc', q:'…, dass ich das Buch gelesen habe.\nWhich verb is in absolute final position?',
+  o:['gelesen','habe','Buch','dass'], c:1,
+  e:'The rule is about the finite verb, which here is the auxiliary habe. The participle sits just before it.' },
+
+{ i:'ns-35', t:'nebensatz', k:'order', q:'Complete the sentence.', s:'Ich konnte nicht kommen,',
+  tk:['musste','weil','arbeiten','ich'], a:['weil ich arbeiten musste'],
+  e:'Simple past of a modal: the infinitive comes first, the finite modal last.',
+  f:{vf:'—', lk:'weil', mf:'ich', rk:'arbeiten musste', nf:'—'} },
+
+{ i:'ns-36', t:'nebensatz', k:'order', q:'Complete the sentence.', s:'Er sagt,',
+  tk:['kann','dass','kommen','nicht','er'], a:['dass er nicht kommen kann'],
+  e:'nicht precedes the verb cluster; the finite modal closes the clause.',
+  f:{vf:'—', lk:'dass', mf:'er nicht', rk:'kommen kann', nf:'—'} },
+
+{ i:'ns-37', t:'nebensatz', k:'order', q:'Build the whole sentence, starting with the als-clause.',
+  tk:['war','ich','Als','ein Kind','wohnte','ich','in Port Harcourt'],
+  a:['Als ich ein Kind war wohnte ich in Port Harcourt'],
+  e:'Written: Als ich ein Kind war, wohnte ich in Port Harcourt. als is used for a single completed stretch of time in the past.',
+  f:{vf:'Als ich ein Kind war', lk:'wohnte', mf:'ich in Port Harcourt', rk:'—', nf:'—'} },
+
+{ i:'ns-38', t:'nebensatz', k:'order', q:'Complete the sentence.', s:'Ich bin müde,',
+  tk:['bin','weil','gegangen','ins Bett','spät','ich','gestern'],
+  a:['weil ich gestern spät ins Bett gegangen bin'],
+  e:'Long Mittelfeld, but the principle holds: participle, then the finite verb in absolute final position.',
+  f:{vf:'—', lk:'weil', mf:'ich gestern spät ins Bett', rk:'gegangen bin', nf:'—'} }
+
+];
+
+
+const BANK_C = [
+
+/* ─────────────── 6. KONNEKTOREN ─────────────── */
+
+{ i:'kn-01', t:'konnektoren', k:'mc', q:'What kind of connector is denn?',
+  o:['Coordinating (position 0)','Subordinating','Conjunctional adverb'], c:0,
+  e:'denn sits outside the frame in position 0 and the clause after it keeps normal V2: Ich bin müde, denn ich habe schlecht geschlafen.' },
+
+{ i:'kn-02', t:'konnektoren', k:'mc', q:'What kind of connector is weil?',
+  o:['Coordinating (position 0)','Subordinating','Conjunctional adverb'], c:1,
+  e:'weil sends the finite verb to the end: …, weil ich schlecht geschlafen habe.' },
+
+{ i:'kn-03', t:'konnektoren', k:'mc', q:'What kind of connector is deshalb?',
+  o:['Coordinating (position 0)','Subordinating','Conjunctional adverb'], c:2,
+  e:'deshalb normally takes the Vorfeld, so the finite verb follows it directly: …, deshalb bin ich müde.' },
+
+{ i:'kn-04', t:'konnektoren', k:'mc', q:'What kind of connector is und?',
+  o:['Coordinating (position 0)','Subordinating','Conjunctional adverb'], c:0,
+  e:'It does not count as an element, so the clause after it starts fresh with normal V2.' },
+
+{ i:'kn-05', t:'konnektoren', k:'mc', q:'What kind of connector is trotzdem?',
+  o:['Coordinating (position 0)','Subordinating','Conjunctional adverb'], c:2,
+  e:'…, trotzdem kauft er ein neues Auto. It occupies the Vorfeld, so inversion follows.' },
+
+{ i:'kn-06', t:'konnektoren', k:'mc', q:'What kind of connector is obwohl?',
+  o:['Coordinating (position 0)','Subordinating','Conjunctional adverb'], c:1,
+  e:'Verb to the end: …, obwohl es regnet.' },
+
+{ i:'kn-07', t:'konnektoren', k:'mc', q:'What kind of connector is sondern?',
+  o:['Coordinating (position 0)','Subordinating','Conjunctional adverb'], c:0,
+  e:'sondern coordinates a correction after a negation and does not occupy a position in the frame.' },
+
+{ i:'kn-08', t:'konnektoren', k:'mc', q:'What kind of connector is damit?',
+  o:['Coordinating (position 0)','Subordinating','Conjunctional adverb'], c:1,
+  e:'damit is a purpose subordinator: …, damit du mich verstehst.' },
+
+{ i:'kn-09', t:'konnektoren', k:'mc', q:'What kind of connector is außerdem?',
+  o:['Coordinating (position 0)','Subordinating','Conjunctional adverb'], c:2,
+  e:'…, außerdem bin ich müde. Vorfeld, then the verb.' },
+
+{ i:'kn-10', t:'konnektoren', k:'mc', q:'What kind of connector is aber?',
+  o:['Coordinating (position 0)','Subordinating','Conjunctional adverb'], c:0,
+  e:'aber in position 0 leaves the following clause in plain V2: …, aber ich trinke lieber Kaffee.' },
+
+{ i:'kn-11', t:'konnektoren', k:'mc', q:'What kind of connector is sonst?',
+  o:['Coordinating (position 0)','Subordinating','Conjunctional adverb'], c:2,
+  e:'…, sonst kommen wir zu spät. The verb follows it directly.' },
+
+{ i:'kn-12', t:'konnektoren', k:'mc', q:'What kind of connector is während?',
+  o:['Coordinating (position 0)','Subordinating','Conjunctional adverb'], c:1,
+  e:'Verb-final: …, während ich koche.' },
+
+{ i:'kn-13', t:'konnektoren', k:'mc', q:'What kind of connector is oder?',
+  o:['Coordinating (position 0)','Subordinating','Conjunctional adverb'], c:0,
+  e:'Position 0. Nothing about the following clause changes.' },
+
+{ i:'kn-14', t:'konnektoren', k:'mc', q:'What kind of connector is nachdem?',
+  o:['Coordinating (position 0)','Subordinating','Conjunctional adverb'], c:1,
+  e:'Verb-final. Do not confuse it with the adverb danach, which takes the Vorfeld.' },
+
+{ i:'kn-15', t:'konnektoren', k:'mc', q:'What kind of connector is danach?',
+  o:['Coordinating (position 0)','Subordinating','Conjunctional adverb'], c:2,
+  e:'Danach gehe ich nach Hause. Compare the subordinator nachdem, which sends the verb to the end.' },
+
+{ i:'kn-16', t:'konnektoren', k:'mc', q:'What kind of connector is da (in the causal sense)?',
+  o:['Coordinating (position 0)','Subordinating','Conjunctional adverb'], c:1,
+  e:'Causal da works like weil: Da ich müde bin, bleibe ich zu Hause.' },
+
+{ i:'kn-17', t:'konnektoren', k:'order', q:'Build the sentence with denn. Start with: Ich bin müde',
+  tk:['geschlafen','bin','denn','müde','Ich','ich','habe','schlecht'],
+  a:['Ich bin müde denn ich habe schlecht geschlafen'],
+  e:'Written: Ich bin müde, denn ich habe schlecht geschlafen. denn is in position 0, so the second clause is ordinary V2.',
+  fn:'clause after denn', f:{vf:'ich', lk:'habe', mf:'schlecht', rk:'geschlafen', nf:'—'} },
+
+{ i:'kn-18', t:'konnektoren', k:'order', q:'Complete with weil.', s:'Ich bin müde,',
+  tk:['habe','weil','geschlafen','schlecht','ich'], a:['weil ich schlecht geschlafen habe'],
+  e:'Same meaning as the denn version, but the finite verb now goes to the end.',
+  f:{vf:'—', lk:'weil', mf:'ich schlecht', rk:'geschlafen habe', nf:'—'} },
+
+{ i:'kn-19', t:'konnektoren', k:'order', q:'Complete with deshalb.', s:'Ich habe schlecht geschlafen,',
+  tk:['bin','deshalb','müde','ich'], a:['deshalb bin ich müde'],
+  e:'deshalb takes the Vorfeld, so the finite verb comes second and the subject moves behind it.',
+  f:{vf:'deshalb', lk:'bin', mf:'ich', rk:'müde', nf:'—'} },
+
+{ i:'kn-20', t:'konnektoren', k:'mc', q:'Is "Ich bin deshalb müde." correct?',
+  o:['No — deshalb must be in the Vorfeld','Yes — conjunctional adverbs can also sit in the Mittelfeld'], c:1,
+  e:'They usually take the Vorfeld, but they are adverbs, so the Mittelfeld is open to them as well.' },
+
+{ i:'kn-21', t:'konnektoren', k:'mc', q:'Does denn send the finite verb to the end?',
+  o:['Yes','No — the clause after denn keeps normal V2'], c:1,
+  e:'This is the single most useful contrast in the whole system: denn keeps V2, weil does not.' },
+
+{ i:'kn-22', t:'konnektoren', k:'mc', q:'Which is correct?',
+  o:['Ich habe schlecht geschlafen, deshalb ich bin müde.','Ich habe schlecht geschlafen, deshalb bin ich müde.'], c:1,
+  e:'deshalb is itself the Vorfeld, so putting ich before the verb would give three elements before it.' },
+
+{ i:'kn-23', t:'konnektoren', k:'mc', q:'Which is correct?',
+  o:['Ich bin müde, denn ich schlecht geschlafen habe.','Ich bin müde, denn ich habe schlecht geschlafen.'], c:1,
+  e:'denn is coordinating. Verb-final order after it is the classic mix-up with weil.' },
+
+{ i:'kn-24', t:'konnektoren', k:'order', q:'Complete with trotzdem.', s:'Er hat kein Geld,',
+  tk:['kauft','trotzdem','ein neues Auto','er'], a:['trotzdem kauft er ein neues Auto'],
+  e:'Concessive adverb in the Vorfeld, then inversion.',
+  f:{vf:'trotzdem', lk:'kauft', mf:'er ein neues Auto', rk:'—', nf:'—'} },
+
+{ i:'kn-25', t:'konnektoren', k:'order', q:'Complete with sonst.', s:'Beeil dich,',
+  tk:['kommen','sonst','zu spät','wir'], a:['sonst kommen wir zu spät'],
+  e:'sonst behaves like deshalb: Vorfeld, then verb, then subject.',
+  f:{vf:'sonst', lk:'kommen', mf:'wir zu spät', rk:'—', nf:'—'} },
+
+{ i:'kn-26', t:'konnektoren', k:'order', q:'Complete with außerdem.', s:'Ich habe keine Zeit,',
+  tk:['bin','außerdem','müde','ich'], a:['außerdem bin ich müde'],
+  e:'Additive adverb in the Vorfeld; the verb follows immediately.',
+  f:{vf:'außerdem', lk:'bin', mf:'ich', rk:'müde', nf:'—'} },
+
+{ i:'kn-27', t:'konnektoren', k:'order', q:'Build the sentence with dann.',
+  tk:['gehe','Zuerst','einkaufen','ich','dann','koche','ich'],
+  a:['Zuerst gehe ich einkaufen dann koche ich','Zuerst koche ich dann gehe ich einkaufen'],
+  e:'Written: Zuerst gehe ich einkaufen, dann koche ich. Both adverbs take the Vorfeld of their own clause.' },
+
+{ i:'kn-28', t:'konnektoren', k:'order', q:'Build the sentence with sondern.',
+  tk:['ist','nicht','sondern','müde','Er','krank'],
+  a:['Er ist nicht müde sondern krank','Er ist nicht krank sondern müde'],
+  e:'Written: Er ist nicht müde, sondern krank. sondern always follows a negation and corrects it.' },
+
+{ i:'kn-29', t:'konnektoren', k:'order', q:'Complete with aber.', s:'Ich mag Tee,',
+  tk:['trinke','aber','lieber','ich','Kaffee'], a:['aber ich trinke lieber Kaffee'],
+  e:'aber occupies position 0, so ich takes the Vorfeld and the verb stays second.',
+  fn:'clause after aber', f:{vf:'ich', lk:'trinke', mf:'lieber Kaffee', rk:'—', nf:'—'} },
+
+{ i:'kn-30', t:'konnektoren', k:'cloze', q:'Rewrite using weil:\nIch bin müde, denn ich habe schlecht geschlafen.',
+  a:['Ich bin müde weil ich schlecht geschlafen habe','Ich bin müde, weil ich schlecht geschlafen habe'],
+  e:'Only the word order of the second clause changes: habe travels to the end.' },
+
+{ i:'kn-31', t:'konnektoren', k:'cloze', q:'Rewrite using deshalb, keeping the cause first:\nIch bin müde, weil ich schlecht geschlafen habe.',
+  a:['Ich habe schlecht geschlafen deshalb bin ich müde','Ich habe schlecht geschlafen, deshalb bin ich müde'],
+  e:'The clauses swap: cause first as a plain main clause, then deshalb plus inversion.' },
+
+{ i:'kn-32', t:'konnektoren', k:'mc', q:'What does "position 0" mean?',
+  o:['The connector is the first element of the Vorfeld','The connector sits outside the frame and does not count as an element','The connector forces verb-final order','The connector is optional'], c:1,
+  e:'It stands before the Vorfeld without occupying it, which is why V2 still counts from the next word.' },
+
+{ i:'kn-33', t:'konnektoren', k:'mc', q:'Which pair means the same but uses opposite word order?',
+  o:['und / oder','denn / weil','dass / ob','dann / danach'], c:1,
+  e:'Both give a reason. denn keeps V2; weil is verb-final.' },
+
+/* ─────────────── 7. IM MITTELFELD ─────────────── */
+
+{ i:'mf-01', t:'mittelfeld', k:'order', q:'Order the Mittelfeld (TeKaMoLo).', s:'Ich fahre',
+  tk:['nach Leeds','mit dem Zug','morgen','wegen der Konferenz'],
+  a:['morgen wegen der Konferenz mit dem Zug nach Leeds'],
+  e:'Temporal, kausal, modal, lokal — when, why, how, where.',
+  f:{vf:'Ich', lk:'fahre', mf:'morgen wegen der Konferenz mit dem Zug nach Leeds', rk:'—', nf:'—'} },
+
+{ i:'mf-02', t:'mittelfeld', k:'order', q:'Order the Mittelfeld (TeKaMoLo).', s:'Wir sind', x:'gefahren.',
+  tk:['nach Hause','mit dem Bus','gestern','wegen des Regens'],
+  a:['gestern wegen des Regens mit dem Bus nach Hause'],
+  e:'Same four slots, this time in the perfect. The participle stays outside in the right bracket.',
+  f:{vf:'Wir', lk:'sind', mf:'gestern wegen des Regens mit dem Bus nach Hause', rk:'gefahren', nf:'—'} },
+
+{ i:'mf-03', t:'mittelfeld', k:'order', q:'Order the Mittelfeld.', s:'Sie geht',
+  tk:['in den Park','mit dem Hund','jeden Morgen'],
+  a:['jeden Morgen mit dem Hund in den Park'],
+  e:'Time, then manner, then place. No causal element here, so that slot is simply skipped.',
+  f:{vf:'Sie', lk:'geht', mf:'jeden Morgen mit dem Hund in den Park', rk:'—', nf:'—'} },
+
+{ i:'mf-04', t:'mittelfeld', k:'order', q:'Order the Mittelfeld.', s:'Ich habe', x:'gelernt.',
+  tk:['in der Bibliothek','gestern'], a:['gestern in der Bibliothek'],
+  e:'Temporal before lokal.',
+  f:{vf:'Ich', lk:'habe', mf:'gestern in der Bibliothek', rk:'gelernt', nf:'—'} },
+
+{ i:'mf-05', t:'mittelfeld', k:'mc', q:'What does TeKaMoLo stand for, in order?',
+  o:['Temporal, kausal, modal, lokal','Temporal, konditional, modal, lokal','Thema, Kasus, Modus, Lokativ','Temporal, lokal, modal, kausal'], c:0,
+  e:'When, why, how, where. It orders adverbials only — objects follow separate rules.' },
+
+{ i:'mf-06', t:'mittelfeld', k:'order', q:'Order the objects.', s:'Er hat', x:'gegeben.',
+  tk:['dem Mann','es'], a:['es dem Mann'],
+  e:'Pronouns come before all full noun phrases, whatever their case.',
+  f:{vf:'Er', lk:'hat', mf:'es dem Mann', rk:'gegeben', nf:'—'} },
+
+{ i:'mf-07', t:'mittelfeld', k:'order', q:'Order the pronouns.', s:'Er hat', x:'gegeben.',
+  tk:['mir','es'], a:['es mir'],
+  e:'Among pronouns the order is nominative, accusative, dative. So accusative es precedes dative mir.',
+  f:{vf:'Er', lk:'hat', mf:'es mir', rk:'gegeben', nf:'—'} },
+
+{ i:'mf-08', t:'mittelfeld', k:'order', q:'Order the nouns.', s:'Er hat', x:'gegeben.',
+  tk:['das Buch','dem Mann'], a:['dem Mann das Buch'],
+  e:'Among full nouns the order is dative before accusative — the mirror image of the pronoun rule.',
+  f:{vf:'Er', lk:'hat', mf:'dem Mann das Buch', rk:'gegeben', nf:'—'} },
+
+{ i:'mf-09', t:'mittelfeld', k:'order', q:'Order the objects.', s:'Er hat', x:'gegeben.',
+  tk:['das Buch','mir'], a:['mir das Buch'],
+  e:'The pronoun wins: mir goes first even though it is dative and das Buch is accusative.',
+  f:{vf:'Er', lk:'hat', mf:'mir das Buch', rk:'gegeben', nf:'—'} },
+
+{ i:'mf-10', t:'mittelfeld', k:'order', q:'Order the Mittelfeld.', s:'Gestern hat', x:'gegeben.',
+  tk:['das Buch','mein Bruder','mir'], a:['mir mein Bruder das Buch'],
+  e:'The pronoun mir even overtakes the full-noun subject. Pronouns cluster at the very front of the Mittelfeld.',
+  f:{vf:'Gestern', lk:'hat', mf:'mir mein Bruder das Buch', rk:'gegeben', nf:'—'} },
+
+{ i:'mf-11', t:'mittelfeld', k:'order', q:'Order the Mittelfeld.', s:'Ich habe', x:'gegeben.',
+  tk:['gestern','ihm','es'], a:['es ihm gestern'],
+  e:'Pronouns come before adverbials as well. Inside the pronoun cluster: accusative es, then dative ihm.',
+  f:{vf:'Ich', lk:'habe', mf:'es ihm gestern', rk:'gegeben', nf:'—'} },
+
+{ i:'mf-12', t:'mittelfeld', k:'mc', q:'Among pronouns, what is the order?',
+  o:['Nominative, dative, accusative','Nominative, accusative, dative','Dative, accusative, nominative','Accusative, nominative, dative'], c:1,
+  e:'Nominative, accusative, dative — e.g. Er hat es mir gegeben.' },
+
+{ i:'mf-13', t:'mittelfeld', k:'mc', q:'Among full noun phrases, what is the order?',
+  o:['Accusative before dative','Dative before accusative','Whichever is shorter first','Same as pronouns'], c:1,
+  e:'Dative before accusative: Er hat dem Mann das Buch gegeben. This is the inverse of the pronoun order.' },
+
+{ i:'mf-14', t:'mittelfeld', k:'mc', q:'A pronoun object and a full noun object appear together. Which comes first?',
+  o:['The pronoun','The full noun','The dative one','The accusative one'], c:0,
+  e:'Pronouns come before all full noun phrases. That rule overrides the case rules.' },
+
+{ i:'mf-15', t:'mittelfeld', k:'order', q:'Build the question.',
+  tk:['der Film','Hat','dir','gefallen'], a:['Hat dir der Film gefallen'],
+  e:'dir is a pronoun, der Film a full noun — so the pronoun precedes the subject.',
+  f:{vf:'—', lk:'Hat', mf:'dir der Film', rk:'gefallen', nf:'—'} },
+
+{ i:'mf-16', t:'mittelfeld', k:'order', q:'Build the question.',
+  tk:['dir','Hat','er','es','gegeben'], a:['Hat er es dir gegeben'],
+  e:'Three pronouns in a row: nominative er, accusative es, dative dir.',
+  f:{vf:'—', lk:'Hat', mf:'er es dir', rk:'gegeben', nf:'—'} },
+
+{ i:'mf-17', t:'mittelfeld', k:'mc', q:'Which is correct?',
+  o:['Er hat dem Mann es gegeben.','Er hat es dem Mann gegeben.'], c:1,
+  e:'The pronoun must come first. A pronoun stuck behind a full noun sounds wrong to native ears.' },
+
+{ i:'mf-18', t:'mittelfeld', k:'mc', q:'Why do "es mir" and "dem Mann das Buch" look contradictory?',
+  o:['One of them is wrong','Pronoun order is accusative-before-dative; noun order is dative-before-accusative','It depends on the verb','It depends on the tense'], c:1,
+  e:'The two orders genuinely invert each other. Learn them as one paired fact rather than two separate ones.' },
+
+{ i:'mf-19', t:'mittelfeld', k:'order', q:'Order the Mittelfeld.', s:'Ich schicke',
+  tk:['die Unterlagen','morgen','dir'], a:['dir morgen die Unterlagen'],
+  e:'The pronoun dir goes to the front, then the time expression, then the full noun object.',
+  f:{vf:'Ich', lk:'schicke', mf:'dir morgen die Unterlagen', rk:'—', nf:'—'} },
+
+{ i:'mf-20', t:'mittelfeld', k:'cloze', q:'Replace dem Mann with a pronoun:\nEr hat dem Mann das Buch gegeben.',
+  a:['Er hat ihm das Buch gegeben'],
+  e:'The pronoun keeps the front position, and the order happens to stay the same here.' },
+
+{ i:'mf-21', t:'mittelfeld', k:'cloze', q:'Replace das Buch with a pronoun:\nEr hat dem Mann das Buch gegeben.',
+  a:['Er hat es dem Mann gegeben'],
+  e:'Now the order flips: the pronoun es jumps in front of the full noun dem Mann.' },
+
+{ i:'mf-22', t:'mittelfeld', k:'cloze', q:'Replace both objects with pronouns:\nEr hat dem Mann das Buch gegeben.',
+  a:['Er hat es ihm gegeben'],
+  e:'Two pronouns: accusative before dative.' },
+
+{ i:'mf-23', t:'mittelfeld', k:'order', q:'Order the Mittelfeld.', s:'Ich treffe',
+  tk:['im Restaurant','mit Sofiane','heute Abend','mich'],
+  a:['mich heute Abend mit Sofiane im Restaurant'],
+  e:'The reflexive pronoun goes first, then time, then the comitative phrase, then place.',
+  f:{vf:'Ich', lk:'treffe', mf:'mich heute Abend mit Sofiane im Restaurant', rk:'—', nf:'—'} },
+
+{ i:'mf-24', t:'mittelfeld', k:'mc', q:'Where does a reflexive pronoun go in the Mittelfeld?',
+  o:['At the very end','Early, with the other pronouns','After all adverbials','Directly before the right bracket'], c:1,
+  e:'Reflexives behave like other pronouns and cluster at the front of the Mittelfeld.' },
+
+{ i:'mf-25', t:'mittelfeld', k:'order', q:'Order the Mittelfeld.', s:'Er ist', x:'geblieben.',
+  tk:['zu Hause','wegen einer Erkältung','heute'],
+  a:['heute wegen einer Erkältung zu Hause'],
+  e:'Temporal, kausal, lokal — the modal slot is simply empty.',
+  f:{vf:'Er', lk:'ist', mf:'heute wegen einer Erkältung zu Hause', rk:'geblieben', nf:'—'} },
+
+{ i:'mf-26', t:'mittelfeld', k:'mc', q:'Where do known/definite elements go relative to new/indefinite ones?',
+  o:['Known before new','New before known','It makes no difference','New first, but only with pronouns'], c:0,
+  e:'German puts given information earlier and new information later, which is also why pronouns sit so far forward.' },
+
+{ i:'mf-27', t:'mittelfeld', k:'order', q:'Order the Mittelfeld.', s:'Ich gehe',
+  tk:['ins Kino','mit meinen Kollegen','heute'],
+  a:['heute mit meinen Kollegen ins Kino'],
+  e:'Time, manner, place.',
+  f:{vf:'Ich', lk:'gehe', mf:'heute mit meinen Kollegen ins Kino', rk:'—', nf:'—'} },
+
+{ i:'mf-28', t:'mittelfeld', k:'order', q:'Order the Mittelfeld.', s:'Sie ist', x:'gezogen.',
+  tk:['nach Berlin','aus beruflichen Gründen','letztes Jahr'],
+  a:['letztes Jahr aus beruflichen Gründen nach Berlin'],
+  e:'Temporal, kausal, lokal.',
+  f:{vf:'Sie', lk:'ist', mf:'letztes Jahr aus beruflichen Gründen nach Berlin', rk:'gezogen', nf:'—'} },
+
+{ i:'mf-29', t:'mittelfeld', k:'mc', q:'Can a TeKaMoLo element be pulled out of the Mittelfeld?',
+  o:['No, the order is fixed','Yes — any one of them can take the Vorfeld for emphasis','Only the temporal one','Only in questions'], c:1,
+  e:'TeKaMoLo describes the default order inside the Mittelfeld. The Vorfeld is always available for whichever element you want to foreground.' },
+
+{ i:'mf-30', t:'mittelfeld', k:'order', q:'Build the question.',
+  tk:['erklären','du','es','Kannst','bitte','mir'], a:['Kannst du es mir bitte erklären'],
+  e:'Pronoun cluster in order — nominative du, accusative es, dative mir — then bitte, then the infinitive.',
+  f:{vf:'—', lk:'Kannst', mf:'du es mir bitte', rk:'erklären', nf:'—'} },
+
+{ i:'mf-31', t:'mittelfeld', k:'order', q:'Order the Mittelfeld.', s:'Ich habe', x:'gesehen.',
+  tk:['im Büro','gestern','ihn'], a:['ihn gestern im Büro'],
+  e:'Pronoun first, then temporal, then lokal.',
+  f:{vf:'Ich', lk:'habe', mf:'ihn gestern im Büro', rk:'gesehen', nf:'—'} },
+
+{ i:'mf-32', t:'mittelfeld', k:'mc', q:'Gestern hat mir mein Bruder geholfen.\nWhy does mir precede mein Bruder?',
+  o:['Because dative precedes nominative','Because pronouns precede all full noun phrases','Because it is shorter','Because of TeKaMoLo'], c:1,
+  e:'The pronoun rule outranks everything else, including the subject.' },
+
+{ i:'mf-33', t:'mittelfeld', k:'mc', q:'Which principle does TeKaMoLo govern?',
+  o:['Objects','Adverbials','Verbs','Pronouns'], c:1,
+  e:'Adverbials only. Objects are ordered by the pronoun/noun and case rules instead.' }
+
+];
+
+
+const BANK_D = [
+
+/* ─────────────── 8. DIE STELLUNG VON NICHT ─────────────── */
+
+{ i:'ng-01', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Ich','kenne','ihn'], w:'nicht', c:3,
+  e:'Ich kenne ihn nicht. The right bracket is empty, so nicht simply goes last.',
+  f:{vf:'Ich', lk:'kenne', mf:'ihn nicht', rk:'—', nf:'—'} },
+
+{ i:'ng-02', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Ich','habe','das Buch','gelesen'], w:'nicht', c:3,
+  e:'Ich habe das Buch nicht gelesen. As late as possible — but still in front of the participle.',
+  f:{vf:'Ich', lk:'habe', mf:'das Buch nicht', rk:'gelesen', nf:'—'} },
+
+{ i:'ng-03', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Er','ruft','mich','an'], w:'nicht', c:3,
+  e:'Er ruft mich nicht an. The stranded prefix is the right bracket, so nicht stops in front of it.',
+  f:{vf:'Er', lk:'ruft', mf:'mich nicht', rk:'an', nf:'—'} },
+
+{ i:'ng-04', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Ich','kann','heute','kommen'], w:'nicht', c:3,
+  e:'Ich kann heute nicht kommen. The infinitive holds the right bracket.',
+  f:{vf:'Ich', lk:'kann', mf:'heute nicht', rk:'kommen', nf:'—'} },
+
+{ i:'ng-05', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Ich','fahre','morgen','nach Berlin'], w:'nicht', c:3,
+  e:'Ich fahre morgen nicht nach Berlin. A directional phrase belongs to the predicate, so nicht goes in front of it.',
+  f:{vf:'Ich', lk:'fahre', mf:'morgen nicht nach Berlin', rk:'—', nf:'—'} },
+
+{ i:'ng-06', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Das Buch','ist','interessant'], w:'nicht', c:2,
+  e:'Das Buch ist nicht interessant. The predicate adjective counts as the right bracket.',
+  f:{vf:'Das Buch', lk:'ist', mf:'nicht', rk:'interessant', nf:'—'} },
+
+{ i:'ng-07', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Ich','warte','auf dich'], w:'nicht', c:2,
+  e:'Ich warte nicht auf dich. A prepositional object is bound to the verb, so nicht precedes it.',
+  f:{vf:'Ich', lk:'warte', mf:'nicht auf dich', rk:'—', nf:'—'} },
+
+{ i:'ng-08', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Ich','habe','ihm','das Geld','gegeben'], w:'nicht', c:4,
+  e:'Ich habe ihm das Geld nicht gegeben. Definite objects are passed; the participle is not.',
+  f:{vf:'Ich', lk:'habe', mf:'ihm das Geld nicht', rk:'gegeben', nf:'—'} },
+
+{ i:'ng-09', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Er','hat','mich','gestern','angerufen'], w:'nicht', c:4,
+  e:'Er hat mich gestern nicht angerufen.',
+  f:{vf:'Er', lk:'hat', mf:'mich gestern nicht', rk:'angerufen', nf:'—'} },
+
+{ i:'ng-10', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Wir','sind','gestern','ins Kino','gegangen'], w:'nicht', c:3,
+  e:'Wir sind gestern nicht ins Kino gegangen. The directional phrase belongs to the predicate, so nicht stops before it.',
+  f:{vf:'Wir', lk:'sind', mf:'gestern nicht ins Kino', rk:'gegangen', nf:'—'} },
+
+{ i:'ng-11', t:'negation', k:'slot', q:'Partial negation. Place nicht so the sentence continues: …, sondern Krankenschwester.',
+  tk:['Sie','wird','Ärztin'], w:'nicht', c:2,
+  e:'Sie wird nicht Ärztin, sondern Krankenschwester. Plain sentence negation of a bare predicate noun uses kein — Sie wird keine Ärztin — so nicht in front of Ärztin can only be the contrastive reading.',
+  f:{vf:'Sie', lk:'wird', mf:'nicht', rk:'Ärztin', nf:'—'} },
+
+{ i:'ng-12', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Ich','kann','dir','helfen'], w:'nicht', c:3,
+  e:'Ich kann dir nicht helfen.',
+  f:{vf:'Ich', lk:'kann', mf:'dir nicht', rk:'helfen', nf:'—'} },
+
+{ i:'ng-13', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Er','hat','mir','das','gesagt'], w:'nicht', c:4,
+  e:'Er hat mir das nicht gesagt.',
+  f:{vf:'Er', lk:'hat', mf:'mir das nicht', rk:'gesagt', nf:'—'} },
+
+{ i:'ng-14', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Ich','möchte','heute Abend','ausgehen'], w:'nicht', c:3,
+  e:'Ich möchte heute Abend nicht ausgehen.',
+  f:{vf:'Ich', lk:'möchte', mf:'heute Abend nicht', rk:'ausgehen', nf:'—'} },
+
+{ i:'ng-15', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Ich','habe','das Auto','gekauft'], w:'nicht', c:3,
+  e:'Ich habe das Auto nicht gekauft. With a definite object, nicht follows it. With an indefinite one you would use kein: Ich habe kein Auto gekauft.',
+  f:{vf:'Ich', lk:'habe', mf:'das Auto nicht', rk:'gekauft', nf:'—'} },
+
+{ i:'ng-16', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Der Zug','ist','pünktlich','angekommen'], w:'nicht', c:2,
+  e:'Der Zug ist nicht pünktlich angekommen. A manner adverb is inside the scope of the negation, so nicht comes before it.',
+  f:{vf:'Der Zug', lk:'ist', mf:'nicht pünktlich', rk:'angekommen', nf:'—'} },
+
+{ i:'ng-17', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Ich','gehe','heute','ins Büro'], w:'nicht', c:3,
+  e:'Ich gehe heute nicht ins Büro.',
+  f:{vf:'Ich', lk:'gehe', mf:'heute nicht ins Büro', rk:'—', nf:'—'} },
+
+{ i:'ng-18', t:'negation', k:'slot', q:'Partial negation. Place nicht so the sentence continues: …, sondern morgen.',
+  tk:['Er','kommt','heute'], w:'nicht', c:2,
+  e:'Er kommt nicht heute, sondern morgen. Partial negation puts nicht directly in front of the element being denied. Sentence negation would give Er kommt heute nicht.',
+  f:{vf:'Er', lk:'kommt', mf:'nicht heute', rk:'—', nf:'—'} },
+
+{ i:'ng-19', t:'negation', k:'slot', q:'Partial negation. Place nicht so the sentence continues: …, sondern nach Hamburg.',
+  tk:['Ich','fahre','nach Berlin'], w:'nicht', c:2,
+  e:'Ich fahre nicht nach Berlin, sondern nach Hamburg. Here partial and sentence negation happen to look identical — only stress and the sondern-continuation tell them apart.',
+  f:{vf:'Ich', lk:'fahre', mf:'nicht nach Berlin', rk:'—', nf:'—'} },
+
+{ i:'ng-20', t:'negation', k:'mc', q:'What is the rule for sentence negation?',
+  o:['nicht goes directly after the finite verb','nicht goes as late as possible, but before the right bracket','nicht goes at the very end always','nicht goes in the Vorfeld'], c:1,
+  e:'As late as possible without entering the right bracket. Two different things sit behind nicht: the right bracket itself (participle, infinitive, prefix, predicative), and predicate-bound complements that stay in the Mittelfeld, such as directional phrases and prepositional objects.' },
+
+{ i:'ng-21', t:'negation', k:'mc', q:'What is the rule for partial negation?',
+  o:['nicht goes directly before the element being negated','nicht goes at the end','nicht goes in the Vorfeld','nicht is replaced by kein'], c:0,
+  e:'nicht sits immediately in front of the constituent it denies, usually with a sondern-phrase following.' },
+
+{ i:'ng-22', t:'negation', k:'mc', q:'Which is correct?',
+  o:['Ich habe nicht ein Auto.','Ich habe kein Auto.'], c:1,
+  e:'An indefinite or bare noun is negated with kein, not with nicht.' },
+
+{ i:'ng-23', t:'negation', k:'mc', q:'How do you tell sentence negation from partial negation when the position is identical?',
+  o:['By the tense','By stress and a sondern-continuation','By the case of the object','You cannot — they are the same'], c:1,
+  e:'The two are often structurally identical. Spoken stress and a following sondern-phrase are what disambiguate them.' },
+
+{ i:'ng-24', t:'negation', k:'cloze', q:'Negate the sentence:\nIch kenne ihn.',
+  a:['Ich kenne ihn nicht'],
+  e:'Nothing blocks nicht, so it lands at the end.' },
+
+{ i:'ng-25', t:'negation', k:'cloze', q:'Negate the sentence:\nEr hat mich angerufen.',
+  a:['Er hat mich nicht angerufen'],
+  e:'nicht stops in front of the participle.' },
+
+{ i:'ng-26', t:'negation', k:'cloze', q:'Negate the sentence:\nDas Buch ist interessant.',
+  a:['Das Buch ist nicht interessant'],
+  e:'The predicate adjective stays last.' },
+
+{ i:'ng-27', t:'negation', k:'cloze', q:'Negate the sentence:\nIch fahre morgen nach Berlin.',
+  a:['Ich fahre morgen nicht nach Berlin'],
+  e:'The directional phrase belongs to the predicate, so nicht goes in front of it, not after it.' },
+
+{ i:'ng-28', t:'negation', k:'cloze', q:'Negate the sentence with kein:\nIch habe Zeit.',
+  a:['Ich habe keine Zeit'],
+  e:'A bare noun object takes kein, inflected like the indefinite article — here feminine accusative keine.' },
+
+{ i:'ng-29', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Ich','will','dich','stören'], w:'nicht', c:3,
+  e:'Ich will dich nicht stören.',
+  f:{vf:'Ich', lk:'will', mf:'dich nicht', rk:'stören', nf:'—'} },
+
+{ i:'ng-30', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Er','ist','mein Chef'], w:'nicht', c:2,
+  e:'Er ist nicht mein Chef. The predicate noun is the right bracket, even when it has an article.',
+  f:{vf:'Er', lk:'ist', mf:'nicht', rk:'mein Chef', nf:'—'} },
+
+{ i:'ng-31', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Ich','habe','ihn','gestern','gesehen'], w:'nicht', c:4,
+  e:'Ich habe ihn gestern nicht gesehen.',
+  f:{vf:'Ich', lk:'habe', mf:'ihn gestern nicht', rk:'gesehen', nf:'—'} },
+
+{ i:'ng-32', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Sie','konnte','gestern','nach Hause','fahren'], w:'nicht', c:3,
+  e:'Sie konnte gestern nicht nach Hause fahren. Two blockers here: the directional phrase and the infinitive.',
+  f:{vf:'Sie', lk:'konnte', mf:'gestern nicht nach Hause', rk:'fahren', nf:'—'} },
+
+{ i:'ng-33', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Ich','verstehe','die Frage'], w:'nicht', c:3,
+  e:'Ich verstehe die Frage nicht. A definite accusative object is passed over.',
+  f:{vf:'Ich', lk:'verstehe', mf:'die Frage nicht', rk:'—', nf:'—'} },
+
+{ i:'ng-34', t:'negation', k:'slot', q:'Place nicht to negate the whole sentence.',
+  tk:['Wir','haben','den Film','gesehen'], w:'nicht', c:3,
+  e:'Wir haben den Film nicht gesehen.',
+  f:{vf:'Wir', lk:'haben', mf:'den Film nicht', rk:'gesehen', nf:'—'} },
+
+{ i:'ng-35', t:'negation', k:'mc', q:'Ich fahre morgen nicht nach Berlin.\nWhy is nicht not at the very end?',
+  o:['Because morgen blocks it','Because a directional phrase belongs to the predicate','Because Berlin is a proper noun','Because fahren is irregular'], c:1,
+  e:'Directional and other predicate-bound complements sit behind nicht, in the same way participles and prefixes do.' },
+
+{ i:'ng-36', t:'negation', k:'mc', q:'Ich habe das Buch nicht gelesen.\nWhat stops nicht from moving further right?',
+  o:['The object das Buch','The participle gelesen','The auxiliary habe','Nothing — it could move'], c:1,
+  e:'nicht may pass the definite object but never enters the right bracket.' },
+
+/* ─────────────── 9. DAS NACHFELD ─────────────── */
+
+{ i:'nf-01', t:'nachfeld', k:'order', q:'Complete the sentence.', s:'Ich habe gehört,',
+  tk:['kommt','dass','er'], a:['dass er kommt'],
+  e:'The dass-clause sits in the Nachfeld, after the participle gehört.',
+  f:{vf:'Ich', lk:'habe', mf:'—', rk:'gehört', nf:', dass er kommt'} },
+
+{ i:'nf-02', t:'nachfeld', k:'order', q:'Complete the sentence.', s:'Ich habe versucht,',
+  tk:['anzurufen','ihn'], a:['ihn anzurufen'],
+  e:'The zu-infinitive group moves into the Nachfeld. Note that zu goes inside the separable verb: anzurufen.',
+  f:{vf:'Ich', lk:'habe', mf:'—', rk:'versucht', nf:', ihn anzurufen'} },
+
+{ i:'nf-03', t:'nachfeld', k:'order', q:'Complete the purpose clause.', s:'Ich fahre nach Leeds,',
+  tk:['teilzunehmen','an einer Konferenz','um'], a:['um an einer Konferenz teilzunehmen'],
+  e:'um … zu clauses live in the Nachfeld. teilnehmen is separable, so zu slots inside it.',
+  f:{vf:'Ich', lk:'fahre', mf:'nach Leeds', rk:'—', nf:', um an einer Konferenz teilzunehmen'} },
+
+{ i:'nf-04', t:'nachfeld', k:'order', q:'Build the comparison.',
+  tk:['gearbeitet','hat','als ich','mehr','Er'], a:['Er hat mehr gearbeitet als ich'],
+  e:'The comparison phrase is allowed to sit after the participle, outside the frame.',
+  f:{vf:'Er', lk:'hat', mf:'mehr', rk:'gearbeitet', nf:'als ich'} },
+
+{ i:'nf-05', t:'nachfeld', k:'order', q:'Complete the comparison.', s:'Das war schwieriger,',
+  tk:['hatte','als','gedacht','ich'], a:['als ich gedacht hatte'],
+  e:'A full comparison clause is verb-final inside itself and sits in the Nachfeld as a whole.',
+  f:{vf:'Das', lk:'war', mf:'schwieriger', rk:'—', nf:', als ich gedacht hatte'} },
+
+{ i:'nf-06', t:'nachfeld', k:'order', q:'Build the sentence so that mit dem letzten Zug lands in the Nachfeld as an afterthought.',
+  tk:['angekommen','bin','mit dem letzten Zug','gestern','Ich'],
+  a:['Ich bin gestern angekommen mit dem letzten Zug'],
+  e:'Written: Ich bin gestern angekommen, mit dem letzten Zug. Spoken afterthoughts are routinely added after the right bracket.',
+  f:{vf:'Ich', lk:'bin', mf:'gestern', rk:'angekommen', nf:', mit dem letzten Zug'} },
+
+{ i:'nf-07', t:'nachfeld', k:'mc', q:'Where does zu go with a separable verb?',
+  o:['Before the whole verb: zu anrufen','Between prefix and stem: anzurufen','After the verb: anrufen zu','It is dropped'], c:1,
+  e:'zu is infixed: an + zu + rufen. Inseparable verbs keep zu as a separate word: zu verstehen.' },
+
+{ i:'nf-08', t:'nachfeld', k:'cloze', q:'Give the zu-infinitive of anrufen.',
+  a:['anzurufen'], e:'Separable, so zu goes inside.' },
+
+{ i:'nf-09', t:'nachfeld', k:'cloze', q:'Give the zu-infinitive of teilnehmen.',
+  a:['teilzunehmen'], e:'Separable: teil + zu + nehmen.' },
+
+{ i:'nf-10', t:'nachfeld', k:'cloze', q:'Give the zu-infinitive of aufstehen.',
+  a:['aufzustehen'], e:'Separable: auf + zu + stehen.' },
+
+{ i:'nf-11', t:'nachfeld', k:'cloze', q:'Give the zu-infinitive of einkaufen.',
+  a:['einzukaufen'], e:'Separable: ein + zu + kaufen.' },
+
+{ i:'nf-12', t:'nachfeld', k:'cloze', q:'Give the zu-infinitive of mitkommen.',
+  a:['mitzukommen'], e:'Separable: mit + zu + kommen.' },
+
+{ i:'nf-13', t:'nachfeld', k:'cloze', q:'Give the zu-infinitive of abholen.',
+  a:['abzuholen'], e:'Separable: ab + zu + holen.' },
+
+{ i:'nf-14', t:'nachfeld', k:'cloze', q:'Give the zu-infinitive of verstehen.',
+  a:['zu verstehen'], e:'ver- is inseparable, so zu stays a separate word in front.' },
+
+{ i:'nf-15', t:'nachfeld', k:'cloze', q:'Give the zu-infinitive of bekommen.',
+  a:['zu bekommen'], e:'be- is inseparable — zu stays outside.' },
+
+{ i:'nf-16', t:'nachfeld', k:'mc', q:'Which of these is NOT normally found in the Nachfeld?',
+  o:['A dass-clause','A zu-infinitive group','A comparison with als','The accusative object'], c:3,
+  e:'Objects belong in the Mittelfeld. The Nachfeld takes heavy or added-on material.' },
+
+{ i:'nf-17', t:'nachfeld', k:'order', q:'Complete the sentence.', s:'Ich habe keine Zeit,',
+  tk:['zu gehen','ins Kino','mit dir'], a:['mit dir ins Kino zu gehen'],
+  e:'The whole infinitive group goes into the Nachfeld, with zu immediately before the infinitive.',
+  f:{vf:'Ich', lk:'habe', mf:'keine Zeit', rk:'—', nf:', mit dir ins Kino zu gehen'} },
+
+{ i:'nf-18', t:'nachfeld', k:'order', q:'Complete the sentence.', s:'Es ist wichtig,',
+  tk:['zu üben','jeden Tag'], a:['jeden Tag zu üben'],
+  e:'Impersonal es plus an infinitive group in the Nachfeld.',
+  f:{vf:'Es', lk:'ist', mf:'—', rk:'wichtig', nf:', jeden Tag zu üben'} },
+
+{ i:'nf-19', t:'nachfeld', k:'order', q:'Complete the sentence.', s:'Ich freue mich darauf,',
+  tk:['zu sehen','dich'], a:['dich zu sehen'],
+  e:'darauf points forward to the infinitive group waiting in the Nachfeld.',
+  f:{vf:'Ich', lk:'freue', mf:'mich darauf', rk:'—', nf:', dich zu sehen'} },
+
+{ i:'nf-20', t:'nachfeld', k:'order', q:'Complete the sentence.', s:'Er ist so müde,',
+  tk:['einschläft','dass','sofort','er'], a:['dass er sofort einschläft'],
+  e:'Consequence clause in the Nachfeld; einschlafen rejoins as one word at the end.',
+  f:{vf:'Er', lk:'ist', mf:'so', rk:'müde', nf:', dass er sofort einschläft'} },
+
+{ i:'nf-21', t:'nachfeld', k:'mc', q:'Is the Nachfeld obligatory?',
+  o:['Yes, every sentence has one','No — it is optional overflow','Only in the perfect tense','Only in subordinate clauses'], c:1,
+  e:'Most sentences leave it empty. It exists so that heavy material does not have to sit inside the Mittelfeld.' },
+
+{ i:'nf-22', t:'nachfeld', k:'mc', q:'Ich habe gehört, dass er kommt.\nWhere is the dass-clause?',
+  o:['In the Mittelfeld','In the right bracket','In the Nachfeld','In the Vorfeld'], c:2,
+  e:'It comes after gehört, which is the right bracket — so it is outside the frame entirely.' },
+
+{ i:'nf-23', t:'nachfeld', k:'order', q:'Complete the sentence.', s:'Ich habe vergessen,',
+  tk:['abzuschicken','den Bericht'], a:['den Bericht abzuschicken'],
+  e:'abschicken is separable: ab + zu + schicken.',
+  f:{vf:'Ich', lk:'habe', mf:'—', rk:'vergessen', nf:', den Bericht abzuschicken'} },
+
+{ i:'nf-24', t:'nachfeld', k:'order', q:'Build the sentence.',
+  tk:['angefangen','hat','Deutsch zu lernen','Sie'], a:['Sie hat angefangen Deutsch zu lernen'],
+  e:'Written: Sie hat angefangen, Deutsch zu lernen. The infinitive group follows the participle.',
+  f:{vf:'Sie', lk:'hat', mf:'—', rk:'angefangen', nf:', Deutsch zu lernen'} },
+
+{ i:'nf-25', t:'nachfeld', k:'order', q:'Complete the purpose clause.', s:'Ich stehe früh auf,',
+  tk:['zu sein','um','pünktlich'], a:['um pünktlich zu sein'],
+  e:'The main clause keeps its own frame — auf is still the right bracket — and the purpose clause follows it.',
+  f:{vf:'Ich', lk:'stehe', mf:'früh', rk:'auf', nf:', um pünktlich zu sein'} },
+
+{ i:'nf-26', t:'nachfeld', k:'mc', q:'Why are subordinate clauses usually pushed into the Nachfeld?',
+  o:['Because they are not allowed in the Mittelfeld by rule','Because heavy material is easier to process at the end','Because of the comma rule','Because they contain a finite verb'], c:1,
+  e:'German lets long constituents drift right. Keeping a whole clause inside the Mittelfeld would bury the right bracket.' },
+
+{ i:'nf-27', t:'nachfeld', k:'mc', q:'Ich habe versucht, ihn anzurufen.\nWhat is in the right bracket?',
+  o:['anzurufen','versucht','ihn','habe'], c:1,
+  e:'versucht is the participle of the main clause. The infinitive group has moved past it into the Nachfeld.' }
+
+];
+
+
+const BANK = [].concat(BANK_A, BANK_B, BANK_C, BANK_D);
+</script>
+<script>
+const REF = [
+{ h:'The frame', b:[
+  { p:'Every clause is one frame with five slots. Two of them hold verb material and clamp the rest in place.' },
+  { f:{vf:'Gestern', lk:'habe', mf:'ich meinem Bruder ein Buch', rk:'geschenkt', nf:'—'} },
+  { f:{vf:'Er', lk:'hat', mf:'mir', rk:'gesagt', nf:', dass er kommt'} },
+  { l:['<b>Vorfeld</b> — exactly one element.',
+       '<b>Left bracket</b> — the finite verb in a main clause, the conjunction in a subordinate clause.',
+       '<b>Mittelfeld</b> — everything else.',
+       '<b>Right bracket</b> — non-finite verb parts, prefixes, predicatives.',
+       '<b>Nachfeld</b> — overflow.'] }
+]},
+
+{ h:'Main clauses', b:[
+  { p:'The finite verb is the second element. An element is one constituent — a noun phrase, a prepositional phrase, an adverb, or a whole subordinate clause.' },
+  { l:['<i>Ich fahre</i> morgen nach Berlin.',
+       '<i>Morgen fahre ich</i> nach Berlin.',
+       '<i>Nach Berlin fahre ich</i> morgen.',
+       '<i>Mit meinem besten Freund aus Nigeria fahre ich</i> morgen nach Berlin.',
+       '<i>Weil ich Urlaub habe, fahre ich</i> nach Berlin.'] },
+  { p:'When anything other than the subject takes the Vorfeld, the subject moves into the Mittelfeld, usually straight after the verb.' }
+]},
+
+{ h:'Verb-first clauses', b:[
+  { l:['Yes/no question — <i>Fährst du morgen nach Berlin?</i>',
+       'Imperative — <i>Mach bitte das Fenster zu! / Machen Sie bitte das Fenster zu!</i>',
+       'Conditional without wenn — <i>Hätte ich Zeit, würde ich kommen.</i>'] },
+  { p:'W-questions are ordinary V2 — the question word simply takes the Vorfeld: Wann fährst du?' }
+]},
+
+{ h:'The right bracket', b:[
+  { l:['Past participle — Ich habe das Buch <i>gelesen</i>.',
+       'Infinitive after a modal — Ich muss heute <i>arbeiten</i>.',
+       'Separable prefix — Ich rufe dich morgen <i>an</i>.',
+       'Predicate noun or adjective — Er wird nächstes Jahr <i>Arzt</i>. / Sie ist <i>krank</i>.',
+       'Fixed verb-noun pair — Ich fahre <i>Auto</i>. / Sie spielt <i>Klavier</i>.',
+       'Verb cluster — Ich hätte das <i>machen können</i>.'] }
+]},
+
+{ h:'Subordinate clauses', b:[
+  { p:'After a subordinating conjunction the finite verb goes to the very end, and a comma always separates the clauses.' },
+  { l:['Ich bleibe zu Hause, <b>weil</b> ich müde <b>bin</b>.',
+       'Er sagt, <b>dass</b> der Zug um acht <b>ankommt</b>. — the separable verb rejoins.',
+       'Ich freue mich, <b>wenn</b> du mich besuchen <b>kannst</b>. — modal last.',
+       'Sie glaubt, <b>dass</b> ich das Buch gelesen <b>habe</b>. — auxiliary last.',
+       'Ich weiß, dass ich das <b>hätte</b> machen können. — double infinitive: the finite verb jumps in front.'] },
+  { p:'Subordinators: dass, weil, da, ob, wenn, als, obwohl, damit, während, bevor, nachdem, seitdem, bis, falls, sobald, solange, indem, sodass. Relative clauses and indirect questions work the same way.' },
+  { p:'If the subordinate clause comes first, the whole clause is the Vorfeld, so the main verb follows immediately: Weil ich müde bin, bleibe ich zu Hause.' }
+]},
+
+{ h:'Three kinds of connector', b:[
+  { l:['<b>Coordinating</b> (position 0): und, aber, oder, denn, sondern — do not count as an element, normal V2 follows.',
+       '<b>Subordinating</b>: weil, dass, obwohl, wenn, da — verb to the end.',
+       '<b>Conjunctional adverbs</b>: deshalb, deswegen, darum, trotzdem, dann, danach, außerdem, sonst, also — usually take the Vorfeld.'] },
+  { p:'Same idea, three structures: Ich bin müde, denn ich habe schlecht geschlafen. / Ich bin müde, weil ich schlecht geschlafen habe. / Ich habe schlecht geschlafen, deshalb bin ich müde.' },
+  { p:'Conjunctional adverbs can also sit in the Mittelfeld: Ich bin deshalb müde.' }
+]},
+
+{ h:'Inside the Mittelfeld', b:[
+  { p:'These are preferences rather than hard rules, but breaking them sounds wrong. Adverbials run temporal, kausal, modal, lokal.' },
+  { p:'Ich fahre morgen wegen der Konferenz mit dem Zug nach Leeds.' },
+  { p:'Objects have their own order:' },
+  { l:['Pronouns come before all full noun phrases — Er hat <i>es dem Mann</i> gegeben.',
+       'Among pronouns: nominative, accusative, dative — Er hat <i>es mir</i> gegeben.',
+       'Among nouns: dative, accusative — Er hat <i>dem Mann das Buch</i> gegeben.',
+       'Known before new.'] },
+  { p:'The pronoun order inverts the noun order. Learn the pair together.' }
+]},
+
+{ h:'Placing nicht', b:[
+  { p:'Partial negation: nicht goes directly before the element being negated. Ich fahre nicht nach Berlin, sondern nach Hamburg.' },
+  { p:'Sentence negation: nicht goes as late as possible, but before the right bracket.' },
+  { l:['Ich kenne ihn <b>nicht</b>.',
+       'Ich habe das Buch <b>nicht</b> gelesen. — before the participle.',
+       'Er ruft mich <b>nicht</b> an. — before the prefix.',
+       'Ich kann heute <b>nicht</b> kommen. — before the infinitive.',
+       'Ich fahre morgen <b>nicht</b> nach Berlin. — before the directional phrase.',
+       'Das Buch ist <b>nicht</b> interessant. — before the predicative.',
+       'Ich warte <b>nicht</b> auf dich. — before a prepositional object.'] },
+  { p:'The two types are often structurally identical and are told apart only by stress and a sondern-continuation.' },
+  { p:'One thing nicht does not do: negate an indefinite or bare noun. That takes kein, inflected like ein — Ich habe <b>kein</b> Auto. / Ich habe <b>keine</b> Zeit. / Sie wird <b>keine</b> Ärztin.' }
+]},
+
+{ h:'The Nachfeld', b:[
+  { l:['Subordinate clauses — Ich habe gehört, <i>dass er kommt</i>.',
+       'zu-infinitives — Ich habe versucht, <i>ihn anzurufen</i>. Note that zu goes inside a separable verb.',
+       'Purpose clauses — Ich fahre nach Leeds, <i>um an einer Konferenz teilzunehmen</i>.',
+       'Comparisons — Er hat mehr gearbeitet <i>als ich</i>. / Das war schwieriger, <i>als ich gedacht hatte</i>.',
+       'Afterthoughts in speech — Ich bin gestern angekommen, <i>mit dem letzten Zug</i>.'] }
+]}
+];
+
+</script>
+<script>
+/* ══════════ state ══════════ */
+const KEY = 'wortstellung.v1';
+const BOX_MAX = 5, MASTER_BOX = 4;
+const IV = [0, 10 * 6e4, 864e5, 3 * 864e5, 8 * 864e5, 21 * 864e5];
+
+const byId = {};
+BANK.forEach(q => byId[q.i] = q);
+const TOPIC = {};
+TOPICS.forEach(t => TOPIC[t.id] = t);
+
+let S = load();
+
+function blank() {
+  return { v: 1, items: {}, log: [], exam: { best: 0, attempts: 0 }, streak: { last: null, days: 0 } };
+}
+function load() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return blank();
+    const p = JSON.parse(raw);
+    if (!p || p.v !== 1) return blank();
+    p.items = p.items || {}; p.log = p.log || [];
+    p.exam = p.exam || { best: 0, attempts: 0 };
+    p.streak = p.streak || { last: null, days: 0 };
+    for (const k of Object.keys(p.items)) if (!byId[k]) delete p.items[k];
+    return p;
+  } catch (e) { return blank(); }
+}
+let saveTimer = null;
+function save() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    try { localStorage.setItem(KEY, JSON.stringify(S)); }
+    catch (e) { toast('Progress could not be saved — this browser is blocking local storage.'); }
+  }, 120);
+}
+function flush() {
+  clearTimeout(saveTimer);
+  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { }
+}
+addEventListener('pagehide', flush);
+addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flush(); });
+function st(id) { return S.items[id] || (S.items[id] = { b: 0, d: 0, n: 0, c: 0, w: 0 }); }
+function has(id) { return !!S.items[id]; }
+
+const today = () => new Date().toISOString().slice(0, 10);
+function touchStreak() {
+  const d = today();
+  if (S.streak.last === d) return;
+  const y = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+  S.streak.days = S.streak.last === y ? S.streak.days + 1 : 1;
+  S.streak.last = d;
+}
+
+/* ══════════ mastery ══════════ */
+function topicStats(tid) {
+  const items = BANK.filter(q => q.t === tid);
+  let mastered = 0, learning = 0, due = 0;
+  const now = Date.now();
+  for (const q of items) {
+    if (!has(q.i)) continue;
+    const s = st(q.i);
+    if (s.b >= MASTER_BOX) mastered++; else learning++;
+    if (s.d <= now) due++;
+  }
+  return { total: items.length, mastered, learning, fresh: items.length - mastered - learning, due, pct: items.length ? mastered / items.length : 0 };
+}
+function overall() {
+  let m = 0;
+  for (const q of BANK) if (has(q.i) && st(q.i).b >= MASTER_BOX) m++;
+  return { mastered: m, total: BANK.length, pct: m / BANK.length };
+}
+function certified() {
+  return TOPICS.every(t => topicStats(t.id).pct >= 0.9) && S.exam.best >= 90;
+}
+
+/* ══════════ session building ══════════ */
+let sess = null;
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+function buildSession(mode, tid) {
+  const now = Date.now();
+  let queue = [];
+  if (mode === 'exam') {
+    const core = [], spare = [];
+    TOPICS.forEach(t => {
+      const pool = shuffle(BANK.filter(q => q.t === t.id));
+      core.push(...pool.slice(0, 3));   // 9 topics x 3 = 27 guaranteed
+      spare.push(...pool.slice(3));
+    });
+    queue = shuffle(core.concat(shuffle(spare).slice(0, 30 - core.length))).map(q => q.i);
+  } else if (mode === 'topic') {
+    const pool = BANK.filter(q => q.t === tid);
+    const seen = pool.filter(q => has(q.i)).sort((a, b) => (st(a.i).b - st(b.i).b) || (st(a.i).d - st(b.i).d));
+    const fresh = pool.filter(q => !has(q.i));
+    queue = seen.filter(q => st(q.i).d <= now || st(q.i).b < MASTER_BOX).concat(fresh).slice(0, 20).map(q => q.i);
+    if (!queue.length) queue = shuffle(pool).slice(0, 20).map(q => q.i);
+  } else if (mode === 'weak') {
+    queue = BANK.filter(q => has(q.i) && st(q.i).w > 0 && st(q.i).b < MASTER_BOX)
+      .sort((a, b) => (st(b.i).w - st(b.i).c) - (st(a.i).w - st(a.i).c) || st(a.i).b - st(b.i).b)
+      .slice(0, 20).map(q => q.i);
+  } else { // smart
+    const due = BANK.filter(q => has(q.i) && st(q.i).d <= now)
+      .sort((a, b) => st(a.i).d - st(b.i).d).map(q => q.i);
+    const fresh = [];
+    const byTopic = TOPICS.map(t => BANK.filter(q => q.t === t.id && !has(q.i)));
+    for (let r = 0; fresh.length < 8; r++) {
+      let added = false;
+      for (const list of byTopic) if (list[r]) { fresh.push(list[r].i); added = true; if (fresh.length >= 8) break; }
+      if (!added) break;
+    }
+    queue = due.slice(0, 20 - Math.min(fresh.length, 8)).concat(fresh);
+    queue = shuffle(queue);
+  }
+  if (!queue.length) return null;
+  return { mode, tid, queue, idx: 0, right: 0, wrong: 0, done: 0, planned: queue.length, redone: new Set(), answered: false, log: [] };
+}
+
+/* ══════════ answer checking ══════════ */
+const strip = s => (s || '').toLowerCase()
+  .replace(/[^\p{L}\p{N}\s]/gu, ' ').replace(/\s+/g, ' ').trim();
+const fold = s => strip(s).replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
+const same = (a, b) => strip(a) === strip(b) || fold(a) === fold(b);
+
+function check(q, resp) {
+  switch (q.k) {
+    case 'mc': case 'pick': return resp === q.c;
+    case 'slot': return resp === q.c;
+    case 'order': return q.a.some(a => same(a, resp.join(' ')));
+    case 'cloze': return q.a.some(a => same(a, resp));
+  }
+  return false;
+}
+
+// typed answers are matched case-insensitively so that word order stays the thing being tested,
+// but German capitalisation is graded at B1 — so flag a slip without failing the item
+function capSlip(q, resp) {
+  if (q.k !== 'cloze') return null;
+  const keep = t => (t || '').replace(/[^\p{L}\p{N}\s]/gu, ' ').replace(/\s+/g, ' ').trim();
+  const given = keep(resp);
+  for (const a of q.a) {
+    const want = keep(a);
+    if (want === given) return null;
+    if (want.toLowerCase() === given.toLowerCase()) return a;
+  }
+  return null;
+}
+
+function grade(q, ok, schedule) {
+  const s = st(q.i);
+  s.n++;
+  if (ok) { s.c++; s.b = Math.min(BOX_MAX, s.b + 1); }
+  else { s.w++; s.b = 0; }
+  if (schedule) s.d = Date.now() + IV[s.b];
+  save();
+}
+
+/* ══════════ view plumbing ══════════ */
+const $ = sel => document.querySelector(sel);
+const el = (tag, cls, txt) => { const n = document.createElement(tag); if (cls) n.className = cls; if (txt != null) n.textContent = txt; return n; };
+let view = 'home';
+
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('on');
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('on'), 3200);
+}
+
+function go(v) { view = v; render(); window.scrollTo({ top: 0 }); }
+
+const EN_WORDS = /\b(the|what|which|is|are|was|where|how|why|does|do|did|rewrite|build|complete|place|click|give|turn|join|order|same|now|start|kind|correct|sentence|clause|answer|question|word|verb|field|bracket|negation|partial|and|not|but|of|to|in|for|with|it|you|your|this|that|these|those|one|two|three|five|none|nothing|only|yes|no)\b/i;
+const isDE = t => !EN_WORDS.test(t || '');
+
+function render() {
+  document.onkeydown = null;
+  const root = $('#main'); root.innerHTML = '';
+  if (view === 'home') root.appendChild(Home());
+  else if (view === 'drill') root.appendChild(Drill());
+  else if (view === 'result') root.appendChild(Result());
+  else if (view === 'progress') root.appendChild(Progress());
+  else if (view === 'reference') root.appendChild(Reference());
+  const o = overall();
+  $('#meter-fill').style.width = (o.pct * 100).toFixed(1) + '%';
+  $('#meter-num').textContent = Math.round(o.pct * 100) + '%';
+  document.querySelectorAll('.nav button').forEach(b => b.setAttribute('aria-current', b.dataset.v === view ? 'page' : 'false'));
+}
+
+/* ══════════ field frame ══════════ */
+function Frame(f, note) {
+  const wrap = el('div', 'framewrap');
+  if (note) wrap.appendChild(el('p', 'framenote', note));
+  const g = el('div', 'frame');
+  const cols = [['vf', 'Vorfeld', f.vf], ['lk', 'linke Klammer', f.lk], ['mf', 'Mittelfeld', f.mf], ['rk', 'rechte Klammer', f.rk], ['nf', 'Nachfeld', f.nf]];
+  cols.forEach(([k, label, val]) => {
+    const c = el('div', 'fcol f-' + k);
+    c.appendChild(el('span', 'flab', label));
+    c.appendChild(el('span', 'fval', val && val !== '—' ? val : '—'));
+    g.appendChild(c);
+  });
+  const clamp = el('div', 'clamp');
+  clamp.setAttribute('aria-hidden', 'true');
+  clamp.appendChild(el('i'));
+  g.appendChild(clamp);
+  wrap.appendChild(g);
+  return wrap;
+}
+
+/* ══════════ home ══════════ */
+function Home() {
+  const w = el('div');
+  const o = overall();
+
+  const hero = el('section', 'hero');
+  const h = el('div', 'heroText');
+  h.appendChild(el('h1', null, 'Every German clause hangs on the same frame.'));
+  h.appendChild(el('p', 'lede', 'Two verb positions clamp the sentence. Everything else falls into the space they leave. Drill the frame until placing a word is automatic.'));
+  hero.appendChild(h);
+  hero.appendChild(Frame({ vf: 'Gestern', lk: 'habe', mf: 'ich meinem Bruder ein Buch', rk: 'geschenkt', nf: '—' }));
+  w.appendChild(hero);
+
+  const now = Date.now();
+  const dueCount = BANK.filter(q => has(q.i) && st(q.i).d <= now).length;
+  const freshCount = BANK.filter(q => !has(q.i)).length;
+  const weakCount = BANK.filter(q => has(q.i) && st(q.i).w > 0 && st(q.i).b < MASTER_BOX).length;
+
+  const acts = el('div', 'actions');
+  const start = el('button', 'btn primary');
+  start.innerHTML = '<strong>Start today\u2019s review</strong><span>' +
+    (dueCount ? dueCount + ' due' : 'nothing due') + (freshCount ? ', ' + freshCount + ' unseen' : '') + '</span>';
+  start.onclick = () => { const s = buildSession('smart'); if (!s) { toast('Nothing to review right now. Try a topic drill.'); return; } sess = s; go('drill'); };
+  acts.appendChild(start);
+
+  const weak = el('button', 'btn');
+  weak.innerHTML = '<strong>Weak spots</strong><span>' + (weakCount ? weakCount + ' item' + (weakCount === 1 ? '' : 's') + ' you have missed' : 'nothing missed yet') + '</span>';
+  weak.disabled = !weakCount;
+  weak.onclick = () => { const s = buildSession('weak'); if (!s) return; sess = s; go('drill'); };
+  acts.appendChild(weak);
+
+  const ex = el('button', 'btn');
+  ex.innerHTML = '<strong>Mastery test</strong><span>' + (S.exam.attempts ? '30 questions, best so far ' + S.exam.best + '%' : '30 questions, all topics') + '</span>';
+  ex.onclick = () => { sess = buildSession('exam'); go('drill'); };
+  acts.appendChild(ex);
+  w.appendChild(acts);
+
+  const list = el('section', 'topics');
+  list.appendChild(el('h2', null, 'The nine rules'));
+  const tl = el('div', 'tlist');
+  list.appendChild(tl);
+  TOPICS.forEach((t, i) => {
+    const s = topicStats(t.id);
+    const row = el('button', 'topic');
+    row.onclick = () => { sess = buildSession('topic', t.id); go('drill'); };
+    const head = el('div', 'thead');
+    const nm = el('div', 'tname');
+    const de = el('span', 'tde');
+    de.appendChild(el('span', 'tno', String(i + 1)));
+    de.appendChild(document.createTextNode(t.n));
+    nm.appendChild(de);
+    nm.appendChild(el('span', 'ten', t.en));
+    head.appendChild(nm);
+    const num = el('div', 'tnum');
+    num.appendChild(el('span', 'tpct', Math.round(s.pct * 100) + '%'));
+    num.appendChild(el('span', 'tcount', s.mastered + '/' + s.total));
+    head.appendChild(num);
+    row.appendChild(head);
+    const bar = el('div', 'tbar');
+    const part = el('div', 'part'); part.style.width = ((s.mastered + s.learning) / s.total * 100) + '%';
+    const fill = el('div', 'fill'); fill.style.width = (s.pct * 100) + '%';
+    bar.appendChild(part); bar.appendChild(fill);
+    row.appendChild(bar);
+    tl.appendChild(row);
+  });
+  w.appendChild(list);
+
+  if (certified()) {
+    const c = el('section', 'cert');
+    c.appendChild(el('h2', null, 'Mastery reached'));
+    c.appendChild(el('p', null, 'Every topic is above 90% and you scored ' + S.exam.best + '% on the mastery test. Keep the daily review going so the spacing does its work.'));
+    w.appendChild(c);
+  }
+  return w;
+}
+
+/* ══════════ drill ══════════ */
+let resp = null;
+
+function Drill() {
+  if (!sess) { view = 'home'; return Home(); }
+  if (sess.idx >= sess.queue.length) { view = 'result'; return Result(); }
+  const q = byId[sess.queue[sess.idx]];
+  const w = el('div', 'drill');
+
+  const bar = el('div', 'sessbar');
+  const prog = el('div', 'sprog');
+  const pf = el('div', 'spfill'); pf.style.width = (sess.done / Math.max(sess.planned, sess.queue.length) * 100) + '%';
+  prog.appendChild(pf); bar.appendChild(prog);
+  const meta = el('div', 'smeta');
+  meta.appendChild(el('span', null, sess.mode === 'exam' ? 'Mastery test' : TOPIC[q.t].n));
+  const s = st(q.i);
+  const pips = el('span', 'pips');
+  if (sess.mode !== 'exam') {
+    for (let i = 0; i < BOX_MAX; i++) { const p = el('i', 'pip' + (i < s.b ? ' on' : '')); pips.appendChild(p); }
+    pips.title = 'Box ' + s.b + ' of ' + BOX_MAX;
+  }
+  meta.appendChild(pips);
+  meta.appendChild(el('span', 'scount', (sess.done + 1) + ' / ' + sess.queue.length));
+  bar.appendChild(meta);
+  w.appendChild(bar);
+
+  const card = el('section', 'card');
+  const pr = el('div', 'prompt');
+  q.q.split('\n').forEach(line => pr.appendChild(el('p', isDE(line) ? 'given' : 'ask', line)));
+  card.appendChild(pr);
+
+  const area = el('div', 'answer');
+  card.appendChild(area);
+  const fb = el('div', 'feedback');
+  card.appendChild(fb);
+  w.appendChild(card);
+
+  const foot = el('div', 'foot');
+  const submit = el('button', 'btn go', 'Check');
+  const next = el('button', 'btn go', 'Next');
+  next.style.display = 'none';
+  foot.appendChild(submit); foot.appendChild(next);
+  const skip = el('button', 'linkbtn', 'Show answer');
+  foot.appendChild(skip);
+  w.appendChild(foot);
+
+  resp = q.k === 'order' ? [] : null;
+  let locked = false;
+
+  /* --- answer widgets --- */
+  if (q.k === 'mc') {
+    const opts = shuffle(q.o.map((text, i) => ({ text, ok: i === q.c })));
+    const box = el('div', 'opts');
+    opts.forEach((o, i) => {
+      const b = el('button', 'opt');
+      b.appendChild(el('span', 'onum', String(i + 1)));
+      b.appendChild(el('span', 'otxt' + (isDE(o.text) ? ' de' : ''), o.text));
+      b.onclick = () => { if (locked) return; box.querySelectorAll('.opt').forEach(x => x.classList.remove('sel')); b.classList.add('sel'); resp = o.ok ? q.c : -1; b._ok = o.ok; };
+      box.appendChild(b);
+    });
+    area.appendChild(box);
+    area._keys = n => { const b = box.querySelectorAll('.opt')[n - 1]; if (b) b.click(); };
+    area._reveal = () => box.querySelectorAll('.opt').forEach(b => {
+      const o = opts[[...box.querySelectorAll('.opt')].indexOf(b)];
+      if (o.ok) b.classList.add('good'); else if (b.classList.contains('sel')) b.classList.add('bad');
+    });
+  }
+
+  if (q.k === 'pick') {
+    const box = el('div', 'tokrow');
+    if (q.s) box.appendChild(el('span', 'fixed', q.s));
+    q.tk.forEach((t, i) => {
+      const b = el('button', 'tok'); b.textContent = t;
+      b.onclick = () => { if (locked) return; box.querySelectorAll('.tok').forEach(x => x.classList.remove('sel')); b.classList.add('sel'); resp = i; };
+      box.appendChild(b);
+    });
+    area.appendChild(box);
+    area._keys = n => { const b = box.querySelectorAll('.tok')[n - 1]; if (b) b.click(); };
+    area._reveal = () => box.querySelectorAll('.tok').forEach((b, i) => { if (i === q.c) b.classList.add('good'); else if (b.classList.contains('sel')) b.classList.add('bad'); });
+  }
+
+  if (q.k === 'slot') {
+    const box = el('div', 'tokrow slots');
+    const mk = gi => {
+      const g = el('button', 'gap');
+      g.setAttribute('aria-label', 'Insert ' + q.w + ' at position ' + (gi + 1));
+      g.onclick = () => {
+        if (locked) return;
+        box.querySelectorAll('.gap').forEach(x => { x.classList.remove('sel'); x.textContent = ''; });
+        g.classList.add('sel'); g.textContent = q.w; resp = gi;
+      };
+      return g;
+    };
+    box.appendChild(mk(0));
+    q.tk.forEach((t, i) => { box.appendChild(el('span', 'tokfix', t)); box.appendChild(mk(i + 1)); });
+    area.appendChild(box);
+    area._reveal = () => box.querySelectorAll('.gap').forEach((g, i) => {
+      if (i === q.c) { g.classList.add('good'); g.textContent = q.w; }
+      else if (g.classList.contains('sel')) g.classList.add('bad');
+    });
+  }
+
+  if (q.k === 'order') {
+    if (q.s) area.appendChild(el('p', 'stem', q.s));
+    const line = el('div', 'line');
+    const hint = el('span', 'linehint', 'Tap the words below in order');
+    line.appendChild(hint);
+    area.appendChild(line);
+    if (q.x) area.appendChild(el('p', 'stem tail', q.x));
+    const bankRow = el('div', 'tokrow');
+    area.appendChild(bankRow);
+    const order = shuffle(q.tk.map((t, i) => ({ t, i })));
+    const used = new Set();
+    const paint = () => {
+      line.innerHTML = '';
+      if (!resp.length) line.appendChild(hint);
+      resp.forEach((r, pos) => {
+        const b = el('button', 'tok in'); b.textContent = r.t;
+        b.onclick = () => { if (locked) return; used.delete(r.i); resp.splice(pos, 1); paint(); };
+        line.appendChild(b);
+      });
+      bankRow.innerHTML = '';
+      order.forEach((o, n) => {
+        const b = el('button', 'tok');
+        b.appendChild(el('span', 'tnum', String(n + 1)));
+        b.appendChild(document.createTextNode(o.t));
+        if (used.has(o.i)) b.classList.add('spent');
+        b.onclick = () => { if (locked || used.has(o.i)) return; used.add(o.i); resp.push(o); paint(); };
+        bankRow.appendChild(b);
+      });
+    };
+    paint();
+    area._keys = n => { const b = bankRow.querySelectorAll('.tok')[n - 1]; if (b) b.click(); };
+    area._back = () => { if (resp.length) { const r = resp.pop(); used.delete(r.i); paint(); } };
+    area._reveal = () => { line.classList.add('shown'); };
+    area._value = () => resp.map(r => r.t);
+  }
+
+  if (q.k === 'cloze') {
+    const inp = el('input', 'input');
+    inp.type = 'text'; inp.autocapitalize = 'sentences'; inp.autocomplete = 'off'; inp.spellcheck = false;
+    inp.placeholder = 'Type your answer';
+    inp.oninput = () => resp = inp.value;
+    area.appendChild(inp);
+    setTimeout(() => inp.focus(), 30);
+    area._reveal = () => inp.classList.add('done');
+  }
+
+  /* --- grading --- */
+  function reveal(ok, shown, slip) {
+    locked = true;
+    if (area._reveal) area._reveal();
+    submit.style.display = 'none';
+    next.style.display = '';
+    skip.style.display = 'none';
+    fb.className = 'feedback on ' + (shown ? 'shown' : ok ? 'right' : 'wrong');
+    const verdict = el('p', 'verdict', shown ? 'The answer' : ok ? 'Correct' : 'Not quite');
+    fb.appendChild(verdict);
+    if (!ok || shown) {
+      const sol = el('p', 'solution');
+      sol.textContent = solutionText(q);
+      fb.appendChild(sol);
+    } else if (slip) {
+      const note = el('p', 'solution');
+      note.textContent = 'Watch the capitals: ' + slip;
+      fb.appendChild(note);
+    }
+    fb.appendChild(el('p', 'explain', q.e));
+    if (q.f) fb.appendChild(Frame(q.f, q.fn));
+    next.focus();
+  }
+
+  submit.onclick = () => {
+    if (locked) return;
+    const val = area._value ? area._value() : resp;
+    if (val == null || val === '' || (Array.isArray(val) && !val.length)) { toast('Give an answer first.'); return; }
+    const ok = check(q, val);
+    if (sess.mode !== 'exam') grade(q, ok, true); else { const s2 = st(q.i); s2.n++; ok ? s2.c++ : s2.w++; save(); }
+    sess.log.push({ i: q.i, ok });
+    ok ? sess.right++ : sess.wrong++;
+    if (!ok && sess.mode !== 'exam' && !sess.redone.has(q.i)) {
+      sess.redone.add(q.i);
+      const at = Math.min(sess.queue.length, sess.idx + 4);
+      sess.queue.splice(at, 0, q.i);
+    }
+    reveal(ok, false, ok ? capSlip(q, val) : null);
+  };
+
+  skip.onclick = () => {
+    if (locked) return;
+    if (sess.mode !== 'exam') { grade(q, false, true); }
+    sess.wrong++;
+    sess.log.push({ i: q.i, ok: false });
+    if (sess.mode !== 'exam' && !sess.redone.has(q.i)) {
+      sess.redone.add(q.i);
+      sess.queue.splice(Math.min(sess.queue.length, sess.idx + 4), 0, q.i);
+    }
+    reveal(false, true);
+  };
+
+  next.onclick = () => { sess.idx++; sess.done++; touchStreak(); save(); render(); };
+
+  document.onkeydown = e => {
+    if (view !== 'drill') return;
+    if (e.key === 'Enter') { e.preventDefault(); locked ? next.click() : submit.click(); return; }
+    if (e.key === 'Backspace' && area._back && q.k === 'order' && document.activeElement.tagName !== 'INPUT') { e.preventDefault(); area._back(); return; }
+    if (/^[1-9]$/.test(e.key) && area._keys && document.activeElement.tagName !== 'INPUT') { e.preventDefault(); area._keys(+e.key); }
+  };
+
+  return w;
+}
+
+function solutionText(q) {
+  if (q.k === 'mc') return q.o[q.c];
+  if (q.k === 'pick') return q.tk[q.c];
+  if (q.k === 'cloze') return q.a[0];
+  if (q.k === 'slot') { const t = q.tk.slice(); t.splice(q.c, 0, q.w); return t.join(' '); }
+  if (q.k === 'order') return [q.s || '', q.a[0], q.x || ''].join(' ').replace(/\s+([,.])/g, '$1').replace(/\s+/g, ' ').trim();
+  return '';
+}
+
+/* ══════════ result ══════════ */
+function Result() {
+  const w = el('div', 'result');
+  const n = sess.log.length, right = sess.log.filter(l => l.ok).length;
+  const pct = n ? Math.round(right / n * 100) : 0;
+  if (sess.mode === 'exam') {
+    S.exam.attempts++;
+    if (pct > S.exam.best) S.exam.best = pct;
+    save();
+  }
+  S.log.push({ t: Date.now(), n, c: right, m: sess.mode });
+  if (S.log.length > 200) S.log = S.log.slice(-200);
+  save();
+
+  w.appendChild(el('h1', null, sess.mode === 'exam' ? 'Mastery test: ' + pct + '%' : 'Session complete'));
+  w.appendChild(el('p', 'lede', right + ' of ' + n + ' correct' +
+    (sess.mode === 'exam'
+      ? (pct >= 90 ? '. That clears the 90% bar.' : '. 90% clears the bar — the misses below are where to go next.')
+      : '.')));
+
+  const missed = [...new Set(sess.log.filter(l => !l.ok).map(l => l.i))];
+  if (missed.length) {
+    const sec = el('section', 'missed');
+    sec.appendChild(el('h2', null, 'Worth another look'));
+    missed.forEach(id => {
+      const q = byId[id];
+      const d = el('div', 'missrow');
+      d.appendChild(el('span', 'mtopic', TOPIC[q.t].n));
+      d.appendChild(el('p', 'msol', solutionText(q)));
+      d.appendChild(el('p', 'mexp', q.e));
+      sec.appendChild(d);
+    });
+    w.appendChild(sec);
+  }
+
+  const acts = el('div', 'actions');
+  const again = el('button', 'btn primary');
+  again.innerHTML = '<strong>Keep going</strong><span>next batch</span>';
+  again.onclick = () => { const s = buildSession(sess.mode === 'exam' ? 'smart' : sess.mode, sess.tid); if (!s) { toast('Nothing left in that queue.'); go('home'); return; } sess = s; go('drill'); };
+  acts.appendChild(again);
+  const home = el('button', 'btn');
+  home.innerHTML = '<strong>Back to the overview</strong><span>see where you stand</span>';
+  home.onclick = () => go('home');
+  acts.appendChild(home);
+  w.appendChild(acts);
+  document.onkeydown = null;
+  return w;
+}
+
+/* ══════════ progress ══════════ */
+function Progress() {
+  const w = el('div');
+  const o = overall();
+  w.appendChild(el('h1', null, 'Progress'));
+  w.appendChild(el('p', 'lede', o.mastered + ' of ' + o.total + ' items mastered. An item counts as mastered once you have answered it correctly ' + MASTER_BOX + ' times in a row across separate sittings.'));
+
+  const grid = el('div', 'stats');
+  const days = S.streak.days || 0;
+  const rev = S.log.reduce((a, l) => a + l.n, 0);
+  [['Day streak', days], ['Questions answered', rev], ['Mastery test best', S.exam.attempts ? S.exam.best + '%' : '—'],
+  ['Due now', BANK.filter(q => has(q.i) && st(q.i).d <= Date.now()).length]]
+    .forEach(([k, v]) => { const c = el('div', 'stat'); c.appendChild(el('span', 'sv', String(v))); c.appendChild(el('span', 'sk', k)); grid.appendChild(c); });
+  w.appendChild(grid);
+
+  const sec = el('section', 'topics');
+  sec.appendChild(el('h2', null, 'By topic'));
+  const tl2 = el('div', 'tlist');
+  sec.appendChild(tl2);
+  TOPICS.forEach(t => {
+    const s = topicStats(t.id);
+    const row = el('div', 'topic static');
+    const head = el('div', 'thead');
+    const nm = el('div', 'tname');
+    nm.appendChild(el('span', 'tde', t.n));
+    nm.appendChild(el('span', 'ten', s.mastered + ' mastered, ' + s.learning + ' in progress, ' + s.fresh + ' unseen'));
+    head.appendChild(nm);
+    head.appendChild(el('div', 'tnum', Math.round(s.pct * 100) + '%'));
+    row.appendChild(head);
+    const bar = el('div', 'tbar');
+    const part = el('div', 'part'); part.style.width = ((s.mastered + s.learning) / s.total * 100) + '%';
+    const fill = el('div', 'fill'); fill.style.width = (s.pct * 100) + '%';
+    bar.appendChild(part); bar.appendChild(fill);
+    row.appendChild(bar);
+    tl2.appendChild(row);
+  });
+  w.appendChild(sec);
+
+  const tools = el('section', 'tools');
+  tools.appendChild(el('h2', null, 'Your data'));
+  tools.appendChild(el('p', null, 'Progress lives in this browser only. Export it if you want to move to another machine.'));
+  const row = el('div', 'toolrow');
+  const exp = el('button', 'btn small', 'Export progress');
+  exp.onclick = () => {
+    const blob = new Blob([JSON.stringify(S)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'wortstellung-' + today() + '.json';
+    a.click(); URL.revokeObjectURL(a.href);
+  };
+  row.appendChild(exp);
+  const imp = el('button', 'btn small', 'Import progress');
+  const file = el('input'); file.type = 'file'; file.accept = 'application/json'; file.style.display = 'none';
+  file.onchange = () => {
+    const f = file.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const p = JSON.parse(r.result);
+        if (!p || p.v !== 1 || typeof p.items !== 'object') throw 0;
+        S = p; for (const k of Object.keys(S.items)) if (!byId[k]) delete S.items[k];
+        save(); render(); toast('Progress imported.');
+      } catch (e) { toast('That file is not a Wortstellung export.'); }
+    };
+    r.readAsText(f);
+  };
+  imp.onclick = () => file.click();
+  row.appendChild(imp); row.appendChild(file);
+  const res = el('button', 'btn small danger', 'Reset everything');
+  res.onclick = () => {
+    if (res.dataset.armed) { S = blank(); save(); toast('Progress cleared.'); render(); return; }
+    res.dataset.armed = '1'; res.textContent = 'Tap again to erase';
+    setTimeout(() => { delete res.dataset.armed; res.textContent = 'Reset everything'; }, 4000);
+  };
+  row.appendChild(res);
+  tools.appendChild(row);
+  w.appendChild(tools);
+  document.onkeydown = null;
+  return w;
+}
+
+/* ══════════ reference ══════════ */
+function Reference() {
+  const w = el('div', 'ref');
+  w.appendChild(el('h1', null, 'Reference'));
+  REF.forEach(sec => {
+    const s = el('section', 'refsec');
+    s.appendChild(el('h2', null, sec.h));
+    sec.b.forEach(block => {
+      if (block.p) s.appendChild(el('p', null, block.p));
+      if (block.f) s.appendChild(Frame(block.f, block.n));
+      if (block.l) {
+        const ul = el('ul');
+        block.l.forEach(li => { const e = el('li'); e.innerHTML = li; ul.appendChild(e); });
+        s.appendChild(ul);
+      }
+    });
+    w.appendChild(s);
+  });
+  document.onkeydown = null;
+  return w;
+}
+
+/* ══════════ boot ══════════ */
+document.querySelectorAll('.nav button').forEach(b => b.onclick = () => go(b.dataset.v));
+render();
+
+</script>
+</body>
+</html>

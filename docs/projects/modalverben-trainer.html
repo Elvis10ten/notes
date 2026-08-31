@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>German Modal Verbs — Drill to Mastery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --desk:#14181c; --desk2:#1c2229; --desk3:#252d36;
+  --card:#f1ede4; --card2:#e6e0d3; --ink:#1a1d21; --ink2:#5b6068;
+  --signal:#d9a21b; --good:#3e7d58; --bad:#b0453c;
+  --line:#c3bbaa; --chrome:#8d97a3;
+  --ui:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+  --serif:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --r:3px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--desk); color:#dfe4ea; font-family:var(--ui);
+  -webkit-font-smoothing:antialiased; font-size:16px; line-height:1.5;
+  display:flex; flex-direction:column; min-height:100dvh;
+}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+
+/* ---------- top bar ---------- */
+.bar{
+  display:flex;align-items:center;gap:18px;padding:12px 20px;
+  border-bottom:1px solid #262e37;background:var(--desk);
+  position:sticky;top:0;z-index:20;flex-wrap:wrap;
+}
+.brand{font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--signal);white-space:nowrap}
+.brand span{color:var(--chrome)}
+.tabs{display:flex;gap:2px;margin-left:auto}
+.tab{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--chrome);padding:6px 11px;border-radius:var(--r)}
+.tab[aria-selected="true"]{color:var(--desk);background:var(--signal);font-weight:600}
+.tab:hover:not([aria-selected="true"]){color:#dfe4ea;background:var(--desk2)}
+
+/* ---------- mastery meter ---------- */
+.meter{display:flex;height:3px;background:#242c35}
+.meter i{display:block;height:100%;transition:width .5s cubic-bezier(.2,.7,.3,1)}
+.meterlab{display:flex;justify-content:space-between;align-items:baseline;
+  padding:8px 20px 0;font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--chrome)}
+.meterlab b{color:#dfe4ea;font-weight:600}
+
+/* ---------- layout ---------- */
+main{flex:1;width:100%;max-width:760px;margin:0 auto;padding:22px 20px 64px;display:flex;flex-direction:column}
+#view-drill{flex:1;display:flex;flex-direction:column;justify-content:center}
+#view-drill.hide{display:none}
+.hide{display:none !important}
+
+/* ---------- the card ---------- */
+.card{
+  background:var(--card);color:var(--ink);border-radius:var(--r);
+  padding:26px 26px 22px;box-shadow:0 1px 0 #fff6 inset,0 18px 40px -22px #000c,0 2px 0 #0006;
+  background-image:radial-gradient(#00000006 1px,transparent 1px);background-size:3px 3px;
+  animation:rise .28s cubic-bezier(.2,.7,.3,1);
+}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.card{animation:none}.meter i{transition:none}}
+.chead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:#8a8578;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:20px}
+.chead .tagname{color:var(--ink);font-weight:600}
+.q{font-family:var(--serif);font-size:23px;line-height:1.45;letter-spacing:-.005em}
+.blank{display:inline-block;width:4.2ch;border-bottom:2px solid #a9a294;margin:0 .16em;vertical-align:0}
+.hintline{font-family:var(--mono);font-size:11px;color:var(--ink2);margin-top:10px;letter-spacing:.04em}
+.lead{font-family:var(--serif);font-size:19px;color:var(--ink2);margin-bottom:6px}
+
+/* ---------- SIGNATURE: the ruled answer line ---------- */
+.rule{position:relative;margin:18px 0 6px;min-height:48px;display:flex;align-items:flex-end}
+.rule::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--line)}
+.rule.ok::after{background:var(--good)}
+.rule.no::after{background:var(--bad)}
+input.ans{
+  width:100%;background:transparent;border:none;font-family:var(--serif);
+  font-size:26px;color:var(--ink);padding:2px 2px 8px;outline:none;
+}
+input.ans::placeholder{color:#a9a294}
+.rule.ok input.ans{color:var(--good)}
+.rule.no input.ans{color:var(--bad)}
+
+/* ---------- keys / actions ---------- */
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:16px}
+.umlaut{display:flex;gap:5px}
+.umlaut button{font-family:var(--serif);font-size:16px;width:34px;height:32px;
+  border:1px solid var(--line);border-radius:var(--r);color:var(--ink2);background:#0000000a}
+.umlaut button:hover{background:var(--ink);color:var(--card);border-color:var(--ink)}
+.spacer{flex:1}
+.btn{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+  font-weight:600;padding:10px 18px;border-radius:var(--r);background:var(--ink);color:var(--card)}
+.btn:hover{background:#000}
+.btn.ghost{background:transparent;color:var(--ink2);border:1px solid var(--line)}
+.btn.ghost:hover{background:#0000000d;color:var(--ink)}
+.btn.mini{padding:7px 12px;font-size:10.5px}
+
+/* ---------- MCQ ---------- */
+.opts{margin-top:20px;border-top:1px solid var(--line)}
+.opt{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;
+  padding:13px 6px;border-bottom:1px solid var(--line);font-family:var(--serif);font-size:17.5px;line-height:1.4}
+.opt:hover{background:#0000000a}
+.opt .k{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--ink2);
+  border:1px solid var(--line);border-radius:var(--r);padding:2px 6px;margin-top:3px;flex:none}
+.opt.pick{background:#0000000f}
+.opt.ok{background:#3e7d5820}.opt.ok .k{background:var(--good);color:#fff;border-color:var(--good)}
+.opt.no{background:#b0453c1a}.opt.no .k{background:var(--bad);color:#fff;border-color:var(--bad)}
+.opt[disabled]{cursor:default}
+
+/* ---------- token builder ---------- */
+.built{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-end;padding-bottom:8px;width:100%;min-height:42px}
+.pool{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chip{font-family:var(--serif);font-size:17px;padding:6px 11px;border:1px solid var(--line);
+  border-radius:var(--r);background:#fffffc;box-shadow:0 1px 0 #0000000f}
+.chip:hover{border-color:var(--ink);background:#fff}
+.chip .n{font-family:var(--mono);font-size:9px;color:var(--ink2);margin-right:6px;vertical-align:1px}
+.built .chip .n{display:none}
+.chip.used{opacity:.22;pointer-events:none}
+.built .chip{background:var(--ink);color:var(--card);border-color:var(--ink)}
+.poolhint{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink2);margin-top:18px}
+
+/* ---------- verdict ---------- */
+.verdict{margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+.vtag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+.vtag.ok{color:var(--good)}.vtag.no{color:var(--bad)}
+.model{font-family:var(--serif);font-size:20px;margin:8px 0 10px;color:var(--ink)}
+.why{font-size:14.5px;line-height:1.6;color:#4a4f56}
+.why b{color:var(--ink)}
+
+/* ---------- panels (tables / stats) ---------- */
+.panel{background:var(--desk2);border:1px solid #2b333d;border-radius:var(--r);padding:20px;margin-bottom:16px}
+.ptitle{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--signal);margin-bottom:4px;font-weight:600}
+.psub{font-size:13.5px;color:var(--chrome);margin-bottom:16px}
+table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12.5px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid #2b333d;white-space:nowrap}
+th{color:var(--signal);font-weight:600;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase}
+td.p{color:var(--chrome)}
+.scroll{overflow-x:auto;margin:0 -4px}
+.note{font-size:13.5px;line-height:1.65;color:#b8c0ca;margin-top:14px}
+.note b{color:#fff}
+.note code{font-family:var(--mono);font-size:12.5px;color:var(--signal)}
+
+/* ---------- stats ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:#2b333d;
+  border:1px solid #2b333d;border-radius:var(--r);overflow:hidden}
+.stat{background:var(--desk2);padding:14px 16px}
+.stat b{display:block;font-family:var(--mono);font-size:24px;font-weight:600;color:#fff;line-height:1.1}
+.stat span{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--chrome)}
+.trow{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid #262e37}
+.trow:last-child{border:none}
+.tname{width:104px;flex:none;font-family:var(--mono);font-size:11.5px;color:#dfe4ea}
+.tbar{flex:1;height:6px;background:#2b333d;border-radius:99px;overflow:hidden;display:flex}
+.tbar i{display:block;height:100%}
+.tnum{font-family:var(--mono);font-size:11px;color:var(--chrome);width:70px;text-align:right;flex:none}
+
+/* ---------- mode chooser ---------- */
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:10px;margin-bottom:18px}
+.mode{background:var(--desk2);border:1px solid #2b333d;border-radius:var(--r);padding:14px 15px;text-align:left}
+.mode:hover{border-color:var(--signal);background:var(--desk3)}
+.mode b{display:block;font-size:14.5px;font-weight:600;margin-bottom:3px}
+.mode span{font-size:12.5px;color:var(--chrome);line-height:1.45}
+.mode.on{border-color:var(--signal);background:var(--desk3)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.tchip{font-family:var(--mono);font-size:11px;padding:6px 10px;border:1px solid #2b333d;
+  border-radius:var(--r);color:var(--chrome)}
+.tchip:hover{border-color:var(--signal);color:#fff}
+.tchip.on{background:var(--signal);color:var(--desk);border-color:var(--signal);font-weight:600}
+.tchip em{font-style:normal;opacity:.65}
+
+.legend{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--chrome);display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+
+.warn{background:#3a2d16;border:1px solid #5a4520;color:#f0d99a;font-size:13px;
+  padding:11px 14px;border-radius:var(--r);margin-bottom:16px;line-height:1.5}
+.done{text-align:center;padding:40px 10px}
+.done h2{font-family:var(--mono);font-size:13px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--signal);margin-bottom:14px}
+.done p{font-family:var(--serif);font-size:22px;color:#fff;margin-bottom:8px}
+.done small{color:var(--chrome);font-size:13.5px;display:block;margin-bottom:22px;line-height:1.6}
+.foot{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:#5c6672;text-align:center;padding:8px 20px 26px}
+
+@media(max-width:560px){
+  main{padding:16px 12px 48px}
+  #view-drill{display:block}
+  .brand span{display:none}
+  .meterlab span:last-child{display:none}
+  .chead{font-size:9.5px;letter-spacing:.09em}
+  .card{padding:20px 18px 18px}
+  .q{font-size:20px}
+  input.ans{font-size:22px}
+  .tname{width:82px}
+  .bar{padding:10px 12px;gap:10px}
+  .meterlab{padding:8px 12px 0}
+}
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="brand">Modal verbs <span>· German B1</span></div>
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-drill"  aria-selected="true"  onclick="go('drill')">Practice</button>
+    <button class="tab" role="tab" id="tab-tables" aria-selected="false" onclick="go('tables')">Tables</button>
+    <button class="tab" role="tab" id="tab-stats"  aria-selected="false" onclick="go('stats')">Progress</button>
+  </nav>
+</header>
+<div class="meter" id="meter"></div>
+<div class="meterlab" id="meterlab"></div>
+<main>
+  <section id="view-drill"></section>
+  <section id="view-tables" class="hide"></section>
+  <section id="view-stats" class="hide"></section>
+</main>
+<div class="foot" id="foot"></div>
+<script>
+/* ============================================================
+   MODALVERBEN — question bank
+   Part 1: master tables, generated conjugation drills, meaning
+   ============================================================ */
+
+const PERSONS = ['ich', 'du', 'er/sie/es', 'wir', 'ihr', 'sie/Sie'];
+
+const VERBS = {
+  duerfen:  { inf: 'dürfen', gloss: 'to be allowed to',
+    pres: ['darf', 'darfst', 'darf', 'dürfen', 'dürft', 'dürfen'],
+    prat: ['durfte', 'durftest', 'durfte', 'durften', 'durftet', 'durften'],
+    pp: 'gedurft' },
+  koennen:  { inf: 'können', gloss: 'to be able to',
+    pres: ['kann', 'kannst', 'kann', 'können', 'könnt', 'können'],
+    prat: ['konnte', 'konntest', 'konnte', 'konnten', 'konntet', 'konnten'],
+    pp: 'gekonnt' },
+  moegen:   { inf: 'mögen', gloss: 'to like',
+    pres: ['mag', 'magst', 'mag', 'mögen', 'mögt', 'mögen'],
+    prat: ['mochte', 'mochtest', 'mochte', 'mochten', 'mochtet', 'mochten'],
+    pp: 'gemocht' },
+  muessen:  { inf: 'müssen', gloss: 'to have to',
+    pres: ['muss', 'musst', 'muss', 'müssen', 'müsst', 'müssen'],
+    prat: ['musste', 'musstest', 'musste', 'mussten', 'musstet', 'mussten'],
+    pp: 'gemusst' },
+  sollen:   { inf: 'sollen', gloss: 'to be supposed to',
+    pres: ['soll', 'sollst', 'soll', 'sollen', 'sollt', 'sollen'],
+    prat: ['sollte', 'solltest', 'sollte', 'sollten', 'solltet', 'sollten'],
+    pp: 'gesollt' },
+  wollen:   { inf: 'wollen', gloss: 'to want to',
+    pres: ['will', 'willst', 'will', 'wollen', 'wollt', 'wollen'],
+    prat: ['wollte', 'wolltest', 'wollte', 'wollten', 'wolltet', 'wollten'],
+    pp: 'gewollt' },
+  moechten: { inf: 'möchten', gloss: 'would like',
+    pres: ['möchte', 'möchtest', 'möchte', 'möchten', 'möchtet', 'möchten'],
+    prat: null, pp: null }
+};
+
+const VERB_ORDER = ['duerfen', 'koennen', 'moegen', 'muessen', 'sollen', 'wollen', 'moechten'];
+
+/* ---------- generated: present tense (7 verbs x 6 persons = 42) ---------- */
+function genPresent() {
+  const out = [];
+  VERB_ORDER.forEach(key => {
+    const v = VERBS[key];
+    PERSONS.forEach((p, i) => {
+      out.push({
+        id: `pres-${key}-${i}`,
+        topic: 'forms-pres',
+        type: 'cloze',
+        q: `${p} ___`,
+        tag: v.inf,
+        a: [v.pres[i]],
+        why: presWhy(key, i, v)
+      });
+    });
+  });
+  return out;
+}
+
+function presWhy(key, i, v) {
+  const base = `${PERSONS[i]} ${v.pres[i]} — full present: ` +
+    PERSONS.map((p, j) => `${p} ${v.pres[j]}`).join(' · ');
+  let note = '';
+  if (i === 0 || i === 2) {
+    note = key === 'moechten'
+      ? ' möchten is the odd one out: ich/er-sie-es end in -e, like a normal Konjunktiv II.'
+      : ' ich and er/sie/es take NO ending — that bare stem is the signature of a modal verb.';
+  } else if (i === 3 || i === 5) {
+    note = ' wir and sie/Sie are always identical to the infinitive.';
+  } else if (i === 4) {
+    note = key === 'moechten'
+      ? ' möchten runs on Konjunktiv II endings attached to the stem möcht-: -e, -est, -e, -en, -et, -en. ihr möchtet is the only form ending in -t.'
+      : ' ihr keeps the plural stem and adds -t.';
+  } else if (i === 1) {
+    note = key === 'moechten'
+      ? ' du möchtest — the stem möcht- plus the Konjunktiv II ending -est.'
+      : key === 'muessen'
+        ? ' du takes -st, but the stem already ends in -ss, so the ending drops its own s: muss + st → musst.'
+        : ' du keeps the singular stem and adds -st.';
+  }
+  return base + '.' + note;
+}
+
+/* ---------- generated: Präteritum (6 verbs x 6 persons = 36) ---------- */
+function genPrat() {
+  const out = [];
+  VERB_ORDER.filter(k => VERBS[k].prat).forEach(key => {
+    const v = VERBS[key];
+    PERSONS.forEach((p, i) => {
+      out.push({
+        id: `prat-${key}-${i}`,
+        topic: 'forms-prat',
+        type: 'cloze',
+        q: `${p} ___`,
+        tag: `${v.inf} · Präteritum`,
+        a: [v.prat[i]],
+        why: `${PERSONS[i]} ${v.prat[i]} — full Präteritum: ` +
+          PERSONS.map((p2, j) => `${p2} ${v.prat[j]}`).join(' · ') +
+          (key === 'sollen' || key === 'wollen'
+            ? `. ${v.inf} never had an umlaut to lose — it is simply weak: ${v.prat[0].replace(/te$/, '')}- plus the ending`
+            : key === 'moegen'
+              ? '. The stem loses the umlaut and swaps g → ch: mögen → moch-'
+              : `. The stem loses the umlaut: ${v.inf} → ${v.prat[0].replace(/te$/, '')}-`) +
+          '. The endings are the regular weak set: -te, -test, -te, -ten, -tet, -ten.'
+      });
+    });
+  });
+  return out;
+}
+
+/* ---------- generated: Partizip II (6) ---------- */
+function genPP() {
+  return VERB_ORDER.filter(k => VERBS[k].pp).map(key => {
+    const v = VERBS[key];
+    return {
+      id: `pp-${key}`,
+      topic: 'perfekt',
+      type: 'cloze',
+      q: `Partizip II of <b>${v.inf}</b>: ___`,
+      tag: 'Partizip II',
+      a: [v.pp],
+      why: `${v.pp}. You only need a real participle when the modal has NO second verb: „Das habe ich nicht ${VERBS.wollen.pp}.“ With a second verb you get the double infinitive instead (habe … ${v.inf}).` +
+        (key === 'sollen' || key === 'duerfen' ? ` In practice ${v.pp} is rare — know it, but do not expect to use it often.` : '')
+    };
+  });
+}
+
+/* ---------- meaning: which modal fits? ---------- */
+const MEANING = [
+  ['Hier ___ man nicht rauchen — das ist verboten.', 'darf', 'Prohibition = nicht dürfen. „Man darf nicht“ is the standard way to say something is forbidden.'],
+  ['Ich ___ schwimmen; ich habe es als Kind gelernt.', 'kann', 'können = ability you have acquired.'],
+  ['Ich ___ keinen Kaffee — ich trinke seit Jahren nur Tee.', 'mag', 'A standing preference → mögen, with a direct object and no second verb. „Ich möchte keinen Kaffee“ would mean you are turning one down right now.'],
+  ['Ich ___ morgen arbeiten, auch wenn ich keine Lust habe.', 'muss', 'müssen = necessity/compulsion, no way around it.'],
+  ['Der Arzt hat es mir geraten: Ich ___ mehr Sport machen.', 'soll', 'Advice passed on from someone else → sollen. müssen would claim it is unavoidable, which advice never is.'],
+  ['Ich ___ dieses Jahr die B1-Prüfung machen. Das ist mein Ziel.', 'will', 'wollen = your own will and intention. It is not rude here; „mein Ziel“ makes the intention explicit.', ['möchte'], 'möchte is correct too and sounds softer. With „Das ist mein Ziel“, wollen states the commitment more plainly.'],
+  ['___ Sie einen Kaffee oder einen Tee? (polite, in a café)', 'Möchten', 'möchten = the polite „would like“. „Wollen Sie…?“ would sound blunt in a café.'],
+  ['Kinder unter 16 ___ diesen Film nicht sehen.', 'dürfen', 'An age limit is permission withheld → nicht dürfen.'],
+  ['Meine Mutter sagt, ich ___ dich anrufen.', 'soll', 'Reported instruction from another person → sollen.'],
+  ['Wir ___ heute nicht kommen — wir haben leider keine Zeit.', 'können', 'No time = no possibility → können.'],
+  ['___ ich das Fenster aufmachen? (you are asking permission)', 'Darf', 'Asking for permission → dürfen. In casual speech „Kann ich…?“ is heard just as often, but dürfen is the verb that actually means „be allowed to“.'],
+  ['Er ___ klassische Musik sehr.', 'mag', 'mögen + direct object, no infinitive.'],
+  ['Sie ___ Ärztin werden; sie studiert schon Medizin.', 'will', 'Her own plan and intention → wollen.', ['möchte'], 'möchte is also right and a shade softer. Since she is already studying medicine, wollen matches the settled decision.'],
+  ['In der Bibliothek ___ man leise sein — sonst wird man rausgeworfen.', 'muss', 'A rule with a real consequence → müssen. Without the consequence, „soll“ would fit just as well.'],
+  ['___ Sie mir bitte helfen?', 'Können', 'Standard polite request for help → können.'],
+  ['Das Baby ___ noch nicht laufen.', 'kann', 'Physical ability → können.'],
+  ['Ich ___ bitte die Rechnung. (in a restaurant)', 'möchte', 'möchten = polite wish; the most common way to order or ask in a restaurant.'],
+  ['Ich habe kein Geld dabei. Ich ___ nicht bezahlen.', 'kann', 'No means = no possibility → können.'],
+  ['Wir ___ am Samstag grillen. Das haben wir schon geplant.', 'wollen', 'A plan you made yourself → wollen.'],
+  ['___ du Fußball?', 'Magst', 'No second verb, direct object → mögen.'],
+  ['Alle Passagiere ___ ihren Ausweis zeigen — das ist Pflicht.', 'müssen', '„Pflicht“ (duty) → müssen.'],
+  ['Was ___ ich mitbringen? (I am asking what is expected of me.)', 'soll', 'You are asking what someone else expects of you → sollen.'],
+  ['Er ___ sehr gut Deutsch; er lebt seit zehn Jahren hier.', 'kann', 'können can stand alone with a language: „Ich kann Deutsch“ = I know German.'],
+  ['___ du lieber Tee oder Kaffee? (you are offering someone a drink right now)', 'Möchtest', 'Offering something here and now → möchten. „Magst du lieber Tee?“ would ask about your taste in general.'],
+  ['Man ___ in Deutschland erst ab 18 wählen — vorher ist es nicht erlaubt.', 'darf', 'A right the law grants only from a set age → dürfen. „kann“ would describe possibility rather than permission.'],
+  ['Der Chef hat gesagt, wir ___ pünktlich sein.', 'sollen', 'Instruction from the boss → sollen.'],
+  ['Meine Schwester ___ keine Spinnen.', 'mag', 'mögen + object, no infinitive.'],
+  ['___ ihr mir kurz helfen?', 'Könnt', 'Asking about ability/availability → können, ihr-form: könnt.'],
+  ['Ihr ___ eure Handys ausschalten — das ist eine Regel.', 'müsst', 'A rule you must obey → müssen, ihr-form: müsst.'],
+  ['Wir ___ hier nicht schwimmen — sieh mal das Schild.', 'dürfen', 'A sign forbidding it → nicht dürfen.'],
+  ['___ wir ins Kino gehen? (making a suggestion)', 'Wollen', '„Wollen wir…?“ is the normal way to make a suggestion.'],
+  ['Sie ___ jeden Tag zwei Stunden pendeln — die Firma ist weit weg.', 'muss', 'Unavoidable necessity → müssen.'],
+  ['Ihr ___ nach dem Unterricht nach Hause gehen. (the teacher allows it)', 'dürft', 'Permission granted → dürfen, ihr-form: dürft.'],
+  ['Ich ___ Sie um einen Gefallen bitten. (very polite)', 'möchte', 'möchten softens a request; „Ich will…“ would be too direct.'],
+  ['Du ___ mich nicht anlügen!', 'darfst', 'Forbidding someone outright → nicht dürfen.', ['sollst'], 'sollst is idiomatic here too („Du sollst nicht lügen“ is how the commandment runs). darfst frames it as a flat ban rather than an instruction.'],
+  ['Wann ___ ihr abfahren? (plan / intention)', 'wollt', 'Asking about their own intention → wollen, ihr-form: wollt.'],
+  ['Der Techniker sagt, ich ___ den Router neu starten.', 'soll', 'Instruction from the technician → sollen.'],
+  ['Ohne Ticket ___ man nicht einsteigen.', 'darf', 'Not permitted → nicht dürfen.'],
+  ['Man ___ hier bezahlen, bevor man isst.', 'muss', 'The procedure is obligatory → müssen.'],
+  ['Wir ___ nächstes Jahr nach Japan reisen. Das ist unser Plan.', 'wollen', 'Own plan → wollen.'],
+  ['___ ich Ihnen etwas anbieten? (a polite offer)', 'Darf', '„Darf ich…?“ asks permission to do something for someone — the polite host formula.'],
+  ['Hier ___ Sie kostenlos parken.', 'dürfen', 'Permission granted → dürfen, Sie-form: dürfen.', ['können'], 'können is at least as common on real signs. dürfen is the one that says the parking is permitted rather than merely possible.'],
+  ['Ich ___ dich unbedingt wiedersehen.', 'will', '„unbedingt“ marks a strong personal wish → wollen.', ['möchte'], 'möchte works too. „unbedingt“ leans towards wollen because it insists rather than asks.'],
+  ['Sie hat Fieber. Der Arzt sagt, sie ___ im Bett bleiben.', 'soll', 'Doctor’s instruction → sollen.'],
+  ['Das Kind ___ noch nicht lesen, es ist erst vier.', 'kann', 'Not yet able → können.']
+];
+
+function genMeaning() {
+  return MEANING.map((m, i) => ({
+    id: `mean-${String(i + 1).padStart(3, '0')}`,
+    topic: 'meaning',
+    type: 'cloze',
+    q: m[0],
+    tag: 'Which modal?',
+    a: [m[1]],
+    alt: m[3] || null,
+    altWhy: m[4] || null,
+    why: m[2]
+  }));
+}
+/* ============================================================
+   Part 2: word order — token builders
+   Each item: tokens = the pool, orders = every accepted sequence
+   ============================================================ */
+
+const ORDER_ITEMS = [
+  // ---- Statement: modal position 2, infinitive last ----
+  { lead: '', tokens: ['ich', 'muss', 'heute', 'länger', 'arbeiten'],
+    orders: [['ich', 'muss', 'heute', 'länger', 'arbeiten'], ['heute', 'muss', 'ich', 'länger', 'arbeiten']],
+    model: 'Ich muss heute länger arbeiten.', pattern: 'Statement',
+    why: 'Modal in position 2, infinitive at the very end. Whatever you put first, the modal stays in slot 2 — so fronting „heute“ pushes „ich“ behind the verb.' },
+  { lead: '', tokens: ['wir', 'wollen', 'am Wochenende', 'nach Hamburg', 'fahren'],
+    orders: [['wir', 'wollen', 'am Wochenende', 'nach Hamburg', 'fahren'], ['am Wochenende', 'wollen', 'wir', 'nach Hamburg', 'fahren']],
+    model: 'Wir wollen am Wochenende nach Hamburg fahren.', pattern: 'Statement',
+    why: 'Time before place (am Wochenende → nach Hamburg), infinitive last.' },
+  { lead: '', tokens: ['er', 'kann', 'sehr gut', 'Gitarre', 'spielen'],
+    orders: [['er', 'kann', 'sehr gut', 'Gitarre', 'spielen']],
+    model: 'Er kann sehr gut Gitarre spielen.', pattern: 'Statement',
+    why: 'The infinitive „spielen“ closes the sentence; everything else sits in the middle field.' },
+  { lead: '', tokens: ['ich', 'darf', 'heute', 'nicht', 'mitkommen'],
+    orders: [['ich', 'darf', 'heute', 'nicht', 'mitkommen'], ['heute', 'darf', 'ich', 'nicht', 'mitkommen']],
+    model: 'Ich darf heute nicht mitkommen.', pattern: 'Statement',
+    why: 'nicht goes directly before the infinitive it negates. Separable „mitkommen“ stays whole because it is an infinitive.' },
+  { lead: '', tokens: ['du', 'sollst', 'deine Hausaufgaben', 'machen'],
+    orders: [['du', 'sollst', 'deine Hausaufgaben', 'machen']],
+    model: 'Du sollst deine Hausaufgaben machen.', pattern: 'Statement',
+    why: 'sollen = someone else told you to. Object in the middle, infinitive at the end.' },
+  { lead: '', tokens: ['sie', 'möchte', 'einen Tee', 'trinken'],
+    orders: [['sie', 'möchte', 'einen Tee', 'trinken']],
+    model: 'Sie möchte einen Tee trinken.', pattern: 'Statement',
+    why: 'möchte (not „möchtet“) for er/sie/es — it behaves like a Konjunktiv II form.' },
+  { lead: '', tokens: ['man', 'darf', 'hier', 'nicht', 'parken'],
+    orders: [['man', 'darf', 'hier', 'nicht', 'parken'], ['hier', 'darf', 'man', 'nicht', 'parken']],
+    model: 'Man darf hier nicht parken.', pattern: 'Statement',
+    why: 'nicht dürfen = prohibition. Both word orders are correct; fronting „hier“ emphasises the place.' },
+  { lead: '', tokens: ['ich', 'muss', 'morgen', 'früh', 'aufstehen'],
+    orders: [['ich', 'muss', 'morgen', 'früh', 'aufstehen'], ['morgen', 'muss', 'ich', 'früh', 'aufstehen']],
+    model: 'Ich muss morgen früh aufstehen.', pattern: 'Statement',
+    why: 'A separable verb is never split when it is the infinitive after a modal: aufstehen stays in one piece at the end.' },
+  { lead: '', tokens: ['ich', 'kann', 'heute', 'nicht', 'kommen'],
+    orders: [['ich', 'kann', 'heute', 'nicht', 'kommen'], ['heute', 'kann', 'ich', 'nicht', 'kommen']],
+    model: 'Ich kann heute nicht kommen.', pattern: 'Statement',
+    why: 'nicht sits just before the infinitive.' },
+  { lead: '', tokens: ['du', 'musst', 'das', 'nicht', 'machen'],
+    orders: [['du', 'musst', 'das', 'nicht', 'machen'], ['das', 'musst', 'du', 'nicht', 'machen']],
+    model: 'Du musst das nicht machen.', pattern: 'Statement',
+    why: 'musst nicht = you don’t have to. If you meant „you must not“, you would need darfst nicht.' },
+  { lead: '', tokens: ['ich', 'möchte', 'einen Termin', 'vereinbaren'],
+    orders: [['ich', 'möchte', 'einen Termin', 'vereinbaren']],
+    model: 'Ich möchte einen Termin vereinbaren.', pattern: 'Statement',
+    why: 'The standard polite opener on the phone or at a counter.' },
+
+  // ---- Yes/no question: modal first ----
+  { lead: '', tokens: ['kannst', 'du', 'mir', 'helfen'],
+    orders: [['kannst', 'du', 'mir', 'helfen']],
+    model: 'Kannst du mir helfen?', end: '?', pattern: 'Yes/no question',
+    why: 'Yes/no question: the modal takes position 1, subject follows immediately, infinitive last.' },
+  { lead: '', tokens: ['darf', 'ich', 'hier', 'rauchen'],
+    orders: [['darf', 'ich', 'hier', 'rauchen']],
+    model: 'Darf ich hier rauchen?', end: '?', pattern: 'Yes/no question',
+    why: 'dürfen fronted = asking permission.' },
+  { lead: '', tokens: ['möchtet', 'ihr', 'etwas', 'essen'],
+    orders: [['möchtet', 'ihr', 'etwas', 'essen']],
+    model: 'Möchtet ihr etwas essen?', end: '?', pattern: 'Yes/no question',
+    why: 'ihr möchtet. Every möchten form is built on the stem möcht-; the ihr-form is the one that ends in -t.' },
+  { lead: '', tokens: ['musst', 'du', 'morgen', 'arbeiten'],
+    orders: [['musst', 'du', 'morgen', 'arbeiten']],
+    model: 'Musst du morgen arbeiten?', end: '?', pattern: 'Yes/no question',
+    why: 'du musst → question form musst du.' },
+  { lead: '', tokens: ['wollen', 'wir', 'ins Kino', 'gehen'],
+    orders: [['wollen', 'wir', 'ins Kino', 'gehen']],
+    model: 'Wollen wir ins Kino gehen?', end: '?', pattern: 'Yes/no question',
+    why: '„Wollen wir …?“ is the everyday way to make a suggestion — the English equivalent is „Shall we …?“.' },
+  { lead: '', tokens: ['kannst', 'du', 'mich', 'abholen'],
+    orders: [['kannst', 'du', 'mich', 'abholen']],
+    model: 'Kannst du mich abholen?', end: '?', pattern: 'Yes/no question',
+    why: 'Separable abholen stays intact as the final infinitive.' },
+
+  // ---- W-question: W-word + modal ----
+  { lead: '', tokens: ['wann', 'willst', 'du', 'kommen'],
+    orders: [['wann', 'willst', 'du', 'kommen']],
+    model: 'Wann willst du kommen?', end: '?', pattern: 'W-question',
+    why: 'W-word first, modal second, subject third, infinitive last.' },
+  { lead: '', tokens: ['was', 'soll', 'ich', 'mitbringen'],
+    orders: [['was', 'soll', 'ich', 'mitbringen']],
+    model: 'Was soll ich mitbringen?', end: '?', pattern: 'W-question',
+    why: 'sollen because you are asking what is expected of you.' },
+  { lead: '', tokens: ['wo', 'kann', 'man', 'hier', 'parken'],
+    orders: [['wo', 'kann', 'man', 'hier', 'parken']],
+    model: 'Wo kann man hier parken?', end: '?', pattern: 'W-question',
+    why: 'The modal stays in slot 2 even after a W-word.' },
+  { lead: '', tokens: ['warum', 'darf', 'ich', 'das', 'nicht', 'machen'],
+    orders: [['warum', 'darf', 'ich', 'das', 'nicht', 'machen']],
+    model: 'Warum darf ich das nicht machen?', end: '?', pattern: 'W-question',
+    why: 'nicht immediately before the infinitive.' },
+  { lead: '', tokens: ['wie lange', 'musst', 'du', 'heute', 'arbeiten'],
+    orders: [['wie lange', 'musst', 'du', 'heute', 'arbeiten']],
+    model: 'Wie lange musst du heute arbeiten?', end: '?', pattern: 'W-question',
+    why: 'A multi-word question phrase still counts as position 1.' },
+  { lead: '', tokens: ['wo', 'muss', 'ich', 'das Formular', 'abgeben'],
+    orders: [['wo', 'muss', 'ich', 'das Formular', 'abgeben']],
+    model: 'Wo muss ich das Formular abgeben?', end: '?', pattern: 'W-question',
+    why: 'Useful at any Amt: the infinitive abgeben closes the question.' },
+
+  // ---- Subordinate clause: infinitive + modal, both at the end ----
+  { lead: 'Ich komme später,', tokens: ['weil', 'ich', 'heute', 'länger', 'arbeiten', 'muss'],
+    orders: [['weil', 'ich', 'heute', 'länger', 'arbeiten', 'muss']],
+    model: 'Ich komme später, weil ich heute länger arbeiten muss.', pattern: 'Subordinate clause',
+    why: 'In a subordinate clause the finite verb goes last — so the order flips to infinitive + modal: … arbeiten muss.' },
+  { lead: 'Er sagt,', tokens: ['dass', 'er', 'uns', 'helfen', 'will'],
+    orders: [['dass', 'er', 'uns', 'helfen', 'will']],
+    model: 'Er sagt, dass er uns helfen will.', pattern: 'Subordinate clause',
+    why: 'helfen will — infinitive first, then the conjugated modal at the very end.' },
+  { lead: 'Ich weiß nicht,', tokens: ['ob', 'ich', 'morgen', 'kommen', 'kann'],
+    orders: [['ob', 'ich', 'morgen', 'kommen', 'kann']],
+    model: 'Ich weiß nicht, ob ich morgen kommen kann.', pattern: 'Subordinate clause',
+    why: 'ob introduces an indirect yes/no question and sends the modal to the end.' },
+  { lead: 'Sag mir Bescheid,', tokens: ['wenn', 'du', 'mitkommen', 'möchtest'],
+    orders: [['wenn', 'du', 'mitkommen', 'möchtest']],
+    model: 'Sag mir Bescheid, wenn du mitkommen möchtest.', pattern: 'Subordinate clause',
+    why: 'möchtest is the finite verb, so it lands last, after the infinitive.' },
+  { lead: 'Ich parke dort,', tokens: ['weil', 'man', 'hier', 'nicht', 'parken', 'darf'],
+    orders: [['weil', 'man', 'hier', 'nicht', 'parken', 'darf']],
+    model: 'Ich parke dort, weil man hier nicht parken darf.', pattern: 'Subordinate clause',
+    why: 'nicht still hugs the infinitive; the modal moves past it to the end.' },
+  { lead: 'Der Chef hat gesagt,', tokens: ['dass', 'wir', 'pünktlich', 'sein', 'sollen'],
+    orders: [['dass', 'wir', 'pünktlich', 'sein', 'sollen']],
+    model: 'Der Chef hat gesagt, dass wir pünktlich sein sollen.', pattern: 'Subordinate clause',
+    why: 'sein sollen — even „sein“ behaves like any other infinitive here.' },
+  { lead: 'Ich bin zu Hause geblieben,', tokens: ['weil', 'ich', 'nicht', 'ausgehen', 'durfte'],
+    orders: [['weil', 'ich', 'nicht', 'ausgehen', 'durfte']],
+    model: 'Ich bin zu Hause geblieben, weil ich nicht ausgehen durfte.', pattern: 'Subordinate clause',
+    why: 'In a subordinate clause, use the Präteritum (durfte), not the Perfekt. „…, weil ich habe ausgehen dürfen“ is grammatically possible but nobody says it.' },
+  { lead: 'Ich habe gehört,', tokens: ['dass', 'man', 'hier', 'gut', 'essen', 'kann'],
+    orders: [['dass', 'man', 'hier', 'gut', 'essen', 'kann']],
+    model: 'Ich habe gehört, dass man hier gut essen kann.', pattern: 'Subordinate clause',
+    why: 'essen kann — infinitive then modal, closing the clause.' },
+
+  // ---- Passive with a modal: Partizip II + werden ----
+  { lead: '', tokens: ['das Formular', 'muss', 'ausgefüllt', 'werden'],
+    orders: [['das Formular', 'muss', 'ausgefüllt', 'werden']],
+    model: 'Das Formular muss ausgefüllt werden.', pattern: 'Passive',
+    why: 'Modal passive ends with Partizip II + werden. „werden“ is the infinitive the modal governs.' },
+  { lead: '', tokens: ['die Rechnung', 'kann', 'online', 'bezahlt', 'werden'],
+    orders: [['die Rechnung', 'kann', 'online', 'bezahlt', 'werden']],
+    model: 'Die Rechnung kann online bezahlt werden.', pattern: 'Passive',
+    why: 'bezahlt werden — never „werden bezahlt“ in a main clause.' },
+  { lead: '', tokens: ['hier', 'darf', 'nicht', 'geraucht', 'werden'],
+    orders: [['hier', 'darf', 'nicht', 'geraucht', 'werden']],
+    model: 'Hier darf nicht geraucht werden.', pattern: 'Passive',
+    why: 'A subjectless passive — the standard register for public prohibitions on signs.' },
+  { lead: '', tokens: ['der Antrag', 'soll', 'bis Freitag', 'eingereicht', 'werden'],
+    orders: [['der Antrag', 'soll', 'bis Freitag', 'eingereicht', 'werden'], ['bis Freitag', 'soll', 'der Antrag', 'eingereicht', 'werden']],
+    model: 'Der Antrag soll bis Freitag eingereicht werden.', pattern: 'Passive',
+    why: 'sollen in the passive = an instruction handed down, very common in official German.' },
+  { lead: '', tokens: ['das Paket', 'muss', 'heute', 'abgeholt', 'werden'],
+    orders: [['das Paket', 'muss', 'heute', 'abgeholt', 'werden'], ['heute', 'muss', 'das Paket', 'abgeholt', 'werden']],
+    model: 'Das Paket muss heute abgeholt werden.', pattern: 'Passive',
+    why: 'Separable abholen → Partizip II abgeholt, then werden.' },
+
+  // ---- Perfekt: double infinitive ----
+  { lead: '', tokens: ['ich', 'habe', 'gestern', 'länger', 'arbeiten', 'müssen'],
+    orders: [['ich', 'habe', 'gestern', 'länger', 'arbeiten', 'müssen'], ['gestern', 'habe', 'ich', 'länger', 'arbeiten', 'müssen']],
+    model: 'Ich habe gestern länger arbeiten müssen.', pattern: 'Perfekt',
+    why: 'Double infinitive: main verb first, modal second, both in the infinitive. Never „gemusst“ when a second verb is present.' },
+  { lead: '', tokens: ['er', 'hat', 'nicht', 'kommen', 'können'],
+    orders: [['er', 'hat', 'nicht', 'kommen', 'können']],
+    model: 'Er hat nicht kommen können.', pattern: 'Perfekt',
+    why: 'kommen können, not „gekonnt kommen“ and not „kommen gekonnt“.' },
+  { lead: '', tokens: ['das', 'habe', 'ich', 'nicht', 'gewollt'],
+    orders: [['das', 'habe', 'ich', 'nicht', 'gewollt']],
+    model: 'Das habe ich nicht gewollt.', pattern: 'Perfekt',
+    why: 'No second verb → the real participle gewollt. This is the famous line politicians use when something goes wrong.' },
+  { lead: '', tokens: ['wir', 'haben', 'früher', 'nach Hause', 'gehen', 'dürfen'],
+    orders: [['wir', 'haben', 'früher', 'nach Hause', 'gehen', 'dürfen']],
+    model: 'Wir haben früher nach Hause gehen dürfen.', pattern: 'Perfekt',
+    why: 'gehen dürfen — the double infinitive closes the sentence, modal always last.' }
+];
+
+function genOrder() {
+  return ORDER_ITEMS.map((o, i) => ({
+    id: `ord-${String(i + 1).padStart(3, '0')}`,
+    topic: 'order',
+    type: 'order',
+    q: o.lead ? `Complete: <b>${o.lead}</b> …` : `Build the sentence (${o.pattern}).`,
+    lead: o.lead || '',
+    tokens: o.tokens,
+    orders: o.orders,
+    model: o.model,
+    end: o.end || '.',
+    tag: o.pattern,
+    why: o.why
+  }));
+}
+/* ============================================================
+   Part 3: Perfekt · Präteritum in context · negation · rules ·
+           translation · beyond-the-notes extensions
+   ============================================================ */
+
+/* ---------- Perfekt: double infinitive vs. real participle ---------- */
+const PERFEKT = [
+  ['Ich habe gestern länger arbeiten ___ <i>(müssen)</i>.', 'müssen', 'A second verb (arbeiten) is present → double infinitive. „gemusst“ would be wrong here.'],
+  ['Das habe ich nicht ___ <i>(wollen)</i>.', 'gewollt', 'No second verb → the real participle gewollt.'],
+  ['Ich habe das nie ___ <i>(können)</i>.', 'gekonnt', 'No second verb → gekonnt.'],
+  ['Er hat gestern nicht kommen ___ <i>(können)</i>.', 'können', 'kommen is the second verb → double infinitive: kommen können.'],
+  ['Als Kind habe ich Spinat nicht ___ <i>(mögen)</i>.', 'gemocht', 'mögen almost always stands alone → participle gemocht.'],
+  ['Wir haben nicht länger bleiben ___ <i>(dürfen)</i>.', 'dürfen', 'bleiben dürfen — double infinitive, modal last.'],
+  ['Sie hat den Test wiederholen ___ <i>(müssen)</i>.', 'müssen', 'wiederholen müssen — double infinitive.'],
+  ['Hast du das wirklich ___ <i>(wollen)</i>?', 'gewollt', 'No second verb → gewollt.'],
+  ['Ich habe früher nach Hause gehen ___ <i>(dürfen)</i>.', 'dürfen', 'gehen dürfen — double infinitive.'],
+  ['Ihr habt das nicht wissen ___ <i>(können)</i>.', 'können', 'wissen können — double infinitive. This is the standard way to say „you couldn’t have known“.'],
+  ['Ich habe dich nicht stören ___ <i>(wollen)</i>.', 'wollen', 'stören wollen — double infinitive. Compare „Das habe ich nicht gewollt“ with no second verb.'],
+  ['Wir haben den Termin verschieben ___ <i>(müssen)</i>.', 'müssen', 'verschieben müssen — double infinitive.'],
+  ['Sie hat als Kind keine Milch ___ <i>(mögen)</i>.', 'gemocht', 'Object only, no infinitive → gemocht.'],
+  ['Er hat noch nie gut kochen ___ <i>(können)</i>.', 'können', 'kochen können — double infinitive.'],
+  ['Habt ihr gestern früher gehen ___ <i>(dürfen)</i>?', 'dürfen', 'gehen dürfen — the double infinitive survives in questions too.']
+];
+
+/* ---------- Präteritum in context ---------- */
+const PRAT_CONTEXT = [
+  ['Als Kind ___ ich nicht lange fernsehen. <i>(dürfen)</i>', 'durfte', 'Präteritum durfte — this is the normal past for modals in both speech and writing.'],
+  ['Ich ___ gestern länger arbeiten. <i>(müssen)</i>', 'musste', 'musste. „Ich habe gestern länger arbeiten müssen“ is also correct but heavier.'],
+  ['Wir ___ das Auto nicht reparieren. <i>(können)</i>', 'konnten', 'wir konnten — Präteritum drops the umlaut of können.'],
+  ['Ihr ___ als Kinder viel draußen spielen. <i>(dürfen)</i>', 'durftet', 'ihr durftet — weak ending -tet on the umlaut-free stem durf-.'],
+  ['Er ___ den Film nicht besonders. <i>(mögen)</i>', 'mochte', 'mögen → mochte: the only modal that changes g to ch in the past.'],
+  ['Gestern ___ ich einen Kaffee, aber die Bar war zu. <i>(möchten)</i>', 'wollte', 'möchten has no past of its own — use wollte.'],
+  ['Sie ___ mich anrufen, aber sie hat es vergessen. <i>(sollen)</i>', 'sollte', 'sollte = she was supposed to.'],
+  ['Wir ___ eigentlich nach Italien fahren. <i>(wollen)</i>', 'wollten', 'wollten = we intended to (and it didn’t happen).'],
+  ['Du ___ gestern zum Arzt gehen, oder? <i>(müssen)</i>', 'musstest', 'du musstest — stem muss- plus -test.'],
+  ['Ich ___ als Student nicht viel Geld ausgeben. <i>(können)</i>', 'konnte', 'ich konnte — the ich and er/sie/es forms are identical in the Präteritum.']
+];
+
+/* ---------- Negation traps: nicht müssen vs. nicht dürfen ---------- */
+const NEG_MCQ = [
+  ['Du <b>musst nicht</b> kommen.', 'You don’t have to come.',
+    ['You must not come.', 'You should not come.', 'You cannot come.'],
+    'nicht müssen removes an obligation. It never means „must not“ — that is the single most common English-speaker error with German modals.'],
+  ['Du <b>darfst nicht</b> kommen.', 'You must not come.',
+    ['You don’t have to come.', 'You might not come.', 'You don’t want to come.'],
+    'nicht dürfen = prohibition. This is the German for English „must not“.'],
+  ['Ich <b>kann nicht</b> kommen.', 'I can’t come.',
+    ['I’m not allowed to come.', 'I don’t have to come.', 'I don’t want to come.'],
+    'nicht können = no ability or no possibility. Neutral, not a prohibition.'],
+  ['Ihr <b>müsst nicht</b> bezahlen.', 'You don’t have to pay.',
+    ['You are not allowed to pay.', 'You cannot pay.', 'You should not pay.'],
+    'Again: nicht müssen cancels the obligation. It’s good news, not a ban.'],
+  ['Sie <b>dürfen</b> hier <b>nicht</b> fotografieren.', 'You are not allowed to take photos here.',
+    ['You don’t have to take photos here.', 'You are unable to take photos here.', 'You shouldn’t bother taking photos here.'],
+    'The standard museum/airport sign meaning: forbidden.'],
+  ['Er <b>darf nicht</b> Auto fahren.', 'He is not allowed to drive.',
+    ['He doesn’t have to drive.', 'He can’t drive (no skill).', 'He doesn’t like driving.'],
+    'No licence, or a ban → nicht dürfen. If he simply never learned, you would say „Er kann nicht Auto fahren.“'],
+  ['Wir <b>müssen nicht</b> früh aufstehen.', 'We don’t have to get up early.',
+    ['We must not get up early.', 'We can’t get up early.', 'We shouldn’t get up early.'],
+    'Obligation removed.'],
+  ['Du <b>sollst nicht</b> so viel arbeiten.', 'You’re not supposed to work so much.',
+    ['You are physically unable to work so much.', 'You don’t have to work at all.', 'You are legally banned from working.'],
+    'nicht sollen = someone advises or instructs against it — softer than a ban.']
+];
+
+const NEG_CHOICE = [
+  ['How do you say “You mustn’t be late”?', 'Du darfst nicht zu spät kommen.',
+    ['Du musst nicht zu spät kommen.', 'Du kannst nicht zu spät kommen.', 'Du sollst nicht zu spät kommen.'],
+    '„mustn’t“ = prohibition = nicht dürfen.'],
+  ['How do you say “You don’t need to wait”?', 'Du musst nicht warten.',
+    ['Du darfst nicht warten.', 'Du kannst nicht warten.', 'Du willst nicht warten.'],
+    '„don’t need to“ = obligation removed = nicht müssen.'],
+  ['How do you say “Nobody is allowed to park here”?', 'Hier darf niemand parken.',
+    ['Hier muss niemand parken.', 'Hier kann niemand parken.', 'Hier will niemand parken.'],
+    '„is allowed to“ = dürfen; negated it becomes the prohibition.'],
+  ['How do you say “We didn’t have to pay”?', 'Wir mussten nicht bezahlen.',
+    ['Wir durften nicht bezahlen.', 'Wir konnten nicht bezahlen.', 'Wir sollten nicht bezahlen.'],
+    'Past of nicht müssen → mussten nicht.'],
+  ['„Man darf hier nicht rauchen.“ — what does that mean?', 'Rauchen ist hier verboten.',
+    ['Rauchen ist hier nicht nötig.', 'Rauchen ist hier unmöglich.', 'Rauchen ist hier erlaubt.'],
+    'nicht dürfen = verboten.'],
+  ['„Man muss hier nicht warten.“ — what does that mean?', 'Warten ist nicht nötig.',
+    ['Warten ist verboten.', 'Warten ist unmöglich.', 'Warten ist erlaubt, aber unhöflich.'],
+    'nicht müssen = nicht nötig (not necessary).']
+];
+
+const NEG_CLOZE = [
+  ['Das Kind ___ nicht allein auf die Straße gehen. Das ist verboten.', 'darf', 'Prohibition → nicht dürfen.'],
+  ['Du ___ nicht alles essen — nimm nur, was du möchtest.', 'musst', 'Obligation removed → nicht müssen.'],
+  ['Hier ___ man nicht telefonieren. Es gilt Handyverbot.', 'darf', '„Verbot“ in the sentence is the giveaway → nicht dürfen.'],
+  ['Am Sonntag ___ ich nicht arbeiten. Ich habe frei.', 'muss', '„Ich habe frei“ = no obligation → nicht müssen.'],
+  ['Ohne Helm ___ du nicht auf die Baustelle.', 'darfst', 'Site rule → nicht dürfen. (The infinitive „gehen“ can be left out after a directional phrase.)'],
+  ['Keine Sorge, du ___ dich nicht entschuldigen.', 'musst', 'You are releasing them from an obligation → nicht müssen.']
+];
+
+/* ---------- Rule checks ---------- */
+const RULES = [
+  ['In a statement with a modal — where does the infinitive go?', 'At the end of the sentence.',
+    ['Directly after the modal.', 'In position 2.', 'Before the subject.'],
+    'The modal takes position 2 and the infinitive is pushed to the end — the Satzklammer (sentence bracket).'],
+  ['Where does the modal go in a statement?', 'In position 2.',
+    ['At the end of the sentence.', 'Always in position 1.', 'Directly before the infinitive.'],
+    'Position 2 is fixed for the finite verb in a German main clause.'],
+  ['What is the order at the end of a subordinate clause?', 'Infinitive + modal.',
+    ['Modal + infinitive.', 'The modal only.', 'Partizip II + modal.'],
+    '„…, weil ich arbeiten muss.“ The finite verb always closes a subordinate clause, so it goes after the infinitive.'],
+  ['Which modal normally appears <i>without</i> a second verb?', 'mögen',
+    ['sollen', 'dürfen', 'wollen'],
+    '„Ich mag Kaffee.“ To say you like *doing* something, German does not use a modal at all — it uses gern + verb: „Ich trinke gern Kaffee.“'],
+  ['Which past form does <b>möchten</b> borrow?', 'wollte',
+    ['möchtete', 'mochte', 'gemöchtet'],
+    'möchten has no past of its own. „mochte“ exists but is the past of mögen (liked), not of möchten.'],
+  ['What does „Du musst nicht kommen“ mean?', 'Du brauchst nicht zu kommen.',
+    ['Es ist dir verboten zu kommen.', 'Du kannst nicht kommen.', 'Du willst nicht kommen.'],
+    'nicht müssen = no obligation.'],
+  ['In the Perfekt with a second verb, the modal appears as …', 'An infinitive (the double infinitive).',
+    ['A Partizip II.', 'A Präteritum form.', 'An infinitive with zu.'],
+    '„Ich habe arbeiten müssen“ — never „gemusst“ when a second verb is there.'],
+  ['What is the Partizip II of <b>können</b> (with no second verb)?', 'gekonnt',
+    ['gekönnt', 'gekonnen', 'gekannt'],
+    'gekonnt. Note „gekannt“ belongs to kennen, a different verb entirely.'],
+  ['Modal + passive — what closes the sentence?', 'Partizip II + werden',
+    ['werden + Partizip II', 'werden alone', 'Partizip II + sein'],
+    '„Das Formular muss ausgefüllt werden.“ The modal governs the infinitive „werden“, which therefore comes last.'],
+  ['In a yes/no question with a modal, position 1 holds …', 'the modal verb.',
+    ['the subject.', 'the infinitive.', 'a question word.'],
+    '„Kannst du mir helfen?“'],
+  ['Which two <i>singular</i> persons share the same present-tense form (e.g. with müssen)?', 'ich und er/sie/es',
+    ['du und ihr', 'wir und ihr', 'ich und du'],
+    'ich muss / er muss. (wir and sie/Sie match each other too, but that is true of every German verb — the singular pair is what marks a modal.)'],
+  ['What is unusual about the ich and er/sie/es forms in the present?', 'They take no ending.',
+    ['They always carry an umlaut.', 'They end in -st.', 'They match the infinitive.'],
+    'Regular verbs give you ich mach-e / er mach-t. Modals give you ich muss / er muss.'],
+  ['What happens to the umlaut in the Präteritum?', 'It disappears: dürfen → durfte.',
+    ['It stays: dürfen → dürfte.', 'It shifts: dürfen → dörfte.', 'Only mögen loses it.'],
+    'durfte, konnte, mochte, musste. (sollen and wollen never had an umlaut.) Careful: „dürfte“ with the umlaut exists too, but that is Konjunktiv II — „that would be allowed / that’s probably the case“.'],
+  ['Which modal changes its stem consonant in the Präteritum?', 'mögen → mochte',
+    ['können → konnte', 'müssen → musste', 'dürfen → durfte'],
+    'g becomes ch. The others only drop the umlaut.'],
+  ['How is the past of a modal verb normally expressed?', 'With the Präteritum.',
+    ['With the Perfekt.', 'With the Plusquamperfekt.', 'With Konjunktiv II.'],
+    'Even in speech, Germans say „Ich musste arbeiten“ rather than „Ich habe arbeiten müssen“.'],
+  ['Which sentence is correct?', 'Ich habe arbeiten müssen.',
+    ['Ich habe arbeiten gemusst.', 'Ich habe gemusst arbeiten.', 'Ich habe müssen arbeiten.'],
+    'Double infinitive, and the modal is always the very last word.'],
+  ['Which sentence is correct?', 'Er hat nicht kommen können.',
+    ['Er hat nicht kommen gekonnt.', 'Er hat nicht gekonnt kommen.', 'Er hat nicht können kommen.'],
+    'kommen können — main verb first, modal last.'],
+  ['Which sentence is correct?', 'Das habe ich nicht gewollt.',
+    ['Das habe ich nicht wollen.', 'Das habe ich nicht gewillt.', 'Das habe ich nicht wollen gehabt.'],
+    'No second verb → real participle gewollt.'],
+  ['„Der Chef sagt, du sollst pünktlich sein.“ Where does the instruction come from?', 'From another person.',
+    ['From yourself.', 'From a law.', 'From nobody — it is only a possibility.'],
+    'sollen always points to an external source: a person, a rule, an expectation.'],
+  ['„Ich will Deutsch lernen.“ What does <b>wollen</b> express here?', 'Your own will.',
+    ['Permission.', 'An ability.', 'A polite request.'],
+    'wollen = your own intention. For a polite request use möchten.'],
+  ['Which one is the polite version?', 'Ich möchte einen Kaffee.',
+    ['Ich will einen Kaffee.', 'Ich muss einen Kaffee.', 'Ich mag einen Kaffee.'],
+    '„Ich will“ in a café sounds demanding; „Ich möchte“ is the neutral polite standard.'],
+  ['What is the ihr-form of <b>möchten</b>?', 'möchtet',
+    ['möchtest', 'möchten', 'möchte'],
+    'ihr möchtet. möchten is really the Konjunktiv II of mögen: the stem möcht- takes -e, -est, -e, -en, -et, -en, so the ihr-form is the only one ending in -t.']
+];
+
+/* ---------- Translation EN → DE ---------- */
+const TRANSLATE = [
+  ['I have to work tomorrow.', ['Ich muss morgen arbeiten.', 'Morgen muss ich arbeiten.'], '', 'müssen for necessity; infinitive at the end.'],
+  ['You don’t have to come. (du)', ['Du musst nicht kommen.', 'Du brauchst nicht zu kommen.', 'Du brauchst nicht kommen.'], '', 'nicht müssen — obligation removed.'],
+  ['You must not smoke here. (du)', ['Du darfst hier nicht rauchen.', 'Hier darfst du nicht rauchen.'], '', 'nicht dürfen for prohibition.'],
+  ['Can you help me? (du)', ['Kannst du mir helfen?', 'Kannst du mir bitte helfen?'], '', 'helfen takes the dative: mir.'],
+  ['I would like a coffee.', ['Ich möchte einen Kaffee.'], '', 'möchten with a direct object, no infinitive needed.'],
+  ['I don’t like coffee.', ['Ich mag keinen Kaffee.', 'Ich mag Kaffee nicht.', 'Kaffee mag ich nicht.'], 'negate with kein-', 'Negate a noun with kein-, not nicht.'],
+  ['He wants to learn German.', ['Er will Deutsch lernen.', 'Er möchte Deutsch lernen.'], '', 'wollen = his own intention.'],
+  ['I had to work longer yesterday.', ['Ich musste gestern länger arbeiten.', 'Gestern musste ich länger arbeiten.'], 'Präteritum', 'Präteritum musste is the normal past.'],
+  ['She is supposed to call the doctor.', ['Sie soll den Arzt anrufen.'], '', 'sollen = instruction from someone else; anrufen takes the accusative.'],
+  ['The form must be filled in.', ['Das Formular muss ausgefüllt werden.'], 'Passiv', 'Modal passive: Partizip II + werden at the end.'],
+  ['I can’t come today.', ['Ich kann heute nicht kommen.', 'Heute kann ich nicht kommen.'], '', 'nicht directly before the infinitive.'],
+  ['When do you want to come? (du)', ['Wann willst du kommen?', 'Wann möchtest du kommen?'], '', 'W-word, then modal, then subject.'],
+  ['I couldn’t sleep.', ['Ich konnte nicht schlafen.'], 'Präteritum', 'konnte — umlaut gone in the past.'],
+  ['As a child I wasn’t allowed to watch TV for long.', ['Als Kind durfte ich nicht lange fernsehen.'], '', 'durfte + the separable fernsehen kept whole as the final infinitive.'],
+  ['May I ask a question?', ['Darf ich eine Frage stellen?'], 'eine Frage stellen', 'dürfen for permission; Germans „stellen“ a question rather than „fragen“ it.'],
+  ['I didn’t want that. (Perfekt)', ['Das habe ich nicht gewollt.', 'Ich habe das nicht gewollt.'], 'Perfekt', 'No second verb → gewollt.'],
+  ['I have never been able to do that. (Perfekt)', ['Das habe ich nie gekonnt.', 'Ich habe das nie gekonnt.'], 'Perfekt', 'No second verb → gekonnt.'],
+  ['We have to get up early tomorrow.', ['Wir müssen morgen früh aufstehen.', 'Morgen müssen wir früh aufstehen.'], '', 'aufstehen stays whole at the end.'],
+  ['Shall we go to the cinema?', ['Wollen wir ins Kino gehen?', 'Sollen wir ins Kino gehen?'], '', '„Wollen wir …?“ is the idiomatic suggestion.'],
+  ['You should drink more water. (du — the doctor said so)', ['Du sollst mehr Wasser trinken.'], '', 'sollen for an instruction from an external source.'],
+  ['The bill can be paid online.', ['Die Rechnung kann online bezahlt werden.'], 'Passiv', 'Partizip II + werden closes the sentence.'],
+  ['We were not allowed to go out. (Präteritum)', ['Wir durften nicht ausgehen.'], 'ausgehen', 'durften — Präteritum of dürfen.'],
+  ['Do I have to fill in this form?', ['Muss ich dieses Formular ausfüllen?'], '', 'Yes/no question: modal first.'],
+  ['I had to work longer yesterday. (Perfekt)', ['Ich habe gestern länger arbeiten müssen.'], 'Doppelinfinitiv', 'Correct, though a German speaker would more often just say „Ich musste gestern länger arbeiten.“']
+];
+
+/* ---------- Beyond the notes: B1-level uses worth knowing ---------- */
+const EXTRA = [
+  { q: '„Du <b>solltest</b> mehr schlafen.“ What is this?', a: 'Advice — Konjunktiv II of sollen.',
+    choices: ['A prohibition.', 'A past-tense form.', 'Permission.'],
+    why: 'solltest looks like the Präteritum but here it is Konjunktiv II: friendly advice. „Du sollst mehr schlafen“ would be an order.' },
+  { q: '„Er <b>soll</b> sehr reich sein.“ — what does that mean?', a: 'People say he is rich.',
+    choices: ['He has to get rich.', 'He wants to be rich.', 'He is allowed to be rich.'],
+    why: 'sollen + sein reports hearsay: „he is said to be rich“. Common in news German.' },
+  { q: '„Er <b>muss</b> krank sein — er ist seit Tagen nicht da.“ What does müssen mean here?', a: 'A logical conclusion.',
+    choices: ['An obligation.', 'Permission.', 'A wish.'],
+    why: 'müssen can express certainty based on evidence — exactly like English „he must be ill“.' },
+  { q: '„Das <b>kann</b> nicht stimmen.“ What does können mean here?', a: 'Impossibility or likelihood.',
+    choices: ['Ability.', 'Permission.', 'Intention.'],
+    why: 'können also covers possibility, not just ability: „that can’t be right“.' },
+  { q: 'What is the most common alternative to „Du musst nicht kommen“?', a: 'Du brauchst nicht zu kommen.',
+    choices: ['Du darfst nicht kommen.', 'Du kannst nicht kommen.', 'Du sollst nicht kommen.'],
+    why: 'brauchen + nicht + zu + Infinitiv is the standard substitute for nicht müssen. In casual speech the „zu“ is often dropped.' },
+  { q: '„<b>Könnten</b> Sie mir bitte helfen?“ — why not „Können“?', a: 'Konjunktiv II sounds more polite.',
+    choices: ['It is the past tense.', 'It is a command.', '„Können Sie“ is grammatically wrong.'],
+    why: 'könnten / dürfte / möchten are the politeness gears of German. „Können Sie“ is fine but plainer.' },
+  { q: 'How does „Ich habe arbeiten müssen“ look after „weil“?', a: 'weil ich habe arbeiten müssen',
+    choices: ['weil ich arbeiten müssen habe', 'weil ich arbeiten habe müssen', 'weil ich gemusst arbeiten habe'],
+    why: 'With a double infinitive the auxiliary jumps in FRONT of it — the one case where the finite verb is not last. Most speakers dodge the whole problem: „weil ich arbeiten musste.“' },
+  { q: '„Ich <b>hätte</b> kommen <b>können</b>.“ — what does that mean?', a: 'I could have come, but I did not.',
+    choices: ['I was able to come.', 'I have to come.', 'I am allowed to come.'],
+    why: 'hätte + double infinitive = the unrealised past: „could have / should have / would have wanted to“.' },
+  { q: 'Which sentence expresses an assumption?', a: 'Sie dürfte schon zu Hause sein.',
+    choices: ['Sie darf schon zu Hause sein.', 'Sie muss nach Hause.', 'Sie will nach Hause.'],
+    why: 'dürfte (Konjunktiv II) = „she is probably home by now“. Do not confuse it with the Präteritum durfte.' },
+  { q: 'What is often left out after a modal with a direction? „Ich muss jetzt nach Hause.“', a: 'The verb of motion (gehen/fahren) can be dropped.',
+    choices: ['The modal is wrong.', 'You need „zu“.', 'The subject is missing.'],
+    why: 'With a clear direction, German drops gehen/fahren: „Ich muss nach Hause“, „Ich will ins Bett“, „Ich darf nicht raus“.' }
+];
+
+/* ---------- assembly ---------- */
+function genPerfekt() {
+  return PERFEKT.map((p, i) => ({
+    id: `perf-${String(i + 1).padStart(3, '0')}`, topic: 'perfekt', type: 'cloze',
+    q: p[0], tag: 'Perfekt', a: [p[1]], why: p[2]
+  }));
+}
+function genPratContext() {
+  return PRAT_CONTEXT.map((p, i) => ({
+    id: `pratc-${String(i + 1).padStart(3, '0')}`, topic: 'forms-prat', type: 'cloze',
+    q: p[0], tag: 'Präteritum in context', a: [p[1]], why: p[2]
+  }));
+}
+function genNegation() {
+  const out = [];
+  NEG_MCQ.forEach((n, i) => out.push({
+    id: `negm-${String(i + 1).padStart(3, '0')}`, topic: 'negation', type: 'mcq',
+    q: `What does this mean: „${n[0]}“`, tag: 'Meaning', a: [n[1]], choices: [n[1], ...n[2]], why: n[3]
+  }));
+  NEG_CHOICE.forEach((n, i) => out.push({
+    id: `negc-${String(i + 1).padStart(3, '0')}`, topic: 'negation', type: 'mcq',
+    q: n[0], tag: 'Translation', a: [n[1]], choices: [n[1], ...n[2]], why: n[3]
+  }));
+  NEG_CLOZE.forEach((n, i) => out.push({
+    id: `negz-${String(i + 1).padStart(3, '0')}`, topic: 'negation', type: 'cloze',
+    q: n[0], tag: 'musst or darfst?', a: [n[1]], why: n[2]
+  }));
+  return out;
+}
+function genRules() {
+  return RULES.map((r, i) => ({
+    id: `rule-${String(i + 1).padStart(3, '0')}`, topic: 'rules', type: 'mcq',
+    q: r[0], tag: 'Rule', a: [r[1]], choices: [r[1], ...r[2]], why: r[3]
+  }));
+}
+function genTranslate() {
+  return TRANSLATE.map((t, i) => ({
+    id: `tr-${String(i + 1).padStart(3, '0')}`, topic: 'translate', type: 'cloze',
+    q: t[0], tag: t[2] ? `EN → DE · ${t[2]}` : 'EN → DE', a: t[1], why: t[3], free: true
+  }));
+}
+function genExtra() {
+  return EXTRA.map((e, i) => ({
+    id: `ext-${String(i + 1).padStart(3, '0')}`, topic: 'extra', type: 'mcq',
+    q: e.q, tag: 'Beyond the notes', a: [e.a], choices: [e.a, ...e.choices], why: e.why
+  }));
+}
+
+/* ============================================================
+   Part 4: discrimination pairs + mixed context
+   The distinctions that actually cost marks at B1.
+   ============================================================ */
+
+const DISCRIM = [
+  ['In a restaurant: „Ich ___ bitte die Nummer 12.“ Which form is right?', 'möchte',
+    ['will', 'mag', 'soll'],
+    'möchten is the ordering formula. „Ich will“ is understood but sounds like a demand; „Ich mag die Nummer 12“ would mean you are fond of it.'],
+  ['„Ich ___ Fußball.“ (I like football in general.)', 'mag',
+    ['möchte', 'will', 'darf'],
+    'mögen for general liking. „Ich möchte Fußball“ would mean you want one, right now.'],
+  ['„Ich ___ heute Abend Fußball spielen.“ (that is my plan)', 'will',
+    ['mag', 'darf', 'soll'],
+    'wollen for your own intention with an infinitive. mögen almost never takes an infinitive.'],
+  ['Your boss has ordered it. „Ich ___ den Bericht heute abgeben.“', 'soll',
+    ['will', 'darf', 'mag'],
+    'sollen = the instruction came from outside you.'],
+  ['The law requires it. „Ich ___ eine Steuererklärung machen.“', 'muss',
+    ['soll', 'darf', 'will'],
+    'müssen for hard necessity. sollen would suggest a person told you, not the law.'],
+  ['What is the difference between „Du <b>musst</b> zum Arzt gehen“ and „Du <b>sollst</b> zum Arzt gehen“?', 'müssen = it is necessary; sollen = someone said so.',
+    ['They mean exactly the same.', 'müssen is more polite than sollen.', 'sollen is stronger than müssen.'],
+    'sollen always points at a source (a doctor, a boss, your mother). müssen points at the situation itself.'],
+  ['„___ ich das Fenster schließen?“ — you are asking for <b>permission</b>.', 'Darf',
+    ['Muss', 'Will', 'Mag'],
+    'dürfen for permission. „Soll ich das Fenster schließen?“ is also good German — but that asks whether the other person <i>wants</i> you to.'],
+  ['„___ ich das Fenster schließen?“ — you are asking whether the other person <b>wants</b> it.', 'Soll',
+    ['Darf', 'Mag', 'Kann'],
+    'soll ich …? = shall I? / do you want me to? This is the offer formula.'],
+  ['„Er ___ nicht schwimmen.“ He never learned how.', 'kann',
+    ['darf', 'muss', 'mag'],
+    'Missing ability → können. „Er darf nicht schwimmen“ would mean somebody forbade it.'],
+  ['„Er ___ nicht schwimmen.“ The doctor has forbidden it.', 'darf',
+    ['kann', 'muss', 'will'],
+    'A ban → dürfen. Same English sentence, two very different German verbs.'],
+  ['„Wir ___ das Meeting verschieben.“ There is no alternative.', 'müssen',
+    ['dürfen', 'mögen', 'sollen'],
+    'No alternative → müssen.'],
+  ['„Wir ___ das Meeting verschieben.“ The client asked for it.', 'sollen',
+    ['müssen', 'dürfen', 'können'],
+    'A request from outside → sollen.'],
+  ['Which sentence is more polite?', 'Möchten Sie einen Kaffee?',
+    ['Wollen Sie einen Kaffee?', 'Müssen Sie einen Kaffee?', 'Mögen Sie einen Kaffee?'],
+    'möchten is the default polite register. („Mögen Sie Kaffee?“ is fine German but asks whether you like coffee in general.)'],
+  ['„___ du Kaffee?“ asks whether I like coffee in general.', 'Magst',
+    ['Möchtest', 'Willst', 'Darfst'],
+    'mögen = general taste; möchten = want one now. Both translate to English „do you want/like“.'],
+  ['„Das ___ nicht wahr sein!“ (shock or outrage)', 'darf',
+    ['muss', 'mag', 'soll'],
+    '„Das darf doch nicht wahr sein!“ is a fixed idiom — roughly „you have got to be kidding me“.'],
+  ['„Ich ___ Deutsch.“ No second verb; meaning: I know German.', 'kann',
+    ['mag', 'muss', 'darf'],
+    'können can take a language directly: „Ich kann Deutsch“ = I know German.']
+];
+
+const MIXED = [
+  ['Gestern ___ ich nicht kommen, weil ich krank war. <i>(können, Präteritum)</i>', 'konnte',
+    'Präteritum konnte — no umlaut in the past.'],
+  ['Ich weiß nicht, ob ich morgen kommen ___. <i>(können, Präsens)</i>', 'kann',
+    'Subordinate clause: the finite modal goes last, after the infinitive.'],
+  ['Wir ___ die Wohnung bis Ende November räumen. <i>(müssen)</i>', 'müssen',
+    'A deadline that binds you → müssen; the wir-form is identical to the infinitive.'],
+  ['___ ich Ihnen meinen Ausweis zeigen? <i>(sollen)</i>', 'Soll',
+    'Offering to do something → soll ich …?'],
+  ['Als Student ___ ich mir kein Auto leisten. <i>(können, Präteritum)</i>', 'konnte',
+    'konnte — ich and er/sie/es share the same Präteritum form.'],
+  ['Ihr ___ hier nicht laut sein, das Baby schläft. <i>(dürfen)</i>', 'dürft',
+    'ihr dürft — permission withheld.'],
+  ['Wir haben den Zug verpasst und ___ eine Stunde warten. <i>(müssen, Präteritum)</i>', 'mussten',
+    'wir mussten — stem muss-, ending -ten.'],
+  ['Er hat gesagt, dass er uns nicht helfen ___. <i>(können, Präsens)</i>', 'kann',
+    'Nebensatz: helfen kann — infinitive then modal.'],
+  ['Das Fahrrad ___ noch heute repariert werden. <i>(müssen)</i>', 'muss',
+    'Modal passive: muss … repariert werden.'],
+  ['___ ihr am Wochenende mitkommen? <i>(wollen)</i>', 'Wollt',
+    'Yes/no question, ihr-form: wollt.'],
+  ['Sie ___ als Kind kein Gemüse. <i>(mögen, Präteritum)</i>', 'mochte',
+    'mochte — g becomes ch. Note there is no infinitive: mögen takes the object directly.'],
+  ['Ich ___ dir helfen, aber ich habe leider keine Zeit. <i>(möchten)</i>', 'möchte',
+    'möchte — a softened offer. (Do not stack it with gern; möchte already carries that.)'],
+  ['Auf dem Schild steht, dass man hier nicht parken ___. <i>(dürfen)</i>', 'darf',
+    'Nebensatz with dass: parken darf.'],
+  ['Wie lange ___ man in Deutschland warten, bis man eingebürgert wird? <i>(müssen)</i>', 'muss',
+    'man muss — man always takes the er/sie/es form.']
+];
+
+function genDiscrim() {
+  return DISCRIM.map((d, i) => ({
+    id: `disc-${String(i + 1).padStart(3, '0')}`, topic: 'meaning', type: 'mcq',
+    q: d[0], tag: 'Fine distinction', a: [d[1]], choices: [d[1], ...d[2]], why: d[3]
+  }));
+}
+function genMixed() {
+  return MIXED.map((m, i) => ({
+    id: `mix-${String(i + 1).padStart(3, '0')}`, topic: 'mixed', type: 'cloze',
+    q: m[0], tag: 'Mixed', a: [m[1]], why: m[2]
+  }));
+}
+/* ============================================================
+   Part 5: assembly + topic registry
+   ============================================================ */
+
+const BANK = [].concat(
+  genPresent(), genPrat(), genPP(), genMeaning(), genOrder(),
+  genPerfekt(), genPratContext(), genNegation(), genRules(),
+  genTranslate(), genExtra(), genDiscrim(), genMixed()
+);
+
+const TOPICS = [
+  { id: 'forms-pres', label: 'Present',     desc: 'All seven modals, all six persons' },
+  { id: 'forms-prat', label: 'Pr\u00e4teritum', desc: 'The normal past \u2014 forms and use' },
+  { id: 'meaning',    label: 'Meaning',     desc: 'Which modal does this sentence need?' },
+  { id: 'order',      label: 'Word order',  desc: 'Statement, question, Nebensatz, Passiv' },
+  { id: 'perfekt',    label: 'Perfekt',     desc: 'Double infinitive vs. real participle' },
+  { id: 'negation',   label: 'Negation',    desc: 'nicht m\u00fcssen vs. nicht d\u00fcrfen' },
+  { id: 'rules',      label: 'Rules',       desc: 'State the rule, not just the answer' },
+  { id: 'translate',  label: 'EN \u2192 DE', desc: 'Produce the sentence yourself' },
+  { id: 'mixed',      label: 'Mixed',       desc: 'Everything at once, exam style' },
+  { id: 'extra',      label: 'Extras',      desc: 'B1 uses beyond the notes' }
+];
+/* ============================================================
+   Engine: storage · scheduling · views
+   ============================================================ */
+
+const KEY = 'modalverben.v1';
+const DAY = 86400000;
+const INTERVALS = [0, 0, 1, 3, 7, 16, 35];   // days, indexed by box
+const MASTER_BOX = 5;                         // box 5+ counts as mastered
+const NEW_PER_SESSION = 15;
+
+/* ---------- storage, with an in-memory fallback ---------- */
+let persistent = true;
+let mem = null;
+const store = {
+  read() {
+    try { const r = localStorage.getItem(KEY); return r ? JSON.parse(r) : null; }
+    catch (e) { persistent = false; return mem; }
+  },
+  write(o) {
+    try { localStorage.setItem(KEY, JSON.stringify(o)); }
+    catch (e) { persistent = false; mem = o; }
+  }
+};
+
+let S = store.read() || { v: 1, items: {}, days: [], started: Date.now() };
+if (!S.items) S = { v: 1, items: {}, days: [], started: Date.now() };
+const save = () => store.write(S);
+const st = id => S.items[id] || (S.items[id] = { b: 0, due: 0, s: 0, c: 0, w: 0, l: 0, t: 0 });
+const today = () => new Date().toISOString().slice(0, 10);
+
+function markDay() {
+  const d = today();
+  if (!S.days.includes(d)) { S.days.push(d); S.days = S.days.slice(-400); save(); }
+}
+
+/* ---------- answer checking ---------- */
+const tidy = s => String(s)
+  .replace(/[„“”"'’]/g, '').replace(/\s+/g, ' ').replace(/[.!?]+$/, '').trim().toLowerCase();
+const fold = s => s.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
+function matchList(list, input) {
+  const u = tidy(input);
+  if (!u || !list) return false;
+  return list.some(ans => {
+    const a = tidy(ans);
+    return u === a || fold(u) === fold(a);
+  });
+}
+// `a` holds the answer the item is teaching; `alt` holds answers that are also
+// correct German but make a different point. Both count as right.
+function accepts(item, input) { return matchList(item.a, input) || matchList(item.alt, input); }
+function viaAlt(item, input) { return !!item.alt && !matchList(item.a, input) && matchList(item.alt, input); }
+
+/* ---------- scheduling ---------- */
+function grade(item, right, hinted) {
+  const s = st(item.id);
+  s.t = Date.now(); s.pb = s.b;
+  if (right) {
+    s.c++; s.s++;
+    if (!hinted) s.b = Math.min(INTERVALS.length - 1, s.b + 1);
+    s.due = Date.now() + INTERVALS[s.b] * DAY;
+  } else {
+    s.w++; s.s = 0; s.l++;
+    s.b = Math.max(0, s.b - 2);
+    s.due = Date.now();
+  }
+  save();
+  return s;
+}
+const isDue = i => { const s = S.items[i.id]; return s && s.t && s.due <= Date.now(); };
+const isNew = i => !S.items[i.id] || !S.items[i.id].t;
+const mastered = i => (S.items[i.id]?.b || 0) >= MASTER_BOX;
+const inProgress = i => { const b = S.items[i.id]?.b || 0; return !isNew(i) && b < MASTER_BOX; };
+
+/* ---------- session ---------- */
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+let ses = null;
+
+function startSession(mode, topic) {
+  let pool = topic ? BANK.filter(i => i.topic === topic) : BANK.slice();
+  let q;
+  if (mode === 'review') {
+    const due = shuffle(pool.filter(isDue));
+    const fresh = shuffle(pool.filter(isNew)).slice(0, NEW_PER_SESSION);
+    q = shuffle(due.concat(fresh));
+    if (!q.length) q = shuffle(pool.filter(i => !mastered(i))).slice(0, 20);
+  } else if (mode === 'topic') {
+    const un = shuffle(pool.filter(i => !mastered(i)));
+    q = un.length ? un.slice(0, 25) : shuffle(pool).slice(0, 25);
+  } else if (mode === 'weak') {
+    q = pool.filter(i => { const s = S.items[i.id]; return s && (s.l > 0 || (s.w > 0 && s.c / (s.c + s.w) < .75)); })
+      .sort((a, b) => (S.items[b.id].l - S.items[a.id].l) || (S.items[b.id].w - S.items[a.id].w))
+      .slice(0, 25);
+    if (!q.length) q = shuffle(pool.filter(i => !mastered(i))).slice(0, 15);
+  } else { // exam
+    q = shuffle(pool).slice(0, 30);
+  }
+  if (!q.length) q = shuffle(pool).slice(0, 20);
+  ses = { mode, topic, q, i: 0, done: 0, right: 0, asked: 0, log: [], state: 'ask', hinted: false, viaAlt: false, pick: null, built: null, poolOrder: null };
+  markDay();
+  renderDrill();
+}
+
+function nextItem() {
+  if (!ses || ses.i >= ses.q.length) return null;
+  return ses.q[ses.i];
+}
+function advance(right, item) {
+  ses.asked++;
+  if (right) ses.right++;
+  const s = S.items[item.id];
+  const requeue = ses.mode !== 'exam' && (!right || INTERVALS[s.b] === 0);
+  ses.q.splice(ses.i, 1);
+  if (requeue) {
+    const gap = right ? 7 : 4;
+    const at = Math.min(ses.q.length, ses.i + gap + (Math.random() * 3 | 0));
+    ses.q.splice(at, 0, item);
+  }
+  ses.state = 'ask'; ses.hinted = false; ses.viaAlt = false; ses.pick = null; ses.built = null; ses.poolOrder = null;
+  renderDrill();
+}
+
+/* ---------- rendering: drill ---------- */
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const el = id => document.getElementById(id);
+
+function renderDrill() {
+  const v = el('view-drill');
+  if (!ses) { v.innerHTML = homeHTML(); renderMeter(); return; }
+  const item = nextItem();
+  if (!item) { v.innerHTML = doneHTML(); renderMeter(); return; }
+
+  const s = st(item.id);
+  const boxLab = ['new', 'box 1', 'box 2', 'box 3', 'box 4', 'mastered', 'mastered'][s.b];
+  const topic = TOPICS.find(t => t.id === item.topic);
+  let body = '';
+
+  if (item.type === 'cloze') {
+    const q = item.q.replace('___', '<span class="blank"></span>');
+    body = `<div class="q"${item.topic === 'translate' ? '' : ' lang="de"'}>${q}</div>` +
+      (item.tag ? `<div class="hintline">${item.tag}</div>` : '') +
+      `<div class="rule" id="rule"><input class="ans" id="inp" autocomplete="off" autocapitalize="off"
+         autocorrect="off" spellcheck="false"></div>
+       <div class="row" id="entry">
+         <div class="umlaut">${['ä', 'ö', 'ü', 'ß'].map(c => `<button onclick="ins('${c}')" tabindex="-1">${c}</button>`).join('')}</div>
+         <button class="btn ghost mini" onclick="hint()" id="hintbtn">Hint</button>
+         <div class="spacer"></div>
+         <button class="btn" onclick="check()">Check</button>
+       </div>`;
+  }
+
+  if (item.type === 'mcq') {
+    if (!ses.poolOrder) ses.poolOrder = shuffle(item.choices);
+    body = `<div class="q">${item.q}</div>
+      <div class="opts">${ses.poolOrder.map((c, k) =>
+        `<button class="opt" id="opt${k}" onclick="pick(${k})">
+           <span class="k">${k + 1}</span><span>${c}</span></button>`).join('')}</div>`;
+  }
+
+  if (item.type === 'order') {
+    if (!ses.poolOrder) { ses.poolOrder = shuffle(item.tokens); ses.built = []; }
+    const used = ses.built.slice();
+    body = (item.lead ? `<div class="lead" lang="de">${item.lead}</div>` : '') +
+      `<div class="hintline" style="margin-top:0">${item.tag} — build the sentence</div>
+       <div class="rule" id="rule"><div class="built" id="built">${ses.built.map((t, k) =>
+        `<button class="chip" lang="de" onclick="unbuild(${k})">${t}</button>`).join('') ||
+        '<span style="color:#a9a294;font-family:var(--serif);font-size:20px">…</span>'}</div></div>
+       <div class="poolhint">Blocks — tap, or press a number key</div>
+       <div class="pool">${ses.poolOrder.map((t, k) => {
+          const idx = used.indexOf(t); if (idx > -1) used.splice(idx, 1);
+          const isUsed = idx > -1;
+          return `<button class="chip${isUsed ? ' used' : ''}" lang="de" onclick="build(${k})"><span class="n">${k + 1}</span>${t}</button>`;
+        }).join('')}</div>
+       <div class="row" id="entry">
+         <button class="btn ghost mini" onclick="clearBuilt()">Clear</button>
+         <div class="spacer"></div>
+         <button class="btn" onclick="check()">Check</button>
+       </div>`;
+  }
+
+  v.innerHTML = `
+    ${persistent ? '' : '<div class="warn">This browser is blocking local storage, so progress will only last for this session. Download the file and open it directly and everything will be saved.</div>'}
+    <div class="card">
+      <div class="chead">
+        <span class="tagname">${topic.label}</span>
+        <span>${ses.asked} done · ${ses.q.length} left · ${boxLab}</span>
+      </div>
+      ${body}
+      <div id="verdict"></div>
+    </div>
+    <div class="row" style="justify-content:space-between">
+      <button class="btn ghost mini" style="border-color:#2b333d;color:var(--chrome)" onclick="ses=null;renderDrill()">← Change mode</button>
+      <span style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#5c6672">
+        ${ses.asked} answered · ${ses.asked ? Math.round(ses.right / ses.asked * 100) : 0}% correct</span>
+    </div>`;
+  const inp = el('inp'); if (inp) inp.focus();
+  renderMeter();
+}
+
+/* ---------- interactions ---------- */
+function ins(c) {
+  const i = el('inp'); if (!i) return;
+  const p = i.selectionStart ?? i.value.length;
+  i.value = i.value.slice(0, p) + c + i.value.slice(i.selectionEnd ?? p);
+  i.focus(); i.setSelectionRange(p + 1, p + 1);
+}
+function hint() {
+  const item = nextItem(); if (!item || ses.state !== 'ask') return;
+  ses.hinted = true;
+  const b = el('hintbtn');
+  if (item.type === 'cloze') {
+    const a = item.a[0];
+    b.textContent = a.length > 12 ? a.split(' ').slice(0, 2).join(' ') + ' …' : a[0] + '…';
+  }
+  b.disabled = true; b.style.opacity = .6;
+}
+function pick(k) {
+  if (ses.state !== 'ask') return;
+  ses.pick = k;
+  document.querySelectorAll('.opt').forEach(o => o.classList.remove('pick'));
+  el('opt' + k).classList.add('pick');
+  check();
+}
+function build(k) {
+  if (ses.state !== 'ask') return;
+  const t = ses.poolOrder[k];
+  const item = nextItem();
+  const avail = ses.poolOrder.filter((x, j) => x === t).length;
+  if (ses.built.filter(x => x === t).length >= avail) return;
+  ses.built.push(t); renderDrill();
+}
+function unbuild(k) { if (ses.state !== 'ask') return; ses.built.splice(k, 1); renderDrill(); }
+function clearBuilt() { if (ses.state !== 'ask') return; ses.built = []; renderDrill(); }
+
+function check() {
+  const item = nextItem(); if (!item) return;
+  if (ses.state === 'shown') { advance(ses.lastRight, item); return; }
+  let right = false, given = '';
+  if (item.type === 'cloze') { given = el('inp').value; if (!given.trim()) return; right = accepts(item, given); ses.viaAlt = viaAlt(item, given); }
+  if (item.type === 'mcq') { if (ses.pick === null) return; given = ses.poolOrder[ses.pick]; right = given === item.a[0]; }
+  if (item.type === 'order') {
+    if (!ses.built.length) return;
+    given = ses.built.join(' ');
+    right = item.orders.some(o => o.length === ses.built.length && o.every((t, k) => t === ses.built[k]));
+  }
+  grade(item, right, ses.hinted);
+  if (item.type !== 'cloze') ses.viaAlt = false;
+  ses.state = 'shown'; ses.lastRight = right;
+  showVerdict(item, right, given);
+}
+
+function showVerdict(item, right, given) {
+  const rule = el('rule');
+  if (rule) rule.classList.add(right ? 'ok' : 'no');
+  const entry = document.getElementById('entry'); if (entry) entry.style.display = 'none';
+  if (item.type === 'cloze') { const i = el('inp'); i.blur(); i.readOnly = true; }
+  if (item.type === 'mcq') {
+    document.querySelectorAll('.opt').forEach((o, k) => {
+      o.disabled = true;
+      if (ses.poolOrder[k] === item.a[0]) o.classList.add('ok');
+      else if (k === ses.pick) o.classList.add('no');
+    });
+  }
+  const model = item.type === 'order' ? item.model
+    : item.type === 'mcq' ? item.a[0]
+      : (item.free ? item.a[0] : item.q.replace('___', '<b>' + item.a[0] + '</b>'));
+  if (!model) return;
+  const answers = item.a || [];
+  const alts = (answers.length > 1 && item.type !== 'mcq')
+    ? `<div class="hintline" style="margin-top:2px">Also accepted: ${answers.slice(1).join(' · ')}</div>`
+    : (item.type === 'order' && item.orders.length > 1
+      ? `<div class="hintline" style="margin-top:2px">Also correct: ${item.orders.slice(1).map(o => (item.lead ? item.lead + ' ' : '') + o.join(' ') + (item.end || '.')).join(' · ')}</div>` : '');
+  const override = (!right && (item.free || answers.length > 1))
+    ? `<button class="btn ghost mini" style="margin-top:12px" onclick="override()">That was right</button>` : '';
+  el('verdict').innerHTML = `<div class="verdict">
+      <div class="vtag ${right ? 'ok' : 'no'}">${right ? (ses.hinted ? 'Correct — but with a hint, so it does not count' : (ses.viaAlt ? 'Also correct' : 'Correct')) : 'Not yet'}</div>
+      ${ses.viaAlt && item.altWhy ? `<div class="why" style="margin-bottom:10px"><b>Your answer works too.</b> ${item.altWhy}</div>` : ''}
+      <div class="model"${item.type === 'mcq' ? '' : ' lang="de"'}>${model}</div>${alts}
+      <div class="why">${item.why}</div>${override}
+      <div class="row"><div class="spacer"></div><button class="btn" onclick="check()" id="nextbtn">Next →</button></div>
+    </div>`;
+  const nb = el('nextbtn'); if (nb) nb.focus();
+}
+function override() {
+  const item = nextItem(); const s = st(item.id);
+  s.w--; s.l--; s.c++; s.s++; s.b = Math.min(INTERVALS.length - 1, (s.pb ?? s.b) + 1);
+  s.due = Date.now() + INTERVALS[s.b] * DAY; save();
+  ses.lastRight = true; ses.right++;
+  advance(true, item);
+}
+
+/* ---------- keyboard ---------- */
+document.addEventListener('keydown', e => {
+  if (!ses || el('view-drill').classList.contains('hide')) return;
+  const item = nextItem(); if (!item) return;
+  if (e.key === 'Enter') { e.preventDefault(); check(); return; }
+  if (ses.state !== 'ask') return;
+  if (item.type === 'mcq' && /^[1-9]$/.test(e.key)) {
+    const k = +e.key - 1; if (k < ses.poolOrder.length) { e.preventDefault(); pick(k); }
+  }
+  if (item.type === 'order') {
+    if (/^[1-9]$/.test(e.key)) { const k = +e.key - 1; if (k < ses.poolOrder.length) { e.preventDefault(); build(k); } }
+    if (e.key === 'Backspace') { e.preventDefault(); ses.built.pop(); renderDrill(); }
+  }
+});
+
+/* ---------- home / mode chooser ---------- */
+let selTopic = null;
+function homeHTML() {
+  const due = BANK.filter(isDue).length;
+  const fresh = BANK.filter(isNew).length;
+  const weak = BANK.filter(i => { const s = S.items[i.id]; return s && (s.l > 0 || (s.w > 0 && s.c / (s.c + s.w) < .75)); }).length;
+  return `
+  ${persistent ? '' : '<div class="warn">This browser is blocking local storage, so progress will only last for this session. Download the file and open it directly and everything will be saved.</div>'}
+  <div class="modes">
+    <button class="mode" onclick="startSession('review')"><b>Review</b>
+      <span>${due} due · ${fresh} new. The default — come back to it daily.</span></button>
+    <button class="mode" onclick="startSession('weak')"><b>Weak spots</b>
+      <span>${weak} questions you have already tripped on.</span></button>
+    <button class="mode" onclick="startSession('exam')"><b>Mock test</b>
+      <span>30 mixed questions. No hints, no second chances.</span></button>
+  </div>
+  <div class="panel">
+    <div class="ptitle">Drill one topic</div>
+    <div class="psub">25 questions from a single area, unmastered ones first.</div>
+    <div class="chips">${TOPICS.map(t => {
+      const items = BANK.filter(i => i.topic === t.id);
+      const m = items.filter(mastered).length;
+      return `<button class="tchip" onclick="startSession('topic','${t.id}')">${t.label} <em>${m}/${items.length}</em></button>`;
+    }).join('')}</div>
+  </div>`;
+}
+function doneHTML() {
+  const pct = ses.asked ? Math.round(ses.right / ses.asked * 100) : 0;
+  const nextDue = BANK.map(i => S.items[i.id]?.due || 0).filter(d => d > Date.now()).sort((a, b) => a - b)[0];
+  const when = nextDue ? Math.max(1, Math.round((nextDue - Date.now()) / DAY)) : null;
+  return `<div class="done">
+    <h2>Round finished</h2>
+    <p>${ses.right} of ${ses.asked} correct · ${pct}%</p>
+    <small>${ses.mode === 'exam' ? 'Mock test complete.' : 'Everything from this round is scheduled.'}
+      ${when ? `Next review in ${when} ${when === 1 ? 'day' : 'days'}.` : ''}</small>
+    <button class="btn" onclick="ses=null;renderDrill()">New round</button>
+  </div>`;
+}
+
+/* ---------- meter ---------- */
+function renderMeter() {
+  const n = BANK.length;
+  const g = BANK.filter(mastered).length;
+  const p = BANK.filter(inProgress).length;
+  el('meter').innerHTML =
+    `<i style="width:${g / n * 100}%;background:var(--good)"></i>` +
+    `<i style="width:${p / n * 100}%;background:var(--signal)"></i>`;
+  el('meterlab').innerHTML =
+    `<span><b>${Math.round(g / n * 100)}%</b> mastered</span>` +
+    `<span>${g} mastered · ${p} in progress · ${n - g - p} untouched · ${n} total</span>`;
+  el('foot').textContent = `${BANK.length} questions · ${S.days.length} study day${S.days.length === 1 ? '' : 's'} · ${persistent ? 'saved in this browser' : 'this session only'}`;
+}
+
+/* ---------- tables view ---------- */
+function tableFor(kind) {
+  const verbs = VERB_ORDER.filter(k => VERBS[k][kind]);
+  return `<div class="scroll" lang="de"><table><thead><tr><th></th>${verbs.map(k => `<th>${VERBS[k].inf}</th>`).join('')}</tr></thead>
+    <tbody>${PERSONS.map((p, i) => `<tr><td class="p">${p}</td>${verbs.map(k => `<td>${VERBS[k][kind][i]}</td>`).join('')}</tr>`).join('')}
+    </tbody></table></div>`;
+}
+function renderTables() {
+  el('view-tables').innerHTML = `
+  <div class="panel">
+    <div class="ptitle">Core meaning</div>
+    <div class="psub">What each modal actually says.</div>
+    <div class="scroll"><table><thead><tr><th>Verb</th><th>Meaning</th><th>Example</th></tr></thead><tbody>
+      <tr><td>dürfen</td><td class="p">permission / prohibition</td><td class="p">Hier darf man nicht rauchen.</td></tr>
+      <tr><td>können</td><td class="p">ability, possibility</td><td class="p">Ich kann schwimmen.</td></tr>
+      <tr><td>mögen</td><td class="p">liking (no infinitive)</td><td class="p">Ich mag keinen Kaffee.</td></tr>
+      <tr><td>müssen</td><td class="p">necessity, compulsion</td><td class="p">Ich muss morgen arbeiten.</td></tr>
+      <tr><td>sollen</td><td class="p">external instruction</td><td class="p">Du sollst den Arzt anrufen.</td></tr>
+      <tr><td>wollen</td><td class="p">own will, intention</td><td class="p">Ich will Deutsch lernen.</td></tr>
+      <tr><td>möchten</td><td class="p">polite wish</td><td class="p">Ich möchte einen Kaffee.</td></tr>
+    </tbody></table></div>
+  </div>
+  <div class="panel"><div class="ptitle">Präsens</div>
+    <div class="psub">ich and er/sie/es take no ending; wir and sie/Sie equal the infinitive.</div>
+    ${tableFor('pres')}</div>
+  <div class="panel"><div class="ptitle">Präteritum</div>
+    <div class="psub">The normal past. Umlaut disappears; mögen also swaps g → ch. möchten borrows wollte.</div>
+    ${tableFor('prat')}</div>
+  <div class="panel"><div class="ptitle">Word order</div>
+    <div class="psub">Where the modal sits and where the infinitive lands.</div>
+    <div class="scroll"><table><thead><tr><th>Sentence type</th><th>Pattern</th><th>Example</th></tr></thead><tbody>
+      <tr><td>Statement</td><td class="p">modal 2nd … infinitive last</td><td class="p">Ich muss heute länger arbeiten.</td></tr>
+      <tr><td>Yes/no question</td><td class="p">modal first</td><td class="p">Kannst du mir helfen?</td></tr>
+      <tr><td>W-question</td><td class="p">W-word + modal</td><td class="p">Wann willst du kommen?</td></tr>
+      <tr><td>Subordinate clause</td><td class="p">infinitive + modal, at the end</td><td class="p">…, weil ich arbeiten muss.</td></tr>
+      <tr><td>Passive</td><td class="p">modal 2nd … Partizip II + werden</td><td class="p">Das Formular muss ausgefüllt werden.</td></tr>
+    </tbody></table></div>
+  </div>
+  <div class="panel"><div class="ptitle">Perfekt</div>
+    <div class="psub">Two shapes, and the choice depends only on whether a second verb is present.</div>
+    <div class="note">
+      <b>With a second verb → double infinitive.</b> The modal appears as an infinitive, never as a participle:
+      <code>Ich habe gestern länger arbeiten müssen.</code><br><br>
+      <b>Without a second verb → the real participle:</b>
+      <code>${VERB_ORDER.filter(k => VERBS[k].pp).map(k => VERBS[k].pp).join(' · ')}</code> —
+      <code>Das habe ich nicht gewollt.</code><br><br>
+      <b>In a subordinate clause</b> native speakers reach for the Präteritum: <code>…, weil ich arbeiten musste.</code>
+    </div>
+  </div>
+  <div class="panel"><div class="ptitle">Negation — the classic trap</div>
+    <div class="psub">The one distinction that changes the meaning completely.</div>
+    <div class="scroll"><table><thead><tr><th>German</th><th>Meaning</th><th>Watch out</th></tr></thead><tbody>
+      <tr><td>Du musst nicht kommen.</td><td class="p">You don't have to come.</td><td style="color:var(--signal)">NOT “must not”</td></tr>
+      <tr><td>Du darfst nicht kommen.</td><td class="p">You must not come.</td><td style="color:var(--signal)">prohibition</td></tr>
+      <tr><td>Ich kann nicht kommen.</td><td class="p">I can't come.</td><td class="p">neutral</td></tr>
+    </tbody></table></div>
+  </div>`;
+}
+
+/* ---------- stats view ---------- */
+function renderStats() {
+  const n = BANK.length;
+  const g = BANK.filter(mastered).length;
+  const p = BANK.filter(inProgress).length;
+  const answered = Object.values(S.items).reduce((a, s) => a + s.c + s.w, 0);
+  const rightN = Object.values(S.items).reduce((a, s) => a + s.c, 0);
+  const acc = answered ? Math.round(rightN / answered * 100) : 0;
+  const dueNow = BANK.filter(isDue).length;
+
+  const rows = TOPICS.map(t => {
+    const items = BANK.filter(i => i.topic === t.id);
+    const m = items.filter(mastered).length, ip = items.filter(inProgress).length;
+    return `<div class="trow"><div class="tname">${t.label}</div>
+      <div class="tbar"><i style="width:${m / items.length * 100}%;background:var(--good)"></i>
+        <i style="width:${ip / items.length * 100}%;background:var(--signal)"></i></div>
+      <div class="tnum">${m}/${items.length}</div></div>`;
+  }).join('');
+
+  const boxes = [0, 1, 2, 3, 4, 5, 6].map(b => BANK.filter(i => (S.items[i.id]?.b || 0) === b && !isNew(i)).length);
+  const maxB = Math.max(1, ...boxes);
+
+  const worst = BANK.map(i => ({ i, s: S.items[i.id] })).filter(x => x.s && x.s.w > 0)
+    .sort((a, b) => b.s.w - a.s.w).slice(0, 8);
+
+  el('view-stats').innerHTML = `
+  <div class="grid" style="margin-bottom:16px">
+    <div class="stat"><b>${Math.round(g / n * 100)}%</b><span>mastered</span></div>
+    <div class="stat"><b>${acc}%</b><span>accuracy</span></div>
+    <div class="stat"><b>${answered}</b><span>answers</span></div>
+    <div class="stat"><b>${S.days.length}</b><span>study days</span></div>
+    <div class="stat"><b>${dueNow}</b><span>due now</span></div>
+  </div>
+  <div class="panel">
+    <div class="ptitle">By topic</div>
+    <div class="psub">Green = mastered (box 5 and up). Amber = in progress.</div>
+    ${rows}
+    <div class="legend"><span><i style="background:var(--good)"></i>mastered</span>
+      <span><i style="background:var(--signal)"></i>in progress</span>
+      <span><i style="background:#2b333d"></i>untouched</span></div>
+  </div>
+  <div class="panel">
+    <div class="ptitle">Leitner boxes</div>
+    <div class="psub">A question moves up one box for every correct answer. Gaps: now · now · 1 · 3 · 7 · 16 · 35 days. From box 5 it counts as mastered.</div>
+    <div class="scroll"><table><thead><tr>${boxes.map((_, b) => `<th>Box ${b}</th>`).join('')}</tr></thead>
+      <tbody><tr>${boxes.map(v => `<td>${v}</td>`).join('')}</tr>
+      <tr>${boxes.map(v => `<td><span style="display:inline-block;height:6px;border-radius:2px;background:var(--signal);width:${v / maxB * 46 + 2}px"></span></td>`).join('')}</tr>
+      </tbody></table></div>
+  </div>
+  ${worst.length ? `<div class="panel"><div class="ptitle">Most-missed questions</div>
+    <div class="psub">The ones that have cost you the most.</div>
+    <div class="scroll"><table><thead><tr><th>Question</th><th>Answer</th><th>Missed</th></tr></thead><tbody>
+    ${worst.map(x => `<tr><td class="p" style="white-space:normal;max-width:340px">${x.i.q.replace(/<[^>]+>/g, '').slice(0, 78)}</td>
+      <td>${(x.i.type === 'order' ? x.i.model : x.i.a[0]).slice(0, 40)}</td><td>${x.s.w}×</td></tr>`).join('')}
+    </tbody></table></div></div>` : ''}
+  <div class="panel">
+    <div class="ptitle">Back up progress</div>
+    <div class="psub">${persistent ? 'Everything lives in this browser\u2019s localStorage.' : 'Storage is blocked here \u2014 download the file and open it directly.'}</div>
+    <div class="row" style="margin:0">
+      <button class="btn ghost mini" style="border-color:#2b333d;color:var(--chrome)" onclick="exportJSON()">Export</button>
+      <button class="btn ghost mini" style="border-color:#2b333d;color:var(--chrome)" onclick="el('imp').click()">Import</button>
+      <input type="file" id="imp" accept="application/json" class="hide" onchange="importJSON(this)">
+      <div class="spacer"></div>
+      <button class="btn ghost mini" style="border-color:#4a2b28;color:#b0453c" onclick="reset()">Reset</button>
+    </div>
+  </div>`;
+}
+
+function exportJSON() {
+  const b = new Blob([JSON.stringify(S)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(b); a.download = 'modal-verbs-progress.json'; a.click();
+}
+function importJSON(inp) {
+  const f = inp.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try { const o = JSON.parse(r.result); if (o && o.items) { S = o; save(); go('stats'); renderMeter(); } }
+    catch (e) { alert('That file could not be read.'); }
+  };
+  r.readAsText(f);
+}
+function reset() {
+  if (!confirm('This deletes all progress. Continue?')) return;
+  S = { v: 1, items: {}, days: [], started: Date.now() }; save(); ses = null;
+  renderStats(); renderMeter(); renderDrill();
+}
+
+/* ---------- nav ---------- */
+function go(v) {
+  ['drill', 'tables', 'stats'].forEach(x => {
+    el('view-' + x).classList.toggle('hide', x !== v);
+    el('tab-' + x).setAttribute('aria-selected', String(x === v));
+  });
+  if (v === 'tables') renderTables();
+  if (v === 'stats') renderStats();
+}
+
+renderDrill();
+renderMeter();
+
+</script>
+</body>
+</html>
