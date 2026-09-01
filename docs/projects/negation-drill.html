@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Verneinung — nicht, kein und der Rest</title>
+<style>
+:root{
+  --paper:#EDEBE3; --card:#F8F7F2; --card-2:#E7E5DB;
+  --ink:#1C1F1A; --ink-2:#5E635A; --ink-3:#8B9083;
+  --rule:#D2D1C6; --rule-2:#BFBDB0;
+  --neg:#B3261E; --neg-soft:#F6E3E0;
+  --yes:#2C6A48; --yes-soft:#E0EDE4;
+  --focus:#2B4A8B;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,"Times New Roman",serif;
+  --sans:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#15171A; --card:#1D2024; --card-2:#262A2F;
+    --ink:#E9E7DF; --ink-2:#A8ADA3; --ink-3:#767C72;
+    --rule:#333840; --rule-2:#454B54;
+    --neg:#E8776A; --neg-soft:#33211F;
+    --yes:#7CC79B; --yes-soft:#1B2A22;
+    --focus:#7EA2E8;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.5;
+  -webkit-text-size-adjust:100%;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:2px}
+
+/* ---------- top rail ---------- */
+.rail{
+  position:sticky;top:0;z-index:10;
+  background:var(--paper);border-bottom:1px solid var(--rule);
+}
+.rail-in{max-width:720px;margin:0 auto;padding:10px 20px 8px}
+.rail-top{display:flex;align-items:baseline;gap:12px}
+.wordmark{font-family:var(--serif);font-size:17px;letter-spacing:.01em}
+.wordmark b{color:var(--neg);font-weight:600}
+.rail-spacer{flex:1}
+.navbtn{
+  font-size:13px;color:var(--ink-2);padding:3px 8px;border-radius:3px;
+}
+.navbtn:hover{color:var(--ink);background:var(--card-2)}
+.navbtn[aria-current="true"]{color:var(--ink);box-shadow:inset 0 -2px 0 var(--neg)}
+.meter{margin-top:8px;height:5px;background:var(--card-2);border-radius:3px;overflow:hidden;display:flex}
+.meter i{display:block;height:100%}
+.meter .m5{background:var(--yes)}
+.meter .m3{background:var(--ink-3)}
+.meter .m1{background:var(--rule-2)}
+.railstat{margin-top:5px;font-size:11.5px;color:var(--ink-3);display:flex;gap:14px;flex-wrap:wrap}
+.railstat b{color:var(--ink-2);font-weight:600}
+
+/* ---------- shell ---------- */
+main{max-width:720px;margin:0 auto;padding:22px 20px 64px}
+.card{
+  background:var(--card);border:1px solid var(--rule);border-radius:4px;
+  padding:22px 22px 20px;
+}
+.eyebrow{
+  font-size:12px;color:var(--ink-3);display:flex;gap:8px;align-items:center;
+  margin-bottom:14px;
+}
+.eyebrow .dot{width:4px;height:4px;border-radius:50%;background:var(--rule-2)}
+.qtext{font-size:14px;color:var(--ink-2);margin:0 0 12px}
+.prompt{
+  font-family:var(--serif);font-size:clamp(1.25rem,4.4vw,1.7rem);line-height:1.35;
+  margin:0 0 4px;
+}
+.hintline{font-size:13px;color:var(--ink-3);margin:8px 0 0;font-style:italic}
+.hintbtn{font-size:12.5px;color:var(--ink-3);text-decoration:underline;text-underline-offset:3px;padding:0}
+.hintbtn:hover{color:var(--ink-2)}
+
+/* ---------- multiple choice ---------- */
+.opts{display:flex;flex-direction:column;gap:7px;margin-top:20px}
+.opt{
+  display:flex;gap:11px;align-items:flex-start;text-align:left;
+  padding:11px 13px;border:1px solid var(--rule);border-radius:3px;
+  background:var(--paper);line-height:1.45;
+}
+.opt:hover:not(:disabled){border-color:var(--rule-2)}
+.opt:disabled{cursor:default}
+.opt .key{
+  flex:none;font-size:11px;color:var(--ink-3);border:1px solid var(--rule);
+  border-radius:2px;min-width:18px;height:18px;display:grid;place-items:center;margin-top:2px;
+}
+.opt.is-right{border-color:var(--yes);background:var(--yes-soft)}
+.opt.is-right .key{border-color:var(--yes);color:var(--yes)}
+.opt.is-wrong{border-color:var(--neg);background:var(--neg-soft)}
+.opt.is-wrong .key{border-color:var(--neg);color:var(--neg)}
+.opt.is-dim{opacity:.5}
+
+/* ---------- slot / caret insertion ---------- */
+.sent{
+  font-family:var(--serif);font-size:clamp(1.2rem,4.2vw,1.6rem);line-height:2.2;
+  margin-top:18px;
+}
+.tok{white-space:nowrap}
+.caret{
+  position:relative;width:24px;height:22px;vertical-align:-4px;
+  display:inline-grid;place-items:center;border-radius:3px;
+}
+.caret svg{width:14px;height:9px;overflow:visible}
+.caret svg path{
+  fill:none;stroke:var(--rule-2);stroke-width:1.6;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.caret:hover:not(:disabled) svg path{stroke:var(--neg);stroke-width:2}
+.caret:disabled{cursor:default}
+.caret .num{
+  position:absolute;bottom:-1px;font-size:9px;color:var(--ink-3);opacity:0;
+}
+.sent:hover .caret .num,.caret:focus-visible .num{opacity:1}
+.caret.picked svg path{stroke:var(--neg);stroke-width:2}
+.inserted{
+  color:var(--neg);font-style:italic;padding:0 2px;
+  animation:drop .22s ease-out;
+}
+.inserted.ghost{color:var(--ink-3);text-decoration:line-through}
+@keyframes drop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@media (pointer:coarse){ .caret{width:34px;height:30px} .caret svg{width:16px;height:10px} }
+@media (prefers-reduced-motion:reduce){.inserted{animation:none}}
+
+/* ---------- typed ---------- */
+.typed{margin-top:20px;display:flex;gap:8px;flex-wrap:wrap}
+.typed input{
+  flex:1;min-width:200px;font-family:var(--serif);font-size:1.05rem;
+  padding:10px 12px;border:1px solid var(--rule-2);border-radius:3px;
+  background:var(--paper);color:var(--ink);
+}
+.typed input:focus{outline:2px solid var(--focus);outline-offset:-1px;border-color:transparent}
+.btn{
+  padding:10px 18px;border-radius:3px;border:1px solid var(--ink);
+  background:var(--ink);color:var(--paper);font-size:14px;
+}
+.btn:hover{opacity:.88}
+.btn.ghost{background:none;color:var(--ink);border-color:var(--rule-2)}
+.btn.ghost:hover{background:var(--card-2);opacity:1}
+
+/* ---------- feedback ---------- */
+.fb{margin-top:20px;border-top:1px solid var(--rule);padding-top:16px}
+.verdict{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+.verdict.ok{color:var(--yes)}
+.verdict.no{color:var(--neg)}
+.solution{
+  font-family:var(--serif);font-size:1.1rem;margin:10px 0 0;
+}
+.solution em{color:var(--neg);font-style:italic}
+.explain{font-size:14.5px;color:var(--ink-2);margin:10px 0 0;line-height:1.55}
+.explain b{color:var(--ink);font-weight:600}
+.near{
+  margin:10px 0;padding:10px 12px;border-left:3px solid var(--rule-2);
+  background:var(--card-2);font-size:.94rem;line-height:1.55;color:var(--ink-2);
+}
+.rulechip{
+  display:inline-block;margin-top:12px;font-size:11.5px;color:var(--ink-2);
+  border:1px solid var(--rule);border-radius:2px;padding:2px 7px;background:var(--paper);
+}
+.fbnav{margin-top:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.kbd{font-size:11.5px;color:var(--ink-3)}
+.kbd kbd{
+  font-family:var(--sans);border:1px solid var(--rule);border-radius:2px;
+  padding:1px 4px;font-size:10.5px;background:var(--paper)
+}
+
+/* ---------- menu / start ---------- */
+.lede{font-family:var(--serif);font-size:clamp(1.5rem,5vw,2.1rem);line-height:1.25;margin:0 0 10px}
+.sub{color:var(--ink-2);font-size:15px;margin:0 0 26px;max-width:56ch}
+.modes{display:grid;gap:9px}
+.mode{
+  display:flex;gap:14px;align-items:baseline;text-align:left;width:100%;
+  border:1px solid var(--rule);border-radius:4px;padding:14px 16px;background:var(--card);
+}
+.mode:hover{border-color:var(--rule-2)}
+.mode:disabled{opacity:.45;cursor:default}
+.mode h3{margin:0;font-size:15px;font-weight:600}
+.mode p{margin:3px 0 0;font-size:13px;color:var(--ink-2)}
+.mode .count{margin-left:auto;font-size:12px;color:var(--ink-3);flex:none}
+.seg{display:flex;gap:6px;margin:22px 0 0;flex-wrap:wrap;align-items:center}
+.seg span{font-size:12.5px;color:var(--ink-3);margin-right:2px}
+.segbtn{font-size:12.5px;padding:4px 10px;border:1px solid var(--rule);border-radius:3px;color:var(--ink-2)}
+.segbtn[aria-pressed="true"]{border-color:var(--ink);color:var(--ink);background:var(--card)}
+
+/* ---------- progress ---------- */
+.trow{
+  display:grid;grid-template-columns:1fr minmax(90px,140px) 46px;gap:12px;align-items:center;
+  padding:11px 0;border-bottom:1px solid var(--rule);
+}
+.trow:last-child{border-bottom:none}
+.tname{font-size:14px}
+.tname small{display:block;color:var(--ink-3);font-size:11.5px;margin-top:1px}
+.bar{height:6px;background:var(--card-2);border-radius:3px;overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.tpct{font-size:12.5px;color:var(--ink-2);text-align:right;font-variant-numeric:tabular-nums}
+.statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:14px;margin:0 0 24px}
+.stat b{display:block;font-family:var(--serif);font-size:1.6rem;line-height:1.1}
+.stat span{font-size:12px;color:var(--ink-3)}
+h2.sec{font-size:13px;font-weight:600;color:var(--ink-2);margin:28px 0 6px}
+.note{font-size:13px;color:var(--ink-3);line-height:1.6;margin:10px 0 0}
+.btn.danger{color:var(--neg);border-color:var(--neg)}
+.btn.danger:hover{background:var(--neg-soft)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.tools .btn{font-size:13px;padding:7px 13px}
+
+/* ---------- summary ---------- */
+.tally{display:flex;gap:4px;flex-wrap:wrap;margin:16px 0 0}
+.tally i{width:11px;height:11px;border-radius:2px;background:var(--yes)}
+.tally i.no{background:var(--neg)}
+.misslist{margin:18px 0 0;border-top:1px solid var(--rule)}
+.miss{padding:12px 0;border-bottom:1px solid var(--rule);font-size:14px}
+.miss .p{font-family:var(--serif);font-size:1rem}
+.miss .a{color:var(--ink-2);font-size:13px;margin-top:3px}
+.miss .a em{color:var(--neg);font-style:normal}
+footer{max-width:720px;margin:0 auto;padding:0 20px 40px;font-size:12px;color:var(--ink-3)}
+.hidden{display:none !important}
+</style>
+</head>
+<body>
+
+<div class="rail">
+  <div class="rail-in">
+    <div class="rail-top">
+      <span class="wordmark">Verneinung: <b>nicht</b> · <b>kein</b></span>
+      <span class="rail-spacer"></span>
+      <button class="navbtn" id="nav-home">Start</button>
+      <button class="navbtn" id="nav-prog">Fortschritt</button>
+    </div>
+    <div class="meter" id="meter" title="Beherrscht / im Aufbau / neu">
+      <i class="m5" style="width:0"></i><i class="m3" style="width:0"></i><i class="m1" style="width:0"></i>
+    </div>
+    <div class="railstat" id="railstat"></div>
+  </div>
+</div>
+
+<main>
+  <section id="view-home"></section>
+  <section id="view-drill" class="hidden"></section>
+  <section id="view-prog" class="hidden"></section>
+  <section id="view-sum" class="hidden"></section>
+</main>
+
+<footer id="foot"></footer>
+
+<script>
+"use strict";
+const BANK = [{"id":"kn-001","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich habe ein Auto.","options":["Ich habe kein Auto.","Ich habe nicht ein Auto.","Ich habe ein Auto nicht.","Ich habe nicht das Auto."],"answer":"Ich habe kein Auto.","explain":"Unbestimmter Artikel <i>ein</i> → <b>kein</b>. Neutrum Akkusativ: <i>kein Auto</i>.","rule":"ein → kein"},{"id":"kn-002","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich habe einen Bruder.","options":["Ich habe keinen Bruder.","Ich habe kein Bruder.","Ich habe einen Bruder nicht.","Ich habe nicht einen Bruder."],"answer":"Ich habe keinen Bruder.","explain":"<i>einen</i> → <b>keinen</b>. Die Endung von <i>kein</i> ist genau die von <i>ein</i>.","rule":"ein → kein"},{"id":"kn-003","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Das ist eine gute Idee.","options":["Das ist keine gute Idee.","Das ist nicht eine gute Idee.","Das ist eine gute Idee nicht.","Das ist kein gute Idee."],"answer":"Das ist keine gute Idee.","explain":"<i>eine</i> → <b>keine</b>. Das Adjektiv behält die schwache Endung: <i>keine gut<u>e</u> Idee</i>.","rule":"ein → kein"},{"id":"kn-004","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Wir haben Zeit.","options":["Wir haben keine Zeit.","Wir haben nicht Zeit.","Wir haben Zeit nicht.","Wir haben kein Zeit."],"answer":"Wir haben keine Zeit.","explain":"Nullartikel bei einem abstrakten Nomen → <b>kein</b>. <i>die Zeit</i>, Akkusativ → <i>keine</i>.","rule":"Nullartikel → kein"},{"id":"kn-005","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich kenne den Mann.","options":["Ich kenne den Mann nicht.","Ich kenne keinen Mann.","Ich kenne nicht den Mann.","Ich kenne den Mann kein."],"answer":"Ich kenne den Mann nicht.","explain":"Bestimmter Artikel <i>den</i> → <b>nicht</b>, und <i>nicht</i> steht hinter dem definiten Objekt.","rule":"definit → nicht"},{"id":"kn-006","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich finde meinen Schlüssel.","options":["Ich finde meinen Schlüssel nicht.","Ich finde keinen Schlüssel.","Ich finde nicht meinen Schlüssel.","Ich finde meinen Schlüssel kein."],"answer":"Ich finde meinen Schlüssel nicht.","explain":"Possessivartikel <i>mein-</i> ist ein bestimmter Begleiter → <b>nicht</b>, nachgestellt.","rule":"definit → nicht"},{"id":"kn-007","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich nehme diesen Zug.","options":["Ich nehme diesen Zug nicht.","Ich nehme keinen Zug.","Ich nehme nicht diesen Zug.","Ich nehme diesen Zug kein."],"answer":"Ich nehme diesen Zug nicht.","explain":"<i>dies-</i> ist ein Demonstrativartikel, also bestimmt → <b>nicht</b> hinter dem Objekt.","rule":"definit → nicht"},{"id":"kn-008","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich kenne Berlin.","options":["Ich kenne Berlin nicht.","Ich kenne kein Berlin.","Ich kenne nicht Berlin.","Ich kenne Berlin kein."],"answer":"Ich kenne Berlin nicht.","explain":"Eigennamen werden immer mit <b>nicht</b> verneint.","rule":"Name/Pronomen → nicht"},{"id":"kn-009","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich sehe ihn.","options":["Ich sehe ihn nicht.","Ich sehe keinen.","Ich sehe nicht ihn.","Ich sehe ihn kein."],"answer":"Ich sehe ihn nicht.","explain":"Pronomen werden mit <b>nicht</b> verneint, und <i>nicht</i> steht dahinter.","rule":"Name/Pronomen → nicht"},{"id":"kn-010","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Er ist Ingenieur.","options":["Er ist kein Ingenieur.","Er ist nicht Ingenieur.","Er ist Ingenieur nicht.","Er ist nicht ein Ingenieur."],"answer":"Er ist kein Ingenieur.","explain":"Berufe stehen ohne Artikel → <b>kein</b>. <i>nicht</i> nur im Kontrast: <i>nicht Ingenieur, sondern Architekt</i>.","rule":"Beruf → kein"},{"id":"kn-011","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Sie ist Deutsche.","options":["Sie ist keine Deutsche.","Sie ist nicht Deutsche.","Sie ist Deutsche nicht.","Sie ist kein Deutsche."],"answer":"Sie ist keine Deutsche.","explain":"Nationalität ohne Artikel → <b>kein</b>; feminin Nominativ → <i>keine</i>.","rule":"Nationalität → kein"},{"id":"kn-012","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Er ist Muslim.","options":["Er ist kein Muslim.","Er ist nicht Muslim.","Er ist Muslim nicht.","Er ist nicht ein Muslim."],"answer":"Er ist kein Muslim.","explain":"Religionszugehörigkeit ohne Artikel → <b>kein</b>.","rule":"Religion → kein"},{"id":"kn-013","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich spiele Klavier.","options":["Ich spiele nicht Klavier.","Ich spiele kein Klavier.","Ich spiele Klavier nicht.","Ich spiele keinen Klavier."],"answer":"Ich spiele nicht Klavier.","explain":"Feste Verb-Nomen-Verbindung (<i>Klavier spielen</i>) — die Ausnahme zur Nullartikel-Regel: hier <b>nicht</b>.","rule":"Feste Wendung → nicht"},{"id":"kn-014","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich fahre Auto.","options":["Ich fahre nicht Auto.","Ich fahre kein Auto.","Ich fahre Auto nicht.","Ich fahre keinen Auto."],"answer":"Ich fahre nicht Auto.","explain":"<i>Auto fahren</i> ist eine feste Wendung → <b>nicht</b>. Vergleiche: <i>Ich habe kein Auto</i> (echtes Objekt).","rule":"Feste Wendung → nicht"},{"id":"kn-015","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich spreche Deutsch.","options":["Ich spreche kein Deutsch.","Ich spreche nicht Deutsch.","Ich spreche Deutsch nicht.","Ich spreche keinen Deutsch."],"answer":"Ich spreche kein Deutsch.","explain":"Sprachen sind die Gegenausnahme: <i>eine Sprache sprechen</i> nimmt <b>kein</b>.","rule":"Sprache → kein"},{"id":"kn-016","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich trinke Kaffee.","options":["Ich trinke keinen Kaffee.","Ich trinke kein Kaffee.","Ich trinke nicht Kaffee.","Ich trinke Kaffee nicht."],"answer":"Ich trinke keinen Kaffee.","explain":"Stoffname ohne Artikel → <b>kein</b>. <i>der Kaffee</i>, Akkusativ → <i>keinen</i>.","rule":"Stoffname → kein"},{"id":"kn-017","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Wir haben Milch.","options":["Wir haben keine Milch.","Wir haben nicht Milch.","Wir haben kein Milch.","Wir haben Milch nicht."],"answer":"Wir haben keine Milch.","explain":"<i>die Milch</i>, Akkusativ → <b>keine</b>.","rule":"Stoffname → kein"},{"id":"kn-018","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich habe Hunger.","options":["Ich habe keinen Hunger.","Ich habe keine Hunger.","Ich habe nicht Hunger.","Ich habe Hunger nicht."],"answer":"Ich habe keinen Hunger.","explain":"<i>der Hunger</i>, Akkusativ → <b>keinen</b>.","rule":"Abstraktum → kein"},{"id":"kn-019","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich habe Angst.","options":["Ich habe keine Angst.","Ich habe nicht Angst.","Ich habe kein Angst.","Ich habe Angst nicht."],"answer":"Ich habe keine Angst.","explain":"<i>die Angst</i>, Akkusativ → <b>keine</b>.","rule":"Abstraktum → kein"},{"id":"kn-020","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich habe Lust.","options":["Ich habe keine Lust.","Ich habe nicht Lust.","Ich habe kein Lust.","Ich habe Lust nicht."],"answer":"Ich habe keine Lust.","explain":"<i>die Lust</i>, Akkusativ → <b>keine</b>.","rule":"Abstraktum → kein"},{"id":"kn-021","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich habe Ahnung.","options":["Ich habe keine Ahnung.","Ich habe nicht Ahnung.","Ich habe kein Ahnung.","Ich habe Ahnung nicht."],"answer":"Ich habe keine Ahnung.","explain":"<i>die Ahnung</i>, Akkusativ → <b>keine</b>.","rule":"Abstraktum → kein"},{"id":"kn-022","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Sie hat Kinder.","options":["Sie hat keine Kinder.","Sie hat nicht Kinder.","Sie hat kein Kinder.","Sie hat Kinder nicht."],"answer":"Sie hat keine Kinder.","explain":"Plural ohne Artikel → <b>keine</b>. Ein Plural nimmt nie <i>nicht</i> als Nomen-Verneinung.","rule":"Plural → kein"},{"id":"kn-023","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Das Zimmer ist groß.","options":["Das Zimmer ist nicht groß.","Das Zimmer ist kein groß.","Das Zimmer ist groß nicht.","Das ist kein großes Zimmer."],"answer":"Das Zimmer ist nicht groß.","explain":"Verneint wird ein Adjektiv, kein Nomen → immer <b>nicht</b>, direkt davor.","rule":"Adjektiv → nicht"},{"id":"kn-024","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich mag den Film.","options":["Ich mag den Film nicht.","Ich mag keinen Film.","Ich mag nicht den Film.","Ich mag den Film kein."],"answer":"Ich mag den Film nicht.","explain":"Definites Objekt → <b>nicht</b>, und zwar dahinter.","rule":"definit → nicht"},{"id":"kn-025","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Er wohnt in Hamburg.","options":["Er wohnt nicht in Hamburg.","Er wohnt in Hamburg nicht.","Er wohnt kein in Hamburg.","Er wohnt in kein Hamburg."],"answer":"Er wohnt nicht in Hamburg.","explain":"<i>wohnen</i> verlangt eine Ortsangabe — sie ist Ergänzung, also steht <b>nicht</b> davor.","rule":"Ortsergänzung → nicht davor"},{"id":"kn-026","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich arbeite heute.","options":["Ich arbeite heute nicht.","Ich arbeite nicht heute.","Ich arbeite kein heute.","Heute arbeite ich kein."],"answer":"Ich arbeite heute nicht.","explain":"Bestimmte Zeitangaben stehen <u>vor</u> <b>nicht</b>. <i>Ich arbeite nicht heute</i> wäre Teilverneinung („nicht heute, sondern morgen“).","rule":"Zeitangabe vor nicht"},{"id":"kn-027","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Das ist mein Buch.","options":["Das ist nicht mein Buch.","Das ist kein mein Buch.","Das ist mein Buch nicht.","Das ist meins nicht."],"answer":"Das ist nicht mein Buch.","explain":"Possessivartikel → <b>nicht</b>. Bei einem Prädikatsnomen steht <i>nicht</i> davor.","rule":"definit → nicht"},{"id":"kn-028","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich brauche einen Stift.","options":["Ich brauche keinen Stift.","Ich brauche nicht einen Stift.","Ich brauche einen Stift nicht.","Ich brauche kein Stift."],"answer":"Ich brauche keinen Stift.","explain":"<i>einen</i> → <b>keinen</b>.","rule":"ein → kein"},{"id":"kn-029","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Er hat eine Schwester.","options":["Er hat keine Schwester.","Er hat nicht eine Schwester.","Er hat eine Schwester nicht.","Er hat kein Schwester."],"answer":"Er hat keine Schwester.","explain":"<i>eine</i> → <b>keine</b>.","rule":"ein → kein"},{"id":"kn-030","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich esse Fleisch.","options":["Ich esse kein Fleisch.","Ich esse nicht Fleisch.","Ich esse keinen Fleisch.","Ich esse Fleisch nicht."],"answer":"Ich esse kein Fleisch.","explain":"Stoffname, <i>das Fleisch</i>, Akkusativ → <b>kein</b>.","rule":"Stoffname → kein"},{"id":"kn-031","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Wir haben einen Termin.","options":["Wir haben keinen Termin.","Wir haben kein Termin.","Wir haben nicht einen Termin.","Wir haben einen Termin nicht."],"answer":"Wir haben keinen Termin.","explain":"<i>einen</i> → <b>keinen</b>.","rule":"ein → kein"},{"id":"kn-032","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Sie trägt eine Brille.","options":["Sie trägt keine Brille.","Sie trägt nicht eine Brille.","Sie trägt eine Brille nicht.","Sie trägt kein Brille."],"answer":"Sie trägt keine Brille.","explain":"<i>eine</i> → <b>keine</b>.","rule":"ein → kein"},{"id":"kn-033","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich höre Musik.","options":["Ich höre keine Musik.","Ich höre nicht Musik.","Ich höre kein Musik.","Ich höre Musik nicht."],"answer":"Ich höre keine Musik.","explain":"<i>Musik hören</i> ist keine feste Verb-Nomen-Verbindung wie <i>Klavier spielen</i> — <i>Musik</i> ist ein echtes Objekt → <b>keine</b>.","rule":"Stoffname → kein"},{"id":"kn-034","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Er spielt Fußball.","options":["Er spielt nicht Fußball.","Er spielt keinen Fußball.","Er spielt Fußball nicht.","Er spielt kein Fußball."],"answer":"Er spielt nicht Fußball.","explain":"<i>Fußball spielen</i> gehört zu <i>spielen</i> + Sportart/Instrument → feste Wendung → <b>nicht</b>. (Umgangssprachlich hört man auch <i>keinen Fußball</i>.)","rule":"Feste Wendung → nicht"},{"id":"kn-035","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich lese das Buch.","options":["Ich lese das Buch nicht.","Ich lese kein Buch.","Ich lese nicht das Buch.","Ich lese das Buch kein."],"answer":"Ich lese das Buch nicht.","explain":"Definites Objekt → <b>nicht</b> dahinter.","rule":"definit → nicht"},{"id":"kn-036","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Sie kennt meine Eltern.","options":["Sie kennt meine Eltern nicht.","Sie kennt keine Eltern.","Sie kennt nicht meine Eltern.","Sie kennt meine Eltern kein."],"answer":"Sie kennt meine Eltern nicht.","explain":"Possessivartikel im Plural ist trotzdem bestimmt → <b>nicht</b>.","rule":"definit → nicht"},{"id":"kn-037","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich habe Geld.","options":["Ich habe kein Geld.","Ich habe nicht Geld.","Ich habe keinen Geld.","Ich habe Geld nicht."],"answer":"Ich habe kein Geld.","explain":"<i>das Geld</i>, Akkusativ → <b>kein</b>.","rule":"Stoffname → kein"},{"id":"kn-038","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Das ist ein Fehler.","options":["Das ist kein Fehler.","Das ist nicht ein Fehler.","Das ist ein Fehler nicht.","Das ist keinen Fehler."],"answer":"Das ist kein Fehler.","explain":"<i>ein</i> im Nominativ (Prädikatsnomen) → <b>kein</b>.","rule":"ein → kein"},{"id":"kn-039","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich trinke Alkohol.","options":["Ich trinke keinen Alkohol.","Ich trinke kein Alkohol.","Ich trinke nicht Alkohol.","Ich trinke Alkohol nicht."],"answer":"Ich trinke keinen Alkohol.","explain":"<i>der Alkohol</i>, Akkusativ → <b>keinen</b>.","rule":"Stoffname → kein"},{"id":"kn-040","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich mag Katzen.","options":["Ich mag keine Katzen.","Ich mag nicht Katzen.","Ich mag keinen Katzen.","Ich mag kein Katzen."],"answer":"Ich mag keine Katzen.","explain":"Artikelloser Plural → <b>keine</b>. (<i>Ich mag Katzen nicht</i> ist übrigens auch richtig — bei <i>mögen</i> + nacktem Plural gehen beide.)","rule":"Plural → kein"},{"id":"kn-041","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Er raucht Zigaretten.","options":["Er raucht keine Zigaretten.","Er raucht nicht Zigaretten.","Er raucht Zigaretten nicht.","Er raucht kein Zigaretten."],"answer":"Er raucht keine Zigaretten.","explain":"Artikelloser Plural → <b>keine</b>.","rule":"Plural → kein"},{"id":"kn-042","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich verstehe die Frage.","options":["Ich verstehe die Frage nicht.","Ich verstehe keine Frage.","Ich verstehe nicht die Frage.","Ich verstehe die Frage kein."],"answer":"Ich verstehe die Frage nicht.","explain":"Definites Objekt → <b>nicht</b> dahinter.","rule":"definit → nicht"},{"id":"kn-043","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Wir suchen eine Wohnung.","options":["Wir suchen keine Wohnung.","Wir suchen nicht eine Wohnung.","Wir suchen eine Wohnung nicht.","Wir suchen kein Wohnung."],"answer":"Wir suchen keine Wohnung.","explain":"<i>eine</i> → <b>keine</b>.","rule":"ein → kein"},{"id":"kn-044","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich habe den Film gesehen.","options":["Ich habe den Film nicht gesehen.","Ich habe keinen Film gesehen.","Ich habe den Film gesehen nicht.","Ich habe nicht den Film gesehen."],"answer":"Ich habe den Film nicht gesehen.","explain":"Definites Objekt → <b>nicht</b>; im Perfekt steht <i>nicht</i> vor dem Partizip.","rule":"definit → nicht"},{"id":"kn-045","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Sie hat einen Hund gekauft.","options":["Sie hat keinen Hund gekauft.","Sie hat einen Hund nicht gekauft.","Sie hat nicht einen Hund gekauft.","Sie hat kein Hund gekauft."],"answer":"Sie hat keinen Hund gekauft.","explain":"<i>einen</i> → <b>keinen</b>; <i>kein-</i> ersetzt den Artikel und bleibt an seiner Stelle.","rule":"ein → kein"},{"id":"kn-046","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Er ist Student.","options":["Er ist kein Student.","Er ist nicht Student.","Er ist Student nicht.","Er ist nicht ein Student."],"answer":"Er ist kein Student.","explain":"Beruf/Status ohne Artikel → <b>kein</b>.","rule":"Beruf → kein"},{"id":"kn-047","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich fahre Ski.","options":["Ich fahre nicht Ski.","Ich fahre keinen Ski.","Ich fahre kein Ski.","Ich fahre Ski nicht."],"answer":"Ich fahre nicht Ski.","explain":"<i>Ski fahren</i> ist eine feste Wendung → <b>nicht</b>.","rule":"Feste Wendung → nicht"},{"id":"kn-048","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Das Wetter ist schön.","options":["Das Wetter ist nicht schön.","Das Wetter ist kein schön.","Das ist kein schönes Wetter heute.","Das Wetter ist schön nicht."],"answer":"Das Wetter ist nicht schön.","explain":"Prädikatives Adjektiv → <b>nicht</b> direkt davor.","rule":"Adjektiv → nicht"},{"id":"kn-049","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich habe Durst.","options":["Ich habe keinen Durst.","Ich habe keine Durst.","Ich habe nicht Durst.","Ich habe Durst nicht."],"answer":"Ich habe keinen Durst.","explain":"<i>der Durst</i>, Akkusativ → <b>keinen</b>.","rule":"Abstraktum → kein"},{"id":"kn-050","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich kenne diese Frau.","options":["Ich kenne diese Frau nicht.","Ich kenne keine Frau.","Ich kenne nicht diese Frau.","Ich kenne diese Frau kein."],"answer":"Ich kenne diese Frau nicht.","explain":"<i>dies-</i> ist bestimmt → <b>nicht</b> dahinter.","rule":"definit → nicht"},{"id":"kn-051","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Sie liebt ihn.","options":["Sie liebt ihn nicht.","Sie liebt keinen.","Sie liebt nicht ihn.","Sie liebt ihn kein."],"answer":"Sie liebt ihn nicht.","explain":"Pronomen → <b>nicht</b>, und Pronomen stehen immer vor <i>nicht</i>.","rule":"Name/Pronomen → nicht"},{"id":"kn-052","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich brauche deine Hilfe.","options":["Ich brauche deine Hilfe nicht.","Ich brauche keine Hilfe.","Ich brauche nicht deine Hilfe.","Ich brauche deine Hilfe kein."],"answer":"Ich brauche deine Hilfe nicht.","explain":"Possessivartikel → <b>nicht</b>. <i>keine Hilfe</i> wäre eine andere Aussage („überhaupt keine“).","rule":"definit → nicht"},{"id":"kn-053","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Das ist die Wahrheit.","options":["Das ist nicht die Wahrheit.","Das ist keine Wahrheit.","Das ist die Wahrheit nicht.","Das ist die keine Wahrheit."],"answer":"Das ist nicht die Wahrheit.","explain":"Bestimmter Artikel → <b>nicht</b>, vor dem Prädikatsnomen.","rule":"definit → nicht"},{"id":"kn-054","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Wir machen Urlaub.","options":["Wir machen keinen Urlaub.","Wir machen nicht Urlaub.","Wir machen kein Urlaub.","Wir machen Urlaub nicht."],"answer":"Wir machen keinen Urlaub.","explain":"<i>der Urlaub</i>, Akkusativ → <b>keinen</b>.","rule":"Abstraktum → kein"},{"id":"kn-055","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Er hat Probleme.","options":["Er hat keine Probleme.","Er hat nicht Probleme.","Er hat kein Probleme.","Er hat Probleme nicht."],"answer":"Er hat keine Probleme.","explain":"Artikelloser Plural → <b>keine</b>.","rule":"Plural → kein"},{"id":"kn-056","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich schreibe einen Brief.","options":["Ich schreibe keinen Brief.","Ich schreibe nicht einen Brief.","Ich schreibe einen Brief nicht.","Ich schreibe kein Brief."],"answer":"Ich schreibe keinen Brief.","explain":"<i>einen</i> → <b>keinen</b>.","rule":"ein → kein"},{"id":"kn-057","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Sie spricht Englisch.","options":["Sie spricht kein Englisch.","Sie spricht nicht Englisch.","Sie spricht keinen Englisch.","Sie spricht Englisch nicht."],"answer":"Sie spricht kein Englisch.","explain":"Sprachen nehmen <b>kein</b> — anders als <i>Klavier spielen</i>.","rule":"Sprache → kein"},{"id":"kn-058","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich habe Erfahrung.","options":["Ich habe keine Erfahrung.","Ich habe nicht Erfahrung.","Ich habe kein Erfahrung.","Ich habe Erfahrung nicht."],"answer":"Ich habe keine Erfahrung.","explain":"<i>die Erfahrung</i>, Akkusativ → <b>keine</b>.","rule":"Abstraktum → kein"},{"id":"kn-059","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Ich kaufe das Auto.","options":["Ich kaufe das Auto nicht.","Ich kaufe kein Auto.","Ich kaufe nicht das Auto.","Ich kaufe das Auto kein."],"answer":"Ich kaufe das Auto nicht.","explain":"Definites Objekt → <b>nicht</b> dahinter. Vergleiche <i>Ich kaufe kein Auto</i> (Verneinung von <i>ein Auto</i>).","rule":"definit → nicht"},{"id":"kn-060","kind":"mc","topic":"kein-nicht","question":"Wie lautet die Verneinung?","prompt":"Er ist Vegetarier.","options":["Er ist kein Vegetarier.","Er ist nicht Vegetarier.","Er ist Vegetarier nicht.","Er ist nicht ein Vegetarier."],"answer":"Er ist kein Vegetarier.","explain":"Gruppenzugehörigkeit ohne Artikel → <b>kein</b>.","rule":"Beruf → kein"},{"id":"kf-001","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Ich habe ___ Hunger.","answers":["keinen"],"explain":"<i>der Hunger</i>, Akkusativ → <b>keinen</b>.","hint":"der Hunger · Akkusativ"},{"id":"kf-002","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Ich habe ___ Zeit.","answers":["keine"],"explain":"<i>die Zeit</i>, Akkusativ → <b>keine</b>.","hint":"die Zeit · Akkusativ"},{"id":"kf-003","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Das ist ___ Problem.","answers":["kein"],"explain":"<i>das Problem</i>, Nominativ → <b>kein</b> (endungslos).","hint":"das Problem · Nominativ"},{"id":"kf-004","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Er hat ___ Auto.","answers":["kein"],"explain":"<i>das Auto</i>, Akkusativ → <b>kein</b>. Neutrum hat im Nominativ und Akkusativ dieselbe Form.","hint":"das Auto · Akkusativ"},{"id":"kf-005","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Ich trinke ___ Kaffee.","answers":["keinen"],"explain":"<i>der Kaffee</i>, Akkusativ → <b>keinen</b>.","hint":"der Kaffee · Akkusativ"},{"id":"kf-006","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Wir haben ___ Milch mehr.","answers":["keine"],"explain":"<i>die Milch</i>, Akkusativ → <b>keine</b>.","hint":"die Milch · Akkusativ"},{"id":"kf-007","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Ich habe ___ Kinder.","answers":["keine"],"explain":"Plural, Akkusativ → <b>keine</b>.","hint":"Plural · Akkusativ"},{"id":"kf-008","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Ich vertraue ___ Fremden.","answers":["keinen"],"explain":"<i>vertrauen</i> + Dativ, Plural → <b>keinen</b>.","hint":"Plural · Dativ"},{"id":"kf-009","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"In ___ Fall mache ich das.","answers":["keinem"],"explain":"<i>in</i> + Dativ, <i>der Fall</i> → <b>keinem</b>. <i>in keinem Fall</i> ist eine feste Wendung.","hint":"der Fall · Dativ"},{"id":"kf-010","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Sie wohnt in ___ großen Stadt.","answers":["keiner"],"explain":"<i>in</i> + Dativ (Ort), <i>die Stadt</i> → <b>keiner</b>.","hint":"die Stadt · Dativ"},{"id":"kf-011","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Das ist ___ gute Idee.","answers":["keine"],"explain":"<i>die Idee</i>, Nominativ → <b>keine</b>; das Adjektiv bleibt schwach: <i>gute</i>.","hint":"die Idee · Nominativ"},{"id":"kf-012","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Ich sehe ___ Unterschied.","answers":["keinen"],"explain":"<i>der Unterschied</i>, Akkusativ → <b>keinen</b>.","hint":"der Unterschied · Akkusativ"},{"id":"kf-013","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Er ist ___ Lehrer.","answers":["kein"],"explain":"Beruf, maskulin Nominativ → <b>kein</b>.","hint":"der Lehrer · Nominativ"},{"id":"kf-014","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Sie ist ___ Ärztin.","answers":["keine"],"explain":"Beruf, feminin Nominativ → <b>keine</b>.","hint":"die Ärztin · Nominativ"},{"id":"kf-015","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Davon habe ich ___ Ahnung.","answers":["keine"],"explain":"<i>die Ahnung</i>, Akkusativ → <b>keine</b>.","hint":"die Ahnung · Akkusativ"},{"id":"kf-016","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Wir brauchen ___ Hilfe.","answers":["keine"],"explain":"<i>die Hilfe</i>, Akkusativ → <b>keine</b>.","hint":"die Hilfe · Akkusativ"},{"id":"kf-017","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Ich gebe ___ Kind Schokolade.","answers":["keinem"],"explain":"Dativobjekt, <i>das Kind</i> → <b>keinem</b>.","hint":"das Kind · Dativ"},{"id":"kf-018","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Ich helfe ___ Frau.","answers":["keiner"],"explain":"<i>helfen</i> + Dativ, <i>die Frau</i> → <b>keiner</b>.","hint":"die Frau · Dativ"},{"id":"kf-019","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Es gibt ___ Grund dafür.","answers":["keinen"],"explain":"<i>es gibt</i> + Akkusativ, <i>der Grund</i> → <b>keinen</b>.","hint":"der Grund · Akkusativ"},{"id":"kf-020","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Ich habe ___ Geschwister.","answers":["keine"],"explain":"Plural, Akkusativ → <b>keine</b>.","hint":"Plural · Akkusativ"},{"id":"kf-021","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Er hat ___ Geld dabei.","answers":["kein"],"explain":"<i>das Geld</i>, Akkusativ → <b>kein</b>.","hint":"das Geld · Akkusativ"},{"id":"kf-022","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Ich habe ___ Lust.","answers":["keine"],"explain":"<i>die Lust</i>, Akkusativ → <b>keine</b>.","hint":"die Lust · Akkusativ"},{"id":"kf-023","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Das ist ___ Witz.","answers":["kein"],"explain":"<i>der Witz</i>, Nominativ → <b>kein</b> (maskulin Nominativ ist endungslos).","hint":"der Witz · Nominativ"},{"id":"kf-024","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Ich kenne ___ Antwort auf diese Frage.","answers":["keine"],"explain":"<i>die Antwort</i>, Akkusativ → <b>keine</b>.","hint":"die Antwort · Akkusativ"},{"id":"kf-025","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Sie hat mit ___ Freund gesprochen.","answers":["keinem"],"explain":"<i>mit</i> + Dativ, <i>der Freund</i> → <b>keinem</b>.","hint":"der Freund · Dativ"},{"id":"kf-026","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Ich habe ___ Fehler gemacht.","answers":["keinen"],"explain":"<i>der Fehler</i>, Akkusativ Singular → <b>keinen</b>.","hint":"der Fehler · Akkusativ"},{"id":"kf-027","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Wir haben ___ Fragen mehr.","answers":["keine"],"explain":"Plural, Akkusativ → <b>keine</b>.","hint":"Plural · Akkusativ"},{"id":"kf-028","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Ich brauche ___ neues Handy.","answers":["kein"],"explain":"<i>das Handy</i>, Akkusativ → <b>kein</b>; das Adjektiv trägt die Endung: <i>neu<u>es</u></i>.","hint":"das Handy · Akkusativ"},{"id":"kf-029","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"In ___ anderen Land wäre das erlaubt.","answers":["keinem"],"explain":"<i>in</i> + Dativ, <i>das Land</i> → <b>keinem</b>.","hint":"das Land · Dativ"},{"id":"kf-030","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Unter ___ Umständen mache ich das.","answers":["keinen"],"explain":"Dativ Plural → <b>keinen</b>. <i>unter keinen Umständen</i> ist eine feste Wendung.","hint":"Plural · Dativ"},{"id":"kf-031","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Er trägt ___ Jacke.","answers":["keine"],"explain":"<i>die Jacke</i>, Akkusativ → <b>keine</b>.","hint":"die Jacke · Akkusativ"},{"id":"kf-032","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Ich habe ___ Bruder.","answers":["keinen"],"explain":"<i>der Bruder</i>, Akkusativ → <b>keinen</b>.","hint":"der Bruder · Akkusativ"},{"id":"kf-033","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Das ist ___ Zufall.","answers":["kein"],"explain":"<i>der Zufall</i>, Nominativ → <b>kein</b>.","hint":"der Zufall · Nominativ"},{"id":"kf-034","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Ich sehe hier ___ Menschen.","answers":["keine"],"explain":"Plural, Akkusativ → <b>keine</b>.","hint":"Plural · Akkusativ"},{"id":"kf-035","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Sie hat ___ Angst.","answers":["keine"],"explain":"<i>die Angst</i>, Akkusativ → <b>keine</b>.","hint":"die Angst · Akkusativ"},{"id":"kf-036","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Ich habe ___ Durst.","answers":["keinen"],"explain":"<i>der Durst</i>, Akkusativ → <b>keinen</b>.","hint":"der Durst · Akkusativ"},{"id":"kf-037","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Wir haben ___ Platz mehr.","answers":["keinen"],"explain":"<i>der Platz</i>, Akkusativ → <b>keinen</b>.","hint":"der Platz · Akkusativ"},{"id":"kf-038","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Das ist ___ Frage.","answers":["keine"],"explain":"<i>die Frage</i>, Nominativ → <b>keine</b>.","hint":"die Frage · Nominativ"},{"id":"kf-039","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Er gibt ___ Kommentar ab.","answers":["keinen"],"explain":"<i>der Kommentar</i>, Akkusativ → <b>keinen</b>.","hint":"der Kommentar · Akkusativ"},{"id":"kf-040","kind":"typed","topic":"kein-formen","question":"Ergänze die richtige Form von <b>kein-</b>.","prompt":"Ich habe ___ Interesse daran.","answers":["kein"],"explain":"<i>das Interesse</i>, Akkusativ → <b>kein</b>.","hint":"das Interesse · Akkusativ"},{"id":"kf-041","kind":"mc","topic":"kein-formen","question":"In welchem Fall bleibt <b>kein</b> ohne Endung?","prompt":"kein / keine / keinen …","options":["Maskulin Nominativ und Neutrum Nominativ/Akkusativ","Nur im Plural","Maskulin Akkusativ und Feminin Dativ","Immer nach einer Präposition"],"answer":"Maskulin Nominativ und Neutrum Nominativ/Akkusativ","explain":"<i>kein</i> hat genau die Endungen von <i>ein</i>: <i>kein Mann</i> (m. Nom.), <i>kein Auto</i> (n. Nom./Akk.). Überall sonst steht eine Endung.","rule":"Deklination"},{"id":"kf-042","kind":"mc","topic":"kein-formen","question":"Welcher Satz ist richtig?","prompt":"Dativ Plural","options":["Ich spiele mit keinen Kindern.","Ich spiele mit keine Kinder.","Ich spiele mit keinem Kindern.","Ich spiele mit kein Kindern."],"answer":"Ich spiele mit keinen Kindern.","explain":"Dativ Plural: <b>keinen</b> + Nomen auf <i>-n</i>.","rule":"Deklination"},{"id":"kf-043","kind":"mc","topic":"kein-formen","question":"Welcher Satz ist richtig?","prompt":"Feminin Dativ","options":["Ich helfe keiner Kollegin.","Ich helfe keine Kollegin.","Ich helfe keinem Kollegin.","Ich helfe kein Kollegin."],"answer":"Ich helfe keiner Kollegin.","explain":"<i>helfen</i> + Dativ, feminin → <b>keiner</b>.","rule":"Deklination"},{"id":"kf-044","kind":"mc","topic":"kein-formen","question":"Welcher Satz ist richtig?","prompt":"Maskulin Akkusativ","options":["Ich habe keinen Termin.","Ich habe kein Termin.","Ich habe keine Termin.","Ich habe keinem Termin."],"answer":"Ich habe keinen Termin.","explain":"<i>der Termin</i> im Akkusativ → <b>keinen</b>.","rule":"Deklination"},{"id":"kf-045","kind":"mc","topic":"kein-formen","question":"Was ist der Unterschied?","prompt":"kein Wort / keine Worte","options":["<i>kein Wort</i> ist Singular, <i>keine Worte</i> ist Plural.","Beides ist Plural.","<i>kein Wort</i> ist Dativ.","<i>keine Worte</i> ist ein Genitiv."],"answer":"<i>kein Wort</i> ist Singular, <i>keine Worte</i> ist Plural.","explain":"Neutrum Singular ist endungslos, im Plural steht immer <b>keine</b> (Nom./Akk.).","rule":"Deklination"},{"id":"za-001","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung? (neutral, ohne Kontrast)","prompt":"Er ist Arzt.","options":["Er ist kein Arzt.","Er ist nicht Arzt.","Er ist nicht ein Arzt.","Er ist Arzt nicht."],"answer":"Er ist kein Arzt.","explain":"Ohne Kontrast nimmt der Beruf <b>kein</b>. Mit Kontrast: <i>nicht Arzt, <u>sondern</u> Zahnarzt</i>.","rule":"Beruf → kein"},{"id":"za-002","kind":"mc","topic":"nullartikel","question":"Ergänze: „Er ist ___ Arzt, sondern Zahnarzt.“","prompt":"Er ist ___ Arzt, sondern Zahnarzt.","options":["nicht","kein","keinen","nicht ein"],"answer":"nicht","explain":"Sobald <i>sondern</i> etwas Konkretes ersetzt, wird das Wort selbst verneint → <b>nicht</b> direkt davor.","rule":"Kontrast → nicht"},{"id":"za-003","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung? (neutral)","prompt":"Sie wird Ärztin.","options":["Sie wird keine Ärztin.","Sie wird nicht Ärztin.","Sie wird nicht eine Ärztin.","Sie wird Ärztin nicht."],"answer":"Sie wird keine Ärztin.","explain":"Auch nach <i>werden</i> gilt für das schlichte Prädikatsnomen <b>kein</b>.","rule":"Beruf → kein"},{"id":"za-004","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung?","prompt":"Ich spreche Französisch.","options":["Ich spreche kein Französisch.","Ich spreche nicht Französisch.","Ich spreche keinen Französisch.","Ich spreche Französisch nicht."],"answer":"Ich spreche kein Französisch.","explain":"Sprachen → <b>kein</b>, obwohl der Artikel fehlt.","rule":"Sprache → kein"},{"id":"za-005","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung?","prompt":"Ich spiele Gitarre.","options":["Ich spiele nicht Gitarre.","Ich spiele keine Gitarre.","Ich spiele Gitarre nicht.","Ich spiele kein Gitarre."],"answer":"Ich spiele nicht Gitarre.","explain":"<i>spielen</i> + Instrument ist eine feste Wendung → <b>nicht</b>. (<i>Ich habe keine Gitarre</i> wäre der Besitz.)","rule":"Feste Wendung → nicht"},{"id":"za-006","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung?","prompt":"Sie fährt Rad.","options":["Sie fährt nicht Rad.","Sie fährt kein Rad.","Sie fährt Rad nicht.","Sie fährt keines Rad."],"answer":"Sie fährt nicht Rad.","explain":"<i>Rad fahren</i> ist eine feste Wendung → <b>nicht</b>.","rule":"Feste Wendung → nicht"},{"id":"za-007","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung?","prompt":"Wir spielen Karten.","options":["Wir spielen nicht Karten.","Wir spielen keine Karten.","Wir spielen Karten nicht.","Wir spielen kein Karten."],"answer":"Wir spielen nicht Karten.","explain":"<i>Karten spielen</i> = Tätigkeit, feste Wendung → <b>nicht</b>. Beim Gegenstand hieße es <i>Ich habe keine Karten</i>.","rule":"Feste Wendung → nicht"},{"id":"za-008","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung?","prompt":"Er läuft Ski.","options":["Er läuft nicht Ski.","Er läuft keinen Ski.","Er läuft Ski nicht.","Er läuft kein Ski."],"answer":"Er läuft nicht Ski.","explain":"<i>Ski laufen</i> ist eine feste Wendung → <b>nicht</b>.","rule":"Feste Wendung → nicht"},{"id":"za-009","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung?","prompt":"Ich habe Kopfschmerzen.","options":["Ich habe keine Kopfschmerzen.","Ich habe nicht Kopfschmerzen.","Ich habe kein Kopfschmerzen.","Ich habe Kopfschmerzen nicht."],"answer":"Ich habe keine Kopfschmerzen.","explain":"Artikelloser Plural → <b>keine</b>.","rule":"Plural → kein"},{"id":"za-010","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung?","prompt":"Wir haben Brot.","options":["Wir haben kein Brot.","Wir haben nicht Brot.","Wir haben keinen Brot.","Wir haben Brot nicht."],"answer":"Wir haben kein Brot.","explain":"<i>das Brot</i> als Stoffname, Akkusativ → <b>kein</b>.","rule":"Stoffname → kein"},{"id":"za-011","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung?","prompt":"Sie hat Talent.","options":["Sie hat kein Talent.","Sie hat nicht Talent.","Sie hat keinen Talent.","Sie hat Talent nicht."],"answer":"Sie hat kein Talent.","explain":"<i>das Talent</i>, Abstraktum ohne Artikel → <b>kein</b>.","rule":"Abstraktum → kein"},{"id":"za-012","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung?","prompt":"Ich trinke Bier.","options":["Ich trinke kein Bier.","Ich trinke nicht Bier.","Ich trinke keinen Bier.","Ich trinke Bier nicht."],"answer":"Ich trinke kein Bier.","explain":"<i>das Bier</i>, Stoffname → <b>kein</b>.","rule":"Stoffname → kein"},{"id":"za-013","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung?","prompt":"Wir haben Glück.","options":["Wir haben kein Glück.","Wir haben nicht Glück.","Wir haben keinen Glück.","Wir haben Glück nicht."],"answer":"Wir haben kein Glück.","explain":"<i>das Glück</i>, Abstraktum → <b>kein</b>.","rule":"Abstraktum → kein"},{"id":"za-014","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung?","prompt":"Das macht Sinn.","options":["Das macht keinen Sinn.","Das macht nicht Sinn.","Das macht kein Sinn.","Das macht Sinn nicht."],"answer":"Das macht keinen Sinn.","explain":"<i>der Sinn</i>, Akkusativ → <b>keinen</b>. Diese Wendung nimmt trotz Nullartikel <i>kein-</i>.","rule":"Abstraktum → kein"},{"id":"za-015","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung?","prompt":"Er ist Berliner.","options":["Er ist kein Berliner.","Er ist nicht Berliner.","Er ist Berliner nicht.","Er ist nicht ein Berliner."],"answer":"Er ist kein Berliner.","explain":"Herkunft ohne Artikel → <b>kein</b>.","rule":"Nationalität → kein"},{"id":"za-016","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung?","prompt":"Sie ist Studentin.","options":["Sie ist keine Studentin.","Sie ist nicht Studentin.","Sie ist kein Studentin.","Sie ist Studentin nicht."],"answer":"Sie ist keine Studentin.","explain":"Feminines Prädikatsnomen ohne Artikel → <b>keine</b>.","rule":"Beruf → kein"},{"id":"za-017","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung?","prompt":"Ich bin Christ.","options":["Ich bin kein Christ.","Ich bin nicht Christ.","Ich bin Christ nicht.","Ich bin nicht ein Christ."],"answer":"Ich bin kein Christ.","explain":"Religion ohne Artikel → <b>kein</b>.","rule":"Religion → kein"},{"id":"za-018","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung?","prompt":"Sie hat Fieber.","options":["Sie hat kein Fieber.","Sie hat nicht Fieber.","Sie hat keinen Fieber.","Sie hat Fieber nicht."],"answer":"Sie hat kein Fieber.","explain":"<i>das Fieber</i>, Akkusativ → <b>kein</b>.","rule":"Abstraktum → kein"},{"id":"za-019","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung?","prompt":"Er sucht Arbeit.","options":["Er sucht keine Arbeit.","Er sucht nicht Arbeit.","Er sucht kein Arbeit.","Er sucht Arbeit nicht."],"answer":"Er sucht keine Arbeit.","explain":"<i>die Arbeit</i>, Akkusativ → <b>keine</b>.","rule":"Abstraktum → kein"},{"id":"za-020","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung?","prompt":"Wir haben Gäste.","options":["Wir haben keine Gäste.","Wir haben nicht Gäste.","Wir haben kein Gäste.","Wir haben Gäste nicht."],"answer":"Wir haben keine Gäste.","explain":"Artikelloser Plural → <b>keine</b>.","rule":"Plural → kein"},{"id":"za-021","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung?","prompt":"Sie macht Sport.","options":["Sie macht keinen Sport.","Sie macht nicht Sport.","Sie macht kein Sport.","Sie macht Sport nicht."],"answer":"Sie macht keinen Sport.","explain":"<i>Sport machen</i> gehört <u>nicht</u> zu den festen Wendungen mit <i>nicht</i> — die betreffen vor allem <i>spielen</i>, <i>fahren</i>, <i>laufen</i> + Nomen. Also <b>keinen</b>.","rule":"Abstraktum → kein"},{"id":"za-022","kind":"mc","topic":"nullartikel","question":"Welches Paar ist richtig?","prompt":"Auto: Besitz vs. Tätigkeit","options":["Ich habe kein Auto. / Ich fahre nicht Auto.","Ich habe nicht Auto. / Ich fahre kein Auto.","Ich habe kein Auto. / Ich fahre kein Auto.","Ich habe nicht Auto. / Ich fahre nicht Auto."],"answer":"Ich habe kein Auto. / Ich fahre nicht Auto.","explain":"Dasselbe Nomen, zwei Regeln: als echtes Objekt <b>kein</b>, in der festen Wendung <i>Auto fahren</i> <b>nicht</b>.","rule":"Feste Wendung → nicht","meta":true},{"id":"za-023","kind":"mc","topic":"nullartikel","question":"Welcher Satz ist richtig?","prompt":"Sprache vs. Instrument","options":["Ich spreche kein Spanisch, und ich spiele nicht Klavier.","Ich spreche nicht Spanisch, und ich spiele kein Klavier.","Ich spreche kein Spanisch, und ich spiele kein Klavier.","Ich spreche nicht Spanisch, und ich spiele nicht Klavier."],"answer":"Ich spreche kein Spanisch, und ich spiele nicht Klavier.","explain":"Sprachen nehmen <b>kein</b>, Instrumente in der Wendung <i>spielen</i> nehmen <b>nicht</b>.","rule":"Sprache → kein","meta":true},{"id":"za-024","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung?","prompt":"Ich habe Erfolg.","options":["Ich habe keinen Erfolg.","Ich habe nicht Erfolg.","Ich habe kein Erfolg.","Ich habe Erfolg nicht."],"answer":"Ich habe keinen Erfolg.","explain":"<i>der Erfolg</i>, Akkusativ → <b>keinen</b>.","rule":"Abstraktum → kein"},{"id":"za-025","kind":"mc","topic":"nullartikel","question":"Wie lautet die Verneinung?","prompt":"Sie hat Geduld.","options":["Sie hat keine Geduld.","Sie hat nicht Geduld.","Sie hat kein Geduld.","Sie hat Geduld nicht."],"answer":"Sie hat keine Geduld.","explain":"<i>die Geduld</i>, Akkusativ → <b>keine</b>.","rule":"Abstraktum → kein"},{"id":"za-026","kind":"mc","topic":"nullartikel","question":"Warum steht hier <b>kein</b> und nicht <i>nicht</i>?","prompt":"Ich habe keine Zeit.","options":["Weil das Nomen ohne Artikel steht und wirklich verneint wird.","Weil <i>Zeit</i> feminin ist.","Weil <i>haben</i> immer <i>kein</i> verlangt.","Weil der Satz im Präsens steht."],"answer":"Weil das Nomen ohne Artikel steht und wirklich verneint wird.","explain":"<b>kein</b> ersetzt einen fehlenden oder unbestimmten Artikel. Das Genus bestimmt nur die Endung, nicht die Wahl.","rule":"Nullartikel → kein","meta":true},{"id":"np-001","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich rufe dich nicht an.","explain":"<b>nicht</b> steht vor dem trennbaren Präfix — das Präfix gehört zum Verb und bleibt ganz am Ende.","rule":"vor dem Präfix","end":".","tokens":["Ich","rufe","dich","an"],"gap":3},{"id":"np-002","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich kann heute nicht kommen.","explain":"<b>nicht</b> steht vor dem Infinitiv. Die Zeitangabe <i>heute</i> bleibt davor.","rule":"vor dem Infinitiv","end":".","tokens":["Ich","kann","heute","kommen"],"gap":3,"partial":2},{"id":"np-003","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich habe das Buch nicht gelesen.","explain":"<b>nicht</b> steht vor dem Partizip, aber hinter dem bestimmten Objekt.","rule":"vor dem Partizip","end":".","tokens":["Ich","habe","das","Buch","gelesen"],"gap":4},{"id":"np-004","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Der Kaffee ist nicht heiß.","explain":"Prädikatives Adjektiv nach <i>sein</i> → <b>nicht</b> direkt davor.","rule":"vor dem Prädikativ","end":".","tokens":["Der","Kaffee","ist","heiß"],"gap":3},{"id":"np-005","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Er wartet nicht auf mich.","explain":"<i>warten auf</i> ist eine feste Verb-Präposition-Verbindung — sie gehört zum Verb, also steht <b>nicht</b> davor.","rule":"vor der Verbpräposition","end":".","tokens":["Er","wartet","auf","mich"],"gap":2},{"id":"np-006","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich fahre nicht nach Berlin.","explain":"Richtungsangabe (Wohin?) ist eine Ergänzung → <b>nicht</b> davor.","rule":"vor der Richtungsangabe","end":".","tokens":["Ich","fahre","nach","Berlin"],"gap":2},{"id":"np-007","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich gebe es ihm nicht.","explain":"Pronomen rücken immer nach vorn, <b>nicht</b> steht dahinter.","rule":"nach Pronomen","end":".","tokens":["Ich","gebe","es","ihm"],"gap":4},{"id":"np-008","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich mag den Film nicht.","explain":"Bestimmtes Objekt → <b>nicht</b> dahinter, ganz am Satzende.","rule":"nach dem definiten Objekt","end":".","tokens":["Ich","mag","den","Film"],"gap":4},{"id":"np-009","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich arbeite heute nicht.","explain":"Bestimmte Zeitangabe → <b>nicht</b> dahinter. <i>Ich arbeite nicht heute</i> hieße „nicht heute, sondern an einem anderen Tag“.","rule":"nach der Zeitangabe","end":".","tokens":["Ich","arbeite","heute"],"gap":3,"partial":2},{"id":"np-010","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich gehe heute nicht ins Kino.","explain":"Reihenfolge: Zeit → <b>nicht</b> → Richtung. <i>ins Kino</i> sagt Wohin? und steht deshalb hinter <i>nicht</i>.","rule":"Te — nicht — Lo","end":".","tokens":["Ich","gehe","heute","ins","Kino"],"gap":3,"partial":2},{"id":"np-011","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich bin gestern nicht mit dem Rad gefahren.","explain":"Reihenfolge: Zeit → <b>nicht</b> → Art und Weise. <i>mit dem Rad</i> ist modal und steht hinter <i>nicht</i>.","rule":"Te — nicht — Mo","end":".","tokens":["Ich","bin","gestern","mit","dem","Rad","gefahren"],"gap":3,"partial":2},{"id":"np-012","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich komme wegen der Arbeit nicht.","explain":"Kausalangaben (Warum?) stehen <u>vor</u> <b>nicht</b>.","rule":"nach der Kausalangabe","end":".","tokens":["Ich","komme","wegen","der","Arbeit"],"gap":5,"partial":2},{"id":"np-013","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich habe ihn in Berlin nicht getroffen.","explain":"<i>in Berlin</i> ist hier eine freie Ortsangabe (Wo?), keine Ergänzung → sie steht <u>vor</u> <b>nicht</b>.","rule":"freie Ortsangabe vor nicht","end":".","tokens":["Ich","habe","ihn","in","Berlin","getroffen"],"gap":5,"partial":3},{"id":"np-014","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Sie steht nicht früh auf.","explain":"<i>früh</i> ist eine unbestimmte Art-/Zeitangabe und gehört wie ein Modalglied hinter <b>nicht</b>; das Präfix bleibt am Ende. Entscheidend ist hier <i>früh</i>, nicht das Präfix — <s>Sie steht früh nicht auf</s>.","rule":"vor dem Modalglied","end":".","tokens":["Sie","steht","früh","auf"],"gap":2},{"id":"np-015","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Er hat mir nicht geholfen.","explain":"Das Dativpronomen steht vor <b>nicht</b>, das Partizip dahinter.","rule":"nach Pronomen","end":".","tokens":["Er","hat","mir","geholfen"],"gap":3},{"id":"np-016","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich kenne ihn nicht.","explain":"Pronomen vor <b>nicht</b>.","rule":"nach Pronomen","end":".","tokens":["Ich","kenne","ihn"],"gap":3},{"id":"np-017","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Das Kind schläft nicht.","explain":"Ohne weitere Satzglieder rutscht <b>nicht</b> ans Ende.","rule":"so weit rechts wie möglich","end":".","tokens":["Das","Kind","schläft"],"gap":3},{"id":"np-018","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Sie hat nicht angerufen.","explain":"<b>nicht</b> vor dem Partizip.","rule":"vor dem Partizip","end":".","tokens":["Sie","hat","angerufen"],"gap":2},{"id":"np-019","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich will das nicht machen.","explain":"<b>nicht</b> vor dem Infinitiv, aber hinter dem Pronomen <i>das</i>.","rule":"vor dem Infinitiv","end":".","tokens":["Ich","will","das","machen"],"gap":3},{"id":"np-020","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Er ist nicht müde.","explain":"Prädikatives Adjektiv → <b>nicht</b> davor.","rule":"vor dem Prädikativ","end":".","tokens":["Er","ist","müde"],"gap":2},{"id":"np-021","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich habe die Hausaufgaben nicht gemacht.","explain":"Bestimmtes Objekt vor <b>nicht</b>, Partizip dahinter.","rule":"vor dem Partizip","end":".","tokens":["Ich","habe","die","Hausaufgaben","gemacht"],"gap":4},{"id":"np-022","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Wir haben uns nicht getroffen.","explain":"Das Reflexivpronomen steht vor <b>nicht</b>.","rule":"nach Pronomen","end":".","tokens":["Wir","haben","uns","getroffen"],"gap":3},{"id":"np-023","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich denke nicht an dich.","explain":"<i>denken an</i> ist verbgebunden → <b>nicht</b> vor der Präposition.","rule":"vor der Verbpräposition","end":".","tokens":["Ich","denke","an","dich"],"gap":2},{"id":"np-024","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Er freut sich nicht auf den Urlaub.","explain":"Reflexivpronomen vor <b>nicht</b>, verbgebundene Präposition dahinter.","rule":"vor der Verbpräposition","end":".","tokens":["Er","freut","sich","auf","den","Urlaub"],"gap":3},{"id":"np-025","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Sie interessiert sich nicht für Sport.","explain":"<i>sich interessieren für</i> — <b>nicht</b> vor der Präposition.","rule":"vor der Verbpräposition","end":".","tokens":["Sie","interessiert","sich","für","Sport"],"gap":3},{"id":"np-026","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich wohne nicht in Berlin.","explain":"<i>wohnen</i> verlangt die Ortsangabe als Ergänzung → <b>nicht</b> davor. Vergleiche <i>Ich habe ihn in Berlin nicht getroffen</i>.","rule":"vor der Ortsergänzung","end":".","tokens":["Ich","wohne","in","Berlin"],"gap":2},{"id":"np-027","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Der Zug fährt nicht nach München.","explain":"Richtungsangabe → <b>nicht</b> davor.","rule":"vor der Richtungsangabe","end":".","tokens":["Der","Zug","fährt","nach","München"],"gap":3},{"id":"np-028","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich lege das Buch nicht auf den Tisch.","explain":"<i>legen</i> verlangt eine Richtungsergänzung (Wohin?) → <b>nicht</b> davor, aber hinter dem bestimmten Objekt.","rule":"vor der Richtungsangabe","end":".","tokens":["Ich","lege","das","Buch","auf","den","Tisch"],"gap":4},{"id":"np-029","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich habe nicht gut geschlafen.","explain":"Art und Weise steht hinter <b>nicht</b>.","rule":"vor dem Modalglied","end":".","tokens":["Ich","habe","gut","geschlafen"],"gap":2},{"id":"np-030","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Er spricht nicht laut.","explain":"Modaladverb → <b>nicht</b> davor.","rule":"vor dem Modalglied","end":".","tokens":["Er","spricht","laut"],"gap":2},{"id":"np-031","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Sie fährt nicht mit dem Auto.","explain":"<i>mit dem Auto</i> ist modal (Wie?) → hinter <b>nicht</b>.","rule":"vor dem Modalglied","end":".","tokens":["Sie","fährt","mit","dem","Auto"],"gap":2},{"id":"np-032","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich kann dir nicht helfen.","explain":"Pronomen vor <b>nicht</b>, Infinitiv dahinter.","rule":"vor dem Infinitiv","end":".","tokens":["Ich","kann","dir","helfen"],"gap":3},{"id":"np-033","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich möchte den Kuchen nicht essen.","explain":"Bestimmtes Objekt vor <b>nicht</b>, Infinitiv dahinter.","rule":"vor dem Infinitiv","end":".","tokens":["Ich","möchte","den","Kuchen","essen"],"gap":4},{"id":"np-034","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich habe ihn nicht gesehen.","explain":"Pronomen vor <b>nicht</b>, Partizip dahinter.","rule":"vor dem Partizip","end":".","tokens":["Ich","habe","ihn","gesehen"],"gap":3},{"id":"np-035","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich weiß, dass er nicht kommt.","explain":"Im Nebensatz steht <b>nicht</b> vor dem konjugierten Verb am Ende.","rule":"vor dem Verb im Nebensatz","end":".","tokens":["Ich","weiß,","dass","er","kommt"],"gap":4},{"id":"np-036","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich glaube, dass sie das nicht versteht.","explain":"Im Nebensatz: <b>nicht</b> vor dem Endverb, aber hinter dem Pronomen <i>das</i>.","rule":"vor dem Verb im Nebensatz","end":".","tokens":["Ich","glaube,","dass","sie","das","versteht"],"gap":5},{"id":"np-037","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Er sagt, dass er nicht müde ist.","explain":"Im Nebensatz steht <b>nicht</b> vor dem Prädikativ, nicht vor dem Endverb.","rule":"vor dem Prädikativ","end":".","tokens":["Er","sagt,","dass","er","müde","ist"],"gap":4},{"id":"np-038","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Sie hat den Brief nicht geschrieben.","explain":"Bestimmtes Objekt vor <b>nicht</b>, Partizip dahinter.","rule":"vor dem Partizip","end":".","tokens":["Sie","hat","den","Brief","geschrieben"],"gap":4},{"id":"np-039","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich nehme den Bus nicht.","explain":"Bestimmtes Objekt → <b>nicht</b> ans Ende.","rule":"nach dem definiten Objekt","end":".","tokens":["Ich","nehme","den","Bus"],"gap":4},{"id":"np-040","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich muss morgen nicht arbeiten.","explain":"Zeitangabe vor <b>nicht</b>, Infinitiv dahinter.","rule":"vor dem Infinitiv","end":".","tokens":["Ich","muss","morgen","arbeiten"],"gap":3,"partial":2},{"id":"np-041","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Er zieht die Jacke nicht aus.","explain":"Bestimmtes Objekt vor <b>nicht</b>, trennbares Präfix dahinter.","rule":"vor dem Präfix","end":".","tokens":["Er","zieht","die","Jacke","aus"],"gap":4},{"id":"np-042","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Wir räumen die Küche nicht auf.","explain":"<b>nicht</b> steht direkt vor dem Präfix <i>auf</i>.","rule":"vor dem Präfix","end":".","tokens":["Wir","räumen","die","Küche","auf"],"gap":4},{"id":"np-043","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Sie macht das Fenster nicht zu.","explain":"<b>nicht</b> vor dem Präfix <i>zu</i>.","rule":"vor dem Präfix","end":".","tokens":["Sie","macht","das","Fenster","zu"],"gap":4},{"id":"np-044","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich habe dich nicht angerufen.","explain":"Im Perfekt ist das Präfix schon im Partizip enthalten → <b>nicht</b> davor.","rule":"vor dem Partizip","end":".","tokens":["Ich","habe","dich","angerufen"],"gap":3},{"id":"np-045","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Das Konzert findet heute nicht statt.","explain":"Zeitangabe vor <b>nicht</b>, Präfix <i>statt</i> dahinter.","rule":"vor dem Präfix","end":".","tokens":["Das","Konzert","findet","heute","statt"],"gap":4,"partial":3},{"id":"np-046","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich kann das nicht verstehen.","explain":"Pronomen <i>das</i> vor <b>nicht</b>, Infinitiv dahinter.","rule":"vor dem Infinitiv","end":".","tokens":["Ich","kann","das","verstehen"],"gap":3},{"id":"np-047","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Er ist nicht zu Hause.","explain":"Bei <i>sein</i> ist die Ortsangabe eine Ergänzung → <b>nicht</b> davor.","rule":"vor der Ortsergänzung","end":".","tokens":["Er","ist","zu","Hause"],"gap":2},{"id":"np-048","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Sie geht nicht nach Hause.","explain":"Richtungsangabe → <b>nicht</b> davor.","rule":"vor der Richtungsangabe","end":".","tokens":["Sie","geht","nach","Hause"],"gap":2},{"id":"np-049","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich bin heute nicht zu Hause.","explain":"Zeitangabe vor <b>nicht</b>, Ortsergänzung dahinter.","rule":"Te — nicht — Lo","end":".","tokens":["Ich","bin","heute","zu","Hause"],"gap":3,"partial":2},{"id":"np-050","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Er hat mir das Buch nicht gegeben.","explain":"Beide Objekte stehen vor <b>nicht</b>, das Partizip dahinter.","rule":"vor dem Partizip","end":".","tokens":["Er","hat","mir","das","Buch","gegeben"],"gap":5},{"id":"np-051","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich habe es ihr nicht gesagt.","explain":"Zwei Pronomen: erst Akkusativ, dann Dativ, dann <b>nicht</b>.","rule":"nach Pronomen","end":".","tokens":["Ich","habe","es","ihr","gesagt"],"gap":4},{"id":"np-052","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Wir bleiben nicht lange.","explain":"Unbestimmte Zeitdauer verhält sich wie ein Modalglied → hinter <b>nicht</b>.","rule":"vor dem Modalglied","end":".","tokens":["Wir","bleiben","lange"],"gap":2},{"id":"np-053","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Das Essen schmeckt nicht gut.","explain":"Modaladverb → <b>nicht</b> davor.","rule":"vor dem Modalglied","end":".","tokens":["Das","Essen","schmeckt","gut"],"gap":3},{"id":"np-054","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich verstehe dich nicht.","explain":"Pronomen vor <b>nicht</b>.","rule":"nach Pronomen","end":".","tokens":["Ich","verstehe","dich"],"gap":3},{"id":"np-055","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Sie wartet nicht auf den Bus.","explain":"<i>warten auf</i> → <b>nicht</b> vor der Präposition, auch wenn ein bestimmter Artikel folgt.","rule":"vor der Verbpräposition","end":".","tokens":["Sie","wartet","auf","den","Bus"],"gap":2},{"id":"np-056","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Er glaubt nicht an Gott.","explain":"<i>glauben an</i> ist verbgebunden → <b>nicht</b> davor.","rule":"vor der Verbpräposition","end":".","tokens":["Er","glaubt","an","Gott"],"gap":2},{"id":"np-057","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich habe heute nicht mit ihm gesprochen.","explain":"Zeit → <b>nicht</b> → Modal (<i>mit ihm</i>) → Partizip.","rule":"Te — nicht — Mo","end":".","tokens":["Ich","habe","heute","mit","ihm","gesprochen"],"gap":3,"partial":2},{"id":"np-058","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Der Laden ist sonntags nicht geöffnet.","explain":"Zeitangabe vor <b>nicht</b>, Prädikativ dahinter.","rule":"nach der Zeitangabe","end":".","tokens":["Der","Laden","ist","sonntags","geöffnet"],"gap":4,"partial":3},{"id":"np-059","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich fahre morgen nicht mit dem Zug nach Köln.","explain":"Die ganze Kette: Temporal → <b>nicht</b> → Modal → Lokal.","rule":"Te — nicht — Mo — Lo","end":".","tokens":["Ich","fahre","morgen","mit","dem","Zug","nach","Köln"],"gap":3,"partial":2},{"id":"np-060","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Sie ist gestern nicht gekommen.","explain":"Zeitangabe vor <b>nicht</b>, Partizip dahinter.","rule":"vor dem Partizip","end":".","tokens":["Sie","ist","gestern","gekommen"],"gap":3,"partial":2},{"id":"np-061","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Wir dürfen hier nicht parken.","explain":"<i>hier</i> ist eine freie Ortsangabe (Wo?) → vor <b>nicht</b>.","rule":"freie Ortsangabe vor nicht","end":".","tokens":["Wir","dürfen","hier","parken"],"gap":3,"partial":2},{"id":"np-062","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Er kann nicht gut kochen.","explain":"Modalglied <i>gut</i> hinter <b>nicht</b>, Infinitiv am Ende.","rule":"vor dem Modalglied","end":".","tokens":["Er","kann","gut","kochen"],"gap":2},{"id":"np-063","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich habe den Schlüssel nicht gefunden.","explain":"Bestimmtes Objekt vor <b>nicht</b>, Partizip dahinter.","rule":"vor dem Partizip","end":".","tokens":["Ich","habe","den","Schlüssel","gefunden"],"gap":4},{"id":"np-064","kind":"slot","topic":"stellung","question":"Verneine den <u>ganzen</u> Satz. Wohin gehört <b>nicht</b>?","solution":"Ich muss mich nicht beeilen.","explain":"Reflexivpronomen vor <b>nicht</b>, Infinitiv dahinter.","rule":"vor dem Infinitiv","end":".","tokens":["Ich","muss","mich","beeilen"],"gap":3},{"id":"np-101","kind":"mc","topic":"stellung","question":"Wie lautet die Reihenfolge?","prompt":"Merkformel für die Stellung von <i>nicht</i>","options":["Temporal — Kausal — <b>nicht</b> — Modal — Lokal","Lokal — Modal — <b>nicht</b> — Kausal — Temporal","<b>nicht</b> — Temporal — Kausal — Modal — Lokal","Temporal — Modal — Lokal — Kausal — <b>nicht</b>"],"answer":"Temporal — Kausal — <b>nicht</b> — Modal — Lokal","explain":"Zeit- und Grundangaben stehen vor <i>nicht</i>, Art und Weise sowie Richtungs-/Ortsergänzungen dahinter.","rule":"Merkformel"},{"id":"np-102","kind":"mc","topic":"stellung","question":"Welcher Satz verneint den ganzen Satz?","prompt":"heute · ins Kino","options":["Ich gehe heute nicht ins Kino.","Ich gehe nicht heute ins Kino.","Nicht ich gehe heute ins Kino.","Ich gehe heute ins Kino nicht."],"answer":"Ich gehe heute nicht ins Kino.","explain":"Steht <i>nicht</i> vor <i>heute</i>, wird nur die Zeit verneint („nicht heute, sondern morgen“).","rule":"Satz- vs. Teilverneinung"},{"id":"np-103","kind":"mc","topic":"stellung","question":"Warum steht <b>nicht</b> vor <i>nach Berlin</i>?","prompt":"Ich fahre nicht nach Berlin.","options":["Weil eine Richtungsangabe eine Ergänzung des Verbs ist.","Weil <i>nach</i> eine Dativpräposition ist.","Weil Städtenamen kein <i>kein</i> erlauben.","Weil <i>fahren</i> ein starkes Verb ist."],"answer":"Weil eine Richtungsangabe eine Ergänzung des Verbs ist.","explain":"Alles, was das Verb zwingend braucht, bildet mit ihm eine Einheit am Satzende — <i>nicht</i> steht davor.","rule":"vor der Richtungsangabe"},{"id":"np-104","kind":"mc","topic":"stellung","question":"Welcher Satz ist richtig?","prompt":"trennbares Verb","options":["Ich rufe dich nicht an.","Ich rufe nicht dich an.","Ich rufe dich an nicht.","Ich nicht rufe dich an."],"answer":"Ich rufe dich nicht an.","explain":"Pronomen vor <i>nicht</i>, Präfix dahinter. <i>Ich rufe nicht dich an</i> wäre Teilverneinung („nicht dich, sondern ihn“).","rule":"vor dem Präfix"},{"id":"np-105","kind":"mc","topic":"stellung","question":"Welcher Satz ist richtig?","prompt":"Nebensatz mit <i>weil</i>","options":["…, weil ich ihn nicht kenne.","…, weil ich nicht ihn kenne.","…, weil ich ihn kenne nicht.","…, weil nicht ich ihn kenne."],"answer":"…, weil ich ihn nicht kenne.","explain":"Im Nebensatz steht <i>nicht</i> direkt vor dem Verb am Satzende.","rule":"vor dem Verb im Nebensatz"},{"id":"np-106","kind":"mc","topic":"stellung","question":"Wo steht <b>nicht</b> gegenüber einer Ortsangabe?","prompt":"Wo? oder Wohin?","options":["Vor einer Ergänzung (<i>wohnen in</i>, <i>fahren nach</i>), aber hinter einer freien Angabe (<i>hier</i>, <i>in Berlin</i> bei <i>treffen</i>).","Immer vor jeder Ortsangabe.","Immer hinter jeder Ortsangabe.","Ortsangaben spielen für die Stellung von <i>nicht</i> keine Rolle."],"answer":"Vor einer Ergänzung (<i>wohnen in</i>, <i>fahren nach</i>), aber hinter einer freien Angabe (<i>hier</i>, <i>in Berlin</i> bei <i>treffen</i>).","explain":"Der Test: Verlangt das Verb die Angabe? <i>Ich wohne</i> ist unvollständig, <i>ich habe ihn getroffen</i> nicht.","rule":"Ergänzung vs. Angabe"},{"id":"np-107","kind":"mc","topic":"stellung","question":"Welcher Satz ist richtig?","prompt":"zwei Pronomen","options":["Ich gebe es ihm nicht.","Ich gebe nicht es ihm.","Ich gebe es nicht ihm.","Ich nicht gebe es ihm."],"answer":"Ich gebe es ihm nicht.","explain":"Pronomen stehen geschlossen vor <i>nicht</i>. <i>Ich gebe es nicht ihm</i> wäre Teilverneinung („nicht ihm, sondern ihr“).","rule":"nach Pronomen"},{"id":"np-108","kind":"mc","topic":"stellung","question":"Welcher Satz ist richtig?","prompt":"Perfekt mit Modalangabe","options":["Ich habe gestern nicht gut geschlafen.","Ich habe nicht gestern gut geschlafen.","Ich habe gestern gut nicht geschlafen.","Ich habe gestern gut geschlafen nicht."],"answer":"Ich habe gestern nicht gut geschlafen.","explain":"Temporal vor <i>nicht</i>, Modal dahinter, Partizip am Ende.","rule":"Te — nicht — Mo"},{"id":"pn-001","kind":"mc","topic":"teilverneinung","question":"Welcher Satz sagt: „nicht heute, sondern morgen“?","prompt":"Ich fahre heute nach Berlin.","options":["Ich fahre nicht heute nach Berlin, sondern morgen.","Ich fahre heute nicht nach Berlin, sondern morgen.","Ich fahre heute nach Berlin nicht, sondern morgen.","Nicht ich fahre heute nach Berlin, sondern morgen."],"answer":"Ich fahre nicht heute nach Berlin, sondern morgen.","explain":"Bei Teilverneinung steht <b>nicht</b> direkt vor dem Wort, das widerlegt wird.","rule":"nicht direkt davor"},{"id":"pn-002","kind":"mc","topic":"teilverneinung","question":"Was bedeutet dieser Satz?","prompt":"Ich fahre heute nicht nach Berlin.","options":["Die Fahrt findet heute überhaupt nicht statt.","Ich fahre heute, aber woandershin.","Jemand anderes fährt nach Berlin.","Ich fahre an einem anderen Tag nach Berlin."],"answer":"Die Fahrt findet heute überhaupt nicht statt.","explain":"<b>nicht</b> an seiner normalen Position = Satzverneinung. Nur vorgezogenes <i>nicht</i> verneint ein einzelnes Wort.","rule":"Satzverneinung"},{"id":"pn-003","kind":"mc","topic":"teilverneinung","question":"Wer hat es gesagt?","prompt":"Nicht ich habe das gesagt, sondern er.","options":["Er.","Ich.","Beide.","Niemand."],"answer":"Er.","explain":"<b>Nicht</b> vor <i>ich</i> widerlegt genau dieses Wort; <i>sondern</i> liefert den Ersatz.","rule":"nicht direkt davor"},{"id":"pn-004","kind":"mc","topic":"teilverneinung","question":"Was hat er gekauft?","prompt":"Er hat nicht das Auto gekauft, sondern das Fahrrad.","options":["Das Fahrrad.","Das Auto.","Beides.","Nichts."],"answer":"Das Fahrrad.","explain":"Auch ein bestimmtes Objekt kann teilverneint werden, wenn <b>nicht</b> direkt davorsteht.","rule":"nicht direkt davor"},{"id":"pn-005","kind":"mc","topic":"teilverneinung","question":"Wo steht <b>nicht</b> bei einer Teilverneinung?","prompt":"Regel","options":["Direkt vor dem Wort, das widerlegt wird.","Immer am Satzende.","Immer vor dem konjugierten Verb.","Immer direkt hinter dem Subjekt."],"answer":"Direkt vor dem Wort, das widerlegt wird.","explain":"Die Position trägt die Bedeutung — sie zeigt, worauf sich die Verneinung bezieht.","rule":"nicht direkt davor"},{"id":"pn-006","kind":"mc","topic":"teilverneinung","question":"Ergänze: „Das Zimmer ist nicht klein, ___ groß.“","prompt":"sondern oder aber?","options":["sondern","aber","und","denn"],"answer":"sondern","explain":"<b>sondern</b> steht nach einer Verneinung, wenn der zweite Teil den ersten <u>ersetzt</u>.","rule":"sondern vs. aber"},{"id":"pn-007","kind":"mc","topic":"teilverneinung","question":"Ergänze: „Er ist nicht reich, ___ glücklich.“","prompt":"sondern oder aber?","options":["aber","sondern","oder","weil"],"answer":"aber","explain":"<i>glücklich</i> ersetzt <i>reich</i> nicht, sondern ergänzt es → <b>aber</b>. <i>sondern</i> nur bei echtem Ersatz.","rule":"sondern vs. aber"},{"id":"pn-008","kind":"mc","topic":"teilverneinung","question":"Ergänze: „Wir treffen uns nicht im Café, ___ im Park.“","prompt":"sondern oder aber?","options":["sondern","aber","und","trotzdem"],"answer":"sondern","explain":"Der Ort wird ersetzt → <b>sondern</b>.","rule":"sondern vs. aber"},{"id":"pn-009","kind":"mc","topic":"teilverneinung","question":"Wie verneint man nur das Verkehrsmittel?","prompt":"Sie kommt mit dem Zug.","options":["Sie kommt nicht mit dem Zug, sondern mit dem Auto.","Sie kommt mit dem Zug nicht, sondern mit dem Auto.","Nicht sie kommt mit dem Zug, sondern mit dem Auto.","Sie kommt kein Zug, sondern mit dem Auto."],"answer":"Sie kommt nicht mit dem Zug, sondern mit dem Auto.","explain":"<b>nicht</b> vor die modale Angabe stellen. Hier fällt das mit der normalen Satzverneinung zusammen — <i>sondern</i> macht die Teilverneinung eindeutig.","rule":"nicht direkt davor"},{"id":"pn-010","kind":"mc","topic":"teilverneinung","question":"Wen hat er gesehen?","prompt":"Ich habe nicht ihn gesehen, sondern seinen Bruder.","options":["Den Bruder.","Ihn.","Beide.","Keinen von beiden."],"answer":"Den Bruder.","explain":"Ein Pronomen steht normalerweise vor <i>nicht</i>. Steht es dahinter, ist es betont und teilverneint.","rule":"nicht direkt davor"},{"id":"pn-011","kind":"mc","topic":"teilverneinung","question":"Was bedeutet dieser Satz?","prompt":"Ich habe ihn nicht in Berlin getroffen.","options":["Getroffen ja, aber woanders.","Ich habe ihn überhaupt nicht getroffen.","Ich war nicht in Berlin.","Er war nicht in Berlin."],"answer":"Getroffen ja, aber woanders.","explain":"Vorgezogenes <b>nicht</b> vor der Ortsangabe verneint nur den Ort. Die Satzverneinung wäre <i>Ich habe ihn in Berlin nicht getroffen</i>.","rule":"Satz- vs. Teilverneinung"},{"id":"pn-012","kind":"mc","topic":"teilverneinung","question":"Was bedeutet dieser Satz?","prompt":"Ich habe ihn in Berlin nicht getroffen.","options":["Das Treffen in Berlin hat nicht stattgefunden.","Ich habe ihn woanders getroffen.","Er war gar nicht in Berlin.","Ich habe jemand anderen getroffen."],"answer":"Das Treffen in Berlin hat nicht stattgefunden.","explain":"Die freie Ortsangabe steht vor <b>nicht</b> — das ist die normale Satzverneinung.","rule":"Satz- vs. Teilverneinung"},{"id":"pn-013","kind":"mc","topic":"teilverneinung","question":"Was bedeutet: „Nicht alle Studenten haben bestanden.“?","prompt":"nicht alle","options":["Einige haben bestanden, aber nicht alle.","Kein einziger hat bestanden.","Alle haben bestanden.","Genau die Hälfte hat bestanden."],"answer":"Einige haben bestanden, aber nicht alle.","explain":"<b>nicht</b> verneint nur <i>alle</i>. „Kein einziger“ wäre <i>Keiner der Studenten hat bestanden</i>.","rule":"nicht direkt davor"},{"id":"pn-014","kind":"mc","topic":"teilverneinung","question":"Wie verneint man nur das Getränk?","prompt":"Ich trinke Kaffee.","options":["Ich trinke nicht Kaffee, sondern Tee.","Ich trinke keinen Kaffee, sondern Tee.","Ich trinke Kaffee nicht, sondern Tee.","Ich trinke nicht Kaffee, aber Tee."],"answer":"Ich trinke nicht Kaffee, sondern Tee.","explain":"Im Kontrast mit <i>sondern</i> nimmt auch ein artikelloses Nomen <b>nicht</b> statt <i>kein</i>.","rule":"Kontrast → nicht"},{"id":"pn-015","kind":"mc","topic":"teilverneinung","question":"Ergänze: „Sie ist ___ Lehrerin, sondern Erzieherin.“","prompt":"Beruf im Kontrast","options":["nicht","keine","kein","nicht eine"],"answer":"nicht","explain":"Ohne Kontrast <i>keine Lehrerin</i>, mit <i>sondern</i> aber <b>nicht Lehrerin</b>.","rule":"Kontrast → nicht"},{"id":"pn-016","kind":"mc","topic":"teilverneinung","question":"Wer hat angerufen?","prompt":"Nicht der Chef hat angerufen, sondern seine Sekretärin.","options":["Die Sekretärin.","Der Chef.","Beide.","Niemand."],"answer":"Die Sekretärin.","explain":"<b>Nicht</b> kann auch ganz an den Satzanfang rücken, wenn es das Subjekt widerlegt.","rule":"nicht direkt davor"},{"id":"pn-017","kind":"mc","topic":"teilverneinung","question":"Welcher Satz ist richtig?","prompt":"Arbeitsort im Kontrast","options":["Er arbeitet nicht in Berlin, sondern in Hamburg.","Er arbeitet in Berlin nicht, sondern in Hamburg.","Er arbeitet kein Berlin, sondern Hamburg.","Nicht er arbeitet in Berlin, sondern in Hamburg."],"answer":"Er arbeitet nicht in Berlin, sondern in Hamburg.","explain":"<b>nicht</b> vor die Ortsangabe, <i>sondern</i> liefert den Ersatz.","rule":"nicht direkt davor"},{"id":"pn-018","kind":"mc","topic":"teilverneinung","question":"Welcher Satz ist richtig?","prompt":"Adjektiv im Kontrast","options":["Das Buch ist nicht teuer, sondern billig.","Das Buch ist kein teuer, sondern billig.","Das Buch ist teuer nicht, sondern billig.","Nicht das Buch ist teuer, sondern billig."],"answer":"Das Buch ist nicht teuer, sondern billig.","explain":"Adjektive nehmen immer <b>nicht</b>, direkt davor.","rule":"Adjektiv → nicht"},{"id":"pn-019","kind":"typed","topic":"teilverneinung","question":"Ergänze mit <b>sondern</b> oder <b>aber</b>.","prompt":"Ich komme nicht am Montag, ___ am Dienstag.","answers":["sondern"],"explain":"Der Tag wird ersetzt → <b>sondern</b>.","hint":"Ersatz oder Zusatz?","rule":"sondern vs. aber"},{"id":"pn-020","kind":"typed","topic":"teilverneinung","question":"Ergänze mit <b>sondern</b> oder <b>aber</b>.","prompt":"Die Wohnung ist klein, ___ hell.","answers":["aber"],"explain":"Keine Verneinung im ersten Teil → nie <i>sondern</i>. Hier <b>aber</b>.","hint":"Ersatz oder Zusatz?","rule":"sondern vs. aber"},{"id":"pn-021","kind":"typed","topic":"teilverneinung","question":"Ergänze mit <b>sondern</b> oder <b>aber</b>.","prompt":"Er hat nicht angerufen, ___ geschrieben.","answers":["sondern"],"explain":"Die Handlung wird ersetzt → <b>sondern</b>.","hint":"Ersatz oder Zusatz?","rule":"sondern vs. aber"},{"id":"pn-022","kind":"typed","topic":"teilverneinung","question":"Ergänze mit <b>sondern</b> oder <b>aber</b>.","prompt":"Das Essen war nicht teuer, ___ leider auch nicht gut.","answers":["aber"],"explain":"Der zweite Teil ersetzt <i>teuer</i> nicht, er fügt etwas hinzu → <b>aber</b>.","hint":"Ersatz oder Zusatz?","rule":"sondern vs. aber"},{"id":"ne-001","kind":"mc","topic":"nicht-ein","question":"Wie sagt man „kein einziges Wort“ mit Betonung?","prompt":"Ich habe ein Wort verstanden.","options":["Ich habe nicht ein Wort verstanden.","Ich habe ein Wort nicht verstanden.","Ich habe nicht das Wort verstanden.","Ich habe ein nicht Wort verstanden."],"answer":"Ich habe nicht ein Wort verstanden.","explain":"<b>nicht ein</b> ist die betonte Variante: „nicht ein einziges“. Neutral wäre <i>kein Wort</i>.","rule":"nicht ein = Betonung"},{"id":"ne-002","kind":"mc","topic":"nicht-ein","question":"Wie lautet die <u>neutrale</u> Verneinung?","prompt":"Ich habe ein Auto.","options":["Ich habe kein Auto.","Ich habe nicht ein Auto.","Ich habe ein Auto nicht.","Ich habe nicht das Auto."],"answer":"Ich habe kein Auto.","explain":"<i>nicht ein</i> ist hier falsch: ohne Betonung oder Kontrast steht immer <b>kein</b>.","rule":"Standard bleibt kein"},{"id":"ne-003","kind":"mc","topic":"nicht-ein","question":"Warum steht hier <b>nicht ein</b>?","prompt":"Das ist nicht ein Problem, sondern zehn.","options":["Weil die Zahl <i>ein</i> im Kontrast zu <i>zehn</i> steht.","Weil <i>Problem</i> ein Neutrum ist.","Weil <i>kein</i> nach <i>sein</i> unmöglich ist.","Weil der Satz eine Frage beantwortet."],"answer":"Weil die Zahl <i>ein</i> im Kontrast zu <i>zehn</i> steht.","explain":"<i>ein</i> ist hier Zahlwort, nicht Artikel — deshalb kann es einzeln verneint werden.","rule":"nicht ein = Kontrast"},{"id":"ne-004","kind":"mc","topic":"nicht-ein","question":"Welcher Satz betont „nicht einen einzigen“?","prompt":"Fehler","options":["Er hat nicht einen Fehler gemacht, sondern viele.","Er hat keinen Fehler gemacht, sondern viele.","Er hat einen Fehler nicht gemacht, sondern viele.","Er hat nicht keinen Fehler gemacht."],"answer":"Er hat nicht einen Fehler gemacht, sondern viele.","explain":"Mit <i>sondern viele</i> ist <i>ein</i> ein Zahlwort im Kontrast → <b>nicht einen</b>.","rule":"nicht ein = Kontrast"},{"id":"ne-005","kind":"mc","topic":"nicht-ein","question":"Welche Verneinung ist hier richtig?","prompt":"Ein einziger Gast ist gekommen. → Verneinung mit Betonung","options":["Nicht ein einziger Gast ist gekommen.","Kein einziger Gast ist nicht gekommen.","Ein einziger Gast ist nicht gekommen.","Nicht einen einzigen Gast ist gekommen."],"answer":"Nicht ein einziger Gast ist gekommen.","explain":"Auch <i>Kein einziger Gast ist gekommen</i> wäre korrekt und noch üblicher — beide betonen dasselbe.","rule":"Betonte Verneinung"},{"id":"ne-006","kind":"mc","topic":"nicht-ein","question":"Was drückt <b>nicht ein</b> aus?","prompt":"Funktion","options":["Betonung („nicht ein einziger“) oder ausdrücklichen Kontrast.","Eine höflichere Verneinung als <i>kein</i>.","Eine Verneinung in der Vergangenheit.","Eine Verneinung im Nebensatz."],"answer":"Betonung („nicht ein einziger“) oder ausdrücklichen Kontrast.","explain":"Sonst ist <b>kein</b> die richtige Wahl. <i>nicht ein</i> ist die Ausnahme, nicht die Alternative.","rule":"nicht ein = Betonung"},{"id":"ne-007","kind":"mc","topic":"nicht-ein","question":"Welcher Satz ist im Alltag richtig?","prompt":"neutrale Aussage","options":["Ich habe keine Zeit.","Ich habe nicht eine Zeit.","Ich habe nicht Zeit gehabt keine.","Ich habe eine Zeit nicht."],"answer":"Ich habe keine Zeit.","explain":"Ohne Betonung oder <i>sondern</i>-Kontrast gilt immer die Grundregel: Nullartikel → <b>kein</b>.","rule":"Standard bleibt kein"},{"id":"ne-008","kind":"mc","topic":"nicht-ein","question":"Ergänze: „Es war ___ Zufall, sondern Absicht.“","prompt":"Kontrast","options":["kein","nicht","nicht kein","keinen"],"answer":"kein","explain":"Hier wird das Nomen selbst ersetzt, nicht die Zahl → <b>kein Zufall, sondern Absicht</b>. <i>nicht ein Zufall</i> ginge nur, wenn es um die Anzahl ginge.","rule":"Standard bleibt kein"},{"id":"nf-001","kind":"mc","topic":"wortfamilie","question":"Ergänze: „Ich habe ___ gesagt.“ (nothing)","prompt":"nichts oder kein?","options":["nichts","kein","keins","nicht"],"answer":"nichts","explain":"<b>nichts</b> ist ein Pronomen und ersetzt das ganze Objekt. <i>kein</i> braucht dagegen ein Nomen: <i>Ich habe kein Wort gesagt</i>.","rule":"nichts"},{"id":"nf-002","kind":"mc","topic":"wortfamilie","question":"Ergänze: „___ war da.“ (nobody)","prompt":"Personen","options":["Niemand","Nichts","Keins","Nicht"],"answer":"Niemand","explain":"<b>niemand</b> ist die Verneinung von <i>jemand</i>.","rule":"niemand"},{"id":"nf-003","kind":"mc","topic":"wortfamilie","question":"Ergänze: „Ich war ___ in Italien.“ (never)","prompt":"Zeit","options":["nie","nichts","nirgendwo","kein"],"answer":"nie","explain":"<b>nie</b> (oder <i>niemals</i>) verneint eine Zeitangabe.","rule":"nie"},{"id":"nf-004","kind":"mc","topic":"wortfamilie","question":"Ergänze: „Ich finde meine Brille ___.“ (nowhere)","prompt":"Ort","options":["nirgendwo","niemand","nichts","nie"],"answer":"nirgendwo","explain":"<b>nirgendwo</b> oder <i>nirgends</i> — die Verneinung von <i>irgendwo</i>.","rule":"nirgendwo"},{"id":"nf-005","kind":"mc","topic":"wortfamilie","question":"Ergänze: „Er ist ___ da.“ (not yet)","prompt":"noch nicht / nicht mehr","options":["noch nicht","nicht mehr","noch kein","gar nicht"],"answer":"noch nicht","explain":"<b>noch nicht</b> = es wird erwartet, ist aber bis jetzt nicht eingetreten.","rule":"noch nicht"},{"id":"nf-006","kind":"mc","topic":"wortfamilie","question":"Ergänze: „Ich habe ___ Ticket.“ (not yet a)","prompt":"noch kein","options":["noch kein","noch nicht","nicht mehr","kein mehr"],"answer":"noch kein","explain":"Vor einem Nomen heißt „noch nicht“ <b>noch kein-</b>: <i>noch kein Ticket</i>.","rule":"noch kein"},{"id":"nf-007","kind":"mc","topic":"wortfamilie","question":"Ergänze: „Ich rauche ___.“ (no longer)","prompt":"nicht mehr","options":["nicht mehr","noch nicht","nie mehr","kein mehr"],"answer":"nicht mehr","explain":"<b>nicht mehr</b> = früher ja, jetzt nicht.","rule":"nicht mehr"},{"id":"nf-008","kind":"mc","topic":"wortfamilie","question":"Ergänze: „Ich habe ___ Geld mehr.“","prompt":"kein … mehr","options":["kein","nicht","nichts","nie"],"answer":"kein","explain":"Vor einem Nomen wird aus <i>nicht mehr</i> die Klammer <b>kein … mehr</b>.","rule":"kein … mehr"},{"id":"nf-009","kind":"mc","topic":"wortfamilie","question":"Ergänze: „Das gefällt mir ___.“ (not at all)","prompt":"Verstärkung","options":["gar nicht","gar kein","nicht mehr","noch nicht"],"answer":"gar nicht","explain":"<b>gar nicht</b> oder <i>überhaupt nicht</i> verstärkt die Verneinung.","rule":"gar nicht"},{"id":"nf-010","kind":"mc","topic":"wortfamilie","question":"Ergänze: „Ich habe ___ Zeit.“ (none at all)","prompt":"Verstärkung vor einem Nomen","options":["gar keine","gar nicht","nicht mehr","noch keine"],"answer":"gar keine","explain":"Vor einem Nomen verstärkt <b>gar kein-</b>: <i>gar keine Zeit</i>.","rule":"gar kein"},{"id":"nf-011","kind":"mc","topic":"wortfamilie","question":"Ergänze: „Er hat ___ angerufen.“ (not even)","prompt":"Steigerung","options":["nicht einmal","nicht mehr","noch nicht","gar kein"],"answer":"nicht einmal","explain":"<b>nicht einmal</b> = nicht einmal das Minimum.","rule":"nicht einmal"},{"id":"nf-012","kind":"mc","topic":"wortfamilie","question":"Ergänze: „Ich trinke ___ Tee noch Kaffee.“","prompt":"doppelte Verneinung als Paar","options":["weder","nicht","kein","nie"],"answer":"weder","explain":"Das feste Paar ist <b>weder … noch</b> — es verneint beide Teile zugleich.","rule":"weder … noch"},{"id":"nf-013","kind":"mc","topic":"wortfamilie","question":"Was bedeutet: „Er arbeitet nicht mehr.“?","prompt":"nicht mehr","options":["Früher hat er gearbeitet, jetzt nicht.","Er hat noch nicht angefangen.","Er hat nie gearbeitet.","Er arbeitet nur wenig."],"answer":"Früher hat er gearbeitet, jetzt nicht.","explain":"<b>nicht mehr</b> beendet einen Zustand, <i>noch nicht</i> kündigt ihn an.","rule":"nicht mehr"},{"id":"nf-014","kind":"mc","topic":"wortfamilie","question":"Was bedeutet: „Er arbeitet noch nicht.“?","prompt":"noch nicht","options":["Der Anfang steht noch bevor.","Er hat aufgehört zu arbeiten.","Er wird nie arbeiten.","Er arbeitet gerade sehr viel."],"answer":"Der Anfang steht noch bevor.","explain":"<b>noch nicht</b> = bis jetzt nicht, aber erwartet.","rule":"noch nicht"},{"id":"nf-015","kind":"mc","topic":"wortfamilie","question":"Welcher Satz ist richtig?","prompt":"doppelte Verneinung","options":["Ich habe nichts gesagt.","Ich habe nichts nicht gesagt.","Ich habe kein nichts gesagt.","Ich habe nicht nichts gesagt."],"answer":"Ich habe nichts gesagt.","explain":"Im Standarddeutschen verneint man nur einmal. Zwei Verneinungen heben sich auf oder gelten als falsch.","rule":"keine doppelte Verneinung"},{"id":"nf-016","kind":"mc","topic":"wortfamilie","question":"Welcher Satz ist richtig?","prompt":"doppelte Verneinung","options":["Ich kenne hier niemanden.","Ich kenne hier keinen nicht.","Ich kenne hier nicht niemanden.","Ich kenne hier niemanden nicht."],"answer":"Ich kenne hier niemanden.","explain":"<b>niemanden</b> trägt die Verneinung allein — kein zusätzliches <i>nicht</i>.","rule":"keine doppelte Verneinung"},{"id":"nf-017","kind":"mc","topic":"wortfamilie","question":"Wie verneint man <i>jemand</i>?","prompt":"Gegenstücke","options":["niemand","nichts","nie","nirgendwo"],"answer":"niemand","explain":"Personen: <i>jemand</i> → <b>niemand</b>.","rule":"Gegenstücke"},{"id":"nf-018","kind":"mc","topic":"wortfamilie","question":"Wie verneint man <i>etwas</i>?","prompt":"Gegenstücke","options":["nichts","niemand","kein","nie"],"answer":"nichts","explain":"Sachen: <i>etwas</i> → <b>nichts</b>.","rule":"Gegenstücke"},{"id":"nf-019","kind":"mc","topic":"wortfamilie","question":"Wie verneint man <i>schon</i> (zeitlich)?","prompt":"Gegenstücke","options":["noch nicht","nicht mehr","nie","gar nicht"],"answer":"noch nicht","explain":"<i>Bist du schon fertig?</i> → <i>Nein, <b>noch nicht</b>.</i>","rule":"Gegenstücke"},{"id":"nf-020","kind":"mc","topic":"wortfamilie","question":"Wie verneint man <i>noch</i> (zeitlich)?","prompt":"Gegenstücke","options":["nicht mehr","noch nicht","nie","nirgendwo"],"answer":"nicht mehr","explain":"<i>Wohnst du noch dort?</i> → <i>Nein, <b>nicht mehr</b>.</i>","rule":"Gegenstücke"},{"id":"nf-021","kind":"mc","topic":"wortfamilie","question":"Wie verneint man <i>schon einmal</i>?","prompt":"Gegenstücke","options":["noch nie","noch nicht","nicht mehr","nirgendwo"],"answer":"noch nie","explain":"<i>Warst du schon einmal dort?</i> → <i>Nein, <b>noch nie</b>.</i>","rule":"Gegenstücke"},{"id":"nf-022","kind":"mc","topic":"wortfamilie","question":"Wie verneint man <i>irgendwo</i>?","prompt":"Gegenstücke","options":["nirgendwo","niemand","nie","nichts"],"answer":"nirgendwo","explain":"Orte: <i>irgendwo</i> → <b>nirgendwo</b> / <i>nirgends</i>.","rule":"Gegenstücke"},{"id":"nf-023","kind":"mc","topic":"wortfamilie","question":"Wie verneint man <i>immer</i>?","prompt":"Gegenstücke","options":["nie","nicht mehr","nichts","gar nicht"],"answer":"nie","explain":"Häufigkeit: <i>immer</i> → <b>nie</b> / <i>niemals</i>.","rule":"Gegenstücke"},{"id":"nf-024","kind":"mc","topic":"wortfamilie","question":"Ergänze: „Ich möchte ___ mehr essen.“ (nothing more)","prompt":"nichts mehr","options":["nichts","kein","nicht","niemand"],"answer":"nichts","explain":"<b>nichts mehr</b> — ohne folgendes Nomen steht <i>nichts</i>, nicht <i>kein</i>.","rule":"nichts"},{"id":"nf-025","kind":"mc","topic":"wortfamilie","question":"Welche Antwort passt?","prompt":"Hast du einen Stift?","options":["Nein, ich habe keinen.","Nein, ich habe kein.","Nein, ich habe nichts.","Nein, ich habe nicht."],"answer":"Nein, ich habe keinen.","explain":"Ohne Nomen wird <i>kein-</i> zum Pronomen und bekommt die volle Endung: <b>keinen</b> (m. Akk.).","rule":"kein als Pronomen"},{"id":"nf-026","kind":"mc","topic":"wortfamilie","question":"Welche Antwort passt?","prompt":"Möchtest du ein Bier?","options":["Nein danke, ich möchte keins.","Nein danke, ich möchte kein.","Nein danke, ich möchte nichts Bier.","Nein danke, ich möchte nicht eins."],"answer":"Nein danke, ich möchte keins.","explain":"Als Pronomen heißt das Neutrum <b>keins</b> (auch <i>keines</i>).","rule":"kein als Pronomen"},{"id":"nf-027","kind":"mc","topic":"wortfamilie","question":"Ergänze: „___ von meinen Freunden war da.“","prompt":"kein als Pronomen","options":["Keiner","Kein","Nichts","Niemand von"],"answer":"Keiner","explain":"Als Pronomen im Maskulinum Nominativ: <b>keiner</b>. (<i>Niemand von meinen Freunden</i> ginge auch.)","rule":"kein als Pronomen"},{"id":"nf-028","kind":"mc","topic":"wortfamilie","question":"Welcher Satz ist richtig?","prompt":"niemand im Akkusativ","options":["Ich habe niemanden gesehen.","Ich habe niemand gesehen.","Ich habe niemandem gesehen.","Ich habe keiner gesehen."],"answer":"Ich habe niemanden gesehen.","explain":"<b>niemand</b> wird dekliniert: Akkusativ <i>niemanden</i>, Dativ <i>niemandem</i>. (Die endungslose Form hört man umgangssprachlich.)","rule":"niemand"},{"id":"nf-029","kind":"mc","topic":"wortfamilie","question":"Welcher Satz ist richtig?","prompt":"niemand im Dativ","options":["Ich habe mit niemandem gesprochen.","Ich habe mit niemanden gesprochen.","Ich habe mit niemand gesprochen sein.","Ich habe mit nichts gesprochen."],"answer":"Ich habe mit niemandem gesprochen.","explain":"<i>mit</i> + Dativ → <b>niemandem</b>.","rule":"niemand"},{"id":"nf-030","kind":"mc","topic":"wortfamilie","question":"Ergänze: „Ich verstehe das ___.“ (überhaupt nicht)","prompt":"Verstärkung","options":["überhaupt nicht","überhaupt kein","gar kein","nicht überhaupt"],"answer":"überhaupt nicht","explain":"<b>überhaupt nicht</b> ist gleichbedeutend mit <i>gar nicht</i>.","rule":"gar nicht"},{"id":"nf-031","kind":"typed","topic":"wortfamilie","question":"Antworte verneint.","prompt":"Hast du etwas gehört? — Nein, ich habe ___ gehört.","answers":["nichts"],"explain":"Sachen ohne Nomen → <b>nichts</b>.","hint":"etwas → ?","rule":"nichts"},{"id":"nf-032","kind":"typed","topic":"wortfamilie","question":"Antworte verneint.","prompt":"Kennst du hier jemanden? — Nein, ich kenne hier ___.","answers":["niemanden","niemand"],"explain":"Akkusativ → <b>niemanden</b>. Die Form <i>niemand</i> ist umgangssprachlich möglich.","hint":"jemanden → ?","rule":"niemand"},{"id":"nf-033","kind":"typed","topic":"wortfamilie","question":"Antworte verneint.","prompt":"Hast du schon einen Termin? — Nein, ich habe noch ___ Termin.","answers":["keinen"],"explain":"<b>noch keinen</b> Termin — vor einem Nomen wird aus <i>noch nicht</i> <i>noch kein-</i>.","hint":"der Termin · Akkusativ","rule":"noch kein"},{"id":"nf-034","kind":"typed","topic":"wortfamilie","question":"Antworte verneint.","prompt":"Warst du schon einmal in Japan? — Nein, ich war ___ dort.","answers":["noch nie"],"explain":"<b>noch nie</b> = bis jetzt kein einziges Mal.","hint":"schon einmal → ?","rule":"noch nie"},{"id":"nf-035","kind":"typed","topic":"wortfamilie","question":"Antworte verneint.","prompt":"Ist noch Milch da? — Nein, es ist ___ Milch mehr da.","answers":["keine"],"explain":"Die Klammer <b>kein … mehr</b>: <i>keine Milch mehr</i>.","hint":"die Milch","rule":"kein … mehr"},{"id":"nf-036","kind":"typed","topic":"wortfamilie","question":"Antworte verneint.","prompt":"Wohnst du noch in Berlin? — Nein, ich wohne ___ dort.","answers":["nicht mehr"],"explain":"<i>noch</i> → <b>nicht mehr</b>.","hint":"noch → ?","rule":"nicht mehr"},{"id":"nf-037","kind":"typed","topic":"wortfamilie","question":"Antworte verneint.","prompt":"Bist du schon fertig? — Nein, ich bin ___ fertig.","answers":["noch nicht"],"explain":"<i>schon</i> → <b>noch nicht</b>.","hint":"schon → ?","rule":"noch nicht"},{"id":"nf-038","kind":"typed","topic":"wortfamilie","question":"Antworte verneint.","prompt":"Möchtest du noch etwas? — Nein danke, ich möchte ___ mehr.","answers":["nichts"],"explain":"<b>nichts mehr</b>.","hint":"etwas → ?","rule":"nichts"},{"id":"nf-039","kind":"typed","topic":"wortfamilie","question":"Ergänze das Paar.","prompt":"Ich fahre weder mit dem Auto ___ mit dem Bus.","answers":["noch"],"explain":"Das Paar heißt <b>weder … noch</b>.","hint":"weder … ?","rule":"weder … noch"},{"id":"nf-040","kind":"typed","topic":"wortfamilie","question":"Ergänze das Paar.","prompt":"___ Tee noch Kaffee stehen auf dem Tisch.","answers":["Weder"],"explain":"<b>Weder … noch</b> verneint beide Glieder.","hint":"… noch","rule":"weder … noch"},{"id":"nf-041","kind":"typed","topic":"wortfamilie","question":"Ergänze.","prompt":"Ich habe ___ Ahnung, wo er ist. (überhaupt keine)","answers":["gar keine","überhaupt keine"],"explain":"Verstärkung vor einem Nomen: <b>gar keine</b> / <i>überhaupt keine</i>.","hint":"die Ahnung","rule":"gar kein"},{"id":"nf-042","kind":"typed","topic":"wortfamilie","question":"Ergänze.","prompt":"Das interessiert mich ___. (überhaupt nicht)","answers":["gar nicht","überhaupt nicht"],"explain":"Ohne Nomen: <b>gar nicht</b> / <i>überhaupt nicht</i>.","hint":"kein Nomen im Satz","rule":"gar nicht"},{"id":"nf-043","kind":"typed","topic":"wortfamilie","question":"Ergänze.","prompt":"Er hat sich ___ bedankt. (not even)","answers":["nicht einmal"],"explain":"<b>nicht einmal</b> steht direkt vor dem, was übertroffen werden sollte.","hint":"not even","rule":"nicht einmal"},{"id":"nf-044","kind":"typed","topic":"wortfamilie","question":"Ergänze.","prompt":"___ hat mir geholfen. (nobody)","answers":["Niemand","Keiner"],"explain":"<b>Niemand</b> im Nominativ; <i>Keiner</i> ist ebenfalls möglich.","hint":"Subjekt","rule":"niemand"},{"id":"nf-045","kind":"typed","topic":"wortfamilie","question":"Ergänze.","prompt":"Ich habe das ___ gewusst. (never)","answers":["nie","niemals"],"explain":"<b>nie</b> oder <i>niemals</i>; die Stellung entspricht der von <i>nicht</i>.","hint":"never","rule":"nie"},{"id":"nf-046","kind":"typed","topic":"wortfamilie","question":"Ergänze.","prompt":"Ich konnte den Schlüssel ___ finden. (nowhere)","answers":["nirgendwo","nirgends"],"explain":"<b>nirgendwo</b> / <i>nirgends</i>.","hint":"nowhere","rule":"nirgendwo"},{"id":"nf-047","kind":"mc","topic":"wortfamilie","question":"Welcher Satz ist richtig?","prompt":"nichts oder kein?","options":["Ich habe kein Brot gekauft.","Ich habe nichts Brot gekauft.","Ich habe nicht Brot gekauft.","Ich habe nichts gekauft Brot."],"answer":"Ich habe kein Brot gekauft.","explain":"Steht ein Nomen da, nimmt man <b>kein-</b>. <i>nichts</i> ersetzt das Nomen: <i>Ich habe nichts gekauft</i>.","rule":"nichts vs. kein"},{"id":"nf-048","kind":"mc","topic":"wortfamilie","question":"Welcher Satz passt zu „Ich habe keine Zeit mehr“?","prompt":"Klammer","options":["Vorher hatte ich Zeit, jetzt ist sie zu Ende.","Ich hatte nie Zeit.","Ich werde später Zeit haben.","Ich habe sehr viel Zeit."],"answer":"Vorher hatte ich Zeit, jetzt ist sie zu Ende.","explain":"<b>kein … mehr</b> beendet einen Zustand — das nominale Gegenstück zu <i>nicht mehr</i>.","rule":"kein … mehr"},{"id":"pr-001","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Ich habe einen Hund.","answers":["Ich habe keinen Hund."],"explain":"<i>einen</i> → <b>keinen</b>.","rule":"ein → kein"},{"id":"pr-002","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Ich kenne den Mann.","answers":["Ich kenne den Mann nicht."],"explain":"Bestimmtes Objekt → <b>nicht</b> dahinter.","rule":"definit → nicht"},{"id":"pr-003","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Er ruft mich an.","answers":["Er ruft mich nicht an."],"explain":"<b>nicht</b> vor dem trennbaren Präfix.","rule":"Präfix"},{"id":"pr-004","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Wir haben Zeit.","answers":["Wir haben keine Zeit."],"explain":"Nullartikel → <b>keine</b>.","rule":"Nullartikel"},{"id":"pr-005","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Ich habe das Buch gelesen.","answers":["Ich habe das Buch nicht gelesen."],"explain":"<b>nicht</b> zwischen Objekt und Partizip.","rule":"Perfekt"},{"id":"pr-006","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Sie ist Lehrerin.","answers":["Sie ist keine Lehrerin."],"explain":"Beruf ohne Artikel → <b>keine</b>.","rule":"Beruf"},{"id":"pr-007","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Ich fahre nach Berlin.","answers":["Ich fahre nicht nach Berlin."],"explain":"Richtungsangabe → <b>nicht</b> davor.","rule":"Richtung"},{"id":"pr-008","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Der Kaffee ist heiß.","answers":["Der Kaffee ist nicht heiß."],"explain":"Prädikatives Adjektiv → <b>nicht</b> davor.","rule":"Adjektiv"},{"id":"pr-009","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Ich spreche Deutsch.","answers":["Ich spreche kein Deutsch."],"explain":"Sprache → <b>kein</b>.","rule":"Sprache"},{"id":"pr-010","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Ich habe Hunger.","answers":["Ich habe keinen Hunger."],"explain":"<i>der Hunger</i>, Akkusativ → <b>keinen</b>.","rule":"Abstraktum"},{"id":"pr-011","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Er wartet auf mich.","answers":["Er wartet nicht auf mich."],"explain":"Verbgebundene Präposition → <b>nicht</b> davor.","rule":"Verbpräposition"},{"id":"pr-012","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Ich gebe es ihm.","answers":["Ich gebe es ihm nicht."],"explain":"Pronomen vor <b>nicht</b>.","rule":"Pronomen"},{"id":"pr-013","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Ich arbeite heute.","answers":["Ich arbeite heute nicht."],"explain":"Bestimmte Zeitangabe vor <b>nicht</b>.","rule":"Zeitangabe"},{"id":"pr-014","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Sie hat Kinder.","answers":["Sie hat keine Kinder."],"explain":"Artikelloser Plural → <b>keine</b>.","rule":"Plural"},{"id":"pr-015","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Ich kann heute kommen.","answers":["Ich kann heute nicht kommen."],"explain":"<b>nicht</b> vor dem Infinitiv.","rule":"Infinitiv"},{"id":"pr-016","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Ich mag den Film.","answers":["Ich mag den Film nicht."],"explain":"Definites Objekt → <b>nicht</b> ans Ende.","rule":"definit → nicht"},{"id":"pr-017","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Ich trinke Kaffee.","answers":["Ich trinke keinen Kaffee."],"explain":"<i>der Kaffee</i>, Akkusativ → <b>keinen</b>.","rule":"Stoffname"},{"id":"pr-018","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Ich wohne in Berlin.","answers":["Ich wohne nicht in Berlin."],"explain":"Ortsergänzung bei <i>wohnen</i> → <b>nicht</b> davor.","rule":"Ortsergänzung"},{"id":"pr-019","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Er ist mein Freund.","answers":["Er ist nicht mein Freund."],"explain":"Possessivartikel → <b>nicht</b> davor.","rule":"definit → nicht"},{"id":"pr-020","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Ich habe ihn gesehen.","answers":["Ich habe ihn nicht gesehen."],"explain":"Pronomen vor <b>nicht</b>, Partizip dahinter.","rule":"Perfekt"},{"id":"pr-021","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Wir gehen heute ins Kino.","answers":["Wir gehen heute nicht ins Kino."],"explain":"Zeit → <b>nicht</b> → Richtung.","rule":"Te — nicht — Lo"},{"id":"pr-022","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Ich spiele Klavier.","answers":["Ich spiele nicht Klavier."],"explain":"Feste Wendung → <b>nicht</b>.","rule":"Feste Wendung"},{"id":"pr-023","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Sie hat einen Bruder.","answers":["Sie hat keinen Bruder."],"explain":"<i>einen</i> → <b>keinen</b>.","rule":"ein → kein"},{"id":"pr-024","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Ich verstehe die Frage.","answers":["Ich verstehe die Frage nicht."],"explain":"Definites Objekt → <b>nicht</b> dahinter.","rule":"definit → nicht"},{"id":"pr-025","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Das ist ein Problem.","answers":["Das ist kein Problem."],"explain":"<i>ein</i> → <b>kein</b>.","rule":"ein → kein"},{"id":"pr-026","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Ich habe Angst.","answers":["Ich habe keine Angst."],"explain":"<i>die Angst</i>, Akkusativ → <b>keine</b>.","rule":"Abstraktum"},{"id":"pr-027","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Er hat mir geholfen.","answers":["Er hat mir nicht geholfen."],"explain":"Dativpronomen vor <b>nicht</b>.","rule":"Pronomen"},{"id":"pr-028","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Ich stehe früh auf.","answers":["Ich stehe nicht früh auf."],"explain":"Modalglied hinter <b>nicht</b>, Präfix am Ende.","rule":"Präfix"},{"id":"pr-029","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Ich brauche deine Hilfe.","answers":["Ich brauche deine Hilfe nicht."],"explain":"Possessivartikel → <b>nicht</b>, nachgestellt.","rule":"definit → nicht"},{"id":"pr-030","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Sie kommt morgen.","answers":["Sie kommt morgen nicht."],"explain":"Bestimmte Zeitangabe vor <b>nicht</b>.","rule":"Zeitangabe"},{"id":"pr-031","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Ich habe Milch gekauft.","answers":["Ich habe keine Milch gekauft."],"explain":"Stoffname ohne Artikel → <b>keine</b>.","rule":"Stoffname"},{"id":"pr-032","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Wir haben uns getroffen.","answers":["Wir haben uns nicht getroffen."],"explain":"Reflexivpronomen vor <b>nicht</b>.","rule":"Pronomen"},{"id":"pr-033","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Das Zimmer ist groß.","answers":["Das Zimmer ist nicht groß."],"explain":"Adjektiv → <b>nicht</b> davor.","rule":"Adjektiv"},{"id":"pr-034","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Ich nehme diesen Zug.","answers":["Ich nehme diesen Zug nicht."],"explain":"<i>dies-</i> ist bestimmt → <b>nicht</b> dahinter.","rule":"definit → nicht"},{"id":"pr-035","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Er hat eine Wohnung gefunden.","answers":["Er hat keine Wohnung gefunden."],"explain":"<i>eine</i> → <b>keine</b>.","rule":"ein → kein"},{"id":"pr-036","kind":"typed","topic":"produktion","question":"Verneine den ganzen Satz. Schreibe ihn vollständig.","prompt":"Ich kenne Berlin.","answers":["Ich kenne Berlin nicht."],"explain":"Eigenname → <b>nicht</b>, nachgestellt.","rule":"Name"},{"id":"fe-001","kind":"mc","topic":"fehler","question":"Der Satz ist falsch. Wie heißt er richtig?","prompt":"✗ Ich habe nicht Zeit.","options":["Ich habe keine Zeit.","Ich habe nicht die Zeit.","Ich habe Zeit nicht.","Ich habe nichts Zeit."],"answer":"Ich habe keine Zeit.","explain":"Nullartikel vor einem Abstraktum → <b>kein-</b>, nicht <i>nicht</i>.","rule":"Nullartikel → kein"},{"id":"fe-002","kind":"mc","topic":"fehler","question":"Der Satz ist falsch. Wie heißt er richtig?","prompt":"✗ Ich kenne keinen den Mann.","options":["Ich kenne den Mann nicht.","Ich kenne nicht den Mann.","Ich kenne den Mann kein.","Ich kenne keinen Mann nicht."],"answer":"Ich kenne den Mann nicht.","explain":"<i>kein-</i> und ein bestimmter Artikel schließen sich aus. Bestimmtes Objekt → <b>nicht</b> dahinter.","rule":"definit → nicht"},{"id":"fe-003","kind":"mc","topic":"fehler","question":"Der Satz ist falsch (ohne Kontrast). Wie heißt er richtig?","prompt":"✗ Er ist nicht Arzt.","options":["Er ist kein Arzt.","Er ist nicht ein Arzt.","Er ist Arzt nicht.","Er ist keinen Arzt."],"answer":"Er ist kein Arzt.","explain":"Ohne <i>sondern</i>-Kontrast nimmt der Beruf <b>kein</b>.","rule":"Beruf → kein"},{"id":"fe-004","kind":"mc","topic":"fehler","question":"Gemeint ist die Satzverneinung. Wie heißt sie richtig?","prompt":"✗ Ich rufe nicht dich an.","options":["Ich rufe dich nicht an.","Ich rufe dich an nicht.","Ich nicht rufe dich an.","Ich rufe kein dich an."],"answer":"Ich rufe dich nicht an.","explain":"Vor dem Pronomen wäre <i>nicht</i> Teilverneinung („nicht dich, sondern ihn“).","rule":"Pronomen"},{"id":"fe-005","kind":"mc","topic":"fehler","question":"Der Satz ist falsch. Wie heißt er richtig?","prompt":"✗ Ich habe das Buch gelesen nicht.","options":["Ich habe das Buch nicht gelesen.","Ich habe nicht das Buch gelesen.","Ich habe das nicht Buch gelesen.","Ich habe kein Buch gelesen nicht."],"answer":"Ich habe das Buch nicht gelesen.","explain":"Das Partizip bleibt am Satzende; <b>nicht</b> steht davor.","rule":"Perfekt"},{"id":"fe-006","kind":"mc","topic":"fehler","question":"Umgangssprachlich hört man das oft. Welche Form erwartet die Prüfung?","prompt":"Ich spiele kein Klavier.","options":["Ich spiele nicht Klavier.","Ich spiele Klavier nicht.","Ich spiele keinen Klavier.","Ich spiele nicht ein Klavier."],"answer":"Ich spiele nicht Klavier.","explain":"<i>Klavier spielen</i> ist eine feste Verb-Nomen-Verbindung → die Lehrbuchform ist <b>nicht</b>. <i>kein Klavier</i> ist im Alltag verbreitet und nicht wirklich falsch — schreib in der Prüfung trotzdem <b>nicht</b>.","rule":"Feste Wendung → nicht"},{"id":"fe-007","kind":"mc","topic":"fehler","question":"Der Satz ist falsch. Wie heißt er richtig?","prompt":"✗ Ich spreche nicht Deutsch.","options":["Ich spreche kein Deutsch.","Ich spreche keinen Deutsch.","Ich spreche Deutsch nicht.","Ich spreche nicht ein Deutsch."],"answer":"Ich spreche kein Deutsch.","explain":"Sprachen sind die Gegenausnahme zu den festen Wendungen → <b>kein</b>.","rule":"Sprache → kein"},{"id":"fe-008","kind":"mc","topic":"fehler","question":"Der Satz ist falsch. Wie heißt er richtig?","prompt":"✗ Ich habe keine Hunger.","options":["Ich habe keinen Hunger.","Ich habe kein Hunger.","Ich habe keinem Hunger.","Ich habe nicht Hunger."],"answer":"Ich habe keinen Hunger.","explain":"<i>der Hunger</i> im Akkusativ → <b>keinen</b>.","rule":"Deklination"},{"id":"fe-009","kind":"mc","topic":"fehler","question":"Der Satz ist falsch. Wie heißt er richtig?","prompt":"✗ Ich habe nichts nicht gesagt.","options":["Ich habe nichts gesagt.","Ich habe nicht nichts gesagt.","Ich habe kein nichts gesagt.","Ich habe nichts gesagt nicht."],"answer":"Ich habe nichts gesagt.","explain":"Im Standarddeutschen wird nur einmal verneint.","rule":"keine doppelte Verneinung"},{"id":"fe-010","kind":"mc","topic":"fehler","question":"Der Satz ist falsch. Wie heißt er richtig?","prompt":"✗ Ich fahre nach Berlin nicht.","options":["Ich fahre nicht nach Berlin.","Ich fahre kein Berlin.","Nicht ich fahre nach Berlin.","Ich nicht fahre nach Berlin."],"answer":"Ich fahre nicht nach Berlin.","explain":"Die Richtungsangabe ist eine Ergänzung — <b>nicht</b> steht davor, nicht dahinter.","rule":"Richtung"},{"id":"fe-011","kind":"mc","topic":"fehler","question":"Der Satz ist falsch. Wie heißt er richtig?","prompt":"✗ Er wartet auf mich nicht.","options":["Er wartet nicht auf mich.","Er wartet auf mich kein.","Er nicht wartet auf mich.","Er wartet auf nicht mich."],"answer":"Er wartet nicht auf mich.","explain":"<i>warten auf</i> gehört zusammen — <b>nicht</b> steht vor der Präposition.","rule":"Verbpräposition"},{"id":"fe-012","kind":"mc","topic":"fehler","question":"Der Satz ist falsch. Wie heißt er richtig?","prompt":"✗ Ich bleibe zu Hause, weil ich ihn kenne nicht.","options":["Ich bleibe zu Hause, weil ich ihn nicht kenne.","Ich bleibe zu Hause, weil ich nicht ihn kenne.","Ich bleibe zu Hause, weil nicht ich ihn kenne.","Ich bleibe zu Hause, weil ich ihn kein kenne."],"answer":"Ich bleibe zu Hause, weil ich ihn nicht kenne.","explain":"Im Nebensatz steht das Verb am Ende, <b>nicht</b> direkt davor.","rule":"Nebensatz"},{"id":"fe-013","kind":"mc","topic":"fehler","question":"Der Satz ist falsch. Wie heißt er richtig?","prompt":"✗ Ich habe kein Kinder.","options":["Ich habe keine Kinder.","Ich habe keinen Kinder.","Ich habe nicht Kinder.","Ich habe keinem Kinder."],"answer":"Ich habe keine Kinder.","explain":"Plural Akkusativ → <b>keine</b>.","rule":"Deklination"},{"id":"fe-014","kind":"mc","topic":"fehler","question":"Gemeint ist eine neutrale Aussage. Wie heißt sie richtig?","prompt":"✗ Ich habe nicht ein Auto.","options":["Ich habe kein Auto.","Ich habe ein Auto nicht.","Ich habe nichts Auto.","Ich habe nicht das Auto."],"answer":"Ich habe kein Auto.","explain":"<i>nicht ein</i> geht nur bei Betonung („nicht ein einziges“) oder Kontrast.","rule":"Standard bleibt kein"},{"id":"fe-015","kind":"mc","topic":"fehler","question":"Der Satz ist falsch. Wie heißt er richtig?","prompt":"✗ Sie hat keine Bruder.","options":["Sie hat keinen Bruder.","Sie hat kein Bruder.","Sie hat keinem Bruder.","Sie hat nicht Bruder."],"answer":"Sie hat keinen Bruder.","explain":"<i>der Bruder</i> im Akkusativ → <b>keinen</b>.","rule":"Deklination"},{"id":"fe-016","kind":"mc","topic":"fehler","question":"Der Satz ist falsch. Wie heißt er richtig?","prompt":"✗ Ich gehe nicht heute ins Kino. (gemeint: gar nicht)","options":["Ich gehe heute nicht ins Kino.","Ich gehe heute ins Kino nicht.","Nicht ich gehe heute ins Kino.","Ich gehe heute kein Kino."],"answer":"Ich gehe heute nicht ins Kino.","explain":"Vor <i>heute</i> wäre nur die Zeit verneint. Für die Satzverneinung steht <b>nicht</b> nach der Zeitangabe.","rule":"Satz- vs. Teilverneinung"}];
+
+/* ============================ storage ============================ */
+const KEY = "verneinung.v1";
+const mem = {};
+const store = {
+  get(k){ try{ return localStorage.getItem(k); }catch(e){ return k in mem ? mem[k] : null; } },
+  set(k,v){ try{ localStorage.setItem(k,v); }catch(e){ mem[k]=v; } },
+  del(k){ try{ localStorage.removeItem(k); }catch(e){ delete mem[k]; } }
+};
+let PERSISTS = true;
+try{ localStorage.setItem(KEY+".probe","1"); localStorage.removeItem(KEY+".probe"); }
+catch(e){ PERSISTS = false; }
+
+/* ============================ model ============================== */
+const DAY = 86400000;
+// Leitner intervals. Box 0 = new or just lapsed; box 5 = mastered.
+const IVL = [0, 10*60000, 1*DAY, 3*DAY, 7*DAY, 21*DAY];
+const MASTER_BOX = 5;
+
+const TOPICS = {
+  "kein-nicht":    {name:"kein oder nicht",      blurb:"Die Grundentscheidung"},
+  "kein-formen":   {name:"Formen von kein-",     blurb:"Endungen nach Kasus"},
+  "nullartikel":   {name:"Nullartikel",          blurb:"Beruf, Stoff, feste Wendungen"},
+  "stellung":      {name:"Stellung von nicht",   blurb:"Wo im Satz?"},
+  "teilverneinung":{name:"Teilverneinung",       blurb:"nicht … sondern"},
+  "nicht-ein":     {name:"nicht ein",            blurb:"Die Ausnahme"},
+  "wortfamilie":   {name:"Wortfamilie",          blurb:"nichts, niemand, nie, noch nicht"},
+  "produktion":    {name:"Selbst schreiben",     blurb:"Ganze Sätze verneinen"},
+  "fehler":        {name:"Fehler finden",        blurb:"Typische Stolperstellen"}
+};
+const TOPIC_ORDER = Object.keys(TOPICS);
+
+let S = load();
+function blank(){
+  return {v:1, items:{}, stats:{answered:0, correct:0, sessions:0, days:{}, lastDay:null, streak:0}};
+}
+function load(){
+  try{
+    const raw = store.get(KEY);
+    if(!raw) return blank();
+    const p = JSON.parse(raw);
+    if(!p || p.v !== 1) return blank();
+    p.items = p.items || {}; p.stats = p.stats || blank().stats;
+    p.stats.days = p.stats.days || {};
+    return p;
+  }catch(e){ return blank(); }
+}
+let saveTimer = null;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(()=>{ store.set(KEY, JSON.stringify(S)); }, 120);
+}
+function rec(id){
+  if(!S.items[id]) S.items[id] = {b:0, due:0, s:0, c:0, w:0, lap:0, seen:0};
+  return S.items[id];
+}
+const isMastered = id => (S.items[id]?.b || 0) >= MASTER_BOX;
+const isDue = id => { const r = S.items[id]; return r && r.b > 0 && r.b < MASTER_BOX + 1 && r.due <= Date.now(); };
+const isNew = id => !S.items[id] || S.items[id].seen === 0;
+
+function grade(id, ok){
+  const r = rec(id); const now = Date.now();
+  r.seen++;
+  if(ok){ r.c++; r.s++; r.b = Math.min(MASTER_BOX, r.b + 1); }
+  else  { r.w++; r.s = 0; if(r.b > 0) r.lap++; r.b = 0; }
+  r.due = now + (IVL[Math.min(r.b, IVL.length-1)] || 0);
+  S.stats.answered++; if(ok) S.stats.correct++;
+  const d = new Date().toISOString().slice(0,10);
+  S.stats.days[d] = (S.stats.days[d]||0) + 1;
+  if(S.stats.lastDay !== d){
+    const y = new Date(Date.now()-DAY).toISOString().slice(0,10);
+    S.stats.streak = (S.stats.lastDay === y) ? (S.stats.streak||0)+1 : 1;
+    S.stats.lastDay = d;
+  }
+  save();
+}
+
+/* ============================ helpers ============================ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function norm(s){
+  return String(s).toLowerCase()
+    .replace(/ß/g,"ss").replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue")
+    .replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
+}
+// Damerau-Levenshtein: a swapped pair of letters ("Hnud") is one typo, not two.
+function lev(a,b){
+  const m=a.length,n=b.length; if(!m) return n; if(!n) return m;
+  const d=Array.from({length:m+1},(_,i)=>{const r=new Array(n+1).fill(0);r[0]=i;return r;});
+  for(let j=0;j<=n;j++) d[0][j]=j;
+  for(let i=1;i<=m;i++) for(let j=1;j<=n;j++){
+    const c = a[i-1]===b[j-1] ? 0 : 1;
+    d[i][j] = Math.min(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1]+c);
+    if(i>1 && j>1 && a[i-1]===b[j-2] && a[i-2]===b[j-1])
+      d[i][j] = Math.min(d[i][j], d[i-2][j-2]+1);
+  }
+  return d[m][n];
+}
+const NEGWORD = /^(nicht|kein|keine|keinen|keinem|keiner|keines|keins|nichts|nie|niemals|niemand|niemanden|niemandem|nirgendwo|nirgends|weder|noch|sondern|aber|mehr|einmal|gar|ueberhaupt)$/;
+
+// Returns "ok" | "typo" | "no". Typos are forgiven only away from the negator,
+// and never for single-word answers, where the ending IS the exercise.
+function checkTyped(input, answers){
+  const u = norm(input);
+  if(!u) return "no";
+  for(const a of answers) if(u === norm(a)) return "ok";
+  for(const a of answers){
+    const A = norm(a).split(" "), U = u.split(" ");
+    if(A.length < 2 || A.length !== U.length) continue;
+    let diff = -1, n = 0;
+    for(let i=0;i<A.length;i++) if(A[i]!==U[i]){ n++; diff=i; }
+    if(n !== 1) continue;
+    if(NEGWORD.test(A[diff]) || NEGWORD.test(U[diff])) continue;
+    if(lev(A[diff], U[diff]) <= 1) return "typo";
+  }
+  return "no";
+}
+
+/* ============================ session ============================ */
+let SES = null;
+
+function pool(mode, topic){
+  let ids = BANK.map(q=>q.id);
+  if(topic) ids = BANK.filter(q=>q.topic===topic).map(q=>q.id);
+  if(mode==="leech") return ids.filter(id=>(S.items[id]?.lap||0)>=2 && !isMastered(id));
+  return ids;
+}
+
+function buildQueue(mode, topic, size){
+  const ids = pool(mode, topic);
+  if(mode==="exam") return shuffle(ids).slice(0, size);
+  if(mode==="leech") return shuffle(ids).slice(0, size);
+
+  const due = ids.filter(isDue).sort((a,b)=>S.items[a].due - S.items[b].due);
+  const fresh = shuffle(ids.filter(isNew));
+  // topic-round-robin the new ones so a session never sits in one corner
+  const byTopic = {};
+  fresh.forEach(id=>{ const t = BANK.find(q=>q.id===id).topic; (byTopic[t] ||= []).push(id); });
+  const woven = [];
+  let added = true;
+  while(added){ added=false;
+    for(const t of TOPIC_ORDER){ const q = byTopic[t]; if(q && q.length){ woven.push(q.shift()); added=true; } }
+  }
+  const rest = shuffle(ids.filter(id=>!isNew(id) && !isDue(id) && !isMastered(id)))
+                 .sort((a,b)=>(S.items[a].b||0)-(S.items[b].b||0));
+  return [...due, ...woven, ...rest, ...shuffle(ids.filter(isMastered))].slice(0, size);
+}
+
+function start(mode, topic, size){
+  const q = buildQueue(mode, topic, size);
+  if(!q.length){ render(); return; }
+  SES = {mode, topic, queue:q, i:0, results:[], answered:new Set(), pending:new Set()};
+  S.stats.sessions++; save();
+  show("drill"); renderQ();
+}
+
+function current(){ return BANK.find(q=>q.id === SES.queue[SES.i]); }
+
+function next(){
+  SES.i++;
+  if(SES.i >= SES.queue.length){ show("sum"); renderSum(); return; }
+  renderQ();
+}
+
+// A wrong answer comes back later in the same sitting -- a session is not
+// finished until everything in it has been answered correctly once.
+function requeue(id){
+  const at = Math.min(SES.queue.length, SES.i + 4 + Math.floor(Math.random()*3));
+  SES.queue.splice(at, 0, id);
+}
+
+/* ============================ views ============================== */
+function show(v){
+  ["home","drill","prog","sum"].forEach(k=> $("#view-"+k).classList.toggle("hidden", k!==v));
+  $("#nav-home").setAttribute("aria-current", v==="home");
+  $("#nav-prog").setAttribute("aria-current", v==="prog");
+  window.scrollTo(0,0);
+  paintRail();
+}
+
+function counts(){
+  let m=0, mid=0, seen=0, due=0, leech=0;
+  for(const q of BANK){
+    const r = S.items[q.id];
+    if(!r || !r.seen) continue;
+    seen++;
+    if(r.b >= MASTER_BOX) m++; else if(r.b >= 2) mid++;
+    if(isDue(q.id)) due++;
+    if((r.lap||0) >= 2 && r.b < MASTER_BOX) leech++;
+  }
+  return {total:BANK.length, mastered:m, mid, seen, due, leech, newly:BANK.length-seen};
+}
+
+function paintRail(){
+  const c = counts(), n = c.total;
+  const m = $("#meter").children;
+  m[0].style.width = (c.mastered/n*100)+"%";
+  m[1].style.width = (c.mid/n*100)+"%";
+  m[2].style.width = ((c.seen-c.mastered-c.mid)/n*100)+"%";
+  const acc = S.stats.answered ? Math.round(S.stats.correct/S.stats.answered*100) : 0;
+  $("#railstat").innerHTML =
+    `<span><b>${c.mastered}</b>/${n} beherrscht</span>` +
+    `<span><b>${c.due}</b> fällig</span>` +
+    `<span><b>${c.newly}</b> neu</span>` +
+    (S.stats.answered ? `<span>Treffer <b>${acc}%</b></span>` : "") +
+    (S.stats.streak > 1 ? `<span><b>${S.stats.streak}</b> Tage in Folge</span>` : "");
+  $("#foot").innerHTML = PERSISTS
+    ? "Fortschritt wird in diesem Browser gespeichert."
+    : "Achtung: Dieser Browser erlaubt keinen Speicher — der Fortschritt gilt nur für diese Sitzung. Lade die Datei herunter und öffne sie lokal.";
+}
+
+/* ---------- home ---------- */
+let SIZE = 20;
+function renderHome(){
+  const c = counts();
+  const topicRows = TOPIC_ORDER.map(t=>{
+    const ids = BANK.filter(q=>q.topic===t).map(q=>q.id);
+    const done = ids.filter(isMastered).length;
+    return `<button class="mode" data-topic="${t}">
+      <span><h3>${TOPICS[t].name}</h3><p>${TOPICS[t].blurb}</p></span>
+      <span class="count">${done}/${ids.length}</span></button>`;
+  }).join("");
+
+  $("#view-home").innerHTML = `
+    <h1 class="lede">Verneinen, bis es sitzt.</h1>
+    <p class="sub">${BANK.length} Aufgaben zu <i>nicht</i>, <i>kein</i>, der Stellung im Satz und der ganzen
+    Wortfamilie. Jede Aufgabe wandert durch fünf Fächer — erst nach fünf richtigen Antworten in Folge,
+    verteilt über mehrere Tage, gilt sie als beherrscht.</p>
+
+    <div class="modes">
+      <button class="mode" data-mode="srs">
+        <span><h3>Weiterüben</h3><p>${c.due} fällig, ${c.newly} noch nie gesehen</p></span>
+        <span class="count">${SIZE} Fragen</span></button>
+      <button class="mode" data-mode="exam">
+        <span><h3>Prüfung</h3><p>30 gemischte Fragen quer durch alle Themen</p></span>
+        <span class="count">30</span></button>
+      <button class="mode" data-mode="leech" ${c.leech?"":"disabled"}>
+        <span><h3>Wackelkandidaten</h3><p>${c.leech ? c.leech+" Aufgaben, die dich mehrfach erwischt haben" : "Noch keine — kommt von selbst"}</p></span>
+        <span class="count">${c.leech||"—"}</span></button>
+    </div>
+
+    <div class="seg"><span>Länge</span>
+      ${[10,20,40].map(n=>`<button class="segbtn" data-size="${n}" aria-pressed="${SIZE===n}">${n}</button>`).join("")}
+    </div>
+
+    <h2 class="sec">Einzelne Themen</h2>
+    <div class="modes">${topicRows}</div>`;
+
+  $("#view-home").querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{
+    const m = b.dataset.mode;
+    start(m, null, m==="exam" ? 30 : (m==="leech" ? 20 : SIZE));
+  });
+  $("#view-home").querySelectorAll("[data-topic]").forEach(b=>b.onclick=()=>start("srs", b.dataset.topic, SIZE));
+  $("#view-home").querySelectorAll("[data-size]").forEach(b=>b.onclick=()=>{ SIZE=+b.dataset.size; renderHome(); });
+}
+
+/* ---------- drill ---------- */
+let LOCK = false, PICKED = null;
+
+function renderQ(){
+  const q = current(); LOCK = false; PICKED = null;
+  const r = S.items[q.id];
+  const boxLabel = !r || !r.seen ? "neu" : `Fach ${r.b}/${MASTER_BOX}`;
+  const inlineHint = q.hint && q.topic === "kein-formen";
+
+  let body = "";
+  if(q.kind === "mc"){
+    const opts = shuffle(q.options);
+    body = `<div class="opts">` + opts.map((o,i)=>
+      `<button class="opt" data-opt="${esc(o)}"><span class="key">${i+1}</span><span>${o}</span></button>`
+    ).join("") + `</div>`;
+  }
+  else if(q.kind === "slot"){
+    // token, caret, token, caret … caret. Gap 0 is never the answer (that would
+    // need a capital "Nicht"), so the sentence opens with its first word.
+    // Terminal punctuation is kept outside the last token, otherwise a
+    // sentence-final "nicht" would land after the full stop.
+    const seq = [];
+    for(let i=0;i<q.tokens.length;i++){
+      if(i>0) seq.push(caretHTML(i));
+      seq.push(`<span class="tok">${esc(q.tokens[i])}</span>`);
+    }
+    seq.push(caretHTML(q.tokens.length));
+    body = `<div class="sent" id="sent">${seq.join(" ")}<span class="tok">${esc(q.end||"")}</span></div>`;
+  }
+  else {
+    body = `<div class="typed">
+      <input id="inp" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"
+             aria-label="Antwort" placeholder="Antwort eingeben…">
+      <button class="btn" id="check">Prüfen</button></div>`;
+  }
+
+  $("#view-drill").innerHTML = `
+    <div class="card">
+      <div class="eyebrow">
+        <span>${TOPICS[q.topic].name}</span><span class="dot"></span>
+        <span>${boxLabel}</span><span class="dot"></span>
+        <span>${SES.i+1} / ${SES.queue.length}</span>
+      </div>
+      <p class="qtext">${q.question}</p>
+      <p class="prompt">${q.prompt || ""}</p>
+      ${inlineHint ? `<p class="hintline">${q.hint}</p>` : ""}
+      ${body}
+      ${(q.hint && !inlineHint) ? `<p class="hintline hidden" id="hintline">${q.hint}</p>
+        <p style="margin:12px 0 0"><button class="hintbtn" id="hintbtn">Tipp anzeigen</button></p>` : ""}
+      <div id="fb"></div>
+    </div>`;
+
+  if(q.kind === "mc")
+    $("#view-drill").querySelectorAll(".opt").forEach(b=> b.onclick=()=>answerMC(b.dataset.opt));
+  if(q.kind === "slot")
+    $("#view-drill").querySelectorAll(".caret").forEach(b=> b.onclick=()=>answerSlot(+b.dataset.gap));
+  if(q.kind === "typed"){
+    const inp = $("#inp");
+    inp.focus();
+    $("#check").onclick = ()=>answerTyped(inp.value);
+    inp.onkeydown = e=>{ if(e.key==="Enter"){ e.preventDefault(); LOCK ? next() : answerTyped(inp.value); } };
+  }
+  const hb = $("#hintbtn");
+  if(hb) hb.onclick = ()=>{ $("#hintline").classList.remove("hidden"); hb.remove(); };
+  paintRail();
+}
+
+// Carets are rendered for gaps 1..n; gap 0 is skipped because it would need a
+// capital "Nicht". The visible number is therefore the gap itself, which keeps
+// the number key, the label and the slot in agreement.
+function caretHTML(gap){
+  return `<button class="caret" data-gap="${gap}" aria-label="nicht an Position ${gap} einsetzen">
+    <svg viewBox="0 0 14 9"><path d="M1 8 L7 1 L13 8"/></svg><span class="num">${gap}</span></button>`;
+}
+
+function solutionHTML(q){
+  if(q.kind === "slot"){
+    const t = q.tokens.slice();
+    return t.slice(0,q.gap).join(" ") + (q.gap?" ":"") + "<em>nicht</em> " +
+           t.slice(q.gap).join(" ") + (q.end||"");
+  }
+  if(q.kind === "typed") return q.answers[0];
+  return q.answer;
+}
+
+function finish(q, ok, extra){
+  LOCK = true;
+  grade(q.id, ok);
+  if(!ok && SES.mode !== "exam") requeue(q.id);
+  SES.results.push({id:q.id, ok});
+  const isLast = SES.i >= SES.queue.length - 1;
+  $("#fb").innerHTML = `
+    <div class="fb">
+      <div class="verdict ${ok?"ok":"no"}">${ok ? (extra==="typo" ? "Richtig — mit einem Tippfehler" : "Richtig") : "Noch nicht"}</div>
+      ${q.kind !== "mc" ? `<p class="solution">${solutionHTML(q)}</p>` : ""}
+      ${extra === "near" ? `<p class="near">Kein Zufallsfehler: hier ergibt <b>nicht</b> eine <b>Teilverneinung</b> — grammatisch richtig, aber es wird nur ein Satzglied verneint (meist mit <i>sondern</i> weitergeführt). Gefragt war der ganze Satz.</p>` : ""}
+      <p class="explain">${q.explain}</p>
+      ${q.rule ? `<span class="rulechip">${q.rule}</span>` : ""}
+      <div class="fbnav">
+        <button class="btn" id="nextbtn">${isLast ? "Auswertung" : "Weiter"}</button>
+        <span class="kbd"><kbd>Enter</kbd> weiter</span>
+      </div>
+    </div>`;
+  $("#nextbtn").onclick = next;
+  $("#nextbtn").focus();
+  paintRail();
+}
+
+function answerMC(choice){
+  if(LOCK) return;
+  const q = current(); const ok = choice === q.answer;
+  $("#view-drill").querySelectorAll(".opt").forEach(b=>{
+    b.disabled = true;
+    const v = b.dataset.opt;
+    if(v === q.answer) b.classList.add("is-right");
+    else if(v === choice) b.classList.add("is-wrong");
+    else b.classList.add("is-dim");
+  });
+  finish(q, ok);
+}
+
+function answerSlot(gap){
+  if(LOCK) return;
+  const q = current(); const ok = gap === q.gap;
+  const sent = $("#sent");
+  const carets = [...sent.querySelectorAll(".caret")];
+  carets.forEach(c=> c.disabled = true);
+  const pick = carets.find(c=> +c.dataset.gap === gap);
+  const right = carets.find(c=> +c.dataset.gap === q.gap);
+  const ins = document.createElement("span");
+  ins.className = "inserted" + (ok ? "" : " ghost");
+  ins.textContent = "nicht";
+  pick.replaceWith(ins);
+  if(!ok){
+    const good = document.createElement("span");
+    good.className = "inserted";
+    good.textContent = "nicht";
+    right.replaceWith(good);
+  }
+  // Drop the remaining carets: once answered, this should read as a sentence.
+  sent.querySelectorAll(".caret").forEach(c=>{
+    const sp = c.previousSibling;
+    c.remove();
+    if(sp && sp.nodeType === 3 && sp.textContent === " ") sp.remove();
+  });
+  // Picking the partial-negation slot is not a random miss: it is good German
+  // answering a different question. Name that instead of only saying "wrong".
+  const near = !ok && q.partial != null && gap === q.partial;
+  finish(q, ok, near ? "near" : undefined);
+}
+
+function answerTyped(val){
+  if(LOCK) return;
+  const q = current();
+  const res = checkTyped(val, q.answers);
+  const inp = $("#inp"); inp.disabled = true; $("#check").disabled = true;
+  inp.style.borderColor = res==="no" ? "var(--neg)" : "var(--yes)";
+  finish(q, res !== "no", res);
+}
+
+/* ---------- summary ---------- */
+function renderSum(){
+  const r = SES.results;
+  const ok = r.filter(x=>x.ok).length;
+  const firstTry = {};
+  r.forEach(x=>{ if(!(x.id in firstTry)) firstTry[x.id] = x.ok; });
+  const missed = Object.keys(firstTry).filter(id=>!firstTry[id]);
+  const c = counts();
+  const pct = r.length ? Math.round(ok/r.length*100) : 0;
+
+  $("#view-sum").innerHTML = `
+    <h1 class="lede">${SES.mode==="exam" ? `${ok} von ${r.length} richtig` : "Runde fertig"}</h1>
+    <p class="sub">${SES.mode==="exam"
+      ? `${pct}% — für telc B1 solltest du hier stabil über 85% liegen.`
+      : `${ok} von ${r.length} Antworten richtig. Falsche Aufgaben kamen in derselben Runde noch einmal.`}</p>
+    <div class="tally">${r.map(x=>`<i class="${x.ok?"":"no"}"></i>`).join("")}</div>
+    ${missed.length ? `<h2 class="sec">Beim ersten Versuch danebengegangen</h2>
+      <div class="misslist">${missed.map(id=>{
+        const q = BANK.find(b=>b.id===id);
+        // slot items carry no prompt -- show the sentence they were asked about
+        const asked = q.kind === "slot" ? q.tokens.join(" ") + (q.end||"") : (q.prompt || q.question);
+        return `<div class="miss"><div class="p">${asked}</div>
+                <div class="a">→ <em>${solutionHTML(q).replace(/<\/?em>/g,"")}</em></div></div>`;
+      }).join("")}</div>` : `<p class="note">Alles beim ersten Versuch richtig.</p>`}
+    <h2 class="sec">Stand</h2>
+    <p class="note">${c.mastered} von ${c.total} Aufgaben beherrscht · ${c.due} jetzt fällig · ${c.newly} noch nie gesehen.</p>
+    <div class="tools">
+      <button class="btn" id="again">Nächste Runde</button>
+      <button class="btn ghost" id="tohome">Zurück zum Start</button>
+    </div>`;
+  $("#again").onclick = ()=> start(SES.mode==="exam"?"srs":SES.mode, SES.topic, SIZE);
+  $("#tohome").onclick = ()=>{ renderHome(); show("home"); };
+}
+
+/* ---------- progress ---------- */
+function renderProg(){
+  const c = counts();
+  const acc = S.stats.answered ? Math.round(S.stats.correct/S.stats.answered*100) : 0;
+  const rows = TOPIC_ORDER.map(t=>{
+    const ids = BANK.filter(q=>q.topic===t).map(q=>q.id);
+    let m=0, mid=0, seen=0;
+    ids.forEach(id=>{ const r=S.items[id]; if(!r||!r.seen) return; seen++;
+      if(r.b>=MASTER_BOX) m++; else if(r.b>=2) mid++; });
+    const n = ids.length;
+    return `<div class="trow">
+      <div class="tname">${TOPICS[t].name}<small>${TOPICS[t].blurb} · ${n} Aufgaben</small></div>
+      <div class="bar">
+        <i class="m5" style="width:${m/n*100}%;background:var(--yes)"></i>
+        <i style="width:${mid/n*100}%;background:var(--ink-3)"></i>
+        <i style="width:${(seen-m-mid)/n*100}%;background:var(--rule-2)"></i>
+      </div>
+      <div class="tpct">${m}/${n}</div></div>`;
+  }).join("");
+
+  const today = S.stats.days[new Date().toISOString().slice(0,10)] || 0;
+
+  $("#view-prog").innerHTML = `
+    <div class="statgrid">
+      <div class="stat"><b>${c.mastered}</b><span>beherrscht von ${c.total}</span></div>
+      <div class="stat"><b>${acc}%</b><span>Trefferquote</span></div>
+      <div class="stat"><b>${today}</b><span>heute beantwortet</span></div>
+      <div class="stat"><b>${S.stats.streak||0}</b><span>Tage in Folge</span></div>
+    </div>
+    <h2 class="sec">Themen</h2>
+    ${rows}
+    <h2 class="sec">Was „beherrscht“ heißt</h2>
+    <p class="note">Jede Aufgabe hat ein Fach von 0 bis 5. Richtig beantwortet steigt sie ein Fach,
+    falsch fällt sie auf 0 zurück. Die Wartezeiten sind 10 Minuten, 1 Tag, 3 Tage, 7 Tage, 21 Tage.
+    Fach 5 erreichst du also frühestens nach fünf richtigen Antworten über mehr als elf Tage —
+    deshalb ist ein voller Balken hier tatsächlich etwas wert.</p>
+    <p class="note">Innerhalb einer Runde kommt jede falsch beantwortete Aufgabe noch einmal,
+    bis sie sitzt. Eine Runde endet nie mit einem offenen Fehler.</p>
+    <h2 class="sec">Daten</h2>
+    <div class="tools">
+      <button class="btn ghost" id="exp">Fortschritt exportieren</button>
+      <button class="btn ghost" id="imp">Importieren</button>
+      <button class="btn ghost danger" id="rst">Alles zurücksetzen</button>
+    </div>
+    <input type="file" id="file" accept="application/json" class="hidden">
+    <p class="note" id="dmsg"></p>`;
+
+  $("#exp").onclick = ()=>{
+    const b = new Blob([JSON.stringify(S)], {type:"application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(b);
+    a.download = "verneinung-fortschritt.json";
+    a.click(); URL.revokeObjectURL(a.href);
+  };
+  $("#imp").onclick = ()=> $("#file").click();
+  $("#file").onchange = e=>{
+    const f = e.target.files[0]; if(!f) return;
+    const fr = new FileReader();
+    fr.onload = ()=>{
+      try{
+        const p = JSON.parse(fr.result);
+        if(!p.items) throw 0;
+        S = p; save(); renderProg(); paintRail();
+        $("#dmsg").textContent = "Fortschritt geladen.";
+      }catch(err){ $("#dmsg").textContent = "Diese Datei konnte nicht gelesen werden."; }
+    };
+    fr.readAsText(f);
+  };
+  let armed = false;
+  $("#rst").onclick = ()=>{
+    if(!armed){ armed = true; $("#rst").textContent = "Wirklich? Nicht rückgängig zu machen"; return; }
+    S = blank(); store.del(KEY); save(); renderProg(); paintRail();
+  };
+}
+
+/* ---------- keyboard ---------- */
+document.addEventListener("keydown", e=>{
+  if($("#view-drill").classList.contains("hidden")) return;
+  if(e.key === "Enter" && LOCK){ e.preventDefault(); next(); return; }
+  const q = current(); if(!q || LOCK) return;
+  const n = parseInt(e.key, 10);
+  if(!n) return;
+  if(q.kind === "mc"){
+    const b = $("#view-drill").querySelectorAll(".opt")[n-1];
+    if(b){ e.preventDefault(); b.click(); }
+  } else if(q.kind === "slot"){
+    const b = $("#view-drill").querySelectorAll(".caret")[n-1];
+    if(b){ e.preventDefault(); b.click(); }
+  }
+});
+
+/* ---------- boot ---------- */
+$("#nav-home").onclick = ()=>{ renderHome(); show("home"); };
+$("#nav-prog").onclick = ()=>{ renderProg(); show("prog"); };
+renderHome(); show("home");
+</script>
+</body>
+</html>
