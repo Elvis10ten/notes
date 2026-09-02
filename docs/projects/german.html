@@ -3,80 +3,279 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
 <title>Deutsch — Übersicht</title>
 <style>
-  :root { --bg:#f7f7f5; --card:#fff; --text:#1a1a1a; --muted:#6b6b6b; --accent:#2f6fed; --border:#e3e3e0; }
-  @media (prefers-color-scheme: dark) {
-    :root { --bg:#161615; --card:#1f1f1e; --text:#f0f0ee; --muted:#a0a09c; --accent:#7aa2f7; --border:#333331; }
+  :root {
+    --bg:#f7f7f5; --card:#fff; --text:#1a1a1a; --muted:#6b6b6b;
+    --accent:#2f6fed; --on-accent:#fff; --accent-soft:#e9effc; --border:#e3e3e0;
   }
-  * { box-sizing: border-box; }
-  body { margin:0; padding:3rem 1.25rem; background:var(--bg); color:var(--text);
-         font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
-  main { max-width:640px; margin:0 auto; }
-  h1 { font-size:1.75rem; margin:0 0 .25rem; }
-  p.sub { color:var(--muted); margin:0 0 2rem; font-size:.95rem; }
-  ul { list-style:none; padding:0; margin:0; display:grid; gap:.75rem; }
-  a.card { display:block; background:var(--card); border:1px solid var(--border); border-radius:10px;
-           padding:1rem 1.1rem; text-decoration:none; color:inherit; transition:border-color .15s, transform .15s; }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#161615; --card:#1f1f1e; --text:#f0f0ee; --muted:#a0a09c;
+      --accent:#7aa2f7; --on-accent:#10151f; --accent-soft:#232c40; --border:#333331;
+    }
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; padding:2.5rem 1.25rem 4rem; background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.4; -webkit-font-smoothing:antialiased;
+  }
+  main { max-width:720px; margin:0 auto; }
+
+  /* Header */
+  header { display:flex; align-items:flex-end; justify-content:space-between; gap:1rem 1.5rem; flex-wrap:wrap; margin-bottom:1.75rem; }
+  h1 { font-size:1.75rem; margin:0 0 .2rem; letter-spacing:-.01em; }
+  .sub { color:var(--muted); margin:0; font-size:.95rem; }
+
+  .continue {
+    display:inline-flex; flex-direction:column; align-items:flex-start; gap:.05rem;
+    padding:.6rem .95rem; border-radius:10px; background:var(--accent); color:var(--on-accent);
+    text-decoration:none; transition:filter .15s;
+  }
+  .continue:hover { filter:brightness(1.08); }
+  .continue:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+  .continue .cta { font-size:.8rem; opacity:.85; }
+  .continue .target { font-weight:600; font-size:.98rem; }
+
+  /* Sections */
+  h2 { font-size:.95rem; font-weight:600; color:var(--muted); margin:2rem 0 .75rem; }
+
+  ul, ol { list-style:none; padding:0; margin:0; display:grid; gap:.75rem; }
+  ol { counter-reset:drill; }
+  li { display:grid; }
+  @media (min-width:600px) { ol, ul.misc { grid-template-columns:1fr 1fr; } }
+
+  /* Cards */
+  a.card {
+    display:flex; gap:.9rem; align-items:flex-start;
+    background:var(--card); border:1px solid var(--border); border-radius:10px;
+    padding:1rem 1.1rem; text-decoration:none; color:inherit;
+    transition:border-color .15s, transform .15s;
+  }
   a.card:hover { border-color:var(--accent); transform:translateY(-1px); }
+  a.card:active { transform:none; }
+  a.card:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+
+  ol a.card::before {
+    counter-increment:drill; content:counter(drill);
+    flex:0 0 1.75rem; height:1.75rem; border-radius:50%;
+    display:grid; place-items:center;
+    background:var(--accent-soft); color:var(--accent);
+    font-size:.8rem; font-weight:600; font-variant-numeric:tabular-nums;
+  }
+  .featured a.card { background:var(--accent-soft); border-color:transparent; }
+  .featured a.card:hover { border-color:var(--accent); }
+
+  .body { min-width:0; flex:1; }
   .name { font-weight:600; font-size:1.02rem; }
   .desc { color:var(--muted); font-size:.87rem; margin-top:.2rem; }
-  code { font-size:.8rem; color:var(--muted); }
+  .last { color:var(--muted); font-size:.75rem; margin-top:.5rem; }
+  .last:empty { display:none; }
+  .last[data-never] { opacity:.65; }
+
+  footer { margin-top:2.5rem; color:var(--muted); font-size:.8rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    a.card, .continue { transition:none; }
+    a.card:hover { transform:none; }
+  }
 </style>
 </head>
 <body>
 <main>
-  <h1>Deutsch — Übersicht</h1>
-  <p class="sub">Lernmaterialien und Trainer</p>
-  <ul>
-    <li><a class="card" href="deutschtrainer.html">
-      <div class="name">Deutschtrainer</div>
-      <div class="desc">Allgemeiner Übungstrainer</div>
-    </a></li>
-    <li><a class="card" href="line-a2-b1.html">
-      <div class="name">Linie A2–B1</div>
-      <div class="desc">Kursbuch-Material, Niveau A2 bis B1</div>
-    </a></li>
-    <li><a class="card" href="mission-b1.html">
-      <div class="name">Mission B1</div>
-      <div class="desc">Prüfungsvorbereitung Niveau B1</div>
-    </a></li>
-    <li><a class="card" href="telc-vokabeltrainer.html">
-      <div class="name">telc Vokabeltrainer</div>
-      <div class="desc">Wortschatz für die telc-Prüfung</div>
-    </a></li>
+  <header>
+    <div>
+      <h1>Deutsch — Übersicht</h1>
+      <p class="sub">Trainer und Wortschatz für die telc B1</p>
+    </div>
+    <a class="continue" id="continue" href="german-nouns-practice.html" title="Öffnet den Trainer, den du am längsten nicht geübt hast">
+      <span class="cta">Weiter üben</span>
+      <span class="target">1. Nomen &amp; Genus</span>
+    </a>
+  </header>
+
+  <ul class="featured">
     <li><a class="card" href="wortschatz.html">
-      <div class="name">Wortschatz</div>
-      <div class="desc">Vokabelsammlung</div>
-    </a></li>
-    <li><a class="card" href="german-nouns-practice.html">
-      <div class="name">1. Nouns</div>
-    </a></li>
-    <li><a class="card" href="pluralformen.html">
-      <div class="name">2. Plurals</div>
-    </a></li>
-    <li><a class="card" href="german-present-tense-drill.html">
-      <div class="name">3. Present tense</div>
-    </a></li>
-    <li><a class="card" href="kasus-b1-trainer.html">
-      <div class="name">4. Cases</div>
-    </a></li>
-    <li><a class="card" href="trennbar-untrennbar.html">
-      <div class="name">5. Separable & inseparable verbs</div>
-    </a></li>
-    <li><a class="card" href="modalverben-trainer.html">
-      <div class="name">6. Modal verbs</div>
-    </a></li>
-    <li><a class="card" href="wortstellung.html">
-      <div class="name">7. Word order</div>
-    </a></li>
-    <li><a class="card" href="imperativ-drill.html">
-      <div class="name">8. Imperative</div>
-    </a></li>
-    <li><a class="card" href="negation-drill.html">
-      <div class="name">9. Negation</div>
+      <div class="body">
+        <div class="name">Wortschatz</div>
+        <div class="desc">Vokabeln lernen und wiederholen</div>
+        <div class="last"></div>
+      </div>
     </a></li>
   </ul>
+
+  <h2>Grammatik</h2>
+  <ol>
+    <li><a class="card" href="german-nouns-practice.html">
+      <div class="body">
+        <div class="name">Nomen &amp; Genus</div>
+        <div class="desc">der, die oder das? Artikel sicher zuordnen</div>
+        <div class="last"></div>
+      </div>
+    </a></li>
+    <li><a class="card" href="pluralformen.html">
+      <div class="body">
+        <div class="name">Pluralformen</div>
+        <div class="desc">Endungen und Umlaut: -e, -en, -er, -s</div>
+        <div class="last"></div>
+      </div>
+    </a></li>
+    <li><a class="card" href="german-present-tense-drill.html">
+      <div class="body">
+        <div class="name">Präsens</div>
+        <div class="desc">Regelmäßige und unregelmäßige Verben konjugieren</div>
+        <div class="last"></div>
+      </div>
+    </a></li>
+    <li><a class="card" href="kasus-b1-trainer.html">
+      <div class="body">
+        <div class="name">Kasus</div>
+        <div class="desc">Nominativ, Akkusativ, Dativ, Genitiv</div>
+        <div class="last"></div>
+      </div>
+    </a></li>
+    <li><a class="card" href="trennbar-untrennbar.html">
+      <div class="body">
+        <div class="name">Trennbare &amp; untrennbare Verben</div>
+        <div class="desc">Vorsilben und Satzklammer</div>
+        <div class="last"></div>
+      </div>
+    </a></li>
+    <li><a class="card" href="modalverben-trainer.html">
+      <div class="body">
+        <div class="name">Modalverben</div>
+        <div class="desc">können, müssen, dürfen, sollen, wollen, mögen</div>
+        <div class="last"></div>
+      </div>
+    </a></li>
+    <li><a class="card" href="wortstellung.html">
+      <div class="body">
+        <div class="name">Wortstellung</div>
+        <div class="desc">Verb auf Position 2, Nebensätze, Satzklammer</div>
+        <div class="last"></div>
+      </div>
+    </a></li>
+    <li><a class="card" href="imperativ-drill.html">
+      <div class="body">
+        <div class="name">Imperativ</div>
+        <div class="desc">du-, ihr- und Sie-Form</div>
+        <div class="last"></div>
+      </div>
+    </a></li>
+    <li><a class="card" href="negation-drill.html">
+      <div class="body">
+        <div class="name">Negation</div>
+        <div class="desc">nicht oder kein? Stellung im Satz</div>
+        <div class="last"></div>
+      </div>
+    </a></li>
+    <li><a class="card" href="perfekt-drill.html">
+      <div class="body">
+        <div class="name">Perfekt</div>
+        <div class="desc">haben oder sein? Partizip II bilden</div>
+        <div class="last"></div>
+      </div>
+    </a></li>
+    <li><a class="card" href="futur-i-drill.html">
+      <div class="body">
+        <div class="name">Futur I</div>
+        <div class="desc">werden + Infinitiv</div>
+        <div class="last"></div>
+      </div>
+    </a></li>
+  </ol>
+
+  <h2>Sonstiges</h2>
+  <ul class="misc">
+    <li><a class="card" href="deutschtrainer.html">
+      <div class="body">
+        <div class="name">Deutschtrainer</div>
+        <div class="desc">Allgemeiner Übungstrainer</div>
+        <div class="last"></div>
+      </div>
+    </a></li>
+    <li><a class="card" href="line-a2-b1.html">
+      <div class="body">
+        <div class="name">Linie A2–B1</div>
+        <div class="desc">Kursbuch-Material, Niveau A2 bis B1</div>
+        <div class="last"></div>
+      </div>
+    </a></li>
+    <li><a class="card" href="mission-b1.html">
+      <div class="body">
+        <div class="name">Mission B1</div>
+        <div class="desc">Prüfungsvorbereitung Niveau B1</div>
+        <div class="last"></div>
+      </div>
+    </a></li>
+    <li><a class="card" href="telc-vokabeltrainer.html">
+      <div class="body">
+        <div class="name">telc Vokabeltrainer</div>
+        <div class="desc">Wortschatz für die telc-Prüfung</div>
+        <div class="last"></div>
+      </div>
+    </a></li>
+  </ul>
+
+  <footer>„Weiter üben" öffnet den Trainer, den du am längsten nicht geöffnet hast.</footer>
 </main>
+
+<script>
+(function () {
+  const KEY = 'deutsch-home:lastOpened';
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } };
+  const save = (m) => { try { localStorage.setItem(KEY, JSON.stringify(m)); } catch (e) {} };
+
+  const cards  = Array.from(document.querySelectorAll('a.card'));
+  const drills = Array.from(document.querySelectorAll('ol a.card'));
+  const btn    = document.getElementById('continue');
+  const hrefOf = (a) => a.getAttribute('href');
+
+  function dayDiff(ts) {
+    const a = new Date(); a.setHours(0, 0, 0, 0);
+    const b = new Date(ts); b.setHours(0, 0, 0, 0);
+    return Math.round((a - b) / 86400000);
+  }
+  function label(ts) {
+    if (!ts) return 'Noch nie geöffnet';
+    const d = dayDiff(ts);
+    if (d <= 0) return 'Zuletzt heute';
+    if (d === 1) return 'Zuletzt gestern';
+    if (d < 14) return 'Zuletzt vor ' + d + ' Tagen';
+    return 'Zuletzt vor ' + Math.floor(d / 7) + ' Wochen';
+  }
+
+  function render() {
+    const m = load();
+    cards.forEach(a => {
+      const el = a.querySelector('.last');
+      const ts = m[hrefOf(a)];
+      el.textContent = label(ts);
+      el.toggleAttribute('data-never', !ts);
+    });
+
+    // Least recently opened drill: never-opened first (in order), otherwise the oldest.
+    let pick = drills.find(a => !m[hrefOf(a)]);
+    if (!pick) pick = drills.slice().sort((x, y) => m[hrefOf(x)] - m[hrefOf(y)])[0];
+    if (pick && btn) {
+      btn.setAttribute('href', hrefOf(pick));
+      btn.querySelector('.target').textContent =
+        (drills.indexOf(pick) + 1) + '. ' + pick.querySelector('.name').textContent;
+    }
+  }
+
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a.card, #continue');
+    if (!a) return;
+    const m = load(); m[hrefOf(a)] = Date.now(); save(m);
+  });
+
+  render();
+  window.addEventListener('pageshow', e => { if (e.persisted) render(); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) render(); });
+})();
+</script>
 </body>
 </html>
