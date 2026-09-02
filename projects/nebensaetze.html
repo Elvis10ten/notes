@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Subordinate clauses — conjunction first, verb last</title>
+<style>
+:root{
+  --paper:#EDEBE3; --card:#F8F7F2; --card-2:#E7E5DB;
+  --ink:#1C1F1A; --ink-2:#5E635A; --ink-3:#8B9083;
+  --rule:#D2D1C6; --rule-2:#BFBDB0;
+  --acc:#2F4A8A; --acc-soft:#E1E7F4;
+  --neg:#B3261E; --neg-soft:#F6E3E0;
+  --yes:#2C6A48; --yes-soft:#E0EDE4;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,"Times New Roman",serif;
+  --sans:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#15171A; --card:#1D2024; --card-2:#262A2F;
+    --ink:#E9E7DF; --ink-2:#A8ADA3; --ink-3:#767C72;
+    --rule:#333840; --rule-2:#454B54;
+    --acc:#94ACEA; --acc-soft:#232B40;
+    --neg:#E8776A; --neg-soft:#33211F;
+    --yes:#7CC79B; --yes-soft:#1B2A22;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.5;
+  -webkit-text-size-adjust:100%;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:2px}
+
+/* ---------- top rail ---------- */
+.rail{position:sticky;top:0;z-index:10;background:var(--paper);border-bottom:1px solid var(--rule)}
+.rail-in{max-width:720px;margin:0 auto;padding:10px 20px 8px}
+.rail-top{display:flex;align-items:baseline;gap:10px}
+.wordmark{font-family:var(--serif);font-size:17px;letter-spacing:.01em;white-space:nowrap}
+.wordmark b{color:var(--acc);font-weight:600}
+.rail-spacer{flex:1}
+.navbtn{font-size:13px;color:var(--ink-2);padding:3px 8px;border-radius:3px}
+.navbtn:hover{color:var(--ink);background:var(--card-2)}
+.navbtn[aria-current="true"]{color:var(--ink);box-shadow:inset 0 -2px 0 var(--acc)}
+.meter{margin-top:8px;height:5px;background:var(--card-2);border-radius:3px;overflow:hidden;display:flex}
+.meter i{display:block;height:100%}
+.meter .m5{background:var(--yes)} .meter .m3{background:var(--ink-3)} .meter .m1{background:var(--rule-2)}
+.railstat{margin-top:5px;font-size:11.5px;color:var(--ink-3);display:flex;gap:14px;flex-wrap:wrap}
+.railstat b{color:var(--ink-2);font-weight:600}
+
+/* ---------- shell ---------- */
+main{max-width:720px;margin:0 auto;padding:22px 20px 64px}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:22px 22px 20px}
+.eyebrow{font-size:12px;color:var(--ink-3);display:flex;gap:8px;align-items:center;margin-bottom:14px}
+.eyebrow .dot{width:4px;height:4px;border-radius:50%;background:var(--rule-2)}
+.qtext{font-size:14px;color:var(--ink-2);margin:0 0 12px}
+.qtext b{color:var(--ink)}
+.prompt{font-family:var(--serif);font-size:clamp(1.25rem,4.4vw,1.7rem);line-height:1.35;margin:0 0 4px}
+.prompt small{font-size:.72em;color:var(--ink-2)}
+.hintline{font-size:13px;color:var(--ink-3);margin:8px 0 0;font-style:italic}
+
+/* ---------- multiple choice ---------- */
+.opts{display:flex;flex-direction:column;gap:7px;margin-top:20px}
+.opt{display:flex;gap:11px;align-items:flex-start;text-align:left;padding:11px 13px;border:1px solid var(--rule);border-radius:3px;background:var(--paper);line-height:1.45}
+.opt:hover:not(:disabled){border-color:var(--rule-2)}
+.opt:disabled{cursor:default}
+.opt .key{flex:none;font-size:11px;color:var(--ink-3);border:1px solid var(--rule);border-radius:2px;min-width:18px;height:18px;display:grid;place-items:center;margin-top:2px}
+.opt.is-right{border-color:var(--yes);background:var(--yes-soft)}
+.opt.is-right .key{border-color:var(--yes);color:var(--yes)}
+.opt.is-wrong{border-color:var(--neg);background:var(--neg-soft)}
+.opt.is-wrong .key{border-color:var(--neg);color:var(--neg)}
+.opt.is-dim{opacity:.5}
+
+/* ---------- builder (the Satzklammer) ---------- */
+.build{
+  font-family:var(--serif);font-size:clamp(1.15rem,4.1vw,1.55rem);line-height:1.5;
+  margin-top:16px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 6px;
+}
+.build .fixed{color:var(--ink-2)}
+.line{display:inline-flex;flex-wrap:wrap;gap:6px 6px;align-items:baseline;min-width:60px;min-height:1.5em;
+  padding:2px 4px;border-bottom:1px dashed var(--rule-2)}
+.line:empty::after{content:"…";color:var(--ink-3)}
+.chip{
+  font-family:var(--serif);font-size:1em;line-height:1.2;
+  padding:7px 11px;border:1px solid var(--rule-2);border-radius:3px;background:var(--paper);
+  transition:transform .12s ease,border-color .12s ease;
+}
+.chip:hover:not(:disabled){border-color:var(--ink-3)}
+.chip:active:not(:disabled){transform:translateY(1px)}
+.chip:disabled{cursor:default}
+.line .chip{background:var(--card-2);border-color:transparent;padding:3px 8px}
+.line .chip:hover:not(:disabled){border-color:var(--neg);color:var(--neg)}
+.pool{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;padding-top:14px;border-top:1px solid var(--rule);font-size:clamp(1.05rem,3.8vw,1.35rem)}
+.pool .chip.used{opacity:0;pointer-events:none}
+.bact{margin-top:16px;display:flex;gap:8px;align-items:center}
+
+/* bracket rendering of a finished clause */
+.klammer{display:inline-flex;flex-wrap:wrap;gap:0 .3em;align-items:baseline}
+.klammer .w{padding:0 1px}
+.klammer .w .p{color:var(--ink);font-weight:400;border:none}
+.klammer .lb,.klammer .rb{
+  color:var(--acc);font-weight:600;
+  border-bottom:3px solid var(--acc);padding-bottom:1px;
+}
+.klammer .rb + .rb{margin-left:-.3em;padding-left:.3em}
+.klammer .lb{border-left:3px solid var(--acc);padding-left:4px;margin-left:-4px}
+.klammer .rb.last{border-right:3px solid var(--acc);padding-right:4px;margin-right:-4px}
+.klammer .mf{color:var(--ink);border-bottom:1px dotted var(--rule-2)}
+.ghost{color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--neg);text-decoration-thickness:1.5px}
+.built{font-family:var(--serif);font-size:clamp(1.15rem,4.1vw,1.55rem);line-height:1.6;margin-top:16px}
+.built .fixed{color:var(--ink-2)}
+.built .lab{display:block;font-family:var(--sans);font-size:11.5px;color:var(--ink-3);margin-bottom:2px}
+.built + .built{margin-top:10px}
+.legend{font-size:11.5px;color:var(--ink-3);margin-top:10px;display:flex;gap:14px;flex-wrap:wrap}
+.legend i{display:inline-block;width:14px;height:0;border-bottom:3px solid var(--acc);vertical-align:middle;margin-right:5px}
+
+/* ---------- typed ---------- */
+.typed{margin-top:20px;display:flex;gap:8px;flex-wrap:wrap}
+.typed input{flex:1;min-width:200px;font-family:var(--serif);font-size:1.05rem;padding:10px 12px;border:1px solid var(--rule-2);border-radius:3px;background:var(--paper);color:var(--ink)}
+.typed input:focus{outline:2px solid var(--acc);outline-offset:-1px;border-color:transparent}
+.btn{padding:10px 18px;border-radius:3px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);font-size:14px}
+.btn:hover{opacity:.88}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.ghost{background:none;color:var(--ink);border-color:var(--rule-2)}
+.btn.ghost:hover{background:var(--card-2);opacity:1}
+
+/* ---------- feedback ---------- */
+.fb{margin-top:20px;border-top:1px solid var(--rule);padding-top:16px}
+.verdict{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+.verdict.ok{color:var(--yes)} .verdict.no{color:var(--neg)}
+.solution{font-family:var(--serif);font-size:1.15rem;margin:10px 0 0;line-height:1.7}
+.solution .fixed{color:var(--ink-2)}
+.explain{font-size:14.5px;color:var(--ink-2);margin:10px 0 0;line-height:1.55}
+.explain b{color:var(--ink);font-weight:600}
+.altnote{font-size:13.5px;color:var(--ink-2);margin:8px 0 0;padding:8px 10px;border-left:3px solid var(--acc);background:var(--acc-soft)}
+.rulechip{display:inline-block;margin-top:12px;font-size:11.5px;color:var(--ink-2);border:1px solid var(--rule);border-radius:2px;padding:2px 7px;background:var(--paper)}
+.fbnav{margin-top:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.kbd{font-size:11.5px;color:var(--ink-3)}
+.kbd kbd{font-family:var(--sans);border:1px solid var(--rule);border-radius:2px;padding:1px 4px;font-size:10.5px;background:var(--paper)}
+
+/* ---------- home ---------- */
+.lede{font-family:var(--serif);font-size:clamp(1.5rem,5vw,2.1rem);line-height:1.25;margin:0 0 10px}
+.sub{color:var(--ink-2);font-size:15px;margin:0 0 26px;max-width:56ch}
+.modes{display:grid;gap:9px}
+.mode{display:flex;gap:14px;align-items:baseline;text-align:left;width:100%;border:1px solid var(--rule);border-radius:4px;padding:14px 16px;background:var(--card)}
+.mode:hover{border-color:var(--rule-2)}
+.mode:disabled{opacity:.45;cursor:default}
+.mode h3{margin:0;font-size:15px;font-weight:600}
+.mode p{margin:3px 0 0;font-size:13px;color:var(--ink-2)}
+.mode .count{margin-left:auto;font-size:12px;color:var(--ink-3);flex:none}
+.seg{display:flex;gap:6px;margin:22px 0 0;flex-wrap:wrap;align-items:center}
+.seg span{font-size:12.5px;color:var(--ink-3);margin-right:2px}
+.segbtn{font-size:12.5px;padding:4px 10px;border:1px solid var(--rule);border-radius:3px;color:var(--ink-2)}
+.segbtn[aria-pressed="true"]{border-color:var(--ink);color:var(--ink);background:var(--card)}
+
+/* ---------- progress / reference ---------- */
+.trow{display:grid;grid-template-columns:1fr 92px 46px;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--rule)}
+.trow:last-child{border-bottom:none}
+.tname{font-size:14px}
+.tname small{display:block;color:var(--ink-3);font-size:11.5px;margin-top:1px}
+.bar{height:6px;background:var(--card-2);border-radius:3px;overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.tpct{font-size:12.5px;color:var(--ink-2);text-align:right;font-variant-numeric:tabular-nums}
+.statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:14px;margin:0 0 24px}
+.stat b{display:block;font-family:var(--serif);font-size:1.6rem;line-height:1.1}
+.stat span{font-size:12px;color:var(--ink-3)}
+h2.sec{font-size:13px;font-weight:600;color:var(--ink-2);margin:28px 0 6px}
+.note{font-size:13px;color:var(--ink-3);line-height:1.6;margin:10px 0 0}
+.danger{color:var(--neg);border-color:var(--neg)}
+.btn.ghost.danger{color:var(--neg);border-color:var(--neg)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.tools .btn{font-size:13px;padding:7px 13px}
+.ref{font-size:14px;line-height:1.6}
+.ref table{border-collapse:collapse;width:100%;margin:8px 0 0;font-size:13.5px}
+.ref th,.ref td{text-align:left;vertical-align:top;padding:7px 8px 7px 0;border-bottom:1px solid var(--rule)}
+.ref th{font-weight:600;color:var(--ink-2);font-size:12px}
+.ref td:first-child{white-space:nowrap;font-family:var(--serif);font-size:15px}
+.ref .ex{font-family:var(--serif)}
+.ref .ex b{color:var(--acc)}
+
+/* ---------- summary ---------- */
+.tally{display:flex;gap:4px;flex-wrap:wrap;margin:16px 0 0}
+.tally i{width:11px;height:11px;border-radius:2px;background:var(--yes)}
+.tally i.no{background:var(--neg)}
+.misslist{margin:18px 0 0;border-top:1px solid var(--rule)}
+.miss{padding:12px 0;border-bottom:1px solid var(--rule);font-size:14px}
+.miss .p{font-family:var(--serif);font-size:1rem}
+.miss .a{color:var(--ink-2);font-size:13px;margin-top:3px}
+.miss .a em{color:var(--acc);font-style:normal}
+footer{max-width:720px;margin:0 auto;padding:0 20px 40px;font-size:12px;color:var(--ink-3)}
+.hidden{display:none !important}
+@media (prefers-reduced-motion:reduce){.chip{transition:none}}
+@media (max-width:420px){.navbtn{padding:3px 6px;font-size:12.5px}.wordmark{font-size:15.5px}}
+</style>
+</head>
+<body>
+
+<div class="rail">
+  <div class="rail-in">
+    <div class="rail-top">
+      <span class="wordmark">Nebensätze: <b>weil</b> … <b>bin</b></span>
+      <span class="rail-spacer"></span>
+      <button class="navbtn" id="nav-home">Home</button>
+      <button class="navbtn" id="nav-ref">Rules</button>
+      <button class="navbtn" id="nav-prog">Progress</button>
+    </div>
+    <div class="meter" id="meter" title="Mastered / in progress / new">
+      <i class="m5" style="width:0"></i><i class="m3" style="width:0"></i><i class="m1" style="width:0"></i>
+    </div>
+    <div class="railstat" id="railstat"></div>
+  </div>
+</div>
+
+<main>
+  <section id="view-home"></section>
+  <section id="view-drill" class="hidden"></section>
+  <section id="view-ref" class="hidden"></section>
+  <section id="view-prog" class="hidden"></section>
+  <section id="view-sum" class="hidden"></section>
+</main>
+
+<footer id="foot"></footer>
+
+<script>
+"use strict";
+const BANK = [{"id":"ve-001","kind":"order","topic":"verbende","frame":"Ich bleibe zu Hause,","tokens":["weil","ich","krank","bin"],"end":".","shape":"sub","vbw":["bin"],"explain":"The conjugated verb <b>bin</b> goes to the very end of the subordinate clause.","rule":"verb at the end","accept":[["weil","ich","krank","bin"]]},{"id":"ve-002","kind":"order","topic":"verbende","frame":"Er kommt nicht,","tokens":["weil","er","keine","Zeit","hat"],"end":".","shape":"sub","vbw":["hat"],"explain":"Conjunction → subject → Mittelfeld → <b>hat</b> at the end.","rule":"verb at the end","accept":[["weil","er","keine","Zeit","hat"]]},{"id":"ve-003","kind":"order","topic":"verbende","frame":"Sie sagt,","tokens":["dass","sie","müde","ist"],"end":".","shape":"sub","vbw":["ist"],"explain":"After <i>dass</i> the same rule applies: <b>ist</b> at the end.","rule":"verb at the end","accept":[["dass","sie","müde","ist"]]},{"id":"ve-004","kind":"order","topic":"verbende","frame":"Ich weiß,","tokens":["dass","er","in","Berlin","wohnt"],"end":".","shape":"sub","vbw":["wohnt"],"explain":"The place phrase stays in the Mittelfeld; <b>wohnt</b> closes the clause.","rule":"verb at the end","accept":[["dass","er","in","Berlin","wohnt"]]},{"id":"ve-005","kind":"order","topic":"verbende","frame":"Wir bleiben hier,","tokens":["solange","es","regnet"],"end":".","shape":"sub","vbw":["regnet"],"explain":"<i>solange</i> is a subordinating conjunction → <b>regnet</b> at the end.","rule":"verb at the end","accept":[["solange","es","regnet"]]},{"id":"ve-006","kind":"order","topic":"verbende","frame":"Ich frage,","tokens":["ob","sie","morgen","kommt"],"end":".","shape":"sub","vbw":["kommt"],"explain":"After <i>ob</i>: subject, then the time expression, then <b>kommt</b>.","rule":"verb at the end","accept":[["ob","sie","morgen","kommt"]]},{"id":"ve-007","kind":"order","topic":"verbende","frame":"Er geht ins Bett,","tokens":["obwohl","es","noch","früh","ist"],"end":".","shape":"sub","vbw":["ist"],"explain":"<i>obwohl</i> + subject + Mittelfeld + <b>ist</b>.","rule":"verb at the end","accept":[["obwohl","es","noch","früh","ist"]]},{"id":"ve-008","kind":"order","topic":"verbende","frame":"Ich lerne Deutsch,","tokens":["weil","ich","in","Deutschland","arbeite"],"end":".","shape":"sub","vbw":["arbeite"],"explain":"<b>arbeite</b> moves to the end; <i>in Deutschland</i> stays before it.","rule":"verb at the end","accept":[["weil","ich","in","Deutschland","arbeite"]]},{"id":"ve-009","kind":"order","topic":"verbende","frame":"Sie ist glücklich,","tokens":["seitdem","sie","hier","wohnt"],"end":".","shape":"sub","vbw":["wohnt"],"explain":"<i>seitdem</i> introduces a subordinate clause → <b>wohnt</b> at the end.","rule":"verb at the end","accept":[["seitdem","sie","hier","wohnt"]]},{"id":"ve-010","kind":"order","topic":"verbende","frame":"Warte,","tokens":["bis","ich","fertig","bin"],"end":".","shape":"sub","vbw":["bin"],"explain":"After <i>bis</i> too: subject, predicative, then <b>bin</b>.","rule":"verb at the end","accept":[["bis","ich","fertig","bin"]]},{"id":"ve-011","kind":"order","topic":"verbende","frame":"Ich weiß,","tokens":["dass","er","früh","aufsteht"],"extra":["steht","auf"],"end":".","shape":"sub","vbw":["aufsteht"],"explain":"In a subordinate clause the separable verb becomes <b>one word</b> again: <i>aufsteht</i>, not <i>steht … auf</i>.","rule":"separable verb → one word","accept":[["dass","er","früh","aufsteht"]]},{"id":"ve-012","kind":"order","topic":"verbende","frame":"Sie sagt,","tokens":["dass","sie","mich","anruft"],"extra":["ruft","an"],"end":".","shape":"sub","vbw":["anruft"],"explain":"Separable verb at the end as one word: <b>anruft</b>.","rule":"separable verb → one word","accept":[["dass","sie","mich","anruft"]]},{"id":"ve-013","kind":"order","topic":"verbende","frame":"Er ist müde,","tokens":["weil","er","jeden","Tag","früh","aufsteht"],"extra":["steht","auf"],"end":".","shape":"sub","vbw":["aufsteht"],"explain":"Time expressions (<i>jeden Tag</i>, <i>früh</i>), then the whole verb <b>aufsteht</b>.","rule":"separable verb → one word","accept":[["weil","er","jeden","Tag","früh","aufsteht"]]},{"id":"ve-014","kind":"order","topic":"verbende","frame":"Ich freue mich,","tokens":["wenn","du","mich","besuchst"],"end":".","shape":"sub","vbw":["besuchst"],"explain":"<i>wenn</i> + subject + object + <b>besuchst</b>.","rule":"verb at the end","accept":[["wenn","du","mich","besuchst"]]},{"id":"ve-015","kind":"order","topic":"verbende","frame":"Es ist schade,","tokens":["dass","du","nicht","kommst"],"end":".","shape":"sub","vbw":["kommst"],"explain":"<i>nicht</i> sits directly before the verb; <b>kommst</b> is at the very end.","rule":"verb at the end","accept":[["dass","du","nicht","kommst"]]},{"id":"ve-016","kind":"order","topic":"verbende","frame":"Ich blieb zu Hause,","tokens":["weil","ich","keine","Zeit","hatte"],"end":".","shape":"sub","vbw":["hatte"],"explain":"The Präteritum changes nothing: the conjugated verb <b>hatte</b> is at the end.","rule":"Präteritum","accept":[["weil","ich","keine","Zeit","hatte"]]},{"id":"ve-017","kind":"order","topic":"verbende","frame":"Ich wohnte in Bonn,","tokens":["als","ich","klein","war"],"end":".","shape":"sub","vbw":["war"],"explain":"<i>als</i> for a one-off event in the past; <b>war</b> at the end.","rule":"Präteritum","accept":[["als","ich","klein","war"]]},{"id":"ve-018","kind":"order","topic":"verbende","frame":"Er wusste nicht,","tokens":["wo","sie","wohnte"],"end":".","shape":"sub","vbw":["wohnte"],"explain":"A question word also introduces a subordinate clause → <b>wohnte</b> at the end.","rule":"Präteritum","accept":[["wo","sie","wohnte"]]},{"id":"ve-019","kind":"order","topic":"verbende","frame":"Sie fragte,","tokens":["ob","ich","Zeit","hatte"],"end":".","shape":"sub","vbw":["hatte"],"explain":"<i>ob</i> + subject + object + <b>hatte</b>.","rule":"Präteritum","accept":[["ob","ich","Zeit","hatte"]]},{"id":"ve-020","kind":"order","topic":"verbende","frame":"Wir gehen spazieren,","tokens":["sobald","die","Sonne","scheint"],"end":".","shape":"sub","vbw":["scheint"],"explain":"<i>sobald</i> + subject (<i>die Sonne</i>) + <b>scheint</b>.","rule":"verb at the end","accept":[["sobald","die","Sonne","scheint"]]},{"id":"ve-021","kind":"order","topic":"verbende","frame":"Man lernt viel,","tokens":["indem","man","jeden","Tag","übt"],"end":".","shape":"sub","vbw":["übt"],"explain":"<i>indem</i> names the method; <b>übt</b> is at the end.","rule":"verb at the end","accept":[["indem","man","jeden","Tag","übt"]]},{"id":"ve-022","kind":"order","topic":"verbende","frame":"Nimm den Schirm mit,","tokens":["falls","es","regnet"],"end":".","shape":"sub","vbw":["regnet"],"explain":"<i>falls</i> + subject + <b>regnet</b>.","rule":"verb at the end","accept":[["falls","es","regnet"]]},{"id":"ve-023","kind":"order","topic":"verbende","frame":"Er kocht,","tokens":["während","sie","den","Tisch","deckt"],"end":".","shape":"sub","vbw":["deckt"],"explain":"The object <i>den Tisch</i> stays in the Mittelfeld; <b>deckt</b> closes the clause.","rule":"verb at the end","accept":[["während","sie","den","Tisch","deckt"]]},{"id":"ve-024","kind":"order","topic":"verbende","frame":"Ich esse etwas,","tokens":["bevor","ich","gehe"],"end":".","shape":"sub","vbw":["gehe"],"explain":"<i>bevor</i> + subject + <b>gehe</b>.","rule":"verb at the end","accept":[["bevor","ich","gehe"]]},{"id":"ve-025","kind":"order","topic":"verbende","frame":"Sie lernt viel,","tokens":["damit","sie","die","Prüfung","besteht"],"end":".","shape":"sub","vbw":["besteht"],"explain":"<i>damit</i> + subject + object + <b>besteht</b>.","rule":"verb at the end","accept":[["damit","sie","die","Prüfung","besteht"]]},{"id":"ve-026","kind":"order","topic":"verbende","frame":"Er sprach leise,","tokens":["sodass","ich","nichts","verstand"],"end":".","shape":"sub","vbw":["verstand"],"explain":"<i>sodass</i> + subject + object + <b>verstand</b>.","rule":"Präteritum","accept":[["sodass","ich","nichts","verstand"]]},{"id":"ve-027","kind":"order","topic":"verbende","frame":"Ich glaube,","tokens":["dass","er","recht","hat"],"end":".","shape":"sub","vbw":["hat"],"explain":"<i>recht haben</i>: the conjugated <b>hat</b> is at the end, <i>recht</i> right before it.","rule":"verb at the end","accept":[["dass","er","recht","hat"]]},{"id":"ve-028","kind":"order","topic":"verbende","frame":"Ich weiß nicht,","tokens":["warum","sie","nicht","antwortet"],"end":".","shape":"sub","vbw":["antwortet"],"explain":"Question word + subject + <i>nicht</i> + <b>antwortet</b>.","rule":"verb at the end","accept":[["warum","sie","nicht","antwortet"]]},{"id":"ve-029","kind":"order","topic":"verbende","frame":"Er geht zum Arzt,","tokens":["weil","er","sich","schlecht","fühlt"],"end":".","shape":"sub","vbw":["fühlt"],"explain":"The reflexive pronoun follows the subject directly; <b>fühlt</b> is at the end.","rule":"verb at the end","accept":[["weil","er","sich","schlecht","fühlt"]]},{"id":"ve-030","kind":"order","topic":"verbende","frame":"Sie ist traurig,","tokens":["weil","ihr","Hund","krank","ist"],"end":".","shape":"sub","vbw":["ist"],"explain":"Subject <i>ihr Hund</i>, predicative <i>krank</i>, then <b>ist</b>.","rule":"verb at the end","accept":[["weil","ihr","Hund","krank","ist"]]},{"id":"ve-031","kind":"order","topic":"verbende","frame":"Er sagt,","tokens":["dass","das","Konzert","stattfindet"],"extra":["findet","statt"],"end":".","shape":"sub","vbw":["stattfindet"],"explain":"<i>stattfinden</i> is separable — in a subordinate clause it is <b>one word</b> again.","rule":"separable verb → one word","accept":[["dass","das","Konzert","stattfindet"]]},{"id":"ve-032","kind":"order","topic":"verbende","frame":"Ich hoffe,","tokens":["dass","du","bald","zurückkommst"],"extra":["kommst","zurück"],"end":".","shape":"sub","vbw":["zurückkommst"],"explain":"<i>zurückkommen</i>: in the subordinate clause <b>zurückkommst</b> as one word at the end.","rule":"separable verb → one word","accept":[["dass","du","bald","zurückkommst"]]},{"id":"ve-101","kind":"mc","topic":"verbende","question":"Which sentence is correct?","prompt":"Verb in the subordinate clause","options":["Ich bleibe zu Hause, weil ich krank bin.","Ich bleibe zu Hause, weil ich bin krank.","Ich bleibe zu Hause, weil bin ich krank.","Ich bleibe zu Hause weil ich krank bin."],"answer":"Ich bleibe zu Hause, weil ich krank bin.","explain":"After <i>weil</i> the verb goes to the end, and a comma precedes the conjunction.","rule":"verb at the end"},{"id":"ve-102","kind":"mc","topic":"verbende","question":"Which sentence is correct?","prompt":"Separable verb in the subordinate clause","options":["Ich weiß, dass er früh aufsteht.","Ich weiß, dass er früh steht auf.","Ich weiß, dass er steht früh auf.","Ich weiß, dass er aufsteht früh."],"answer":"Ich weiß, dass er früh aufsteht.","explain":"In a subordinate clause the separable verb is not split: <b>aufsteht</b> stands as one word at the end.","rule":"separable verb → one word"},{"id":"ve-103","kind":"mc","topic":"verbende","question":"Where does the conjugated verb go in a subordinate clause?","prompt":"Rule","options":["Right at the end of the subordinate clause.","In position 2, as in a main clause.","Directly after the conjunction.","Directly before the subject."],"answer":"Right at the end of the subordinate clause.","explain":"This is the core rule: conjunction → subject → Mittelfeld → <b>verb</b>.","rule":"verb at the end","meta":true},{"id":"ve-104","kind":"mc","topic":"verbende","question":"Does the conjunction count as position 1 of the subordinate clause?","prompt":"Rule","options":["No — it sits outside the sentence fields and only introduces the clause.","Yes — that's why the verb is in position 2.","Yes, but only with <i>weil</i> and <i>dass</i>.","Only when the subordinate clause comes first."],"answer":"No — it sits outside the sentence fields and only introduces the clause.","explain":"The conjunction is not a sentence field. That is why the subject follows directly and the verb goes to the end.","rule":"conjunction ≠ a field","meta":true},{"id":"ve-105","kind":"mc","topic":"verbende","question":"Which sentence is correct?","prompt":"Präteritum in the subordinate clause","options":["Ich blieb zu Hause, weil ich keine Zeit hatte.","Ich blieb zu Hause, weil ich hatte keine Zeit.","Ich blieb zu Hause, weil hatte ich keine Zeit.","Ich blieb zu Hause, weil ich keine hatte Zeit."],"answer":"Ich blieb zu Hause, weil ich keine Zeit hatte.","explain":"Tense changes nothing about the position: <b>hatte</b> is at the end.","rule":"Präteritum"},{"id":"ve-106","kind":"mc","topic":"verbende","question":"How is a separable verb written in a subordinate clause?","prompt":"Rule","options":["As one word at the end: <i>…, weil er früh aufsteht.</i>","Split, as in a main clause: <i>…, weil er früh steht auf.</i>","With the prefix at the front: <i>…, weil auf er früh steht.</i>","As two words at the end: <i>…, weil er früh auf steht.</i>"],"answer":"As one word at the end: <i>…, weil er früh aufsteht.</i>","explain":"Once the verb is at the end, prefix and stem meet again.","rule":"separable verb → one word","meta":true},{"id":"ve-107","kind":"mc","topic":"verbende","question":"Which sentence is correct?","prompt":"Separable verb","options":["Sie fragt, ob das Konzert heute stattfindet.","Sie fragt, ob das Konzert findet heute statt.","Sie fragt, ob findet das Konzert heute statt.","Sie fragt, ob das Konzert heute findet statt."],"answer":"Sie fragt, ob das Konzert heute stattfindet.","explain":"<i>stattfinden</i> stands as one word at the end of the subordinate clause.","rule":"separable verb → one word"},{"id":"ve-108","kind":"mc","topic":"verbende","question":"Which sentence is punctuated correctly?","prompt":"Comma","options":["Ich hoffe, dass du kommst.","Ich hoffe dass du kommst.","Ich hoffe, dass, du kommst.","Ich, hoffe dass du kommst."],"answer":"Ich hoffe, dass du kommst.","explain":"A subordinate clause is <b>always</b> set off by a comma — here exactly one, right before the conjunction.","rule":"comma"},{"id":"vb-001","kind":"order","topic":"verbblock","frame":"Ich kann nicht kommen,","tokens":["weil","ich","arbeiten","muss"],"end":".","shape":"sub","vbw":["arbeiten","muss"],"explain":"Modal verb: the infinitive <i>arbeiten</i> comes directly before the conjugated <b>muss</b>.","rule":"modal verb","accept":[["weil","ich","arbeiten","muss"]]},{"id":"vb-002","kind":"order","topic":"verbblock","frame":"Er sagt,","tokens":["dass","er","morgen","kommen","kann"],"end":".","shape":"sub","vbw":["kommen","kann"],"explain":"Time expression in the Mittelfeld, then the block <b>kommen kann</b>.","rule":"modal verb","accept":[["dass","er","morgen","kommen","kann"]]},{"id":"vb-003","kind":"order","topic":"verbblock","frame":"Ich bin müde,","tokens":["weil","ich","schlecht","geschlafen","habe"],"end":".","shape":"sub","vbw":["geschlafen","habe"],"explain":"Perfekt: participle <i>geschlafen</i>, then the conjugated <b>habe</b> at the very end.","rule":"Perfekt","accept":[["weil","ich","schlecht","geschlafen","habe"]]},{"id":"vb-004","kind":"order","topic":"verbblock","frame":"Sie ist glücklich,","tokens":["weil","sie","die","Prüfung","bestanden","hat"],"end":".","shape":"sub","vbw":["bestanden","hat"],"explain":"Object in the Mittelfeld, then <b>bestanden hat</b>.","rule":"Perfekt","accept":[["weil","sie","die","Prüfung","bestanden","hat"]]},{"id":"vb-005","kind":"order","topic":"verbblock","frame":"Ich glaube,","tokens":["dass","er","morgen","kommen","wird"],"end":".","shape":"sub","vbw":["kommen","wird"],"explain":"Futur I: infinitive <i>kommen</i>, then the conjugated <b>wird</b>.","rule":"Futur I","accept":[["dass","er","morgen","kommen","wird"]]},{"id":"vb-006","kind":"order","topic":"verbblock","frame":"Ich warte,","tokens":["bis","das","Auto","repariert","wird"],"end":".","shape":"sub","vbw":["repariert","wird"],"explain":"Passive: participle <i>repariert</i>, then <b>wird</b> at the end.","rule":"passive","accept":[["bis","das","Auto","repariert","wird"]]},{"id":"vb-007","kind":"order","topic":"verbblock","frame":"Ich weiß,","tokens":["dass","der","Brief","geschrieben","wurde"],"end":".","shape":"sub","vbw":["geschrieben","wurde"],"explain":"Passive Präteritum: <i>geschrieben</i> + <b>wurde</b> form the block at the end.","rule":"passive","accept":[["dass","der","Brief","geschrieben","wurde"]]},{"id":"vb-008","kind":"order","topic":"verbblock","frame":"Er ist sauer,","tokens":["weil","ich","nicht","habe","kommen","können"],"end":".","shape":"sub","vbw":["habe","kommen","können"],"explain":"Perfekt + modal verb (double infinitive): the conjugated <b>habe</b> moves <u>before</u> the two infinitives.","rule":"double infinitive","accept":[["weil","ich","nicht","habe","kommen","können"]]},{"id":"vb-009","kind":"order","topic":"verbblock","frame":"Sie sagt,","tokens":["dass","sie","gestern","hat","arbeiten","müssen"],"end":".","shape":"sub","vbw":["hat","arbeiten","müssen"],"explain":"Double infinitive: <b>hat</b> comes before <i>arbeiten müssen</i>, not after it.","rule":"double infinitive","accept":[["dass","sie","gestern","hat","arbeiten","müssen"]]},{"id":"vb-010","kind":"order","topic":"verbblock","frame":"Ich frage,","tokens":["ob","er","das","Problem","lösen","kann"],"end":".","shape":"sub","vbw":["lösen","kann"],"explain":"Object, then <b>lösen kann</b>.","rule":"modal verb","accept":[["ob","er","das","Problem","lösen","kann"]]},{"id":"vb-011","kind":"order","topic":"verbblock","frame":"Wir bleiben zu Hause,","tokens":["weil","es","morgen","regnen","wird"],"end":".","shape":"sub","vbw":["regnen","wird"],"explain":"Futur: <i>regnen</i> + <b>wird</b> at the end.","rule":"Futur I","accept":[["weil","es","morgen","regnen","wird"]]},{"id":"vb-012","kind":"order","topic":"verbblock","frame":"Er ist nach Hause gegangen,","tokens":["nachdem","er","gegessen","hatte"],"end":".","shape":"sub","vbw":["gegessen","hatte"],"explain":"Plusquamperfekt after <i>nachdem</i>: <i>gegessen</i> + <b>hatte</b>.","rule":"Plusquamperfekt","accept":[["nachdem","er","gegessen","hatte"]]},{"id":"vb-013","kind":"order","topic":"verbblock","frame":"Ich weiß nicht,","tokens":["ob","sie","schon","angekommen","ist"],"end":".","shape":"sub","vbw":["angekommen","ist"],"explain":"Perfekt with <i>sein</i>: participle, then <b>ist</b> at the end.","rule":"Perfekt","accept":[["ob","sie","schon","angekommen","ist"]]},{"id":"vb-014","kind":"order","topic":"verbblock","frame":"Sie freut sich,","tokens":["weil","sie","eine","Wohnung","gefunden","hat"],"end":".","shape":"sub","vbw":["gefunden","hat"],"explain":"Object in the Mittelfeld, block <b>gefunden hat</b> at the end.","rule":"Perfekt","accept":[["weil","sie","eine","Wohnung","gefunden","hat"]]},{"id":"vb-015","kind":"order","topic":"verbblock","frame":"Ich hoffe,","tokens":["dass","es","morgen","geliefert","wird"],"end":".","shape":"sub","vbw":["geliefert","wird"],"explain":"Present passive: <i>geliefert</i> + <b>wird</b>.","rule":"passive","accept":[["dass","es","morgen","geliefert","wird"]]},{"id":"vb-016","kind":"order","topic":"verbblock","frame":"Er sagt,","tokens":["dass","das","Haus","verkauft","worden","ist"],"end":".","shape":"sub","vbw":["verkauft","worden","ist"],"explain":"Passive Perfekt: participle + <i>worden</i> + conjugated <b>ist</b> — the conjugated verb stays last.","rule":"passive","accept":[["dass","das","Haus","verkauft","worden","ist"]]},{"id":"vb-017","kind":"order","topic":"verbblock","frame":"Ich kann nicht schlafen,","tokens":["weil","ich","zu","viel","Kaffee","getrunken","habe"],"end":".","shape":"sub","vbw":["getrunken","habe"],"explain":"A long Mittelfeld, but the block <b>getrunken habe</b> stays at the end.","rule":"Perfekt","accept":[["weil","ich","zu","viel","Kaffee","getrunken","habe"]]},{"id":"vb-018","kind":"order","topic":"verbblock","frame":"Sie ist enttäuscht,","tokens":["weil","er","nicht","angerufen","hat"],"end":".","shape":"sub","vbw":["angerufen","hat"],"explain":"<i>nicht</i> comes before the verb block <b>angerufen hat</b>.","rule":"Perfekt","accept":[["weil","er","nicht","angerufen","hat"]]},{"id":"vb-019","kind":"order","topic":"verbblock","frame":"Ich möchte wissen,","tokens":["ob","der","Zug","pünktlich","ankommen","wird"],"extra":["kommt","an"],"end":".","shape":"sub","vbw":["ankommen","wird"],"explain":"Futur with a separable verb: the infinitive <i>ankommen</i> stays one word, <b>wird</b> is at the end.","rule":"Futur I","accept":[["ob","der","Zug","pünktlich","ankommen","wird"]]},{"id":"vb-020","kind":"order","topic":"verbblock","frame":"Er lernt Deutsch,","tokens":["damit","er","in","Deutschland","studieren","kann"],"end":".","shape":"sub","vbw":["studieren","kann"],"explain":"Place phrase, then <b>studieren kann</b>.","rule":"modal verb","accept":[["damit","er","in","Deutschland","studieren","kann"]]},{"id":"vb-021","kind":"order","topic":"verbblock","frame":"Ich bleibe,","tokens":["solange","ich","hier","arbeiten","darf"],"end":".","shape":"sub","vbw":["arbeiten","darf"],"explain":"<i>hier</i> in the Mittelfeld, block <b>arbeiten darf</b>.","rule":"modal verb","accept":[["solange","ich","hier","arbeiten","darf"]]},{"id":"vb-022","kind":"order","topic":"verbblock","frame":"Sie fragt,","tokens":["ob","sie","das","Fenster","öffnen","darf"],"end":".","shape":"sub","vbw":["öffnen","darf"],"explain":"Object, then <b>öffnen darf</b>.","rule":"modal verb","accept":[["ob","sie","das","Fenster","öffnen","darf"]]},{"id":"vb-023","kind":"order","topic":"verbblock","frame":"Wir waren froh,","tokens":["als","der","Regen","aufgehört","hatte"],"end":".","shape":"sub","vbw":["aufgehört","hatte"],"explain":"Plusquamperfekt: <i>aufgehört</i> + <b>hatte</b>.","rule":"Plusquamperfekt","accept":[["als","der","Regen","aufgehört","hatte"]]},{"id":"vb-024","kind":"order","topic":"verbblock","frame":"Ich weiß,","tokens":["dass","du","das","nicht","verstehen","kannst"],"end":".","shape":"sub","vbw":["verstehen","kannst"],"explain":"Pronoun <i>das</i> before <i>nicht</i>; then the block <b>verstehen kannst</b>.","rule":"modal verb","accept":[["dass","du","das","nicht","verstehen","kannst"]]},{"id":"vb-025","kind":"order","topic":"verbblock","frame":"Er konnte nicht kommen,","tokens":["weil","er","hat","arbeiten","müssen"],"end":".","shape":"sub","vbw":["hat","arbeiten","müssen"],"explain":"Double infinitive: <b>hat arbeiten müssen</b> — conjugated verb first.","rule":"double infinitive","accept":[["weil","er","hat","arbeiten","müssen"]]},{"id":"vb-026","kind":"order","topic":"verbblock","frame":"Sie ist müde,","tokens":["weil","sie","die","ganze","Nacht","hat","lernen","müssen"],"end":".","shape":"sub","vbw":["hat","lernen","müssen"],"explain":"Even with a long Mittelfeld: <b>hat</b> before the two infinitives.","rule":"double infinitive","accept":[["weil","sie","die","ganze","Nacht","hat","lernen","müssen"]]},{"id":"vb-027","kind":"order","topic":"verbblock","frame":"Ich hoffe,","tokens":["dass","du","mich","verstehen","wirst"],"end":".","shape":"sub","vbw":["verstehen","wirst"],"explain":"Futur: <i>verstehen</i> + <b>wirst</b>.","rule":"Futur I","accept":[["dass","du","mich","verstehen","wirst"]]},{"id":"vb-028","kind":"order","topic":"verbblock","frame":"Er ist froh,","tokens":["dass","er","nicht","operiert","werden","muss"],"end":".","shape":"sub","vbw":["operiert","werden","muss"],"explain":"Passive + modal verb: participle + <i>werden</i> + conjugated <b>muss</b>.","rule":"passive","accept":[["dass","er","nicht","operiert","werden","muss"]]},{"id":"vb-029","kind":"order","topic":"verbblock","frame":"Ich glaube,","tokens":["dass","sie","den","Film","gesehen","hat"],"end":".","shape":"sub","vbw":["gesehen","hat"],"explain":"Object, then <b>gesehen hat</b>.","rule":"Perfekt","accept":[["dass","sie","den","Film","gesehen","hat"]]},{"id":"vb-030","kind":"order","topic":"verbblock","frame":"Wir wissen nicht,","tokens":["ob","wir","das","schaffen","können"],"end":".","shape":"sub","vbw":["schaffen","können"],"explain":"<i>das</i> in the Mittelfeld, block <b>schaffen können</b>.","rule":"modal verb","accept":[["ob","wir","das","schaffen","können"]]},{"id":"vb-201","kind":"typed","topic":"verbblock","question":"Form the subordinate clause with <b>weil</b>.","prompt":"Ich bin müde, … (Ich habe schlecht geschlafen.)","frame":"Ich bin müde,","answers":["weil ich schlecht geschlafen habe"],"shape":"sub","vbw":["geschlafen","habe"],"explain":"Perfekt in the subordinate clause: <i>geschlafen</i> + <b>habe</b> at the end.","rule":"Perfekt"},{"id":"vb-202","kind":"typed","topic":"verbblock","question":"Form the subordinate clause with <b>dass</b>.","prompt":"Er sagt, … (Er kann morgen nicht kommen.)","frame":"Er sagt,","answers":["dass er morgen nicht kommen kann"],"shape":"sub","vbw":["kommen","kann"],"explain":"<i>nicht</i> before the block <b>kommen kann</b>.","rule":"modal verb"},{"id":"vb-203","kind":"typed","topic":"verbblock","question":"Form the subordinate clause with <b>weil</b>.","prompt":"Ich bleibe zu Hause, … (Es wird heute regnen.)","frame":"Ich bleibe zu Hause,","answers":["weil es heute regnen wird"],"shape":"sub","vbw":["regnen","wird"],"explain":"Futur: <i>regnen</i> + <b>wird</b>.","rule":"Futur I"},{"id":"vb-204","kind":"typed","topic":"verbblock","question":"Form the subordinate clause with <b>ob</b>.","prompt":"Ich weiß nicht, … (Wird das Auto morgen repariert?)","frame":"Ich weiß nicht,","answers":["ob das Auto morgen repariert wird","ob morgen das Auto repariert wird"],"shape":"sub","vbw":["repariert","wird"],"explain":"Passive: <i>repariert</i> + <b>wird</b> at the end.","rule":"passive"},{"id":"vb-205","kind":"typed","topic":"verbblock","question":"Form the subordinate clause with <b>weil</b>.","prompt":"Er ist nicht gekommen, … (Er hat arbeiten müssen.)","frame":"Er ist nicht gekommen,","answers":["weil er hat arbeiten müssen"],"shape":"sub","vbw":["hat","arbeiten","müssen"],"explain":"Double infinitive: <b>hat</b> comes before <i>arbeiten müssen</i>.","rule":"double infinitive"},{"id":"vb-206","kind":"typed","topic":"verbblock","question":"Form the subordinate clause with <b>dass</b>.","prompt":"Ich glaube, … (Sie hat die Prüfung bestanden.)","frame":"Ich glaube,","answers":["dass sie die Prüfung bestanden hat"],"shape":"sub","vbw":["bestanden","hat"],"explain":"Perfekt: <i>bestanden</i> + <b>hat</b>.","rule":"Perfekt"},{"id":"vb-207","kind":"typed","topic":"verbblock","question":"Form the subordinate clause with <b>obwohl</b>.","prompt":"Er ist zur Arbeit gegangen, … (Er war krank.)","frame":"Er ist zur Arbeit gegangen,","answers":["obwohl er krank war"],"shape":"sub","vbw":["war"],"explain":"Präteritum: <b>war</b> at the end.","rule":"Präteritum"},{"id":"vb-208","kind":"typed","topic":"verbblock","question":"Form the subordinate clause with <b>nachdem</b>.","prompt":"Sie ging schlafen, … (Sie hatte den Film gesehen.)","frame":"Sie ging schlafen,","answers":["nachdem sie den Film gesehen hatte"],"shape":"sub","vbw":["gesehen","hatte"],"explain":"Plusquamperfekt: <i>gesehen</i> + <b>hatte</b>.","rule":"Plusquamperfekt"},{"id":"vb-209","kind":"typed","topic":"verbblock","question":"Form the subordinate clause with <b>weil</b>.","prompt":"Ich bleibe hier, … (Ich darf noch nicht gehen.)","frame":"Ich bleibe hier,","answers":["weil ich noch nicht gehen darf"],"shape":"sub","vbw":["gehen","darf"],"explain":"<i>noch nicht</i> before the block <b>gehen darf</b>.","rule":"modal verb"},{"id":"vb-210","kind":"typed","topic":"verbblock","question":"Form the subordinate clause with <b>dass</b>.","prompt":"Ich hoffe, … (Du wirst mich verstehen.)","frame":"Ich hoffe,","answers":["dass du mich verstehen wirst"],"shape":"sub","vbw":["verstehen","wirst"],"explain":"Futur: <i>verstehen</i> + <b>wirst</b>.","rule":"Futur I"},{"id":"vb-101","kind":"mc","topic":"verbblock","question":"Which sentence is correct?","prompt":"Modal verb in the subordinate clause","options":["Ich komme nicht, weil ich arbeiten muss.","Ich komme nicht, weil ich muss arbeiten.","Ich komme nicht, weil muss ich arbeiten.","Ich komme nicht, weil ich muss zu arbeiten."],"answer":"Ich komme nicht, weil ich arbeiten muss.","explain":"Infinitive first, conjugated modal verb at the very end: <b>arbeiten muss</b>.","rule":"modal verb"},{"id":"vb-102","kind":"mc","topic":"verbblock","question":"Which sentence is correct?","prompt":"Perfekt in the subordinate clause","options":["Ich bin müde, weil ich schlecht geschlafen habe.","Ich bin müde, weil ich habe schlecht geschlafen.","Ich bin müde, weil ich schlecht habe geschlafen.","Ich bin müde, weil ich geschlafen schlecht habe."],"answer":"Ich bin müde, weil ich schlecht geschlafen habe.","explain":"Participle, then auxiliary: <b>geschlafen habe</b>.","rule":"Perfekt"},{"id":"vb-103","kind":"mc","topic":"verbblock","question":"Which sentence is correct?","prompt":"Perfekt + modal verb","options":["Er ist sauer, weil ich nicht habe kommen können.","Er ist sauer, weil ich nicht kommen können habe.","Er ist sauer, weil ich nicht kommen habe können.","Er ist sauer, weil ich habe nicht kommen können."],"answer":"Er ist sauer, weil ich nicht habe kommen können.","explain":"The exception: with a double infinitive, <b>habe</b> moves before the two infinitives; <i>nicht</i> comes before the whole verb block.","rule":"double infinitive"},{"id":"vb-104","kind":"mc","topic":"verbblock","question":"Which sentence is correct?","prompt":"Futur I in the subordinate clause","options":["Ich glaube, dass er morgen kommen wird.","Ich glaube, dass er wird morgen kommen.","Ich glaube, dass er morgen wird kommen.","Ich glaube, dass er kommen morgen wird."],"answer":"Ich glaube, dass er morgen kommen wird.","explain":"Infinitive <i>kommen</i>, then conjugated <b>wird</b>.","rule":"Futur I"},{"id":"vb-105","kind":"mc","topic":"verbblock","question":"Which sentence is correct?","prompt":"Passive in the subordinate clause","options":["Ich warte, bis das Auto repariert wird.","Ich warte, bis das Auto wird repariert.","Ich warte, bis wird das Auto repariert.","Ich warte, bis das Auto repariert ist worden."],"answer":"Ich warte, bis das Auto repariert wird.","explain":"Participle <i>repariert</i>, then the conjugated <b>wird</b>.","rule":"passive"},{"id":"vb-106","kind":"mc","topic":"verbblock","question":"In what order does the verb block appear at the end of a subordinate clause?","prompt":"Rule","options":["Infinitive or participle first, then the conjugated verb: <i>arbeiten muss</i>, <i>geschlafen habe</i>.","Conjugated verb first, then infinitive or participle: <i>muss arbeiten</i>.","The order is free.","The conjugated verb is in position 2, the rest at the end."],"answer":"Infinitive or participle first, then the conjugated verb: <i>arbeiten muss</i>, <i>geschlafen habe</i>.","explain":"The conjugated verb takes the last slot; everything non-conjugated sits directly before it.","rule":"verb block","meta":true},{"id":"vb-107","kind":"mc","topic":"verbblock","question":"What is special about Perfekt + modal verb in a subordinate clause?","prompt":"Rule","options":["The conjugated <i>habe/hatte</i> goes <u>before</u> the two infinitives: <i>…, weil ich habe kommen müssen.</i>","The modal verb becomes a participle: <i>…, weil ich kommen gemusst habe.</i>","Nothing — the conjugated verb is at the very end as usual.","The subordinate clause then always comes first."],"answer":"The conjugated <i>habe/hatte</i> goes <u>before</u> the two infinitives: <i>…, weil ich habe kommen müssen.</i>","explain":"Double infinitive: the one exception to “conjugated verb last”.","rule":"double infinitive","meta":true},{"id":"vb-108","kind":"mc","topic":"verbblock","question":"Which sentence is correct?","prompt":"Perfekt with sein","options":["Ich weiß nicht, ob sie schon angekommen ist.","Ich weiß nicht, ob sie ist schon angekommen.","Ich weiß nicht, ob sie schon ist angekommen.","Ich weiß nicht, ob sie schon angekommen hat."],"answer":"Ich weiß nicht, ob sie schon angekommen ist.","explain":"<i>ankommen</i> forms the Perfekt with <i>sein</i>; <b>ist</b> is at the end.","rule":"Perfekt"},{"id":"vb-109","kind":"mc","topic":"verbblock","question":"Which sentence is correct?","prompt":"Plusquamperfekt after nachdem","options":["Nachdem er gegessen hatte, ging er spazieren.","Nachdem er hatte gegessen, ging er spazieren.","Nachdem er gegessen hatte, er ging spazieren.","Nachdem er gegessen, ging er spazieren."],"answer":"Nachdem er gegessen hatte, ging er spazieren.","explain":"<i>gegessen</i> + <b>hatte</b> at the end of the subordinate clause; the main-clause verb follows immediately.","rule":"Plusquamperfekt"},{"id":"vb-110","kind":"mc","topic":"verbblock","question":"Which sentence is correct?","prompt":"Passive Perfekt","options":["Er sagt, dass das Haus verkauft worden ist.","Er sagt, dass das Haus ist verkauft worden.","Er sagt, dass das Haus verkauft ist worden.","Er sagt, dass das Haus worden verkauft ist."],"answer":"Er sagt, dass das Haus verkauft worden ist.","explain":"Participle + <i>worden</i> + conjugated <b>ist</b>: the conjugated verb stays last.","rule":"passive"},{"id":"ni-001","kind":"order","topic":"nicht","question":"Build the subordinate clause. Negate the whole clause.","frame":"Ich bin zu Hause,","tokens":["weil","ich","das","Buch","nicht","lese"],"end":".","shape":"sub","vbw":["lese"],"explain":"Definite object, then <i>nicht</i>, then the verb: <b>… das Buch nicht lese</b>.","rule":"nicht before the verb","accept":[["weil","ich","das","Buch","nicht","lese"]]},{"id":"ni-002","kind":"order","topic":"nicht","question":"Build the subordinate clause. Negate the whole clause.","frame":"Er ist traurig,","tokens":["weil","ich","nicht","kommen","kann"],"end":".","shape":"sub","vbw":["kommen","kann"],"explain":"<i>nicht</i> sits directly before the verb block <b>kommen kann</b>.","rule":"nicht before the verb block","accept":[["weil","ich","nicht","kommen","kann"]]},{"id":"ni-003","kind":"order","topic":"nicht","question":"Build the subordinate clause. Negate the whole clause.","frame":"Ich gehe ins Bett,","tokens":["obwohl","ich","nicht","müde","bin"],"end":".","shape":"sub","vbw":["bin"],"explain":"Before a predicative adjective: <i>nicht müde</i>, then <b>bin</b>.","rule":"nicht before the predicative","accept":[["obwohl","ich","nicht","müde","bin"]]},{"id":"ni-004","kind":"order","topic":"nicht","question":"Build the subordinate clause. Negate the whole clause.","frame":"Ich bleibe hier,","tokens":["weil","ich","nicht","nach","Bonn","fahre"],"end":".","shape":"sub","vbw":["fahre"],"explain":"Before a direction complement: <i>nicht nach Bonn</i>, then <b>fahre</b>.","rule":"nicht before the direction phrase","accept":[["weil","ich","nicht","nach","Bonn","fahre"]]},{"id":"ni-005","kind":"order","topic":"nicht","question":"Build the subordinate clause. Negate the whole clause.","frame":"Sie sagt,","tokens":["dass","sie","den","Film","nicht","kennt"],"end":".","shape":"sub","vbw":["kennt"],"explain":"Definite object before <i>nicht</i>; <b>kennt</b> at the end.","rule":"nicht before the verb","accept":[["dass","sie","den","Film","nicht","kennt"]]},{"id":"ni-006","kind":"order","topic":"nicht","question":"Build the subordinate clause. Negate the whole clause.","frame":"Er ist sauer,","tokens":["weil","ich","ihn","nicht","angerufen","habe"],"end":".","shape":"sub","vbw":["angerufen","habe"],"explain":"Pronoun before <i>nicht</i>, then the block <b>angerufen habe</b>.","rule":"nicht before the verb block","accept":[["weil","ich","ihn","nicht","angerufen","habe"]]},{"id":"ni-007","kind":"order","topic":"nicht","question":"Build the subordinate clause. Negate the whole clause.","frame":"Ich weiß,","tokens":["dass","er","heute","nicht","arbeitet"],"end":".","shape":"sub","vbw":["arbeitet"],"explain":"Definite time expression before <i>nicht</i>: <i>heute nicht</i>. (<i>nicht heute</i> would negate only the time.)","rule":"time expression before nicht","accept":[["dass","er","heute","nicht","arbeitet"]]},{"id":"ni-008","kind":"order","topic":"nicht","question":"Build the subordinate clause. Negate the whole clause.","frame":"Sie ist enttäuscht,","tokens":["weil","er","nicht","mitkommt"],"end":".","shape":"sub","vbw":["mitkommt"],"explain":"<i>nicht</i> directly before the (unsplit) verb <b>mitkommt</b>.","rule":"nicht before the verb","accept":[["weil","er","nicht","mitkommt"]]},{"id":"ni-009","kind":"order","topic":"nicht","question":"Build the subordinate clause. Negate the whole clause.","frame":"Ich glaube,","tokens":["dass","das","nicht","richtig","ist"],"end":".","shape":"sub","vbw":["ist"],"explain":"<i>nicht</i> before the predicative adjective <i>richtig</i>, <b>ist</b> at the end.","rule":"nicht before the predicative","accept":[["dass","das","nicht","richtig","ist"]]},{"id":"ni-010","kind":"order","topic":"nicht","question":"Build the subordinate clause. Negate the whole clause.","frame":"Ich frage mich,","tokens":["warum","er","nicht","in","Berlin","wohnt"],"end":".","shape":"sub","vbw":["wohnt"],"explain":"<i>wohnen</i> needs the place phrase as a complement → <i>nicht</i> goes before it.","rule":"nicht before the place complement","accept":[["warum","er","nicht","in","Berlin","wohnt"]]},{"id":"ni-011","kind":"order","topic":"nicht","question":"Build the subordinate clause. Negate the whole clause.","frame":"Er sagt,","tokens":["dass","er","kein","Auto","hat"],"extra":["nicht","ein"],"end":".","shape":"sub","vbw":["hat"],"explain":"A noun without an article is negated with <b>kein</b>, not <i>nicht</i>. The verb stays at the end.","rule":"kein instead of nicht","accept":[["dass","er","kein","Auto","hat"]]},{"id":"ni-012","kind":"order","topic":"nicht","question":"Build the subordinate clause. Negate the whole clause.","frame":"Ich bleibe zu Hause,","tokens":["weil","ich","nicht","gesund","bin"],"end":".","shape":"sub","vbw":["bin"],"explain":"<i>nicht gesund</i> (predicative), then <b>bin</b>.","rule":"nicht before the predicative","accept":[["weil","ich","nicht","gesund","bin"]]},{"id":"ni-013","kind":"order","topic":"nicht","question":"Build the subordinate clause. Negate the whole clause.","frame":"Sie fragt,","tokens":["ob","ich","morgen","nicht","kommen","kann"],"end":".","shape":"sub","vbw":["kommen","kann"],"explain":"Time expression, then <i>nicht</i>, then the block <b>kommen kann</b>.","rule":"time expression before nicht","accept":[["ob","ich","morgen","nicht","kommen","kann"]]},{"id":"ni-014","kind":"order","topic":"nicht","question":"Build the subordinate clause. Negate the whole clause.","frame":"Ich hoffe,","tokens":["dass","es","morgen","nicht","regnet"],"end":".","shape":"sub","vbw":["regnet"],"explain":"<i>morgen nicht</i> → whole-clause negation; <b>regnet</b> at the end.","rule":"time expression before nicht","accept":[["dass","es","morgen","nicht","regnet"]]},{"id":"ni-015","kind":"order","topic":"nicht","question":"Build the subordinate clause. Negate the whole clause.","frame":"Er ist froh,","tokens":["dass","er","nicht","umziehen","muss"],"end":".","shape":"sub","vbw":["umziehen","muss"],"explain":"<i>nicht</i> before the block <b>umziehen muss</b>.","rule":"nicht before the verb block","accept":[["dass","er","nicht","umziehen","muss"]]},{"id":"ni-016","kind":"order","topic":"nicht","question":"Build the subordinate clause. Negate the whole clause.","frame":"Ich weiß nicht,","tokens":["ob","sie","mich","nicht","verstanden","hat"],"end":".","shape":"sub","vbw":["verstanden","hat"],"explain":"Pronoun <i>mich</i> before <i>nicht</i>; block <b>verstanden hat</b>.","rule":"nicht before the verb block","accept":[["ob","sie","mich","nicht","verstanden","hat"]]},{"id":"ni-017","kind":"order","topic":"nicht","question":"Build the subordinate clause. Negate the whole clause.","frame":"Sie sagt,","tokens":["dass","sie","keine","Zeit","hat"],"extra":["nicht"],"end":".","shape":"sub","vbw":["hat"],"explain":"<i>Zeit</i> has no article → <b>keine</b>; <i>nicht</i> stays unused.","rule":"kein instead of nicht","accept":[["dass","sie","keine","Zeit","hat"]]},{"id":"ni-018","kind":"order","topic":"nicht","question":"Build the subordinate clause. Negate the whole clause.","frame":"Ich glaube,","tokens":["dass","er","nicht","zu","Hause","ist"],"end":".","shape":"sub","vbw":["ist"],"explain":"With <i>sein</i> the place phrase is a complement → <i>nicht</i> before it, <b>ist</b> at the end.","rule":"nicht before the place complement","accept":[["dass","er","nicht","zu","Hause","ist"]]},{"id":"ni-101","kind":"mc","topic":"nicht","question":"Which sentence is correct?","prompt":"Negation in the subordinate clause","options":["Er ist traurig, weil ich nicht kommen kann.","Er ist traurig, weil ich kommen nicht kann.","Er ist traurig, weil ich kommen kann nicht.","Er ist traurig, weil nicht ich kommen kann."],"answer":"Er ist traurig, weil ich nicht kommen kann.","explain":"<i>nicht</i> comes before the whole verb block <b>kommen kann</b>.","rule":"nicht before the verb block"},{"id":"ni-102","kind":"mc","topic":"nicht","question":"Which sentence is correct?","prompt":"Negation in the subordinate clause","options":["Ich gehe ins Bett, obwohl ich nicht müde bin.","Ich gehe ins Bett, obwohl ich müde nicht bin.","Ich gehe ins Bett, obwohl ich müde bin nicht.","Ich gehe ins Bett, obwohl ich bin nicht müde."],"answer":"Ich gehe ins Bett, obwohl ich nicht müde bin.","explain":"Before a predicative adjective, <i>nicht</i> sits directly in front of it: <b>nicht müde bin</b>.","rule":"nicht before the predicative"},{"id":"ni-103","kind":"mc","topic":"nicht","question":"Which sentence negates the whole subordinate clause?","prompt":"das Buch","options":["…, weil ich das Buch nicht lese.","…, weil ich nicht das Buch lese.","…, weil ich das Buch lese nicht.","…, weil ich das nicht Buch lese."],"answer":"…, weil ich das Buch nicht lese.","explain":"Definite object before <i>nicht</i>. <i>nicht das Buch</i> would be partial negation (“not the book, but the newspaper”).","rule":"nicht before the verb"},{"id":"ni-104","kind":"mc","topic":"nicht","question":"Which sentence is correct?","prompt":"Direction phrase","options":["…, weil ich nicht nach Bonn fahre.","…, weil ich nach Bonn nicht fahre.","…, weil ich nach Bonn fahre nicht.","…, weil nicht ich nach Bonn fahre."],"answer":"…, weil ich nicht nach Bonn fahre.","explain":"A direction complement belongs to the verb — <i>nicht</i> goes before it.","rule":"nicht before the direction phrase"},{"id":"ni-105","kind":"mc","topic":"nicht","question":"Where does <b>nicht</b> go in a subordinate clause?","prompt":"Rule","options":["Directly before the verb block — or before a predicative adjective/noun or a prepositional/direction complement.","Always directly after the conjunction.","Always at the very end, after the verb.","Always directly after the subject."],"answer":"Directly before the verb block — or before a predicative adjective/noun or a prepositional/direction complement.","explain":"The same logic as in a main clause, except that the verb block is now at the very end.","rule":"nicht before the verb block","meta":true},{"id":"ni-106","kind":"mc","topic":"nicht","question":"Which sentence means: he isn't working at all today?","prompt":"Negating the whole clause","options":["…, dass er heute nicht arbeitet.","…, dass er nicht heute arbeitet.","…, dass er heute arbeitet nicht.","…, dass nicht er heute arbeitet."],"answer":"…, dass er heute nicht arbeitet.","explain":"Definite time expressions come before <i>nicht</i>. <i>nicht heute</i> would mean “not today, but another day”.","rule":"time expression before nicht"},{"id":"vo-001","kind":"order","topic":"voranstellung","question":"Build the main clause.","frame":"Weil ich krank bin,","tokens":["bleibe","ich","zu","Hause"],"end":".","shape":"main","explain":"The subordinate clause is position 1 → the main-clause verb <b>bleibe</b> follows right after the comma.","rule":"verb right after the comma","accept":[["bleibe","ich","zu","Hause"]]},{"id":"vo-002","kind":"order","topic":"voranstellung","question":"Build the main clause.","frame":"Wenn ich Zeit habe,","tokens":["rufe","ich","dich","an"],"end":".","shape":"main","tail":["an"],"explain":"<b>rufe</b> right after the comma, the prefix <i>an</i> at the end of the sentence.","rule":"verb right after the comma","accept":[["rufe","ich","dich","an"]]},{"id":"vo-003","kind":"order","topic":"voranstellung","question":"Build the main clause.","frame":"Als ich klein war,","tokens":["wohnte","ich","in","Bonn"],"end":".","shape":"main","explain":"<b>wohnte</b> in position 2, subject after it.","rule":"verb right after the comma","accept":[["wohnte","ich","in","Bonn"]]},{"id":"vo-004","kind":"order","topic":"voranstellung","question":"Build the main clause.","frame":"Obwohl es regnet,","tokens":["gehen","wir","spazieren"],"end":".","shape":"main","explain":"<b>gehen</b> after the comma, then <i>wir</i>.","rule":"verb right after the comma","accept":[["gehen","wir","spazieren"]]},{"id":"vo-005","kind":"order","topic":"voranstellung","question":"Build the main clause.","frame":"Nachdem ich gegessen hatte,","tokens":["ging","ich","ins","Bett"],"end":".","shape":"main","explain":"<b>ging</b> right after the comma.","rule":"verb right after the comma","accept":[["ging","ich","ins","Bett"]]},{"id":"vo-006","kind":"order","topic":"voranstellung","question":"Build the main clause.","frame":"Sobald er kommt,","tokens":["essen","wir"],"end":".","shape":"main","explain":"Short, but the same rule: <b>essen</b> before <i>wir</i>.","rule":"verb right after the comma","accept":[["essen","wir"]]},{"id":"vo-007","kind":"order","topic":"voranstellung","question":"Build the main clause.","frame":"Falls es regnet,","tokens":["nehmen","wir","den","Bus"],"end":".","shape":"main","explain":"<b>nehmen</b> after the comma, subject <i>wir</i> after it.","rule":"verb right after the comma","accept":[["nehmen","wir","den","Bus"]]},{"id":"vo-008","kind":"order","topic":"voranstellung","question":"Build the main clause.","frame":"Da es spät ist,","tokens":["gehe","ich","jetzt","nach","Hause"],"end":".","shape":"main","explain":"<b>gehe</b> in position 2, then subject and Mittelfeld.","rule":"verb right after the comma","accept":[["gehe","ich","jetzt","nach","Hause"]]},{"id":"vo-009","kind":"order","topic":"voranstellung","question":"Build the main clause.","frame":"Bevor ich gehe,","tokens":["esse","ich","noch","etwas"],"end":".","shape":"main","explain":"<b>esse</b> after the comma.","rule":"verb right after the comma","accept":[["esse","ich","noch","etwas"]]},{"id":"vo-010","kind":"order","topic":"voranstellung","question":"Build the main clause.","frame":"Solange es regnet,","tokens":["bleiben","wir","hier"],"end":".","shape":"main","explain":"<b>bleiben</b> after the comma, then <i>wir</i>.","rule":"verb right after the comma","accept":[["bleiben","wir","hier"]]},{"id":"vo-011","kind":"order","topic":"voranstellung","question":"Build the main clause.","frame":"Damit ich die Prüfung bestehe,","tokens":["lerne","ich","jeden","Tag"],"end":".","shape":"main","explain":"<b>lerne</b> after the comma.","rule":"verb right after the comma","accept":[["lerne","ich","jeden","Tag"]]},{"id":"vo-012","kind":"order","topic":"voranstellung","question":"Build the main clause.","frame":"Seitdem er hier wohnt,","tokens":["ist","er","glücklich"],"end":".","shape":"main","explain":"<b>ist</b> after the comma, subject <i>er</i> after it.","rule":"verb right after the comma","accept":[["ist","er","glücklich"]]},{"id":"vo-013","kind":"order","topic":"voranstellung","question":"Build the main clause.","frame":"Wenn du mich brauchst,","tokens":["kannst","du","mich","anrufen"],"end":".","shape":"main","tail":["anrufen"],"explain":"Modal verb <b>kannst</b> in position 2, infinitive <i>anrufen</i> at the end.","rule":"verb right after the comma","accept":[["kannst","du","mich","anrufen"]]},{"id":"vo-014","kind":"order","topic":"voranstellung","question":"Build the main clause.","frame":"Weil er keine Zeit hatte,","tokens":["hat","er","nicht","angerufen"],"end":".","shape":"main","tail":["angerufen"],"explain":"Auxiliary <b>hat</b> in position 2, participle at the end.","rule":"verb right after the comma","accept":[["hat","er","nicht","angerufen"]]},{"id":"vo-015","kind":"order","topic":"voranstellung","question":"Build the main clause.","frame":"Während er kocht,","tokens":["deckt","sie","den","Tisch"],"end":".","shape":"main","explain":"<b>deckt</b> after the comma, then <i>sie</i>.","rule":"verb right after the comma","accept":[["deckt","sie","den","Tisch"]]},{"id":"vo-016","kind":"order","topic":"voranstellung","question":"Build the main clause.","frame":"Als ich nach Hause kam,","tokens":["war","niemand","da"],"end":".","shape":"main","explain":"<b>war</b> after the comma, subject <i>niemand</i> after it.","rule":"verb right after the comma","accept":[["war","niemand","da"]]},{"id":"vo-017","kind":"order","topic":"voranstellung","question":"Build the fronted subordinate clause.","tokens":["Wenn","ich","Zeit","habe"],"after":", komme ich","end":".","shape":"sub","vbw":["habe"],"explain":"Fronted subordinate clause: conjunction first, <b>habe</b> at the end, comma, then the main-clause verb.","rule":"subordinate clause first","accept":[["Wenn","ich","Zeit","habe"]]},{"id":"vo-018","kind":"order","topic":"voranstellung","question":"Build the fronted subordinate clause.","tokens":["Als","ich","klein","war"],"after":", wohnte ich in Bonn","end":".","shape":"sub","vbw":["war"],"explain":"<i>Als</i> + subject + predicative + <b>war</b>, then comma and <i>wohnte</i>.","rule":"subordinate clause first","accept":[["Als","ich","klein","war"]]},{"id":"vo-019","kind":"order","topic":"voranstellung","question":"Build the fronted subordinate clause.","tokens":["Obwohl","er","müde","ist"],"after":", geht er zur Arbeit","end":".","shape":"sub","vbw":["ist"],"explain":"<b>ist</b> is at the end of the subordinate clause, right before the comma.","rule":"subordinate clause first","accept":[["Obwohl","er","müde","ist"]]},{"id":"vo-020","kind":"order","topic":"voranstellung","question":"Build the fronted subordinate clause.","tokens":["Nachdem","wir","gegessen","hatten"],"after":", gingen wir spazieren","end":".","shape":"sub","vbw":["gegessen","hatten"],"explain":"Block <b>gegessen hatten</b> before the comma; the main clause starts with <i>gingen</i>.","rule":"subordinate clause first","accept":[["Nachdem","wir","gegessen","hatten"]]},{"id":"vo-201","kind":"typed","topic":"voranstellung","question":"Move the subordinate clause to the front.","prompt":"Ich bleibe zu Hause, weil ich krank bin.","answers":["Weil ich krank bin, bleibe ich zu Hause."],"shape":"ns-hs","vbw":["bin"],"explain":"The subordinate clause becomes position 1 → <b>bleibe</b> follows right after the comma, then <i>ich</i>.","rule":"verb right after the comma"},{"id":"vo-202","kind":"typed","topic":"voranstellung","question":"Move the subordinate clause to the front.","prompt":"Ich rufe dich an, wenn ich Zeit habe.","answers":["Wenn ich Zeit habe, rufe ich dich an."],"shape":"ns-hs","vbw":["habe"],"explain":"<b>rufe</b> after the comma, <i>an</i> at the end.","rule":"verb right after the comma"},{"id":"vo-203","kind":"typed","topic":"voranstellung","question":"Move the subordinate clause to the front.","prompt":"Ich wohnte in Bonn, als ich klein war.","answers":["Als ich klein war, wohnte ich in Bonn."],"shape":"ns-hs","vbw":["war"],"explain":"<b>wohnte</b> right after the comma.","rule":"verb right after the comma"},{"id":"vo-204","kind":"typed","topic":"voranstellung","question":"Move the subordinate clause to the front.","prompt":"Wir gehen spazieren, obwohl es regnet.","answers":["Obwohl es regnet, gehen wir spazieren."],"shape":"ns-hs","vbw":["regnet"],"explain":"<b>gehen</b> after the comma, then <i>wir</i>.","rule":"verb right after the comma"},{"id":"vo-205","kind":"typed","topic":"voranstellung","question":"Move the subordinate clause to the front.","prompt":"Wir essen, sobald er kommt.","answers":["Sobald er kommt, essen wir."],"shape":"ns-hs","vbw":["kommt"],"explain":"<b>essen</b> after the comma, then <i>wir</i>.","rule":"verb right after the comma"},{"id":"vo-206","kind":"typed","topic":"voranstellung","question":"Move the subordinate clause to the front.","prompt":"Nimm den Schirm, falls es regnet.","answers":["Falls es regnet, nimm den Schirm."],"shape":"ns-hs","vbw":["regnet"],"explain":"Even with an imperative: the verb <b>nimm</b> comes right after the comma.","rule":"verb right after the comma"},{"id":"vo-207","kind":"typed","topic":"voranstellung","question":"Move the subordinate clause to the front.","prompt":"Ich lerne viel, damit ich die Prüfung bestehe.","answers":["Damit ich die Prüfung bestehe, lerne ich viel."],"shape":"ns-hs","vbw":["bestehe"],"explain":"<b>lerne</b> after the comma.","rule":"verb right after the comma"},{"id":"vo-208","kind":"typed","topic":"voranstellung","question":"Move the subordinate clause to the front.","prompt":"Er ist glücklich, seitdem er hier wohnt.","answers":["Seitdem er hier wohnt, ist er glücklich."],"shape":"ns-hs","vbw":["wohnt"],"explain":"<b>ist</b> after the comma, then <i>er</i>.","rule":"verb right after the comma"},{"id":"vo-209","kind":"typed","topic":"voranstellung","question":"Move the subordinate clause to the front.","prompt":"Sie deckt den Tisch, während er kocht.","answers":["Während er kocht, deckt sie den Tisch."],"shape":"ns-hs","vbw":["kocht"],"explain":"<b>deckt</b> after the comma, then <i>sie</i>.","rule":"verb right after the comma"},{"id":"vo-210","kind":"typed","topic":"voranstellung","question":"Move the subordinate clause to the front.","prompt":"Ich esse etwas, bevor ich gehe.","answers":["Bevor ich gehe, esse ich etwas."],"shape":"ns-hs","vbw":["gehe"],"explain":"<b>esse</b> after the comma.","rule":"verb right after the comma"},{"id":"vo-211","kind":"typed","topic":"voranstellung","question":"Move the subordinate clause to the front.","prompt":"Du kannst mich anrufen, wenn du Hilfe brauchst.","answers":["Wenn du Hilfe brauchst, kannst du mich anrufen."],"shape":"ns-hs","vbw":["brauchst"],"explain":"The conjugated <b>kannst</b> after the comma, <i>anrufen</i> stays at the end.","rule":"verb right after the comma"},{"id":"vo-212","kind":"typed","topic":"voranstellung","question":"Move the subordinate clause to the front.","prompt":"Er hat nicht angerufen, weil er keine Zeit hatte.","answers":["Weil er keine Zeit hatte, hat er nicht angerufen."],"shape":"ns-hs","vbw":["hatte"],"explain":"The auxiliary <b>hat</b> after the comma, <i>angerufen</i> at the end.","rule":"verb right after the comma"},{"id":"vo-101","kind":"mc","topic":"voranstellung","question":"Which sentence is correct?","prompt":"Subordinate clause first","options":["Weil ich krank bin, bleibe ich zu Hause.","Weil ich krank bin, ich bleibe zu Hause.","Weil ich bin krank, bleibe ich zu Hause.","Weil ich krank bin bleibe ich zu Hause."],"answer":"Weil ich krank bin, bleibe ich zu Hause.","explain":"Subordinate clause = position 1 → main-clause verb right after the comma. And the comma stays.","rule":"verb right after the comma"},{"id":"vo-102","kind":"mc","topic":"voranstellung","question":"What happens when the subordinate clause comes first?","prompt":"Rule","options":["The whole subordinate clause counts as position 1; the main-clause verb follows right after the comma.","Nothing — the main clause starts with the subject as usual.","The subordinate clause's verb moves to position 2.","The comma is dropped."],"answer":"The whole subordinate clause counts as position 1; the main-clause verb follows right after the comma.","explain":"Pattern: <i>subordinate clause, verb subject …</i> — e.g. <i>Wenn ich Zeit habe, rufe ich dich an.</i>","rule":"verb right after the comma","meta":true},{"id":"vo-103","kind":"mc","topic":"voranstellung","question":"Which sentence is correct?","prompt":"Subordinate clause first + separable verb","options":["Wenn ich Zeit habe, rufe ich dich an.","Wenn ich Zeit habe, ich rufe dich an.","Wenn ich habe Zeit, rufe ich dich an.","Wenn ich Zeit habe, rufe ich an dich."],"answer":"Wenn ich Zeit habe, rufe ich dich an.","explain":"<b>rufe</b> after the comma; the prefix <i>an</i> stays at the end of the sentence.","rule":"verb right after the comma"},{"id":"vo-104","kind":"mc","topic":"voranstellung","question":"Which sentence is correct?","prompt":"Subordinate clause first (Präteritum)","options":["Als ich klein war, wohnte ich in Bonn.","Als ich klein war, ich wohnte in Bonn.","Als ich war klein, wohnte ich in Bonn.","Als ich klein war, wohnte in Bonn ich."],"answer":"Als ich klein war, wohnte ich in Bonn.","explain":"Verb, then subject: <b>wohnte ich</b>.","rule":"verb right after the comma"},{"id":"vo-105","kind":"mc","topic":"voranstellung","question":"Which sentence is correct?","prompt":"Subordinate clause first + modal verb","options":["Wenn du willst, kannst du mitkommen.","Wenn du willst, du kannst mitkommen.","Wenn du willst, kannst mitkommen du.","Wenn willst du, kannst du mitkommen."],"answer":"Wenn du willst, kannst du mitkommen.","explain":"The conjugated <b>kannst</b> right after the comma, the infinitive at the end.","rule":"verb right after the comma"},{"id":"vo-106","kind":"mc","topic":"voranstellung","question":"What comes right after the comma when the subordinate clause is first?","prompt":"Rule","options":["The conjugated verb of the main clause.","The subject of the main clause.","A second conjunction.","An adverb such as <i>dann</i>."],"answer":"The conjugated verb of the main clause.","explain":"Position 1 is taken (by the subordinate clause), so position 2 holds the verb.","rule":"verb right after the comma","meta":true},{"id":"ko-001","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"Ich bleibe zu Hause, ___ ich krank bin. (because)","answers":["weil"],"alt":["da"],"altWhy":"<i>da</i> works too — it sounds more formal and fits when the reason is already known.","explain":"Reason → <b>weil</b>; the verb goes to the end.","rule":"weil"},{"id":"ko-002","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"Ich gehe spazieren, ___ es regnet. (although)","answers":["obwohl"],"explain":"Contrast → <b>obwohl</b>.","rule":"obwohl"},{"id":"ko-003","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"Ich lerne jeden Tag, ___ ich die Prüfung bestehe. (so that – purpose)","answers":["damit"],"explain":"Purpose → <b>damit</b>.","rule":"damit"},{"id":"ko-004","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"Er sprach sehr leise, ___ ich nichts verstand. (so that – result)","answers":["sodass"],"alt":["so dass"],"altWhy":"<i>so dass</i> (two words) is an accepted spelling of <i>sodass</i>.","explain":"Result → <b>sodass</b>.","rule":"sodass"},{"id":"ko-005","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"___ ich gehe, esse ich noch etwas. (before)","answers":["Bevor"],"explain":"<b>Bevor</b> = before.","rule":"bevor"},{"id":"ko-006","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"___ ich gegessen hatte, ging ich spazieren. (after)","answers":["Nachdem"],"explain":"<b>Nachdem</b> = after; typically with the Plusquamperfekt.","rule":"nachdem"},{"id":"ko-007","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"___ er kocht, deckt sie den Tisch. (while)","answers":["Während"],"explain":"Same time → <b>Während</b>.","rule":"während"},{"id":"ko-008","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"Warte, ___ ich fertig bin. (until)","answers":["bis"],"explain":"End point → <b>bis</b>.","rule":"bis"},{"id":"ko-009","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"___ er hier wohnt, ist er glücklich. (since – time)","answers":["Seitdem"],"alt":["Seit"],"altWhy":"As conjunctions, <i>seit</i> and <i>seitdem</i> mean the same.","explain":"Starting point in time → <b>Seitdem</b>.","rule":"seitdem"},{"id":"ko-010","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"___ er kommt, essen wir. (as soon as)","answers":["Sobald"],"explain":"<b>Sobald</b> = immediately after.","rule":"sobald"},{"id":"ko-011","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"___ es regnet, bleiben wir hier. (as long as)","answers":["Solange"],"explain":"<b>Solange</b> = for the duration of.","rule":"solange"},{"id":"ko-012","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"Nimm den Schirm mit, ___ es regnet. (in case)","answers":["falls"],"alt":["wenn"],"altWhy":"<i>wenn</i> is possible too; <i>falls</i> stresses that it is only a possibility.","explain":"Possibility → <b>falls</b>.","rule":"falls"},{"id":"ko-013","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"Man lernt eine Sprache, ___ man sie jeden Tag benutzt. (by …ing)","answers":["indem"],"explain":"Method → <b>indem</b>.","rule":"indem"},{"id":"ko-014","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"Ich weiß, ___ er kommt. (that)","answers":["dass"],"explain":"Certain statement after <i>wissen</i> → <b>dass</b>.","rule":"dass"},{"id":"ko-015","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"Ich frage, ___ er kommt. (whether)","answers":["ob"],"explain":"Indirect yes/no question → <b>ob</b>.","rule":"ob"},{"id":"ko-016","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"Ich rufe dich an, ___ ich Zeit habe. (when/if – future)","answers":["wenn"],"alt":["falls"],"altWhy":"<i>falls</i> (“in case”) fits too, but signals doubt; <i>wenn</i> is the default here.","explain":"Present/future/condition → <b>wenn</b>.","rule":"wenn"},{"id":"ko-017","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"___ ich klein war, wohnte ich in Bonn. (when – a single period, past)","answers":["Als"],"explain":"A single period in the past → <b>Als</b>.","rule":"als"},{"id":"ko-018","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"___ es regnet, bleiben wir zu Hause. (since – reason, formal)","answers":["Da"],"alt":["Weil"],"altWhy":"<i>weil</i> works too — <i>da</i> is the more formal choice when the reason is already known.","explain":"Known reason, formal, at the start of the sentence → <b>Da</b>.","rule":"da"},{"id":"ko-019","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"Er trainiert jeden Tag, ___ er fit bleibt. (so that – purpose)","answers":["damit"],"explain":"Purpose → <b>damit</b>.","rule":"damit"},{"id":"ko-020","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"Sie hat sehr viel gearbeitet, ___ sie jetzt müde ist. (so that – result)","answers":["sodass"],"alt":["so dass"],"altWhy":"<i>so dass</i> (two words) is an accepted spelling of <i>sodass</i>.","explain":"Result → <b>sodass</b>.","rule":"sodass"},{"id":"ko-021","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"Ich bleibe hier, ___ du zurückkommst. (until)","answers":["bis"],"explain":"End point → <b>bis</b>.","rule":"bis"},{"id":"ko-022","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"___ du gehst, mach bitte das Licht aus. (before)","answers":["Bevor"],"explain":"<b>Bevor</b> = before.","rule":"bevor"},{"id":"ko-023","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"Er ist glücklich, ___ er einen neuen Job hat. (since – time)","answers":["seitdem"],"alt":["seit"],"altWhy":"As conjunctions, <i>seit</i> and <i>seitdem</i> mean the same.","explain":"Starting point in time → <b>seitdem</b>.","rule":"seitdem"},{"id":"ko-024","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"___ sie die Prüfung bestanden hat, ist sie sehr zufrieden. (since – time)","answers":["Seitdem"],"alt":["Seit"],"altWhy":"As conjunctions, <i>seit</i> and <i>seitdem</i> mean the same.","explain":"Time, not reason → <b>Seitdem</b>.","rule":"seitdem"},{"id":"ko-025","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"Ich esse etwas, ___ ich Hunger habe. (whenever)","answers":["wenn"],"explain":"Repeated in the present → <b>wenn</b>.","rule":"wenn"},{"id":"ko-026","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"Er kann nicht kommen, ___ er arbeiten muss. (because)","answers":["weil"],"alt":["da"],"altWhy":"<i>da</i> works too — it sounds more formal and fits when the reason is already known.","explain":"Reason → <b>weil</b>.","rule":"weil"},{"id":"ko-027","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"Sie geht zur Arbeit, ___ sie krank ist. (although)","answers":["obwohl"],"explain":"Contrast → <b>obwohl</b>.","rule":"obwohl"},{"id":"ko-028","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"Ich spare Geld, ___ ich mir ein Auto kaufen kann. (so that – purpose)","answers":["damit"],"explain":"Purpose → <b>damit</b>.","rule":"damit"},{"id":"ko-029","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"Ich verbessere mein Deutsch, ___ ich jeden Tag Zeitung lese. (by …ing)","answers":["indem"],"explain":"Method → <b>indem</b>.","rule":"indem"},{"id":"ko-030","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"Ruf mich an, ___ du Hilfe brauchst. (in case)","answers":["falls"],"alt":["wenn"],"altWhy":"<i>wenn</i> is possible too; <i>falls</i> stresses that it is only a possibility.","explain":"Possibility → <b>falls</b>.","rule":"falls"},{"id":"ko-031","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"Ich warte hier, ___ der Bus kommt. (until)","answers":["bis"],"explain":"End point → <b>bis</b>.","rule":"bis"},{"id":"ko-032","kind":"typed","topic":"konjunktion","question":"Fill in the right conjunction.","prompt":"___ du die Tür abschließt, kontrolliere die Fenster. (before)","answers":["Bevor"],"explain":"<b>Bevor</b> = before.","rule":"bevor"},{"id":"ko-101","kind":"mc","topic":"konjunktion","question":"Which conjunction expresses a contrast?","prompt":"although","options":["obwohl","weil","damit","bevor"],"answer":"obwohl","explain":"<b>obwohl</b> = despite a circumstance.","rule":"obwohl"},{"id":"ko-102","kind":"mc","topic":"konjunktion","question":"Which conjunction expresses a purpose?","prompt":"so that (purpose)","options":["damit","sodass","obwohl","indem"],"answer":"damit","explain":"<b>damit</b> names the goal of an action.","rule":"damit"},{"id":"ko-103","kind":"mc","topic":"konjunktion","question":"Which conjunction expresses a result?","prompt":"so that (result)","options":["sodass","damit","weil","solange"],"answer":"sodass","explain":"<b>sodass</b> names what follows from it.","rule":"sodass"},{"id":"ko-104","kind":"mc","topic":"konjunktion","question":"Which conjunction names the method („how?“)?","prompt":"by …ing","options":["indem","während","bis","falls"],"answer":"indem","explain":"<b>indem</b> = by doing …","rule":"indem"},{"id":"ko-105","kind":"mc","topic":"konjunktion","question":"What is the difference between <b>damit</b> and <b>sodass</b>?","prompt":"Rule","options":["<i>damit</i> = purpose, <i>sodass</i> = result.","<i>damit</i> = result, <i>sodass</i> = purpose.","No difference — both mean “so that”.","<i>damit</i> can only start a sentence."],"answer":"<i>damit</i> = purpose, <i>sodass</i> = result.","explain":"<i>Ich lerne, damit ich bestehe</i> (goal) — <i>Ich habe gelernt, sodass ich bestanden habe</i> (result).","rule":"damit / sodass","meta":true},{"id":"ko-106","kind":"mc","topic":"konjunktion","question":"Which conjunction means “until”?","prompt":"until","options":["bis","bevor","seitdem","sobald"],"answer":"bis","explain":"<b>bis</b> names the end point.","rule":"bis"},{"id":"ko-107","kind":"mc","topic":"konjunktion","question":"Which conjunction introduces an indirect yes/no question?","prompt":"whether","options":["ob","dass","wenn","als"],"answer":"ob","explain":"<b>ob</b> — not <i>wenn</i>, even though English says “if”.","rule":"ob"},{"id":"ko-108","kind":"mc","topic":"konjunktion","question":"Which sentence expresses a purpose?","prompt":"Purpose","options":["Ich lerne viel, damit ich die Prüfung bestehe.","Ich habe viel gelernt, sodass ich müde bin.","Ich lerne viel, obwohl ich müde bin.","Ich lerne viel, weil ich müde bin."],"answer":"Ich lerne viel, damit ich die Prüfung bestehe.","explain":"Passing is the goal → <b>damit</b>.","rule":"damit"},{"id":"ko-109","kind":"mc","topic":"konjunktion","question":"Which sentence expresses a result?","prompt":"Result","options":["Er sprach leise, sodass ich nichts verstand.","Er sprach leise, damit niemand ihn hörte.","Er sprach leise, obwohl er wütend war.","Er sprach leise, während sie schlief."],"answer":"Er sprach leise, sodass ich nichts verstand.","explain":"Not understanding is the result of the quiet speaking → <b>sodass</b>.","rule":"sodass"},{"id":"ko-110","kind":"mc","topic":"konjunktion","question":"Which conjunction means “as soon as”?","prompt":"as soon as","options":["sobald","solange","seitdem","bis"],"answer":"sobald","explain":"<b>sobald</b> = the moment that …","rule":"sobald"},{"id":"ko-111","kind":"mc","topic":"konjunktion","question":"Which conjunction means “as long as”?","prompt":"as long as","options":["solange","sobald","bevor","nachdem"],"answer":"solange","explain":"<b>solange</b> = for the whole time that …","rule":"solange"},{"id":"ko-112","kind":"mc","topic":"konjunktion","question":"What does <b>indem</b> mean?","prompt":"Rule","options":["It names the method: “by doing …”.","It names the reason: “because”.","It names the time: “while”.","It names the result: “so that”."],"answer":"It names the method: “by doing …”.","explain":"<i>Man lernt, indem man übt.</i> = by practising.","rule":"indem","meta":true},{"id":"ko-113","kind":"mc","topic":"konjunktion","question":"Which sentence is correct?","prompt":"falls","options":["Falls es regnet, nimm den Schirm.","Falls regnet es, nimm den Schirm.","Falls es regnet, du nimmst den Schirm.","Falls, es regnet, nimm den Schirm."],"answer":"Falls es regnet, nimm den Schirm.","explain":"<i>falls</i> is subordinating: verb at the end, then comma, then the imperative.","rule":"falls"},{"id":"ko-114","kind":"mc","topic":"konjunktion","question":"Which two conjunctions both translate as “so that” but mean different things?","prompt":"Rule","options":["<i>damit</i> (purpose) and <i>sodass</i> (result)","<i>weil</i> (reason) and <i>da</i> (reason)","<i>wenn</i> (condition) and <i>falls</i> (condition)","<i>seit</i> (time) and <i>seitdem</i> (time)"],"answer":"<i>damit</i> (purpose) and <i>sodass</i> (result)","explain":"The other pairs are synonyms; only <i>damit/sodass</i> differ in meaning.","rule":"damit / sodass","meta":true},{"id":"ko-115","kind":"mc","topic":"konjunktion","question":"<b>bis</b> or <b>bevor</b>?","prompt":"Ich warte hier, ___ du kommst.","options":["bis","bevor","nachdem","seitdem"],"answer":"bis","explain":"The waiting lasts until the arrival → <b>bis</b>. <i>bevor</i> only gives the order of two actions.","rule":"bis"},{"id":"ko-116","kind":"mc","topic":"konjunktion","question":"<b>obwohl</b> or <b>weil</b>?","prompt":"Er geht zur Arbeit, ___ er krank ist.","options":["obwohl","weil","damit","sobald"],"answer":"obwohl","explain":"Being ill and working anyway = contrast → <b>obwohl</b>.","rule":"obwohl"},{"id":"wd-001","kind":"mc","topic":"weil-denn-da","question":"Fill in: <b>weil</b>, <b>denn</b> or <b>da</b>?","prompt":"Ich bleibe zu Hause, ___ ich bin krank.","options":["denn","weil","da","dass"],"answer":"denn","explain":"The verb is in position 2 (<i>ich bin</i>) → main-clause word order → <b>denn</b>.","rule":"denn → position 0"},{"id":"wd-002","kind":"mc","topic":"weil-denn-da","question":"Fill in: <b>weil</b>, <b>denn</b> or <b>da</b>?","prompt":"Ich bleibe zu Hause, ___ ich krank bin.","options":["weil","denn","dass","ob"],"answer":"weil","explain":"The verb is at the end → subordinating conjunction → <b>weil</b>.","rule":"weil → verb at the end"},{"id":"wd-003","kind":"mc","topic":"weil-denn-da","question":"Fill in: <b>weil</b>, <b>denn</b> or <b>da</b>?","prompt":"___ es regnet, bleiben wir zu Hause.","options":["Da","Denn","Dass","Ob"],"answer":"Da","explain":"Sentence-initial, known reason → <b>Da</b>. <i>Denn</i> cannot introduce a clause that comes before the other one.","rule":"da → formal / known reason"},{"id":"wd-004","kind":"mc","topic":"weil-denn-da","question":"Fill in: <b>weil</b>, <b>denn</b> or <b>da</b>?","prompt":"Er kommt nicht, ___ er hat keine Zeit.","options":["denn","weil","da","obwohl"],"answer":"denn","explain":"<i>er hat</i> = verb in position 2 → <b>denn</b>.","rule":"denn → position 0"},{"id":"wd-005","kind":"mc","topic":"weil-denn-da","question":"Fill in: <b>weil</b>, <b>denn</b> or <b>da</b>?","prompt":"Er kommt nicht, ___ er keine Zeit hat.","options":["weil","denn","obwohl","ob"],"answer":"weil","explain":"Verb at the end → <b>weil</b>.","rule":"weil → verb at the end"},{"id":"wd-006","kind":"mc","topic":"weil-denn-da","question":"Which sentence is correct?","prompt":"denn","options":["Ich lerne Deutsch, denn ich wohne in Berlin.","Ich lerne Deutsch, denn ich in Berlin wohne.","Ich lerne Deutsch, weil ich wohne in Berlin.","Ich lerne Deutsch weil ich in Berlin wohne."],"answer":"Ich lerne Deutsch, denn ich wohne in Berlin.","explain":"After <i>denn</i> comes a normal main clause: subject, verb in position 2.","rule":"denn → position 0"},{"id":"wd-007","kind":"mc","topic":"weil-denn-da","question":"Which sentence is correct?","prompt":"weil","options":["Ich lerne Deutsch, weil ich in Berlin wohne.","Ich lerne Deutsch, weil ich wohne in Berlin.","Ich lerne Deutsch, denn ich in Berlin wohne.","Ich lerne Deutsch, denn wohne ich in Berlin."],"answer":"Ich lerne Deutsch, weil ich in Berlin wohne.","explain":"After <i>weil</i> the verb goes to the end.","rule":"weil → verb at the end"},{"id":"wd-008","kind":"mc","topic":"weil-denn-da","question":"What kind of conjunction is <b>denn</b>?","prompt":"Rule","options":["A coordinating conjunction (position 0): normal main-clause word order follows.","A subordinating conjunction: the verb goes to the end.","An adverb like <i>deshalb</i>: the verb comes before the subject.","A question particle."],"answer":"A coordinating conjunction (position 0): normal main-clause word order follows.","explain":"<i>denn</i> joins two main clauses; it does not count as position 1.","rule":"denn → position 0","meta":true},{"id":"wd-009","kind":"mc","topic":"weil-denn-da","question":"When is <b>da</b> preferred over <i>weil</i>?","prompt":"Rule","options":["When the reason is already known or the style is formal — often at the start of the sentence.","When the verb should be in position 2.","When asking a question.","When the reason is a guess."],"answer":"When the reason is already known or the style is formal — often at the start of the sentence.","explain":"<i>da</i> is subordinating like <i>weil</i> (verb at the end), but the reason is treated as known.","rule":"da → formal / known reason","meta":true},{"id":"wd-010","kind":"mc","topic":"weil-denn-da","question":"Can the <b>denn</b> clause come before the other main clause?","prompt":"Rule","options":["No — the <i>denn</i> clause always comes second.","Yes, and the verb then goes to the end.","Yes, with no change.","Only in questions."],"answer":"No — the <i>denn</i> clause always comes second.","explain":"<i>Weil/Da ich krank bin, bleibe ich zu Hause</i> works; <i>Denn ich bin krank, …</i> does not.","rule":"denn → position 0","meta":true},{"id":"wd-011","kind":"mc","topic":"weil-denn-da","question":"Fill in: <b>weil</b>, <b>denn</b> or <b>da</b>?","prompt":"___ er müde war, ging er früh ins Bett.","options":["Da","Denn","Dass","Ob"],"answer":"Da","explain":"Fronted reason → <b>Da</b>; the main-clause verb follows.","rule":"da → formal / known reason"},{"id":"wd-012","kind":"mc","topic":"weil-denn-da","question":"Fill in: <b>weil</b>, <b>denn</b> or <b>da</b>?","prompt":"Sie lernt viel, ___ sie will die Prüfung bestehen.","options":["denn","weil","da","damit"],"answer":"denn","explain":"<i>sie will</i> = verb in position 2 → <b>denn</b>.","rule":"denn → position 0"},{"id":"wd-013","kind":"mc","topic":"weil-denn-da","question":"Fill in: <b>weil</b>, <b>denn</b> or <b>da</b>?","prompt":"Sie lernt viel, ___ sie die Prüfung bestehen will.","options":["weil","denn","dass","ob"],"answer":"weil","explain":"Verb block at the end (<i>bestehen will</i>) → <b>weil</b>.","rule":"weil → verb at the end"},{"id":"wd-014","kind":"mc","topic":"weil-denn-da","question":"Where is the verb after <b>denn</b>?","prompt":"Rule","options":["Position 2, as in any main clause.","At the very end.","Position 1.","Directly after <i>denn</i>."],"answer":"Position 2, as in any main clause.","explain":"<i>…, denn ich <b>bin</b> krank.</i>","rule":"denn → position 0","meta":true},{"id":"wd-201","kind":"order","topic":"weil-denn-da","question":"Build the clause. Both conjunctions work — the word order has to match.","frame":"Ich bleibe zu Hause,","tokens":["weil","ich","krank","bin"],"extra":["denn"],"end":".","shape":"sub","vbw":["bin"],"explain":"With <i>weil</i>, <b>bin</b> is at the end; with <i>denn</i> it would be in position 2: <i>denn ich bin krank</i>.","rule":"weil ↔ denn","accept":[["weil","ich","krank","bin"],["denn","ich","bin","krank"]]},{"id":"wd-202","kind":"order","topic":"weil-denn-da","question":"Build the clause. Both conjunctions work — the word order has to match.","frame":"Er kommt nicht,","tokens":["weil","er","keine","Zeit","hat"],"extra":["denn"],"end":".","shape":"sub","vbw":["hat"],"explain":"<i>weil … hat</i> (end) or <i>denn er hat …</i> (position 2).","rule":"weil ↔ denn","accept":[["weil","er","keine","Zeit","hat"],["denn","er","hat","keine","Zeit"]]},{"id":"wd-203","kind":"order","topic":"weil-denn-da","question":"Build the clause. Both conjunctions work — the word order has to match.","frame":"Ich nehme den Bus,","tokens":["weil","mein","Auto","kaputt","ist"],"extra":["denn"],"end":".","shape":"sub","vbw":["ist"],"explain":"<i>weil mein Auto kaputt ist</i> or <i>denn mein Auto ist kaputt</i>.","rule":"weil ↔ denn","accept":[["weil","mein","Auto","kaputt","ist"],["denn","mein","Auto","ist","kaputt"]]},{"id":"wd-204","kind":"order","topic":"weil-denn-da","question":"Build the clause. Both conjunctions work — the word order has to match.","frame":"Sie ist müde,","tokens":["weil","sie","schlecht","geschlafen","hat"],"extra":["denn"],"end":".","shape":"sub","vbw":["geschlafen","hat"],"explain":"<i>weil sie schlecht geschlafen hat</i> or <i>denn sie hat schlecht geschlafen</i>.","rule":"weil ↔ denn","accept":[["weil","sie","schlecht","geschlafen","hat"],["denn","sie","hat","schlecht","geschlafen"]]},{"id":"wd-205","kind":"order","topic":"weil-denn-da","question":"Build the clause. Both conjunctions work — the word order has to match.","frame":"Ich lerne Deutsch,","tokens":["weil","ich","in","Berlin","arbeite"],"extra":["denn"],"end":".","shape":"sub","vbw":["arbeite"],"explain":"<i>weil ich in Berlin arbeite</i> or <i>denn ich arbeite in Berlin</i>.","rule":"weil ↔ denn","accept":[["weil","ich","in","Berlin","arbeite"],["denn","ich","arbeite","in","Berlin"]]},{"id":"wd-206","kind":"order","topic":"weil-denn-da","question":"Build the clause. Both conjunctions work — the word order has to match.","frame":"Er geht zum Arzt,","tokens":["weil","er","Schmerzen","hat"],"extra":["denn"],"end":".","shape":"sub","vbw":["hat"],"explain":"<i>weil er Schmerzen hat</i> or <i>denn er hat Schmerzen</i>.","rule":"weil ↔ denn","accept":[["weil","er","Schmerzen","hat"],["denn","er","hat","Schmerzen"]]},{"id":"wd-301","kind":"typed","topic":"weil-denn-da","question":"Rewrite the sentence with <b>denn</b>.","prompt":"Ich bleibe zu Hause, weil ich krank bin.","answers":["Ich bleibe zu Hause, denn ich bin krank."],"explain":"After <i>denn</i> the verb returns to position 2: <b>ich bin krank</b>.","rule":"denn → position 0"},{"id":"wd-302","kind":"typed","topic":"weil-denn-da","question":"Rewrite the sentence with <b>weil</b>.","prompt":"Er kommt nicht, denn er hat keine Zeit.","answers":["Er kommt nicht, weil er keine Zeit hat."],"shape":"hs-ns","vbw":["hat"],"explain":"After <i>weil</i> the verb goes to the end: <b>keine Zeit hat</b>.","rule":"weil → verb at the end"},{"id":"wd-303","kind":"typed","topic":"weil-denn-da","question":"Rewrite the sentence with <b>denn</b>.","prompt":"Sie lernt viel, weil sie die Prüfung bestehen will.","answers":["Sie lernt viel, denn sie will die Prüfung bestehen."],"explain":"After <i>denn</i>: <b>sie will</b> … <i>bestehen</i> — the modal verb in position 2, the infinitive at the end.","rule":"denn → position 0"},{"id":"wd-304","kind":"typed","topic":"weil-denn-da","question":"Rewrite the sentence with <b>weil</b>.","prompt":"Ich nehme den Bus, denn mein Auto ist kaputt.","answers":["Ich nehme den Bus, weil mein Auto kaputt ist."],"shape":"hs-ns","vbw":["ist"],"explain":"After <i>weil</i>: <b>kaputt ist</b> at the end.","rule":"weil → verb at the end"},{"id":"wa-001","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"___ ich klein war, wohnte ich in Bonn.","answers":["Als"],"explain":"A single period in the past → <b>Als</b>.","rule":"als → one-off, past"},{"id":"wa-002","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"___ ich Zeit habe, rufe ich dich an.","answers":["Wenn"],"explain":"Present/future → <b>Wenn</b>.","rule":"wenn → present/future"},{"id":"wa-003","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"Immer ___ ich ihn besuchte, freute er sich.","answers":["wenn"],"explain":"<i>immer</i> = repeated in the past → <b>wenn</b>.","rule":"wenn → repeated (past)"},{"id":"wa-004","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"___ er gestern nach Hause kam, war niemand da.","answers":["Als"],"explain":"<i>gestern</i>, a one-off event → <b>Als</b>.","rule":"als → one-off, past"},{"id":"wa-005","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"___ es morgen regnet, bleiben wir zu Hause.","answers":["Wenn"],"explain":"Future/condition → <b>Wenn</b>.","rule":"wenn → present/future"},{"id":"wa-006","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"___ ich 18 wurde, machte ich den Führerschein.","answers":["Als"],"explain":"You only turn 18 once → <b>Als</b>.","rule":"als → one-off, past"},{"id":"wa-007","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"Jedes Mal, ___ er kocht, brennt etwas an.","answers":["wenn"],"explain":"<i>jedes Mal</i> = repetition → <b>wenn</b>.","rule":"wenn → repeated"},{"id":"wa-008","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"___ wir in Italien waren, hat es die ganze Zeit geregnet.","answers":["Als"],"explain":"A single period in the past (that holiday) → <b>Als</b>.","rule":"als → one-off, past"},{"id":"wa-009","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"___ du fertig bist, sag Bescheid.","answers":["Wenn"],"explain":"Future → <b>Wenn</b>.","rule":"wenn → present/future"},{"id":"wa-010","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"___ der Krieg zu Ende war, kehrte er nach Hause zurück.","answers":["Als"],"explain":"A one-off event in the past → <b>Als</b>.","rule":"als → one-off, past"},{"id":"wa-011","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"Früher, ___ ich noch studierte, hatte ich mehr Zeit.","answers":["als"],"explain":"Student days are a single period in the past → <b>als</b>.","rule":"als → one-off, past"},{"id":"wa-012","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"___ ich Kopfschmerzen habe, nehme ich eine Tablette.","answers":["Wenn"],"explain":"Repeated in the present → <b>Wenn</b>.","rule":"wenn → present/future"},{"id":"wa-013","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"___ ich letzte Woche im Kino war, habe ich Anna getroffen.","answers":["Als"],"explain":"<i>letzte Woche</i>, one-off → <b>Als</b>.","rule":"als → one-off, past"},{"id":"wa-014","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"___ ich als Kind krank war, hat mir meine Mutter immer Tee gemacht.","answers":["Wenn"],"explain":"<i>immer</i> signals repetition in the past → <b>Wenn</b>. (The <i>als</i> in <i>als Kind</i> means “as” — it is not the time conjunction.)","rule":"wenn → repeated (past)"},{"id":"wa-015","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"___ sie das hörte, fing sie an zu weinen.","answers":["Als"],"explain":"A one-off event → <b>Als</b>.","rule":"als → one-off, past"},{"id":"wa-016","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"Was machst du, ___ du die Prüfung bestanden hast?","answers":["wenn"],"explain":"Future (even though the Perfekt is used) → <b>wenn</b>.","rule":"wenn → present/future"},{"id":"wa-017","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"___ ich gestern aufwachte, war es schon zehn Uhr.","answers":["Als"],"explain":"<i>gestern</i>, one-off → <b>Als</b>.","rule":"als → one-off, past"},{"id":"wa-018","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"Ruf mich an, ___ du angekommen bist.","answers":["wenn"],"explain":"Future → <b>wenn</b>.","rule":"wenn → present/future"},{"id":"wa-019","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"___ er die Nachricht bekam, war er sehr überrascht.","answers":["Als"],"explain":"A one-off event in the past → <b>Als</b>.","rule":"als → one-off, past"},{"id":"wa-020","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"Sonntags, ___ ich frei habe, schlafe ich lange.","answers":["wenn"],"explain":"Present, repeated → <b>wenn</b>.","rule":"wenn → present/future"},{"id":"wa-021","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"___ meine Großeltern jung waren, gab es noch kein Internet.","answers":["Als"],"explain":"A single period in the past → <b>Als</b>.","rule":"als → one-off, past"},{"id":"wa-022","kind":"typed","topic":"wenn-als","question":"Fill in: <b>wenn</b> or <b>als</b>?","prompt":"Früher, ___ wir Besuch hatten, gab es immer Kuchen.","answers":["wenn"],"explain":"<i>immer</i> — a repeated situation in the past → <b>wenn</b>.","rule":"wenn → repeated (past)"},{"id":"wa-101","kind":"mc","topic":"wenn-als","question":"When do you use <b>als</b>?","prompt":"Rule","options":["For a one-off event or a single period in the past.","For everything in the past, including repeated events.","For present and future.","For conditions."],"answer":"For a one-off event or a single period in the past.","explain":"<i>Als ich klein war …</i> — once. Repeated past events take <i>wenn</i>.","rule":"als → one-off, past","meta":true},{"id":"wa-102","kind":"mc","topic":"wenn-als","question":"When do you use <b>wenn</b> for the past?","prompt":"Rule","options":["Only for repeated events: <i>immer wenn</i>, <i>jedes Mal wenn</i>.","Never — the past always takes <i>als</i>.","Whenever the clause comes first.","Only in the Präteritum."],"answer":"Only for repeated events: <i>immer wenn</i>, <i>jedes Mal wenn</i>.","explain":"<i>Immer wenn er kam, brachte er Blumen mit.</i>","rule":"wenn → repeated (past)","meta":true},{"id":"wa-103","kind":"mc","topic":"wenn-als","question":"Which sentence is correct?","prompt":"one-off, past","options":["Als ich klein war, wohnte ich in Bonn.","Wenn ich klein war, wohnte ich in Bonn.","Als ich klein bin, wohne ich in Bonn.","Wenn ich klein war, wohne ich in Bonn."],"answer":"Als ich klein war, wohnte ich in Bonn.","explain":"Childhood = a single period in the past → <b>als</b>.","rule":"als → one-off, past"},{"id":"wa-104","kind":"mc","topic":"wenn-als","question":"Which sentence is correct?","prompt":"present/future","options":["Wenn ich Zeit habe, komme ich.","Als ich Zeit habe, komme ich.","Als ich Zeit hatte, komme ich.","Wenn ich Zeit hatte, komme ich."],"answer":"Wenn ich Zeit habe, komme ich.","explain":"Present/future → <b>wenn</b>; <i>als</i> only works for the past.","rule":"wenn → present/future"},{"id":"wa-105","kind":"mc","topic":"wenn-als","question":"Which sentence describes a repeated event in the past?","prompt":"Repetition","options":["Immer wenn er kam, brachte er Blumen mit.","Als er kam, brachte er Blumen mit.","Wenn er kommt, bringt er Blumen mit.","Als er gekommen war, brachte er Blumen mit."],"answer":"Immer wenn er kam, brachte er Blumen mit.","explain":"<i>immer wenn</i> + Präteritum = repeated in the past.","rule":"wenn → repeated (past)"},{"id":"wa-106","kind":"mc","topic":"wenn-als","question":"What does <b>wenn</b> mean in „Wenn es regnet, bleibe ich zu Hause“?","prompt":"Rule","options":["when/if — present, future or condition","when — a one-off event in the past","whether — an indirect question","while — at the same time"],"answer":"when/if — present, future or condition","explain":"<i>wenn</i> covers “when” and “if” — except for one-off past events (<i>als</i>) and indirect questions (<i>ob</i>).","rule":"wenn → present/future","meta":true},{"id":"do-001","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Ich weiß, ___ er kommt.","answers":["dass"],"explain":"Certain statement → <b>dass</b>.","rule":"dass → statement"},{"id":"do-002","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Ich weiß nicht, ___ er kommt.","answers":["ob"],"explain":"Uncertainty, an open yes/no question → <b>ob</b>.","rule":"ob → yes/no question"},{"id":"do-003","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Ich frage mich, ___ sie recht hat.","answers":["ob"],"explain":"<i>sich fragen</i> → open question → <b>ob</b>.","rule":"ob → yes/no question"},{"id":"do-004","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Ich glaube, ___ sie recht hat.","answers":["dass"],"explain":"<i>glauben</i> → statement → <b>dass</b>.","rule":"dass → statement"},{"id":"do-005","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Kannst du mir sagen, ___ der Zug pünktlich ist?","answers":["ob"],"explain":"The direct question would be <i>Ist der Zug pünktlich?</i> (yes/no) → <b>ob</b>.","rule":"ob → yes/no question"},{"id":"do-006","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Es ist schade, ___ du nicht kommst.","answers":["dass"],"explain":"Feeling + fact → <b>dass</b>.","rule":"dass → statement"},{"id":"do-007","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Ich bin nicht sicher, ___ das richtig ist.","answers":["ob"],"explain":"Uncertainty → <b>ob</b>.","rule":"ob → yes/no question"},{"id":"do-008","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Ich bin sicher, ___ das richtig ist.","answers":["dass"],"explain":"Certainty → <b>dass</b>.","rule":"dass → statement"},{"id":"do-009","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Er hat gefragt, ___ wir morgen Zeit haben.","answers":["ob"],"explain":"<i>fragen</i> → <b>ob</b>.","rule":"ob → yes/no question"},{"id":"do-010","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Er hat gesagt, ___ er morgen keine Zeit hat.","answers":["dass"],"explain":"<i>sagen</i> → statement → <b>dass</b>.","rule":"dass → statement"},{"id":"do-011","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Ich hoffe, ___ das Wetter schön wird.","answers":["dass"],"explain":"<i>hoffen</i> → <b>dass</b>.","rule":"dass → statement"},{"id":"do-012","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Weißt du, ___ das Geschäft heute geöffnet ist? Ich habe keine Ahnung.","answers":["ob"],"explain":"The speaker doesn't know → open yes/no question → <b>ob</b>.","rule":"ob → yes/no question"},{"id":"do-013","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Es ist wichtig, ___ du pünktlich bist.","answers":["dass"],"explain":"Firm statement → <b>dass</b>.","rule":"dass → statement"},{"id":"do-014","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Ich möchte wissen, ___ du mitkommst oder nicht.","answers":["ob"],"explain":"<i>… oder nicht</i> = yes/no → <b>ob</b>.","rule":"ob → yes/no question"},{"id":"do-015","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Sie hat mir erzählt, ___ sie umzieht.","answers":["dass"],"explain":"<i>erzählen</i> → statement → <b>dass</b>.","rule":"dass → statement"},{"id":"do-016","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Ich habe keine Ahnung, ___ er noch hier wohnt.","answers":["ob"],"explain":"Not knowing → <b>ob</b>.","rule":"ob → yes/no question"},{"id":"do-017","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Es freut mich, ___ du da bist.","answers":["dass"],"explain":"Feeling + fact → <b>dass</b>.","rule":"dass → statement"},{"id":"do-018","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Ich habe ihn gefragt, ___ er mir helfen kann.","answers":["ob"],"explain":"<i>fragen</i> → <b>ob</b>.","rule":"ob → yes/no question"},{"id":"do-019","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Ich finde, ___ der Film langweilig ist.","answers":["dass"],"explain":"<i>finden</i> (opinion) → <b>dass</b>.","rule":"dass → statement"},{"id":"do-020","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Ich prüfe, ___ die Tür abgeschlossen ist.","answers":["ob"],"explain":"<i>prüfen</i> = settling an open question → <b>ob</b>.","rule":"ob → yes/no question"},{"id":"do-021","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Ich denke, ___ er morgen kommt.","answers":["dass"],"explain":"<i>denken</i> → statement → <b>dass</b>.","rule":"dass → statement"},{"id":"do-022","kind":"typed","topic":"dass-ob","question":"Fill in: <b>dass</b> or <b>ob</b>?","prompt":"Ich bin gespannt, ___ sie die Stelle bekommt.","answers":["ob"],"explain":"The outcome is open → <b>ob</b>.","rule":"ob → yes/no question"},{"id":"do-101","kind":"mc","topic":"dass-ob","question":"Which conjunction follows <b>fragen</b>?","prompt":"Rule","options":["ob","dass","wenn","weil"],"answer":"ob","explain":"A question without a question word is introduced by <b>ob</b>.","rule":"ob → yes/no question"},{"id":"do-102","kind":"mc","topic":"dass-ob","question":"When do you use <b>ob</b>?","prompt":"Rule","options":["For uncertainty or an indirect yes/no question.","After all verbs of saying and thinking.","Only after question words.","When the subordinate clause comes first."],"answer":"For uncertainty or an indirect yes/no question.","explain":"<i>Ich weiß nicht, ob …</i> / <i>Ich frage, ob …</i>","rule":"ob → yes/no question","meta":true},{"id":"do-103","kind":"mc","topic":"dass-ob","question":"Which sentence is correct?","prompt":"fragen","options":["Er fragt, ob sie morgen kommt.","Er fragt, dass sie morgen kommt.","Er fragt, ob kommt sie morgen.","Er fragt, ob sie kommt morgen."],"answer":"Er fragt, ob sie morgen kommt.","explain":"After <i>fragen</i> comes <b>ob</b>, and the verb goes to the end.","rule":"ob → yes/no question"},{"id":"do-104","kind":"mc","topic":"dass-ob","question":"Which verbs are typically followed by <b>dass</b>?","prompt":"Rule","options":["sagen, glauben, denken, hoffen, meinen — and <i>wissen</i> when you are certain","fragen, sich fragen, prüfen","only after <i>wissen</i>","after question words"],"answer":"sagen, glauben, denken, hoffen, meinen — and <i>wissen</i> when you are certain","explain":"Verbs of saying, thinking and knowing, plus expressions of feeling (<i>es ist schade, dass …</i>).","rule":"dass → statement","meta":true},{"id":"do-105","kind":"mc","topic":"dass-ob","question":"Which sentence is correct?","prompt":"hoffen","options":["Ich hoffe, dass du kommst.","Ich hoffe, ob du kommst.","Ich hoffe, dass kommst du.","Ich hoffe dass du kommst."],"answer":"Ich hoffe, dass du kommst.","explain":"<i>hoffen</i> → <b>dass</b>, comma before it, verb at the end.","rule":"dass → statement"},{"id":"do-106","kind":"mc","topic":"dass-ob","question":"What changes from „Ich weiß, dass er kommt“ to „Ich weiß nicht, ob er kommt“?","prompt":"Rule","options":["A certain statement becomes an open yes/no question.","Only the tense.","The word order in the subordinate clause.","Nothing — <i>dass</i> and <i>ob</i> are interchangeable."],"answer":"A certain statement becomes an open yes/no question.","explain":"<i>dass</i> = fact, <i>ob</i> = “yes or no?”. The word order stays the same (verb at the end).","rule":"dass / ob","meta":true},{"id":"te-001","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"___ ich frühstücke, dusche ich. (before)","answers":["Bevor"],"explain":"<b>Bevor</b> = before.","rule":"bevor"},{"id":"te-002","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"___ ich geduscht habe, frühstücke ich. (after)","answers":["Nachdem"],"explain":"<b>Nachdem</b> = after; Perfekt in the subordinate clause, Präsens in the main clause.","rule":"nachdem"},{"id":"te-003","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"___ ich koche, hört sie Musik. (while)","answers":["Während"],"explain":"At the same time → <b>Während</b>.","rule":"während"},{"id":"te-004","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"Ich warte, ___ der Bus kommt. (until)","answers":["bis"],"explain":"End point → <b>bis</b>.","rule":"bis"},{"id":"te-005","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"___ ich in Berlin wohne, spreche ich besser Deutsch. (since – time)","answers":["Seitdem"],"alt":["Seit"],"altWhy":"As conjunctions, <i>seit</i> and <i>seitdem</i> mean the same.","explain":"Starting point, still ongoing → <b>Seitdem</b>.","rule":"seitdem"},{"id":"te-006","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"___ ich zu Hause bin, rufe ich dich an. (as soon as)","answers":["Sobald"],"explain":"<b>Sobald</b> = immediately after.","rule":"sobald"},{"id":"te-007","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"___ du krank bist, musst du im Bett bleiben. (as long as)","answers":["Solange"],"explain":"Duration → <b>Solange</b>.","rule":"solange"},{"id":"te-008","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"Mach das Licht aus, ___ du gehst. (before)","answers":["bevor"],"explain":"<b>bevor</b> = before.","rule":"bevor"},{"id":"te-009","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"___ er die Schule beendet hatte, machte er eine Ausbildung. (after)","answers":["Nachdem"],"explain":"<b>Nachdem</b> + Plusquamperfekt.","rule":"nachdem"},{"id":"te-010","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"Du kannst hier bleiben, ___ du willst. (as long as)","answers":["solange"],"explain":"Duration → <b>solange</b>.","rule":"solange"},{"id":"te-011","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"Wir warten, ___ der Regen aufhört. (until)","answers":["bis"],"explain":"End point → <b>bis</b>.","rule":"bis"},{"id":"te-012","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"___ sie das Baby bekommen hat, arbeitet sie nicht mehr. (since – time)","answers":["Seitdem"],"alt":["Seit"],"altWhy":"As conjunctions, <i>seit</i> and <i>seitdem</i> mean the same.","explain":"Starting point → <b>Seitdem</b>.","rule":"seitdem"},{"id":"te-013","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"___ die Kinder schlafen, lesen wir. (while)","answers":["Während"],"explain":"At the same time → <b>Während</b>.","rule":"während"},{"id":"te-014","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"Ich schreibe dir, ___ ich angekommen bin. (as soon as)","answers":["sobald"],"explain":"<b>sobald</b> = immediately after.","rule":"sobald"},{"id":"te-015","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"Er hat die Wohnung aufgeräumt, ___ die Gäste kamen. (before)","answers":["bevor"],"explain":"<b>bevor</b> = before.","rule":"bevor"},{"id":"te-016","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"___ wir gegessen hatten, spielten wir Karten. (after)","answers":["Nachdem"],"explain":"<b>Nachdem</b> + Plusquamperfekt.","rule":"nachdem"},{"id":"te-017","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"Ich bleibe bei dir, ___ du wieder gesund bist. (until)","answers":["bis"],"explain":"End point → <b>bis</b>.","rule":"bis"},{"id":"te-018","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"___ er sein Handy verloren hat, ist er schlecht erreichbar. (since – time)","answers":["Seitdem"],"alt":["Seit"],"altWhy":"As conjunctions, <i>seit</i> and <i>seitdem</i> mean the same.","explain":"Starting point → <b>Seitdem</b>.","rule":"seitdem"},{"id":"te-019","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"Sie hört Musik, ___ sie arbeitet. (while)","answers":["während"],"explain":"At the same time → <b>während</b>.","rule":"während"},{"id":"te-020","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"___ das Essen fertig ist, rufe ich euch. (as soon as)","answers":["Sobald"],"explain":"<b>Sobald</b>.","rule":"sobald"},{"id":"te-021","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"Ich putze mir die Zähne, ___ ich ins Bett gehe. (before)","answers":["bevor"],"explain":"<b>bevor</b> = before.","rule":"bevor"},{"id":"te-022","kind":"typed","topic":"temporal","question":"Fill in the time conjunction.","prompt":"___ es dunkel wird, gehen wir nach Hause. (as soon as)","answers":["Sobald"],"explain":"<b>Sobald</b> = immediately after.","rule":"sobald"},{"id":"te-101","kind":"mc","topic":"temporal","question":"Which sentence is correct?","prompt":"nachdem + Präteritum in the main clause","options":["Nachdem ich gegessen hatte, ging ich spazieren.","Nachdem ich gegessen habe, ging ich spazieren.","Nachdem ich aß, ging ich spazieren.","Nachdem ich esse, ging ich spazieren."],"answer":"Nachdem ich gegessen hatte, ging ich spazieren.","explain":"The <i>nachdem</i> clause is one step further back in time: main clause Präteritum → subordinate clause Plusquamperfekt.","rule":"nachdem → Plusquamperfekt"},{"id":"te-102","kind":"mc","topic":"temporal","question":"Which tense is typical in the <b>nachdem</b> clause when the main clause is in the Präteritum?","prompt":"Rule","options":["Plusquamperfekt","Präsens","Futur I","Präteritum"],"answer":"Plusquamperfekt","explain":"<i>Nachdem ich gegessen <b>hatte</b>, ging ich.</i> With a Präsens main clause: Perfekt.","rule":"nachdem → Plusquamperfekt","meta":true},{"id":"te-103","kind":"mc","topic":"temporal","question":"<b>bis</b> or <b>bevor</b>?","prompt":"Ich warte, ___ du fertig bist.","options":["bis","bevor","nachdem","seitdem"],"answer":"bis","explain":"The waiting lasts up to an end point → <b>bis</b>.","rule":"bis"},{"id":"te-104","kind":"mc","topic":"temporal","question":"<b>bevor</b> or <b>nachdem</b>?","prompt":"Ich putze mir die Zähne, ___ ich ins Bett gehe.","options":["bevor","nachdem","bis","während"],"answer":"bevor","explain":"Brushing your teeth comes before going to bed → <b>bevor</b>.","rule":"bevor"},{"id":"te-105","kind":"mc","topic":"temporal","question":"<b>seitdem</b> or <b>bis</b>?","prompt":"___ er in Berlin wohnt, hat er viele Freunde.","options":["Seitdem","Bis","Bevor","Nachdem"],"answer":"Seitdem","explain":"Starting point of a state that continues → <b>Seitdem</b>.","rule":"seitdem"},{"id":"te-106","kind":"mc","topic":"temporal","question":"What does <b>während</b> mean?","prompt":"Rule","options":["At the same time (“while”) — or a contrast (“whereas”).","Earlier (“before”).","Later (“after”).","An end point (“until”)."],"answer":"At the same time (“while”) — or a contrast (“whereas”).","explain":"<i>Während er kocht, deckt sie den Tisch.</i>","rule":"während","meta":true},{"id":"te-107","kind":"mc","topic":"temporal","question":"<b>sobald</b> or <b>solange</b>?","prompt":"___ ich das Geld habe, kaufe ich das Auto.","options":["Sobald","Solange","Bevor","Seitdem"],"answer":"Sobald","explain":"A point in time (“as soon as”) → <b>Sobald</b>.","rule":"sobald"},{"id":"te-108","kind":"mc","topic":"temporal","question":"<b>solange</b> or <b>sobald</b>?","prompt":"___ du noch hier wohnst, musst du die Regeln respektieren.","options":["Solange","Sobald","Nachdem","Bis"],"answer":"Solange","explain":"A duration (“as long as”) → <b>Solange</b>.","rule":"solange"},{"id":"te-109","kind":"mc","topic":"temporal","question":"Which sentence is correct?","prompt":"seitdem","options":["Seitdem er hier wohnt, ist er glücklich.","Seitdem er hier wohnte, ist er glücklich.","Seitdem wohnt er hier, ist er glücklich.","Seitdem er hier wohnt, er ist glücklich."],"answer":"Seitdem er hier wohnt, ist er glücklich.","explain":"Ongoing state → Präsens; verb at the end of the subordinate clause; then the main-clause verb.","rule":"seitdem"},{"id":"te-110","kind":"mc","topic":"temporal","question":"Which sentence says that two things happen at the same time?","prompt":"Same time","options":["Während er kocht, deckt sie den Tisch.","Nachdem er gekocht hat, deckt sie den Tisch.","Bevor er kocht, deckt sie den Tisch.","Bis er kocht, deckt sie den Tisch."],"answer":"Während er kocht, deckt sie den Tisch.","explain":"<b>während</b> = at the same time.","rule":"während"},{"id":"in-001","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Wo wohnt er? → Ich weiß nicht, …","frame":"Ich weiß nicht,","answers":["wo er wohnt"],"shape":"sub","vbw":["wohnt"],"explain":"The W-word stays, the verb goes to the end: <b>wo er wohnt</b>.","rule":"W-word stays"},{"id":"in-002","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Wann kommt sie? → Sag mir, …","frame":"Sag mir,","answers":["wann sie kommt"],"shape":"sub","vbw":["kommt"],"explain":"<b>wann sie kommt</b>.","rule":"W-word stays"},{"id":"in-003","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Wie geht das? → Ich weiß nicht, …","frame":"Ich weiß nicht,","answers":["wie das geht"],"shape":"sub","vbw":["geht"],"explain":"<b>wie das geht</b>.","rule":"W-word stays"},{"id":"in-004","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Kommt er? → Ich frage, …","frame":"Ich frage,","answers":["ob er kommt"],"shape":"sub","vbw":["kommt"],"explain":"Yes/no question → <b>ob</b>, verb at the end.","rule":"yes/no → ob"},{"id":"in-005","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Was kostet das Ticket? → Weißt du, …?","frame":"Weißt du,","answers":["was das Ticket kostet"],"shape":"sub","vbw":["kostet"],"explain":"<b>was das Ticket kostet</b>. Question mark, because the main clause is a question.","rule":"W-word stays"},{"id":"in-006","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Warum ist er nicht gekommen? → Ich weiß nicht, …","frame":"Ich weiß nicht,","answers":["warum er nicht gekommen ist"],"shape":"sub","vbw":["gekommen","ist"],"explain":"Perfekt: <i>gekommen</i> + <b>ist</b> at the end.","rule":"W-word stays"},{"id":"in-007","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Hat sie Zeit? → Ich frage sie, …","frame":"Ich frage sie,","answers":["ob sie Zeit hat"],"shape":"sub","vbw":["hat"],"explain":"Yes/no → <b>ob sie Zeit hat</b>.","rule":"yes/no → ob"},{"id":"in-008","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Wie spät ist es? → Können Sie mir sagen, …?","frame":"Können Sie mir sagen,","answers":["wie spät es ist"],"shape":"sub","vbw":["ist"],"explain":"<b>wie spät es ist</b>.","rule":"W-word stays"},{"id":"in-009","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Wohin fährt der Bus? → Ich möchte wissen, …","frame":"Ich möchte wissen,","answers":["wohin der Bus fährt"],"shape":"sub","vbw":["fährt"],"explain":"<b>wohin der Bus fährt</b>.","rule":"W-word stays"},{"id":"in-010","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Kann er schwimmen? → Ich weiß nicht, …","frame":"Ich weiß nicht,","answers":["ob er schwimmen kann"],"shape":"sub","vbw":["schwimmen","kann"],"explain":"Yes/no → <b>ob</b>; modal verb: <i>schwimmen</i> + <b>kann</b>.","rule":"yes/no → ob"},{"id":"in-011","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Woher kommt sie? → Ich frage mich, …","frame":"Ich frage mich,","answers":["woher sie kommt"],"shape":"sub","vbw":["kommt"],"explain":"<b>woher sie kommt</b>.","rule":"W-word stays"},{"id":"in-012","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Ist das Geschäft geöffnet? → Weißt du, …?","frame":"Weißt du,","answers":["ob das Geschäft geöffnet ist"],"shape":"sub","vbw":["ist"],"explain":"Yes/no → <b>ob</b>; <i>geöffnet</i> + <b>ist</b>.","rule":"yes/no → ob"},{"id":"in-013","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Wie lange dauert der Kurs? → Ich möchte wissen, …","frame":"Ich möchte wissen,","answers":["wie lange der Kurs dauert"],"shape":"sub","vbw":["dauert"],"explain":"<i>wie lange</i> stays together at the front; <b>dauert</b> at the end.","rule":"W-word stays"},{"id":"in-014","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Mit wem spricht er? → Ich weiß nicht, …","frame":"Ich weiß nicht,","answers":["mit wem er spricht"],"shape":"sub","vbw":["spricht"],"explain":"Preposition + question word stay together: <b>mit wem er spricht</b>.","rule":"W-word stays"},{"id":"in-015","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Hat er den Brief geschrieben? → Ich frage mich, …","frame":"Ich frage mich,","answers":["ob er den Brief geschrieben hat"],"shape":"sub","vbw":["geschrieben","hat"],"explain":"Yes/no → <b>ob</b>; <i>geschrieben</i> + <b>hat</b>.","rule":"yes/no → ob"},{"id":"in-016","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Wie viel kostet das? → Weißt du, …?","frame":"Weißt du,","answers":["wie viel das kostet"],"shape":"sub","vbw":["kostet"],"explain":"<b>wie viel das kostet</b>.","rule":"W-word stays"},{"id":"in-017","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Wer hat angerufen? → Ich weiß nicht, …","frame":"Ich weiß nicht,","answers":["wer angerufen hat"],"shape":"sub","vbw":["angerufen","hat"],"explain":"<i>wer</i> is the subject here; block <b>angerufen hat</b>.","rule":"W-word stays"},{"id":"in-018","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Muss ich ein Visum beantragen? → Ich möchte wissen, …","frame":"Ich möchte wissen,","answers":["ob ich ein Visum beantragen muss"],"shape":"sub","vbw":["beantragen","muss"],"explain":"Yes/no → <b>ob</b>; <i>beantragen</i> + <b>muss</b>.","rule":"yes/no → ob"},{"id":"in-019","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Wann fängt der Film an? → Weißt du, …?","frame":"Weißt du,","answers":["wann der Film anfängt"],"shape":"sub","vbw":["anfängt"],"explain":"Separable verb in a subordinate clause → one word: <b>anfängt</b>.","rule":"W-word stays"},{"id":"in-020","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Wo hast du das gekauft? → Sag mir, …","frame":"Sag mir,","answers":["wo du das gekauft hast"],"shape":"sub","vbw":["gekauft","hast"],"explain":"<i>gekauft</i> + <b>hast</b> at the end.","rule":"W-word stays"},{"id":"in-021","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Fährt der Zug pünktlich ab? → Ich weiß nicht, …","frame":"Ich weiß nicht,","answers":["ob der Zug pünktlich abfährt"],"shape":"sub","vbw":["abfährt"],"explain":"Yes/no → <b>ob</b>; the separable verb is one word again: <b>abfährt</b>.","rule":"yes/no → ob"},{"id":"in-022","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Wem gehört das Auto? → Ich frage mich, …","frame":"Ich frage mich,","answers":["wem das Auto gehört"],"shape":"sub","vbw":["gehört"],"explain":"<b>wem das Auto gehört</b>.","rule":"W-word stays"},{"id":"in-023","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Kommst du morgen mit? → Ich möchte wissen, …","frame":"Ich möchte wissen,","answers":["ob du morgen mitkommst"],"shape":"sub","vbw":["mitkommst"],"explain":"Yes/no → <b>ob</b>; <i>mitkommen</i> becomes one word again.","rule":"yes/no → ob"},{"id":"in-024","kind":"typed","topic":"indirekt","question":"Form the indirect question.","prompt":"Welches Buch liest sie? → Ich weiß nicht, …","frame":"Ich weiß nicht,","answers":["welches Buch sie liest"],"shape":"sub","vbw":["liest"],"explain":"<i>welches Buch</i> stays together at the front; <b>liest</b> at the end.","rule":"W-word stays"},{"id":"in-201","kind":"order","topic":"indirekt","question":"Build the indirect question.","frame":"Ich weiß nicht,","tokens":["wo","er","wohnt"],"extra":["ob"],"end":".","shape":"sub","vbw":["wohnt"],"explain":"W-question → the W-word stays; <i>ob</i> would only be for yes/no questions.","rule":"W-word stays","accept":[["wo","er","wohnt"]]},{"id":"in-202","kind":"order","topic":"indirekt","question":"Build the indirect question.","frame":"Ich frage,","tokens":["ob","er","kommt"],"extra":["dass"],"end":".","shape":"sub","vbw":["kommt"],"explain":"Yes/no question → <b>ob</b>; <i>dass</i> doesn't fit a question.","rule":"yes/no → ob","accept":[["ob","er","kommt"]]},{"id":"in-203","kind":"order","topic":"indirekt","question":"Build the indirect question.","frame":"Weißt du,","tokens":["wann","der","Zug","kommt"],"extra":["ob"],"end":"?","shape":"sub","vbw":["kommt"],"explain":"W-word + subject + <b>kommt</b>. Question mark, because <i>Weißt du</i> is a question.","rule":"W-word stays","accept":[["wann","der","Zug","kommt"]]},{"id":"in-204","kind":"order","topic":"indirekt","question":"Build the indirect question.","frame":"Ich möchte wissen,","tokens":["ob","sie","das","verstanden","hat"],"extra":["dass"],"end":".","shape":"sub","vbw":["verstanden","hat"],"explain":"Yes/no → <b>ob</b>; Perfekt block <b>verstanden hat</b>.","rule":"yes/no → ob","accept":[["ob","sie","das","verstanden","hat"]]},{"id":"in-205","kind":"order","topic":"indirekt","question":"Build the indirect question.","frame":"Sag mir,","tokens":["wie","viel","das","kostet"],"end":".","shape":"sub","vbw":["kostet"],"explain":"<i>wie viel</i> stays together; <b>kostet</b> at the end.","rule":"W-word stays","accept":[["wie","viel","das","kostet"]]},{"id":"in-206","kind":"order","topic":"indirekt","question":"Build the indirect question.","frame":"Können Sie mir sagen,","tokens":["wo","der","Bahnhof","ist"],"end":"?","shape":"sub","vbw":["ist"],"explain":"<b>ist</b> at the end; question mark because of the main clause.","rule":"W-word stays","accept":[["wo","der","Bahnhof","ist"]]},{"id":"in-207","kind":"order","topic":"indirekt","question":"Build the indirect question.","frame":"Ich weiß nicht,","tokens":["ob","ich","das","schaffen","kann"],"extra":["dass"],"end":".","shape":"sub","vbw":["schaffen","kann"],"explain":"Yes/no → <b>ob</b>; block <b>schaffen kann</b>.","rule":"yes/no → ob","accept":[["ob","ich","das","schaffen","kann"]]},{"id":"in-208","kind":"order","topic":"indirekt","question":"Build the indirect question.","frame":"Ich frage mich,","tokens":["warum","er","nicht","geantwortet","hat"],"end":".","shape":"sub","vbw":["geantwortet","hat"],"explain":"<i>nicht</i> before the block <b>geantwortet hat</b>.","rule":"W-word stays","accept":[["warum","er","nicht","geantwortet","hat"]]},{"id":"in-209","kind":"order","topic":"indirekt","question":"Build the indirect question.","frame":"Weißt du,","tokens":["ob","er","heute","arbeitet"],"extra":["wenn"],"end":"?","shape":"sub","vbw":["arbeitet"],"explain":"Yes/no → <b>ob</b>; <i>wenn</i> is the trap from English (“if”).","rule":"yes/no → ob","accept":[["ob","er","heute","arbeitet"]]},{"id":"in-210","kind":"order","topic":"indirekt","question":"Build the indirect question.","frame":"Ich weiß nicht,","tokens":["mit","wem","sie","spricht"],"end":".","shape":"sub","vbw":["spricht"],"explain":"Preposition + question word together at the front; <b>spricht</b> at the end.","rule":"W-word stays","accept":[["mit","wem","sie","spricht"]]},{"id":"in-101","kind":"mc","topic":"indirekt","question":"Which sentence is correct?","prompt":"Punctuation","options":["Weißt du, wo er wohnt?","Weißt du, wo er wohnt.","Weißt du, wo wohnt er?","Weißt du wo er wohnt?"],"answer":"Weißt du, wo er wohnt?","explain":"Verb at the end of the subordinate clause; the punctuation follows the main clause (<i>Weißt du</i> = question → ?).","rule":"punctuation follows the main clause"},{"id":"in-102","kind":"mc","topic":"indirekt","question":"Which sentence is correct?","prompt":"Punctuation","options":["Ich weiß nicht, wo er wohnt.","Ich weiß nicht, wo er wohnt?","Ich weiß nicht, wo wohnt er.","Ich weiß nicht wo er wohnt."],"answer":"Ich weiß nicht, wo er wohnt.","explain":"The main clause is a statement → full stop, even though the subordinate clause contains a question.","rule":"punctuation follows the main clause"},{"id":"in-103","kind":"mc","topic":"indirekt","question":"What happens in an indirect yes/no question?","prompt":"Rule","options":["You use <i>ob</i>, and the verb goes to the end.","You use <i>dass</i>, and the verb stays in position 1.","You use <i>wenn</i>, and the verb goes to the end.","You drop the conjunction."],"answer":"You use <i>ob</i>, and the verb goes to the end.","explain":"<i>Kommt er?</i> → <i>Ich frage, <b>ob</b> er kommt.</i>","rule":"yes/no → ob","meta":true},{"id":"in-104","kind":"mc","topic":"indirekt","question":"What happens in an indirect W-question?","prompt":"Rule","options":["The W-word stays; the verb goes to the end.","The W-word is replaced by <i>ob</i>.","The W-word is replaced by <i>dass</i>.","The word order stays as in the direct question."],"answer":"The W-word stays; the verb goes to the end.","explain":"<i>Wo wohnt er?</i> → <i>Ich weiß nicht, <b>wo</b> er <b>wohnt</b>.</i>","rule":"W-word stays","meta":true},{"id":"in-105","kind":"mc","topic":"indirekt","question":"Which sentence is correct?","prompt":"Direkt: Kommt er?","options":["Ich frage, ob er kommt.","Ich frage, dass er kommt.","Ich frage, ob kommt er.","Ich frage, wenn er kommt."],"answer":"Ich frage, ob er kommt.","explain":"Yes/no → <b>ob</b>. Not <i>wenn</i> — English “if” is a trap here.","rule":"yes/no → ob"},{"id":"in-106","kind":"mc","topic":"indirekt","question":"Which indirect question is correct?","prompt":"Direkt: Hast du Zeit?","options":["Ich frage dich, ob du Zeit hast.","Ich frage dich, dass du Zeit hast.","Ich frage dich, wenn du Zeit hast.","Ich frage dich, ob hast du Zeit."],"answer":"Ich frage dich, ob du Zeit hast.","explain":"<b>ob</b> + subject + object + <b>hast</b>.","rule":"yes/no → ob"},{"id":"pr-001","kind":"typed","topic":"produktion","question":"Join the sentences with <b>weil</b>. Main clause first.","prompt":"Ich bleibe zu Hause. Ich bin krank.","answers":["Ich bleibe zu Hause, weil ich krank bin."],"shape":"hs-ns","vbw":["bin"],"explain":"Comma, <i>weil</i>, subject, then <b>bin</b> at the end.","rule":"weil"},{"id":"pr-002","kind":"typed","topic":"produktion","question":"Join the sentences with <b>dass</b>. Main clause first.","prompt":"Ich glaube. Er hat recht.","answers":["Ich glaube, dass er recht hat."],"shape":"hs-ns","vbw":["hat"],"explain":"<i>dass er recht <b>hat</b></i>.","rule":"dass"},{"id":"pr-003","kind":"typed","topic":"produktion","question":"Join the sentences with <b>ob</b>. Main clause first.","prompt":"Ich weiß nicht. Kommt sie morgen?","answers":["Ich weiß nicht, ob sie morgen kommt."],"shape":"hs-ns","vbw":["kommt"],"explain":"Yes/no question → <i>ob</i>; <b>kommt</b> at the end.","rule":"ob"},{"id":"pr-004","kind":"typed","topic":"produktion","question":"Join the sentences with <b>obwohl</b>. Main clause first.","prompt":"Er geht zur Arbeit. Er ist krank.","answers":["Er geht zur Arbeit, obwohl er krank ist."],"shape":"hs-ns","vbw":["ist"],"explain":"<i>obwohl er krank <b>ist</b></i>.","rule":"obwohl"},{"id":"pr-005","kind":"typed","topic":"produktion","question":"Join the sentences with <b>wenn</b>. Subordinate clause first.","prompt":"Ich habe Zeit. Ich rufe dich an.","answers":["Wenn ich Zeit habe, rufe ich dich an."],"shape":"ns-hs","vbw":["habe"],"explain":"Subordinate clause first → <b>rufe</b> right after the comma, <i>an</i> at the end.","rule":"wenn"},{"id":"pr-006","kind":"typed","topic":"produktion","question":"Join the sentences with <b>als</b>. Subordinate clause first.","prompt":"Ich war klein. Ich wohnte in Bonn.","answers":["Als ich klein war, wohnte ich in Bonn."],"shape":"ns-hs","vbw":["war"],"explain":"<i>Als ich klein <b>war</b></i>, then <b>wohnte</b> ich.","rule":"als"},{"id":"pr-007","kind":"typed","topic":"produktion","question":"Join the sentences with <b>damit</b>. Main clause first.","prompt":"Ich lerne viel. Ich bestehe die Prüfung.","answers":["Ich lerne viel, damit ich die Prüfung bestehe."],"shape":"hs-ns","vbw":["bestehe"],"explain":"Purpose → <i>damit</i>; <b>bestehe</b> at the end.","rule":"damit"},{"id":"pr-008","kind":"typed","topic":"produktion","question":"Join the sentences with <b>bevor</b>. Subordinate clause first.","prompt":"Ich gehe. Ich esse.","answers":["Bevor ich gehe, esse ich."],"shape":"ns-hs","vbw":["gehe"],"explain":"<i>Bevor ich <b>gehe</b></i>, <b>esse</b> ich.","rule":"bevor"},{"id":"pr-009","kind":"typed","topic":"produktion","question":"Join the sentences with <b>nachdem</b>. Subordinate clause first.","prompt":"Ich hatte gegessen. Ich ging spazieren.","answers":["Nachdem ich gegessen hatte, ging ich spazieren."],"shape":"ns-hs","vbw":["gegessen","hatte"],"explain":"Plusquamperfekt block <b>gegessen hatte</b>, then <b>ging</b> ich.","rule":"nachdem"},{"id":"pr-010","kind":"typed","topic":"produktion","question":"Join the sentences with <b>während</b>. Subordinate clause first.","prompt":"Er kocht. Sie deckt den Tisch.","answers":["Während er kocht, deckt sie den Tisch."],"shape":"ns-hs","vbw":["kocht"],"explain":"<i>Während er <b>kocht</b></i>, <b>deckt</b> sie …","rule":"während"},{"id":"pr-011","kind":"typed","topic":"produktion","question":"Join the sentences with <b>bis</b>. Main clause first.","prompt":"Warte. Ich bin fertig.","answers":["Warte, bis ich fertig bin."],"shape":"hs-ns","vbw":["bin"],"explain":"<i>bis ich fertig <b>bin</b></i>.","rule":"bis"},{"id":"pr-012","kind":"typed","topic":"produktion","question":"Join the sentences with <b>seitdem</b>. Subordinate clause first.","prompt":"Er wohnt hier. Er ist glücklich.","answers":["Seitdem er hier wohnt, ist er glücklich."],"alt":["Seit er hier wohnt, ist er glücklich."],"altWhy":"As conjunctions, <i>seit</i> and <i>seitdem</i> mean the same.","shape":"ns-hs","vbw":["wohnt"],"explain":"<i>Seitdem er hier <b>wohnt</b></i>, <b>ist</b> er glücklich.","rule":"seitdem"},{"id":"pr-013","kind":"typed","topic":"produktion","question":"Join the sentences with <b>sobald</b>. Subordinate clause first.","prompt":"Er kommt. Wir essen.","answers":["Sobald er kommt, essen wir."],"shape":"ns-hs","vbw":["kommt"],"explain":"<i>Sobald er <b>kommt</b></i>, <b>essen</b> wir.","rule":"sobald"},{"id":"pr-014","kind":"typed","topic":"produktion","question":"Join the sentences with <b>solange</b>. Subordinate clause first.","prompt":"Es regnet. Wir bleiben hier.","answers":["Solange es regnet, bleiben wir hier."],"shape":"ns-hs","vbw":["regnet"],"explain":"<i>Solange es <b>regnet</b></i>, <b>bleiben</b> wir hier.","rule":"solange"},{"id":"pr-015","kind":"typed","topic":"produktion","question":"Join the sentences with <b>falls</b>. Subordinate clause first.","prompt":"Es regnet. Nimm den Schirm.","answers":["Falls es regnet, nimm den Schirm."],"shape":"ns-hs","vbw":["regnet"],"explain":"The imperative <b>nimm</b> also comes right after the comma.","rule":"falls"},{"id":"pr-016","kind":"typed","topic":"produktion","question":"Join the sentences with <b>sodass</b>. Main clause first.","prompt":"Er sprach leise. Ich verstand nichts.","answers":["Er sprach leise, sodass ich nichts verstand."],"alt":["Er sprach leise, so dass ich nichts verstand."],"altWhy":"<i>so dass</i> (two words) is an accepted spelling of <i>sodass</i>.","shape":"hs-ns","vbw":["verstand"],"explain":"Result → <i>sodass</i>; <b>verstand</b> at the end.","rule":"sodass"},{"id":"pr-017","kind":"typed","topic":"produktion","question":"Join the sentences with <b>indem</b>. Main clause first.","prompt":"Man lernt. Man übt.","answers":["Man lernt, indem man übt."],"shape":"hs-ns","vbw":["übt"],"explain":"Method → <i>indem</i>; <b>übt</b> at the end.","rule":"indem"},{"id":"pr-018","kind":"typed","topic":"produktion","question":"Join the sentences with <b>weil</b>. Main clause first.","prompt":"Ich kann nicht kommen. Ich muss arbeiten.","answers":["Ich kann nicht kommen, weil ich arbeiten muss."],"shape":"hs-ns","vbw":["arbeiten","muss"],"explain":"Modal-verb block <b>arbeiten muss</b> at the end.","rule":"weil"},{"id":"pr-019","kind":"typed","topic":"produktion","question":"Join the sentences with <b>dass</b>. Main clause first.","prompt":"Ich hoffe. Du hast gut geschlafen.","answers":["Ich hoffe, dass du gut geschlafen hast."],"shape":"hs-ns","vbw":["geschlafen","hast"],"explain":"Perfekt block <b>geschlafen hast</b> at the end.","rule":"dass"},{"id":"pr-020","kind":"typed","topic":"produktion","question":"Join the sentences with <b>weil</b>. Main clause first.","prompt":"Er ist müde. Er steht jeden Tag früh auf.","answers":["Er ist müde, weil er jeden Tag früh aufsteht."],"shape":"hs-ns","vbw":["aufsteht"],"explain":"The separable verb becomes one word again: <b>aufsteht</b>.","rule":"weil"},{"id":"pr-021","kind":"typed","topic":"produktion","question":"Join the sentences with <b>ob</b>. Main clause first.","prompt":"Ich frage ihn. Kann er mir helfen?","answers":["Ich frage ihn, ob er mir helfen kann."],"shape":"hs-ns","vbw":["helfen","kann"],"explain":"Yes/no → <i>ob</i>; block <b>helfen kann</b>.","rule":"ob"},{"id":"pr-022","kind":"typed","topic":"produktion","question":"Join the sentences with <b>obwohl</b>. Subordinate clause first.","prompt":"Er hat viel gelernt. Er hat die Prüfung nicht bestanden.","answers":["Obwohl er viel gelernt hat, hat er die Prüfung nicht bestanden."],"shape":"ns-hs","vbw":["gelernt","hat"],"explain":"Subordinate-clause block <b>gelernt hat</b>, then <b>hat</b> er … <i>bestanden</i>.","rule":"obwohl"},{"id":"pr-023","kind":"typed","topic":"produktion","question":"Join the sentences with <b>wenn</b>. Subordinate clause first.","prompt":"Du brauchst Hilfe. Du kannst mich anrufen.","answers":["Wenn du Hilfe brauchst, kannst du mich anrufen."],"shape":"ns-hs","vbw":["brauchst"],"explain":"<b>kannst</b> right after the comma, <i>anrufen</i> at the end.","rule":"wenn"},{"id":"pr-024","kind":"typed","topic":"produktion","question":"Join the sentences with <b>weil</b>. Main clause first.","prompt":"Wir bleiben zu Hause. Es wird regnen.","answers":["Wir bleiben zu Hause, weil es regnen wird."],"shape":"hs-ns","vbw":["regnen","wird"],"explain":"Futur block <b>regnen wird</b> at the end.","rule":"weil"},{"id":"pr-025","kind":"typed","topic":"produktion","question":"Join the sentences with <b>dass</b>. Main clause first.","prompt":"Ich hoffe. Das Auto wird morgen repariert.","answers":["Ich hoffe, dass das Auto morgen repariert wird.","Ich hoffe, dass morgen das Auto repariert wird."],"shape":"hs-ns","vbw":["repariert","wird"],"explain":"Passive block <b>repariert wird</b> at the end.","rule":"dass"},{"id":"pr-026","kind":"typed","topic":"produktion","question":"Join the sentences with <b>weil</b>. Main clause first.","prompt":"Er ist nicht gekommen. Er hat arbeiten müssen.","answers":["Er ist nicht gekommen, weil er hat arbeiten müssen."],"shape":"hs-ns","vbw":["hat","arbeiten","müssen"],"explain":"Double infinitive: <b>hat arbeiten müssen</b> — conjugated verb before the infinitives.","rule":"weil"},{"id":"pr-027","kind":"typed","topic":"produktion","question":"Join the sentences with <b>als</b>. Subordinate clause first.","prompt":"Ich kam nach Hause. Niemand war da.","answers":["Als ich nach Hause kam, war niemand da."],"shape":"ns-hs","vbw":["kam"],"explain":"<i>Als ich nach Hause <b>kam</b></i>, <b>war</b> niemand da.","rule":"als"},{"id":"pr-028","kind":"typed","topic":"produktion","question":"Join the sentences with <b>damit</b>. Main clause first.","prompt":"Sie spart Geld. Sie kann sich ein Auto kaufen.","answers":["Sie spart Geld, damit sie sich ein Auto kaufen kann."],"shape":"hs-ns","vbw":["kaufen","kann"],"explain":"Purpose → <i>damit</i>; block <b>kaufen kann</b>.","rule":"damit"},{"id":"pr-029","kind":"typed","topic":"produktion","question":"Join the sentences with <b>nachdem</b>. Main clause first.","prompt":"Wir gingen spazieren. Wir hatten gegessen.","answers":["Wir gingen spazieren, nachdem wir gegessen hatten."],"shape":"hs-ns","vbw":["gegessen","hatten"],"explain":"Plusquamperfekt block <b>gegessen hatten</b> at the end.","rule":"nachdem"},{"id":"pr-030","kind":"typed","topic":"produktion","question":"Join the sentences with <b>weil</b>. Main clause first.","prompt":"Ich bin zu Hause geblieben. Ich habe mich nicht gut gefühlt.","answers":["Ich bin zu Hause geblieben, weil ich mich nicht gut gefühlt habe."],"shape":"hs-ns","vbw":["gefühlt","habe"],"explain":"<i>nicht gut</i> before the block <b>gefühlt habe</b>.","rule":"weil"},{"id":"pr-031","kind":"typed","topic":"produktion","question":"Join the sentences with <b>ob</b>. Main clause first.","prompt":"Weißt du? Ist der Laden heute geöffnet?","answers":["Weißt du, ob der Laden heute geöffnet ist?","Weißt du, ob heute der Laden geöffnet ist?"],"shape":"hs-ns","vbw":["ist"],"explain":"Yes/no → <i>ob</i>; <b>ist</b> at the end; question mark because of <i>Weißt du</i>.","rule":"ob"},{"id":"pr-032","kind":"typed","topic":"produktion","question":"Join the sentences with <b>dass</b>. Main clause first.","prompt":"Ich weiß. Das Konzert findet heute statt.","answers":["Ich weiß, dass das Konzert heute stattfindet.","Ich weiß, dass heute das Konzert stattfindet."],"shape":"hs-ns","vbw":["stattfindet"],"explain":"The separable verb becomes one word again: <b>stattfindet</b>.","rule":"dass"},{"id":"fe-001","kind":"mc","topic":"fehler","question":"This sentence is wrong. What is the correct version?","prompt":"✗ Ich bleibe zu Hause, weil ich bin krank.","options":["Ich bleibe zu Hause, weil ich krank bin.","Ich bleibe zu Hause, weil bin ich krank.","Ich bleibe zu Hause, weil ich krank bin nicht.","Ich bleibe zu Hause, denn ich krank bin."],"answer":"Ich bleibe zu Hause, weil ich krank bin.","explain":"After <i>weil</i> the verb is at the end — not in position 2 as after <i>denn</i>.","rule":"verb at the end"},{"id":"fe-002","kind":"mc","topic":"fehler","question":"This sentence is wrong. What is the correct version?","prompt":"✗ Ich weiß, dass er früh steht auf.","options":["Ich weiß, dass er früh aufsteht.","Ich weiß, dass er steht früh auf.","Ich weiß, dass er aufsteht früh.","Ich weiß, dass auf er früh steht."],"answer":"Ich weiß, dass er früh aufsteht.","explain":"Separable verbs become <b>one word</b> again in a subordinate clause.","rule":"separable verb → one word"},{"id":"fe-003","kind":"mc","topic":"fehler","question":"This sentence is wrong. What is the correct version?","prompt":"✗ Weil ich krank bin, ich bleibe zu Hause.","options":["Weil ich krank bin, bleibe ich zu Hause.","Weil ich bin krank, bleibe ich zu Hause.","Weil ich krank bin, ich zu Hause bleibe.","Weil ich krank bin bleibe ich zu Hause."],"answer":"Weil ich krank bin, bleibe ich zu Hause.","explain":"The fronted subordinate clause is position 1 → the verb <b>bleibe</b> follows right after the comma.","rule":"verb right after the comma"},{"id":"fe-004","kind":"mc","topic":"fehler","question":"This sentence is wrong. What is the correct version?","prompt":"✗ Ich bleibe zu Hause, denn ich krank bin.","options":["Ich bleibe zu Hause, denn ich bin krank.","Ich bleibe zu Hause, denn bin ich krank.","Ich bleibe zu Hause, weil ich bin krank.","Denn ich bin krank, bleibe ich zu Hause."],"answer":"Ich bleibe zu Hause, denn ich bin krank.","explain":"<i>denn</i> is coordinating: main-clause word order follows, verb in position 2.","rule":"denn → position 0"},{"id":"fe-005","kind":"mc","topic":"fehler","question":"This sentence is wrong. What is the correct version?","prompt":"✗ Wenn ich klein war, wohnte ich in Bonn.","options":["Als ich klein war, wohnte ich in Bonn.","Wenn ich klein bin, wohnte ich in Bonn.","Als ich klein war, ich wohnte in Bonn.","Wann ich klein war, wohnte ich in Bonn."],"answer":"Als ich klein war, wohnte ich in Bonn.","explain":"A single period in the past → <b>als</b>. (<i>wann</i> is a question word.)","rule":"als → one-off, past"},{"id":"fe-006","kind":"mc","topic":"fehler","question":"This sentence is wrong. What is the correct version?","prompt":"✗ Ich frage, dass er kommt.","options":["Ich frage, ob er kommt.","Ich frage, wenn er kommt.","Ich frage, ob kommt er.","Ich frage, dass kommt er."],"answer":"Ich frage, ob er kommt.","explain":"After <i>fragen</i> comes <b>ob</b> — a question is not a statement.","rule":"ob → yes/no question"},{"id":"fe-007","kind":"mc","topic":"fehler","question":"This sentence is wrong. What is the correct version?","prompt":"✗ Ich weiß nicht, wo wohnt er.","options":["Ich weiß nicht, wo er wohnt.","Ich weiß nicht, wo er wohnt?","Ich weiß nicht, ob er wohnt.","Ich weiß nicht wo wohnt er."],"answer":"Ich weiß nicht, wo er wohnt.","explain":"In an indirect question the verb goes to the end; the punctuation follows the main clause (statement → full stop).","rule":"W-word stays"},{"id":"fe-008","kind":"mc","topic":"fehler","question":"This sentence is wrong. What is the correct version?","prompt":"✗ Ich glaube dass er recht hat.","options":["Ich glaube, dass er recht hat.","Ich glaube, dass er hat recht.","Ich glaube dass, er recht hat.","Ich glaube, dass, er recht hat."],"answer":"Ich glaube, dass er recht hat.","explain":"A subordinate clause is always separated from the main clause by a comma — here right before <i>dass</i>.","rule":"comma"},{"id":"fe-009","kind":"mc","topic":"fehler","question":"This sentence is wrong. What is the correct version?","prompt":"✗ Er kommt nicht, weil er muss arbeiten.","options":["Er kommt nicht, weil er arbeiten muss.","Er kommt nicht, weil muss er arbeiten.","Er kommt nicht, weil er zu arbeiten muss.","Er kommt nicht, denn er arbeiten muss."],"answer":"Er kommt nicht, weil er arbeiten muss.","explain":"Infinitive, then the conjugated modal verb at the end: <b>arbeiten muss</b>.","rule":"modal verb"},{"id":"fe-010","kind":"mc","topic":"fehler","question":"This sentence is wrong. What is the correct version?","prompt":"✗ Er ist sauer, weil ich nicht kommen können habe.","options":["Er ist sauer, weil ich nicht habe kommen können.","Er ist sauer, weil ich nicht kommen habe können.","Er ist sauer, weil ich habe nicht können kommen.","Er ist sauer, weil ich nicht gekonnt habe kommen."],"answer":"Er ist sauer, weil ich nicht habe kommen können.","explain":"Double infinitive: <b>habe</b> before the two infinitives.","rule":"double infinitive"},{"id":"fe-011","kind":"mc","topic":"fehler","question":"This sentence is wrong (intended meaning: “whether”). What is the correct version?","prompt":"✗ Ich frage, wenn er Zeit hat.","options":["Ich frage, ob er Zeit hat.","Ich frage, dass er Zeit hat.","Ich frage, wann er Zeit hat.","Ich frage, ob hat er Zeit."],"answer":"Ich frage, ob er Zeit hat.","explain":"“if/whether” in an indirect question is <b>ob</b>, never <i>wenn</i>.","rule":"ob → yes/no question"},{"id":"fe-012","kind":"mc","topic":"fehler","question":"This sentence is wrong. What is the correct version?","prompt":"✗ Nachdem ich gegessen hatte, ich ging spazieren.","options":["Nachdem ich gegessen hatte, ging ich spazieren.","Nachdem ich hatte gegessen, ging ich spazieren.","Nachdem ich gegessen hatte, ich spazieren ging.","Nachdem ich gegessen hatte ging ich spazieren."],"answer":"Nachdem ich gegessen hatte, ging ich spazieren.","explain":"After the fronted subordinate clause the verb comes immediately: <b>ging ich</b>.","rule":"verb right after the comma"},{"id":"fe-013","kind":"mc","topic":"fehler","question":"This sentence is wrong (intended meaning: purpose). What is the correct version?","prompt":"✗ Ich lerne viel, sodass ich die Prüfung bestehe.","options":["Ich lerne viel, damit ich die Prüfung bestehe.","Ich lerne viel, obwohl ich die Prüfung bestehe.","Ich lerne viel, damit ich bestehe die Prüfung.","Ich lerne viel, weil ich die Prüfung bestehe."],"answer":"Ich lerne viel, damit ich die Prüfung bestehe.","explain":"Purpose → <b>damit</b>; <i>sodass</i> only describes a result.","rule":"damit"},{"id":"fe-014","kind":"mc","topic":"fehler","question":"This sentence is wrong. What is the correct version?","prompt":"✗ Ich warte, bis das Auto wird repariert.","options":["Ich warte, bis das Auto repariert wird.","Ich warte, bis wird das Auto repariert.","Ich warte, bis das Auto repariert.","Ich warte bis das Auto repariert wird."],"answer":"Ich warte, bis das Auto repariert wird.","explain":"Passive in a subordinate clause: participle, then <b>wird</b> at the very end.","rule":"passive"},{"id":"fe-015","kind":"mc","topic":"fehler","question":"This sentence is wrong. What is the correct version?","prompt":"✗ Weißt du, wo er wohnt.","options":["Weißt du, wo er wohnt?","Weißt du, wo wohnt er?","Weißt du wo er wohnt?","Weißt du, ob er wohnt?"],"answer":"Weißt du, wo er wohnt?","explain":"The main clause <i>Weißt du</i> is a question → question mark.","rule":"punctuation follows the main clause"},{"id":"fe-016","kind":"mc","topic":"fehler","question":"This sentence is wrong. What is the correct version?","prompt":"✗ Als ich Zeit habe, rufe ich dich an.","options":["Wenn ich Zeit habe, rufe ich dich an.","Als ich Zeit hatte, rufe ich dich an.","Wenn ich Zeit habe, ich rufe dich an.","Wann ich Zeit habe, rufe ich dich an."],"answer":"Wenn ich Zeit habe, rufe ich dich an.","explain":"Present/future → <b>wenn</b>; <i>als</i> only for one-off past events.","rule":"wenn → present/future"},{"id":"fe-017","kind":"mc","topic":"fehler","question":"This sentence is wrong. What is the correct version?","prompt":"✗ Ich weiß nicht, ob kommt sie.","options":["Ich weiß nicht, ob sie kommt.","Ich weiß nicht, ob sie kommt?","Ich weiß nicht, ob sie kommen.","Ich weiß nicht ob sie kommt."],"answer":"Ich weiß nicht, ob sie kommt.","explain":"After <i>ob</i> the verb goes to the end.","rule":"yes/no → ob"},{"id":"fe-018","kind":"mc","topic":"fehler","question":"This sentence is wrong. What is the correct version?","prompt":"✗ Sie ist glücklich, seitdem sie hier wohnte.","options":["Sie ist glücklich, seitdem sie hier wohnt.","Sie ist glücklich, seitdem wohnt sie hier.","Sie ist glücklich, bis sie hier wohnt.","Sie ist glücklich, seitdem sie hier gewohnt."],"answer":"Sie ist glücklich, seitdem sie hier wohnt.","explain":"<i>seitdem</i> describes a state that continues until now → Präsens.","rule":"seitdem"},{"id":"fe-019","kind":"mc","topic":"fehler","question":"This sentence is wrong. What is the correct version?","prompt":"✗ Ich hoffe, dass du mich wirst verstehen.","options":["Ich hoffe, dass du mich verstehen wirst.","Ich hoffe, dass du wirst mich verstehen.","Ich hoffe, dass wirst du mich verstehen.","Ich hoffe, dass du mich verstehst wirst."],"answer":"Ich hoffe, dass du mich verstehen wirst.","explain":"Futur in a subordinate clause: infinitive, then <b>wirst</b> at the end.","rule":"Futur I"},{"id":"fe-020","kind":"mc","topic":"fehler","question":"This sentence is wrong. What is the correct version?","prompt":"✗ Ich gehe ins Bett, obwohl ich müde nicht bin.","options":["Ich gehe ins Bett, obwohl ich nicht müde bin.","Ich gehe ins Bett, obwohl ich müde bin nicht.","Ich gehe ins Bett, obwohl nicht ich müde bin.","Ich gehe ins Bett, obwohl ich bin nicht müde."],"answer":"Ich gehe ins Bett, obwohl ich nicht müde bin.","explain":"<i>nicht</i> comes before the predicative adjective: <b>nicht müde bin</b>.","rule":"nicht before the predicative"}];
+
+/* ============================ storage ============================ */
+const KEY = "nebensaetze.v1";
+const mem = {};
+const store = {
+  get(k){ try{ return localStorage.getItem(k); }catch(e){ return k in mem ? mem[k] : null; } },
+  set(k,v){ try{ localStorage.setItem(k,v); }catch(e){ mem[k]=v; } },
+  del(k){ try{ localStorage.removeItem(k); }catch(e){ delete mem[k]; } }
+};
+let PERSISTS = true;
+try{ localStorage.setItem(KEY+".probe","1"); localStorage.removeItem(KEY+".probe"); }
+catch(e){ PERSISTS = false; }
+
+/* ============================ model ============================== */
+const DAY = 86400000;
+// Leitner boxes. 0 = new or just lapsed, 5 = mastered. A box is only left
+// when the item is due, so five correct answers must be spread over ≥ 11 days.
+const IVL = [0, 10*60000, 1*DAY, 3*DAY, 7*DAY, 21*DAY];
+const MASTER_BOX = 5;
+
+const TOPICS = {
+  "verbende":      {name:"Verb at the end",            blurb:"The core rule, separable verbs"},
+  "verbblock":     {name:"The verb block",             blurb:"Modal, Perfekt, Futur, passive, double infinitive"},
+  "nicht":         {name:"nicht in the clause",         blurb:"Before the verb — or before what?"},
+  "voranstellung": {name:"Subordinate clause first",   blurb:"Then the verb follows immediately"},
+  "konjunktion":   {name:"Which conjunction?",         blurb:"Meaning: obwohl, damit, indem …"},
+  "weil-denn-da":  {name:"weil · denn · da",           blurb:"Same meaning, different word order"},
+  "wenn-als":      {name:"wenn or als",                blurb:"Once, or every time?"},
+  "dass-ob":       {name:"dass or ob",                 blurb:"Statement or question?"},
+  "temporal":      {name:"Time conjunctions",          blurb:"bevor, nachdem, während, bis, seitdem …"},
+  "indirekt":      {name:"Indirect questions",         blurb:"W-word stays, yes/no becomes ob"},
+  "produktion":    {name:"Joining sentences",          blurb:"Write whole sentences yourself"},
+  "fehler":        {name:"Spot the error",             blurb:"Typical stumbling blocks"}
+};
+const TOPIC_ORDER = Object.keys(TOPICS);
+
+let S = load();
+function blank(){
+  return {v:1, items:{}, stats:{answered:0, correct:0, sessions:0, days:{}, lastDay:null, streak:0}};
+}
+function load(){
+  try{
+    const raw = store.get(KEY);
+    if(!raw) return blank();
+    const p = JSON.parse(raw);
+    if(!p || p.v !== 1) return blank();
+    p.items = p.items || {}; p.stats = p.stats || blank().stats;
+    p.stats.days = p.stats.days || {};
+    return p;
+  }catch(e){ return blank(); }
+}
+let saveTimer = null;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(()=>{ store.set(KEY, JSON.stringify(S)); }, 120);
+}
+function rec(id){
+  if(!S.items[id]) S.items[id] = {b:0, due:0, s:0, c:0, w:0, lap:0, seen:0};
+  return S.items[id];
+}
+const isMastered = id => (S.items[id]?.b || 0) >= MASTER_BOX;
+const isDue = id => { const r = S.items[id]; return !!r && r.seen > 0 && r.due <= Date.now(); };
+const isNew = id => !S.items[id] || S.items[id].seen === 0;
+
+function grade(id, ok){
+  const r = rec(id); const now = Date.now();
+  const wasDue = r.seen === 0 || r.due <= now;
+  r.seen++;
+  if(ok){
+    r.c++; r.s++;
+    // promotion only when the review was actually due -- early extra practice
+    // is welcome but must not shortcut the spacing
+    if(wasDue){ r.b = Math.min(MASTER_BOX, r.b + 1); r.due = now + IVL[Math.min(r.b, IVL.length-1)]; }
+  } else {
+    r.w++; r.s = 0; if(r.b > 0) r.lap++; r.b = 0; r.due = now;
+  }
+  S.stats.answered++; if(ok) S.stats.correct++;
+  const d = new Date().toISOString().slice(0,10);
+  S.stats.days[d] = (S.stats.days[d]||0) + 1;
+  if(S.stats.lastDay !== d){
+    const y = new Date(Date.now()-DAY).toISOString().slice(0,10);
+    S.stats.streak = (S.stats.lastDay === y) ? (S.stats.streak||0)+1 : 1;
+    S.stats.lastDay = d;
+  }
+  save();
+}
+
+/* ============================ helpers ============================ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function norm(s){
+  return String(s).toLowerCase()
+    .replace(/ß/g,"ss").replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue")
+    .replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
+}
+function lev(a,b){
+  // edit distance where swapping two adjacent letters counts as one edit
+  const m=a.length,n=b.length; if(!m) return n; if(!n) return m;
+  const d=[]; for(let i=0;i<=m;i++){ d[i]=[i]; } for(let j=0;j<=n;j++) d[0][j]=j;
+  for(let i=1;i<=m;i++) for(let j=1;j<=n;j++){
+    const c = a[i-1]===b[j-1]?0:1;
+    d[i][j]=Math.min(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1]+c);
+    if(i>1 && j>1 && a[i-1]===b[j-2] && a[i-2]===b[j-1]) d[i][j]=Math.min(d[i][j], d[i-2][j-2]+1);
+  }
+  return d[m][n];
+}
+const OPENERS = new Set(("weil dass ob da wenn als obwohl damit bevor nachdem waehrend bis seit seitdem sobald solange falls sodass indem denn "+
+  "wo wann wie was warum wohin woher wer wem wen welches welche welcher wieso womit nicht kein keine keinen").split(" "));
+
+/* ---- bracket rendering (the Satzklammer) ---- */
+// Returns [{w, cls, p}] where cls is "lb" (conjunction), "rb" (verb block),
+// "mf" (Mittelfeld) or "" (fixed text); p is trailing punctuation.
+function bracketize(text, shape, vbw, tail){
+  const raw = String(text).trim().split(/\s+/).filter(Boolean);
+  const toks = raw.map(w=>{ const m = w.match(/^(.*?)([.,?!]*)$/); return {w:m[1], p:m[2], cls:""}; });
+  const n = toks.length; const vb = (vbw||[]).length;
+  const mark = (from, to, cls) => { for(let i=from;i<to;i++) if(i>=0 && i<n) toks[i].cls = cls; };
+  if(shape === "sub"){
+    mark(0,1,"lb"); mark(n-vb, n, "rb"); mark(1, n-vb, "mf");
+  } else if(shape === "main"){
+    mark(0,1,"rb"); const t=(tail||[]).length; if(t) mark(n-t, n, "rb"); mark(1, n-t, "mf");
+  } else if(shape === "hs-ns" || shape === "ns-hs"){
+    const ci = toks.findIndex(t=>t.p.startsWith(","));
+    if(ci >= 0){
+      if(shape === "hs-ns"){ mark(ci+1, ci+2, "lb"); mark(n-vb, n, "rb"); mark(ci+2, n-vb, "mf"); }
+      else { mark(0,1,"lb"); mark(ci+1-vb, ci+1, "rb"); mark(1, ci+1-vb, "mf"); mark(ci+1, ci+2, "rb"); }
+    }
+  }
+  // "so dass" counts as one opener
+  toks.forEach((t,i)=>{ if(t.cls==="lb" && t.w.toLowerCase()==="so" && toks[i+1] && toks[i+1].w.toLowerCase()==="dass") toks[i+1].cls="lb"; });
+  return toks;
+}
+function klammerHTML(toks, ghost){
+  let out = `<span class="klammer${ghost?" ghost":""}">`;
+  toks.forEach((t,i)=>{
+    const last = t.cls==="rb" && (i===toks.length-1 || toks[i+1].cls!=="rb");
+    // punctuation stays inside the word's span: a flex gap must never open before a comma
+    out += (i ? " " : "") + `<span class="w ${t.cls}${last?" last":""}">${esc(t.w)}${t.p?`<span class="p">${esc(t.p)}</span>`:""}</span>`;
+  });
+  return out + `</span>`;
+}
+function protectedWords(q){
+  const set = new Set(OPENERS);
+  (q.vbw||[]).forEach(w=>set.add(norm(w)));
+  (q.tail||[]).forEach(w=>set.add(norm(w)));
+  const all = (q.answers||[]).concat(q.alt||[]);
+  for(const a of all) for(const t of bracketize(a, q.shape, q.vbw)) if(t.cls==="lb"||t.cls==="rb") set.add(norm(t.w));
+  return set;
+}
+
+// Comma positions as "after word N". The comma before a Nebensatz is part of
+// the grammar, not typography, so it is checked separately from the words.
+function commaMap(s){
+  const out = []; let n = 0;
+  for(const tok of String(s).replace(/<[^>]+>/g,"").replace(/[.?!…]/g,"").split(/\s+/)){
+    if(!tok) continue;
+    const hasComma = /,$/.test(tok);
+    const w = norm(tok.replace(/,$/,""));
+    if(w){ n++; if(hasComma) out.push(n); }
+    else if(hasComma && n) out.push(n);
+  }
+  return out.join(",");
+}
+
+// Returns {res: "ok" | "typo" | "alt" | "comma" | "no"}.
+// - words are compared without case, umlauts, ß or punctuation;
+// - if the words are right but a comma is missing or misplaced, the result is
+//   "comma" -- graded wrong, because the comma is one of the rules;
+// - a typo is forgiven one edit away in a word that carries no grammar (never
+//   the conjunction, the verb block, or the negation), never on single-word
+//   answers, and never in the word right after the comma.
+function checkTyped(input, q){
+  const u = norm(input);
+  if(!u) return {res:"no"};
+  const uC = commaMap(input);
+  const raw = q.answers.map(a=>({a, k:"ok"})).concat((q.alt||[]).map(a=>({a, k:"alt"})));
+  const cands = [];
+  for(const c of raw){
+    cands.push({t:norm(c.a), cm:commaMap(c.a), k:c.k});
+    if(q.frame) cands.push({t:norm(q.frame+" "+c.a), cm:commaMap(q.frame+" "+c.a), k:c.k});
+  }
+  for(const c of cands) if(u === c.t) return {res: c.cm === uC ? c.k : "comma"};
+  const prot = protectedWords(q);
+  for(const c of cands){
+    const A = c.t.split(" "), U = u.split(" ");
+    if(A.length < 2 || A.length !== U.length) continue;
+    let diff = -1, n = 0;
+    for(let i=0;i<A.length;i++) if(A[i]!==U[i]){ n++; diff=i; }
+    if(n !== 1) continue;
+    if(prot.has(A[diff]) || prot.has(U[diff])) continue;
+    if(c.cm.split(",").includes(String(diff))) continue;   // word right after a comma
+    if(lev(A[diff], U[diff]) <= 1) return {res: c.cm !== uC ? "comma" : (c.k==="alt" ? "alt" : "typo")};
+  }
+  return {res:"no"};
+}
+function checkOrder(seq, q){
+  for(let i=0;i<q.accept.length;i++){
+    const a = q.accept[i];
+    if(a.length === seq.length && a.every((w,j)=>w===seq[j])) return {res: i===0 ? "ok" : "alt", idx:i};
+  }
+  return {res:"no"};
+}
+
+/* ============================ session ============================ */
+let SES = null;
+
+function pool(mode, topic){
+  let ids = BANK.map(q=>q.id);
+  if(topic) ids = BANK.filter(q=>q.topic===topic).map(q=>q.id);
+  if(mode==="leech") return ids.filter(id=>(S.items[id]?.lap||0)>=2 && !isMastered(id));
+  return ids;
+}
+
+function buildQueue(mode, topic, size){
+  const ids = pool(mode, topic);
+  if(mode==="exam"){
+    // stratified: every topic is represented, the rest is random
+    const per = {}; ids.forEach(id=>{ const t = BANK.find(q=>q.id===id).topic; (per[t] ||= []).push(id); });
+    const picked = [];
+    TOPIC_ORDER.forEach(t=>{ if(per[t]) picked.push(...shuffle(per[t]).slice(0,2)); });
+    const rest = shuffle(ids.filter(id=>!picked.includes(id)));
+    return shuffle(picked.concat(rest.slice(0, Math.max(0, size - picked.length)))).slice(0, size);
+  }
+  if(mode==="leech") return shuffle(ids).slice(0, size);
+
+  const due = ids.filter(id=>isDue(id) && !isNew(id)).sort((a,b)=>S.items[a].due - S.items[b].due);
+  const fresh = shuffle(ids.filter(isNew));
+  const byTopic = {};
+  fresh.forEach(id=>{ const t = BANK.find(q=>q.id===id).topic; (byTopic[t] ||= []).push(id); });
+  const woven = [];
+  let added = true;
+  while(added){ added=false;
+    for(const t of TOPIC_ORDER){ const q = byTopic[t]; if(q && q.length){ woven.push(q.shift()); added=true; } }
+  }
+  // extra practice: seen, not yet due, not mastered -- lowest boxes first
+  const rest = shuffle(ids.filter(id=>!isNew(id) && !isDue(id) && !isMastered(id)))
+                 .sort((a,b)=>(S.items[a].b||0)-(S.items[b].b||0));
+  const spot = shuffle(ids.filter(id=>!isNew(id) && !isDue(id) && isMastered(id)));
+  // due reviews come first, but a quarter of every round is reserved for new
+  // material while any is left -- otherwise a backlog of reviews would starve
+  // the rest of the bank forever
+  const nNew = Math.min(woven.length, Math.ceil(size/4));
+  const nDue = Math.min(due.length, size - nNew);
+  return [...due.slice(0, nDue), ...woven, ...due.slice(nDue), ...rest, ...spot].slice(0, size);
+}
+
+function start(mode, topic, size){
+  const q = buildQueue(mode, topic, size);
+  if(!q.length){ renderHome(); show("home"); return; }
+  SES = {mode, topic, queue:q, i:0, results:[]};
+  S.stats.sessions++; save();
+  show("drill"); renderQ();
+}
+function current(){ return BANK.find(q=>q.id === SES.queue[SES.i]); }
+function next(){
+  SES.i++;
+  if(SES.i >= SES.queue.length){ show("sum"); renderSum(); return; }
+  renderQ();
+}
+// A wrong answer comes back later in the same sitting -- a round is not over
+// until everything in it has been answered correctly once.
+function requeue(id){
+  const at = Math.min(SES.queue.length, SES.i + 4 + Math.floor(Math.random()*3));
+  SES.queue.splice(at, 0, id);
+}
+
+/* ============================ views ============================== */
+function show(v){
+  ["home","drill","ref","prog","sum"].forEach(k=> $("#view-"+k).classList.toggle("hidden", k!==v));
+  $("#nav-home").setAttribute("aria-current", v==="home");
+  $("#nav-ref").setAttribute("aria-current", v==="ref");
+  $("#nav-prog").setAttribute("aria-current", v==="prog");
+  window.scrollTo(0,0);
+  paintRail();
+}
+function counts(){
+  let m=0, mid=0, seen=0, due=0, leech=0;
+  for(const q of BANK){
+    const r = S.items[q.id];
+    if(!r || !r.seen) continue;
+    seen++;
+    if(r.b >= MASTER_BOX) m++; else if(r.b >= 2) mid++;
+    if(isDue(q.id)) due++;
+    if((r.lap||0) >= 2 && r.b < MASTER_BOX) leech++;
+  }
+  return {total:BANK.length, mastered:m, mid, seen, due, leech, newly:BANK.length-seen};
+}
+function paintRail(){
+  const c = counts(), n = c.total;
+  const m = $("#meter").children;
+  m[0].style.width = (c.mastered/n*100)+"%";
+  m[1].style.width = (c.mid/n*100)+"%";
+  m[2].style.width = ((c.seen-c.mastered-c.mid)/n*100)+"%";
+  const acc = S.stats.answered ? Math.round(S.stats.correct/S.stats.answered*100) : 0;
+  $("#railstat").innerHTML =
+    `<span><b>${c.mastered}</b>/${n} mastered</span>` +
+    `<span><b>${c.due}</b> due</span>` +
+    `<span><b>${c.newly}</b> new</span>` +
+    (S.stats.answered ? `<span>Accuracy <b>${acc}%</b></span>` : "") +
+    (S.stats.streak > 1 ? `<span><b>${S.stats.streak}</b>-day streak</span>` : "");
+  $("#foot").innerHTML = PERSISTS
+    ? "Progress is saved in this browser."
+    : "Note: this browser does not allow storage — progress only lasts for this session. Download the file and open it locally.";
+}
+
+/* ---------- home ---------- */
+let SIZE = 20;
+function renderHome(){
+  const c = counts();
+  const topicRows = TOPIC_ORDER.map(t=>{
+    const ids = BANK.filter(q=>q.topic===t).map(q=>q.id);
+    const done = ids.filter(isMastered).length;
+    return `<button class="mode" data-topic="${t}">
+      <span><h3>${TOPICS[t].name}</h3><p>${TOPICS[t].blurb}</p></span>
+      <span class="count">${done}/${ids.length}</span></button>`;
+  }).join("");
+
+  $("#view-home").innerHTML = `
+    <h1 class="lede">Conjunction first, verb last.</h1>
+    <p class="sub">${BANK.length} exercises on subordinate clauses: word order, the verb block, <i>nicht</i>, the conjunctions
+    and indirect questions. Every item moves through five boxes — only after five correct answers in a row,
+    spread over several days, does it count as mastered.</p>
+
+    <div class="modes">
+      <button class="mode" data-mode="srs">
+        <span><h3>Keep practising</h3><p>${c.due} due, ${c.newly} never seen</p></span>
+        <span class="count">${SIZE} questions</span></button>
+      <button class="mode" data-mode="exam">
+        <span><h3>Exam</h3><p>30 mixed questions, every topic included</p></span>
+        <span class="count">30</span></button>
+      <button class="mode" data-mode="leech" ${c.leech?"":"disabled"}>
+        <span><h3>Weak spots</h3><p>${c.leech ? c.leech+" items that have caught you out more than once" : "None yet — they show up on their own"}</p></span>
+        <span class="count">${c.leech||"—"}</span></button>
+    </div>
+
+    <div class="seg"><span>Length</span>
+      ${[10,20,40].map(n=>`<button class="segbtn" data-size="${n}" aria-pressed="${SIZE===n}">${n}</button>`).join("")}
+    </div>
+
+    <h2 class="sec">Individual topics</h2>
+    <div class="modes">${topicRows}</div>`;
+
+  $("#view-home").querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{
+    const m = b.dataset.mode;
+    start(m, null, m==="exam" ? 30 : (m==="leech" ? 20 : SIZE));
+  });
+  $("#view-home").querySelectorAll("[data-topic]").forEach(b=>b.onclick=()=>start("srs", b.dataset.topic, SIZE));
+  $("#view-home").querySelectorAll("[data-size]").forEach(b=>b.onclick=()=>{ SIZE=+b.dataset.size; renderHome(); });
+}
+
+/* ---------- drill ---------- */
+let LOCK = false, BUILT = [];
+
+function questionText(q){
+  if(q.question) return q.question;
+  if(q.kind === "order") return q.shape === "main" ? "Build the main clause." : "Build the subordinate clause.";
+  return "";
+}
+function renderQ(){
+  const q = current(); LOCK = false; BUILT = [];
+  const r = S.items[q.id];
+  const boxLabel = !r || !r.seen ? "new" : `Box ${r.b}/${MASTER_BOX}`;
+  let body = "", hint = "";
+
+  if(q.kind === "mc"){
+    const opts = shuffle(q.options);
+    body = `<div class="opts"${q.meta ? "" : ' lang="de"'}>` + opts.map((o,i)=>
+      `<button class="opt" data-opt="${esc(o)}"><span class="key">${i+1}</span><span>${o}</span></button>`
+    ).join("") + `</div>`;
+  }
+  else if(q.kind === "order"){
+    const pool = shuffle(q.tokens.concat(q.extra||[]));
+    q._pool = pool;
+    body = `<div class="build" lang="de">
+        ${q.frame ? `<span class="fixed">${esc(q.frame)}</span>` : ""}
+        <span class="line" id="line" aria-live="polite"></span>
+        <span class="fixed">${esc((q.after||"") + q.end)}</span>
+      </div>
+      <div class="pool" id="pool" lang="de">${pool.map((w,i)=>`<button class="chip" data-i="${i}">${esc(w)}</button>`).join("")}</div>
+      <div class="bact">
+        <button class="btn" id="check" disabled>Check</button>
+        <button class="btn ghost" id="undo" disabled>Undo</button>
+      </div>`;
+    hint = "Tap the words in the right order." + ((q.extra||[]).length ? " Not every word is needed." : "");
+  }
+  else {
+    body = `<div class="typed">
+      <input id="inp" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"
+             aria-label="Answer" placeholder="${q.frame ? "Type just the subordinate clause…" : "Type your answer…"}">
+      <button class="btn" id="check">Check</button></div>`;
+    if(q.hint) hint = q.hint;
+  }
+
+  $("#view-drill").innerHTML = `
+    <div class="card">
+      <div class="eyebrow">
+        <span>${TOPICS[q.topic].name}</span><span class="dot"></span>
+        <span>${boxLabel}</span><span class="dot"></span>
+        <span>${SES.i+1} / ${SES.queue.length}</span>
+      </div>
+      <p class="qtext">${questionText(q)}</p>
+      ${q.kind !== "order" ? `<p class="prompt"${q.meta ? "" : ' lang="de"'}>${q.prompt || ""}</p>` : ""}
+      ${hint ? `<p class="hintline">${hint}</p>` : ""}
+      ${body}
+      <div id="fb"></div>
+    </div>`;
+
+  if(q.kind === "mc")
+    $("#view-drill").querySelectorAll(".opt").forEach(b=> b.onclick=()=>answerMC(b.dataset.opt));
+  if(q.kind === "order"){
+    $("#pool").querySelectorAll(".chip").forEach(b=> b.onclick=()=>pick(+b.dataset.i));
+    $("#check").onclick = ()=>answerOrder();
+    $("#undo").onclick = ()=>unpick(BUILT.length-1);
+  }
+  if(q.kind === "typed"){
+    const inp = $("#inp");
+    inp.focus();
+    $("#check").onclick = ()=>answerTyped(inp.value);
+    inp.onkeydown = e=>{ if(e.key==="Enter"){ e.preventDefault(); LOCK ? next() : answerTyped(inp.value); } };
+  }
+  paintRail();
+}
+
+function pick(i){
+  if(LOCK || BUILT.includes(i)) return;
+  BUILT.push(i); paintBuild();
+}
+function unpick(k){
+  if(LOCK || k<0 || k>=BUILT.length) return;
+  BUILT.splice(k,1); paintBuild();
+}
+function paintBuild(){
+  const q = current();
+  const line = $("#line");
+  line.innerHTML = BUILT.map((i,k)=>`<button class="chip" data-k="${k}" aria-label="remove ${esc(q._pool[i])}">${esc(q._pool[i])}</button>`).join("");
+  line.querySelectorAll(".chip").forEach(b=> b.onclick=()=>unpick(+b.dataset.k));
+  $("#pool").querySelectorAll(".chip").forEach(b=> b.classList.toggle("used", BUILT.includes(+b.dataset.i)));
+  $("#check").disabled = BUILT.length === 0;
+  $("#undo").disabled = BUILT.length === 0;
+}
+
+function solutionHTML(q, which){
+  if(q.kind === "order"){
+    const seq = q.accept[which||0];
+    const shape = which ? null : q.shape;   // an accepted alternative (weil↔denn) has its own structure
+    const inner = shape ? klammerHTML(bracketize(seq.join(" "), shape, q.vbw, q.tail)) : esc(seq.join(" "));
+    return `${q.frame ? `<span class="fixed">${esc(q.frame)}</span> ` : ""}${inner}<span class="fixed">${esc((q.after||"")+q.end)}</span>`;
+  }
+  if(q.kind === "typed"){
+    const a = q.answers[0];
+    if(q.prompt.includes("___")){
+      const p = q.prompt.replace(/\s*\([^)]*\)\s*$/, "");
+      return p.replace("___", `<span class="klammer"><span class="w lb">${esc(a)}</span></span>`);
+    }
+    const inner = q.shape ? klammerHTML(bracketize(a, q.shape, q.vbw)) : esc(a);
+    return `${q.frame ? `<span class="fixed">${esc(q.frame)}</span> ` : ""}${inner}`;
+  }
+  return q.answer;
+}
+function plainSolution(q){
+  if(q.kind === "order") return (q.frame ? q.frame+" " : "") + q.accept[0].join(" ") + (q.after||"") + q.end;
+  if(q.kind === "typed"){
+    if(q.prompt.includes("___")) return q.prompt.replace(/<[^>]+>/g,"").replace(/\s*\([^)]*\)\s*$/, "").replace("___", q.answers[0]);
+    return (q.frame ? q.frame+" " : "") + q.answers[0];
+  }
+  return q.answer.replace(/<[^>]+>/g,"");
+}
+
+function finish(q, ok, res, userHTML){
+  LOCK = true;
+  grade(q.id, ok);
+  if(!ok && SES.mode !== "exam") requeue(q.id);
+  SES.results.push({id:q.id, ok});
+  const isLast = SES.i >= SES.queue.length - 1;
+  const verdict = !ok ? (res==="comma" ? "Almost — the comma is missing or misplaced" : "Not yet")
+                      : res==="typo" ? "Correct — with a typo" : res==="alt" ? "Correct — that works too" : "Correct";
+  const showSol = !ok || q.kind === "typed" || (q.kind === "order" && res === "alt");
+  const bracketed = q.kind === "order" || (q.kind === "typed" && q.shape);
+  $("#fb").innerHTML = `
+    <div class="fb">
+      <div class="verdict ${ok?"ok":"no"}">${verdict}</div>
+      ${userHTML || ""}
+      ${showSol ? `<p class="solution" lang="de">${solutionHTML(q)}</p>` : ""}
+      ${bracketed && showSol ? `<div class="legend"><span><i></i>Conjunction on the left, verb block on the right — the sentence bracket</span></div>` : ""}
+      ${res==="alt" && q.altWhy ? `<p class="altnote">${q.altWhy}</p>` : ""}
+      ${res==="comma" ? `<p class="altnote">The words are right. But a comma always precedes a subordinate clause — and when the clause comes first, the comma separates it from the main clause. Without the comma the sentence counts as wrong.</p>` : ""}
+      <p class="explain">${q.explain}</p>
+      ${q.rule ? `<span class="rulechip">${q.rule}</span>` : ""}
+      <div class="fbnav">
+        <button class="btn" id="nextbtn">${isLast ? "Summary" : "Next"}</button>
+        <span class="kbd"><kbd>Enter</kbd> next</span>
+      </div>
+    </div>`;
+  $("#nextbtn").onclick = next;
+  $("#nextbtn").focus();
+  paintRail();
+}
+
+function answerMC(choice){
+  if(LOCK) return;
+  const q = current(); const ok = choice === q.answer;
+  $("#view-drill").querySelectorAll(".opt").forEach(b=>{
+    b.disabled = true;
+    const v = b.dataset.opt;
+    if(v === q.answer) b.classList.add("is-right");
+    else if(v === choice) b.classList.add("is-wrong");
+    else b.classList.add("is-dim");
+  });
+  finish(q, ok);
+}
+
+function answerOrder(){
+  if(LOCK || !BUILT.length) return;
+  const q = current();
+  const seq = BUILT.map(i=>q._pool[i]);
+  const r = checkOrder(seq, q);
+  const ok = r.res !== "no";
+  $("#view-drill").querySelectorAll(".chip,#check,#undo").forEach(b=> b.disabled = true);
+  // replace the builder with a readable verdict line
+  const fixedL = q.frame ? `<span class="fixed">${esc(q.frame)}</span> ` : "";
+  const fixedR = `<span class="fixed">${esc((q.after||"")+q.end)}</span>`;
+  let userHTML;
+  if(ok){
+    const shape = r.idx ? null : q.shape;
+    const inner = shape ? klammerHTML(bracketize(seq.join(" "), shape, q.vbw, q.tail)) : esc(seq.join(" "));
+    userHTML = `<div class="built" lang="de">${fixedL}${inner}${fixedR}</div>`;
+    $("#view-drill .build").outerHTML = userHTML; $("#pool").remove(); $("#view-drill .bact").remove();
+    userHTML = "";
+  } else {
+    userHTML = `<div class="built" lang="de"><span class="lab">Your answer</span>${fixedL}${klammerHTML(bracketize(seq.join(" "), null), true)}${fixedR}</div>`;
+    $("#view-drill .build").remove(); $("#pool").remove(); $("#view-drill .bact").remove();
+  }
+  finish(q, ok, r.res, userHTML);
+}
+
+function answerTyped(val){
+  if(LOCK) return;
+  const q = current();
+  const r = checkTyped(val, q);
+  const ok = r.res === "ok" || r.res === "typo" || r.res === "alt";
+  const inp = $("#inp"); inp.disabled = true; $("#check").disabled = true;
+  inp.style.borderColor = ok ? "var(--yes)" : "var(--neg)";
+  finish(q, ok, r.res);
+}
+
+/* ---------- summary ---------- */
+function renderSum(){
+  const r = SES.results;
+  const ok = r.filter(x=>x.ok).length;
+  const firstTry = {};
+  r.forEach(x=>{ if(!(x.id in firstTry)) firstTry[x.id] = x.ok; });
+  const missed = Object.keys(firstTry).filter(id=>!firstTry[id]);
+  const c = counts();
+  const pct = r.length ? Math.round(ok/r.length*100) : 0;
+  $("#view-sum").innerHTML = `
+    <h1 class="lede">${SES.mode==="exam" ? `${ok} of ${r.length} correct` : "Round complete"}</h1>
+    <p class="sub">${SES.mode==="exam"
+      ? `${pct}% — for telc B1 you want to be consistently above 85% here.`
+      : `${ok} of ${r.length} answers correct. Wrong items came back in the same round.`}</p>
+    <div class="tally">${r.map(x=>`<i class="${x.ok?"":"no"}"></i>`).join("")}</div>
+    ${missed.length ? `<h2 class="sec">Missed on the first try</h2>
+      <div class="misslist">${missed.map(id=>{
+        const q = BANK.find(b=>b.id===id);
+        const p = q.kind==="order" ? questionText(q) + " " + (q.frame||"") + " …" : (q.prompt||q.question);
+        return `<div class="miss"><div class="p" lang="de">${p}</div>
+                <div class="a">→ <em lang="de">${esc(plainSolution(q))}</em></div></div>`;
+      }).join("")}</div>` : `<p class="note">Everything right on the first try.</p>`}
+    <h2 class="sec">Where you stand</h2>
+    <p class="note">${c.mastered} of ${c.total} items mastered · ${c.due} due now · ${c.newly} never seen.</p>
+    <div class="tools">
+      <button class="btn" id="again">Next round</button>
+      <button class="btn ghost" id="tohome">Back to start</button>
+    </div>`;
+  $("#again").onclick = ()=> start(SES.mode==="exam"?"srs":SES.mode, SES.topic, SIZE);
+  $("#tohome").onclick = ()=>{ renderHome(); show("home"); };
+}
+
+/* ---------- reference ---------- */
+function renderRef(){
+  $("#view-ref").innerHTML = `<div class="ref">
+    <h1 class="lede">The rules</h1>
+    <h2 class="sec">Three things always hold</h2>
+    <table>
+      <tr><td>Comma</td><td>A subordinate clause is always set off by a comma.</td></tr>
+      <tr><td>Verb last</td><td>The conjugated verb goes to the very end; an infinitive or participle sits right before it:
+        <span class="ex" lang="de">…, weil ich arbeiten <b>muss</b></span>. Exception, Perfekt + modal: <span class="ex" lang="de">…, weil ich nicht <b>habe</b> kommen können</span>.</td></tr>
+      <tr><td>Conjunction ≠ field</td><td>The conjunction does not count as position 1. After it come the subject, then the Mittelfeld (Te-Ka-Mo-Lo), then the verb block.</td></tr>
+    </table>
+    <h2 class="sec">Subordinate clause first</h2>
+    <p>The whole subordinate clause is position 1, so the main-clause verb follows right after the comma:
+      <span class="ex" lang="de"><b>Weil</b> ich krank <b>bin</b>, <b>bleibe</b> ich zu Hause.</span></p>
+    <h2 class="sec">nicht in a subordinate clause</h2>
+    <p>Directly before the verb block — or before a predicative adjective/noun, or a prepositional/direction complement:
+      <span class="ex" lang="de">…, weil ich das Buch <b>nicht</b> lese · …, weil ich <b>nicht</b> müde bin · …, weil ich <b>nicht</b> nach Bonn fahre</span>.</p>
+    <h2 class="sec">The conjunctions</h2>
+    <table lang="de">
+      <tr><th lang="en">Conjunction</th><th lang="en">Meaning</th><th lang="en">Example</th></tr>
+      <tr><td>dass</td><td lang="en">that — after sagen, glauben, wissen, hoffen …</td><td class="ex">Ich glaube, dass er recht hat.</td></tr>
+      <tr><td>ob</td><td lang="en">whether — yes/no question</td><td class="ex">Ich frage, ob er kommt.</td></tr>
+      <tr><td>weil</td><td lang="en">because</td><td class="ex">Ich gehe, weil es spät ist.</td></tr>
+      <tr><td>da</td><td lang="en">since — known reason, formal</td><td class="ex">Da es regnet, bleiben wir hier.</td></tr>
+      <tr><td>wenn</td><td lang="en">if / when — present, future, condition, repeated past</td><td class="ex">Wenn ich Zeit habe, komme ich.</td></tr>
+      <tr><td>als</td><td lang="en">when — one-off, past</td><td class="ex">Als ich klein war, wohnte ich in Bonn.</td></tr>
+      <tr><td>obwohl</td><td lang="en">although</td><td class="ex">Ich gehe, obwohl ich müde bin.</td></tr>
+      <tr><td>damit</td><td lang="en">so that — purpose</td><td class="ex">Ich lerne, damit ich die Prüfung bestehe.</td></tr>
+      <tr><td>bevor</td><td lang="en">before</td><td class="ex">Bevor ich gehe, esse ich.</td></tr>
+      <tr><td>nachdem</td><td lang="en">after — usually Plusquamperfekt</td><td class="ex">Nachdem ich gegessen hatte, ging ich.</td></tr>
+      <tr><td>während</td><td lang="en">while / whereas</td><td class="ex">Während er kocht, deckt sie den Tisch.</td></tr>
+      <tr><td>bis</td><td lang="en">until</td><td class="ex">Warte, bis ich fertig bin.</td></tr>
+      <tr><td>seit / seitdem</td><td lang="en">since — time</td><td class="ex">Seitdem er hier wohnt, ist er glücklich.</td></tr>
+      <tr><td>sobald</td><td lang="en">as soon as</td><td class="ex">Sobald er kommt, essen wir.</td></tr>
+      <tr><td>solange</td><td lang="en">as long as</td><td class="ex">Solange es regnet, bleiben wir.</td></tr>
+      <tr><td>falls</td><td lang="en">in case</td><td class="ex">Falls es regnet, nimm den Schirm.</td></tr>
+      <tr><td>sodass</td><td lang="en">so that — result</td><td class="ex">Er sprach leise, sodass ich nichts verstand.</td></tr>
+      <tr><td>indem</td><td lang="en">by …ing — method</td><td class="ex">Man lernt, indem man übt.</td></tr>
+    </table>
+    <h2 class="sec">weil · denn · da</h2>
+    <table>
+      <tr><td>weil</td><td>subordinating</td><td class="ex" lang="de">…, weil ich krank <b>bin</b>.</td></tr>
+      <tr><td>denn</td><td>coordinating (position 0) — the verb stays in position 2</td><td class="ex" lang="de">…, denn ich <b>bin</b> krank.</td></tr>
+      <tr><td>da</td><td>subordinating, formal, reason already known</td><td class="ex" lang="de">Da ich krank <b>bin</b>, …</td></tr>
+    </table>
+    <h2 class="sec">Indirect questions</h2>
+    <p>W-question: the W-word stays. Yes/no question: <b>ob</b>. Verb at the end. The punctuation follows the main clause:
+      <span class="ex" lang="de">Ich weiß nicht, wo er wohnt<b>.</b> · Weißt du, wo er wohnt<b>?</b></span></p>
+  </div>`;
+}
+
+/* ---------- progress ---------- */
+function renderProg(){
+  const c = counts();
+  const acc = S.stats.answered ? Math.round(S.stats.correct/S.stats.answered*100) : 0;
+  const rows = TOPIC_ORDER.map(t=>{
+    const ids = BANK.filter(q=>q.topic===t).map(q=>q.id);
+    let m=0, mid=0, seen=0;
+    ids.forEach(id=>{ const r=S.items[id]; if(!r||!r.seen) return; seen++;
+      if(r.b>=MASTER_BOX) m++; else if(r.b>=2) mid++; });
+    const n = ids.length;
+    return `<div class="trow">
+      <div class="tname">${TOPICS[t].name}<small>${TOPICS[t].blurb} · ${n} items</small></div>
+      <div class="bar">
+        <i style="width:${m/n*100}%;background:var(--yes)"></i>
+        <i style="width:${mid/n*100}%;background:var(--ink-3)"></i>
+        <i style="width:${(seen-m-mid)/n*100}%;background:var(--rule-2)"></i>
+      </div>
+      <div class="tpct">${m}/${n}</div></div>`;
+  }).join("");
+  const today = S.stats.days[new Date().toISOString().slice(0,10)] || 0;
+
+  $("#view-prog").innerHTML = `
+    <div class="statgrid">
+      <div class="stat"><b>${c.mastered}</b><span>mastered of ${c.total}</span></div>
+      <div class="stat"><b>${acc}%</b><span>accuracy</span></div>
+      <div class="stat"><b>${today}</b><span>answered today</span></div>
+      <div class="stat"><b>${S.stats.streak||0}</b><span>day streak</span></div>
+    </div>
+    <h2 class="sec">Topics</h2>
+    ${rows}
+    <h2 class="sec">What “mastered” means</h2>
+    <p class="note">Every item sits in a box from 0 to 5. A correct answer moves it up one box — but only if it
+    was actually due. A wrong answer drops it back to 0. The waiting times are 10 minutes, 1 day, 3 days,
+    7 days, 21 days. So box 5 takes at least five correct answers spread over more than eleven days —
+    extra practice in between does no harm, but it cannot shortcut the wait.</p>
+    <p class="note">Within a round, every item you get wrong comes back until it sticks.
+    A round never ends with an open mistake.</p>
+    <h2 class="sec">Data</h2>
+    <div class="tools">
+      <button class="btn ghost" id="exp">Export progress</button>
+      <button class="btn ghost" id="imp">Import</button>
+      <button class="btn ghost danger" id="rst">Reset everything</button>
+    </div>
+    <input type="file" id="file" accept="application/json" class="hidden">
+    <p class="note" id="dmsg"></p>`;
+
+  $("#exp").onclick = ()=>{
+    const b = new Blob([JSON.stringify(S)], {type:"application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(b);
+    a.download = "nebensaetze-progress.json";
+    a.click(); URL.revokeObjectURL(a.href);
+  };
+  $("#imp").onclick = ()=> $("#file").click();
+  $("#file").onchange = e=>{
+    const f = e.target.files[0]; if(!f) return;
+    const fr = new FileReader();
+    fr.onload = ()=>{
+      try{
+        const p = JSON.parse(fr.result);
+        if(!p.items || p.v !== 1) throw 0;
+        S = p; save(); renderProg(); paintRail();
+        $("#dmsg").textContent = "Progress loaded.";
+      }catch(err){ $("#dmsg").textContent = "That file could not be read."; }
+    };
+    fr.readAsText(f);
+  };
+  let armed = false;
+  $("#rst").onclick = ()=>{
+    if(!armed){ armed = true; $("#rst").textContent = "Really? This cannot be undone"; return; }
+    S = blank(); store.del(KEY); save(); renderProg(); paintRail();
+  };
+}
+
+/* ---------- keyboard ---------- */
+document.addEventListener("keydown", e=>{
+  if($("#view-drill").classList.contains("hidden")) return;
+  const q = current(); if(!q) return;
+  if(e.key === "Enter"){
+    if(LOCK){ e.preventDefault(); next(); return; }
+    if(q.kind === "order" && BUILT.length){ e.preventDefault(); answerOrder(); return; }
+    return;
+  }
+  if(LOCK) return;
+  if(q.kind === "order" && e.key === "Backspace" && document.activeElement?.tagName !== "INPUT"){ e.preventDefault(); unpick(BUILT.length-1); return; }
+  const n = parseInt(e.key, 10);
+  if(!n) return;
+  if(q.kind === "mc"){
+    const b = $("#view-drill").querySelectorAll(".opt")[n-1];
+    if(b){ e.preventDefault(); b.click(); }
+  } else if(q.kind === "order"){
+    const b = $("#pool").querySelectorAll(".chip:not(.used)")[n-1];
+    if(b){ e.preventDefault(); b.click(); }
+  }
+});
+
+/* ---------- boot ---------- */
+$("#nav-home").onclick = ()=>{ renderHome(); show("home"); };
+$("#nav-ref").onclick = ()=>{ renderRef(); show("ref"); };
+$("#nav-prog").onclick = ()=>{ renderProg(); show("prog"); };
+renderHome(); show("home");
+</script>
+</body>
+</html>
