@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Futur I — Drill</title>
+<style>
+  :root{
+    --bg:#F2F4F8; --surface:#FFFFFF; --ink:#16213A; --muted:#5B667A; --line:#D9DEE8;
+    --accent:#1F4FD8; --accent-ink:#FFFFFF; --soft:#E7EDFB;
+    --ok:#157A4A; --ok-soft:#E3F3EA; --bad:#B83A2A; --bad-soft:#FBE7E3;
+    --gold:#B7791F;
+    --r:10px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Segoe UI","Helvetica Neue",Inter,system-ui,sans-serif}
+  button{font:inherit;cursor:pointer}
+  input{font:inherit}
+  .wrap{max-width:720px;margin:0 auto;padding:20px 16px 60px}
+  header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:18px}
+  header h1{font-size:22px;font-weight:800;margin:0;letter-spacing:-.01em}
+  header h1 span{color:var(--accent)}
+  .navbtn{background:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px;color:var(--ink)}
+  .navbtn:hover{border-color:var(--ink)}
+
+  /* bracket hero */
+  .bracket{display:grid;grid-template-columns:auto 1fr auto;align-items:end;gap:0;margin:8px 0 22px;font-weight:800;font-size:26px;letter-spacing:-.01em}
+  .bracket .l,.bracket .r{padding:0 10px 8px;border-bottom:3px solid var(--accent);color:var(--accent)}
+  .bracket .l{border-left:3px solid var(--accent);border-radius:8px 0 0 0}
+  .bracket .r{border-right:3px solid var(--accent);border-radius:0 8px 0 0}
+  .bracket .m{padding:0 12px 8px;color:var(--muted);font-weight:400;font-size:18px;border-bottom:3px dashed var(--line);text-align:center}
+
+  .mastery{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;margin-bottom:14px}
+  .mastery .pct{font-size:34px;font-weight:800;line-height:1;min-width:90px}
+  .mastery .pct small{font-size:14px;font-weight:400;color:var(--muted);display:block;margin-top:4px}
+  .bar{height:10px;background:var(--soft);border-radius:999px;overflow:hidden;display:flex}
+  .bar i{display:block;height:100%}
+  .bar .b5{background:var(--ok)} .bar .b4{background:#4C9E76} .bar .b3{background:#7BB79A} .bar .b2{background:#A8CDB9} .bar .b1{background:#C9DFD2}
+  .mastery .barwrap{flex:1}
+  .legend{font-size:12px;color:var(--muted);margin-top:6px}
+
+  .cats{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:16px}
+  .cat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 14px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;text-align:left;color:var(--ink)}
+  .cat:hover{border-color:var(--accent)}
+  .cat.active{border-color:var(--accent);background:var(--soft)}
+  .cat .name{font-weight:600}
+  .cat .sub{grid-column:1/-1;font-size:13px;color:var(--muted)}
+  .cat .num{font-size:13px;color:var(--muted);white-space:nowrap}
+  .cat .bar{grid-column:1/-1;height:6px}
+
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+  .primary{background:var(--accent);color:var(--accent-ink);border:0;border-radius:var(--r);padding:12px 20px;font-weight:600;font-size:16px}
+  .primary:hover{filter:brightness(1.08)}
+  .primary:disabled{opacity:.45;cursor:default;filter:none}
+  .ghost{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 18px;color:var(--ink)}
+  .ghost:hover{border-color:var(--ink)}
+  .danger{color:var(--bad);border-color:transparent;background:none;font-size:13px}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px 20px 18px;margin-bottom:12px}
+  .meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);margin-bottom:12px}
+  .meta b{color:var(--ink);font-weight:600}
+  .boxes{display:inline-flex;gap:3px;vertical-align:middle;margin-left:6px}
+  .boxes i{width:9px;height:9px;border-radius:2px;background:var(--soft);display:inline-block}
+  .boxes i.on{background:var(--ok)}
+  .task{font-size:14px;color:var(--muted);margin-bottom:6px}
+  .prompt{font-size:22px;font-weight:600;line-height:1.35;margin-bottom:16px;letter-spacing:-.005em}
+  .prompt .hint{font-weight:400;color:var(--muted);font-size:16px}
+  .prompt .gap{display:inline-block;min-width:70px;border-bottom:2px solid var(--accent);color:var(--accent);text-align:center;padding:0 4px}
+  .prompt .en{display:block;font-size:15px;font-weight:400;color:var(--muted);margin-top:4px}
+
+  .typed{display:flex;gap:8px}
+  .typed input{flex:1;padding:12px 14px;border:2px solid var(--line);border-radius:var(--r);font-size:18px;color:var(--ink);background:var(--surface)}
+  .typed input:focus{outline:none;border-color:var(--accent)}
+  .umlauts{display:flex;gap:6px;margin-top:8px}
+  .umlauts button{background:var(--soft);border:0;border-radius:6px;padding:6px 12px;font-size:16px;color:var(--ink)}
+
+  .opts{display:grid;gap:8px}
+  .opt{text-align:left;background:var(--surface);border:2px solid var(--line);border-radius:var(--r);padding:12px 14px;font-size:17px;color:var(--ink)}
+  .opt:hover{border-color:var(--accent)}
+  .opt.sel{border-color:var(--accent);background:var(--soft)}
+  .opt.right{border-color:var(--ok);background:var(--ok-soft)}
+  .opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+  .opt kbd{display:inline-block;font:inherit;font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 6px;margin-right:8px;vertical-align:middle}
+
+  .built{min-height:56px;border:2px dashed var(--line);border-radius:var(--r);padding:8px;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+  .built.empty::before{content:"Tap the words below in the right order";color:var(--muted);font-size:14px;padding:6px}
+  .pool{display:flex;flex-wrap:wrap;gap:6px}
+  .tok{background:var(--soft);border:1px solid transparent;border-radius:8px;padding:8px 12px;font-size:17px;color:var(--ink)}
+  .tok:hover{border-color:var(--accent)}
+  .built .tok{background:var(--surface);border-color:var(--accent)}
+  .tok.used{visibility:hidden}
+
+  .feedback{border-radius:var(--r);padding:14px 16px;margin-top:14px;border:1px solid}
+  .feedback.ok{background:var(--ok-soft);border-color:#B9DEC8}
+  .feedback.bad{background:var(--bad-soft);border-color:#F0C5BD}
+  .feedback .verdict{font-weight:800;margin-bottom:4px}
+  .feedback.ok .verdict{color:var(--ok)} .feedback.bad .verdict{color:var(--bad)}
+  .feedback .ans{font-size:18px;font-weight:600;margin:4px 0 6px}
+  .feedback .exp{font-size:15px;color:var(--ink)}
+  .feedback .exp em{color:var(--accent);font-style:normal;font-weight:600}
+  .rowbtns{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:10px;flex-wrap:wrap}
+  .kbd-hint{font-size:12px;color:var(--muted)}
+  .done{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:26px 20px;text-align:center}
+  .done h2{margin:0 0 6px;font-size:24px}
+  .stat{font-size:14px;color:var(--muted)}
+  .ref{font-size:14px;color:var(--muted);margin-top:22px;line-height:1.6}
+  .ref table{border-collapse:collapse;margin-top:6px}
+  .ref td{padding:2px 12px 2px 0}
+  .ref b{color:var(--ink)}
+  .weak{margin-top:10px;font-size:14px}
+  .weak span{display:inline-block;background:var(--bad-soft);color:var(--bad);border-radius:6px;padding:2px 8px;margin:2px 4px 2px 0}
+  .data{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;margin-top:14px;font-size:14px}
+  .data textarea{width:100%;min-height:90px;border:2px solid var(--line);border-radius:var(--r);padding:8px 10px;font:13px/1.4 ui-monospace,Menlo,Consolas,monospace;color:var(--ink);margin-top:8px}
+  .data textarea:focus{outline:none;border-color:var(--accent)}
+  .data .msg{margin-top:8px;font-weight:600}
+  .data .msg.bad{color:var(--bad)} .data .msg.ok{color:var(--ok)}
+  .data input[type=file]{display:none}
+  @media (max-width:480px){.prompt{font-size:19px}.bracket{font-size:20px}.bracket .m{font-size:14px}}
+  @media (prefers-reduced-motion:no-preference){.opt,.tok,.cat{transition:border-color .12s,background .12s}}
+  :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+/* =========================== QUESTION BANK =========================== */
+/* BANK-START */
+const CATS = {
+  conj:  {name:"Conjugation of werden", sub:"ich werde · du wirst · er wird · wir werden · ihr werdet · sie werden"},
+  order: {name:"Sentence bracket (main clause)", sub:"werden in position 2, infinitive at the very end"},
+  sub:   {name:"Subordinate clauses",     sub:"infinitive + werden at the very end: …, dass er kommen wird"},
+  trans: {name:"Präsens → Futur I",       sub:"separable verbs stay together, reflexive pronoun in the Mittelfeld"},
+  use:   {name:"Future or assumption?",   sub:"prediction / plan / promise vs. assumption about the present"},
+  three: {name:"The three werden",        sub:"full verb (werden + noun/adjective), Futur I (+ infinitive), Passiv (+ Partizip II)"},
+  err:   {name:"Spot the error",          sub:"which sentence is correct? word order, negation, separable and reflexive verbs"},
+};
+
+const WERDEN = {ich:"werde", du:"wirst", er:"wird", wir:"werden", ihr:"werdet", sie:"werden"};
+
+// type "conj": fill the gap with a form of werden. p = subject key for validation.
+const CONJ = [
+  ["Ich ___ dich morgen anrufen.", "ich"],
+  ["Du ___ die Prüfung bestehen.", "du"],
+  ["Er ___ nächste Woche nach München fahren.", "er"],
+  ["Wir ___ am Samstag umziehen.", "wir"],
+  ["Ihr ___ das Spiel gewinnen.", "ihr"],
+  ["Sie ___ uns bestimmt helfen. (sie = they)", "sie"],
+  ["Sie ___ die Unterlagen morgen bekommen. (Sie = formal)", "sie"],
+  ["Es ___ heute Abend regnen.", "er"],
+  ["Meine Eltern ___ im Sommer nach Italien fliegen.", "sie"],
+  ["Mein Bruder ___ bald umziehen.", "er"],
+  ["Wann ___ du endlich aufräumen?", "du"],
+  ["Was ___ ihr am Wochenende machen?", "ihr"],
+  ["Ich ___ mich beeilen.", "ich"],
+  ["Das Wetter ___ morgen besser sein.", "er"],
+  ["Wir ___ euch nicht vergessen.", "wir"],
+  ["Die Kinder ___ bald schlafen.", "sie"],
+  ["___ du mir helfen?", "du"],
+  ["___ Sie morgen im Büro sein? (Sie = formal)", "sie"],
+  ["Meine Schwester ___ wohl krank sein.", "er"],
+  ["Ihr ___ euch bestimmt freuen.", "ihr"],
+  ["Ich ___ nie wieder rauchen.", "ich"],
+  ["Der Zug ___ pünktlich ankommen.", "er"],
+  ["Du ___ das schon schaffen.", "du"],
+  ["Wir ___ das Problem lösen.", "wir"],
+  ["Man ___ sehen.", "er"],
+  ["Die Firma ___ neue Mitarbeiter einstellen.", "er"],
+  ["Ihr ___ morgen früh aufstehen müssen.", "ihr"],
+  ["Sie ___ heute nicht kommen. (sie = she)", "er"],
+  ["Niemand ___ das glauben.", "er"],
+  ["Alle ___ zur Party kommen.", "sie"],
+  ["Ich ___ wahrscheinlich zu spät kommen.", "ich"],
+  ["Du ___ dich an mich erinnern.", "du"],
+  ["Warum ___ ihr nicht mitkommen?", "ihr"],
+  ["Wo ___ wir übernachten?", "wir"],
+  ["Das ___ teuer sein.", "er"],
+  ["Er ___ sich sicher melden.", "er"],
+  ["Die Kollegen ___ das Projekt übernehmen.", "sie"],
+  ["Wer ___ die Rede halten?", "er"],
+  ["___ ihr uns besuchen?", "ihr"],
+  ["Es ___ bestimmt klappen.", "er"],
+  ["___ wir das schaffen?", "wir"],
+  ["Ich ___ dir morgen alles erklären.", "ich"],
+  ["Die Nachbarn ___ sich beschweren.", "sie"],
+  ["Du ___ es nicht bereuen.", "du"],
+  ["Meine Chefin ___ die Entscheidung morgen treffen.", "er"],
+];
+
+// type "order": tokens (shuffled at runtime) → one of the accepted sentences.
+// [canonical, ...alternatives]; tokens are split on " | ".
+const ORDER = [
+  ["ich | werde | morgen | mit meiner Schwester | telefonieren.", "Morgen werde ich mit meiner Schwester telefonieren.", "Mit meiner Schwester werde ich morgen telefonieren.", "Ich werde mit meiner Schwester morgen telefonieren."],
+  ["morgen | wird | er | sicher | anrufen.", "Er wird morgen sicher anrufen.", "Sicher wird er morgen anrufen.", "Er wird sicher morgen anrufen."],
+  ["wann | wirst | du | das Buch | lesen?"],
+  ["ich | werde | früh | aufstehen.", "Früh werde ich aufstehen."],
+  ["wir | werden | uns | beeilen."],
+  ["ich | werde | morgen | nicht | arbeiten.", "Morgen werde ich nicht arbeiten."],
+  ["es | wird | morgen | regnen.", "Morgen wird es regnen."],
+  ["ich | werde | dir | helfen.", "Dir werde ich helfen."],
+  ["er | wird | jetzt | zu Hause | sein.", "Jetzt wird er zu Hause sein.", "Zu Hause wird er jetzt sein."],
+  ["sie | wird | wohl | krank | sein."],
+  ["das | wird | teuer | sein.", "Teuer wird das sein."],
+  ["wir | werden | nächstes Jahr | nach Japan | fliegen.", "Nächstes Jahr werden wir nach Japan fliegen.", "Nach Japan werden wir nächstes Jahr fliegen.", "Wir werden nach Japan nächstes Jahr fliegen."],
+  ["ihr | werdet | das Spiel | bestimmt | gewinnen.", "Bestimmt werdet ihr das Spiel gewinnen.", "Das Spiel werdet ihr bestimmt gewinnen.", "Ihr werdet bestimmt das Spiel gewinnen."],
+  ["wirst | du | mir | morgen | helfen?"],
+  ["was | werdet | ihr | am Wochenende | machen?"],
+  ["die Kinder | werden | bald | einschlafen.", "Bald werden die Kinder einschlafen."],
+  ["ich | werde | mich | morgen | bei dir | melden.", "Morgen werde ich mich bei dir melden.", "Bei dir werde ich mich morgen melden.", "Ich werde mich bei dir morgen melden."],
+  ["er | wird | das Fenster | nicht | öffnen.", "Das Fenster wird er nicht öffnen."],
+  ["werden | Sie | morgen | im Büro | sein?"],
+  ["nächste Woche | werde | ich | umziehen.", "Ich werde nächste Woche umziehen."],
+  ["der Zug | wird | um acht Uhr | ankommen.", "Um acht Uhr wird der Zug ankommen."],
+  ["wir | werden | die Prüfung | sicher | bestehen.", "Sicher werden wir die Prüfung bestehen.", "Die Prüfung werden wir sicher bestehen.", "Wir werden sicher die Prüfung bestehen."],
+  ["ich | werde | nie wieder | rauchen.", "Nie wieder werde ich rauchen."],
+  ["du | wirst | dich | daran | erinnern.", "Daran wirst du dich erinnern."],
+  ["sie | werden | sich | bestimmt | freuen.", "Bestimmt werden sie sich freuen."],
+  ["wo | werden | wir | übernachten?"],
+  ["ich | werde | heute Abend | nicht | ausgehen.", "Heute Abend werde ich nicht ausgehen."],
+  ["meine Eltern | werden | mich | am Sonntag | besuchen.", "Am Sonntag werden meine Eltern mich besuchen.", "Am Sonntag werden mich meine Eltern besuchen.", "Mich werden meine Eltern am Sonntag besuchen."],
+  ["er | wird | wahrscheinlich | zu spät | kommen.", "Wahrscheinlich wird er zu spät kommen."],
+  ["ich | werde | das Paket | morgen | abholen.", "Morgen werde ich das Paket abholen.", "Das Paket werde ich morgen abholen.", "Ich werde morgen das Paket abholen."],
+  ["wir | werden | uns | nächste Woche | treffen.", "Nächste Woche werden wir uns treffen."],
+  ["das Wetter | wird | morgen | besser | sein.", "Morgen wird das Wetter besser sein."],
+  ["ich | werde | dich | nicht | vergessen.", "Dich werde ich nicht vergessen."],
+  ["du | wirst | es | schaffen."],
+  ["er | wird | sich | sicher | bald | melden.", "Sicher wird er sich bald melden.", "Bald wird er sich sicher melden.", "Er wird sich bald sicher melden."],
+  ["ich | werde | mir | den Film | ansehen.", "Den Film werde ich mir ansehen."],
+  ["warum | werdet | ihr | nicht | mitkommen?"],
+  ["ich | glaube, | dass | er | morgen | kommen | wird."],
+  ["sie | sagt, | dass | sie | uns | helfen | wird."],
+  ["ich | hoffe, | dass | du | die Prüfung | bestehen | wirst."],
+];
+
+// type "sub": complete the subordinate clause: "…, dass er morgen ___ (kommen)" → "kommen wird"
+const SUB = [
+  ["Ich glaube, dass er morgen ___.", "kommen", "kommen wird"],
+  ["Sie sagt, dass sie uns ___.", "helfen", "helfen wird"],
+  ["Ich hoffe, dass du die Prüfung ___.", "bestehen", "bestehen wirst"],
+  ["Er meint, dass es morgen ___.", "regnen", "regnen wird"],
+  ["Wir wissen, dass ihr das ___.", "schaffen", "schaffen werdet"],
+  ["Ich denke, dass wir morgen früh ___.", "aufstehen", "aufstehen werden"],
+  ["Weißt du, ob sie morgen ___? (sie = she)", "kommen", "kommen wird"],
+  ["Ich bin sicher, dass ich das ___.", "schaffen", "schaffen werde"],
+  ["Er sagt, dass er sich bald ___.", "melden", "melden wird"],
+  ["Ich glaube nicht, dass er das ___.", "verstehen", "verstehen wird"],
+  ["Sie fragt, wann du ___.", "anrufen", "anrufen wirst"],
+  ["Ich weiß, dass meine Eltern mich ___.", "besuchen", "besuchen werden"],
+  ["Wir hoffen, dass das Wetter besser ___.", "sein", "sein wird"],
+  ["Ich vermute, dass das teuer ___.", "sein", "sein wird"],
+  ["Er glaubt, dass ihr euch ___.", "freuen", "freuen werdet"],
+  ["Sie sagt, dass sie das Paket morgen ___.", "abholen", "abholen wird"],
+  ["Ich frage mich, ob wir uns wieder ___.", "sehen", "sehen werden"],
+  ["Er verspricht, dass er nie wieder ___.", "rauchen", "rauchen wird"],
+  ["Ich glaube, dass der Zug pünktlich ___.", "ankommen", "ankommen wird"],
+  ["Sie hofft, dass du sie nicht ___.", "vergessen", "vergessen wirst"],
+  ["Wir denken, dass die Firma neue Leute ___.", "einstellen", "einstellen wird"],
+  ["Ich weiß nicht, wo wir ___.", "übernachten", "übernachten werden"],
+  ["Er ist sicher, dass Sie die Stelle ___. (Sie = formal)", "bekommen", "bekommen werden"],
+  ["Ich hoffe, dass ihr nicht zu spät ___.", "kommen", "kommen werdet"],
+  ["Sie sagt, dass sie wohl krank ___.", "sein", "sein wird"],
+  ["Ich denke, dass du dich daran ___.", "erinnern", "erinnern wirst"],
+  ["Weil es morgen ___, bleiben wir zu Hause.", "regnen", "regnen wird"],
+  ["Ich bin froh, dass wir zusammen ___.", "lernen", "lernen werden"],
+  ["Sie meint, dass niemand das ___.", "glauben", "glauben wird"],
+  ["Ich hoffe, dass alle zur Party ___.", "kommen", "kommen werden"],
+  ["Er sagt, dass er morgen nicht ___.", "arbeiten", "arbeiten wird"],
+  ["Ich glaube, dass es bestimmt ___.", "klappen", "klappen wird"],
+  ["Sie wissen, dass ich sie nicht ___.", "vergessen", "vergessen werde"],
+  ["Ich frage mich, ob du mir ___.", "helfen", "helfen wirst"],
+  ["Er hofft, dass wir ihn ___.", "besuchen", "besuchen werden"],
+  ["Ich weiß, dass ihr euch ___.", "beeilen", "beeilen werdet"],
+];
+
+// type "trans": rewrite in Futur I. [präsens, canonical futur, ...alternatives]
+const TRANS = [
+  ["Ich fahre morgen nach Berlin.", "Ich werde morgen nach Berlin fahren.", "Morgen werde ich nach Berlin fahren.", "Nach Berlin werde ich morgen fahren."],
+  ["Er kommt heute Abend.", "Er wird heute Abend kommen.", "Heute Abend wird er kommen."],
+  ["Wir kaufen ein neues Auto.", "Wir werden ein neues Auto kaufen."],
+  ["Du lernst Deutsch.", "Du wirst Deutsch lernen."],
+  ["Ihr besucht uns im Sommer.", "Ihr werdet uns im Sommer besuchen.", "Im Sommer werdet ihr uns besuchen."],
+  ["Sie helfen mir. (sie = they)", "Sie werden mir helfen."],
+  ["Ich stehe morgen früh auf.", "Ich werde morgen früh aufstehen.", "Morgen werde ich früh aufstehen.", "Morgen früh werde ich aufstehen."],
+  ["Er ruft dich an.", "Er wird dich anrufen."],
+  ["Wir ziehen nächsten Monat um.", "Wir werden nächsten Monat umziehen.", "Nächsten Monat werden wir umziehen."],
+  ["Ich beeile mich.", "Ich werde mich beeilen."],
+  ["Sie freut sich.", "Sie wird sich freuen."],
+  ["Wir treffen uns am Freitag.", "Wir werden uns am Freitag treffen.", "Am Freitag werden wir uns treffen."],
+  ["Ich arbeite morgen nicht.", "Ich werde morgen nicht arbeiten.", "Morgen werde ich nicht arbeiten."],
+  ["Er kommt nicht.", "Er wird nicht kommen."],
+  ["Das Wetter ist morgen schön.", "Das Wetter wird morgen schön sein.", "Morgen wird das Wetter schön sein."],
+  ["Es regnet.", "Es wird regnen."],
+  ["Ich habe Zeit.", "Ich werde Zeit haben."],
+  ["Du schaffst das.", "Du wirst das schaffen."],
+  ["Der Zug kommt um neun an.", "Der Zug wird um neun ankommen.", "Um neun wird der Zug ankommen."],
+  ["Ich melde mich bei dir.", "Ich werde mich bei dir melden."],
+  ["Die Kinder schlafen bald ein.", "Die Kinder werden bald einschlafen.", "Bald werden die Kinder einschlafen."],
+  ["Wir bestehen die Prüfung.", "Wir werden die Prüfung bestehen."],
+  ["Ich vergesse dich nie.", "Ich werde dich nie vergessen.", "Nie werde ich dich vergessen."],
+  ["Ihr räumt das Zimmer auf.", "Ihr werdet das Zimmer aufräumen."],
+  ["Er sieht fern.", "Er wird fernsehen."],
+  ["Ich gehe heute nicht aus.", "Ich werde heute nicht ausgehen.", "Heute werde ich nicht ausgehen."],
+  ["Sie holt das Paket ab. (sie = she)", "Sie wird das Paket abholen."],
+  ["Wir fliegen nach Japan.", "Wir werden nach Japan fliegen."],
+  ["Du erinnerst dich daran.", "Du wirst dich daran erinnern."],
+  ["Ich rauche nie wieder.", "Ich werde nie wieder rauchen.", "Nie wieder werde ich rauchen."],
+  ["Kommst du morgen?", "Wirst du morgen kommen?"],
+  ["Hilfst du mir?", "Wirst du mir helfen?"],
+  ["Was macht ihr am Wochenende?", "Was werdet ihr am Wochenende machen?"],
+  ["Wann kommt er zurück?", "Wann wird er zurückkommen?"],
+  ["Wo übernachten wir?", "Wo werden wir übernachten?"],
+  ["Er ist wohl zu Hause.", "Er wird wohl zu Hause sein."],
+  ["Das ist bestimmt teuer.", "Das wird bestimmt teuer sein.", "Bestimmt wird das teuer sein."],
+  ["Ich sehe mir den Film an.", "Ich werde mir den Film ansehen."],
+  ["Sie ziehen sich um. (sie = they)", "Sie werden sich umziehen."],
+  ["Wir laden euch ein.", "Wir werden euch einladen."],
+  ["Ich bringe dir etwas mit.", "Ich werde dir etwas mitbringen."],
+  ["Er macht das Fenster nicht zu.", "Er wird das Fenster nicht zumachen."],
+  ["Ich setze mich hin.", "Ich werde mich hinsetzen."],
+  ["Sie kommen morgen nicht mit. (sie = they)", "Sie werden morgen nicht mitkommen.", "Morgen werden sie nicht mitkommen."],
+];
+
+// type "use": future vs. assumption. [sentence, "Z" | "V", context/explanation]
+const USE = [
+  ["Es wird morgen regnen.", "Z", "Time marker „morgen“ → prediction about the future."],
+  ["Er wird jetzt zu Hause sein.", "V", "„jetzt“ + sein → assumption about the present: he is probably at home right now."],
+  ["Sie wird wohl krank sein.", "V", "Particle „wohl“ → assumption: she is probably ill (now)."],
+  ["Ich werde dir helfen.", "Z", "Promise → future."],
+  ["Das wird wohl teuer sein.", "V", "„wohl“ + sein → assumption: that is presumably expensive."],
+  ["Ich werde nie wieder rauchen.", "Z", "Resolution / promise → future."],
+  ["Die Kinder werden jetzt wohl schon schlafen.", "V", "„jetzt“, „wohl“, „schon“ → assumption about the present."],
+  ["Wir werden nächstes Jahr heiraten.", "Z", "Time marker „nächstes Jahr“ → plan in the future."],
+  ["Nach der langen Reise: Du wirst müde sein.", "V", "Assumption about the current state: you are surely tired."],
+  ["Der Zug wird gleich abfahren.", "Z", "„gleich“ → prediction about the (near) future."],
+  ["Sie wird gerade im Meeting sein.", "V", "„gerade“ → assumption about the present."],
+  ["Ich werde dich morgen anrufen.", "Z", "Promise with a time marker → future."],
+  ["Das wird wohl stimmen.", "V", "„wohl“ → assumption: that is probably true."],
+  ["Er wird wahrscheinlich noch im Büro sein.", "V", "„wahrscheinlich“ + „noch“ → assumption about now."],
+  ["Nächste Woche werden wir umziehen.", "Z", "Time marker „nächste Woche“ → plan."],
+  ["Er hat den ganzen Tag nichts gegessen. Er wird bestimmt Hunger haben.", "V", "Assumption about the current state (he is surely hungry)."],
+  ["Ihr werdet das Spiel gewinnen.", "Z", "Prediction → future."],
+  ["Sie werden wohl keine Zeit haben.", "V", "„wohl“ → assumption: they presumably have no time."],
+  ["Ich werde ab Montag mehr Sport machen.", "Z", "Resolution with a time marker → future."],
+  ["Das Kind weint. Es wird wohl Angst haben.", "V", "Assumption about the reason (now)."],
+  ["Die Firma wird 2027 eine neue Filiale eröffnen.", "Z", "Time marker „2027“ → plan / prediction."],
+  ["Er wird wohl recht haben.", "V", "„wohl“ → assumption: he is probably right."],
+  ["Morgen werde ich früh aufstehen.", "Z", "„morgen“ → plan / resolution."],
+  ["Sie wird jetzt sicher unterwegs sein.", "V", "„jetzt“ + „sicher“ → assumption about the present."],
+  ["Wir werden euch nicht vergessen.", "Z", "Promise → future."],
+  ["Es klingelt. Das wird der Postbote sein.", "V", "Assumption about the present: that is probably the postman."],
+  ["Ich werde in Zukunft pünktlicher sein.", "Z", "„in Zukunft“ → resolution."],
+  ["Sie werden schon wissen, was sie tun.", "V", "„schon“ → assumption: they presumably know what they are doing."],
+  ["Du wirst die Prüfung bestehen, da bin ich sicher.", "Z", "Prediction about the future (the exam has not happened yet)."],
+  ["Das Licht ist an. Er wird wohl noch wach sein.", "V", "„wohl“ + „noch“ → assumption about now."],
+];
+
+// type "part": add a particle so the sentence reads as an assumption. Any of wohl/sicher/wahrscheinlich/bestimmt accepted.
+const PART = [
+  "Sie wird ___ zu Hause sein.",
+  "Er wird ___ krank sein.",
+  "Das wird ___ teuer sein.",
+  "Die Kinder werden ___ schon schlafen.",
+  "Du wirst ___ müde sein.",
+  "Sie werden ___ keine Zeit haben.",
+];
+
+// type "three": which werden? [sentence, "Voll" | "Futur" | "Passiv"]
+const THREE = [
+  ["Ich werde Lehrer.", "Voll"],
+  ["Es wird kalt.", "Voll"],
+  ["Ich werde arbeiten.", "Futur"],
+  ["Das Auto wird repariert.", "Passiv"],
+  ["Sie wird Ärztin.", "Voll"],
+  ["Die Tür wird geöffnet.", "Passiv"],
+  ["Wir werden morgen kommen.", "Futur"],
+  ["Der Brief wird geschrieben.", "Passiv"],
+  ["Er wird müde.", "Voll"],
+  ["Er wird müde sein.", "Futur"],
+  ["Das Haus wird gebaut.", "Passiv"],
+  ["Ihr werdet lachen.", "Futur"],
+  ["Es wird dunkel.", "Voll"],
+  ["Das Essen wird gekocht.", "Passiv"],
+  ["Ich werde dich anrufen.", "Futur"],
+  ["Meine Schwester wird bald Mutter.", "Voll"],
+  ["Die Rechnung wird bezahlt.", "Passiv"],
+  ["Du wirst das schaffen.", "Futur"],
+  ["Die Kinder werden groß.", "Voll"],
+  ["Der Film wird um acht gezeigt.", "Passiv"],
+  ["Wir werden alt.", "Voll"],
+  ["Wir werden alt werden.", "Futur"],
+  ["Hier wird ein Parkplatz gebaut.", "Passiv"],
+  ["Das Wetter wird besser.", "Voll"],
+  ["Das Wetter wird besser werden.", "Futur"],
+  ["Die Fenster werden geputzt.", "Passiv"],
+  ["Ich werde dreißig.", "Voll"],
+  ["Er wird Vater werden.", "Futur"],
+  ["Das Problem wird gelöst.", "Passiv"],
+  ["Sie werden sich freuen.", "Futur"],
+  ["Es wird spät.", "Voll"],
+  ["Die E-Mail wird gesendet.", "Passiv"],
+  ["Es wird spät werden.", "Futur"],
+  ["Der Kuchen wird gebacken.", "Passiv"],
+  ["Sie wird rot.", "Voll"],
+  ["Der Patient wird operiert.", "Passiv"],
+  ["Ich werde mich beeilen.", "Futur"],
+  ["Die Blätter werden gelb.", "Voll"],
+  ["Die Kinder werden abgeholt.", "Passiv"],
+  ["Die Kinder werden die Oma abholen.", "Futur"],
+];
+
+// type "err": pick the correct sentence. [correct, wrong1, wrong2, explanation]
+const ERR = [
+  ["Ich werde morgen nach Berlin fahren.", "Ich werde fahren morgen nach Berlin.", "Ich fahre werde morgen nach Berlin.", "werden in position 2, the infinitive at the very end."],
+  ["Er wird früh aufstehen.", "Er wird früh auf stehen.", "Er wird früh stehen auf.", "Separable verbs stay together in the infinitive: aufstehen."],
+  ["Ich werde mich beeilen.", "Ich werde beeilen mich.", "Ich mich werde beeilen.", "The reflexive pronoun sits in the Mittelfeld, directly after werden."],
+  ["Ich werde morgen nicht arbeiten.", "Ich werde morgen arbeiten nicht.", "Ich nicht werde morgen arbeiten.", "nicht goes directly before the infinitive."],
+  ["Ich glaube, dass er morgen kommen wird.", "Ich glaube, dass er morgen wird kommen.", "Ich glaube, dass er wird morgen kommen.", "In a subordinate clause: infinitive + werden at the very end."],
+  ["Du wirst es schaffen.", "Du wird es schaffen.", "Du werdest es schaffen.", "du → wirst."],
+  ["Ihr werdet lachen.", "Ihr werden lachen.", "Ihr wirdet lachen.", "ihr → werdet."],
+  ["Wir werden warten.", "Wir werdet warten.", "Wir wird warten.", "wir → werden."],
+  ["Sie sagt, dass sie uns helfen wird.", "Sie sagt, dass sie uns wird helfen.", "Sie sagt, dass sie wird uns helfen.", "Subordinate clause: helfen wird — the finite verb at the very end."],
+  ["Morgen wird er sicher anrufen.", "Morgen er wird sicher anrufen.", "Morgen wird er sicher rufen an.", "With „Morgen“ in position 1, werden takes position 2; anrufen stays together."],
+  ["Wann wirst du das Buch lesen?", "Wann du wirst das Buch lesen?", "Wann wirst du lesen das Buch?", "W-question: question word, werden, subject … infinitive at the end."],
+  ["Er wird jetzt wohl zu Hause sein.", "Er wird jetzt wohl zu Hause ist.", "Er wird jetzt wohl sein zu Hause.", "werden + infinitive (sein), and the infinitive goes at the very end."],
+  ["Wir werden uns morgen treffen.", "Wir werden morgen treffen uns.", "Wir werden treffen uns morgen.", "Reflexive pronoun in the Mittelfeld, infinitive at the end."],
+  ["Ich werde dir helfen.", "Ich werde dir geholfen.", "Ich werde dir hilfst.", "Futur I = werden + infinitive — not a Partizip II and not a conjugated verb."],
+  ["Er wird das Fenster nicht öffnen.", "Er wird das Fenster öffnen nicht.", "Er wird nicht öffnen das Fenster.", "nicht directly before the infinitive, infinitive at the very end."],
+  ["Weißt du, ob sie kommen wird?", "Weißt du, ob sie wird kommen?", "Weißt du, ob wird sie kommen?", "Subordinate clause with ob: kommen wird at the end."],
+  ["Der Zug wird um acht Uhr ankommen.", "Der Zug wird um acht Uhr kommen an.", "Der Zug wird ankommen um acht Uhr.", "The separable verb stays together and goes at the very end."],
+  ["Sie werden sich freuen.", "Sie werden freuen sich.", "Sie sich werden freuen.", "Reflexive pronoun directly after werden."],
+  ["Ich werde nie wieder rauchen.", "Ich werde rauchen nie wieder.", "Ich nie wieder werde rauchen.", "Infinitive at the end; werden stays in position 2."],
+  ["Wirst du mir helfen?", "Wirst du helfen mir?", "Wird du mir helfen?", "Yes/no question: werden in position 1, infinitive at the end; du → wirst."],
+  ["Ich hoffe, dass du die Prüfung bestehen wirst.", "Ich hoffe, dass du die Prüfung wirst bestehen.", "Ich hoffe, dass du wirst die Prüfung bestehen.", "Subordinate clause: bestehen wirst at the end."],
+  ["Ich werde mir den Film ansehen.", "Ich werde mir den Film sehen an.", "Ich werde mir ansehen den Film.", "ansehen stays together and goes at the end."],
+  ["Es wird morgen regnen.", "Es wird morgen regnet.", "Es wird morgen geregnet.", "werden + infinitive (regnen)."],
+  ["Wir werden das Problem lösen.", "Wir werden das Problem gelöst.", "Wir werden lösen das Problem.", "werden + infinitive at the end — a Partizip II would make it Passiv."],
+  ["Sie wird wohl krank sein.", "Sie wird wohl krank ist.", "Sie wird sein wohl krank.", "The infinitive sein at the very end."],
+  ["Ich denke, dass wir früh aufstehen werden.", "Ich denke, dass wir früh werden aufstehen.", "Ich denke, dass wir werden früh aufstehen.", "Subordinate clause: aufstehen werden at the end."],
+  ["Was werdet ihr am Wochenende machen?", "Was werdet ihr machen am Wochenende?", "Was ihr werdet am Wochenende machen?", "W-question: werden in position 2, machen at the end."],
+  ["Ich werde das Paket morgen abholen.", "Ich werde das Paket morgen holen ab.", "Ich werde abholen das Paket morgen.", "abholen stays together and goes at the end."],
+  ["Ich werde mich nicht beeilen.", "Ich werde nicht mich beeilen.", "Ich werde mich beeilen nicht.", "Reflexive pronoun after werden, then nicht directly before the infinitive."],
+  ["Du wirst dich daran erinnern.", "Du wirst daran dich erinnern.", "Du wirst erinnern dich daran.", "Reflexive pronoun directly after werden, infinitive at the end."],
+  ["Sie sagt, dass sie das Paket morgen abholen wird.", "Sie sagt, dass sie das Paket morgen abholt wird.", "Sie sagt, dass sie das Paket morgen wird abholen.", "Subordinate clause: infinitive (abholen) + wird at the very end."],
+  ["Ihr werdet euch bestimmt freuen.", "Ihr werdet bestimmt freuen euch.", "Ihr werdet euch bestimmt gefreut.", "Reflexive pronoun in the Mittelfeld, infinitive freuen at the end."],
+  ["Wo werden wir übernachten?", "Wo wir werden übernachten?", "Wo werden wir nachten über?", "W-question with werden in position 2; übernachten is not separable."],
+  ["Er wird sich sicher bald melden.", "Er wird sicher bald melden sich.", "Er sich wird sicher bald melden.", "Reflexive pronoun directly after werden."],
+  ["Ich glaube, dass es bestimmt klappen wird.", "Ich glaube, dass es bestimmt wird klappen.", "Ich glaube, dass es wird bestimmt klappen.", "Subordinate clause: klappen wird at the end."],
+  ["Ich fahre morgen nach Berlin.", "Ich werde morgen nach Berlin fahre.", "Ich werde morgen fahren nach Berlin.", "Präsens + time marker is the everyday way to express plans. The other two are broken Futur I sentences."],
+];
+/* BANK-END */
+
+/* =========================== BUILD ITEMS =========================== */
+function buildBank(){
+  const items = [];
+  CONJ.forEach(([p, subj], i) => items.push({
+    id:"conj"+i, cat:"conj", type:"typed", task:"Fill in the correct form of werden.",
+    prompt:p, answers:[WERDEN[subj]], explain:`${subjLabel(subj)} → <em>${WERDEN[subj]}</em>`
+  }));
+  ORDER.forEach((arr, i) => {
+    const tokens = arr[0].split(" | ");
+    const canonical = cap(tokens.join(" "));
+    const answers = [canonical, ...arr.slice(1)];
+    const isSub = tokens.includes("dass");
+    items.push({
+      id:"order"+i, cat:"order", type:"order", task:"Build the sentence from the words.",
+      tokens, answers,
+      explain: isSub ? "Subordinate clause: infinitive + werden at the very end." : "werden in position 2, infinitive at the very end." + (arr.length>1 ? " Also correct: " + arr.slice(1).join(" / ") : "")
+    });
+  });
+  SUB.forEach(([p, verb, ans], i) => items.push({
+    id:"sub"+i, cat:"sub", type:"typed", task:"Complete the end of the subordinate clause (Futur I).",
+    prompt:p, hintVerb:verb, answers:[ans],
+    explain:`In a subordinate clause the finite verb moves to the very end, <em>after</em> the infinitive: … ${ans}.`
+  }));
+  TRANS.forEach((arr, i) => items.push({
+    id:"trans"+i, cat:"trans", type:"typed", task:"Rewrite the sentence in Futur I.",
+    prompt:arr[0], answers:arr.slice(1), wide:true,
+    explain:`<em>${arr[1]}</em>` + (arr.length>2 ? " — also correct: " + arr.slice(2).join(" / ") : "")
+  }));
+  USE.forEach(([s, k, ex], i) => items.push({
+    id:"use"+i, cat:"use", type:"mc", task:"Future, or an assumption about the present?",
+    prompt:s, options:["Future (prediction, plan, promise)", "Assumption about the present"],
+    correct: k==="Z" ? 0 : 1, explain:ex
+  }));
+  PART.forEach((p, i) => items.push({
+    id:"part"+i, cat:"use", type:"typed", task:"Add a particle so the sentence expresses an assumption.",
+    prompt:p, answers:["wohl","sicher","wahrscheinlich","bestimmt"],
+    explain:"The assumption reading almost always needs a particle: <em>wohl</em>, <em>sicher</em>, <em>wahrscheinlich</em> or <em>bestimmt</em>."
+  }));
+  THREE.forEach(([s, k], i) => items.push({
+    id:"three"+i, cat:"three", type:"mc", task:"Which werden is this?",
+    prompt:s, options:["Full verb (werden + noun / adjective = to become)", "Futur I (werden + infinitive)", "Passiv (werden + Partizip II)"],
+    correct:{Voll:0, Futur:1, Passiv:2}[k],
+    explain:{Voll:"werden is followed by a noun or adjective → full verb werden (to become / to get).",
+             Futur:"werden is followed by an infinitive at the end of the sentence → Futur I.",
+             Passiv:"werden is followed by a Partizip II (ge-…-t / ge-…-en) → Passiv."}[k]
+  }));
+  ERR.forEach(([ok, w1, w2, ex], i) => items.push({
+    id:"err"+i, cat:"err", type:"mc", task:"Which sentence is correct?",
+    prompt:"", options:[ok, w1, w2], correct:0, shuffle:true, explain:ex
+  }));
+  return items;
+}
+function subjLabel(s){ return {ich:"ich", du:"du", er:"er / sie / es (singular)", wir:"wir", ihr:"ihr", sie:"sie (plural) / Sie"}[s]; }
+function cap(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+function norm(s){
+  return s.toLowerCase().replace(/[.!?,]/g," ").replace(/\s+/g," ").trim();
+}
+function checkTyped(item, input){
+  const n = norm(input);
+  return item.answers.some(a => norm(a) === n);
+}
+function checkOrder(item, tokensInOrder){
+  const n = norm(tokensInOrder.join(" "));
+  return item.answers.some(a => norm(a) === n);
+}
+/* =========================== SCHEDULER (Leitner) =========================== */
+// Boxes 0..5. Box 5 = mastered. Interval in "steps" (answered questions) before due again.
+const INTERVAL = [0, 4, 10, 25, 60];
+const MASTER = 5;
+const KEY = "futur1_drill_v1";
+
+const BANK = buildBank();
+let state = load();
+
+function load(){
+  try{ const s = JSON.parse(localStorage.getItem(KEY)); if(s && s.items) return s; }catch(e){}
+  return {step:0, items:{}, session:null, history:[]};
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+function rec(id){ return state.items[id] || (state.items[id] = {box:0, due:0, seen:0, right:0, wrong:0, streak:0}); }
+
+function pickNext(filterCats){
+  const pool = BANK.filter(q => !filterCats || filterCats.includes(q.cat));
+  const recent = state.history.slice(-3);
+  const cand = pool.filter(q => !recent.includes(q.id));
+  const list = cand.length ? cand : pool;
+  const due = list.filter(q => { const r = rec(q.id); return r.box < MASTER && r.due <= state.step; });
+  if(due.length){
+    // lowest box first, then longest overdue, then seed randomness
+    due.sort((a,b) => (rec(a.id).box - rec(b.id).box) || (rec(a.id).due - rec(b.id).due) || (Math.random()-.5));
+    const top = due.filter(q => rec(q.id).box === rec(due[0].id).box);
+    return top[Math.floor(Math.random()*Math.min(top.length, 6))];
+  }
+  const unmastered = list.filter(q => rec(q.id).box < MASTER);
+  if(unmastered.length){
+    // nothing due yet: pull the earliest-due card forward (keeps drilling without dead time)
+    unmastered.sort((a,b) => rec(a.id).due - rec(b.id).due);
+    return unmastered[0];
+  }
+  // all mastered: light maintenance review of the weakest historically
+  const m = list.slice().sort((a,b) => (rec(b.id).wrong - rec(a.id).wrong) || (Math.random()-.5));
+  return m[Math.floor(Math.random()*Math.min(m.length, 10))];
+}
+function grade(id, ok){
+  const r = rec(id);
+  r.seen++;
+  state.step++;
+  if(ok){
+    r.right++; r.streak++;
+    if(r.box < MASTER) r.box++;
+    r.due = state.step + (r.box < MASTER ? INTERVAL[r.box] : 10000);
+  }else{
+    r.wrong++; r.streak = 0;
+    r.box = 0;
+    r.due = state.step + 2;
+  }
+  state.history.push(id); if(state.history.length > 50) state.history.shift();
+  save();
+}
+function stats(cats){
+  const pool = BANK.filter(q => !cats || cats.includes(q.cat));
+  const boxes = [0,0,0,0,0,0];
+  pool.forEach(q => boxes[rec(q.id).box]++);
+  return {n:pool.length, boxes, mastered:boxes[5], pct: pool.length ? Math.round(100*boxes[5]/pool.length) : 0};
+}
+
+/* =========================== EXPORT / IMPORT =========================== */
+function exportProgress(){
+  const payload = {app:"futur1-drill", version:1, exported:new Date().toISOString(), step:state.step, items:state.items, history:state.history};
+  const text = JSON.stringify(payload);
+  const stamp = new Date().toISOString().slice(0,10);
+  const blob = new Blob([text], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = `futur1-progress-${stamp}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).catch(()=>{});
+}
+function validateImport(obj){
+  if(!obj || typeof obj !== "object") return "Not a valid export.";
+  if(obj.app !== "futur1-drill") return "This file was not exported from this app.";
+  if(typeof obj.step !== "number" || obj.step < 0 || !isFinite(obj.step)) return "Export is missing the answer counter.";
+  if(!obj.items || typeof obj.items !== "object") return "Export is missing card progress.";
+  const known = new Set(BANK.map(q => q.id));
+  let matched = 0;
+  for(const [id, r] of Object.entries(obj.items)){
+    if(!r || typeof r !== "object") return `Card "${id}" has malformed data.`;
+    for(const k of ["box","due","seen","right","wrong","streak"]){
+      if(typeof r[k] !== "number" || !isFinite(r[k]) || r[k] < 0) return `Card "${id}" has an invalid "${k}" value.`;
+    }
+    if(r.box > MASTER) return `Card "${id}" has an invalid box.`;
+    if(known.has(id)) matched++;
+  }
+  if(matched === 0 && Object.keys(obj.items).length) return "None of the cards in this file match this app's question bank.";
+  return null;
+}
+function importProgress(text){
+  let obj;
+  try{ obj = JSON.parse(text); }catch(e){ setImportMsg("That is not valid JSON.", false); return; }
+  const err = validateImport(obj);
+  if(err){ setImportMsg(err, false); return; }
+  const known = new Set(BANK.map(q => q.id));
+  const items = {};
+  for(const [id, r] of Object.entries(obj.items)) if(known.has(id)) items[id] = {box:r.box, due:r.due, seen:r.seen, right:r.right, wrong:r.wrong, streak:r.streak};
+  const mastered = Object.values(items).filter(r => r.box === MASTER).length;
+  if(!confirm(`Import ${Object.keys(items).length} cards (${mastered} mastered, ${obj.step} answers)? This replaces the progress saved in this browser.`)) return;
+  state = {step:Math.floor(obj.step), items, session:null, history:Array.isArray(obj.history) ? obj.history.filter(x => known.has(x)).slice(-50) : []};
+  save();
+  renderHome();
+  const panel = app.querySelector("#importpanel"); panel.hidden = false;
+  setImportMsg(`Imported ${Object.keys(items).length} cards.`, true);
+}
+function setImportMsg(text, ok){
+  const m = app.querySelector("#importmsg"); if(!m) return;
+  m.textContent = text; m.className = "msg " + (ok ? "ok" : "bad");
+}
+
+/* =========================== UI =========================== */
+const app = document.getElementById("app");
+let view = "home";
+let session = {cats:null, q:null, answered:false, built:[], sel:null, optOrder:null, count:0, ok:0};
+
+function h(s){ return s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function barHTML(b, n){
+  return `<div class="bar">${[5,4,3,2,1].map(k => `<i class="b${k}" style="width:${100*b[k]/n}%"></i>`).join("")}</div>`;
+}
+
+function renderHome(){
+  const s = stats(null);
+  const catKeys = Object.keys(CATS);
+  app.innerHTML = `
+    <header><h1>Futur I <span>drill</span></h1><span class="kbd-hint">${state.step} answers so far</span></header>
+    <div class="bracket"><div class="l">werde</div><div class="m">morgen nach Berlin</div><div class="r">fahren</div></div>
+    <div class="mastery">
+      <div class="pct">${s.pct}%<small>${s.mastered} / ${s.n} mastered</small></div>
+      <div class="barwrap">${barHTML(s.boxes, s.n)}
+        <div class="legend">A card counts as mastered after 5 correct answers at growing intervals. One mistake sends it back to zero.</div></div>
+    </div>
+    <div class="cats">
+      ${catKeys.map(k => { const cs = stats([k]); const active = session.cats && session.cats.includes(k);
+        return `<button class="cat ${active?"active":""}" data-cat="${k}">
+          <span class="name">${CATS[k].name}</span><span class="num">${cs.mastered}/${cs.n}</span>
+          <span class="sub">${CATS[k].sub}</span>${barHTML(cs.boxes, cs.n)}</button>`; }).join("")}
+    </div>
+    <div class="actions">
+      <button class="primary" id="start">${session.cats ? "Drill selected topics" : "Drill everything"}</button>
+      ${session.cats ? `<button class="ghost" id="clearsel">Clear selection</button>` : ""}
+      ${weakHTML()}
+    </div>
+    ${refHTML()}
+    <div class="actions">
+      <button class="ghost" id="export">Export progress</button>
+      <button class="ghost" id="import">Import progress</button>
+      <button class="danger" id="reset">Delete progress</button>
+    </div>
+    <div class="data" id="importpanel" hidden>
+      Import a file you exported earlier, or paste its contents. Importing replaces the progress currently saved in this browser.
+      <div class="actions" style="margin:10px 0 0">
+        <button class="ghost" id="pickfile">Choose file</button>
+        <input type="file" id="file" accept=".json,application/json">
+        <button class="primary" id="doimport">Import</button>
+        <button class="ghost" id="cancelimport">Cancel</button>
+      </div>
+      <textarea id="importtext" placeholder="…or paste exported JSON here" spellcheck="false"></textarea>
+      <div class="msg" id="importmsg"></div>
+    </div>`;
+  app.querySelectorAll(".cat").forEach(b => b.onclick = () => {
+    const k = b.dataset.cat;
+    session.cats = session.cats || [];
+    session.cats = session.cats.includes(k) ? session.cats.filter(x => x!==k) : [...session.cats, k];
+    if(!session.cats.length) session.cats = null;
+    renderHome();
+  });
+  app.querySelector("#start").onclick = () => { session.count=0; session.ok=0; next(); };
+  const cs = app.querySelector("#clearsel"); if(cs) cs.onclick = () => { session.cats=null; renderHome(); };
+  const wk = app.querySelector("#weak"); if(wk) wk.onclick = () => { session.cats=null; session.weak=true; session.count=0; session.ok=0; next(); };
+  app.querySelector("#reset").onclick = () => { if(confirm("Delete all progress? This cannot be undone.")){ state = {step:0, items:{}, session:null, history:[]}; save(); renderHome(); } };
+  app.querySelector("#export").onclick = exportProgress;
+  const panel = app.querySelector("#importpanel");
+  app.querySelector("#import").onclick = () => { panel.hidden = !panel.hidden; if(!panel.hidden) app.querySelector("#importtext").focus(); };
+  app.querySelector("#cancelimport").onclick = () => { panel.hidden = true; };
+  app.querySelector("#pickfile").onclick = () => app.querySelector("#file").click();
+  app.querySelector("#file").onchange = e => {
+    const f = e.target.files[0]; if(!f) return;
+    const rd = new FileReader();
+    rd.onload = () => { app.querySelector("#importtext").value = rd.result; importProgress(rd.result); };
+    rd.onerror = () => setImportMsg("Could not read that file.", false);
+    rd.readAsText(f);
+  };
+  app.querySelector("#doimport").onclick = () => importProgress(app.querySelector("#importtext").value);
+}
+function weakHTML(){
+  const weak = BANK.filter(q => rec(q.id).wrong >= 2 && rec(q.id).box < MASTER);
+  return weak.length ? `<button class="ghost" id="weak">Drill weak cards (${weak.length})</button>` : "";
+}
+function refHTML(){
+  return `<div class="ref"><b>Quick reference</b><table>
+    <tr><td><b>Main clause</b></td><td>Ich <b>werde</b> morgen nach Berlin <b>fahren</b>.</td></tr>
+    <tr><td><b>Subordinate</b></td><td>…, dass er morgen <b>kommen wird</b>.</td></tr>
+    <tr><td><b>Separable</b></td><td>Ich werde früh <b>aufstehen</b>.</td></tr>
+    <tr><td><b>Reflexive</b></td><td>Ich werde <b>mich</b> beeilen.</td></tr>
+    <tr><td><b>Negation</b></td><td>Ich werde morgen <b>nicht arbeiten</b>.</td></tr>
+    <tr><td><b>Assumption</b></td><td>Er wird <b>wohl</b> zu Hause sein. (needs a particle)</td></tr>
+    <tr><td><b>Three werden</b></td><td>Ich werde Lehrer (full verb) · Ich werde arbeiten (Futur I) · Das Auto wird repariert (Passiv)</td></tr>
+  </table></div>`;
+}
+
+function next(){
+  let cats = session.cats;
+  let q;
+  if(session.weak){
+    const weakAll = BANK.filter(x => rec(x.id).wrong >= 2 && rec(x.id).box < MASTER);
+    if(!weakAll.length){ session.weak=false; renderHome(); return; }
+    const recent = state.history.slice(-3);
+    const weak = weakAll.filter(x => !recent.includes(x.id));
+    q = weak.length ? weak[Math.floor(Math.random()*weak.length)] : pickNext(cats);
+  } else q = pickNext(cats);
+  session.q = q; session.answered=false; session.built=[]; session.sel=null;
+  session.optOrder = q.options ? q.options.map((_,i)=>i) : null;
+  if(q.shuffle) shuffle(session.optOrder);
+  session.pool = q.tokens ? shuffleUntilDifferent(q.tokens) : null;
+  renderQ();
+}
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function shuffleUntilDifferent(t){ let p; let tries=0; do{ p = shuffle(t.slice()); }while(p.join()===t.join() && ++tries<10); return p; }
+
+function renderQ(){
+  const q = session.q; const r = rec(q.id);
+  const boxes = `<span class="boxes">${[1,2,3,4,5].map(k=>`<i class="${r.box>=k?"on":""}"></i>`).join("")}</span>`;
+  let body = "";
+  if(q.type==="typed"){
+    let p = h(q.prompt);
+    if(q.hintVerb) p = p.replace("___", `<span class="gap">___</span> <span class="hint">(${q.hintVerb})</span>`);
+    else p = p.replace("___", `<span class="gap">___</span>`);
+    body = `<div class="prompt">${p}</div>
+      <div class="typed"><input id="inp" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${q.wide?"Whole sentence…":"…"}"></div>
+      <div class="umlauts">${["ä","ö","ü","ß"].map(c=>`<button data-c="${c}">${c}</button>`).join("")}</div>`;
+  }else if(q.type==="mc"){
+    body = (q.prompt ? `<div class="prompt">${h(q.prompt)}</div>` : "") +
+      `<div class="opts">${session.optOrder.map((oi,k)=>`<button class="opt" data-i="${oi}"><kbd>${k+1}</kbd>${h(q.options[oi])}</button>`).join("")}</div>`;
+  }else if(q.type==="order"){
+    body = `<div class="built ${session.built.length?"":"empty"}" id="built">${session.built.map((ti,k)=>`<button class="tok" data-b="${k}">${h(session.pool[ti])}</button>`).join("")}</div>
+      <div class="pool">${session.pool.map((t,i)=>`<button class="tok ${session.built.includes(i)?"used":""}" data-p="${i}">${h(t)}</button>`).join("")}</div>`;
+  }
+  app.innerHTML = `
+    <header><h1>Futur I <span>drill</span></h1><button class="navbtn" id="home">Overview</button></header>
+    <div class="card">
+      <div class="meta"><span><b>${CATS[q.cat].name}</b>${boxes}</span><span>${session.count} answered · ${session.ok} correct</span></div>
+      <div class="task">${q.task}</div>
+      ${body}
+      <div id="fb"></div>
+      <div class="rowbtns">
+        <span class="kbd-hint">${q.type==="mc"?"Keys 1–3 select, Enter checks":q.type==="order"?"Enter checks, Backspace removes the last word":"Enter checks"}</span>
+        <button class="primary" id="check">Check</button>
+      </div>
+    </div>`;
+  app.querySelector("#home").onclick = () => { session.weak=false; renderHome(); };
+  const btn = app.querySelector("#check");
+  btn.onclick = submit;
+  if(q.type==="typed"){
+    const inp = app.querySelector("#inp"); inp.focus();
+    app.querySelectorAll(".umlauts button").forEach(b=>b.onclick=()=>{ const s=inp.selectionStart; inp.setRangeText(b.dataset.c, s, inp.selectionEnd, "end"); inp.focus(); });
+  }
+  if(q.type==="mc"){
+    app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{ if(session.answered) return; session.sel=+b.dataset.i; app.querySelectorAll(".opt").forEach(x=>x.classList.toggle("sel", +x.dataset.i===session.sel)); });
+  }
+  if(q.type==="order"){
+    app.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{ if(session.answered) return; const i=+b.dataset.p; if(!session.built.includes(i)){ session.built.push(i); renderQ(); } });
+    app.querySelectorAll("[data-b]").forEach(b=>b.onclick=()=>{ if(session.answered) return; session.built.splice(+b.dataset.b,1); renderQ(); });
+  }
+}
+document.addEventListener("keydown", e => {
+  if(view!=="q") return;
+  const q = session.q; if(!q) return;
+  if(e.key==="Enter"){ e.preventDefault(); session.answered ? next() : submit(); return; }
+  if(session.answered) return;
+  if(q.type==="mc" && /^[1-3]$/.test(e.key)){ const k=+e.key-1; if(k<session.optOrder.length){ session.sel=session.optOrder[k]; app.querySelectorAll(".opt").forEach(x=>x.classList.toggle("sel", +x.dataset.i===session.sel)); } }
+  if(q.type==="order" && e.key==="Backspace" && document.activeElement.tagName!=="INPUT"){ e.preventDefault(); session.built.pop(); renderQ(); }
+});
+const _next = next; next = function(){ view="q"; _next(); };
+const _home = renderHome; renderHome = function(){ view="home"; _home(); };
+
+function submit(){
+  if(session.answered) return;
+  const q = session.q; let ok=false, given="";
+  if(q.type==="typed"){
+    given = app.querySelector("#inp").value;
+    if(!norm(given)) { app.querySelector("#inp").focus(); return; }
+    ok = checkTyped(q, given);
+  }else if(q.type==="mc"){
+    if(session.sel===null) return;
+    ok = session.sel === q.correct;
+  }else if(q.type==="order"){
+    if(session.built.length !== session.pool.length) { app.querySelector("#fb").innerHTML = `<div class="task" style="margin-top:10px">Use all the words before checking.</div>`; return; }
+    given = session.built.map(i=>session.pool[i]).join(" ");
+    ok = checkOrder(q, session.built.map(i=>session.pool[i]));
+  }
+  session.answered = true; session.count++; if(ok) session.ok++;
+  grade(q.id, ok);
+  const r = rec(q.id);
+  const answerLine = q.type==="mc" ? q.options[q.correct] : q.answers[0];
+  const fb = app.querySelector("#fb");
+  fb.innerHTML = `<div class="feedback ${ok?"ok":"bad"}">
+    <div class="verdict">${ok ? (r.box===MASTER ? "Correct — mastered." : "Correct.") : "Wrong."}</div>
+    <div class="ans">${h(answerLine)}</div>
+    ${ok && q.type!=="mc" && norm(given)!==norm(q.answers[0]) ? `<div class="exp">Your version is also correct.</div>` : ""}
+    <div class="exp">${q.explain}</div>
+  </div>`;
+  if(q.type==="mc"){
+    app.querySelectorAll(".opt").forEach(x=>{ const i=+x.dataset.i; x.classList.remove("sel"); if(i===q.correct) x.classList.add("right"); else if(i===session.sel) x.classList.add("wrong"); });
+  }
+  if(q.type==="typed"){ app.querySelector("#inp").disabled = true; }
+  const btn = app.querySelector("#check"); btn.textContent = "Next"; btn.onclick = next; if(document.activeElement) document.activeElement.blur();
+}
+
+renderHome();
+window.__t = {BANK, exportProgress, importProgress, validateImport, get session(){return session}, get state(){return state}, stats, checkOrder, checkTyped};
+</script>
+</body>
+</html>
