@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Konjunktiv II — wäre, hätte, würde</title>
+<style>
+:root{
+  --paper:#EDEBE3; --card:#F8F7F2; --card-2:#E7E5DB;
+  --ink:#1C1F1A; --ink-2:#5E635A; --ink-3:#8B9083;
+  --rule:#D2D1C6; --rule-2:#BFBDB0;
+  --acc:#2F4A8A; --acc-soft:#E1E7F4;
+  --neg:#B3261E; --neg-soft:#F6E3E0;
+  --yes:#2C6A48; --yes-soft:#E0EDE4;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,"Times New Roman",serif;
+  --sans:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#15171A; --card:#1D2024; --card-2:#262A2F;
+    --ink:#E9E7DF; --ink-2:#A8ADA3; --ink-3:#767C72;
+    --rule:#333840; --rule-2:#454B54;
+    --acc:#94ACEA; --acc-soft:#232B40;
+    --neg:#E8776A; --neg-soft:#33211F;
+    --yes:#7CC79B; --yes-soft:#1B2A22;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;
+  -webkit-text-size-adjust:100%;padding-bottom:env(safe-area-inset-bottom)}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:2px}
+[lang=de]{font-family:var(--serif)}
+b{font-weight:600}
+
+/* ---------- top rail ---------- */
+.rail{position:sticky;top:0;z-index:10;background:var(--paper);border-bottom:1px solid var(--rule)}
+.rail-in{max-width:720px;margin:0 auto;padding:10px 20px 8px}
+.rail-top{display:flex;align-items:baseline;gap:10px}
+.wordmark{font-family:var(--serif);font-size:17px;white-space:nowrap}
+.wordmark b{color:var(--acc);font-weight:600}
+.rail-spacer{flex:1}
+.navbtn{font-size:13px;color:var(--ink-2);padding:3px 8px;border-radius:4px}
+.navbtn.on{color:var(--ink);background:var(--card-2)}
+.meter{display:flex;height:5px;margin-top:8px;background:var(--card-2);border-radius:3px;overflow:hidden}
+.meter i{display:block;height:100%}
+.meter .m5{background:var(--yes)} .meter .m3{background:var(--acc)} .meter .m1{background:var(--rule-2)}
+.railstat{font-size:12px;color:var(--ink-3);margin-top:4px}
+
+main{max-width:720px;margin:0 auto;padding:22px 20px 40px}
+h1{font-family:var(--serif);font-weight:500;font-size:28px;line-height:1.2;margin:0 0 6px;letter-spacing:-.01em}
+h2{font-family:var(--serif);font-weight:500;font-size:21px;margin:30px 0 10px}
+h3{font-size:14px;font-weight:600;margin:20px 0 6px;color:var(--ink-2)}
+p{margin:0 0 10px}
+.muted{color:var(--ink-2)}
+.small{font-size:13px}
+.hidden{display:none !important}
+
+/* ---------- home ---------- */
+.lead{font-size:17px;color:var(--ink-2);max-width:56ch}
+.soften{margin:22px 0 6px;padding:18px 20px;background:var(--card);border:1px solid var(--rule);border-radius:10px}
+.soften .row{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:baseline;font-family:var(--serif);font-size:20px}
+.soften .row+.row{margin-top:8px}
+.soften .tag{font-family:var(--sans);font-size:12px;color:var(--ink-3)}
+.soften .direct{color:var(--ink-2)}
+.soften .soft em{font-style:normal;color:var(--acc);font-weight:600;border-bottom:2px solid var(--acc)}
+.soften .arrow{grid-column:2;font-family:var(--sans);font-size:12px;color:var(--ink-3);margin:2px 0}
+.soften .more{margin-top:10px;font-size:13px;color:var(--acc)}
+
+.setup{margin-top:26px}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.opt{padding:8px 13px;border:1px solid var(--rule-2);border-radius:20px;font-size:14px;background:var(--card)}
+.opt.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.opt small{opacity:.7;margin-left:4px}
+.topics{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0 4px}
+@media (max-width:480px){.topics{grid-template-columns:1fr}}
+.tchip{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--rule);border-radius:8px;background:var(--card);text-align:left}
+.tchip.on{border-color:var(--acc);background:var(--acc-soft)}
+.tchip .nm{font-size:14px;line-height:1.25}
+.tchip .bl{font-size:12px;color:var(--ink-3);line-height:1.25}
+.tchip .pct{margin-left:auto;font-size:12px;color:var(--ink-2);white-space:nowrap}
+.tchip .box{width:9px;height:9px;border-radius:2px;background:var(--rule-2);flex:none}
+.tchip .box.done{background:var(--yes)} .tchip .box.mid{background:var(--acc)}
+.primary{display:inline-block;background:var(--acc);color:#fff;padding:12px 22px;border-radius:8px;font-weight:600;font-size:16px;margin-top:18px}
+.primary:disabled{opacity:.5;cursor:default}
+.secondary{display:inline-block;background:var(--card-2);padding:11px 18px;border-radius:8px;font-size:15px}
+.linkbtn{color:var(--acc);font-size:14px;padding:4px 0;text-decoration:underline;text-underline-offset:3px}
+.plan{margin-top:14px;font-size:13px;color:var(--ink-3)}
+
+/* ---------- drill ---------- */
+.dhead{display:flex;align-items:baseline;gap:12px;font-size:13px;color:var(--ink-3)}
+.dhead .n{font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.dhead .t{flex:1}
+.card{margin-top:12px;background:var(--card);border:1px solid var(--rule);border-radius:12px;padding:20px 20px 18px}
+.instr{font-size:13px;color:var(--ink-2);margin-bottom:10px}
+.prompt{font-family:var(--serif);font-size:23px;line-height:1.4;margin:0 0 14px}
+.prompt.en{font-family:var(--sans);font-size:19px}
+.prompt .gapin{display:inline-block;width:8.5ch;min-width:5ch;margin:0 2px;padding:1px 6px 0;border:none;border-bottom:2px solid var(--rule-2);background:transparent;font-family:var(--serif);font-size:23px;text-align:center;border-radius:0}
+.prompt .gapin:focus{border-bottom-color:var(--acc);outline:none}
+.prompt .gapin.ok{border-bottom-color:var(--yes);color:var(--yes)}
+.prompt .gapin.bad{border-bottom-color:var(--neg);color:var(--neg);text-decoration:line-through}
+.cue{font-size:13px;color:var(--ink-3);margin:-6px 0 12px}
+.cue b{color:var(--acc);font-weight:600;font-family:var(--serif);font-size:15px}
+.hint{font-size:12px;color:var(--ink-3);margin-left:8px;font-family:var(--sans)}
+.direct{font-size:12px;color:var(--ink-3);margin:-6px 0 12px}
+
+.choices{display:grid;gap:8px}
+.choice{display:flex;gap:12px;align-items:baseline;text-align:left;padding:11px 14px;border:1px solid var(--rule-2);border-radius:8px;background:var(--paper);font-size:16px;line-height:1.35}
+.choice[lang=de]{font-size:17px}
+.choice .k{font-family:var(--sans);font-size:12px;color:var(--ink-3);min-width:12px}
+.choice.pick{border-color:var(--acc);background:var(--acc-soft)}
+.choice.yes{border-color:var(--yes);background:var(--yes-soft)}
+.choice.no{border-color:var(--neg);background:var(--neg-soft)}
+.choice:disabled{cursor:default}
+
+.typedin{width:100%;padding:12px 14px;border:1px solid var(--rule-2);border-radius:8px;background:var(--paper);font-family:var(--serif);font-size:20px}
+.typedin:focus{border-color:var(--acc);outline:none}
+.typedin.ok{border-color:var(--yes)} .typedin.bad{border-color:var(--neg)}
+.keys{display:flex;gap:6px;margin-top:8px}
+.key{padding:6px 0;width:44px;text-align:center;border:1px solid var(--rule);border-radius:6px;font-family:var(--serif);font-size:17px;background:var(--card-2)}
+
+.builder{min-height:52px;padding:10px 12px;border:1px dashed var(--rule-2);border-radius:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-family:var(--serif);font-size:19px}
+.builder .frame{color:var(--ink-2);margin-right:4px}
+.builder .end{color:var(--ink-3)}
+.builder.ok{border-color:var(--yes);border-style:solid} .builder.bad{border-color:var(--neg);border-style:solid}
+.pool{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.tok{padding:7px 12px;border:1px solid var(--rule-2);border-radius:7px;background:var(--paper);font-family:var(--serif);font-size:19px}
+.builder .tok{background:var(--acc-soft);border-color:transparent}
+.tok:disabled{opacity:.35;cursor:default}
+.builder .tok:disabled{opacity:1}
+
+.actions{display:flex;gap:10px;align-items:center;margin-top:16px}
+.actions .sp{flex:1}
+.fb{margin-top:16px;padding:14px 16px;border-radius:8px;border-left:4px solid var(--acc);background:var(--paper)}
+.fb.yes{border-left-color:var(--yes)} .fb.no{border-left-color:var(--neg)}
+.fb .v{font-weight:600;margin-bottom:4px}
+.fb.yes .v{color:var(--yes)} .fb.no .v{color:var(--neg)}
+.fb .ans{font-family:var(--serif);font-size:19px;margin:4px 0 6px}
+.fb .ans em{font-style:normal;color:var(--acc);font-weight:600}
+.fb .why{font-size:14px;color:var(--ink-2)}
+.fb .why i{font-family:var(--serif);font-style:normal;font-size:15px;color:var(--ink)}
+.fb .note{font-size:13px;color:var(--ink-3);margin-top:6px}
+.fb .pair{margin:6px 0 8px;font-family:var(--serif);font-size:18px;line-height:1.45}
+.fb .pair .d{color:var(--ink-3)}
+.fb .pair .s em{font-style:normal;color:var(--acc);font-weight:600;border-bottom:2px solid var(--acc)}
+.sched{font-size:12px;color:var(--ink-3);margin-top:8px}
+
+/* ---------- rules ---------- */
+.ref{width:100%;border-collapse:collapse;font-size:14.5px;margin:8px 0 6px}
+.ref th{text-align:left;font-weight:600;font-size:12.5px;color:var(--ink-2);padding:6px 8px 6px 0;border-bottom:1px solid var(--rule-2)}
+.ref td{padding:7px 8px 7px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ref td[lang=de]{font-size:16px}
+.ref .yes{color:var(--yes)} .ref .no{color:var(--neg)}
+.ladder{margin:8px 0 0;border-top:1px solid var(--rule)}
+.rung{display:block;width:100%;text-align:left;padding:10px 0;border-bottom:1px solid var(--rule)}
+.rung .d{font-family:var(--serif);font-size:17px;color:var(--ink-2)}
+.rung .s{font-family:var(--serif);font-size:17px;margin-top:2px}
+.rung .s em{font-style:normal;color:var(--acc);font-weight:600}
+.rung .s.veil{color:transparent;text-shadow:0 0 9px var(--ink-3);user-select:none}
+.rung .s.veil em{color:transparent;font-weight:400;text-shadow:0 0 9px var(--ink-3)}
+.rulebox{padding:12px 14px;background:var(--card);border:1px solid var(--rule);border-radius:8px;margin:8px 0}
+.rulebox [lang=de]{font-size:17px}
+
+/* ---------- progress ---------- */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0 4px}
+.stat{padding:12px 14px;background:var(--card);border:1px solid var(--rule);border-radius:8px}
+.stat .v{font-family:var(--serif);font-size:26px;line-height:1.1}
+.stat .l{font-size:12px;color:var(--ink-3)}
+.trow{display:grid;grid-template-columns:1fr 130px 52px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--rule);font-size:14px}
+.trow .nm{line-height:1.25}
+.trow .bar{display:flex;height:10px;border-radius:3px;overflow:hidden;background:var(--card-2)}
+.trow .bar i{display:block;height:100%}
+.trow .pct{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--ink-3);margin:6px 0 2px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.leech{padding:10px 0;border-bottom:1px solid var(--rule);font-size:14px}
+.leech .p{font-family:var(--serif);font-size:17px}
+.leech .a{color:var(--ink-2);font-size:13px}
+.leech .a em{font-style:normal;color:var(--acc)}
+.tools{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+textarea{width:100%;min-height:90px;padding:10px;border:1px solid var(--rule-2);border-radius:8px;background:var(--card);font:13px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink)}
+.msg{font-size:13px;margin-top:8px}
+.msg.bad{color:var(--neg)} .msg.good{color:var(--yes)}
+
+/* ---------- summary ---------- */
+.tally{display:flex;gap:4px;flex-wrap:wrap;margin:16px 0 0}
+.tally i{width:11px;height:11px;border-radius:2px;background:var(--yes)}
+.tally i.no{background:var(--neg)}
+.misslist{margin:18px 0 0;border-top:1px solid var(--rule)}
+.miss{padding:12px 0;border-bottom:1px solid var(--rule);font-size:14px}
+.miss .p{font-family:var(--serif);font-size:17px}
+.miss .a{color:var(--ink-2);font-size:13px;margin-top:3px}
+.miss .a em{color:var(--acc);font-style:normal}
+footer{max-width:720px;margin:0 auto;padding:0 20px 40px;font-size:12px;color:var(--ink-3)}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+@media (max-width:420px){.navbtn{padding:3px 6px;font-size:12.5px}.wordmark{font-size:15.5px}.prompt{font-size:21px}.prompt .gapin{font-size:21px}}
+</style>
+</head>
+<body>
+
+<div class="rail">
+  <div class="rail-in">
+    <div class="rail-top">
+      <span class="wordmark">Konjunktiv II: <b>wäre</b> · <b>hätte</b> · <b>würde</b></span>
+      <span class="rail-spacer"></span>
+      <button class="navbtn" id="nav-home">Start</button>
+      <button class="navbtn" id="nav-ref">Rules</button>
+      <button class="navbtn" id="nav-prog">Progress</button>
+    </div>
+    <div class="meter" id="meter" title="mastered / learning / untouched">
+      <i class="m5" style="width:0"></i><i class="m3" style="width:0"></i><i class="m1" style="width:0"></i>
+    </div>
+    <div class="railstat" id="railstat"></div>
+  </div>
+</div>
+
+<main>
+  <section id="view-home"></section>
+  <section id="view-drill" class="hidden"></section>
+  <section id="view-ref" class="hidden"></section>
+  <section id="view-prog" class="hidden"></section>
+  <section id="view-sum" class="hidden"></section>
+</main>
+
+<footer id="foot"></footer>
+
+<script>
+"use strict";
+const BANK = [{"id":"cj-sein-0","topic":"shw","kind":"typed","prompt":"ich ___ (sein)","answers":["wäre"],"why":"sein → war → w<b>ä<\/b>re: Präteritum <i>war<\/i> + umlaut + ending. Ending for <i>ich<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-sein-1","topic":"shw","kind":"typed","prompt":"du ___ (sein)","answers":["wärst","wärest"],"why":"sein → war → w<b>ä<\/b>re: Präteritum <i>war<\/i> + umlaut + ending. Ending for <i>du<\/i>: -est, usually shortened after <i>wär-<\/i>. Both <i>wärst / wärest<\/i> are correct.","instr":"Konjunktiv II — type the form."},{"id":"cj-sein-2","topic":"shw","kind":"typed","prompt":"er/sie/es ___ (sein)","answers":["wäre"],"why":"sein → war → w<b>ä<\/b>re: Präteritum <i>war<\/i> + umlaut + ending. Ending for <i>er/sie/es<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-sein-3","topic":"shw","kind":"typed","prompt":"wir ___ (sein)","answers":["wären"],"why":"sein → war → w<b>ä<\/b>re: Präteritum <i>war<\/i> + umlaut + ending. Ending for <i>wir<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-sein-4","topic":"shw","kind":"typed","prompt":"ihr ___ (sein)","answers":["wärt","wäret"],"why":"sein → war → w<b>ä<\/b>re: Präteritum <i>war<\/i> + umlaut + ending. Ending for <i>ihr<\/i>: -et, usually shortened after <i>wär-<\/i>. Both <i>wärt / wäret<\/i> are correct.","instr":"Konjunktiv II — type the form."},{"id":"cj-sein-5","topic":"shw","kind":"typed","prompt":"sie/Sie ___ (sein)","answers":["wären"],"why":"sein → war → w<b>ä<\/b>re: Präteritum <i>war<\/i> + umlaut + ending. Ending for <i>sie/Sie<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-haben-0","topic":"shw","kind":"typed","prompt":"ich ___ (haben)","answers":["hätte"],"why":"haben → hatte → h<b>ä<\/b>tte: Präteritum <i>hatte<\/i> + umlaut + ending. Ending for <i>ich<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-haben-1","topic":"shw","kind":"typed","prompt":"du ___ (haben)","answers":["hättest"],"why":"haben → hatte → h<b>ä<\/b>tte: Präteritum <i>hatte<\/i> + umlaut + ending. Ending for <i>du<\/i>: -est.","instr":"Konjunktiv II — type the form."},{"id":"cj-haben-2","topic":"shw","kind":"typed","prompt":"er/sie/es ___ (haben)","answers":["hätte"],"why":"haben → hatte → h<b>ä<\/b>tte: Präteritum <i>hatte<\/i> + umlaut + ending. Ending for <i>er/sie/es<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-haben-3","topic":"shw","kind":"typed","prompt":"wir ___ (haben)","answers":["hätten"],"why":"haben → hatte → h<b>ä<\/b>tte: Präteritum <i>hatte<\/i> + umlaut + ending. Ending for <i>wir<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-haben-4","topic":"shw","kind":"typed","prompt":"ihr ___ (haben)","answers":["hättet"],"why":"haben → hatte → h<b>ä<\/b>tte: Präteritum <i>hatte<\/i> + umlaut + ending. Ending for <i>ihr<\/i>: -et.","instr":"Konjunktiv II — type the form."},{"id":"cj-haben-5","topic":"shw","kind":"typed","prompt":"sie/Sie ___ (haben)","answers":["hätten"],"why":"haben → hatte → h<b>ä<\/b>tte: Präteritum <i>hatte<\/i> + umlaut + ending. Ending for <i>sie/Sie<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-werden-0","topic":"shw","kind":"typed","prompt":"ich ___ (werden)","answers":["würde"],"why":"werden → wurde → w<b>ü<\/b>rde: Präteritum <i>wurde<\/i> + umlaut + ending. Ending for <i>ich<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-werden-1","topic":"shw","kind":"typed","prompt":"du ___ (werden)","answers":["würdest"],"why":"werden → wurde → w<b>ü<\/b>rde: Präteritum <i>wurde<\/i> + umlaut + ending. Ending for <i>du<\/i>: -est.","instr":"Konjunktiv II — type the form."},{"id":"cj-werden-2","topic":"shw","kind":"typed","prompt":"er/sie/es ___ (werden)","answers":["würde"],"why":"werden → wurde → w<b>ü<\/b>rde: Präteritum <i>wurde<\/i> + umlaut + ending. Ending for <i>er/sie/es<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-werden-3","topic":"shw","kind":"typed","prompt":"wir ___ (werden)","answers":["würden"],"why":"werden → wurde → w<b>ü<\/b>rde: Präteritum <i>wurde<\/i> + umlaut + ending. Ending for <i>wir<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-werden-4","topic":"shw","kind":"typed","prompt":"ihr ___ (werden)","answers":["würdet"],"why":"werden → wurde → w<b>ü<\/b>rde: Präteritum <i>wurde<\/i> + umlaut + ending. Ending for <i>ihr<\/i>: -et.","instr":"Konjunktiv II — type the form."},{"id":"cj-werden-5","topic":"shw","kind":"typed","prompt":"sie/Sie ___ (werden)","answers":["würden"],"why":"werden → wurde → w<b>ü<\/b>rde: Präteritum <i>wurde<\/i> + umlaut + ending. Ending for <i>sie/Sie<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-können-0","topic":"modal","kind":"typed","prompt":"ich ___ (können)","answers":["könnte"],"why":"können → konnte → k<b>ö<\/b>nnte: umlaut on the o. Ending for <i>ich<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-können-1","topic":"modal","kind":"typed","prompt":"du ___ (können)","answers":["könntest"],"why":"können → konnte → k<b>ö<\/b>nnte: umlaut on the o. Ending for <i>du<\/i>: -est.","instr":"Konjunktiv II — type the form."},{"id":"cj-können-2","topic":"modal","kind":"typed","prompt":"er/sie/es ___ (können)","answers":["könnte"],"why":"können → konnte → k<b>ö<\/b>nnte: umlaut on the o. Ending for <i>er/sie/es<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-können-3","topic":"modal","kind":"typed","prompt":"wir ___ (können)","answers":["könnten"],"why":"können → konnte → k<b>ö<\/b>nnte: umlaut on the o. Ending for <i>wir<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-können-4","topic":"modal","kind":"typed","prompt":"ihr ___ (können)","answers":["könntet"],"why":"können → konnte → k<b>ö<\/b>nnte: umlaut on the o. Ending for <i>ihr<\/i>: -et.","instr":"Konjunktiv II — type the form."},{"id":"cj-können-5","topic":"modal","kind":"typed","prompt":"sie/Sie ___ (können)","answers":["könnten"],"why":"können → konnte → k<b>ö<\/b>nnte: umlaut on the o. Ending for <i>sie/Sie<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-müssen-0","topic":"modal","kind":"typed","prompt":"ich ___ (müssen)","answers":["müsste"],"why":"müssen → musste → m<b>ü<\/b>sste: umlaut on the u. Ending for <i>ich<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-müssen-1","topic":"modal","kind":"typed","prompt":"du ___ (müssen)","answers":["müsstest"],"why":"müssen → musste → m<b>ü<\/b>sste: umlaut on the u. Ending for <i>du<\/i>: -est.","instr":"Konjunktiv II — type the form."},{"id":"cj-müssen-2","topic":"modal","kind":"typed","prompt":"er/sie/es ___ (müssen)","answers":["müsste"],"why":"müssen → musste → m<b>ü<\/b>sste: umlaut on the u. Ending for <i>er/sie/es<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-müssen-3","topic":"modal","kind":"typed","prompt":"wir ___ (müssen)","answers":["müssten"],"why":"müssen → musste → m<b>ü<\/b>sste: umlaut on the u. Ending for <i>wir<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-müssen-4","topic":"modal","kind":"typed","prompt":"ihr ___ (müssen)","answers":["müsstet"],"why":"müssen → musste → m<b>ü<\/b>sste: umlaut on the u. Ending for <i>ihr<\/i>: -et.","instr":"Konjunktiv II — type the form."},{"id":"cj-müssen-5","topic":"modal","kind":"typed","prompt":"sie/Sie ___ (müssen)","answers":["müssten"],"why":"müssen → musste → m<b>ü<\/b>sste: umlaut on the u. Ending for <i>sie/Sie<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-dürfen-0","topic":"modal","kind":"typed","prompt":"ich ___ (dürfen)","answers":["dürfte"],"why":"dürfen → durfte → d<b>ü<\/b>rfte: umlaut on the u. Ending for <i>ich<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-dürfen-1","topic":"modal","kind":"typed","prompt":"du ___ (dürfen)","answers":["dürftest"],"why":"dürfen → durfte → d<b>ü<\/b>rfte: umlaut on the u. Ending for <i>du<\/i>: -est.","instr":"Konjunktiv II — type the form."},{"id":"cj-dürfen-2","topic":"modal","kind":"typed","prompt":"er/sie/es ___ (dürfen)","answers":["dürfte"],"why":"dürfen → durfte → d<b>ü<\/b>rfte: umlaut on the u. Ending for <i>er/sie/es<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-dürfen-3","topic":"modal","kind":"typed","prompt":"wir ___ (dürfen)","answers":["dürften"],"why":"dürfen → durfte → d<b>ü<\/b>rfte: umlaut on the u. Ending for <i>wir<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-dürfen-4","topic":"modal","kind":"typed","prompt":"ihr ___ (dürfen)","answers":["dürftet"],"why":"dürfen → durfte → d<b>ü<\/b>rfte: umlaut on the u. Ending for <i>ihr<\/i>: -et.","instr":"Konjunktiv II — type the form."},{"id":"cj-dürfen-5","topic":"modal","kind":"typed","prompt":"sie/Sie ___ (dürfen)","answers":["dürften"],"why":"dürfen → durfte → d<b>ü<\/b>rfte: umlaut on the u. Ending for <i>sie/Sie<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-mögen-0","topic":"modal","kind":"typed","prompt":"ich ___ (mögen)","answers":["möchte"],"why":"mögen → mochte → m<b>ö<\/b>chte: umlaut on the o. Ending for <i>ich<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-mögen-1","topic":"modal","kind":"typed","prompt":"du ___ (mögen)","answers":["möchtest"],"why":"mögen → mochte → m<b>ö<\/b>chte: umlaut on the o. Ending for <i>du<\/i>: -est.","instr":"Konjunktiv II — type the form."},{"id":"cj-mögen-2","topic":"modal","kind":"typed","prompt":"er/sie/es ___ (mögen)","answers":["möchte"],"why":"mögen → mochte → m<b>ö<\/b>chte: umlaut on the o. Ending for <i>er/sie/es<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-mögen-3","topic":"modal","kind":"typed","prompt":"wir ___ (mögen)","answers":["möchten"],"why":"mögen → mochte → m<b>ö<\/b>chte: umlaut on the o. Ending for <i>wir<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-mögen-4","topic":"modal","kind":"typed","prompt":"ihr ___ (mögen)","answers":["möchtet"],"why":"mögen → mochte → m<b>ö<\/b>chte: umlaut on the o. Ending for <i>ihr<\/i>: -et.","instr":"Konjunktiv II — type the form."},{"id":"cj-mögen-5","topic":"modal","kind":"typed","prompt":"sie/Sie ___ (mögen)","answers":["möchten"],"why":"mögen → mochte → m<b>ö<\/b>chte: umlaut on the o. Ending for <i>sie/Sie<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-sollen-0","topic":"modal","kind":"typed","prompt":"ich ___ (sollen)","answers":["sollte"],"why":"sollen → sollte → sollte: <b>no umlaut<\/b>. Same as Präteritum — context decides. Ending for <i>ich<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-sollen-1","topic":"modal","kind":"typed","prompt":"du ___ (sollen)","answers":["solltest"],"why":"sollen → sollte → sollte: <b>no umlaut<\/b>. Same as Präteritum — context decides. Ending for <i>du<\/i>: -est.","instr":"Konjunktiv II — type the form."},{"id":"cj-sollen-2","topic":"modal","kind":"typed","prompt":"er/sie/es ___ (sollen)","answers":["sollte"],"why":"sollen → sollte → sollte: <b>no umlaut<\/b>. Same as Präteritum — context decides. Ending for <i>er/sie/es<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-sollen-3","topic":"modal","kind":"typed","prompt":"wir ___ (sollen)","answers":["sollten"],"why":"sollen → sollte → sollte: <b>no umlaut<\/b>. Same as Präteritum — context decides. Ending for <i>wir<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-sollen-4","topic":"modal","kind":"typed","prompt":"ihr ___ (sollen)","answers":["solltet"],"why":"sollen → sollte → sollte: <b>no umlaut<\/b>. Same as Präteritum — context decides. Ending for <i>ihr<\/i>: -et.","instr":"Konjunktiv II — type the form."},{"id":"cj-sollen-5","topic":"modal","kind":"typed","prompt":"sie/Sie ___ (sollen)","answers":["sollten"],"why":"sollen → sollte → sollte: <b>no umlaut<\/b>. Same as Präteritum — context decides. Ending for <i>sie/Sie<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-wollen-0","topic":"modal","kind":"typed","prompt":"ich ___ (wollen)","answers":["wollte"],"why":"wollen → wollte → wollte: <b>no umlaut<\/b>. Same as Präteritum — context decides. Ending for <i>ich<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-wollen-1","topic":"modal","kind":"typed","prompt":"du ___ (wollen)","answers":["wolltest"],"why":"wollen → wollte → wollte: <b>no umlaut<\/b>. Same as Präteritum — context decides. Ending for <i>du<\/i>: -est.","instr":"Konjunktiv II — type the form."},{"id":"cj-wollen-2","topic":"modal","kind":"typed","prompt":"er/sie/es ___ (wollen)","answers":["wollte"],"why":"wollen → wollte → wollte: <b>no umlaut<\/b>. Same as Präteritum — context decides. Ending for <i>er/sie/es<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-wollen-3","topic":"modal","kind":"typed","prompt":"wir ___ (wollen)","answers":["wollten"],"why":"wollen → wollte → wollte: <b>no umlaut<\/b>. Same as Präteritum — context decides. Ending for <i>wir<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-wollen-4","topic":"modal","kind":"typed","prompt":"ihr ___ (wollen)","answers":["wolltet"],"why":"wollen → wollte → wollte: <b>no umlaut<\/b>. Same as Präteritum — context decides. Ending for <i>ihr<\/i>: -et.","instr":"Konjunktiv II — type the form."},{"id":"cj-wollen-5","topic":"modal","kind":"typed","prompt":"sie/Sie ___ (wollen)","answers":["wollten"],"why":"wollen → wollte → wollte: <b>no umlaut<\/b>. Same as Präteritum — context decides. Ending for <i>sie/Sie<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-wissen-0","topic":"orig","kind":"typed","prompt":"ich ___ (wissen)","answers":["wüsste"],"why":"wissen → wusste → w<b>ü<\/b>sste: umlaut on the u. Ending for <i>ich<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-wissen-1","topic":"orig","kind":"typed","prompt":"du ___ (wissen)","answers":["wüsstest"],"why":"wissen → wusste → w<b>ü<\/b>sste: umlaut on the u. Ending for <i>du<\/i>: -est.","instr":"Konjunktiv II — type the form."},{"id":"cj-wissen-2","topic":"orig","kind":"typed","prompt":"er/sie/es ___ (wissen)","answers":["wüsste"],"why":"wissen → wusste → w<b>ü<\/b>sste: umlaut on the u. Ending for <i>er/sie/es<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-wissen-3","topic":"orig","kind":"typed","prompt":"wir ___ (wissen)","answers":["wüssten"],"why":"wissen → wusste → w<b>ü<\/b>sste: umlaut on the u. Ending for <i>wir<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-wissen-4","topic":"orig","kind":"typed","prompt":"ihr ___ (wissen)","answers":["wüsstet"],"why":"wissen → wusste → w<b>ü<\/b>sste: umlaut on the u. Ending for <i>ihr<\/i>: -et.","instr":"Konjunktiv II — type the form."},{"id":"cj-wissen-5","topic":"orig","kind":"typed","prompt":"sie/Sie ___ (wissen)","answers":["wüssten"],"why":"wissen → wusste → w<b>ü<\/b>sste: umlaut on the u. Ending for <i>sie/Sie<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-kommen-0","topic":"orig","kind":"typed","prompt":"ich ___ (kommen)","answers":["käme"],"why":"kommen → kam → k<b>ä<\/b>me: umlaut on the a. Ending for <i>ich<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-kommen-1","topic":"orig","kind":"typed","prompt":"du ___ (kommen)","answers":["kämst","kämest"],"why":"kommen → kam → k<b>ä<\/b>me: umlaut on the a. Ending for <i>du<\/i>: -est, usually shortened after <i>käm-<\/i>. Both <i>kämst / kämest<\/i> are correct.","instr":"Konjunktiv II — type the form."},{"id":"cj-kommen-2","topic":"orig","kind":"typed","prompt":"er/sie/es ___ (kommen)","answers":["käme"],"why":"kommen → kam → k<b>ä<\/b>me: umlaut on the a. Ending for <i>er/sie/es<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-kommen-3","topic":"orig","kind":"typed","prompt":"wir ___ (kommen)","answers":["kämen"],"why":"kommen → kam → k<b>ä<\/b>me: umlaut on the a. Ending for <i>wir<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-kommen-4","topic":"orig","kind":"typed","prompt":"ihr ___ (kommen)","answers":["kämt","kämet"],"why":"kommen → kam → k<b>ä<\/b>me: umlaut on the a. Ending for <i>ihr<\/i>: -et, usually shortened after <i>käm-<\/i>. Both <i>kämt / kämet<\/i> are correct.","instr":"Konjunktiv II — type the form."},{"id":"cj-kommen-5","topic":"orig","kind":"typed","prompt":"sie/Sie ___ (kommen)","answers":["kämen"],"why":"kommen → kam → k<b>ä<\/b>me: umlaut on the a. Ending for <i>sie/Sie<\/i>: -en.","instr":"Konjunktiv II — type the form."},{"id":"cj-gehen-0","topic":"orig","kind":"typed","prompt":"ich ___ (gehen)","answers":["ginge"],"why":"gehen → ging → ginge: <i>i<\/i> takes no umlaut (only a, o, u do), so just add the ending. Ending for <i>ich<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-gehen-1","topic":"orig","kind":"typed","prompt":"du ___ (gehen)","answers":["gingest"],"why":"gehen → ging → ginge: <i>i<\/i> takes no umlaut (only a, o, u do), so just add the ending. Ending for <i>du<\/i>: -est. Careful: <i>gingst<\/i> would be Präteritum indicative.","instr":"Konjunktiv II — type the form."},{"id":"cj-gehen-2","topic":"orig","kind":"typed","prompt":"er/sie/es ___ (gehen)","answers":["ginge"],"why":"gehen → ging → ginge: <i>i<\/i> takes no umlaut (only a, o, u do), so just add the ending. Ending for <i>er/sie/es<\/i>: -e.","instr":"Konjunktiv II — type the form."},{"id":"cj-gehen-3","topic":"orig","kind":"typed","prompt":"wir ___ (gehen)","answers":["gingen"],"why":"gehen → ging → ginge: <i>i<\/i> takes no umlaut (only a, o, u do), so just add the ending. Ending for <i>wir<\/i>: -en. <i>gingen<\/i> looks exactly like the Präteritum — only context tells you which it is.","instr":"Konjunktiv II — type the form."},{"id":"cj-gehen-4","topic":"orig","kind":"typed","prompt":"ihr ___ (gehen)","answers":["ginget"],"why":"gehen → ging → ginge: <i>i<\/i> takes no umlaut (only a, o, u do), so just add the ending. Ending for <i>ihr<\/i>: -et. Careful: <i>gingt<\/i> would be Präteritum indicative.","instr":"Konjunktiv II — type the form."},{"id":"cj-gehen-5","topic":"orig","kind":"typed","prompt":"sie/Sie ___ (gehen)","answers":["gingen"],"why":"gehen → ging → ginge: <i>i<\/i> takes no umlaut (only a, o, u do), so just add the ending. Ending for <i>sie/Sie<\/i>: -en. <i>gingen<\/i> looks exactly like the Präteritum — only context tells you which it is.","instr":"Konjunktiv II — type the form."},{"id":"shw-mc-01","topic":"shw","kind":"mc","prompt":"du ___ (sein)","options":["wärst","warst","wäre","wärt"],"correct":"wärst","why":"du → -st: <i>wärst<\/i> (or <i>wärest<\/i>). <i>warst<\/i> is Präteritum, no umlaut.","instr":"Which is the Konjunktiv II form?"},{"id":"shw-mc-02","topic":"shw","kind":"mc","prompt":"ihr ___ (haben)","options":["hättet","hättest","hattet","hätten"],"correct":"hättet","why":"ihr → -et: <i>hättet<\/i>. <i>hattet<\/i> has no umlaut, so it is Präteritum.","instr":"Which is the Konjunktiv II form?"},{"id":"shw-mc-03","topic":"shw","kind":"mc","prompt":"wir ___ (werden)","options":["würden","wurden","werden","würdet"],"correct":"würden","why":"wir → -en: <i>würden<\/i>. <i>wurden<\/i> is Präteritum, <i>werden<\/i> Präsens.","instr":"Which is the Konjunktiv II form?"},{"id":"shw-mc-04","topic":"shw","kind":"mc","prompt":"er ___ (sein)","options":["wäre","war","ist","wären"],"correct":"wäre","why":"er → -e: <i>wäre<\/i>. <i>war<\/i> is Präteritum, <i>ist<\/i> Präsens.","instr":"Which is the Konjunktiv II form?"},{"id":"shw-mc-05","topic":"shw","kind":"mc","prompt":"Sie (formal) ___ (haben)","options":["hätten","hatten","hättet","haben"],"correct":"hätten","why":"Sie (formal) → -en: <i>hätten<\/i>.","instr":"Which is the Konjunktiv II form?"},{"id":"shw-mc-06","topic":"shw","kind":"mc","prompt":"ich ___ (werden)","options":["würde","wurde","werde","würden"],"correct":"würde","why":"ich → -e: <i>würde<\/i>. <i>wurde<\/i> (no umlaut) is the Präteritum it is built from.","instr":"Which is the Konjunktiv II form?"},{"id":"shw-g-01","topic":"shw","kind":"gaps","prompt":"Das ___ super! (sein)","answers":[["wäre"]],"why":"Cautious / enthusiastic reaction: <i>Das wäre super!<\/i> — sein uses its own form.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"shw-g-02","topic":"shw","kind":"gaps","prompt":"Ich ___ gern die Rechnung. (haben)","answers":[["hätte"]],"why":"Polite wish: <i>Ich hätte gern …<\/i> — the standard way to order or ask for something.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"shw-g-03","topic":"shw","kind":"gaps","prompt":"___ du mir helfen? (werden)","answers":[["Würdest"]],"why":"Polite request with würde: <i>Würdest du mir helfen?<\/i> — du → -est.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"shw-g-04","topic":"shw","kind":"gaps","prompt":"Wir ___ jetzt gern am Strand. (sein)","answers":[["wären"]],"why":"Wish: <i>Wir wären jetzt gern am Strand.<\/i> — wir → -en.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"shw-g-05","topic":"shw","kind":"gaps","prompt":"___ Sie einen Moment Zeit? (haben)","answers":[["Hätten"]],"why":"Politeness: <i>Hätten Sie …?<\/i> is softer than <i>Haben Sie …?<\/i>","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"shw-g-06","topic":"shw","kind":"gaps","prompt":"Ohne Hilfe ___ ihr das nie schaffen. (werden)","answers":[["würdet"]],"why":"ihr → -et: <i>würdet<\/i>. The infinitive <i>schaffen<\/i> stays at the end.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"shw-g-07","topic":"shw","kind":"gaps","prompt":"Wenn du hier ___, ___ ich glücklich. (sein, sein)","answers":[["wärst","wärest"],["wäre"]],"why":"Unreal condition: both clauses take Konjunktiv II. du → <i>wärst<\/i>, ich → <i>wäre<\/i>.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"shw-g-08","topic":"shw","kind":"gaps","prompt":"Er tut so, als ob er krank ___. (sein)","answers":[["wäre"]],"why":"Unreal comparison after <i>als ob<\/i>: the verb goes to the end, in Konjunktiv II.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"shw-g-09","topic":"shw","kind":"gaps","prompt":"Sie tun so, als ob sie keine Zeit ___. (haben)","answers":[["hätten"]],"why":"<i>als ob<\/i> + Konjunktiv II at the end: sie (plural) → <i>hätten<\/i>.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"shw-g-10","topic":"shw","kind":"gaps","prompt":"Ich ___ das an deiner Stelle nicht machen. (werden)","answers":[["würde"]],"why":"Advice with <i>an deiner Stelle<\/i>: <i>Ich würde … nicht machen.<\/i>","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"shw-g-11","topic":"shw","kind":"gaps","prompt":"Wenn ihr Zeit ___, könntet ihr uns besuchen. (haben)","answers":[["hättet"]],"why":"ihr → -et: <i>hättet<\/i>. In the wenn-clause the finite verb goes last.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"shw-g-12","topic":"shw","kind":"gaps","prompt":"Du ___ jetzt sicher gern ein Eis, oder? (haben)","answers":[["hättest"]],"why":"Wish, du-form: <i>hättest<\/i>.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"shw-g-13","topic":"shw","kind":"gaps","prompt":"Was ___ ihr in meiner Situation tun? (werden)","answers":[["würdet"]],"why":"ihr → <i>würdet<\/i>; the infinitive <i>tun<\/i> at the end.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"shw-g-14","topic":"shw","kind":"gaps","prompt":"Ohne dich ___ ich verloren. (sein)","answers":[["wäre"]],"why":"Unreal condition without <i>wenn<\/i>: <i>ohne dich<\/i> = <i>wenn du nicht da wärst<\/i>.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"shw-g-15","topic":"shw","kind":"gaps","prompt":"Ohne Auto ___ wir nicht so flexibel. (sein)","answers":[["wären"]],"why":"wir → <i>wären<\/i>. The condition is hidden in <i>ohne Auto<\/i>.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"shw-g-16","topic":"shw","kind":"gaps","prompt":"Ich ___ eine Frage. (haben)","answers":[["hätte"]],"why":"Very common polite opener: <i>Ich hätte eine Frage.<\/i> — softer than <i>Ich habe eine Frage.<\/i>","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"shw-g-17","topic":"shw","kind":"gaps","prompt":"___ es möglich, morgen zu kommen? (sein)","answers":[["Wäre"]],"why":"Cautious question: <i>Wäre es möglich …?<\/i>","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"shw-g-18","topic":"shw","kind":"gaps","prompt":"Ihr ___ jetzt sicher gern zu Hause, stimmt's? (sein)","answers":[["wärt","wäret"]],"why":"ihr → <i>wärt<\/i> (or <i>wäret<\/i>).","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"shw-g-19","topic":"shw","kind":"gaps","prompt":"Wenn wir ein Auto ___, ___ wir dich abholen. (haben, werden)","answers":[["hätten"],["würden"]],"why":"Unreal condition: <i>hätten<\/i> at the end of the wenn-clause, then <i>würden<\/i> opens the main clause.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"shw-g-20","topic":"shw","kind":"gaps","prompt":"Wie ___ es mit Freitag? (sein)","answers":[["wäre"]],"why":"Suggestion formula: <i>Wie wäre es mit …?<\/i> = How about …?","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"mod-mc-01","topic":"modal","kind":"mc","prompt":"Which modal verb has <b>no<\/b> umlaut in Konjunktiv II?","options":["sollen","können","müssen","dürfen"],"correct":"sollen","why":"sollen → <i>sollte<\/i> and wollen → <i>wollte<\/i> keep the plain o. The other four take an umlaut.","instr":null,"enPrompt":true},{"id":"mod-mc-02","topic":"modal","kind":"mc","prompt":"Konjunktiv II of <b>mögen<\/b> (ich):","options":["möchte","mochte","mögte","möge"],"correct":"möchte","why":"mögen → mochte → m<b>ö<\/b>chte. <i>mochte<\/i> is Präteritum; <i>möge<\/i> is Konjunktiv I.","instr":null,"enPrompt":true},{"id":"mod-mc-03","topic":"modal","kind":"mc","prompt":"du ___ (können)","options":["könntest","konntest","könnest","kannst"],"correct":"könntest","why":"Präteritum <i>konntest<\/i> + umlaut = <i>könntest<\/i>.","instr":null},{"id":"mod-mc-04","topic":"modal","kind":"mc","prompt":"ihr ___ (müssen)","options":["müsstet","müsst","musstet","müssten"],"correct":"müsstet","why":"ihr → -et: <i>müsstet<\/i>. <i>müsst<\/i> is Präsens, <i>musstet<\/i> Präteritum.","instr":null},{"id":"mod-mc-05","topic":"modal","kind":"mc","prompt":"wir ___ (dürfen)","options":["dürften","durften","dürfen","dürftet"],"correct":"dürften","why":"wir → -en: <i>dürften<\/i>. Without the umlaut (<i>durften<\/i>) it is Präteritum.","instr":null},{"id":"mod-mc-06","topic":"modal","kind":"mc","prompt":"Sie (formal) ___ (wollen)","options":["wollten","wöllten","wollen","wolltet"],"correct":"wollten","why":"wollen never takes an umlaut: <i>wollten<\/i>. It looks exactly like the Präteritum.","instr":null},{"id":"mod-mc-07","topic":"modal","kind":"mc","prompt":"Which of these is <b>not<\/b> a real Konjunktiv II form?","options":["söllte","könnte","müsste","dürfte"],"correct":"söllte","why":"sollen keeps the plain o: <i>sollte<\/i>. <i>söllte<\/i> does not exist.","instr":null,"enPrompt":true},{"id":"mod-g-01","topic":"modal","kind":"gaps","prompt":"Du ___ mehr schlafen. (sollen)","answers":[["solltest"]],"why":"Advice: <i>Du solltest …<\/i> — du → -est.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"mod-g-02","topic":"modal","kind":"gaps","prompt":"___ Sie mir helfen? (können)","answers":[["Könnten"]],"why":"Politeness: <i>Könnten Sie …?<\/i> is softer than <i>Können Sie …?<\/i>","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"mod-g-03","topic":"modal","kind":"gaps","prompt":"Er ___ recht haben. (können)","answers":[["könnte"]],"why":"Cautious statement: <i>Er könnte recht haben.<\/i> = He could be right.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"mod-g-04","topic":"modal","kind":"gaps","prompt":"Ich ___ gern einen Tee. (mögen)","answers":[["möchte"]],"why":"<i>möchte<\/i> is the Konjunktiv II of mögen and the everyday way to say 'would like'.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"mod-g-05","topic":"modal","kind":"gaps","prompt":"Wir ___ eigentlich früher aufstehen. (müssen)","answers":[["müssten"]],"why":"Softened obligation: <i>Wir müssten eigentlich …<\/i> = we really ought to.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"mod-g-06","topic":"modal","kind":"gaps","prompt":"___ ich das Fenster öffnen? (dürfen)","answers":[["Dürfte"]],"why":"Very polite permission question: <i>Dürfte ich …?<\/i>","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"mod-g-07","topic":"modal","kind":"gaps","prompt":"Ihr ___ mal wieder Sport machen. (sollen)","answers":[["solltet"]],"why":"ihr → -et: <i>solltet<\/i>.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"mod-g-08","topic":"modal","kind":"gaps","prompt":"Sie ___ das Formular bis Montag abgeben. (müssen — Sie = formal)","answers":[["müssten"]],"why":"Softened instruction: <i>Sie müssten …<\/i> sounds less harsh than <i>Sie müssen …<\/i>.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"mod-g-09","topic":"modal","kind":"gaps","prompt":"Was ___ ich jetzt am besten machen? (sollen)","answers":[["sollte"]],"why":"Asking for advice: <i>Was sollte ich …?<\/i> — ich → -e.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"mod-g-10","topic":"modal","kind":"gaps","prompt":"Du ___ dir mehr Zeit nehmen. (sollen)","answers":[["solltest"]],"why":"Advice with <i>solltest<\/i>.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"mod-g-11","topic":"modal","kind":"gaps","prompt":"___ du mir das Salz geben? (können)","answers":[["Könntest"]],"why":"Polite request: <i>Könntest du …?<\/i>","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"mod-g-12","topic":"modal","kind":"gaps","prompt":"Wir ___ jetzt eigentlich schon im Urlaub sein. (können)","answers":[["könnten"]],"why":"Unreal: <i>könnten … sein<\/i> — we could already be on holiday (but we are not).","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"mod-g-13","topic":"modal","kind":"gaps","prompt":"Ich ___ jetzt eigentlich arbeiten. (müssen)","answers":[["müsste"]],"why":"<i>Ich müsste eigentlich …<\/i> = I really should (but I'm not).","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"mod-g-14","topic":"modal","kind":"gaps","prompt":"Ihr ___ ruhig etwas lauter sprechen. (dürfen)","answers":[["dürftet"]],"why":"ihr → -et: <i>dürftet<\/i>. Soft permission / encouragement.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"mod-g-15","topic":"modal","kind":"gaps","prompt":"Ich ___ Ihnen nur kurz etwas sagen. (mögen)","answers":[["möchte"]],"why":"<i>Ich möchte …<\/i> — polite intention.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"mod-g-16","topic":"modal","kind":"gaps","prompt":"Man ___ nie aufgeben. (sollen)","answers":[["sollte"]],"why":"General advice: <i>Man sollte …<\/i>","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"mod-g-17","topic":"modal","kind":"gaps","prompt":"Das ___ eigentlich funktionieren. (müssen)","answers":[["müsste"]],"why":"Cautious statement: <i>Das müsste funktionieren.<\/i> = That should work (I think).","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"mod-g-18","topic":"modal","kind":"gaps","prompt":"Das ___ kein Problem sein. (dürfen)","answers":[["dürfte"]],"why":"<i>dürfte<\/i> = probably: <i>Das dürfte kein Problem sein.<\/i>","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"mod-g-19","topic":"modal","kind":"gaps","prompt":"___ ihr mir kurz helfen? (können)","answers":[["Könntet"]],"why":"ihr → -et: <i>Könntet ihr …?<\/i>","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"mod-g-20","topic":"modal","kind":"gaps","prompt":"Wir ___ uns bald mal wieder treffen. (sollen)","answers":[["sollten"]],"why":"Suggestion: <i>Wir sollten uns … treffen.<\/i>","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"orig-pt-war","topic":"orig","kind":"typed","prompt":"Präteritum <b>war<\/b> → Konjunktiv II ___","answers":["wäre"],"why":"Rule: Präteritum (ich-form) + umlaut (only on a, o, u) + ending -e. a → ä.","instr":"Build the Konjunktiv II (ich-form) from the Präteritum."},{"id":"orig-pt-hatte","topic":"orig","kind":"typed","prompt":"Präteritum <b>hatte<\/b> → Konjunktiv II ___","answers":["hätte"],"why":"Rule: Präteritum (ich-form) + umlaut (only on a, o, u) + ending -e. a → ä.","instr":"Build the Konjunktiv II (ich-form) from the Präteritum."},{"id":"orig-pt-wurde","topic":"orig","kind":"typed","prompt":"Präteritum <b>wurde<\/b> → Konjunktiv II ___","answers":["würde"],"why":"Rule: Präteritum (ich-form) + umlaut (only on a, o, u) + ending -e. u → ü.","instr":"Build the Konjunktiv II (ich-form) from the Präteritum."},{"id":"orig-pt-konnte","topic":"orig","kind":"typed","prompt":"Präteritum <b>konnte<\/b> → Konjunktiv II ___","answers":["könnte"],"why":"Rule: Präteritum (ich-form) + umlaut (only on a, o, u) + ending -e. o → ö.","instr":"Build the Konjunktiv II (ich-form) from the Präteritum."},{"id":"orig-pt-wusste","topic":"orig","kind":"typed","prompt":"Präteritum <b>wusste<\/b> → Konjunktiv II ___","answers":["wüsste"],"why":"Rule: Präteritum (ich-form) + umlaut (only on a, o, u) + ending -e. u → ü.","instr":"Build the Konjunktiv II (ich-form) from the Präteritum."},{"id":"orig-pt-kam","topic":"orig","kind":"typed","prompt":"Präteritum <b>kam<\/b> → Konjunktiv II ___","answers":["käme"],"why":"Rule: Präteritum (ich-form) + umlaut (only on a, o, u) + ending -e. a → ä, then add -e.","instr":"Build the Konjunktiv II (ich-form) from the Präteritum."},{"id":"orig-pt-ging","topic":"orig","kind":"typed","prompt":"Präteritum <b>ging<\/b> → Konjunktiv II ___","answers":["ginge"],"why":"Rule: Präteritum (ich-form) + umlaut (only on a, o, u) + ending -e. i cannot take an umlaut, so only the -e is added.","instr":"Build the Konjunktiv II (ich-form) from the Präteritum."},{"id":"orig-pt-musste","topic":"orig","kind":"typed","prompt":"Präteritum <b>musste<\/b> → Konjunktiv II ___","answers":["müsste"],"why":"Rule: Präteritum (ich-form) + umlaut (only on a, o, u) + ending -e. u → ü.","instr":"Build the Konjunktiv II (ich-form) from the Präteritum."},{"id":"orig-pt-durfte","topic":"orig","kind":"typed","prompt":"Präteritum <b>durfte<\/b> → Konjunktiv II ___","answers":["dürfte"],"why":"Rule: Präteritum (ich-form) + umlaut (only on a, o, u) + ending -e. u → ü.","instr":"Build the Konjunktiv II (ich-form) from the Präteritum."},{"id":"orig-pt-mochte","topic":"orig","kind":"typed","prompt":"Präteritum <b>mochte<\/b> → Konjunktiv II ___","answers":["möchte"],"why":"Rule: Präteritum (ich-form) + umlaut (only on a, o, u) + ending -e. o → ö.","instr":"Build the Konjunktiv II (ich-form) from the Präteritum."},{"id":"orig-pt-sollte","topic":"orig","kind":"typed","prompt":"Präteritum <b>sollte<\/b> → Konjunktiv II ___","answers":["sollte"],"why":"Rule: Präteritum (ich-form) + umlaut (only on a, o, u) + ending -e. Exception: sollen takes no umlaut, so the form is unchanged.","instr":"Build the Konjunktiv II (ich-form) from the Präteritum."},{"id":"orig-pt-wollte","topic":"orig","kind":"typed","prompt":"Präteritum <b>wollte<\/b> → Konjunktiv II ___","answers":["wollte"],"why":"Rule: Präteritum (ich-form) + umlaut (only on a, o, u) + ending -e. Exception: wollen takes no umlaut, so the form is unchanged.","instr":"Build the Konjunktiv II (ich-form) from the Präteritum."},{"id":"orig-mc-01","topic":"orig","kind":"mc","prompt":"How is the own Konjunktiv II form built?","options":["Präteritum (ich-form) + umlaut on a/o/u + ending","Präsens + umlaut","Infinitive + -te","Partizip II + würde"],"correct":"Präteritum (ich-form) + umlaut on a/o/u + ending","why":"war → wäre, hatte → hätte, kam → käme. The endings are -e, -est, -e, -en, -et, -en.","instr":null,"enOpts":true,"enPrompt":true},{"id":"orig-mc-02","topic":"orig","kind":"mc","prompt":"Why does <b>ginge<\/b> have no umlaut?","options":["i cannot take an umlaut — only a, o, u can","gehen is completely irregular","ginge is actually the Präteritum","The umlaut is optional"],"correct":"i cannot take an umlaut — only a, o, u can","why":"ging → ginge: the vowel stays, only the ending -e is added.","instr":null,"enOpts":true,"enPrompt":true},{"id":"orig-mc-03","topic":"orig","kind":"mc","prompt":"Why do <b>sollte<\/b> and <b>wollte<\/b> have no umlaut?","options":["sollen and wollen are exceptions: no umlaut although the vowel is o","Their vowel is not a, o or u","They are not modal verbs","They only form Konjunktiv II with würde"],"correct":"sollen and wollen are exceptions: no umlaut although the vowel is o","why":"That is why <i>sollte / wollte<\/i> look identical to the Präteritum — context decides.","instr":null,"enOpts":true,"enPrompt":true},{"id":"orig-mc-04","topic":"orig","kind":"mc","prompt":"Konjunktiv II of <b>wissen<\/b> (ich):","options":["wüsste","wusste","weiß","wisse"],"correct":"wüsste","why":"wusste + umlaut = <i>wüsste<\/i>. <i>wisse<\/i> is Konjunktiv I, <i>weiß<\/i> Präsens.","instr":null,"enPrompt":true},{"id":"orig-mc-05","topic":"orig","kind":"mc","prompt":"Konjunktiv II of <b>gehen<\/b> (er):","options":["ginge","ging","gehe","gegangen"],"correct":"ginge","why":"ging + -e = <i>ginge<\/i>. <i>ging<\/i> alone is Präteritum.","instr":null,"enPrompt":true},{"id":"orig-mc-06","topic":"orig","kind":"mc","prompt":"Konjunktiv II of <b>kommen<\/b> (sie, singular):","options":["käme","kam","komme","kämte"],"correct":"käme","why":"kam → käme: umlaut on the a plus -e. <i>kämte<\/i> does not exist.","instr":null,"enPrompt":true},{"id":"orig-mc-07","topic":"orig","kind":"mc","prompt":"Which Präteritum form is <b>würde<\/b> built from?","options":["wurde","werde","wird","geworden"],"correct":"wurde","why":"werden → wurde → w<b>ü<\/b>rde. That is why würde is itself a Konjunktiv II form.","instr":null,"enPrompt":true},{"id":"orig-g-01","topic":"orig","kind":"gaps","prompt":"Wenn ich das ___, würde ich es dir sagen. (wissen)","answers":[["wüsste"]],"why":"Unreal condition: <i>wenn ich das wüsste<\/i> — I don't know it.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"orig-g-02","topic":"orig","kind":"gaps","prompt":"Ich ___ gern, wann der Zug fährt. (wissen)","answers":[["wüsste"]],"why":"Polite wish: <i>Ich wüsste gern, …<\/i> = I'd like to know …","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"orig-g-03","topic":"orig","kind":"gaps","prompt":"Wenn er früher ___, könnten wir zusammen essen. (kommen)","answers":[["käme"]],"why":"kam → <i>käme<\/i>, at the end of the wenn-clause.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"orig-g-04","topic":"orig","kind":"gaps","prompt":"Das ___ leider nicht. (gehen)","answers":[["ginge"]],"why":"Cautious refusal: <i>Das ginge leider nicht.<\/i> = That wouldn't work, unfortunately.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"orig-g-05","topic":"orig","kind":"gaps","prompt":"Wenn es nach mir ___, würden wir jetzt fahren. (gehen)","answers":[["ginge"]],"why":"Fixed phrase: <i>Wenn es nach mir ginge<\/i> = if it were up to me.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"orig-g-06","topic":"orig","kind":"gaps","prompt":"___ du mit, wenn ich dich einladen würde? (kommen)","answers":[["Kämst","Kämest"]],"why":"du → <i>kämst<\/i> / <i>kämest<\/i>. Both are correct.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"orig-g-07","topic":"orig","kind":"gaps","prompt":"Wenn wir das ___, wären wir schlauer. (wissen)","answers":[["wüssten"]],"why":"wir → -en: <i>wüssten<\/i>.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"orig-g-08","topic":"orig","kind":"gaps","prompt":"Ohne Ticket ___ ich nicht rein. (kommen)","answers":[["käme"]],"why":"Hidden condition (<i>ohne Ticket<\/i>) + <i>käme<\/i>.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"orig-g-09","topic":"orig","kind":"gaps","prompt":"Wenn Sie morgen ___, könnten wir alles besprechen. (kommen)","answers":[["kämen"]],"why":"Sie → -en: <i>kämen<\/i>.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"orig-g-10","topic":"orig","kind":"gaps","prompt":"Ich ___ gern, ob das stimmt. (wissen)","answers":[["wüsste"]],"why":"<i>Ich wüsste gern, ob …<\/i> — indirect yes/no question after a polite wish.","instr":"Fill the gap with the Konjunktiv II form of the verb in brackets."},{"id":"wu-g-01","topic":"wuerde","kind":"gaps","prompt":"Ich ___ gern nach Berlin ___. (fahren)","answers":[["würde"],["fahren"]],"why":"Main clause: <i>würde<\/i> in position 2, the infinitive at the very end.","instr":"Fill both gaps: the right form of würde and the infinitive in brackets."},{"id":"wu-g-02","topic":"wuerde","kind":"gaps","prompt":"___ du mir ___? (helfen)","answers":[["Würdest"],["helfen"]],"why":"Yes/no question: <i>Würdest<\/i> in position 1, the infinitive at the end.","instr":"Fill both gaps: the right form of würde and the infinitive in brackets."},{"id":"wu-g-03","topic":"wuerde","kind":"gaps","prompt":"Wir ___ das Konzert gern ___. (besuchen)","answers":[["würden"],["besuchen"]],"why":"Main clause: <i>würde<\/i> in position 2, the infinitive at the very end.","instr":"Fill both gaps: the right form of würde and the infinitive in brackets."},{"id":"wu-g-04","topic":"wuerde","kind":"gaps","prompt":"___ Sie mir das ___? (erklären)","answers":[["Würden"],["erklären"]],"why":"Polite request: <i>Würden Sie … erklären?<\/i>","instr":"Fill both gaps: the right form of würde and the infinitive in brackets."},{"id":"wu-g-05","topic":"wuerde","kind":"gaps","prompt":"Er ___ nie ___. (lügen)","answers":[["würde"],["lügen"]],"why":"Main clause: <i>würde<\/i> in position 2, the infinitive at the very end.","instr":"Fill both gaps: the right form of würde and the infinitive in brackets."},{"id":"wu-g-06","topic":"wuerde","kind":"gaps","prompt":"Ihr ___ das sicher ___. (verstehen)","answers":[["würdet"],["verstehen"]],"why":"ihr → <i>würdet<\/i>. Main clause: <i>würde<\/i> in position 2, the infinitive at the very end.","instr":"Fill both gaps: the right form of würde and the infinitive in brackets."},{"id":"wu-g-07","topic":"wuerde","kind":"gaps","prompt":"Ich ___ dich gern ___. (einladen)","answers":[["würde"],["einladen"]],"why":"Separable verb stays whole as an infinitive at the end: <i>einladen<\/i>.","instr":"Fill both gaps: the right form of würde and the infinitive in brackets."},{"id":"wu-g-08","topic":"wuerde","kind":"gaps","prompt":"Was ___ du in meiner Situation ___? (machen)","answers":[["würdest"],["machen"]],"why":"W-question: <i>Was<\/i> is position 1, <i>würdest<\/i> position 2, <i>machen<\/i> last.","instr":"Fill both gaps: the right form of würde and the infinitive in brackets."},{"id":"wu-g-09","topic":"wuerde","kind":"gaps","prompt":"Sie ___ das Auto nie ___. (verkaufen — Sie = they)","answers":[["würden"],["verkaufen"]],"why":"Main clause: <i>würde<\/i> in position 2, the infinitive at the very end.","instr":"Fill both gaps: the right form of würde and the infinitive in brackets."},{"id":"wu-g-10","topic":"wuerde","kind":"gaps","prompt":"An deiner Stelle ___ ich mit ihm ___. (sprechen)","answers":[["würde"],["sprechen"]],"why":"<i>An deiner Stelle<\/i> takes position 1, so <i>würde<\/i> comes next, before <i>ich<\/i>.","instr":"Fill both gaps: the right form of würde and the infinitive in brackets."},{"id":"wu-g-11","topic":"wuerde","kind":"gaps","prompt":"Ich wäre froh, wenn du mir ___ ___. (helfen)","answers":[["helfen"],["würdest"]],"why":"Subordinate clause: the infinitive first, then <i>würde<\/i> at the very end.","instr":"Fill both gaps: the right form of würde and the infinitive in brackets."},{"id":"wu-g-12","topic":"wuerde","kind":"gaps","prompt":"Es wäre schön, wenn ihr uns ___ ___. (besuchen)","answers":[["besuchen"],["würdet"]],"why":"Subordinate clause: the infinitive first, then <i>würde<\/i> at the very end.","instr":"Fill both gaps: the right form of würde and the infinitive in brackets."},{"id":"wu-g-13","topic":"wuerde","kind":"gaps","prompt":"Ich wüsste gern, ob Sie mir ___ ___. (schreiben)","answers":[["schreiben"],["würden"]],"why":"<i>ob<\/i>-clause is subordinate: infinitive, then <i>würden<\/i> at the end.","instr":"Fill both gaps: the right form of würde and the infinitive in brackets."},{"id":"wu-g-14","topic":"wuerde","kind":"gaps","prompt":"Wenn ich in Berlin ___ ___, hätte ich mehr Freunde. (wohnen)","answers":[["wohnen"],["würde"]],"why":"Subordinate clause: the infinitive first, then <i>würde<\/i> at the very end.","instr":"Fill both gaps: the right form of würde and the infinitive in brackets."},{"id":"wu-g-15","topic":"wuerde","kind":"gaps","prompt":"Er sagt, dass er das nie ___ ___. (machen)","answers":[["machen"],["würde"]],"why":"<i>dass<\/i>-clause: infinitive, then <i>würde<\/i> at the end.","instr":"Fill both gaps: the right form of würde and the infinitive in brackets."},{"id":"wu-g-16","topic":"wuerde","kind":"gaps","prompt":"Wenn du nicht so viel ___ ___, hättest du mehr Zeit. (arbeiten)","answers":[["arbeiten"],["würdest"]],"why":"Subordinate clause: the infinitive first, then <i>würde<\/i> at the very end.","instr":"Fill both gaps: the right form of würde and the infinitive in brackets."},{"id":"wu-g-17","topic":"wuerde","kind":"gaps","prompt":"Morgen ___ ich gern länger ___. (schlafen)","answers":[["würde"],["schlafen"]],"why":"<i>Morgen<\/i> in position 1 → <i>würde<\/i> in position 2 → <i>ich<\/i> after the verb.","instr":"Fill both gaps: the right form of würde and the infinitive in brackets."},{"id":"wu-g-18","topic":"wuerde","kind":"gaps","prompt":"___ ihr ___? (mitkommen)","answers":[["Würdet"],["mitkommen"]],"why":"Separable verb: as an infinitive it stays in one piece at the end.","instr":"Fill both gaps: the right form of würde and the infinitive in brackets."},{"id":"wu-g-19","topic":"wuerde","kind":"gaps","prompt":"Ich ___ das Licht ___. (ausmachen)","answers":[["würde"],["ausmachen"]],"why":"Infinitive at the end, separable prefix attached: <i>ausmachen<\/i>.","instr":"Fill both gaps: the right form of würde and the infinitive in brackets."},{"id":"wu-g-20","topic":"wuerde","kind":"gaps","prompt":"Wenn er mich ___ ___, würde ich sofort kommen. (anrufen)","answers":[["anrufen"],["würde"]],"why":"Subordinate clause: the infinitive first, then <i>würde<\/i> at the very end.","instr":"Fill both gaps: the right form of würde and the infinitive in brackets."},{"id":"wu-mc-01","topic":"wuerde","kind":"mc","prompt":"In a main clause with <b>würde<\/b>, where does the infinitive go?","options":["At the very end","Directly after würde","In position 1","Before the subject"],"correct":"At the very end","why":"<i>Ich würde morgen gern nach Berlin fahren.<\/i> — würde in position 2, the infinitive last.","instr":null,"enOpts":true,"enPrompt":true},{"id":"wu-mc-02","topic":"wuerde","kind":"mc","prompt":"In a <b>wenn<\/b>-clause, how are infinitive and würde ordered?","options":["Infinitive first, then würde at the very end","würde first, then the infinitive","würde in position 2","Either order is fine"],"correct":"Infinitive first, then würde at the very end","why":"<i>…, wenn ich in Berlin wohnen würde.<\/i>","instr":null,"enOpts":true,"enPrompt":true},{"id":"wu-mc-03","topic":"wuerde","kind":"mc","prompt":"Which sentence is correct?","options":["Ich würde gern nach Berlin fahren.","Ich würde fahren gern nach Berlin.","Ich fahren würde gern nach Berlin.","Ich gern würde nach Berlin fahren."],"correct":"Ich würde gern nach Berlin fahren.","why":"Position 2 for <i>würde<\/i>, infinitive at the end — the two together form the sentence bracket.","instr":null,"enPrompt":true},{"id":"wu-mc-04","topic":"wuerde","kind":"mc","prompt":"Which clause is correct?","options":["…, wenn ich in Berlin wohnen würde.","…, wenn ich würde in Berlin wohnen.","…, wenn ich in Berlin würde wohnen.","…, wenn würde ich in Berlin wohnen."],"correct":"…, wenn ich in Berlin wohnen würde.","why":"In a subordinate clause the conjugated verb goes last, after the infinitive.","instr":null,"enPrompt":true},{"id":"wu-mc-05","topic":"wuerde","kind":"mc","prompt":"würde is conjugated. Which is the <b>ihr<\/b>-form?","options":["würdet","würden","würdest","würde"],"correct":"würdet","why":"ihr → -et: <i>würdet<\/i>.","instr":null,"enPrompt":true},{"id":"fn-01","topic":"function","kind":"mc","prompt":"Könnten Sie mir helfen?","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Politeness","why":"A request made softer with <i>könnten<\/i> — the speaker is being polite, not describing anything unreal.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-02","topic":"function","kind":"mc","prompt":"Ich hätte gern einen Kaffee.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Wish","why":"<i>hätte gern<\/i> expresses what the speaker would like.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-03","topic":"function","kind":"mc","prompt":"Wenn ich Zeit hätte, würde ich kommen.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Unreal condition","why":"<i>wenn<\/i> + Konjunktiv II: the speaker has no time, so the coming will not happen.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-04","topic":"function","kind":"mc","prompt":"Du solltest mehr schlafen.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Advice","why":"<i>solltest<\/i> = you should — a recommendation.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-05","topic":"function","kind":"mc","prompt":"Das wäre möglich.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Cautious statement","why":"<i>wäre<\/i> softens the claim: possible, but the speaker is not committing.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-06","topic":"function","kind":"mc","prompt":"Er tut so, als ob er krank wäre.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Unreal comparison","why":"<i>als ob<\/i> + Konjunktiv II: he is compared with an ill person, but he is not ill.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-07","topic":"function","kind":"mc","prompt":"Würdest du mir das Fenster öffnen?","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Politeness","why":"<i>Würdest du …?<\/i> is the softened form of <i>Öffnest du …?<\/i> / <i>Öffne …!<\/i>","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-08","topic":"function","kind":"mc","prompt":"Ich wäre jetzt gern am Meer.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Wish","why":"<i>wäre gern<\/i> — the speaker is not at the sea and wishes to be.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-09","topic":"function","kind":"mc","prompt":"Wenn ich reich wäre, würde ich eine Weltreise machen.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Unreal condition","why":"The <i>wenn<\/i>-clause states a condition that is not the case (the speaker is not rich).","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-10","topic":"function","kind":"mc","prompt":"An deiner Stelle würde ich zum Arzt gehen.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Advice","why":"<i>An deiner Stelle würde ich …<\/i> is the classic advice formula.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-11","topic":"function","kind":"mc","prompt":"Das könnte stimmen.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Cautious statement","why":"<i>könnte<\/i> = could be — the speaker leaves room for doubt.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-12","topic":"function","kind":"mc","prompt":"Sie redet, als ob sie alles wüsste.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Unreal comparison","why":"<i>als ob<\/i> + <i>wüsste<\/i>: she does not actually know everything.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-13","topic":"function","kind":"mc","prompt":"Hätten Sie einen Moment Zeit?","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Politeness","why":"<i>Hätten Sie …?<\/i> is a courteous way to ask for a moment.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-14","topic":"function","kind":"mc","prompt":"Ich hätte gern mehr Freizeit.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Wish","why":"<i>hätte gern<\/i> — a wish for something the speaker lacks.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-15","topic":"function","kind":"mc","prompt":"Wenn wir ein Auto hätten, würden wir ans Meer fahren.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Unreal condition","why":"<i>wenn … hätten, würden …<\/i>: no car, so no trip.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-16","topic":"function","kind":"mc","prompt":"Du könntest es mal mit Yoga versuchen.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Advice","why":"<i>Du könntest … versuchen<\/i> — a gentle suggestion to try something.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-17","topic":"function","kind":"mc","prompt":"Es könnte morgen regnen.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Cautious statement","why":"<i>könnte<\/i> makes the forecast tentative.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-18","topic":"function","kind":"mc","prompt":"Er benimmt sich, als ob er der Chef wäre.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Unreal comparison","why":"<i>als ob<\/i>: he behaves like the boss, but he is not the boss.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-19","topic":"function","kind":"mc","prompt":"Dürfte ich kurz stören?","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Politeness","why":"<i>Dürfte ich …?<\/i> is the most polite way to ask permission.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-20","topic":"function","kind":"mc","prompt":"Ich würde so gern Klavier spielen können.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Wish","why":"<i>würde so gern<\/i> — a wish the speaker cannot fulfil right now.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-21","topic":"function","kind":"mc","prompt":"Wenn es nicht regnen würde, würden wir draußen essen.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Unreal condition","why":"It is raining, so eating outside is not happening — an unreal condition.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-22","topic":"function","kind":"mc","prompt":"Ihr solltet früher ins Bett gehen.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Advice","why":"<i>solltet<\/i> = you (pl.) should.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-23","topic":"function","kind":"mc","prompt":"Das dürfte kein Problem sein.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Cautious statement","why":"<i>dürfte<\/i> here means 'probably' — a careful guess, not a fact.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-24","topic":"function","kind":"mc","prompt":"Sie tun so, als ob sie kein Deutsch könnten.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Unreal comparison","why":"<i>als ob … könnten<\/i>: they pretend not to know German.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-25","topic":"function","kind":"mc","prompt":"Wären Sie so nett, mir zu helfen?","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Politeness","why":"<i>Wären Sie so nett …?<\/i> — a very polite request formula.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-26","topic":"function","kind":"mc","prompt":"Ich hätte so gern ein Haustier.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Wish","why":"<i>hätte so gern<\/i> — a strong wish.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-27","topic":"function","kind":"mc","prompt":"Wenn du nicht hier wärst, wäre ich verloren.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Unreal condition","why":"You are here, so the speaker is not lost — the condition is unreal.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-28","topic":"function","kind":"mc","prompt":"Ich würde an deiner Stelle das Angebot annehmen.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Advice","why":"<i>an deiner Stelle<\/i> marks it as advice: in your place I would …","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-29","topic":"function","kind":"mc","prompt":"Das müsste eigentlich funktionieren.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Cautious statement","why":"<i>müsste eigentlich<\/i> = should (I think) — the speaker is not certain.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-30","topic":"function","kind":"mc","prompt":"Er spricht Deutsch, als ob er hier geboren wäre.","options":["Politeness","Wish","Unreal condition","Advice","Cautious statement","Unreal comparison"],"correct":"Unreal comparison","why":"<i>als ob … wäre<\/i>: he was not born here, but sounds like it.","instr":"What is Konjunktiv II doing in this sentence?","enOpts":true},{"id":"fn-sig-01","topic":"function","kind":"mc","prompt":"Which phrase signals an <b>unreal comparison<\/b>?","options":["als ob","an deiner Stelle","gern","wenn"],"correct":"als ob","why":"<i>Er tut so, als ob er krank wäre.<\/i>","instr":null,"enOpts":true,"enPrompt":true},{"id":"fn-sig-02","topic":"function","kind":"mc","prompt":"Which opener most typically introduces <b>advice<\/b>?","options":["An deiner Stelle …","Als ob …","Hätten Sie …","Es könnte …"],"correct":"An deiner Stelle …","why":"<i>An deiner Stelle würde ich …<\/i> = in your place I would …","instr":null,"enOpts":true,"enPrompt":true},{"id":"fn-sig-03","topic":"function","kind":"mc","prompt":"<b>hätte gern<\/b> / <b>wäre gern<\/b> most typically express a…","options":["Wish","Unreal comparison","Cautious statement","Advice"],"correct":"Wish","why":"<i>Ich hätte gern …<\/i> / <i>Ich wäre gern …<\/i> — what the speaker would like.","instr":null,"enOpts":true,"enPrompt":true},{"id":"fn-sig-04","topic":"function","kind":"mc","prompt":"<b>könnte / dürfte / müsste<\/b> in front of a claim (<i>Das könnte stimmen<\/i>) make it a…","options":["Cautious statement","Wish","Advice","Politeness"],"correct":"Cautious statement","why":"They downgrade certainty: could be, probably, should be.","instr":null,"enOpts":true,"enPrompt":true},{"id":"pat-01","topic":"patterns","kind":"typed","prompt":"Kannst du mir helfen?","answers":["Könntest du mir helfen?"],"why":"kannst → <i>könntest<\/i>: the modal takes Konjunktiv II, nothing else moves.","instr":"Make it softer with Konjunktiv II.","cue":"könnt-","direct":"Kannst du mir helfen?"},{"id":"pat-02","topic":"patterns","kind":"typed","prompt":"Können Sie mir helfen?","answers":["Könnten Sie mir helfen?"],"why":"können → <i>könnten<\/i> (Sie-form).","instr":"Make it softer with Konjunktiv II.","cue":"könnt-","direct":"Können Sie mir helfen?"},{"id":"pat-03","topic":"patterns","kind":"typed","prompt":"Ich will einen Kaffee.","answers":["Ich hätte gern einen Kaffee."],"why":"<i>Ich will<\/i> sounds demanding. <i>Ich hätte gern …<\/i> is the polite standard.","instr":"Make it softer with Konjunktiv II.","alt":["Ich möchte einen Kaffee.","Ich möchte gern einen Kaffee."],"altWhy":"<i>möchte<\/i> works too — but the pattern drilled here is <i>hätte gern<\/i>.","cue":"hätte gern","direct":"Ich will einen Kaffee."},{"id":"pat-04","topic":"patterns","kind":"typed","prompt":"Gib mir das Salz.","answers":["Würdest du mir das Salz geben?"],"why":"Imperative → question with <i>Würdest du … geben?<\/i> — the verb becomes an infinitive at the end.","instr":"Make it softer with Konjunktiv II.","alt":["Könntest du mir das Salz geben?"],"altWhy":"<i>Könntest du …?<\/i> is equally polite — the pattern drilled here is <i>würdest<\/i>.","cue":"würd-","direct":"Gib mir das Salz."},{"id":"pat-05","topic":"patterns","kind":"typed","prompt":"Haben Sie Zeit?","answers":["Hätten Sie Zeit?"],"why":"haben → <i>hätten<\/i>: one umlaut turns a plain question into a courteous one.","instr":"Make it softer with Konjunktiv II.","cue":"hätt-","direct":"Haben Sie Zeit?"},{"id":"pat-06","topic":"patterns","kind":"typed","prompt":"Ist das möglich?","answers":["Wäre das möglich?"],"why":"ist → <i>wäre<\/i>: cautious question.","instr":"Make it softer with Konjunktiv II.","cue":"wär-","direct":"Ist das möglich?"},{"id":"pat-07","topic":"patterns","kind":"typed","prompt":"Hast du einen Moment?","answers":["Hättest du einen Moment?"],"why":"hast → <i>hättest<\/i>.","instr":"Make it softer with Konjunktiv II.","cue":"hätt-","direct":"Hast du einen Moment?"},{"id":"pat-08","topic":"patterns","kind":"typed","prompt":"Das ist gut.","answers":["Das wäre gut."],"why":"ist → <i>wäre<\/i>: turns a statement into a soft agreement / suggestion.","instr":"Make it softer with Konjunktiv II.","cue":"wär-","direct":"Das ist gut."},{"id":"pat-09","topic":"patterns","kind":"typed","prompt":"Darf ich das Fenster öffnen?","answers":["Dürfte ich das Fenster öffnen?"],"why":"darf → <i>dürfte<\/i>: the most polite permission question.","instr":"Make it softer with Konjunktiv II.","cue":"dürft-","direct":"Darf ich das Fenster öffnen?"},{"id":"pat-10","topic":"patterns","kind":"typed","prompt":"Kannst du das Fenster schließen?","answers":["Könntest du das Fenster schließen?"],"why":"kannst → <i>könntest<\/i>.","instr":"Make it softer with Konjunktiv II.","cue":"könnt-","direct":"Kannst du das Fenster schließen?"},{"id":"pat-11","topic":"patterns","kind":"typed","prompt":"Geh früher ins Bett.","answers":["Du solltest früher ins Bett gehen."],"why":"Imperative → advice: <i>Du solltest … gehen.<\/i> The verb becomes an infinitive at the end.","instr":"Make it softer with Konjunktiv II.","cue":"Du solltest …","direct":"Geh früher ins Bett."},{"id":"pat-12","topic":"patterns","kind":"typed","prompt":"Schlaf mehr.","answers":["Du solltest mehr schlafen."],"why":"<i>Du solltest mehr schlafen.<\/i> — advice instead of an order.","instr":"Make it softer with Konjunktiv II.","cue":"Du solltest …","direct":"Schlaf mehr."},{"id":"pat-13","topic":"patterns","kind":"typed","prompt":"Wir müssen jetzt eigentlich gehen.","answers":["Wir müssten jetzt eigentlich gehen."],"why":"müssen → <i>müssten<\/i>: 'we really ought to go' instead of 'we must go'.","instr":"Make it softer with Konjunktiv II.","cue":"müsst-","direct":"Wir müssen jetzt eigentlich gehen."},{"id":"pat-14","topic":"patterns","kind":"typed","prompt":"Können Sie das wiederholen?","answers":["Könnten Sie das wiederholen?"],"why":"können → <i>könnten<\/i>.","instr":"Make it softer with Konjunktiv II.","cue":"könnt-","direct":"Können Sie das wiederholen?"},{"id":"pat-15","topic":"patterns","kind":"typed","prompt":"Kannst du mir das Buch geben?","answers":["Könntest du mir das Buch geben?"],"why":"kannst → <i>könntest<\/i>.","instr":"Make it softer with Konjunktiv II.","cue":"könnt-","direct":"Kannst du mir das Buch geben?"},{"id":"pat-16","topic":"patterns","kind":"typed","prompt":"Sagen Sie mir die Uhrzeit.","answers":["Könnten Sie mir die Uhrzeit sagen?"],"why":"Imperative → <i>Könnten Sie … sagen?<\/i> — infinitive at the end.","instr":"Make it softer with Konjunktiv II.","alt":["Würden Sie mir die Uhrzeit sagen?"],"altWhy":"<i>Würden Sie …?<\/i> is fine as well — the pattern drilled here is <i>könnten<\/i>.","cue":"könnt-","direct":"Sagen Sie mir die Uhrzeit."},{"id":"pat-17","topic":"patterns","kind":"typed","prompt":"Ich will wissen, wann der Zug fährt.","answers":["Ich wüsste gern, wann der Zug fährt."],"why":"<i>Ich will wissen<\/i> → <i>Ich wüsste gern<\/i>: the fixed polite formula for 'I'd like to know'.","instr":"Make it softer with Konjunktiv II.","alt":["Ich möchte wissen, wann der Zug fährt.","Ich möchte gern wissen, wann der Zug fährt.","Ich würde gern wissen, wann der Zug fährt."],"altWhy":"Also polite and correct — the pattern drilled here is <i>wüsste gern<\/i>.","cue":"wüsste gern","direct":"Ich will wissen, wann der Zug fährt."},{"id":"pat-18","topic":"patterns","kind":"typed","prompt":"Können wir morgen kommen?","answers":["Könnten wir morgen kommen?"],"why":"können → <i>könnten<\/i>.","instr":"Make it softer with Konjunktiv II.","cue":"könnt-","direct":"Können wir morgen kommen?"},{"id":"pat-19","topic":"patterns","kind":"typed","prompt":"Hilf mir!","answers":["Könntest du mir helfen?"],"why":"Order → question: <i>Könntest du mir helfen?<\/i>","instr":"Make it softer with Konjunktiv II.","alt":["Würdest du mir helfen?"],"altWhy":"<i>Würdest du …?<\/i> works too — the pattern drilled here is <i>könntest<\/i>.","cue":"könnt-","direct":"Hilf mir!"},{"id":"pat-20","topic":"patterns","kind":"typed","prompt":"Sie müssen das Formular ausfüllen.","answers":["Sie müssten das Formular ausfüllen."],"why":"müssen → <i>müssten<\/i>: the instruction sounds less harsh.","instr":"Make it softer with Konjunktiv II.","cue":"müsst-","direct":"Sie müssen das Formular ausfüllen."},{"id":"pat-21","topic":"patterns","kind":"typed","prompt":"Ich habe eine Frage.","answers":["Ich hätte eine Frage."],"why":"habe → <i>hätte<\/i>: the classic polite opener.","instr":"Make it softer with Konjunktiv II.","cue":"hätt-","direct":"Ich habe eine Frage."},{"id":"pat-22","topic":"patterns","kind":"typed","prompt":"Ich habe noch einen Wunsch.","answers":["Ich hätte noch einen Wunsch."],"why":"habe → <i>hätte<\/i>.","instr":"Make it softer with Konjunktiv II.","cue":"hätt-","direct":"Ich habe noch einen Wunsch."},{"id":"pat-23","topic":"patterns","kind":"typed","prompt":"Ich nehme das Schnitzel.","answers":["Ich hätte gern das Schnitzel."],"why":"Ordering food politely: <i>Ich hätte gern …<\/i>","instr":"Make it softer with Konjunktiv II.","alt":["Ich würde das Schnitzel nehmen.","Ich möchte das Schnitzel."],"altWhy":"Also polite — the pattern drilled here is <i>hätte gern<\/i>.","cue":"hätte gern","direct":"Ich nehme das Schnitzel."},{"id":"pat-24","topic":"patterns","kind":"typed","prompt":"Das geht.","answers":["Das ginge."],"why":"geht → <i>ginge<\/i>: 'that would work' — tentative agreement.","instr":"Make it softer with Konjunktiv II.","cue":"ging-","direct":"Das geht."},{"id":"pat-25","topic":"patterns","kind":"typed","prompt":"Kommst du mit?","answers":["Würdest du mitkommen?"],"why":"Present question → <i>Würdest du mitkommen?<\/i> The separable verb becomes one infinitive at the end.","instr":"Make it softer with Konjunktiv II.","alt":["Kämst du mit?","Kämest du mit?"],"altWhy":"<i>Kämst du mit?<\/i> uses the own form — correct, but the pattern drilled here is <i>würdest<\/i>.","cue":"würd-","direct":"Kommst du mit?"},{"id":"pat-26","topic":"patterns","kind":"typed","prompt":"Machst du das Licht aus?","answers":["Würdest du das Licht ausmachen?"],"why":"<i>Würdest du … ausmachen?<\/i> — prefix and verb rejoin as an infinitive at the end.","instr":"Make it softer with Konjunktiv II.","alt":["Könntest du das Licht ausmachen?"],"altWhy":"<i>Könntest du …?<\/i> is fine too — the pattern drilled here is <i>würdest<\/i>.","cue":"würd-","direct":"Machst du das Licht aus?"},{"id":"pat-27","topic":"patterns","kind":"typed","prompt":"Rufen Sie mich morgen an.","answers":["Könnten Sie mich morgen anrufen?"],"why":"Imperative → <i>Könnten Sie … anrufen?<\/i>","instr":"Make it softer with Konjunktiv II.","alt":["Würden Sie mich morgen anrufen?"],"altWhy":"<i>Würden Sie …?<\/i> also works — the pattern drilled here is <i>könnten<\/i>.","cue":"könnt-","direct":"Rufen Sie mich morgen an."},{"id":"pat-28","topic":"patterns","kind":"typed","prompt":"Ist es okay, wenn ich später komme?","answers":["Wäre es okay, wenn ich später käme?"],"why":"Both verbs shift: ist → <i>wäre<\/i>, komme → <i>käme<\/i>.","instr":"Make it softer with Konjunktiv II.","alt":["Wäre es okay, wenn ich später kommen würde?"],"altWhy":"<i>kommen würde<\/i> is also correct — here the own form <i>käme<\/i> was the target.","cue":"wäre … käme","direct":"Ist es okay, wenn ich später komme?"},{"id":"pat-29","topic":"patterns","kind":"typed","prompt":"Es ist besser, wenn du gehst.","answers":["Es wäre besser, wenn du gehen würdest."],"why":"ist → <i>wäre<\/i>; gehst → <i>gehen würdest<\/i> (infinitive, then würdest at the end).","instr":"Make it softer with Konjunktiv II.","alt":["Es wäre besser, wenn du gingest."],"altWhy":"<i>gingest<\/i> is the own form — correct, but here <i>gehen würdest<\/i> was the target.","cue":"wäre … würd-","direct":"Es ist besser, wenn du gehst."},{"id":"pat-30","topic":"patterns","kind":"typed","prompt":"Kann ich Sie etwas fragen?","answers":["Könnte ich Sie etwas fragen?"],"why":"kann → <i>könnte<\/i>.","instr":"Make it softer with Konjunktiv II.","cue":"könnt-","direct":"Kann ich Sie etwas fragen?"},{"id":"pat-31","topic":"patterns","kind":"typed","prompt":"Haben Sie noch ein Zimmer frei?","answers":["Hätten Sie noch ein Zimmer frei?"],"why":"haben → <i>hätten<\/i>: hotel-reception politeness.","instr":"Make it softer with Konjunktiv II.","cue":"hätt-","direct":"Haben Sie noch ein Zimmer frei?"},{"id":"pat-32","topic":"patterns","kind":"typed","prompt":"Passt Ihnen Montag?","answers":["Würde Ihnen Montag passen?"],"why":"passt → <i>würde … passen<\/i>: the verb becomes an infinitive at the end.","instr":"Make it softer with Konjunktiv II.","cue":"würd-","direct":"Passt Ihnen Montag?"},{"id":"pat-33","topic":"patterns","kind":"typed","prompt":"Öffne bitte das Fenster.","answers":["Würdest du bitte das Fenster öffnen?"],"why":"Imperative → <i>Würdest du … öffnen?<\/i>","instr":"Make it softer with Konjunktiv II.","alt":["Könntest du bitte das Fenster öffnen?"],"altWhy":"<i>Könntest du …?<\/i> is fine as well — the pattern drilled here is <i>würdest<\/i>.","cue":"würd-","direct":"Öffne bitte das Fenster."},{"id":"pat-34","topic":"patterns","kind":"typed","prompt":"Ich empfehle dir das Buch.","answers":["Ich würde dir das Buch empfehlen."],"why":"empfehle → <i>würde … empfehlen<\/i>: a recommendation phrased more gently.","instr":"Make it softer with Konjunktiv II.","cue":"würd-","direct":"Ich empfehle dir das Buch."},{"id":"pat-35","topic":"patterns","kind":"typed","prompt":"Ich mache das nicht.","answers":["Ich würde das nicht machen."],"why":"<i>Ich würde das nicht machen.<\/i> — the flat refusal becomes a softer 'I wouldn't do that', which is also how German gives advice.","instr":"Make it softer with Konjunktiv II.","cue":"würd-","direct":"Ich mache das nicht."},{"id":"pat-36","topic":"patterns","kind":"typed","prompt":"Wie ist es mit Freitag?","answers":["Wie wäre es mit Freitag?"],"why":"ist → <i>wäre<\/i>: <i>Wie wäre es mit …?<\/i> is the standard suggestion formula.","instr":"Make it softer with Konjunktiv II.","cue":"wär-","direct":"Wie ist es mit Freitag?"},{"id":"pat-37","topic":"patterns","kind":"typed","prompt":"Können Sie bitte langsamer sprechen?","answers":["Könnten Sie bitte langsamer sprechen?"],"why":"können → <i>könnten<\/i>.","instr":"Make it softer with Konjunktiv II.","cue":"könnt-","direct":"Können Sie bitte langsamer sprechen?"},{"id":"pat-38","topic":"patterns","kind":"typed","prompt":"Können Sie mir sagen, wo der Bahnhof ist?","answers":["Könnten Sie mir sagen, wo der Bahnhof ist?"],"why":"Only the modal changes: können → <i>könnten<\/i>. The indirect question stays as it is.","instr":"Make it softer with Konjunktiv II.","cue":"könnt-","direct":"Können Sie mir sagen, wo der Bahnhof ist?"},{"id":"pat-39","topic":"patterns","kind":"typed","prompt":"Zeig mir den Weg.","answers":["Könntest du mir den Weg zeigen?"],"why":"Imperative → <i>Könntest du … zeigen?<\/i>","instr":"Make it softer with Konjunktiv II.","alt":["Würdest du mir den Weg zeigen?"],"altWhy":"<i>Würdest du …?<\/i> works as well — the pattern drilled here is <i>könntest<\/i>.","cue":"könnt-","direct":"Zeig mir den Weg."},{"id":"pat-40","topic":"patterns","kind":"typed","prompt":"Hast du Zeit für mich?","answers":["Hättest du Zeit für mich?"],"why":"hast → <i>hättest<\/i>.","instr":"Make it softer with Konjunktiv II.","cue":"hätt-","direct":"Hast du Zeit für mich?"},{"id":"pat-41","topic":"patterns","kind":"typed","prompt":"Treffen wir uns morgen?","answers":["Könnten wir uns morgen treffen?"],"why":"Direct proposal → <i>Könnten wir uns … treffen?<\/i> — modal in position 1, infinitive at the end.","instr":"Make it softer with Konjunktiv II.","cue":"könnt-","direct":"Treffen wir uns morgen?"},{"id":"pat-42","topic":"patterns","kind":"typed","prompt":"Ich brauche ein Zimmer für zwei Nächte.","answers":["Ich hätte gern ein Zimmer für zwei Nächte."],"why":"<i>Ich brauche<\/i> → <i>Ich hätte gern<\/i>: the polite way to ask at a reception.","instr":"Make it softer with Konjunktiv II.","alt":["Ich bräuchte ein Zimmer für zwei Nächte.","Ich möchte ein Zimmer für zwei Nächte."],"altWhy":"Also fine — <i>bräuchte<\/i> is common in speech but not in the notes' closed set; <i>hätte gern<\/i> is the safe exam form.","cue":"hätte gern","direct":"Ich brauche ein Zimmer für zwei Nächte."},{"id":"pat-mc-01","topic":"patterns","kind":"mc","prompt":"Kannst du mir helfen?","options":["Könntest du mir helfen?","Konntest du mir helfen?","Kannst du mir bitte helfen?","Könnest du mir helfen?"],"correct":"Könntest du mir helfen?","why":"<i>konntest<\/i> (no umlaut) is Präteritum — 'were you able to'. Only <i>könntest<\/i> is Konjunktiv II.","instr":"Which version is the softened (Konjunktiv II) one?"},{"id":"pat-mc-02","topic":"patterns","kind":"mc","prompt":"Haben Sie Zeit?","options":["Hätten Sie Zeit?","Hatten Sie Zeit?","Haben Sie Zeit, bitte?","Hättet Sie Zeit?"],"correct":"Hätten Sie Zeit?","why":"<i>Hatten Sie Zeit?<\/i> asks about the past. <i>Hättet<\/i> is the ihr-form, not Sie.","instr":"Which version is the softened (Konjunktiv II) one?"},{"id":"pat-mc-03","topic":"patterns","kind":"mc","prompt":"Ist das möglich?","options":["Wäre das möglich?","War das möglich?","Würde das möglich?","Wären das möglich?"],"correct":"Wäre das möglich?","why":"<i>würde<\/i> alone cannot replace <i>ist<\/i>; sein has its own form <i>wäre<\/i>. <i>Wären<\/i> is plural.","instr":"Which version is the softened (Konjunktiv II) one?"},{"id":"pat-mc-04","topic":"patterns","kind":"mc","prompt":"Gib mir das Salz.","options":["Würdest du mir das Salz geben?","Würdest du mir das Salz gibst?","Wurdest du mir das Salz geben?","Gibst du mir das Salz?"],"correct":"Würdest du mir das Salz geben?","why":"After <i>würdest<\/i> the verb is an infinitive (<i>geben<\/i>), and <i>wurdest<\/i> has no umlaut.","instr":"Which version is the softened (Konjunktiv II) one?"},{"id":"pat-mc-05","topic":"patterns","kind":"mc","prompt":"Schlaf mehr.","options":["Du solltest mehr schlafen.","Du söllst mehr schlafen.","Du sollst mehr schlafen.","Du solltest mehr schläfst."],"correct":"Du solltest mehr schlafen.","why":"<i>sollst<\/i> is Präsens (an instruction); <i>solltest<\/i> is advice. After a modal the verb is an infinitive.","instr":"Which version is the softened (Konjunktiv II) one?"},{"id":"pat-mc-06","topic":"patterns","kind":"mc","prompt":"Ich will einen Kaffee.","options":["Ich hätte gern einen Kaffee.","Ich hatte gern einen Kaffee.","Ich will gern einen Kaffee.","Ich würde gern einen Kaffee."],"correct":"Ich hätte gern einen Kaffee.","why":"<i>hatte<\/i> is Präteritum; <i>würde gern einen Kaffee<\/i> has no infinitive and is incomplete.","instr":"Which version is the softened (Konjunktiv II) one?"},{"id":"pat-mc-07","topic":"patterns","kind":"mc","prompt":"Darf ich das Fenster öffnen?","options":["Dürfte ich das Fenster öffnen?","Durfte ich das Fenster öffnen?","Dürftest ich das Fenster öffnen?","Darf ich bitte das Fenster öffnen?"],"correct":"Dürfte ich das Fenster öffnen?","why":"<i>durfte<\/i> is Präteritum; <i>dürftest<\/i> is the du-ending on an ich-subject.","instr":"Which version is the softened (Konjunktiv II) one?"},{"id":"pat-mc-08","topic":"patterns","kind":"mc","prompt":"Wie ist es mit Freitag?","options":["Wie wäre es mit Freitag?","Wie war es mit Freitag?","Wie würde es mit Freitag?","Wie wären es mit Freitag?"],"correct":"Wie wäre es mit Freitag?","why":"<i>es<\/i> is singular → <i>wäre<\/i>. <i>würde<\/i> needs an infinitive, which is missing here.","instr":"Which version is the softened (Konjunktiv II) one?"},{"id":"pat-mc-09","topic":"patterns","kind":"mc","prompt":"Können Sie das wiederholen?","options":["Könnten Sie das wiederholen?","Konnten Sie das wiederholen?","Könnten Sie das wiederholten?","Könnte Sie das wiederholen?"],"correct":"Könnten Sie das wiederholen?","why":"Sie → -en: <i>Könnten<\/i>. The main verb stays an infinitive.","instr":"Which version is the softened (Konjunktiv II) one?"},{"id":"pat-mc-10","topic":"patterns","kind":"mc","prompt":"Ich habe eine Frage.","options":["Ich hätte eine Frage.","Ich hatte eine Frage.","Ich habe gern eine Frage.","Ich würde eine Frage haben."],"correct":"Ich hätte eine Frage.","why":"haben has its own form — <i>würde … haben<\/i> is avoided.","instr":"Which version is the softened (Konjunktiv II) one?"},{"id":"cond-g-01","topic":"condition","kind":"gaps","prompt":"Wenn ich Zeit ___, ___ ich kommen. (haben, werden)","answers":[["hätte"],["würde"]],"why":"Unreal condition: the wenn-clause ends with its verb; the main clause starts with the verb because the wenn-clause took position 1.","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-g-02","topic":"condition","kind":"gaps","prompt":"Wenn ich mehr Geld ___, ___ ich ein Haus kaufen. (haben, werden)","answers":[["hätte"],["würde"]],"why":"Unreal condition: the wenn-clause ends with its verb; the main clause starts with the verb because the wenn-clause took position 1.","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-g-03","topic":"condition","kind":"gaps","prompt":"Wenn das Wetter besser ___, ___ wir wandern gehen. (sein, können)","answers":[["wäre"],["könnten"]],"why":"Unreal condition: the wenn-clause ends with its verb; the main clause starts with the verb because the wenn-clause took position 1.","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-g-04","topic":"condition","kind":"gaps","prompt":"Wenn du früher aufstehen ___, ___ du pünktlich. (werden, sein)","answers":[["würdest"],["wärst","wärest"]],"why":"wenn-clause with würde: infinitive <i>aufstehen<\/i>, then <i>würdest<\/i> last. Main clause: <i>wärst du pünktlich<\/i>.","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-g-05","topic":"condition","kind":"gaps","prompt":"Wenn er das ___, ___ er es uns sagen. (wissen, werden)","answers":[["wüsste"],["würde"]],"why":"Unreal condition: the wenn-clause ends with its verb; the main clause starts with the verb because the wenn-clause took position 1.","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-g-06","topic":"condition","kind":"gaps","prompt":"Wenn wir ein Auto ___, ___ wir ans Meer fahren. (haben, werden)","answers":[["hätten"],["würden"]],"why":"Unreal condition: the wenn-clause ends with its verb; the main clause starts with the verb because the wenn-clause took position 1.","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-g-07","topic":"condition","kind":"gaps","prompt":"Wenn ihr Lust ___, ___ ihr mitkommen. (haben, können)","answers":[["hättet"],["könntet"]],"why":"Unreal condition: the wenn-clause ends with its verb; the main clause starts with the verb because the wenn-clause took position 1.","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-g-08","topic":"condition","kind":"gaps","prompt":"Wenn ich du ___, ___ ich das nicht machen. (sein, werden)","answers":[["wäre"],["würde"]],"why":"<i>Wenn ich du wäre, würde ich …<\/i> — the standard advice formula.","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-g-09","topic":"condition","kind":"gaps","prompt":"Wenn Sie Fragen ___, ___ Sie mich anrufen. (haben, können)","answers":[["hätten"],["könnten"]],"why":"Unreal condition: the wenn-clause ends with its verb; the main clause starts with the verb because the wenn-clause took position 1.","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-g-10","topic":"condition","kind":"gaps","prompt":"Ich ___ dich besuchen, wenn ich in Berlin ___. (werden, sein)","answers":[["würde"],["wäre"]],"why":"Unreal condition, main clause first: verb in position 2, then the wenn-clause with its verb at the end.","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-g-11","topic":"condition","kind":"gaps","prompt":"Wir ___ nach Italien fahren, wenn wir Urlaub ___. (werden, haben)","answers":[["würden"],["hätten"]],"why":"Unreal condition, main clause first: verb in position 2, then the wenn-clause with its verb at the end.","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-g-12","topic":"condition","kind":"gaps","prompt":"Es ___ schön, wenn du ___. (sein, kommen)","answers":[["wäre"],["kämst","kämest"]],"why":"<i>Es wäre schön, wenn du kämst.<\/i> — own forms for both sein and kommen.","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-g-13","topic":"condition","kind":"gaps","prompt":"Wenn ich nicht so müde ___, ___ ich mit ins Kino gehen. (sein, werden)","answers":[["wäre"],["würde"]],"why":"Unreal condition: the wenn-clause ends with its verb; the main clause starts with the verb because the wenn-clause took position 1.","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-g-14","topic":"condition","kind":"gaps","prompt":"Wenn du mehr ___ ___, ___ dein Deutsch besser. (üben + werden, sein)","answers":[["üben"],["würdest"],["wäre"]],"why":"üben has no own form → <i>üben würdest<\/i> at the end of the wenn-clause. Then <i>wäre<\/i> opens the main clause.","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-g-15","topic":"condition","kind":"gaps","prompt":"Ich ___ das Angebot annehmen, wenn ich du ___. (werden, sein)","answers":[["würde"],["wäre"]],"why":"Unreal condition, main clause first: verb in position 2, then the wenn-clause with its verb at the end.","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-g-16","topic":"condition","kind":"gaps","prompt":"Wenn es nicht so teuer ___, ___ ich es kaufen. (sein, werden)","answers":[["wäre"],["würde"]],"why":"Unreal condition: the wenn-clause ends with its verb; the main clause starts with the verb because the wenn-clause took position 1.","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-g-17","topic":"condition","kind":"gaps","prompt":"___ es möglich, wenn wir später ___? (sein, kommen)","answers":[["Wäre"],["kämen"]],"why":"Question first: <i>Wäre es möglich, wenn wir später kämen?<\/i>","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-g-18","topic":"condition","kind":"gaps","prompt":"Wenn ich ein Ticket ___, ___ ich zum Konzert gehen. (haben, können)","answers":[["hätte"],["könnte"]],"why":"Unreal condition: the wenn-clause ends with its verb; the main clause starts with the verb because the wenn-clause took position 1.","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-g-19","topic":"condition","kind":"gaps","prompt":"Wenn er nicht so viel arbeiten ___, ___ er mehr Zeit für uns. (müssen, haben)","answers":[["müsste"],["hätte"]],"why":"Unreal condition: the wenn-clause ends with its verb; the main clause starts with the verb because the wenn-clause took position 1.","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-g-20","topic":"condition","kind":"gaps","prompt":"Wenn ich perfekt Deutsch ___, ___ ich mir keine Sorgen um die Prüfung machen. (können, werden)","answers":[["könnte"],["würde"]],"why":"Unreal condition: the wenn-clause ends with its verb; the main clause starts with the verb because the wenn-clause took position 1.","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-g-21","topic":"condition","kind":"gaps","prompt":"Wenn du mich ___ ___, ___ ich sofort kommen. (anrufen + werden, werden)","answers":[["anrufen"],["würdest"],["würde"]],"why":"Separable verb as infinitive (<i>anrufen<\/i>), then <i>würdest<\/i> at the end; <i>würde<\/i> opens the main clause.","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-g-22","topic":"condition","kind":"gaps","prompt":"Wenn ich mehr Zeit ___, ___ ich jeden Tag Deutsch lernen. (haben, werden)","answers":[["hätte"],["würde"]],"why":"Unreal condition: the wenn-clause ends with its verb; the main clause starts with the verb because the wenn-clause took position 1.","instr":"Fill the gaps with Konjunktiv II forms of the verbs in brackets (in order)."},{"id":"cond-mc-01","topic":"condition","kind":"mc","prompt":"Which sentence is an <b>unreal<\/b> condition?","options":["Wenn ich Zeit hätte, würde ich kommen.","Wenn ich Zeit habe, komme ich.","Als ich Zeit hatte, kam ich.","Wenn ich Zeit habe, werde ich kommen."],"correct":"Wenn ich Zeit hätte, würde ich kommen.","why":"Only the Konjunktiv II version says: I don't have time, so I won't come. The others are real or past.","instr":null,"enPrompt":true},{"id":"cond-mc-02","topic":"condition","kind":"mc","prompt":"<i>Wenn ich Zeit habe, komme ich.<\/i> — this is…","options":["a real condition (indicative): it may well happen","an unreal condition","a wish","advice"],"correct":"a real condition (indicative): it may well happen","why":"Indicative <i>habe / komme<\/i>: an open possibility. Compare <i>Wenn ich Zeit hätte, käme ich.<\/i>","instr":null,"enOpts":true,"enPrompt":true},{"id":"cond-mc-03","topic":"condition","kind":"mc","prompt":"<i>Wenn ich reich wäre, …<\/i> — what does the speaker imply?","options":["I am not rich","I am rich","I used to be rich","I will be rich"],"correct":"I am not rich","why":"Konjunktiv II in the condition marks it as contrary to fact.","instr":null,"enOpts":true,"enPrompt":true},{"id":"cond-mc-04","topic":"condition","kind":"mc","prompt":"In <i>Wenn ich Zeit hätte, würde ich kommen<\/i>, which part is the condition?","options":["Wenn ich Zeit hätte","würde ich kommen","Both parts","Neither part"],"correct":"Wenn ich Zeit hätte","why":"The <i>wenn<\/i>-clause is the condition; the main clause is the consequence.","instr":null,"enOpts":true,"enPrompt":true},{"id":"cond-mc-05","topic":"condition","kind":"mc","prompt":"Complete correctly: <i>Wenn ich du wäre, …<\/i>","options":["würde ich das nicht machen.","ich würde das nicht machen.","würde das ich nicht machen.","ich das nicht machen würde."],"correct":"würde ich das nicht machen.","why":"The wenn-clause occupies position 1, so the main-clause verb comes immediately after the comma.","instr":null,"enPrompt":true},{"id":"wo-01","topic":"order","kind":"order","tokens":["Das","wäre","super"],"why":"Main clause: the Konjunktiv II verb sits in position 2.","frame":null,"end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-02","topic":"order","kind":"order","tokens":["Ich","hätte","gern","die Rechnung"],"why":"Main clause: the Konjunktiv II verb sits in position 2.","frame":null,"end":".","hint":null,"instr":"Tap the words in the right order.","alt":[["Ich","hätte","die Rechnung","gern"]]},{"id":"wo-03","topic":"order","kind":"order","tokens":["Er","könnte","recht","haben"],"why":"Main clause: modal / würde in position 2, the infinitive at the very end.","frame":null,"end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-04","topic":"order","kind":"order","tokens":["Du","solltest","früher","ins Bett","gehen"],"why":"Main clause: modal / würde in position 2, the infinitive at the very end.","frame":null,"end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-05","topic":"order","kind":"order","tokens":["Ich","würde","gern","nach Berlin","fahren"],"why":"Main clause: modal / würde in position 2, the infinitive at the very end.","frame":null,"end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-06","topic":"order","kind":"order","tokens":["Würdest","du","mir","helfen"],"why":"Yes/no question: the Konjunktiv II verb comes first, the infinitive last.","frame":null,"end":"?","hint":"question","instr":"Tap the words in the right order."},{"id":"wo-07","topic":"order","kind":"order","tokens":["Könnten","Sie","mir","helfen"],"why":"Yes/no question: the Konjunktiv II verb comes first, the infinitive last.","frame":null,"end":"?","hint":"question","instr":"Tap the words in the right order."},{"id":"wo-08","topic":"order","kind":"order","tokens":["Wir","müssten","früher","aufstehen"],"why":"Main clause: modal / würde in position 2, the infinitive at the very end.","frame":null,"end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-09","topic":"order","kind":"order","tokens":["Dürfte","ich","das Fenster","öffnen"],"why":"Yes/no question: the Konjunktiv II verb comes first, the infinitive last.","frame":null,"end":"?","hint":"question","instr":"Tap the words in the right order."},{"id":"wo-10","topic":"order","kind":"order","tokens":["An deiner Stelle","würde","ich","zum Arzt","gehen"],"why":"<i>An deiner Stelle<\/i> fills position 1, so <i>würde<\/i> is position 2 and <i>ich<\/i> follows it.","frame":null,"end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-11","topic":"order","kind":"order","tokens":["Ohne dich","wäre","ich","verloren"],"why":"<i>Ohne dich<\/i> fills position 1 → <i>wäre<\/i> in position 2 → subject after the verb.","frame":null,"end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-12","topic":"order","kind":"order","tokens":["Morgen","könnte","ich","dir","helfen"],"why":"<i>Morgen<\/i> in position 1 → <i>könnte<\/i> position 2 → <i>ich<\/i> after it → infinitive last.","frame":null,"end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-13","topic":"order","kind":"order","tokens":["wenn","ich","Zeit","hätte"],"why":"wenn-clause: the conjugated verb goes to the very end.","frame":"Ich würde kommen,","end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-14","topic":"order","kind":"order","tokens":["wenn","ich","in Berlin","wohnen","würde"],"why":"wenn-clause with würde: infinitive first, then würde at the end.","frame":"Ich hätte mehr Freunde,","end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-15","topic":"order","kind":"order","tokens":["als ob","er","krank","wäre"],"why":"als ob-clause: the verb goes to the end, in Konjunktiv II.","frame":"Er tut so,","end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-16","topic":"order","kind":"order","tokens":["wenn","du","mir","helfen","würdest"],"why":"wenn-clause with würde: infinitive first, then würde at the end.","frame":"Ich wäre froh,","end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-17","topic":"order","kind":"order","tokens":["wenn","ihr","uns","besuchen","würdet"],"why":"wenn-clause with würde: infinitive first, then würde at the end.","frame":"Es wäre schön,","end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-18","topic":"order","kind":"order","tokens":["wenn","er","früher","käme"],"why":"wenn-clause: the conjugated verb goes to the very end.","frame":"Wir könnten zusammen essen,","end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-19","topic":"order","kind":"order","tokens":["als ob","sie","alles","wüsste"],"why":"als ob-clause: the verb goes to the end, in Konjunktiv II.","frame":"Sie redet,","end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-20","topic":"order","kind":"order","tokens":["wenn","ich","es","wüsste"],"why":"wenn-clause: the conjugated verb goes to the very end.","frame":"Ich würde es dir sagen,","end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-21","topic":"order","kind":"order","tokens":["Wenn ich Zeit hätte,","würde","ich","kommen"],"why":"The wenn-clause takes position 1, so the main-clause verb comes right after the comma, before the subject.","frame":null,"end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-22","topic":"order","kind":"order","tokens":["Wenn das Wetter besser wäre,","könnten","wir","wandern gehen"],"why":"The wenn-clause takes position 1, so the main-clause verb comes right after the comma, before the subject.","frame":null,"end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-23","topic":"order","kind":"order","tokens":["Wenn ich du wäre,","würde","ich","das","nicht","machen"],"why":"The wenn-clause takes position 1, so the main-clause verb comes right after the comma, before the subject.","frame":null,"end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-24","topic":"order","kind":"order","tokens":["Was","würdest","du","an meiner Stelle","machen"],"why":"W-question: <i>Was<\/i> is position 1, <i>würdest<\/i> position 2, infinitive last.","frame":null,"end":"?","hint":"question","instr":"Tap the words in the right order."},{"id":"wo-25","topic":"order","kind":"order","tokens":["Hätten","Sie","einen Moment","Zeit"],"why":"Yes/no question: the Konjunktiv II verb comes first, the infinitive last.","frame":null,"end":"?","hint":"question","instr":"Tap the words in the right order."},{"id":"wo-26","topic":"order","kind":"order","tokens":["ob","Sie","mir","schreiben","würden"],"why":"ob-clause: infinitive, then <i>würden<\/i> at the very end.","frame":"Ich wüsste gern,","end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-27","topic":"order","kind":"order","tokens":["Ich","wäre","gern","am Meer"],"why":"Main clause: the Konjunktiv II verb sits in position 2.","frame":null,"end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-28","topic":"order","kind":"order","tokens":["Du","könntest","es","mal","mit Yoga","versuchen"],"why":"Main clause: modal / würde in position 2, the infinitive at the very end.","frame":null,"end":".","hint":null,"instr":"Tap the words in the right order."},{"id":"wo-mc-01","topic":"order","kind":"mc","prompt":"<i>Das wäre super.<\/i> — where is the Konjunktiv II verb?","options":["Position 2","Position 1","At the end","Anywhere"],"correct":"Position 2","why":"Main clause: the conjugated verb sits in position 2 — same rule as in the indicative.","instr":null,"enOpts":true,"enPrompt":true},{"id":"wo-mc-02","topic":"order","kind":"mc","prompt":"<i>…, wenn ich mehr Geld hätte.<\/i> — where is the conjugated verb?","options":["At the very end","Position 2","Right after wenn","Before the subject"],"correct":"At the very end","why":"Subordinate clause: conjugated verb last.","instr":null,"enOpts":true,"enPrompt":true},{"id":"wo-mc-03","topic":"order","kind":"mc","prompt":"After a fronted wenn-clause (<i>Wenn ich Zeit hätte, …<\/i>) what comes next?","options":["The main-clause verb (würde / käme …)","The subject (ich)","The infinitive","A second wenn"],"correct":"The main-clause verb (würde / käme …)","why":"<i>Wenn ich Zeit hätte, würde ich kommen.<\/i> — verb, then subject.","instr":null,"enOpts":true,"enPrompt":true},{"id":"wo-mc-04","topic":"order","kind":"mc","prompt":"<i>Du solltest früher ins Bett gehen.<\/i> — which words form the sentence bracket?","options":["solltest … gehen","Du … gehen","solltest … früher","ins Bett … gehen"],"correct":"solltest … gehen","why":"Modal in position 2, infinitive at the end: everything else sits between them.","instr":null,"enPrompt":true},{"id":"amb-01","topic":"ambig","kind":"mc","prompt":"Ich <b>wollte<\/b> gestern anrufen.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Indicative (Präteritum)","why":"<i>gestern<\/i> + a completed intention: I wanted to call. Past, real.","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-02","topic":"ambig","kind":"mc","prompt":"Du <b>solltest<\/b> zum Arzt gehen.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Konjunktiv II","why":"Advice for now: you should see a doctor. Nothing in the past.","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-03","topic":"ambig","kind":"mc","prompt":"Wir <b>wollten<\/b> letztes Jahr nach Spanien fahren.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Indicative (Präteritum)","why":"<i>letztes Jahr<\/i>: a past plan — indicative.","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-04","topic":"ambig","kind":"mc","prompt":"Ihr <b>solltet<\/b> mehr Wasser trinken.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Konjunktiv II","why":"Advice — Konjunktiv II.","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-05","topic":"ambig","kind":"mc","prompt":"Er <b>sollte<\/b> um 8 Uhr kommen, aber er kam nicht.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Indicative (Präteritum)","why":"He was supposed to come — a past arrangement, confirmed by <i>aber er kam nicht<\/i>.","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-06","topic":"ambig","kind":"mc","prompt":"Sie <b>wollte<\/b> schon immer Ärztin werden.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Indicative (Präteritum)","why":"<i>schon immer<\/i> + a life-long wish in the past: she always wanted to.","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-07","topic":"ambig","kind":"mc","prompt":"Ich <b>sollte<\/b> wirklich mehr schlafen.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Konjunktiv II","why":"Self-advice about the present: I really should.","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-08","topic":"ambig","kind":"mc","prompt":"<b>Wolltest<\/b> du mich anrufen? Ich habe nichts gehört.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Indicative (Präteritum)","why":"Asking about a past intention (did you want to call me?).","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-09","topic":"ambig","kind":"mc","prompt":"Man <b>sollte<\/b> nie aufgeben.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Konjunktiv II","why":"General advice — Konjunktiv II.","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-10","topic":"ambig","kind":"mc","prompt":"Als Kind <b>wollte<\/b> ich Pilot werden.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Indicative (Präteritum)","why":"<i>Als Kind<\/i> — a past wish, indicative.","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-11","topic":"ambig","kind":"mc","prompt":"Du <b>solltest<\/b> das Angebot annehmen.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Konjunktiv II","why":"A recommendation about a decision now.","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-12","topic":"ambig","kind":"mc","prompt":"Wir <b>sollten<\/b> uns bald treffen.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Konjunktiv II","why":"<i>bald<\/i> points forward: a suggestion, Konjunktiv II.","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-13","topic":"ambig","kind":"mc","prompt":"Ich <b>konnte<\/b> gestern nicht kommen.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Indicative (Präteritum)","why":"No umlaut → Präteritum: I was not able to come.","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-14","topic":"ambig","kind":"mc","prompt":"Ich <b>könnte<\/b> morgen kommen.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Konjunktiv II","why":"Umlaut → Konjunktiv II: I could come (offer).","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-15","topic":"ambig","kind":"mc","prompt":"<b>Hatte<\/b> er Zeit?","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Indicative (Präteritum)","why":"<i>hatte<\/i>, no umlaut: did he have time?","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-16","topic":"ambig","kind":"mc","prompt":"<b>Hätte<\/b> er Zeit?","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Konjunktiv II","why":"<i>hätte<\/i>, umlaut: would he have time?","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-17","topic":"ambig","kind":"mc","prompt":"Wir <b>waren<\/b> im Urlaub.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Indicative (Präteritum)","why":"<i>waren<\/i> — we were on holiday. Past fact.","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-18","topic":"ambig","kind":"mc","prompt":"Wir <b>wären<\/b> jetzt gern im Urlaub.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Konjunktiv II","why":"<i>wären gern<\/i> — a wish, Konjunktiv II.","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-19","topic":"ambig","kind":"mc","prompt":"Sie <b>musste<\/b> gestern arbeiten.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Indicative (Präteritum)","why":"<i>musste<\/i>, no umlaut, <i>gestern<\/i>: she had to.","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-20","topic":"ambig","kind":"mc","prompt":"Sie <b>müsste<\/b> eigentlich arbeiten.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Konjunktiv II","why":"<i>müsste eigentlich<\/i>: she really ought to (but isn't).","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-21","topic":"ambig","kind":"mc","prompt":"Das <b>wusste<\/b> ich nicht.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Indicative (Präteritum)","why":"<i>wusste<\/i> without umlaut: I didn't know that.","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-22","topic":"ambig","kind":"mc","prompt":"Das <b>wüsste<\/b> ich gern.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Konjunktiv II","why":"<i>wüsste gern<\/i>: I'd like to know that.","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-23","topic":"ambig","kind":"mc","prompt":"Wir <b>gingen<\/b> gestern ins Kino.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Indicative (Präteritum)","why":"<i>gingen<\/i> looks the same in both moods; <i>gestern<\/i> and the completed action make it Präteritum.","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-24","topic":"ambig","kind":"mc","prompt":"Wenn es nach mir <b>ginge<\/b>, würden wir jetzt fahren.","options":["Indicative (Präteritum)","Konjunktiv II"],"correct":"Konjunktiv II","why":"<i>ginge<\/i> only exists as Konjunktiv II (Präteritum would be <i>ging<\/i>).","instr":"Is the highlighted verb indicative Präteritum or Konjunktiv II?","enOpts":true},{"id":"amb-mc-25","topic":"ambig","kind":"mc","prompt":"Which two modal verbs look identical in Präteritum and Konjunktiv II?","options":["sollen and wollen","können and müssen","dürfen and mögen","haben and sein"],"correct":"sollen and wollen","why":"sollte / wollte take no umlaut, so only context tells you the mood.","instr":null,"enOpts":true,"enPrompt":true},{"id":"amb-mc-26","topic":"ambig","kind":"mc","prompt":"What tells you <i>Ich wollte gestern anrufen<\/i> is past indicative?","options":["gestern and a completed past action","The umlaut","The word order","wollte can only be Präteritum"],"correct":"gestern and a completed past action","why":"The form alone is ambiguous; time words and the situation decide.","instr":null,"enOpts":true,"enPrompt":true},{"id":"ch-own-sein","topic":"choice","kind":"mc","prompt":"<b>sein<\/b>","options":["Own form","würde + infinitive"],"correct":"Own form","why":"sein belongs to the small closed set with its own form: <i>wäre<\/i>. <i>würde sein<\/i> is avoided.","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-own-haben","topic":"choice","kind":"mc","prompt":"<b>haben<\/b>","options":["Own form","würde + infinitive"],"correct":"Own form","why":"haben belongs to the small closed set with its own form: <i>hätte<\/i>. <i>würde haben<\/i> is avoided.","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-own-werden","topic":"choice","kind":"mc","prompt":"<b>werden<\/b>","options":["Own form","würde + infinitive"],"correct":"Own form","why":"werden belongs to the small closed set with its own form: <i>würde<\/i>. <i>würde werden<\/i> is avoided.","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-own-können","topic":"choice","kind":"mc","prompt":"<b>können<\/b>","options":["Own form","würde + infinitive"],"correct":"Own form","why":"können belongs to the small closed set with its own form: <i>könnte<\/i>. <i>würde können<\/i> is avoided.","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-own-müssen","topic":"choice","kind":"mc","prompt":"<b>müssen<\/b>","options":["Own form","würde + infinitive"],"correct":"Own form","why":"müssen belongs to the small closed set with its own form: <i>müsste<\/i>. <i>würde müssen<\/i> is avoided.","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-own-dürfen","topic":"choice","kind":"mc","prompt":"<b>dürfen<\/b>","options":["Own form","würde + infinitive"],"correct":"Own form","why":"dürfen belongs to the small closed set with its own form: <i>dürfte<\/i>. <i>würde dürfen<\/i> is avoided.","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-own-mögen","topic":"choice","kind":"mc","prompt":"<b>mögen<\/b>","options":["Own form","würde + infinitive"],"correct":"Own form","why":"mögen belongs to the small closed set with its own form: <i>möchte<\/i>. <i>würde mögen<\/i> is avoided.","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-own-sollen","topic":"choice","kind":"mc","prompt":"<b>sollen<\/b>","options":["Own form","würde + infinitive"],"correct":"Own form","why":"sollen belongs to the small closed set with its own form: <i>sollte<\/i>. <i>würde sollen<\/i> is avoided.","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-own-wollen","topic":"choice","kind":"mc","prompt":"<b>wollen<\/b>","options":["Own form","würde + infinitive"],"correct":"Own form","why":"wollen belongs to the small closed set with its own form: <i>wollte<\/i>. <i>würde wollen<\/i> is avoided.","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-own-wissen","topic":"choice","kind":"mc","prompt":"<b>wissen<\/b>","options":["Own form","würde + infinitive"],"correct":"Own form","why":"wissen belongs to the small closed set with its own form: <i>wüsste<\/i>. <i>würde wissen<\/i> is avoided.","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-own-kommen","topic":"choice","kind":"mc","prompt":"<b>kommen<\/b>","options":["Own form","würde + infinitive"],"correct":"Own form","why":"kommen belongs to the small closed set with its own form: <i>käme<\/i>. <i>würde kommen<\/i> is avoided.","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-own-gehen","topic":"choice","kind":"mc","prompt":"<b>gehen<\/b>","options":["Own form","würde + infinitive"],"correct":"Own form","why":"gehen belongs to the small closed set with its own form: <i>ginge<\/i>. <i>würde gehen<\/i> is avoided.","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-wu-kaufen","topic":"choice","kind":"mc","prompt":"<b>kaufen<\/b>","options":["Own form","würde + infinitive"],"correct":"würde + infinitive","why":"kaufen is not in the closed set → <i>würde … kaufen<\/i>. (An old-fashioned own form may exist, but würde is the standard.)","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-wu-arbeiten","topic":"choice","kind":"mc","prompt":"<b>arbeiten<\/b>","options":["Own form","würde + infinitive"],"correct":"würde + infinitive","why":"arbeiten is not in the closed set → <i>würde … arbeiten<\/i>. (An old-fashioned own form may exist, but würde is the standard.)","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-wu-machen","topic":"choice","kind":"mc","prompt":"<b>machen<\/b>","options":["Own form","würde + infinitive"],"correct":"würde + infinitive","why":"machen is not in the closed set → <i>würde … machen<\/i>. (An old-fashioned own form may exist, but würde is the standard.)","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-wu-fahren","topic":"choice","kind":"mc","prompt":"<b>fahren<\/b>","options":["Own form","würde + infinitive"],"correct":"würde + infinitive","why":"fahren is not in the closed set → <i>würde … fahren<\/i>. (An old-fashioned own form may exist, but würde is the standard.)","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-wu-helfen","topic":"choice","kind":"mc","prompt":"<b>helfen<\/b>","options":["Own form","würde + infinitive"],"correct":"würde + infinitive","why":"helfen is not in the closed set → <i>würde … helfen<\/i>. (An old-fashioned own form may exist, but würde is the standard.)","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-wu-wohnen","topic":"choice","kind":"mc","prompt":"<b>wohnen<\/b>","options":["Own form","würde + infinitive"],"correct":"würde + infinitive","why":"wohnen is not in the closed set → <i>würde … wohnen<\/i>. (An old-fashioned own form may exist, but würde is the standard.)","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-wu-sprechen","topic":"choice","kind":"mc","prompt":"<b>sprechen<\/b>","options":["Own form","würde + infinitive"],"correct":"würde + infinitive","why":"sprechen is not in the closed set → <i>würde … sprechen<\/i>. (An old-fashioned own form may exist, but würde is the standard.)","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-wu-lernen","topic":"choice","kind":"mc","prompt":"<b>lernen<\/b>","options":["Own form","würde + infinitive"],"correct":"würde + infinitive","why":"lernen is not in the closed set → <i>würde … lernen<\/i>. (An old-fashioned own form may exist, but würde is the standard.)","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-wu-essen","topic":"choice","kind":"mc","prompt":"<b>essen<\/b>","options":["Own form","würde + infinitive"],"correct":"würde + infinitive","why":"essen is not in the closed set → <i>würde … essen<\/i>. (An old-fashioned own form may exist, but würde is the standard.)","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-wu-trinken","topic":"choice","kind":"mc","prompt":"<b>trinken<\/b>","options":["Own form","würde + infinitive"],"correct":"würde + infinitive","why":"trinken is not in the closed set → <i>würde … trinken<\/i>. (An old-fashioned own form may exist, but würde is the standard.)","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-wu-schlafen","topic":"choice","kind":"mc","prompt":"<b>schlafen<\/b>","options":["Own form","würde + infinitive"],"correct":"würde + infinitive","why":"schlafen is not in the closed set → <i>würde … schlafen<\/i>. (An old-fashioned own form may exist, but würde is the standard.)","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-wu-verstehen","topic":"choice","kind":"mc","prompt":"<b>verstehen<\/b>","options":["Own form","würde + infinitive"],"correct":"würde + infinitive","why":"verstehen is not in the closed set → <i>würde … verstehen<\/i>. (An old-fashioned own form may exist, but würde is the standard.)","instr":"How does this verb form its Konjunktiv II in everyday German?","enOpts":true},{"id":"ch-s-01","topic":"choice","kind":"mc","prompt":"Das ___ toll!","options":["wäre","würde sein"],"correct":"wäre","why":"sein has its own form. <i>würde sein<\/i> is avoided.","instr":"Which is the standard form?"},{"id":"ch-s-02","topic":"choice","kind":"mc","prompt":"Ich ___ gern einen Kaffee.","options":["hätte","würde haben"],"correct":"hätte","why":"haben has its own form. <i>würde haben<\/i> is avoided.","instr":"Which is the standard form?"},{"id":"ch-s-03","topic":"choice","kind":"mc","prompt":"Er ___ recht haben.","options":["könnte","würde können"],"correct":"könnte","why":"Modal verbs always use their own form; never <i>würde<\/i> + modal.","instr":"Which is the standard form?"},{"id":"ch-s-04","topic":"choice","kind":"mc","prompt":"Ich ___ dich gern ___.","options":["würde … besuchen","besuchte"],"correct":"würde … besuchen","why":"For a regular verb the own form (<i>besuchte<\/i>) looks exactly like the Präteritum, so würde is used.","instr":"Which is the standard form?"},{"id":"ch-s-05","topic":"choice","kind":"mc","prompt":"Wenn ich das ___, …","options":["wüsste","wissen würde"],"correct":"wüsste","why":"wissen is in the closed set: <i>wüsste<\/i>. (You will hear <i>wissen würde<\/i>, but <i>wüsste<\/i> is the expected form.)","instr":"Which is the standard form?"},{"id":"ch-s-06","topic":"choice","kind":"mc","prompt":"Ich ___ morgen gern länger ___.","options":["würde … schlafen","schliefe"],"correct":"würde … schlafen","why":"<i>schliefe<\/i> exists but sounds old-fashioned; würde + infinitive is the everyday form.","instr":"Which is the standard form?"},{"id":"ch-s-07","topic":"choice","kind":"mc","prompt":"Du ___ mehr schlafen.","options":["solltest","würdest sollen"],"correct":"solltest","why":"Modal verbs never combine with würde.","instr":"Which is the standard form?"},{"id":"ch-s-08","topic":"choice","kind":"mc","prompt":"___ Sie mir helfen?","options":["Könnten","Würden … können"],"correct":"Könnten","why":"können has its own form <i>könnten<\/i>.","instr":"Which is the standard form?"},{"id":"tr-01","topic":"produce","kind":"typed","prompt":"Could you help me? (Sie)","answers":["Könnten Sie mir helfen?"],"why":"<i>Könnten<\/i> first (question), <i>helfen<\/i> last.","instr":"Write it in German.","cue":"könnt-","enPrompt":true},{"id":"tr-02","topic":"produce","kind":"typed","prompt":"I'd like a coffee.","answers":["Ich hätte gern einen Kaffee."],"why":"<i>hätte gern<\/i> + Akkusativ (<i>einen Kaffee<\/i>).","instr":"Write it in German.","alt":["Ich möchte einen Kaffee.","Ich möchte gern einen Kaffee."],"altWhy":"Also correct — <i>hätte gern<\/i> was the target here.","cue":"hätte gern","enPrompt":true},{"id":"tr-03","topic":"produce","kind":"typed","prompt":"That would be possible.","answers":["Das wäre möglich."],"why":"sein → <i>wäre<\/i>.","instr":"Write it in German.","cue":"wär-","enPrompt":true},{"id":"tr-04","topic":"produce","kind":"typed","prompt":"You should sleep more. (du)","answers":["Du solltest mehr schlafen."],"why":"Advice with <i>solltest<\/i>; infinitive at the end.","instr":"Write it in German.","cue":"sollt-","enPrompt":true},{"id":"tr-05","topic":"produce","kind":"typed","prompt":"If I had time, I would come.","answers":["Wenn ich Zeit hätte, würde ich kommen."],"why":"<i>hätte<\/i> ends the wenn-clause; <i>würde<\/i> opens the main clause.","instr":"Write it in German.","alt":["Wenn ich Zeit hätte, käme ich."],"altWhy":"<i>käme<\/i> is the own form — correct, but <i>würde ich kommen<\/i> was the target.","cue":"hätte / würde","enPrompt":true},{"id":"tr-06","topic":"produce","kind":"typed","prompt":"He acts as if he were ill.","answers":["Er tut so, als ob er krank wäre."],"why":"<i>tut so, als ob<\/i> + <i>wäre<\/i> at the end.","instr":"Write it in German.","alt":["Er tut so, als wäre er krank."],"altWhy":"<i>als<\/i> without <i>ob<\/i> is also correct — then the verb comes right after <i>als<\/i>.","cue":"tut so, als ob","enPrompt":true},{"id":"tr-07","topic":"produce","kind":"typed","prompt":"That would be great. (super)","answers":["Das wäre super."],"why":"<i>Das wäre super!<\/i>","instr":"Write it in German.","alt":["Das wäre toll.","Das wäre großartig.","Das wäre klasse."],"altWhy":"Also fine — the cue asked for <i>super<\/i>.","enPrompt":true},{"id":"tr-08","topic":"produce","kind":"typed","prompt":"I'd like the bill.","answers":["Ich hätte gern die Rechnung."],"why":"<i>Ich hätte gern die Rechnung.<\/i>","instr":"Write it in German.","alt":["Ich möchte die Rechnung.","Ich möchte gern die Rechnung."],"altWhy":"Also correct — <i>hätte gern<\/i> was the target.","cue":"hätte gern","enPrompt":true},{"id":"tr-09","topic":"produce","kind":"typed","prompt":"Would you please help me? (du)","answers":["Würdest du mir bitte helfen?"],"why":"<i>Würdest du …?<\/i> + infinitive at the end. <i>bitte<\/i> is optional.","instr":"Write it in German.","cue":"würd-","enPrompt":true},{"id":"tr-10","topic":"produce","kind":"typed","prompt":"He could be right.","answers":["Er könnte recht haben."],"why":"<i>könnte recht haben<\/i> — cautious statement.","instr":"Write it in German.","cue":"recht haben","enPrompt":true},{"id":"tr-11","topic":"produce","kind":"typed","prompt":"I would like to go to Berlin tomorrow.","answers":["Ich würde morgen gern nach Berlin fahren.","Ich würde gern morgen nach Berlin fahren.","Morgen würde ich gern nach Berlin fahren."],"why":"<i>würde<\/i> in position 2, <i>fahren<\/i> at the end; <i>morgen<\/i> can sit in position 1 or in the middle.","instr":"Write it in German.","cue":"würde … gern … fahren","enPrompt":true},{"id":"tr-12","topic":"produce","kind":"typed","prompt":"Might I open the window? (very polite)","answers":["Dürfte ich das Fenster öffnen?"],"why":"<i>Dürfte ich …?<\/i>","instr":"Write it in German.","cue":"dürft-","enPrompt":true},{"id":"tr-13","topic":"produce","kind":"typed","prompt":"I'd like to know when the train leaves.","answers":["Ich wüsste gern, wann der Zug fährt.","Ich wüsste gern, wann der Zug abfährt.","Ich wüsste gern, wann der Zug losfährt."],"why":"<i>Ich wüsste gern, wann …<\/i> — indirect question with the verb at the end.","instr":"Write it in German.","cue":"wüsste gern","enPrompt":true},{"id":"tr-14","topic":"produce","kind":"typed","prompt":"Would you have a moment? (Sie)","answers":["Hätten Sie einen Moment?","Hätten Sie einen Moment Zeit?","Hätten Sie kurz Zeit?","Hätten Sie einen Augenblick?","Hätten Sie einen Augenblick Zeit?"],"why":"<i>Hätten Sie …?<\/i>","instr":"Write it in German.","cue":"hätt-","enPrompt":true},{"id":"tr-15","topic":"produce","kind":"typed","prompt":"If I were you, I wouldn't do that.","answers":["Wenn ich du wäre, würde ich das nicht machen.","Wenn ich du wäre, würde ich das nicht tun."],"why":"<i>Wenn ich du wäre, würde ich …<\/i> — the advice formula.","instr":"Write it in German.","cue":"wäre / würde","enPrompt":true},{"id":"tr-16","topic":"produce","kind":"typed","prompt":"We should meet soon.","answers":["Wir sollten uns bald treffen.","Wir sollten uns bald mal treffen."],"why":"<i>sollten<\/i> + reflexive <i>uns<\/i> + infinitive at the end.","instr":"Write it in German.","cue":"sollt-","enPrompt":true},{"id":"tr-17","topic":"produce","kind":"typed","prompt":"It could rain tomorrow.","answers":["Es könnte morgen regnen.","Morgen könnte es regnen."],"why":"<i>könnte<\/i> in position 2, <i>regnen<\/i> at the end.","instr":"Write it in German.","cue":"könnt-","enPrompt":true},{"id":"tr-18","topic":"produce","kind":"typed","prompt":"I have a question. (say it politely)","answers":["Ich hätte eine Frage."],"why":"<i>hätte<\/i> instead of <i>habe<\/i>.","instr":"Write it in German.","cue":"hätt-","enPrompt":true},{"id":"tr-19","topic":"produce","kind":"typed","prompt":"How about Friday?","answers":["Wie wäre es mit Freitag?"],"why":"<i>Wie wäre es mit …?<\/i>","instr":"Write it in German.","cue":"Wie wäre es …","enPrompt":true},{"id":"tr-20","topic":"produce","kind":"typed","prompt":"Could you please speak more slowly? (Sie)","answers":["Könnten Sie bitte langsamer sprechen?"],"why":"<i>Könnten Sie … sprechen?<\/i> — <i>bitte<\/i> is optional.","instr":"Write it in German.","cue":"könnt-","enPrompt":true},{"id":"tr-21","topic":"produce","kind":"typed","prompt":"What would you do in my place? (du)","answers":["Was würdest du an meiner Stelle machen?","Was würdest du an meiner Stelle tun?"],"why":"W-question: <i>Was würdest du … machen?<\/i>","instr":"Write it in German.","cue":"würd- / an meiner Stelle","enPrompt":true},{"id":"tr-22","topic":"produce","kind":"typed","prompt":"I would be glad if you came. (du)","answers":["Ich wäre froh, wenn du kämst.","Ich wäre froh, wenn du kämest.","Ich wäre froh, wenn du kommen würdest."],"why":"<i>Ich wäre froh, wenn du kämst / kommen würdest.<\/i>","instr":"Write it in German.","cue":"wäre froh, wenn","enPrompt":true}];
+
+/* ============================ storage ============================ */
+const KEY = "konjunktiv2.v1";
+const mem = {};
+const store = {
+  get(k){ try{ return localStorage.getItem(k); }catch(e){ return k in mem ? mem[k] : null; } },
+  set(k,v){ try{ localStorage.setItem(k,v); }catch(e){ mem[k]=v; } },
+  del(k){ try{ localStorage.removeItem(k); }catch(e){ delete mem[k]; } }
+};
+let PERSISTS = true;
+try{ localStorage.setItem(KEY+".probe","1"); localStorage.removeItem(KEY+".probe"); }
+catch(e){ PERSISTS = false; }
+
+/* ============================ model ============================== */
+const DAY = 86400000;
+// Leitner boxes. 0 = new or just lapsed, 5 = mastered. A box is only left when
+// the item is due, so five correct answers must be spread over ≥ 11 days.
+const IVL = [0, 10*60000, 1*DAY, 3*DAY, 7*DAY, 21*DAY];
+const MASTER_BOX = 5;
+let NOW = () => Date.now();
+
+const TOPICS = {
+  "shw":       {name:"sein · haben · werden", blurb:"wäre, hätte, würde in every person"},
+  "modal":     {name:"Modal verbs",           blurb:"könnte, müsste, dürfte, möchte, sollte, wollte"},
+  "orig":      {name:"Own forms & the rule",  blurb:"Präteritum + umlaut + ending: wüsste, käme, ginge"},
+  "wuerde":    {name:"würde + infinitive",    blurb:"The default: würde in position 2, infinitive last"},
+  "function":  {name:"What is it doing?",     blurb:"Politeness, wish, condition, advice, caution, comparison"},
+  "patterns":  {name:"Softening patterns",    blurb:"Kannst du … → Könntest du …"},
+  "condition": {name:"Unreal conditions",     blurb:"Wenn ich … hätte, würde ich …"},
+  "order":     {name:"Word order",            blurb:"Position 2, verb at the end, wenn-clause first"},
+  "ambig":     {name:"Indicative or KII?",    blurb:"sollte, wollte, gingen — context decides"},
+  "choice":    {name:"würde or own form?",    blurb:"Which verbs skip würde"},
+  "produce":   {name:"Produce it",            blurb:"English → German"}
+};
+const TOPIC_ORDER = Object.keys(TOPICS);
+const BY_TOPIC = {};
+TOPIC_ORDER.forEach(t => BY_TOPIC[t] = BANK.filter(q => q.topic === t));
+
+let S = load();
+function blank(){
+  return {v:1, items:{}, stats:{answered:0, correct:0, sessions:0, days:{}, lastDay:null, streak:0}};
+}
+function load(){
+  try{
+    const raw = store.get(KEY);
+    if(!raw) return blank();
+    const p = JSON.parse(raw);
+    if(!p || p.v !== 1) return blank();
+    p.items = p.items || {}; p.stats = Object.assign(blank().stats, p.stats || {});
+    p.stats.days = p.stats.days || {};
+    return p;
+  }catch(e){ return blank(); }
+}
+let saveTimer = null;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(()=>{ store.set(KEY, JSON.stringify(S)); }, 120);
+}
+function saveNow(){ clearTimeout(saveTimer); store.set(KEY, JSON.stringify(S)); }
+function rec(id){
+  if(!S.items[id]) S.items[id] = {b:0, due:0, s:0, c:0, w:0, lap:0, seen:0};
+  return S.items[id];
+}
+const boxOf = id => (S.items[id] ? S.items[id].b : 0);
+const seen = id => !!(S.items[id] && S.items[id].seen > 0);
+const isMastered = id => boxOf(id) >= MASTER_BOX;
+const isDue = id => { const r = S.items[id]; return !r || r.seen === 0 || r.due <= NOW(); };
+const dueAt = id => (S.items[id] ? S.items[id].due : 0);
+
+function dayKey(t){ const d = new Date(t); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function touchDay(){
+  const today = dayKey(NOW());
+  const st = S.stats;
+  if(st.lastDay !== today){
+    const y = dayKey(NOW() - DAY);
+    st.streak = (st.lastDay === y) ? (st.streak||0) + 1 : 1;
+    st.lastDay = today;
+  }
+  st.days[today] = (st.days[today]||0) + 1;
+}
+
+// Grade an answer. `promotable` = the item was due when asked.
+function grade(id, ok, promotable){
+  const r = rec(id); const now = NOW();
+  r.seen++; r.s = now;
+  S.stats.answered++;
+  if(ok){
+    r.c++; S.stats.correct++;
+    if(promotable){ r.b = Math.min(MASTER_BOX, r.b + 1); r.due = now + IVL[r.b]; }
+  }else{
+    r.w++; if(r.b > 0) r.lap++;
+    r.b = 0; r.due = now;
+  }
+  touchDay();
+  save();
+  return r;
+}
+
+/* ============================ answer checking ==================== */
+function norm(s){
+  s = String(s||"").toLowerCase().replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss");
+  s = s.replace(/[.,!?;:„“”"'’…]/g," ");
+  return s.split(/\s+/).filter(t => t && t !== "bitte").map(t => t === "gerne" ? "gern" : t).join(" ");
+}
+// returns {ok, alt} for typed answers
+function checkTyped(q, input){
+  const n = norm(input);
+  if(!n) return {ok:false, empty:true};
+  if(q.answers.some(a => norm(a) === n)) return {ok:true};
+  if((q.alt||[]).some(a => norm(a) === n)) return {ok:true, alt:true};
+  if(q.direct && norm(q.direct) === n) return {ok:false, unchanged:true};
+  return {ok:false};
+}
+function checkGaps(q, inputs){
+  const per = q.answers.map((group, i) => group.some(a => norm(a) === norm(inputs[i]||"")));
+  return {ok: per.every(Boolean), per};
+}
+function checkOrder(q, placed){
+  const s = placed.join(" ");
+  if(s === q.tokens.join(" ")) return {ok:true};
+  if((q.alt||[]).some(a => a.join(" ") === s)) return {ok:true, alt:true};
+  return {ok:false};
+}
+function checkMC(q, choice){ return {ok: choice === q.correct}; }
+
+/* ============================ session ============================ */
+function shuffle(a){ a = a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function interleave(list){
+  // round-robin across topics, shuffled within each topic
+  const groups = {}; list.forEach(q => (groups[q.topic] = groups[q.topic]||[]).push(q));
+  const keys = shuffle(Object.keys(groups)); keys.forEach(k => groups[k] = shuffle(groups[k]));
+  const out = []; let any = true;
+  while(any){ any = false; for(const k of keys){ if(groups[k].length){ out.push(groups[k].shift()); any = true; } } }
+  return out;
+}
+function buildQueue(mode, topics, n){
+  const pool = BANK.filter(q => topics.includes(q.topic));
+  let q = [];
+  if(mode === "srs"){
+    const due = pool.filter(x => seen(x.id) && isDue(x.id)).sort((a,b) => boxOf(a.id)-boxOf(b.id) || dueAt(a.id)-dueAt(b.id));
+    const fresh = interleave(pool.filter(x => !seen(x.id)));
+    // Review rounds contain only what is scheduled: due items first, then new
+    // ones. Nothing is pulled in early — an early miss would reset an item
+    // that a correct answer could not have advanced.
+    q = due.slice(0, n);
+    if(q.length < n) q = q.concat(fresh.slice(0, n - q.length));
+    q = shuffle(q);
+  }else if(mode === "exam"){
+    q = interleave(pool).slice(0, n);
+    q = shuffle(q);
+  }else if(mode === "leech"){
+    const weak = pool.filter(x => { const r = S.items[x.id]; return r && (r.w >= 2 || r.lap >= 1); })
+      .sort((a,b) => { const ra=S.items[a.id], rb=S.items[b.id]; return (rb.w-rb.c)-(ra.w-ra.c) || ra.b-rb.b; });
+    q = weak.slice(0, n);
+    if(q.length < n){
+      const rest = pool.filter(x => !q.includes(x) && seen(x.id) && boxOf(x.id) === 0);
+      q = q.concat(shuffle(rest).slice(0, n - q.length));
+    }
+    q = shuffle(q);
+  }
+  return q.map(x => ({q:x, promotable:isDue(x.id), retry:0}));
+}
+
+let SESSION = null;
+function startSession(mode, topics, n){
+  const queue = buildQueue(mode, topics, n);
+  if(!queue.length) return null;
+  SESSION = {mode, topics, queue, i:0, results:[], misses:[], answered:0, correct:0, started:NOW()};
+  S.stats.sessions++; save();
+  return SESSION;
+}
+function currentEntry(){ return SESSION && SESSION.i < SESSION.queue.length ? SESSION.queue[SESSION.i] : null; }
+// Record an answer for the current entry; wrong answers are requeued 4–6 positions later (max twice).
+function recordAnswer(ok, extra){
+  const e = currentEntry(); if(!e) return null;
+  const r = grade(e.q.id, ok, e.promotable);
+  SESSION.answered++; if(ok) SESSION.correct++;
+  SESSION.results.push(ok);
+  if(!ok){
+    if(!SESSION.misses.some(m => m.id === e.q.id)) SESSION.misses.push({id:e.q.id, given:extra||""});
+    if(e.retry < 2){
+      const pos = Math.min(SESSION.queue.length, SESSION.i + 4 + Math.floor(Math.random()*3));
+      SESSION.queue.splice(pos, 0, {q:e.q, promotable:true, retry:e.retry+1});
+    }
+  }
+  return r;
+}
+function advance(){ SESSION.i++; return currentEntry(); }
+
+/* ============================ helpers ============================ */
+const $ = sel => document.querySelector(sel);
+function h(tag, attrs, ...kids){
+  const el = document.createElement(tag);
+  if(attrs) for(const k in attrs){
+    if(k === "class") el.className = attrs[k];
+    else if(k === "html") el.innerHTML = attrs[k];
+    else if(k.startsWith("on")) el.addEventListener(k.slice(2), attrs[k]);
+    else if(attrs[k] !== null && attrs[k] !== undefined) el.setAttribute(k, attrs[k]);
+  }
+  for(const kid of kids){ if(kid === null || kid === undefined || kid === false) continue; el.append(kid.nodeType ? kid : document.createTextNode(String(kid))); }
+  return el;
+}
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const KII_RE = /^(wär(e|st|est|en|t|et)|hätt(e|est|en|et)|würd(e|est|en|et)|könnt(e|est|en|et)|müsst(e|est|en|et)|dürft(e|est|en|et)|möcht(e|est|en|et)|sollt(e|est|en|et)|wollt(e|est|en|et)|wüsst(e|est|en|et)|käm(e|st|est|en|t|et)|ging(e|est|en|et))$/i;
+function markKII(sentence){
+  // wrap Konjunktiv II finite forms in <em>
+  return esc(sentence).split(/(\s+)/).map(w => {
+    const core = w.replace(/[.,!?;:]+$/,""); const tail = w.slice(core.length);
+    return KII_RE.test(core) ? "<em>"+core+"</em>"+tail : w;
+  }).join("");
+}
+function diffMark(direct, soft){
+  // highlight tokens of `soft` that do not occur in `direct`
+  const d = new Set(norm(direct).split(" "));
+  return esc(soft).split(/(\s+)/).map(w => {
+    const core = w.replace(/[.,!?;:]+$/,""); const tail = w.slice(core.length);
+    if(!core) return w;
+    return d.has(norm(core)) ? w : "<em>"+core+"</em>"+tail;
+  }).join("");
+}
+function fmtDue(t){
+  const d = t - NOW();
+  if(d <= 0) return "now";
+  if(d < 3600000) return Math.max(1, Math.round(d/60000)) + " min";
+  if(d < DAY) return Math.round(d/3600000) + " h";
+  return Math.round(d/DAY) + " d";
+}
+function counts(topics){
+  const pool = topics ? BANK.filter(q => topics.includes(q.topic)) : BANK;
+  let m=0, l=0, u=0, due=0;
+  pool.forEach(q => { const b = boxOf(q.id); if(!seen(q.id)) u++; else if(b >= MASTER_BOX) m++; else l++; if(seen(q.id) && isDue(q.id)) due++; });
+  return {m, l, u, due, total:pool.length};
+}
+
+/* ============================ views ============================== */
+const views = ["home","drill","ref","prog","sum"];
+function show(name){
+  views.forEach(v => $("#view-"+v).classList.toggle("hidden", v !== name));
+  ["home","ref","prog"].forEach(v => $("#nav-"+v).classList.toggle("on", v === name));
+  window.scrollTo(0,0);
+}
+function renderRail(){
+  const c = counts();
+  const el = $("#meter");
+  el.children[0].style.width = (100*c.m/c.total)+"%";
+  el.children[1].style.width = (100*c.l/c.total)+"%";
+  el.children[2].style.width = (100*c.u/c.total)+"%";
+  $("#railstat").textContent = c.m + " of " + c.total + " mastered · " + c.due + " due" + (S.stats.streak > 1 ? " · " + S.stats.streak + "-day streak" : "");
+}
+
+/* ---------- home ---------- */
+const PATTERNS = BANK.filter(q => q.topic === "patterns" && q.kind === "typed" && q.direct);
+let homeSel = {mode:"srs", n:20, topics:TOPIC_ORDER.slice(), patIdx:Math.floor(Math.random()*PATTERNS.length)};
+function renderHome(){
+  const v = $("#view-home"); v.innerHTML = "";
+  const c = counts();
+  v.append(h("h1", null, "Konjunktiv II"));
+  v.append(h("p", {class:"lead"}, "Not real, but said anyway: wishes, polite requests, advice, conditions that aren't true. One box of forms to memorise, one word-order rule to keep, and forty everyday sentences to soften."));
+
+  // signature: the softener
+  const p = PATTERNS[homeSel.patIdx % PATTERNS.length];
+  const sof = h("div", {class:"soften"},
+    h("div", {class:"row"}, h("span", {class:"tag"}, "direct"), h("span", {class:"direct", lang:"de"}, p.direct)),
+    h("div", {class:"row"}, h("span", {class:"tag"}, "softer"), h("span", {class:"soft", lang:"de", html: diffMark(p.direct, p.answers[0])})),
+    h("button", {class:"more", onclick:()=>{ homeSel.patIdx = (homeSel.patIdx + 1 + Math.floor(Math.random()*(PATTERNS.length-1))) % PATTERNS.length; renderHome(); }}, "Show another pattern")
+  );
+  v.append(sof);
+
+  if(!PERSISTS) v.append(h("p", {class:"small", style:"color:var(--neg)"}, "This browser is blocking storage, so progress will not survive a reload. Open the file directly in Safari, Chrome or Firefox."));
+
+  const setup = h("div", {class:"setup"});
+  setup.append(h("h3", null, "Session"));
+  const modes = [["srs","Review", c.due + " due · " + c.u + " new"],["exam","Exam mix", "any state"],["leech","Weak spots", null],["topic","One topic", null]];
+  const mrow = h("div", {class:"opts"});
+  modes.forEach(([id, label, sub]) => mrow.append(h("button", {class:"opt"+(homeSel.mode===id?" on":""), onclick:()=>{ homeSel.mode=id; if(id==="topic" && homeSel.topics.length !== 1) homeSel.topics=[TOPIC_ORDER[0]]; if(id!=="topic" && homeSel.topics.length===1) homeSel.topics=TOPIC_ORDER.slice(); renderHome(); }}, label, sub ? h("small", null, sub) : null)));
+  setup.append(mrow);
+  const nrow = h("div", {class:"opts"});
+  [10,20,40].forEach(n => nrow.append(h("button", {class:"opt"+(homeSel.n===n?" on":""), onclick:()=>{ homeSel.n=n; renderHome(); }}, n + " questions")));
+  setup.append(nrow);
+
+  setup.append(h("h3", null, homeSel.mode === "topic" ? "Pick the topic" : "Topics in this session"));
+  const tg = h("div", {class:"topics"});
+  TOPIC_ORDER.forEach(t => {
+    const tc = counts([t]); const on = homeSel.topics.includes(t);
+    const pct = Math.round(100*tc.m/tc.total);
+    tg.append(h("button", {class:"tchip"+(on?" on":""), onclick:()=>{
+      if(homeSel.mode === "topic"){ homeSel.topics = [t]; }
+      else { homeSel.topics = on ? homeSel.topics.filter(x => x!==t) : homeSel.topics.concat([t]); }
+      renderHome();
+    }},
+      h("span", {class:"box"+(pct===100?" done":(tc.m||tc.l?" mid":""))}),
+      h("span", null, h("div", {class:"nm"}, TOPICS[t].name), h("div", {class:"bl"}, TOPICS[t].blurb)),
+      h("span", {class:"pct"}, tc.m + "/" + tc.total)
+    ));
+  });
+  setup.append(tg);
+  if(homeSel.mode !== "topic") setup.append(h("button", {class:"linkbtn", onclick:()=>{ homeSel.topics = homeSel.topics.length===TOPIC_ORDER.length ? [] : TOPIC_ORDER.slice(); renderHome(); }}, homeSel.topics.length===TOPIC_ORDER.length ? "Clear all" : "Select all"));
+
+  const can = homeSel.topics.length > 0;
+  const start = h("button", {class:"primary", disabled: can ? null : "disabled", onclick:()=>beginDrill()}, "Start");
+  setup.append(h("div", null, start));
+  const sel = counts(homeSel.topics);
+  let plan = "";
+  if(homeSel.mode === "leech"){
+    const weak = BANK.filter(x => homeSel.topics.includes(x.topic) && S.items[x.id] && (S.items[x.id].w>=2 || S.items[x.id].lap>=1)).length;
+    plan = weak ? weak + " weak item" + (weak===1?"":"s") + " in the selected topics." : "No weak items yet — nothing has been missed twice.";
+  }else if(homeSel.mode === "exam"){
+    plan = "A stratified mix across the selected topics, regardless of schedule. Correct answers still count for the schedule when the item is due.";
+  }else{
+    const willAsk = Math.min(homeSel.n, sel.due + sel.u);
+    if(willAsk === 0){
+      const up = BANK.filter(q => homeSel.topics.includes(q.topic) && seen(q.id) && !isDue(q.id)).sort((a,b)=>dueAt(a.id)-dueAt(b.id));
+      plan = "Nothing is due in the selected topics and there are no new items." + (up.length ? " Next review in " + fmtDue(dueAt(up[0].id)) + "." : "") + " Use Exam mix if you want to practise anyway.";
+    }else{
+      plan = "This round: " + willAsk + " question" + (willAsk===1?"":"s") + " (" + sel.due + " due, " + sel.u + " new in the selected topics). Review rounds only ask what is scheduled, so they can be shorter than the length you picked.";
+    }
+  }
+  setup.append(h("p", {class:"plan"}, plan));
+  setup.append(h("p", {class:"plan"}, "Mastery = every item in box 5. A box is left only when the item is due (10 min → 1 d → 3 d → 7 d → 21 d), and one mistake sends an item back to box 0."));
+  v.append(setup);
+}
+function beginDrill(){
+  const mode = homeSel.mode === "topic" ? "srs" : homeSel.mode;
+  const s = startSession(mode, homeSel.topics, homeSel.n);
+  if(!s){ alert(mode === "srs" ? "Nothing is due right now and there are no new items in those topics. Try Exam mix, or come back later." : "Nothing to drill with those settings."); return; }
+  show("drill"); renderQuestion();
+}
+
+/* ---------- drill ---------- */
+let UI = {};   // per-question state
+function renderQuestion(){
+  const v = $("#view-drill"); v.innerHTML = "";
+  const e = currentEntry();
+  if(!e){ finishSession(); return; }
+  const q = e.q;
+  UI = {q, placed:[], gapEls:[], answered:false, pick:null};
+  const head = h("div", {class:"dhead"},
+    h("span", {class:"n"}, (SESSION.i+1) + " / " + SESSION.queue.length),
+    h("span", {class:"t"}, TOPICS[q.topic].name + (e.retry ? " · retry" : "") + (!e.promotable && !e.retry ? " · not due yet" : "")),
+    h("button", {class:"linkbtn", onclick:()=>{ if(confirm("End this round now? Answers so far are saved.")) finishSession(); }}, "End round"));
+  v.append(head);
+  const card = h("div", {class:"card"});
+  if(q.instr) card.append(h("div", {class:"instr"}, q.instr));
+
+  if(q.kind === "mc") renderMC(card, q);
+  else if(q.kind === "typed") renderTyped(card, q);
+  else if(q.kind === "gaps") renderGaps(card, q);
+  else if(q.kind === "order") renderOrder(card, q);
+
+  v.append(card);
+  const first = card.querySelector("input"); if(first) first.focus();
+}
+function promptEl(q, extraClass){
+  const isEn = !!q.enPrompt;
+  const el = h("div", {class:"prompt"+(isEn?" en":"")+(extraClass?" "+extraClass:"")});
+  if(!isEn) el.setAttribute("lang","de");
+  el.innerHTML = q.prompt;
+  return el;
+}
+function cueEl(q){ return q.cue ? h("div", {class:"cue"}, "Use: ", h("b", null, q.cue)) : null; }
+function keysBar(getInput){
+  const bar = h("div", {class:"keys"});
+  ["ä","ö","ü","ß"].forEach(ch => bar.append(h("button", {class:"key", type:"button", onmousedown:ev=>ev.preventDefault(), onclick:()=>{
+    const inp = getInput(); if(!inp || inp.disabled) return;
+    const s = inp.selectionStart ?? inp.value.length, en = inp.selectionEnd ?? s;
+    inp.value = inp.value.slice(0,s) + ch + inp.value.slice(en);
+    inp.focus(); inp.setSelectionRange(s+1, s+1);
+  }}, ch)));
+  return bar;
+}
+function actions(card, onCheck){
+  const row = h("div", {class:"actions"});
+  const btn = h("button", {class:"primary", style:"margin-top:0", onclick:onCheck}, "Check");
+  row.append(btn, h("span", {class:"sp"}));
+  card.append(row);
+  UI.checkBtn = btn; UI.actionRow = row;
+}
+function afterAnswer(card, res, given){
+  UI.answered = true;
+  const q = UI.q;
+  const r = recordAnswer(res.ok, given);
+  if(UI.checkBtn) UI.checkBtn.remove();
+  const fb = h("div", {class:"fb "+(res.ok?"yes":"no")});
+  fb.append(h("div", {class:"v"}, res.ok ? (res.alt ? "Correct — accepted alternative" : "Correct") : (res.unchanged ? "That is still the direct version" : "Not quite")));
+  const ansText = answerText(q);
+  if(q.direct){
+    fb.append(h("div", {class:"pair"}, h("div", {class:"d", lang:"de"}, q.direct), h("div", {class:"s", lang:"de", html: diffMark(q.direct, q.answers[0])})));
+  }else if(q.kind === "mc" && q.enOpts){
+    fb.append(h("div", {class:"ans", style:"font-family:var(--sans);font-size:16px"}, ansText));
+  }else{
+    fb.append(h("div", {class:"ans", lang:"de", html: markKII(ansText)}));
+  }
+  if(res.alt && q.altWhy) fb.append(h("div", {class:"note", html:q.altWhy}));
+  if(q.kind === "typed" && q.answers.length > 1) fb.append(h("div", {class:"note", html:"Also accepted: " + q.answers.slice(1).map(a=>"<i lang=de>"+esc(a)+"</i>").join(" · ")}));
+  if(q.kind === "order" && q.alt && q.alt.length) fb.append(h("div", {class:"note", html:"Also accepted: " + q.alt.map(a=>"<i lang=de>"+esc(a.join(" "))+"</i>").join(" · ")}));
+  fb.append(h("div", {class:"why", html:q.why}));
+  const e = SESSION.queue[SESSION.i];
+  let sched;
+  if(res.ok && e.promotable) sched = r.b >= MASTER_BOX ? "Box 5 — mastered. Next check in " + fmtDue(r.due) + "." : "Up to box " + r.b + ". Due again in " + fmtDue(r.due) + ".";
+  else if(res.ok) sched = "Correct, but this item wasn't due yet, so it stays in box " + r.b + ".";
+  else sched = "Back to box 0. It will come up again later in this round.";
+  fb.append(h("div", {class:"sched"}, sched));
+  card.append(fb);
+  const next = h("button", {class:"primary", style:"margin-top:14px", onclick:()=>{ advance(); renderQuestion(); }}, SESSION.i+1 < SESSION.queue.length ? "Next" : "Finish round");
+  card.append(h("div", null, next));
+  next.focus();
+  renderRail();
+}
+function promptText(q){
+  if(q.kind !== "order") return q.prompt.replace(/\s*\([^)]*\)\s*$/,"");
+  const toks = q.tokens.slice().sort((a,b)=>a.localeCompare(b,"de"));
+  return (q.frame ? esc(q.frame) + " " : "") + "[ " + toks.map(esc).join(" · ") + " ]";
+}
+function answerText(q){
+  return q.kind === "mc" ? q.correct : q.kind === "typed" ? q.answers[0] : q.kind === "gaps" ? fillGaps(q) : (q.frame ? q.frame + " " : "") + q.tokens.join(" ") + (q.end||"");
+}
+function fillGaps(q){
+  let s = q.prompt.replace(/\s*\([^)]*\)\s*$/, "");
+  q.answers.forEach(g => { s = s.replace("___", g[0]); });
+  return s.replace(/<[^>]+>/g,"");
+}
+
+function renderMC(card, q){
+  card.append(promptEl(q));
+  const fixed = q.topic === "function" || q.topic === "ambig" || q.topic === "choice";
+  const opts = fixed ? q.options.slice() : shuffle(q.options);
+  const isDe = !q.enOpts;
+  const list = h("div", {class:"choices"});
+  UI.choiceBtns = [];
+  opts.forEach((o, i) => {
+    const b = h("button", {class:"choice", onclick:ev=>{ if(UI.answered) return; UI.pick = o; UI.choiceBtns.forEach(x => x.classList.toggle("pick", x.dataset.opt === o)); ev.currentTarget.blur(); }},
+      h("span", {class:"k"}, String(i+1)), h("span", {html: esc(o)}));
+    b.dataset.opt = o; if(isDe) b.setAttribute("lang","de");
+    list.append(b); UI.choiceBtns.push(b);
+  });
+  card.append(list);
+  actions(card, () => {
+    if(UI.answered || UI.pick === null) return;
+    const res = checkMC(q, UI.pick);
+    UI.choiceBtns.forEach(b => { b.disabled = true; if(b.dataset.opt === q.correct) b.classList.add("yes"); else if(b.dataset.opt === UI.pick) b.classList.add("no"); });
+    afterAnswer(card, res, UI.pick);
+  });
+}
+function renderTyped(card, q){
+  if(q.prompt.includes("___")){
+    // inline single blank
+    const el = promptEl(q); const inp = h("input", {class:"gapin", type:"text", autocapitalize:"off", autocomplete:"off", autocorrect:"off", spellcheck:"false"});
+    el.innerHTML = q.prompt.replace("___", "\uE000");
+    // replace marker with input
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); let node;
+    while((node = walker.nextNode())){ const i = node.data.indexOf("\uE000"); if(i >= 0){ const after = node.splitText(i); after.data = after.data.slice(1); node.parentNode.insertBefore(inp, after); break; } }
+    card.append(el); UI.inp = inp;
+  }else{
+    card.append(promptEl(q));
+    if(q.direct) card.append(h("div", {class:"direct"}, "Rewrite the sentence — keep the meaning, soften the tone."));
+    const cue = cueEl(q); if(cue) card.append(cue);
+    UI.inp = h("input", {class:"typedin", type:"text", lang:"de", autocapitalize:"sentences", autocomplete:"off", autocorrect:"off", spellcheck:"false", placeholder:"…"});
+    card.append(UI.inp);
+  }
+  card.append(keysBar(() => UI.inp));
+  const check = () => {
+    if(UI.answered) return;
+    const res = checkTyped(q, UI.inp.value);
+    if(res.empty) return;
+    UI.inp.disabled = true; UI.inp.classList.add(res.ok ? "ok" : "bad");
+    afterAnswer(card, res, UI.inp.value);
+  };
+  UI.inp.addEventListener("keydown", ev => { if(ev.key === "Enter"){ ev.preventDefault(); check(); } });
+  actions(card, check);
+}
+function renderGaps(card, q){
+  const el = promptEl(q);
+  let html = q.prompt; const parts = html.split("___");
+  el.innerHTML = "";
+  parts.forEach((part, i) => {
+    const span = h("span", {html: part}); el.append(span);
+    if(i < parts.length - 1){
+      const inp = h("input", {class:"gapin", type:"text", autocapitalize:"off", autocomplete:"off", autocorrect:"off", spellcheck:"false"});
+      const longest = Math.max(...q.answers[i].map(a => a.length));
+      inp.style.width = Math.max(6, longest + 2) + "ch";
+      el.append(inp); UI.gapEls.push(inp);
+    }
+  });
+  card.append(el);
+  card.append(keysBar(() => UI.gapEls.find(x => x === document.activeElement) || UI.lastGap || UI.gapEls[0]));
+  UI.gapEls.forEach((inp, i) => {
+    inp.addEventListener("focus", () => UI.lastGap = inp);
+    inp.addEventListener("keydown", ev => { if(ev.key === "Enter"){ ev.preventDefault(); if(i < UI.gapEls.length-1 && !UI.gapEls[i+1].value) UI.gapEls[i+1].focus(); else check(); } });
+  });
+  const check = () => {
+    if(UI.answered) return;
+    const vals = UI.gapEls.map(x => x.value);
+    if(vals.some(v => !norm(v))) { (UI.gapEls.find(x => !norm(x.value))||UI.gapEls[0]).focus(); return; }
+    const res = checkGaps(q, vals);
+    UI.gapEls.forEach((x, i) => { x.disabled = true; x.classList.add(res.per[i] ? "ok" : "bad"); });
+    afterAnswer(card, res, vals.join(" / "));
+  };
+  actions(card, check);
+}
+function renderOrder(card, q){
+  const p = h("div", {class:"prompt", lang:"de"});
+  card.append(h("div", {class:"instr"}, (q.frame ? "Complete the sentence" : "Build the sentence") + (q.hint ? " (" + q.hint + ")" : "") + "."));
+  const builder = h("div", {class:"builder"});
+  if(q.frame) builder.append(h("span", {class:"frame"}, q.frame));
+  const slot = h("span", {style:"display:contents"}); builder.append(slot);
+  builder.append(h("span", {class:"end"}, q.end || "."));
+  let pool = shuffle(q.tokens); if(pool.join(" ") === q.tokens.join(" ")) pool = pool.slice(1).concat(pool.slice(0,1));
+  const poolEl = h("div", {class:"pool"});
+  const poolBtns = {};
+  const redraw = () => {
+    slot.innerHTML = "";
+    UI.placed.forEach((t, i) => slot.append(h("button", {class:"tok", type:"button", disabled: UI.answered ? "disabled" : null, onclick:ev=>{ if(UI.answered) return; ev.currentTarget.blur(); UI.placed.splice(i,1); redraw(); }}, t)));
+    q.tokens.forEach(t => { poolBtns[t].disabled = UI.answered || UI.placed.includes(t); });
+  };
+  pool.forEach(t => {
+    const b = h("button", {class:"tok", type:"button", onclick:ev=>{ if(UI.answered || UI.placed.includes(t)) return; ev.currentTarget.blur(); UI.placed.push(t); redraw(); }}, t);
+    poolBtns[t] = b; poolEl.append(b);
+  });
+  card.append(builder, poolEl);
+  UI.builder = builder; UI.redraw = redraw;
+  actions(card, () => {
+    if(UI.answered) return;
+    if(UI.placed.length < q.tokens.length){ builder.classList.add("bad"); setTimeout(()=>builder.classList.remove("bad"), 600); return; }
+    const res = checkOrder(q, UI.placed);
+    builder.classList.add(res.ok ? "ok" : "bad");
+    UI.answered = true; redraw();
+    afterAnswer(card, res, UI.placed.join(" "));
+  });
+}
+
+document.addEventListener("keydown", ev => {
+  if($("#view-drill").classList.contains("hidden")) return;
+  const q = UI.q; if(!q) return;
+  const tag = (ev.target.tagName||"").toLowerCase();
+  if(ev.key === "Enter" && (tag === "button" || tag === "input" || tag === "textarea")) return; // the element handles it
+  if(UI.answered){
+    if(ev.key === "Enter"){ ev.preventDefault(); advance(); renderQuestion(); }
+    return;
+  }
+  if(q.kind === "mc" && /^[1-9]$/.test(ev.key)){
+    const b = UI.choiceBtns[Number(ev.key)-1]; if(b){ b.click(); }
+  }else if(q.kind === "mc" && ev.key === "Enter" && UI.pick !== null){ ev.preventDefault(); UI.checkBtn.click(); }
+  else if(q.kind === "order"){
+    if(ev.key === "Enter"){ ev.preventDefault(); UI.checkBtn.click(); }
+    else if(ev.key === "Backspace"){ ev.preventDefault(); UI.placed.pop(); UI.redraw(); }
+  }
+});
+
+/* ---------- summary ---------- */
+function finishSession(){
+  const s = SESSION; if(!s) { show("home"); renderHome(); return; }
+  saveNow();
+  const v = $("#view-sum"); v.innerHTML = "";
+  v.append(h("h1", null, "Round done"));
+  const pct = s.answered ? Math.round(100*s.correct/s.answered) : 0;
+  v.append(h("p", {class:"lead"}, s.answered ? s.correct + " of " + s.answered + " correct (" + pct + "%)." : "No answers this round."));
+  const tally = h("div", {class:"tally"}); s.results.forEach(ok => tally.append(h("i", {class: ok ? "" : "no"}))); v.append(tally);
+  const c = counts();
+  v.append(h("p", {class:"small muted", style:"margin-top:12px"}, c.m + " of " + c.total + " items mastered · " + c.due + " due now."));
+  if(s.misses.length){
+    v.append(h("h2", null, "To look at again"));
+    const ml = h("div", {class:"misslist"});
+    s.misses.forEach(m => {
+      const q = BANK.find(x => x.id === m.id);
+      const ans = answerText(q);
+      ml.append(h("div", {class:"miss"}, h("div", {class:"p", lang:"de", html:promptText(q)}), h("div", {class:"a", html:"<em lang=de>"+esc(ans)+"</em>" + (m.given ? " — you wrote <span lang=de>"+esc(m.given)+"</span>" : "")}), h("div", {class:"a", html:q.why})));
+    });
+    v.append(ml);
+  }
+  const row = h("div", {class:"tools", style:"margin-top:22px"});
+  row.append(h("button", {class:"primary", style:"margin-top:0", onclick:()=>{ show("home"); renderHome(); }}, "Back to start"));
+  if(s.misses.length) row.append(h("button", {class:"secondary", onclick:()=>{ homeSel.mode="leech"; beginDrill(); }}, "Drill weak spots"));
+  v.append(row);
+  SESSION = null;
+  renderRail(); show("sum");
+}
+
+/* ---------- rules ---------- */
+function renderRef(){
+  const v = $("#view-ref"); v.innerHTML = "";
+  v.append(h("h1", null, "Rules"));
+  v.append(h("p", {class:"lead"}, "Konjunktiv II marks something as not real: a wish, a hypothesis, a suggestion, a softened request."));
+
+  v.append(h("h2", null, "What it does"));
+  const t1 = h("table", {class:"ref"}, h("tr", null, h("th", null, "Function"), h("th", null, "Example"), h("th", null, "English")));
+  [["Politeness","<b>Könnten</b> Sie mir helfen?","Could you help me?"],["Wish","Ich <b>hätte</b> gern einen Kaffee.","I'd like a coffee."],["Unreal condition","Wenn ich Zeit <b>hätte</b>, <b>würde</b> ich kommen.","If I had time, I'd come."],["Advice","Du <b>solltest</b> mehr schlafen.","You should sleep more."],["Cautious statement","Das <b>wäre</b> möglich.","That would be possible."],["Unreal comparison","Er tut so, als ob er krank <b>wäre</b>.","He acts as if he were ill."]]
+    .forEach(r => t1.append(h("tr", null, h("td", null, r[0]), h("td", {lang:"de", html:r[1]}), h("td", {class:"muted"}, r[2]))));
+  v.append(t1);
+
+  v.append(h("h2", null, "Two ways to build it"));
+  v.append(h("div", {class:"rulebox", html:"<b>1. würde + infinitive</b> — the default, works with almost every verb. <i>würde</i> is conjugated and sits in position 2; the infinitive goes to the end.<br><span lang=de>Ich <b>würde</b> morgen gern nach Berlin <b>fahren</b>. · <b>Würdest</b> du mir <b>helfen</b>?</span><br>In a subordinate clause the infinitive comes first and <i>würde</i> last: <span lang=de>…, wenn ich in Berlin <b>wohnen würde</b>.</span>"}));
+  v.append(h("div", {class:"rulebox", html:"<b>2. Own form</b> — a small closed set: <span lang=de>sein, haben, werden, wissen, kommen, gehen</span> and all six modal verbs. Rule: Präteritum (ich-form) + umlaut (only on a, o, u) + ending.<br><span lang=de>war → <b>wäre</b> · hatte → <b>hätte</b> · wurde → <b>würde</b> · konnte → <b>könnte</b> · wusste → <b>wüsste</b> · kam → <b>käme</b> · ging → <b>ginge</b></span><br>The own form sits in position 2 (or last in a subordinate clause); with a modal the infinitive goes to the end: <span lang=de>Er <b>könnte</b> recht <b>haben</b>.</span> Never <i>würde sein / würde haben / würde können</i>."}));
+
+  v.append(h("h2", null, "The forms to know"));
+  const t2 = h("table", {class:"ref"}, h("tr", null, h("th", null, ""), h("th", null, "sein"), h("th", null, "haben"), h("th", null, "werden")));
+  [["ich","wäre","hätte","würde"],["du","wärst","hättest","würdest"],["er/sie/es","wäre","hätte","würde"],["wir","wären","hätten","würden"],["ihr","wärt","hättet","würdet"],["sie/Sie","wären","hätten","würden"]]
+    .forEach(r => t2.append(h("tr", null, h("td", {class:"muted"}, r[0]), h("td", {lang:"de"}, r[1]), h("td", {lang:"de"}, r[2]), h("td", {lang:"de"}, r[3]))));
+  v.append(t2);
+  v.append(h("p", {class:"small muted"}, "wärst / wärt also appear as wärest / wäret — both are correct."));
+
+  v.append(h("h3", null, "Modal verbs"));
+  const t3 = h("table", {class:"ref"}, h("tr", null, h("th", null, "Infinitive"), h("th", null, "Konjunktiv II"), h("th", null, "Umlaut")));
+  [["können","könnte","yes"],["müssen","müsste","yes"],["dürfen","dürfte","yes"],["mögen","möchte","yes"],["sollen","sollte","no"],["wollen","wollte","no"]]
+    .forEach(r => t3.append(h("tr", null, h("td", {lang:"de"}, r[0]), h("td", {lang:"de"}, r[1]), h("td", {class:r[2]==="yes"?"yes":"no"}, r[2]==="yes"?"umlaut":"no umlaut"))));
+  v.append(t3);
+  v.append(h("p", {class:"small"}, "Endings are the same for every verb: -e, -est, -e, -en, -et, -en. ", h("span", {lang:"de"}, "ich könnte, du könntest, er könnte, wir könnten, ihr könntet, sie könnten.")));
+  v.append(h("div", {class:"rulebox", html:"<b>sollte / wollte</b> look exactly like the Präteritum. Context decides:<br><span lang=de>Ich <b>wollte</b> gestern anrufen.</span> — past, indicative<br><span lang=de>Du <b>solltest</b> zum Arzt gehen.</span> — advice, Konjunktiv II"}));
+
+  v.append(h("h2", null, "Word order in one line"));
+  v.append(h("div", {class:"rulebox", html:"Main clause: Konjunktiv II verb in <b>position 2</b>, infinitive at the <b>end</b>. Question: verb <b>first</b>. Subordinate clause (<i>wenn, als ob, ob, dass</i>): verb <b>last</b> — with würde, the infinitive comes just before it. If the wenn-clause is fronted, the main-clause verb follows <b>right after the comma</b>: <span lang=de>Wenn ich Zeit hätte, <b>würde</b> ich kommen.</span>"}));
+
+  v.append(h("h2", null, "Softening ladder"));
+  v.append(h("p", {class:"small muted"}, "Tap a line to reveal the softened version. These are the patterns to have ready before the speaking exam."));
+  const lad = h("div", {class:"ladder"});
+  PATTERNS.forEach(p => {
+    const s = h("div", {class:"s veil", lang:"de", html: diffMark(p.direct, p.answers[0])});
+    lad.append(h("button", {class:"rung", onclick:()=>s.classList.toggle("veil")}, h("div", {class:"d", lang:"de"}, p.direct), s));
+  });
+  v.append(lad);
+}
+
+/* ---------- progress ---------- */
+function renderProg(){
+  const v = $("#view-prog"); v.innerHTML = "";
+  v.append(h("h1", null, "Progress"));
+  const c = counts(); const st = S.stats;
+  const acc = st.answered ? Math.round(100*st.correct/st.answered) : 0;
+  const grid = h("div", {class:"stats"},
+    h("div", {class:"stat"}, h("div", {class:"v"}, c.m + "/" + c.total), h("div", {class:"l"}, "mastered")),
+    h("div", {class:"stat"}, h("div", {class:"v"}, String(c.due)), h("div", {class:"l"}, "due now")),
+    h("div", {class:"stat"}, h("div", {class:"v"}, acc + "%"), h("div", {class:"l"}, "accuracy, " + st.answered + " answers")));
+  v.append(grid);
+  const days = Object.keys(st.days).length;
+  v.append(h("p", {class:"small muted"}, days + " day" + (days===1?"":"s") + " studied · " + st.sessions + " round" + (st.sessions===1?"":"s") + (st.streak>1 ? " · " + st.streak + "-day streak" : "")));
+  if(c.m === c.total) v.append(h("div", {class:"rulebox", style:"border-color:var(--yes)"}, "Every item is in box 5. Keep answering the reviews as they come due to hold it."));
+
+  // next due
+  const upcoming = BANK.filter(q => seen(q.id) && !isDue(q.id)).sort((a,b)=>dueAt(a.id)-dueAt(b.id));
+  if(!c.due && upcoming.length) v.append(h("p", {class:"small muted"}, "Nothing due. Next review in " + fmtDue(dueAt(upcoming[0].id)) + "."));
+
+  v.append(h("h2", null, "By topic"));
+  v.append(h("div", {class:"legend"}, h("span", null, h("i", {style:"background:var(--yes)"}), "box 5"), h("span", null, h("i", {style:"background:var(--acc)"}), "box 1–4"), h("span", null, h("i", {style:"background:var(--neg)"}), "box 0, seen"), h("span", null, h("i", {style:"background:var(--rule-2)"}), "untouched")));
+  TOPIC_ORDER.forEach(t => {
+    const pool = BY_TOPIC[t]; let m=0,l=0,z=0,u=0;
+    pool.forEach(q => { if(!seen(q.id)) u++; else { const b=boxOf(q.id); if(b>=MASTER_BOX) m++; else if(b===0) z++; else l++; } });
+    const n = pool.length;
+    v.append(h("div", {class:"trow"},
+      h("div", {class:"nm"}, TOPICS[t].name, h("div", {class:"small muted"}, n + " items")),
+      h("div", {class:"bar"}, h("i", {style:"width:"+(100*m/n)+"%;background:var(--yes)"}), h("i", {style:"width:"+(100*l/n)+"%;background:var(--acc)"}), h("i", {style:"width:"+(100*z/n)+"%;background:var(--neg)"}), h("i", {style:"width:"+(100*u/n)+"%;background:var(--rule-2)"})),
+      h("div", {class:"pct"}, Math.round(100*m/n) + "%")));
+  });
+
+  const leeches = BANK.filter(q => S.items[q.id] && (S.items[q.id].w >= 2 || S.items[q.id].lap >= 1)).sort((a,b) => (S.items[b.id].w - S.items[b.id].c) - (S.items[a.id].w - S.items[a.id].c)).slice(0, 12);
+  v.append(h("h2", null, "Weak spots"));
+  if(!leeches.length) v.append(h("p", {class:"small muted"}, "Nothing has been missed twice yet."));
+  leeches.forEach(q => {
+    const r = S.items[q.id];
+    const ans = answerText(q);
+    v.append(h("div", {class:"leech"}, h("div", {class:"p", lang:"de", html:promptText(q)}), h("div", {class:"a", html:"<em lang=de>"+esc(ans)+"</em> · " + r.w + " wrong, " + r.c + " right, box " + r.b})));
+  });
+
+  v.append(h("h2", null, "Backup"));
+  v.append(h("p", {class:"small muted"}, PERSISTS ? "Progress is saved in this browser only. Export a copy before switching devices or clearing browser data." : "Storage is blocked in this browser — export to keep your progress."));
+  const tools = h("div", {class:"tools"});
+  tools.append(h("button", {class:"secondary", onclick:exportProgress}, "Export progress"));
+  const file = h("input", {type:"file", accept:"application/json,.json", style:"display:none", onchange:ev=>{ const f = ev.target.files[0]; if(!f) return; f.text().then(t => importProgress(t)); ev.target.value=""; }});
+  tools.append(file, h("button", {class:"secondary", onclick:()=>file.click()}, "Import file"));
+  tools.append(h("button", {class:"secondary", onclick:()=>{ const box = $("#pastebox"); box.classList.toggle("hidden"); }}, "Paste JSON"));
+  tools.append(h("button", {class:"secondary", style:"color:var(--neg)", onclick:()=>{ if(confirm("Reset all progress for Konjunktiv II? This cannot be undone.")){ S = blank(); saveNow(); renderRail(); renderProg(); } }}, "Reset"));
+  v.append(tools);
+  const paste = h("div", {id:"pastebox", class:"hidden", style:"margin-top:10px"});
+  const ta = h("textarea", {placeholder:"Paste an exported JSON backup here"});
+  paste.append(ta, h("div", {style:"margin-top:8px"}, h("button", {class:"secondary", onclick:()=>importProgress(ta.value)}, "Import pasted JSON")));
+  v.append(paste);
+  v.append(h("div", {id:"impmsg", class:"msg"}));
+}
+function exportProgress(){
+  const data = JSON.stringify(Object.assign({app:"konjunktiv2", exported:new Date(NOW()).toISOString()}, S));
+  try{
+    const blob = new Blob([data], {type:"application/json"});
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+    a.download = "konjunktiv2-progress-" + dayKey(NOW()) + ".json"; document.body.append(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+  }catch(e){}
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(data).catch(()=>{});
+  const m = $("#impmsg"); if(m){ m.className = "msg good"; m.textContent = "Exported (downloaded and copied to the clipboard)."; }
+}
+function validateImport(p){
+  if(!p || typeof p !== "object") return "Not a JSON object.";
+  if(p.v !== 1) return "Unknown version.";
+  if(!p.items || typeof p.items !== "object") return "Missing items.";
+  const ids = new Set(BANK.map(q => q.id));
+  for(const id in p.items){
+    const r = p.items[id];
+    if(!r || typeof r !== "object") return "Bad record for " + id + ".";
+    for(const k of ["b","due","s","c","w","lap","seen"]) if(typeof r[k] !== "number" || !isFinite(r[k])) return "Bad field " + k + " in " + id + ".";
+    if(r.b < 0 || r.b > MASTER_BOX) return "Box out of range in " + id + ".";
+    if(!ids.has(id)) return "Unknown item " + id + ".";
+  }
+  if(!p.stats || typeof p.stats !== "object") return "Missing stats.";
+  return null;
+}
+function importProgress(text){
+  const m = $("#impmsg");
+  let p;
+  try{ p = JSON.parse(text); }catch(e){ m.className="msg bad"; m.textContent = "That is not valid JSON."; return false; }
+  const err = validateImport(p);
+  if(err){ m.className="msg bad"; m.textContent = "Import rejected: " + err + " Nothing was changed."; return false; }
+  S = {v:1, items:p.items, stats:Object.assign(blank().stats, p.stats)};
+  S.stats.days = S.stats.days || {};
+  saveNow(); renderRail(); renderProg();
+  const mm = $("#impmsg"); mm.className="msg good"; mm.textContent = "Imported " + Object.keys(S.items).length + " item records.";
+  return true;
+}
+
+/* ============================ boot =============================== */
+$("#nav-home").addEventListener("click", ()=>{ if(SESSION && !confirm("Leave this round? Answers so far are saved.")) return; SESSION = null; show("home"); renderHome(); });
+$("#nav-ref").addEventListener("click", ()=>{ if(SESSION && !confirm("Leave this round? Answers so far are saved.")) return; SESSION = null; renderRef(); show("ref"); });
+$("#nav-prog").addEventListener("click", ()=>{ if(SESSION && !confirm("Leave this round? Answers so far are saved.")) return; SESSION = null; renderProg(); show("prog"); });
+$("#foot").textContent = BANK.length + " items · " + TOPIC_ORDER.length + " topics · Konjunktiv II from your notes (German 14).";
+renderRail(); renderHome(); show("home");
+
+// test hooks
+window.K2 = {
+  get S(){ return S; }, set S(v){ S = v; }, BANK, TOPICS, TOPIC_ORDER, IVL, MASTER_BOX,
+  norm, checkTyped, checkGaps, checkOrder, checkMC, grade, buildQueue, startSession, currentEntry, recordAnswer, advance,
+  counts, isDue, boxOf, seen, load, saveNow, blank, renderHome, renderProg, renderRef, renderQuestion, finishSession, beginDrill,
+  importProgress, validateImport, exportProgress, fillGaps, homeSel,
+  setNow(fn){ NOW = fn; }, get session(){ return SESSION; }, get ui(){ return UI; }, show
+};
+</script>
+</body>
+</html>
