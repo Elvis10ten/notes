@@ -9,11 +9,13 @@
   :root {
     --bg:#f7f7f5; --card:#fff; --text:#1a1a1a; --muted:#6b6b6b;
     --accent:#2f6fed; --on-accent:#fff; --accent-soft:#e9effc; --border:#e3e3e0;
+    --ok:#1f7a3a; --err:#b42318;
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --bg:#161615; --card:#1f1f1e; --text:#f0f0ee; --muted:#a0a09c;
       --accent:#7aa2f7; --on-accent:#10151f; --accent-soft:#232c40; --border:#333331;
+      --ok:#6fcf8e; --err:#f28b82;
     }
   }
   * { box-sizing:border-box; }
@@ -75,10 +77,34 @@
   .last:empty { display:none; }
   .last[data-never] { opacity:.65; }
 
+  /* Backup */
+  .backup {
+    background:var(--card); border:1px solid var(--border); border-radius:10px;
+    padding:1rem 1.1rem; transition:border-color .15s;
+  }
+  .backup.dragover { border-color:var(--accent); border-style:dashed; }
+  .backup .desc { max-width:60ch; }
+  .backup .stats { color:var(--muted); font-size:.8rem; margin-top:.6rem; font-variant-numeric:tabular-nums; }
+  .backup .actions { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.9rem; }
+  .btn {
+    appearance:none; font:inherit; font-size:.92rem; font-weight:600; cursor:pointer;
+    padding:.55rem .9rem; border-radius:10px; border:1px solid var(--border);
+    background:var(--card); color:var(--text); transition:border-color .15s, filter .15s;
+  }
+  .btn:hover { border-color:var(--accent); }
+  .btn:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  .btn.primary { background:var(--accent); color:var(--on-accent); border-color:transparent; }
+  .btn.primary:hover { filter:brightness(1.08); }
+  .btn[hidden] { display:none; }
+  .status { font-size:.85rem; margin-top:.7rem; min-height:1.2em; }
+  .status:empty { display:none; }
+  .status[data-kind="ok"] { color:var(--ok); }
+  .status[data-kind="err"] { color:var(--err); }
+
   footer { margin-top:2.5rem; color:var(--muted); font-size:.8rem; }
 
   @media (prefers-reduced-motion: reduce) {
-    a.card, .continue { transition:none; }
+    a.card, .continue, .btn, .backup { transition:none; }
     a.card:hover { transform:none; }
   }
 </style>
@@ -261,6 +287,20 @@
     </a></li>
   </ul>
 
+  <h2>Sicherung</h2>
+  <section class="backup" id="backup">
+    <div class="name">Fortschritt sichern und übertragen</div>
+    <div class="desc">Alle Trainer speichern ihren Stand nur in diesem Browser. Exportiere eine Datei nach iCloud&nbsp;Drive und importiere sie auf dem anderen Gerät – oder zieh sie einfach hierher.</div>
+    <div class="stats" id="backup-stats"></div>
+    <div class="actions">
+      <button class="btn primary" id="export-btn" type="button">Exportieren</button>
+      <button class="btn" id="share-btn" type="button" hidden>Teilen …</button>
+      <button class="btn" id="import-btn" type="button">Importieren …</button>
+      <input type="file" id="import-file" accept=".json,application/json" hidden>
+    </div>
+    <div class="status" id="backup-status" role="status" aria-live="polite"></div>
+  </section>
+
   <footer>„Weiter üben" öffnet den Trainer, den du am längsten nicht geöffnet hast.</footer>
 </main>
 
@@ -314,9 +354,164 @@
     const m = load(); m[hrefOf(a)] = Date.now(); save(m);
   });
 
-  render();
-  window.addEventListener('pageshow', e => { if (e.persisted) render(); });
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) render(); });
+  /* ---------- Backup: export / import every localStorage key on this origin ---------- */
+
+  const FORMAT   = 'deutsch-home-backup';
+  const META_KEY = 'deutsch-home:backupMeta';   // when this device last exported; never part of a backup
+
+  const box       = document.getElementById('backup');
+  const statsEl   = document.getElementById('backup-stats');
+  const statusEl  = document.getElementById('backup-status');
+  const exportBtn = document.getElementById('export-btn');
+  const shareBtn  = document.getElementById('share-btn');
+  const importBtn = document.getElementById('import-btn');
+  const fileInput = document.getElementById('import-file');
+
+  function readAll() {
+    const data = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k === META_KEY) continue;
+      data[k] = localStorage.getItem(k);
+    }
+    return data;
+  }
+  function buildBackup() {
+    const data = readAll();
+    return {
+      format: FORMAT, version: 1,
+      exportedAt: new Date().toISOString(),
+      origin: location.origin,
+      keys: Object.keys(data).length,
+      data
+    };
+  }
+  function parseBackup(text) {
+    let p;
+    try { p = JSON.parse(text); } catch (e) { throw new Error('Die Datei ist kein gültiges JSON.'); }
+    if (!p || typeof p !== 'object' || p.format !== FORMAT) throw new Error('Das ist keine Sicherung dieser Seite.');
+    if (p.version !== 1) throw new Error('Unbekannte Version der Sicherung (' + p.version + ').');
+    if (!p.data || typeof p.data !== 'object' || Array.isArray(p.data)) throw new Error('Die Sicherung enthält keine Daten.');
+    const keys = Object.keys(p.data);
+    if (!keys.length) throw new Error('Die Sicherung ist leer.');
+    for (const k of keys) {
+      if (typeof p.data[k] !== 'string') throw new Error('Ungültiger Eintrag: „' + k + '".');
+    }
+    return p;
+  }
+  // Overwrites only the keys contained in the backup; everything else on this device stays untouched.
+  function applyBackup(p) {
+    const keys = Object.keys(p.data).filter(k => k !== META_KEY);
+    for (const k of keys) localStorage.setItem(k, p.data[k]);
+    return keys.length;
+  }
+
+  function fileName(iso) {
+    const d = new Date(iso), z = n => String(n).padStart(2, '0');
+    return 'deutsch-sicherung-' + d.getFullYear() + '-' + z(d.getMonth() + 1) + '-' + z(d.getDate())
+         + '-' + z(d.getHours()) + z(d.getMinutes()) + '.json';
+  }
+  function fmtDate(iso) {
+    try { return new Date(iso).toLocaleString('de-DE', { dateStyle: 'medium', timeStyle: 'short' }); }
+    catch (e) { return iso; }
+  }
+  function fmtSize(bytes) {
+    return bytes < 1024 * 1024 ? Math.max(1, Math.round(bytes / 1024)) + ' KB' : (bytes / 1048576).toFixed(1) + ' MB';
+  }
+  function meta() { try { return JSON.parse(localStorage.getItem(META_KEY)) || null; } catch (e) { return null; } }
+  function rememberExport(p) {
+    try { localStorage.setItem(META_KEY, JSON.stringify({ exportedAt: p.exportedAt, keys: p.keys })); } catch (e) {}
+  }
+  function setStatus(msg, kind) {
+    statusEl.textContent = msg || '';
+    if (kind) statusEl.setAttribute('data-kind', kind); else statusEl.removeAttribute('data-kind');
+  }
+
+  function renderStats() {
+    const data = readAll();
+    const keys = Object.keys(data);
+    let bytes = 0; keys.forEach(k => { bytes += (k.length + data[k].length) * 2; });
+    const m = meta();
+    const parts = [keys.length + (keys.length === 1 ? ' Eintrag' : ' Einträge') + ' gespeichert (≈ ' + fmtSize(bytes) + ')'];
+    if (m && m.exportedAt) parts.push('Zuletzt gesichert: ' + label(new Date(m.exportedAt).getTime()).replace('Zuletzt ', ''));
+    else parts.push('Noch nie gesichert');
+    statsEl.textContent = parts.join(' — ');
+  }
+
+  function download(name, text) {
+    const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
+    const a = document.createElement('a');
+    a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  }
+
+  function doExport() {
+    const p = buildBackup();
+    if (!p.keys) { setStatus('Nichts zu sichern – noch kein Trainer geöffnet.', 'err'); return; }
+    download(fileName(p.exportedAt), JSON.stringify(p, null, 2));
+    rememberExport(p); renderStats();
+    setStatus(p.keys + ' Einträge exportiert. Die Datei liegt im Download-Ordner von Safari.', 'ok');
+  }
+  async function doShare() {
+    const p = buildBackup();
+    if (!p.keys) { setStatus('Nichts zu sichern – noch kein Trainer geöffnet.', 'err'); return; }
+    const file = new File([JSON.stringify(p, null, 2)], fileName(p.exportedAt), { type: 'application/json' });
+    try {
+      await navigator.share({ files: [file], title: 'Deutsch – Sicherung' });
+      rememberExport(p); renderStats();
+      setStatus(p.keys + ' Einträge geteilt.', 'ok');
+    } catch (e) {
+      if (e && e.name === 'AbortError') return;          // user closed the share sheet
+      setStatus('Teilen nicht möglich – bitte „Exportieren" verwenden.', 'err');
+    }
+  }
+  async function doImportText(text) {
+    let p;
+    try { p = parseBackup(text); }
+    catch (e) { setStatus(e.message, 'err'); return; }
+    const n = Object.keys(p.data).length;
+    const ok = confirm('Sicherung vom ' + fmtDate(p.exportedAt) + ' (' + n + ' Einträge) importieren?\n\n'
+                     + 'Vorhandener Fortschritt zu diesen Einträgen wird überschrieben. Schließe vorher offene Trainer-Tabs.');
+    if (!ok) { setStatus('Import abgebrochen.'); return; }
+    try {
+      const written = applyBackup(p);
+      render(); renderStats();
+      setStatus(written + ' Einträge importiert. Öffne einen Trainer, um den Stand zu sehen.', 'ok');
+    } catch (e) {
+      setStatus('Import fehlgeschlagen: ' + (e && e.message ? e.message : 'Speicher voll oder blockiert.'), 'err');
+    }
+  }
+  function doImportFile(file) {
+    if (!file) return;
+    const r = new FileReader();
+    r.onload  = () => doImportText(String(r.result));
+    r.onerror = () => setStatus('Datei konnte nicht gelesen werden.', 'err');
+    r.readAsText(file);
+  }
+
+  exportBtn.addEventListener('click', doExport);
+  importBtn.addEventListener('click', () => { fileInput.value = ''; fileInput.click(); });
+  fileInput.addEventListener('change', () => doImportFile(fileInput.files && fileInput.files[0]));
+
+  try {
+    const probe = new File(['{}'], 'probe.json', { type: 'application/json' });
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [probe] })) {
+      shareBtn.hidden = false; shareBtn.addEventListener('click', doShare);
+    }
+  } catch (e) {}
+
+  // Drag a backup file onto the card (desktop).
+  ['dragenter', 'dragover'].forEach(t => box.addEventListener(t, e => { e.preventDefault(); box.classList.add('dragover'); }));
+  ['dragleave', 'drop'].forEach(t => box.addEventListener(t, e => { e.preventDefault(); box.classList.remove('dragover'); }));
+  box.addEventListener('drop', e => doImportFile(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]));
+
+  // Exposed for headless tests only.
+  window.deutschHomeBackup = { buildBackup, parseBackup, applyBackup, META_KEY, FORMAT };
+
+  render(); renderStats();
+  window.addEventListener('pageshow', e => { if (e.persisted) { render(); renderStats(); } });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) { render(); renderStats(); } });
+  window.addEventListener('storage', () => { render(); renderStats(); });
 })();
 </script>
 </body>
