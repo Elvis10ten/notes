@@ -60,37 +60,42 @@
   a.card:active { transform:none; }
   a.card:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
 
-  ol > li.card::before {
-    counter-increment:drill; content:counter(drill);
-    flex:0 0 1.75rem; height:1.75rem; border-radius:50%;
-    display:grid; place-items:center;
-    background:var(--accent-soft); color:var(--accent);
-    font-size:.8rem; font-weight:600; font-variant-numeric:tabular-nums;
-  }
   .featured a.card { background:var(--accent-soft); border-color:transparent; }
   .featured a.card:hover { border-color:var(--accent); }
 
   .body { min-width:0; flex:1; }
   .name { font-weight:600; font-size:1.02rem; }
   .desc { color:var(--muted); font-size:.87rem; margin-top:.2rem; }
-  .last { color:var(--muted); font-size:.75rem; margin-top:.5rem; }
+  .last, .soon-label { color:var(--muted); font-size:.75rem; margin-top:.5rem; }
   .last:empty { display:none; }
   .last[data-never] { opacity:.65; }
 
-  /* Grammar topics: one card, two links (practice + notes) */
-  .links { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.7rem; }
-  .links a, .links .soon {
-    display:inline-flex; align-items:center;
-    font-size:.85rem; font-weight:600; text-decoration:none;
-    padding:.4rem .8rem; border-radius:8px; border:1px solid var(--border);
-    background:var(--card); color:var(--text);
-    transition:border-color .15s, filter .15s;
+  /* Grammar topics: the card opens the trainer, the tab on its right edge opens the notes */
+  li.topic {
+    display:flex; align-items:stretch;
+    background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden;
+    transition:border-color .15s, transform .15s;
   }
-  .links a.practice { background:var(--accent); color:var(--on-accent); border-color:transparent; }
-  .links a.practice:hover { filter:brightness(1.08); }
-  .links a.note:hover { border-color:var(--accent); }
-  .links a:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
-  .links .soon { color:var(--muted); border-style:dashed; cursor:default; }
+  li.topic:hover { border-color:var(--accent); transform:translateY(-1px); }
+  li.topic > .card { flex:1; min-width:0; background:none; border:0; border-radius:0; }
+  li.topic > a.card:hover { transform:none; }
+  li.topic > .card::before {
+    counter-increment:drill; content:counter(drill);
+    flex:0 0 1.75rem; height:1.75rem; border-radius:50%;
+    display:grid; place-items:center;
+    background:var(--accent-soft); color:var(--accent);
+    font-size:.8rem; font-weight:600; font-variant-numeric:tabular-nums;
+  }
+  li.topic > .card.soon { cursor:default; }
+  li.topic > .card.soon::before { background:none; border:1px dashed var(--border); color:var(--muted); }
+  li.topic > .note {
+    display:flex; align-items:center; flex:0 0 auto; padding:0 .9rem;
+    border-left:1px solid var(--border);
+    color:var(--muted); font-size:.8rem; font-weight:600; text-decoration:none;
+    transition:color .15s, background .15s;
+  }
+  li.topic > .note:hover { color:var(--accent); background:var(--accent-soft); }
+  li.topic > .card:focus-visible, li.topic > .note:focus-visible { outline:2px solid var(--accent); outline-offset:-3px; }
 
   /* Backup */
   .backup {
@@ -119,8 +124,8 @@
   footer { margin-top:2.5rem; color:var(--muted); font-size:.8rem; }
 
   @media (prefers-reduced-motion: reduce) {
-    a.card, .continue, .btn, .backup, .links a { transition:none; }
-    a.card:hover { transform:none; }
+    a.card, li.topic, li.topic > .note, .continue, .btn, .backup { transition:none; }
+    a.card:hover, li.topic:hover { transform:none; }
   }
 </style>
 </head>
@@ -149,191 +154,175 @@
 
   <h2>Grammatik</h2>
   <ol>
-    <li class="card">
-      <div class="body">
-        <div class="name">Nomen &amp; Genus</div>
-        <div class="desc">der, die oder das? Artikel sicher zuordnen</div>
-        <div class="links">
-          <a class="practice" href="nouns-practice.html">Üben</a>
-          <a class="note" href="nouns-note.html">Notizen</a>
+    <li class="topic">
+      <a class="card" href="nouns-practice.html">
+        <div class="body">
+          <div class="name">Nomen &amp; Genus</div>
+          <div class="desc">der, die oder das? Artikel sicher zuordnen</div>
+          <div class="last"></div>
         </div>
-        <div class="last"></div>
-      </div>
+      </a>
+      <a class="note" href="nouns-note.html" aria-label="Notizen: Nomen &amp; Genus">Notizen</a>
     </li>
-    <li class="card">
-      <div class="body">
-        <div class="name">Pluralformen</div>
-        <div class="desc">Endungen und Umlaut: -e, -en, -er, -s</div>
-        <div class="links">
-          <a class="practice" href="plurals-practice.html">Üben</a>
-          <a class="note" href="plurals-note.html">Notizen</a>
+    <li class="topic">
+      <a class="card" href="plurals-practice.html">
+        <div class="body">
+          <div class="name">Pluralformen</div>
+          <div class="desc">Endungen und Umlaut: -e, -en, -er, -s</div>
+          <div class="last"></div>
         </div>
-        <div class="last"></div>
-      </div>
+      </a>
+      <a class="note" href="plurals-note.html" aria-label="Notizen: Pluralformen">Notizen</a>
     </li>
-    <li class="card">
-      <div class="body">
-        <div class="name">Präsens</div>
-        <div class="desc">Regelmäßige und unregelmäßige Verben konjugieren</div>
-        <div class="links">
-          <a class="practice" href="present-tense-practice.html">Üben</a>
-          <a class="note" href="present-tense-note.html">Notizen</a>
+    <li class="topic">
+      <a class="card" href="present-tense-practice.html">
+        <div class="body">
+          <div class="name">Präsens</div>
+          <div class="desc">Regelmäßige und unregelmäßige Verben konjugieren</div>
+          <div class="last"></div>
         </div>
-        <div class="last"></div>
-      </div>
+      </a>
+      <a class="note" href="present-tense-note.html" aria-label="Notizen: Präsens">Notizen</a>
     </li>
-    <li class="card">
-      <div class="body">
-        <div class="name">Kasus</div>
-        <div class="desc">Nominativ, Akkusativ, Dativ, Genitiv</div>
-        <div class="links">
-          <a class="practice" href="cases-practice.html">Üben</a>
-          <a class="note" href="cases-note.html">Notizen</a>
+    <li class="topic">
+      <a class="card" href="cases-practice.html">
+        <div class="body">
+          <div class="name">Kasus</div>
+          <div class="desc">Nominativ, Akkusativ, Dativ, Genitiv</div>
+          <div class="last"></div>
         </div>
-        <div class="last"></div>
-      </div>
+      </a>
+      <a class="note" href="cases-note.html" aria-label="Notizen: Kasus">Notizen</a>
     </li>
-    <li class="card">
-      <div class="body">
-        <div class="name">Trennbare &amp; untrennbare Verben</div>
-        <div class="desc">Vorsilben und Satzklammer</div>
-        <div class="links">
-          <a class="practice" href="separable-inseparable-verbs-practice.html">Üben</a>
-          <a class="note" href="separable-inseparable-verbs-note.html">Notizen</a>
+    <li class="topic">
+      <a class="card" href="separable-inseparable-verbs-practice.html">
+        <div class="body">
+          <div class="name">Trennbare &amp; untrennbare Verben</div>
+          <div class="desc">Vorsilben und Satzklammer</div>
+          <div class="last"></div>
         </div>
-        <div class="last"></div>
-      </div>
+      </a>
+      <a class="note" href="separable-inseparable-verbs-note.html" aria-label="Notizen: Trennbare &amp; untrennbare Verben">Notizen</a>
     </li>
-    <li class="card">
-      <div class="body">
-        <div class="name">Modalverben</div>
-        <div class="desc">können, müssen, dürfen, sollen, wollen, mögen</div>
-        <div class="links">
-          <a class="practice" href="modal-verbs-practice.html">Üben</a>
-          <a class="note" href="modal-verbs-note.html">Notizen</a>
+    <li class="topic">
+      <a class="card" href="modal-verbs-practice.html">
+        <div class="body">
+          <div class="name">Modalverben</div>
+          <div class="desc">können, müssen, dürfen, sollen, wollen, mögen</div>
+          <div class="last"></div>
         </div>
-        <div class="last"></div>
-      </div>
+      </a>
+      <a class="note" href="modal-verbs-note.html" aria-label="Notizen: Modalverben">Notizen</a>
     </li>
-    <li class="card">
-      <div class="body">
-        <div class="name">Wortstellung</div>
-        <div class="desc">Verb auf Position 2, Nebensätze, Satzklammer</div>
-        <div class="links">
-          <a class="practice" href="word-order-practice.html">Üben</a>
-          <a class="note" href="word-order-note.html">Notizen</a>
+    <li class="topic">
+      <a class="card" href="word-order-practice.html">
+        <div class="body">
+          <div class="name">Wortstellung</div>
+          <div class="desc">Verb auf Position 2, Nebensätze, Satzklammer</div>
+          <div class="last"></div>
         </div>
-        <div class="last"></div>
-      </div>
+      </a>
+      <a class="note" href="word-order-note.html" aria-label="Notizen: Wortstellung">Notizen</a>
     </li>
-    <li class="card">
-      <div class="body">
-        <div class="name">Imperativ</div>
-        <div class="desc">du-, ihr- und Sie-Form</div>
-        <div class="links">
-          <a class="practice" href="imperative-practice.html">Üben</a>
-          <a class="note" href="imperative-note.html">Notizen</a>
+    <li class="topic">
+      <a class="card" href="imperative-practice.html">
+        <div class="body">
+          <div class="name">Imperativ</div>
+          <div class="desc">du-, ihr- und Sie-Form</div>
+          <div class="last"></div>
         </div>
-        <div class="last"></div>
-      </div>
+      </a>
+      <a class="note" href="imperative-note.html" aria-label="Notizen: Imperativ">Notizen</a>
     </li>
-    <li class="card">
-      <div class="body">
-        <div class="name">Negation</div>
-        <div class="desc">nicht oder kein? Stellung im Satz</div>
-        <div class="links">
-          <a class="practice" href="negation-practice.html">Üben</a>
-          <a class="note" href="negation-note.html">Notizen</a>
+    <li class="topic">
+      <a class="card" href="negation-practice.html">
+        <div class="body">
+          <div class="name">Negation</div>
+          <div class="desc">nicht oder kein? Stellung im Satz</div>
+          <div class="last"></div>
         </div>
-        <div class="last"></div>
-      </div>
+      </a>
+      <a class="note" href="negation-note.html" aria-label="Notizen: Negation">Notizen</a>
     </li>
-    <li class="card">
-      <div class="body">
-        <div class="name">Perfekt</div>
-        <div class="desc">haben oder sein? Partizip II bilden</div>
-        <div class="links">
-          <a class="practice" href="perfekt-practice.html">Üben</a>
-          <a class="note" href="perfekt-note.html">Notizen</a>
+    <li class="topic">
+      <a class="card" href="perfekt-practice.html">
+        <div class="body">
+          <div class="name">Perfekt</div>
+          <div class="desc">haben oder sein? Partizip II bilden</div>
+          <div class="last"></div>
         </div>
-        <div class="last"></div>
-      </div>
+      </a>
+      <a class="note" href="perfekt-note.html" aria-label="Notizen: Perfekt">Notizen</a>
     </li>
-    <li class="card">
-      <div class="body">
-        <div class="name">Futur I</div>
-        <div class="desc">werden + Infinitiv</div>
-        <div class="links">
-          <a class="practice" href="futur-i-practice.html">Üben</a>
-          <a class="note" href="futur-i-note.html">Notizen</a>
+    <li class="topic">
+      <a class="card" href="futur-i-practice.html">
+        <div class="body">
+          <div class="name">Futur I</div>
+          <div class="desc">werden + Infinitiv</div>
+          <div class="last"></div>
         </div>
-        <div class="last"></div>
-      </div>
+      </a>
+      <a class="note" href="futur-i-note.html" aria-label="Notizen: Futur I">Notizen</a>
     </li>
-    <li class="card">
-      <div class="body">
-        <div class="name">Präteritum</div>
-        <div class="desc">war, hatte, konnte … und die wichtigsten unregelmäßigen Verben</div>
-        <div class="links">
-          <a class="practice" href="praeteritum-practice.html">Üben</a>
-          <a class="note" href="praeteritum-note.html">Notizen</a>
+    <li class="topic">
+      <a class="card" href="praeteritum-practice.html">
+        <div class="body">
+          <div class="name">Präteritum</div>
+          <div class="desc">war, hatte, konnte … und die wichtigsten unregelmäßigen Verben</div>
+          <div class="last"></div>
         </div>
-        <div class="last"></div>
-      </div>
+      </a>
+      <a class="note" href="praeteritum-note.html" aria-label="Notizen: Präteritum">Notizen</a>
     </li>
-    <li class="card">
-      <div class="body">
-        <div class="name">Präpositionen</div>
-        <div class="desc">Dativ, Akkusativ oder Wechselpräposition?</div>
-        <div class="links">
-          <a class="practice" href="prepositions-practice.html">Üben</a>
-          <a class="note" href="prepositions-note.html">Notizen</a>
+    <li class="topic">
+      <a class="card" href="prepositions-practice.html">
+        <div class="body">
+          <div class="name">Präpositionen</div>
+          <div class="desc">Dativ, Akkusativ oder Wechselpräposition?</div>
+          <div class="last"></div>
         </div>
-        <div class="last"></div>
-      </div>
+      </a>
+      <a class="note" href="prepositions-note.html" aria-label="Notizen: Präpositionen">Notizen</a>
     </li>
-    <li class="card">
-      <div class="body">
-        <div class="name">Komparativ &amp; Superlativ</div>
-        <div class="desc">größer als, am größten, so … wie</div>
-        <div class="links">
-          <span class="soon" title="Für dieses Thema gibt es noch keine Übung">Übung folgt</span>
-          <a class="note" href="komparativ-superlativ-note.html">Notizen</a>
+    <li class="topic">
+      <div class="card soon" title="Für dieses Thema gibt es noch keine Übung">
+        <div class="body">
+          <div class="name">Komparativ &amp; Superlativ</div>
+          <div class="desc">größer als, am größten, so … wie</div>
+          <div class="soon-label">Übung folgt</div>
         </div>
       </div>
+      <a class="note" href="komparativ-superlativ-note.html" aria-label="Notizen: Komparativ &amp; Superlativ">Notizen</a>
     </li>
-    <li class="card">
-      <div class="body">
-        <div class="name">Nebensätze</div>
-        <div class="desc">weil, dass, wenn, als, obwohl … und das Verb am Ende</div>
-        <div class="links">
-          <a class="practice" href="subordinate-clauses-practice.html">Üben</a>
-          <a class="note" href="subordinate-clauses-note.html">Notizen</a>
+    <li class="topic">
+      <a class="card" href="subordinate-clauses-practice.html">
+        <div class="body">
+          <div class="name">Nebensätze</div>
+          <div class="desc">weil, dass, wenn, als, obwohl … und das Verb am Ende</div>
+          <div class="last"></div>
         </div>
-        <div class="last"></div>
-      </div>
+      </a>
+      <a class="note" href="subordinate-clauses-note.html" aria-label="Notizen: Nebensätze">Notizen</a>
     </li>
-    <li class="card">
-      <div class="body">
-        <div class="name">Infinitiv mit zu</div>
-        <div class="desc">vorhaben zu, anfangen zu, um … zu</div>
-        <div class="links">
-          <a class="practice" href="infinitiv-mit-zu-practice.html">Üben</a>
-          <a class="note" href="infinitiv-mit-zu-note.html">Notizen</a>
+    <li class="topic">
+      <a class="card" href="infinitiv-mit-zu-practice.html">
+        <div class="body">
+          <div class="name">Infinitiv mit zu</div>
+          <div class="desc">vorhaben zu, anfangen zu, um … zu</div>
+          <div class="last"></div>
         </div>
-        <div class="last"></div>
-      </div>
+      </a>
+      <a class="note" href="infinitiv-mit-zu-note.html" aria-label="Notizen: Infinitiv mit zu">Notizen</a>
     </li>
-    <li class="card">
-      <div class="body">
-        <div class="name">Konjunktiv II</div>
-        <div class="desc">würde, hätte, wäre, könnte – Wünsche, Bitten, irreale Bedingungen</div>
-        <div class="links">
-          <a class="practice" href="konjunktiv-ii-practice.html">Üben</a>
-          <a class="note" href="konjunktiv-ii-note.html">Notizen</a>
+    <li class="topic">
+      <a class="card" href="konjunktiv-ii-practice.html">
+        <div class="body">
+          <div class="name">Konjunktiv II</div>
+          <div class="desc">würde, hätte, wäre, könnte – Wünsche, Bitten, irreale Bedingungen</div>
+          <div class="last"></div>
         </div>
-        <div class="last"></div>
-      </div>
+      </a>
+      <a class="note" href="konjunktiv-ii-note.html" aria-label="Notizen: Konjunktiv II">Notizen</a>
     </li>
   </ol>
 
@@ -423,12 +412,11 @@
     return m;
   }
 
-  const openers = Array.from(document.querySelectorAll('a.card, a.practice')); // links with a "last opened" time
-  const drills  = Array.from(document.querySelectorAll('ol a.practice'));
-  const topics  = Array.from(document.querySelectorAll('ol > li'));
-  const btn     = document.getElementById('continue');
-  const hrefOf  = (a) => a.getAttribute('href');
-  const cardOf  = (a) => a.closest('.card');
+  const cards  = Array.from(document.querySelectorAll('a.card'));     // every link that shows a "last opened" line
+  const drills = Array.from(document.querySelectorAll('ol a.card'));  // trainers only; a topic without one is a plain div
+  const topics = Array.from(document.querySelectorAll('ol > li'));
+  const btn    = document.getElementById('continue');
+  const hrefOf = (a) => a.getAttribute('href');
 
   function dayDiff(ts) {
     const a = new Date(); a.setHours(0, 0, 0, 0);
@@ -446,8 +434,8 @@
 
   function render() {
     const m = load();
-    openers.forEach(a => {
-      const el = cardOf(a).querySelector('.last');
+    cards.forEach(a => {
+      const el = a.querySelector('.last');
       if (!el) return;
       const ts = m[hrefOf(a)];
       el.textContent = label(ts);
@@ -458,16 +446,15 @@
     let pick = drills.find(a => !m[hrefOf(a)]);
     if (!pick) pick = drills.slice().sort((x, y) => m[hrefOf(x)] - m[hrefOf(y)])[0];
     if (pick && btn) {
-      const card = cardOf(pick);
       btn.setAttribute('href', hrefOf(pick));
       btn.querySelector('.target').textContent =
-        (topics.indexOf(card) + 1) + '. ' + card.querySelector('.name').textContent;
+        (topics.indexOf(pick.closest('li')) + 1) + '. ' + pick.querySelector('.name').textContent;
     }
   }
 
-  // Only opening a trainer counts as practice; reading the notes does not move the "Weiter üben" pick.
+  // Only opening a trainer counts as practice; the notes tab (a.note) does not move the "Weiter üben" pick.
   document.addEventListener('click', e => {
-    const a = e.target.closest('a.card, a.practice, #continue');
+    const a = e.target.closest('a.card, #continue');
     if (!a) return;
     const m = load(); m[hrefOf(a)] = Date.now(); save(m);
   });
