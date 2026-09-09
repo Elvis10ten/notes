@@ -14,3 +14,4 @@ Here is all you need to know:
 5. All images must be placed in a dedicated directory inside the `docs/assets` directory e.g. `docs/assets/2024-1-foo/`.
 6. All notes banners must be in the `assets/banners` directory and the name must match the note's file name e.g. `assets/banners/2024-1-foo.png`.
 7. To reference any image in a note, prefix the link with `/docs/assets/` e.g. `![foo](/docs/assets/2024-1-foo/foo.png)`.
+8. The one exception to (1): the German grammar notes in `docs/german` are rendered in place, next to their trainer pages (`docs/german/nouns-note.md` -> `docs/german/nouns-note.html`), and are not listed on the index page.

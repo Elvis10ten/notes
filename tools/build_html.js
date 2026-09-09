@@ -12,7 +12,7 @@ import {
     getMarkdownFileNames,
     getToolsPath,
     readFileText,
-    getBannerRelativePath, srcPapersDir, allInnerSrcDirs, indexFileNames
+    getBannerRelativePath, srcPapersDir, allInnerSrcDirs, indexFileNames, inPlaceMarkdownDirs
 } from "./utils.js";
 
 console.log('Configuring the marked library...');
@@ -41,7 +41,7 @@ marked.use(
 
 console.log('Building HTML files...');
 const scaffoldHTML = await readFileText(getToolsPath('markdown-scaffold.html'));
-const srcDirs = allInnerSrcDirs.concat(srcDir);
+const srcDirs = allInnerSrcDirs.concat(srcDir, inPlaceMarkdownDirs);
 
 for (const dir of srcDirs) {
     const markdownFileNames = await getMarkdownFileNames(dir);
@@ -59,7 +59,10 @@ async function buildHTMLFile(dir, markdownFileName) {
     const srcMarkdown = await readFileText(resolve(dir, markdownFileName));
     let srcHTML = await marked(srcMarkdown);
 
-    if (!indexFileNames.includes(markdownFileName)) {
+    if (inPlaceMarkdownDirs.includes(dir)) {
+        // These notes belong to the index next to them (e.g. docs/german/index.html), so link back there instead of the site home.
+        srcHTML = `<div><a href="index.html" class="back-link">Übersicht</a></div>` + srcHTML;
+    } else if (!indexFileNames.includes(markdownFileName)) {
         srcHTML = `<div><a href="/" class="back-link">Home</a></div>` + srcHTML;
     }
 

@@ -20,13 +20,18 @@ export const srcProjectsDir = resolve(srcDir, 'projects');
 export const destBannersDir = resolve(destDir, 'assets', 'banners');
 export const allInnerSrcDirs = [srcBooksDir, srcEssayDir, srcPapersDir, srcProjectsDir];
 
+// Markdown that lives next to its generated HTML instead of under `src`: the German grammar notes sit beside their trainers in `docs/german`.
+export const docsGermanDir = resolve(destDir, 'german');
+export const inPlaceMarkdownDirs = [docsGermanDir];
+
 export async function getMarkdownFileNames(dir) {
     const fileNames = await readdir(dir);
     return fileNames.filter(fileName => fileName.endsWith('.md'));
 }
 
 export async function getDestHTMLPath(dir, markdownFileName) {
-    const fileDir = resolve(destDir, basename(relative(srcDir, dir)));
+    // Markdown outside `src` is rendered next to itself; everything else mirrors its `src` sub-directory under `docs`.
+    const fileDir = inPlaceMarkdownDirs.includes(dir) ? dir : resolve(destDir, basename(relative(srcDir, dir)));
 
     // Create dir if not exists.
     await mkdir(fileDir, { recursive: true });

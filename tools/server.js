@@ -1,7 +1,7 @@
 import http from "http";
 import { promises as fs, watch } from "fs";
 import path from "path";
-import {allInnerSrcDirs, destDir, srcBooksDir, srcDir, srcEssayDir, srcPapersDir, toolsDir} from "./utils.js";
+import {allInnerSrcDirs, destDir, inPlaceMarkdownDirs, srcBooksDir, srcDir, srcEssayDir, srcPapersDir, toolsDir} from "./utils.js";
 import { spawn } from "child_process";
 
 const PORT = 3000;
@@ -57,6 +57,16 @@ const runCommand = () => {
 allInnerSrcDirs.concat(toolsDir).forEach((dir) => {
     watch(dir, { recursive: true }, (eventType, filename) => {
         if (filename) {
+            console.log(`File changed: ${filename}`);
+            runCommand();
+        }
+    });
+});
+
+// Markdown rendered in place: only react to the .md files, otherwise the build's own HTML output would retrigger it.
+inPlaceMarkdownDirs.forEach((dir) => {
+    watch(dir, (eventType, filename) => {
+        if (filename && filename.endsWith(".md")) {
             console.log(`File changed: ${filename}`);
             runCommand();
         }
