@@ -1,0 +1,1587 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Komparativ & Superlativ — drill to mastery</title>
+<meta name="description" content="Spaced-repetition drills for German comparative and superlative forms (telc B1).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,0..100;1,9..144,400..700,0..100&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  /* Komparativ & Superlativ — the subject is degree, so the palette is one
+     green stepped through six tints: box 0 (pale) to box 5 (deep). The
+     stepped bar is the app's only ornament and it carries real information. */
+  :root{
+    --paper:#F2F5F1; --card:#FFFFFF; --ink:#17262A; --mute:#5D6B70; --line:#D3DBD6; --soft:#E9EEEA;
+    --b0:#E1E7E3; --b1:#D4EADB; --b2:#B0D9C0; --b3:#7FC09F; --b4:#48A07E; --b5:#1B6A50;
+    --good:#1B6A50; --good-bg:#E3F1EA; --bad:#B2402D; --bad-bg:#F9E8E4;
+    --focus:#1B6A50; --radius:10px;
+    --serif:"Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    --sans:"Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  }
+  *{ box-sizing:border-box; }
+  html{ -webkit-text-size-adjust:100%; }
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.5; }
+  .app{ max-width:700px; margin:0 auto; padding:20px 18px 56px; }
+  header.top{ display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:12px 20px; padding-bottom:14px; border-bottom:1px solid var(--line); margin-bottom:22px; }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand svg{ width:34px; height:34px; flex:none; }
+  .brand h1{ font-family:var(--serif); font-weight:500; font-size:1.35rem; line-height:1.1; margin:0; letter-spacing:-.01em; font-variation-settings:"SOFT" 40, "opsz" 36; }
+  .brand small{ display:block; font-family:var(--sans); font-size:.8rem; color:var(--mute); font-weight:400; margin-top:3px; }
+  .tabs{ display:flex; gap:2px; }
+  .tabs button{ font:inherit; font-weight:500; background:none; border:0; color:var(--mute); padding:8px 10px; border-radius:8px; cursor:pointer; }
+  .tabs button[aria-selected="true"]{ color:var(--ink); background:var(--soft); }
+  h2{ font-family:var(--serif); font-weight:500; font-size:1.5rem; letter-spacing:-.01em; margin:26px 0 8px; font-variation-settings:"SOFT" 40; }
+  h3{ font-size:1rem; font-weight:600; margin:26px 0 8px; }
+  p{ margin:0 0 10px; }
+  .lede{ font-size:1.05rem; color:var(--ink); margin-bottom:14px; max-width:60ch; }
+  button{ font:inherit; }
+  .primary, .ghost, .danger{ border-radius:var(--radius); padding:10px 18px; font-weight:600; cursor:pointer; border:1.5px solid transparent; }
+  .primary{ background:var(--b5); color:#fff; border-color:var(--b5); }
+  .primary:disabled{ opacity:.45; cursor:default; }
+  .primary.big{ font-size:1.05rem; padding:13px 22px; }
+  .ghost{ background:var(--card); color:var(--ink); border-color:var(--line); }
+  .danger{ background:var(--card); color:var(--bad); border-color:var(--bad); }
+  .chip{ border:1px solid var(--line); background:var(--card); border-radius:999px; padding:4px 12px; margin-left:6px; cursor:pointer; color:var(--mute); }
+  .chip.on{ background:var(--ink); color:#fff; border-color:var(--ink); }
+  :focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .kbd{ font-size:.78rem; color:var(--mute); }
+
+  /* stepped mastery bar */
+  .boxbar{ display:flex; height:10px; border-radius:5px; overflow:hidden; background:var(--b0); margin:6px 0 14px; }
+  .boxbar .seg{ display:block; min-width:2px; }
+  .b0{ background:var(--b0); } .b1{ background:var(--b1); } .b2{ background:var(--b2); } .b3{ background:var(--b3); } .b4{ background:var(--b4); } .b5{ background:var(--b5); }
+  .legend{ display:flex; flex-wrap:wrap; gap:6px 16px; font-size:.82rem; color:var(--mute); margin-bottom:8px; }
+  .legend i{ display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:6px; vertical-align:-1px; }
+
+  /* home */
+  .start{ display:flex; flex-wrap:wrap; align-items:center; gap:14px 22px; margin:8px 0 10px; }
+  .size{ color:var(--mute); font-size:.9rem; }
+  .topics{ display:flex; flex-direction:column; gap:8px; }
+  .trow{ display:flex; align-items:center; gap:16px; background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:12px 14px; }
+  .tinfo{ flex:1; min-width:0; }
+  .tinfo .boxbar{ margin:8px 0 0; height:6px; }
+  .tname{ font-weight:600; }
+  .tcount{ font-weight:400; color:var(--mute); margin-left:8px; font-size:.9rem; }
+  .tblurb{ color:var(--mute); font-size:.9rem; }
+  .trow .ghost{ flex:none; padding:8px 14px; }
+  .weak{ margin-top:16px; }
+
+  /* drill */
+  .round{ display:flex; justify-content:space-between; color:var(--mute); font-size:.9rem; margin-bottom:6px; }
+  .rail{ display:flex; gap:3px; margin-bottom:16px; }
+  .rail i{ flex:1; height:4px; border-radius:2px; background:var(--b0); }
+  .rail i.ok{ background:var(--b4); } .rail i.bad{ background:var(--bad); } .rail i.cur{ background:var(--ink); }
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px 22px 20px; }
+  .tag{ font-size:.82rem; color:var(--mute); display:flex; flex-wrap:wrap; gap:6px 14px; margin-bottom:14px; }
+  .tag span::before{ content:"· "; }
+  .tag .note{ color:var(--b5); }
+  .wrongline{ color:var(--mute); font-family:var(--serif); font-size:1.1rem; margin-bottom:4px; }
+  .wrongline s{ color:var(--bad); text-decoration-thickness:2px; }
+  .prompt{ font-family:var(--serif); font-size:1.5rem; line-height:1.55; font-variation-settings:"SOFT" 30, "opsz" 24; margin:0 0 6px; }
+  .prompt.en{ font-style:italic; font-size:1.3rem; }
+  .gap{ font:inherit; font-size:1em; color:var(--ink); background:var(--soft); border:0; border-bottom:2px solid var(--ink); border-radius:6px 6px 0 0; padding:0 .3em; margin:0 .1em; min-width:6ch; max-width:100%; vertical-align:baseline; }
+  .freewrap{ margin:4px 0 8px; }
+  .gap.free{ width:100%; font-size:1.25rem; padding:6px 10px; border-radius:8px; }
+  .gap:focus{ outline:none; border-bottom-color:var(--b5); background:var(--b1); }
+  .given{ display:inline-block; padding:0 .3em; border-bottom:2px solid; border-radius:6px 6px 0 0; }
+  .given.ok{ color:var(--good); border-color:var(--good); background:var(--good-bg); }
+  .given.bad{ color:var(--bad); border-color:var(--bad); background:var(--bad-bg); text-decoration:line-through; }
+  .given-line{ font-size:1.25rem; }
+  .hint{ color:var(--mute); font-size:.92rem; margin-bottom:12px; }
+  .keys{ display:flex; align-items:center; gap:6px; margin:6px 0 14px; }
+  .key{ border:1px solid var(--line); background:var(--card); border-radius:8px; width:38px; height:34px; font-family:var(--serif); font-size:1.05rem; cursor:pointer; }
+  .keys .kbd{ margin-left:8px; }
+  .actions{ display:flex; align-items:center; gap:14px; margin-top:12px; flex-wrap:wrap; }
+  .options{ display:flex; flex-direction:column; gap:8px; margin:12px 0 4px; }
+  .opt{ display:flex; align-items:center; gap:12px; text-align:left; background:var(--card); border:1.5px solid var(--line); border-radius:var(--radius); padding:10px 12px; cursor:pointer; font-size:1.02rem; color:var(--ink); }
+  .opt b, .tile b{ display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:6px; background:var(--soft); color:var(--mute); font-size:.78rem; font-weight:600; flex:none; }
+  .opt.right{ border-color:var(--good); background:var(--good-bg); }
+  .opt.wrong{ border-color:var(--bad); background:var(--bad-bg); }
+  .opt:disabled{ cursor:default; opacity:.9; }
+  .chosen{ min-height:52px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:10px; border:1.5px dashed var(--line); border-radius:var(--radius); margin:12px 0 10px; }
+  .chosen .ph{ color:var(--mute); font-size:.9rem; }
+  .pool{ display:flex; flex-wrap:wrap; gap:8px; }
+  .tile{ display:inline-flex; align-items:center; gap:8px; border:1.5px solid var(--line); background:var(--card); border-radius:8px; padding:6px 10px 6px 6px; font-family:var(--serif); font-size:1.1rem; cursor:pointer; color:var(--ink); }
+  .tile.picked{ background:var(--b1); border-color:var(--b3); padding:6px 10px; }
+  .tile:disabled{ cursor:default; }
+  .fb{ margin-top:18px; padding:14px 16px; border-radius:var(--radius); border-left:4px solid; }
+  .fb.ok{ background:var(--good-bg); border-color:var(--good); }
+  .fb.bad{ background:var(--bad-bg); border-color:var(--bad); }
+  .verdict{ font-family:var(--serif); font-size:1.1rem; font-weight:500; margin-bottom:6px; }
+  .fb.ok .verdict{ color:var(--good); } .fb.bad .verdict{ color:var(--bad); }
+  .ans{ font-size:1.05rem; }
+  .ans strong{ font-family:var(--serif); font-size:1.15rem; font-weight:600; }
+  .ans s{ color:var(--bad); }
+  .alt{ color:var(--mute); font-size:.9rem; }
+  .gapno{ color:var(--mute); font-size:.85rem; }
+  .expl{ margin:8px 0 6px; }
+  .sched{ color:var(--mute); font-size:.9rem; }
+  .missed{ list-style:none; padding:0; margin:0; }
+  .missed li{ display:flex; flex-wrap:wrap; justify-content:space-between; gap:4px 16px; padding:8px 0; border-bottom:1px solid var(--line); }
+  .missed .mq{ color:var(--mute); }
+
+  /* progress */
+  .grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin:14px 0; }
+  .stat{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:10px 12px; }
+  .stat b{ display:block; font-family:var(--serif); font-size:1.5rem; font-weight:500; }
+  .stat span{ color:var(--mute); font-size:.85rem; }
+  .forecast{ display:flex; gap:8px; align-items:flex-end; height:100px; }
+  .fday{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:4px; font-size:.8rem; color:var(--mute); }
+  .fday i{ display:block; width:100%; background:var(--b3); border-radius:4px 4px 0 0; }
+  .fday b{ color:var(--ink); }
+
+  /* data */
+  .io{ width:100%; font:inherit; font-size:.85rem; border:1px solid var(--line); border-radius:var(--radius); padding:10px; margin-top:14px; resize:vertical; }
+  .filebtn{ display:inline-block; }
+  .filebtn input{ position:absolute; width:1px; height:1px; opacity:0; }
+  .msg{ color:var(--b5); margin-top:8px; }
+
+  /* rules */
+  .rules table{ border-collapse:collapse; width:100%; margin:6px 0 14px; font-size:.95rem; }
+  .rules th, .rules td{ text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+  .rules th{ font-weight:600; color:var(--mute); font-size:.85rem; }
+  .rules p{ max-width:66ch; }
+  .rules table.lex td{ font-family:var(--serif); font-size:1rem; }
+
+  @media (max-width:520px){
+    .app{ padding:14px 14px 48px; }
+    .prompt{ font-size:1.3rem; }
+    .card{ padding:18px 16px; }
+    .grid{ grid-template-columns:repeat(2, 1fr); }
+    .trow{ flex-direction:column; align-items:stretch; }
+    .trow .ghost{ align-self:flex-start; }
+  }
+  @media (prefers-reduced-motion: no-preference){
+    .opt, .tile, .primary, .ghost{ transition: background-color .12s, border-color .12s; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 34 34" aria-hidden="true"><rect x="2" y="22" width="8" height="10" rx="2" fill="#B0D9C0"/><rect x="13" y="13" width="8" height="19" rx="2" fill="#48A07E"/><rect x="24" y="3" width="8" height="29" rx="2" fill="#1B6A50"/></svg>
+      <h1>Komparativ &amp; Superlativ<small>schnell · schneller · am schnellsten</small></h1>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button role="tab" data-tab="drill" aria-selected="true">Drill</button>
+      <button role="tab" data-tab="rules" aria-selected="false">Rules</button>
+      <button role="tab" data-tab="progress" aria-selected="false">Progress</button>
+      <button role="tab" data-tab="data" aria-selected="false">Data</button>
+    </nav>
+  </header>
+  <main id="view"></main>
+</div>
+<script>
+/* ============================ bank ==============================
+   Every adjective form below was checked against Duden. Items are
+   generated from LEX where the answer is a bare form, and written by
+   hand where context decides. IDs are stable slugs: changing an id
+   would orphan its saved progress.
+*/
+
+// [positive, English, Komparativ, Superlativ stem, flags]
+// flags: um = umlaut, noum = short a/o/u but NO umlaut (trap), est = -est,
+// exc = groß exception, isch = unstressed -isch takes -st, irr = irregular,
+// vow = ends in a vowel or -h (früh, neu, schlau): -est is usual, -st also accepted,
+// edrop = -el/-uer/-auer drops e, keep = -er/-en keeps e, e = ends in -e,
+// vow = stressed vowel ending, -est or -st both fine, core = in the must-know table,
+// salt = accepted alternative superlative stem, kalt = accepted alternative comparative,
+// dual = Duden allows both the umlaut and the plain form (kept out of the umlaut quiz)
+const LEX = [
+  ["alt","old","älter","ältest",{um:1,est:1,core:1}],
+  ["jung","young","jünger","jüngst",{um:1,core:1}],
+  ["groß","big","größer","größt",{um:1,exc:1,core:1}],
+  ["klein","small","kleiner","kleinst",{core:1}],
+  ["gut","good","besser","best",{irr:1,core:1}],
+  ["schlecht","bad","schlechter","schlechtest",{est:1,core:1}],
+  ["viel","much / many","mehr","meist",{irr:1,core:1}],
+  ["wenig","little / few","weniger","wenigst",{core:1}],
+  ["gern","gladly","lieber","liebst",{irr:1,core:1}],
+  ["hoch","high","höher","höchst",{um:1,irr:1,core:1}],
+  ["nah","near","näher","nächst",{um:1,irr:1,core:1}],
+  ["teuer","expensive","teurer","teuerst",{edrop:1,core:1}],
+  ["billig","cheap","billiger","billigst",{core:1}],
+  ["dunkel","dark","dunkler","dunkelst",{edrop:1,noum:1,core:1}],
+  ["kurz","short","kürzer","kürzest",{um:1,est:1,core:1}],
+  ["schnell","fast","schneller","schnellst",{core:1}],
+  ["langsam","slow","langsamer","langsamst",{noum:1,core:1}],
+  ["warm","warm","wärmer","wärmst",{um:1,core:1}],
+  ["kalt","cold","kälter","kältest",{um:1,est:1,core:1}],
+  ["heiß","hot","heißer","heißest",{est:1,core:1}],
+  ["stark","strong","stärker","stärkst",{um:1,core:1}],
+  ["schön","beautiful","schöner","schönst",{core:1}],
+  ["laut","loud","lauter","lautest",{noum:1,est:1,core:1}],
+  ["gesund","healthy","gesünder","gesündest",{um:1,est:1,core:1,dual:1,kalt:"gesunder",salt:"gesundest"}],
+  ["klug","clever","klüger","klügst",{um:1,core:1}],
+  ["wichtig","important","wichtiger","wichtigst",{core:1}],
+  ["interessant","interesting","interessanter","interessantest",{noum:1,est:1,core:1}],
+  ["oft","often","öfter","häufigst",{um:1,irr:1,core:1,salt:"öftest"}],
+  ["lang","long","länger","längst",{um:1}],
+  ["arm","poor","ärmer","ärmst",{um:1}],
+  ["hart","hard","härter","härtest",{um:1,est:1}],
+  ["krank","ill","kränker","kränkst",{um:1}],
+  ["dumm","stupid","dümmer","dümmst",{um:1}],
+  ["schwach","weak","schwächer","schwächst",{um:1}],
+  ["scharf","spicy / sharp","schärfer","schärfst",{um:1}],
+  ["grob","coarse / rough","gröber","gröbst",{um:1}],
+  ["schwarz","black","schwärzer","schwärzest",{um:1,est:1}],
+  ["klar","clear","klarer","klarst",{noum:1}],
+  ["voll","full","voller","vollst",{noum:1}],
+  ["rund","round","runder","rundest",{noum:1,est:1}],
+  ["bunt","colourful","bunter","buntest",{noum:1,est:1}],
+  ["schlank","slim","schlanker","schlankst",{noum:1}],
+  ["flach","flat","flacher","flachst",{noum:1}],
+  ["froh","glad","froher",null,{noum:1}],
+  ["toll","great","toller","tollst",{noum:1}],
+  ["stolz","proud","stolzer","stolzest",{noum:1,est:1}],
+  ["falsch","wrong","falscher","falschest",{noum:1,est:1}],
+  ["zart","tender","zarter","zartest",{noum:1,est:1}],
+  ["knapp","tight / scarce","knapper","knappst",{noum:1}],
+  ["schlau","smart","schlauer","schlauest",{noum:1,est:1,vow:1,salt:"schlaust"}],
+  ["faul","lazy","fauler","faulst",{noum:1}],
+  ["sauer","sour","saurer","sauerst",{noum:1,edrop:1}],
+  ["stumm","mute / silent","stummer","stummst",{noum:1}],
+  ["wach","awake","wacher","wachst",{noum:1}],
+  ["blond","blond","blonder","blondest",{noum:1,est:1}],
+  ["satt","full (after eating)","satter","sattest",{noum:1,est:1}],
+  ["sanft","gentle","sanfter","sanftest",{noum:1,est:1}],
+  ["langweilig","boring","langweiliger","langweiligst",{}],
+  ["leise","quiet","leiser","leisest",{e:1,est:1}],
+  ["müde","tired","müder","müdest",{e:1,est:1}],
+  ["böse","angry / evil","böser","bösest",{e:1,est:1}],
+  ["nett","nice","netter","nettest",{est:1}],
+  ["breit","wide","breiter","breitest",{est:1}],
+  ["weit","far","weiter","weitest",{est:1}],
+  ["früh","early","früher","frühest",{vow:1,salt:"frühst"}],
+  ["spät","late","später","spätest",{est:1}],
+  ["leicht","easy / light","leichter","leichtest",{est:1}],
+  ["schwer","heavy / difficult","schwerer","schwerst",{}],
+  ["neu","new","neuer","neuest",{vow:1,salt:"neust"}],
+  ["reich","rich","reicher","reichst",{}],
+  ["glücklich","happy","glücklicher","glücklichst",{}],
+  ["fleißig","hard-working","fleißiger","fleißigst",{}],
+  ["ruhig","calm","ruhiger","ruhigst",{}],
+  ["sicher","safe","sicherer","sicherst",{keep:1}],
+  ["lecker","tasty","leckerer","leckerst",{keep:1}],
+  ["sauber","clean","sauberer","sauberst",{keep:1}],
+  ["bitter","bitter","bitterer","bitterst",{keep:1}],
+  ["trocken","dry","trockener","trockenst",{keep:1}],
+  ["edel","noble","edler","edelst",{edrop:1}],
+  ["tief","deep","tiefer","tiefst",{}],
+  ["freundlich","friendly","freundlicher","freundlichst",{}],
+  ["modern","modern","moderner","modernst",{}],
+  ["bekannt","well-known","bekannter","bekanntest",{est:1}],
+  ["beliebt","popular","beliebter","beliebtest",{est:1}],
+  ["berühmt","famous","berühmter","berühmtest",{est:1}],
+  ["süß","sweet","süßer","süßest",{est:1}],
+  ["frech","cheeky","frecher","frechst",{}],
+  ["weich","soft","weicher","weichst",{}],
+  ["frisch","fresh","frischer","frischest",{est:1}],
+  ["hübsch","pretty","hübscher","hübschest",{est:1}],
+  ["praktisch","practical","praktischer","praktischst",{isch:1}],
+  ["typisch","typical","typischer","typischst",{isch:1}],
+  ["wild","wild","wilder","wildest",{est:1}],
+  ["fest","firm","fester","festest",{est:1}],
+  ["hell","bright","heller","hellst",{}],
+  ["dick","thick / fat","dicker","dickst",{}],
+  ["dünn","thin","dünner","dünnst",{}],
+  ["lustig","funny","lustiger","lustigst",{}],
+  ["traurig","sad","trauriger","traurigst",{}],
+  ["eng","narrow / tight","enger","engst",{}],
+  ["gefährlich","dangerous","gefährlicher","gefährlichst",{}],
+  ["nervös","nervous","nervöser","nervösest",{est:1}],
+  ["einfach","simple","einfacher","einfachst",{}],
+  ["schwierig","difficult","schwieriger","schwierigst",{}],
+  ["günstig","inexpensive","günstiger","günstigst",{}],
+  ["niedrig","low","niedriger","niedrigst",{}],
+  ["schmutzig","dirty","schmutziger","schmutzigst",{}],
+  ["kaputt","broken","kaputter","kaputtest",{est:1}],
+  ["fix","quick","fixer","fixest",{est:1}],
+];
+const LX = {};
+LEX.forEach(e => LX[e[0]] = {p:e[0], en:e[1], k:e[2], s:e[3], f:e[4]});
+
+const TOPICS = {
+  "komp":    {name:"Komparativ forms",       blurb:"-er, umlaut, teurer / dunkler, besser / mehr / lieber"},
+  "sup":     {name:"Superlativ forms",       blurb:"am -sten, -est after d t s ß z sch x, am größten"},
+  "umlaut":  {name:"Umlaut or not?",         blurb:"älter but lauter — decide fast"},
+  "est":     {name:"-st or -est?",           blurb:"am ältesten but am schnellsten, am größten"},
+  "alswie":  {name:"als or wie?",            blurb:"größer als · so groß wie"},
+  "amder":   {name:"am or der/die/das?",     blurb:"am wärmsten after a verb, das schnellste Auto before a noun"},
+  "endings": {name:"Endings before a noun",  blurb:"der ältere Bruder, ein älterer Bruder, den kürzeren Weg"},
+  "patterns":{name:"Exam patterns",          blurb:"lieber / am liebsten, immer teurer, je … desto, viel / noch / etwas"},
+  "fix":     {name:"Fix the mistake",        blurb:"mehr schnell → schneller, größer wie → größer als"},
+  "order":   {name:"Word order",             blurb:"Je … verb at the end, desto + Komparativ + verb"},
+  "reverse": {name:"Which adjective?",       blurb:"besser ← gut, lieber ← gern, am nächsten ← nah"},
+  "rule":    {name:"Know the rule",          blurb:"Why is it am größten and not am größesten?"},
+  "produce": {name:"Produce it",             blurb:"English → German"}
+};
+const TOPIC_ORDER = Object.keys(TOPICS);
+
+/* ---------------- item constructors ---------------- */
+const BANK = [];
+const IDS = new Set();
+function push(item){
+  if(IDS.has(item.id)) throw new Error("duplicate id " + item.id);
+  IDS.add(item.id); BANK.push(item);
+}
+// type-in. answers: array of gaps; each gap: [canonical, ...alternates]
+function T(topic, id, prompt, answers, expl, x){
+  push(Object.assign({id, topic, type:"type", prompt, answers, expl}, x || {}));
+}
+// multiple choice. options[answer] is the correct one
+function M(topic, id, prompt, options, answer, expl, x){
+  push(Object.assign({id, topic, type:"mc", prompt, options, answer, expl}, x || {}));
+}
+// tap-to-build. sentence is canonical, alts are other accepted orders
+function B(topic, id, prompt, sentence, alts, expl, x){
+  push(Object.assign({id, topic, type:"build", prompt, sentence, alts: alts || [], expl}, x || {}));
+}
+
+const UM = {ä:"a", ö:"o", ü:"u"};
+const deUmlaut = s => s.replace(/[äöü]/g, c => UM[c]);
+const addUmlaut = s => s.replace(/[aou]/, c => ({a:"ä",o:"ö",u:"ü"})[c]);
+
+function kompExpl(L){
+  const f = L.f;
+  if(f.irr) return L.p + " is irregular: " + L.k + ".";
+  const parts = [];
+  if(f.um) parts.push("short adjective with a/o/u → umlaut");
+  if(f.noum) parts.push("keeps its vowel, no umlaut");
+  if(f.edrop) parts.push("drops the e of its ending (not " + L.p + "er)");
+  if(f.keep) parts.push("keeps its e — only -el and vowel + -er (teuer, sauer) drop it");
+  if(f.e) parts.push("already ends in -e, so only -r is added");
+  if(!parts.length) return "Regular: " + L.p + " + -er = " + L.k + (L.p === "wenig" ? "." : ". German never says mehr " + L.p + ".");
+  return L.p + ": " + parts.join("; ") + " → " + L.k + (f.dual ? " (Duden also allows " + f.kalt + ", but the umlaut form is standard and what the exam expects)" : "") + ".";
+}
+function supExpl(L){
+  const f = L.f, full = "am " + L.s + "en";
+  const ending = /sch$/.test(L.p) ? "sch" : L.p.slice(-1);
+  if(f.exc) return "groß is the one exception: am größten, not am größesten.";
+  if(f.irr) return L.p + " is irregular: " + full + ".";
+  if(f.isch) return "Unstressed -isch takes only -st: " + full + " (not " + L.p + "esten).";
+  if(f.e) return L.p + " drops its final -e; the stem ends in " + L.s.charAt(L.s.length-4) + ", so -est: " + full + ".";
+  if(f.est) return L.p + " ends in " + ending + ", so -est is added: " + full + (f.dual ? " (am " + f.salt + "en is a rarer variant)" : "") + ".";
+  if(f.vow) return L.p + " ends in a vowel sound, so -est is usual: " + full + " (am " + f.salt + "en is also accepted).";
+  if(f.edrop) return "The e stays in the superlative: " + full + " (only the comparative drops it).";
+  if(f.um) return L.p + " takes an umlaut and plain -st: " + full + ".";
+  return "Regular: " + L.p + " + -st: " + full + ".";
+}
+
+/* ---------------- 1. Komparativ forms ---------------- */
+// bare forms for every adjective that illustrates a rule
+Object.values(LX).forEach(L => {
+  const f = L.f;
+  // no-umlaut traps are drilled as decisions in the Umlaut topic; here only rule-bearing forms
+  if(!(f.core || f.um || f.edrop || f.keep || f.e || f.irr)) return;
+  T("komp", "komp.f." + L.p, "Komparativ: " + L.p + " → ___", [kompAnswers(L)], kompExpl(L), {hint:L.en});
+});
+// in context
+[
+ ["Mein Bruder ist ___ als ich.", "alt"],
+ ["Der Winter ist ___ als der Herbst.", "kalt"],
+ ["Diese Übung ist ___ als die letzte.", "leicht"],
+ ["Der Rhein ist ___ als die Elbe.", "lang"],
+ ["Das neue Handy ist ___ als das alte.", "teuer"],
+ ["Im Sommer ist es ___ als im Winter.", "warm"],
+ ["Meine Schwester ist ___ als ich.", "jung"],
+ ["Dieser Film ist ___ als das Buch.", "interessant"],
+ ["Er spricht ___ Deutsch als ich.", "gut"],
+ ["Ich habe ___ Zeit als früher.", "viel"],
+ ["Sie trinkt ___ Tee als Kaffee.", "gern"],
+ ["Die Zugspitze ist ___ als der Brocken.", "hoch"],
+ ["Der Bahnhof ist ___ als der Flughafen.", "nah"],
+ ["Berlin ist ___ als Hamburg.", "groß"],
+ ["Er kommt ___ zu spät als ich.", "oft"],
+ ["Das Zimmer ist ___ als das andere.", "dunkel"],
+ ["Die Musik ist heute ___ als gestern.", "laut"],
+ ["Der Weg ist ___ als gedacht.", "kurz"],
+ ["Bitte sprich ___!", "leise"],
+ ["Ich bin heute ___ als gestern.", "müde"],
+ ["Er ist ___ als sein Bruder.", "klug"],
+ ["Obst ist ___ als Schokolade.", "gesund"],
+ ["Die Zitrone ist ___ als die Orange.", "sauer"],
+ ["Ein Fahrrad ist ___ als ein Auto.", "langsam"],
+ ["Sein Auto ist ___ als meins.", "schnell"],
+ ["Diese Wohnung ist ___ als die alte.", "billig"],
+ ["Der Kaffee ist ___ als der Tee.", "stark"],
+ ["Der Kuchen ist ___ als das Brot.", "süß"],
+ ["Das Wasser ist hier ___ als im See.", "klar"],
+ ["Ich fühle mich heute ___ als gestern.", "schlecht"],
+ ["Der Test war ___ als erwartet.", "schwer"],
+ ["Die Suppe ist ___ als das Curry.", "scharf"],
+ ["Wir brauchen ___ Geld als letztes Jahr.", "wenig"],
+ ["Er ist ___ als sein Nachbar.", "arm"],
+ ["Der Stein ist ___ als das Holz.", "hart"],
+ ["Er ist heute ___ als gestern.", "krank"],
+ ["Der Witz ist ___ als der letzte.", "dumm"],
+ ["Die Wohnung ist ___ als das Haus.", "sicher"],
+ ["Das Essen hier ist ___ als dort.", "lecker"],
+ ["Er ist ___ als sein Vater.", "schwach"],
+ ["Das Sofa ist ___ als der Stuhl.", "weich"],
+ ["Diese Straße ist ___ als die andere.", "eng"],
+ ["Mein Zimmer ist ___ als deins.", "hell"],
+ ["Der Bus ist heute ___ als gestern.", "voll"],
+ ["Das T-Shirt ist ___ als das Hemd.", "bunt"],
+].forEach((r, i) => {
+  const L = LX[r[1]];
+  T("komp", "komp.c." + (i+1), r[0], [kompAnswers(L)], kompExpl(L), {hint:r[1] + " · Komparativ"});
+});
+
+/* ---------------- 2. Superlativ forms ---------------- */
+function kompAnswers(L){ const a = [L.k]; if(L.f.kalt) a.push(L.f.kalt); return a; }
+function supAnswers(L){ const a = ["am " + L.s + "en"]; if(L.f.salt) a.push("am " + L.f.salt + "en"); return a; }
+Object.values(LX).forEach(L => {
+  const f = L.f;
+  if(!L.s) return;
+  if(!(f.core || f.est || f.exc || f.isch || f.irr || f.edrop || f.e)) return;
+  T("sup", "sup.f." + L.p, "Superlativ: " + L.p + " → ___", [supAnswers(L)], supExpl(L), {hint:L.en + " · am …"});
+});
+[
+ ["Im Juli ist es ___.", "warm"],
+ ["Sie läuft ___.", "schnell"],
+ ["Was magst du ___?", "viel"],
+ ["Ich spiele ___ Fußball.", "gern"],
+ ["Im Januar ist es ___.", "kalt"],
+ ["Er ist ___ von uns.", "alt"],
+ ["Dieses Buch ist ___.", "interessant"],
+ ["Die Zugspitze ist ___.", "hoch"],
+ ["Der Bahnhof ist ___.", "nah"],
+ ["Von den drei Städten ist Berlin ___.", "groß"],
+ ["Er kommt ___ zu spät.", "oft"],
+ ["Diese Straße ist ___.", "laut"],
+ ["Im Winter sind die Tage ___.", "kurz"],
+ ["Dieses Hotel ist ___.", "teuer"],
+ ["Das Zimmer im Keller ist ___.", "dunkel"],
+ ["Sie ist ___ in der Klasse.", "klug"],
+ ["Gemüse ist ___.", "gesund"],
+ ["Im August ist es ___.", "heiß"],
+ ["Diese Aufgabe ist ___.", "leicht"],
+ ["Dieser Zug ist ___.", "langsam"],
+ ["Sein Auto ist ___.", "neu"],
+ ["Sie ist ___ von allen.", "nett"],
+ ["Dieser Fluss ist ___.", "breit"],
+ ["Er singt ___.", "schön"],
+ ["Er ist ___ in der Familie.", "jung"],
+ ["Sie steht ___ auf.", "früh"],
+ ["Er ist ___ von uns.", "stark"],
+ ["Diese Frage ist ___.", "wichtig"],
+ ["Dieser Weg ist ___.", "schlecht"],
+ ["Wer ist ___?", "müde"],
+ ["Wer spricht ___?", "leise"],
+ ["Hier ist das Wasser ___.", "tief"],
+ ["Dieses Kleid ist ___.", "hübsch"],
+ ["Er ist ___ von uns.", "fleißig"],
+ ["Diese Lösung ist ___.", "praktisch"],
+ ["Diese Aufgabe ist ___.", "schwer"],
+ ["Diese Übung ist ___.", "einfach"],
+ ["Dieser Ort ist ___.", "ruhig"],
+ ["Im Sommer sind die Tage ___.", "lang"],
+ ["Ich habe ___ Zeit von allen.", "wenig"],
+ ["Welcher Weg ist ___?", "kurz"],
+ ["Diese Suppe ist ___.", "scharf"],
+].forEach((r, i) => {
+  const L = LX[r[1]];
+  T("sup", "sup.c." + (i+1), r[0], [supAnswers(L)], supExpl(L), {hint:r[1] + " · am + Superlativ"});
+});
+
+/* ---------------- 3. Umlaut or not? ---------------- */
+Object.values(LX).forEach(L => {
+  const f = L.f;
+  if(!(f.um || f.noum) || f.dual) return;
+  const wrong = f.um ? deUmlaut(L.k) : addUmlaut(L.k);
+  if(wrong === L.k) throw new Error("bad distractor " + L.p);
+  M("umlaut", "um." + L.p, "Komparativ of " + L.p + " (" + L.en + ")?", [L.k, wrong], 0, kompExpl(L));
+});
+
+/* ---------------- 4. -st or -est? ---------------- */
+Object.values(LX).forEach(L => {
+  const f = L.f;
+  if(!L.s || f.irr || f.e || f.vow) return;   // -e and vowel endings make the choice moot or optional
+  if(!(f.est || f.exc || f.isch || f.core || f.keep || f.edrop)) return;
+  const right = "am " + L.s + "en";
+  const wrong = f.est ? "am " + L.s.replace(/est$/, "st") + "en"
+              : f.exc ? "am " + L.s.replace(/t$/, "est") + "en"
+              : "am " + L.s.replace(/st$/, "est") + "en";
+  if(wrong === right) throw new Error("bad est distractor " + L.p);
+  M("est", "est." + L.p, "Superlativ of " + L.p + " (" + L.en + ")?", [right, wrong], 0, supExpl(L));
+});
+
+/* ---------------- 5. als or wie? ---------------- */
+const ALS = "Komparativ + als.";
+const WIE = "so / genauso / ebenso / doppelt so + Positiv + wie.";
+[
+ ["Berlin ist größer ___ Hamburg.", "als", ALS],
+ ["Berlin ist nicht so warm ___ Rom.", "wie", WIE],
+ ["Er ist genauso alt ___ ich.", "wie", WIE],
+ ["Ich trinke lieber Tee ___ Kaffee.", "als", "lieber is a Komparativ (of gern), so als."],
+ ["Das Auto ist doppelt so teuer ___ das Fahrrad.", "wie", WIE],
+ ["Sie läuft so schnell ___ ein Profi.", "wie", WIE],
+ ["Das dauert länger ___ eine Stunde.", "als", ALS],
+ ["Ich habe weniger Zeit ___ du.", "als", "weniger is a Komparativ, so als."],
+ ["Er ist nicht so groß ___ sein Bruder.", "wie", WIE],
+ ["Heute ist es kälter ___ gestern.", "als", ALS],
+ ["Mein Bruder ist ebenso fleißig ___ ich.", "wie", WIE],
+ ["Sie spricht besser Deutsch ___ ich.", "als", ALS],
+ ["Das Essen hier ist genauso gut ___ bei meiner Oma.", "wie", WIE],
+ ["Ich mag Tee lieber ___ Kaffee.", "als", "lieber is a Komparativ, so als."],
+ ["Die Prüfung war leichter ___ gedacht.", "als", ALS],
+ ["Er verdient mehr ___ seine Chefin.", "als", "mehr is a Komparativ, so als."],
+ ["Dieses Hotel ist halb so teuer ___ das andere.", "wie", WIE],
+ ["Sie ist so alt ___ meine Mutter.", "wie", WIE],
+ ["Der Film ist interessanter ___ das Buch.", "als", ALS],
+ ["Das Wetter ist heute schöner ___ gestern.", "als", ALS],
+ ["Er arbeitet nicht so viel ___ früher.", "wie", WIE],
+ ["Ich bin genauso müde ___ du.", "wie", WIE],
+ ["Er ist ganz anders ___ sein Vater.", "als", "anders (different) behaves like a Komparativ: anders als."],
+ ["Nichts ist wichtiger ___ Gesundheit.", "als", ALS],
+ ["Sie ist so klug ___ ihr Bruder.", "wie", WIE],
+ ["Er ist älter, ___ er aussieht.", "als", ALS + " A clause follows, so a comma comes first."],
+ ["Das kostet mehr ___ 100 Euro.", "als", "mehr is a Komparativ, so als."],
+ ["Es ist nicht so schwer, ___ es aussieht.", "wie", WIE],
+ ["Du bist genauso pünktlich ___ immer.", "wie", WIE],
+ ["Diese Übung ist schwieriger ___ die letzte.", "als", ALS],
+ ["Mein Kaffee ist dreimal so stark ___ deiner.", "wie", WIE],
+ ["Ich wohne näher am Zentrum ___ du.", "als", ALS],
+].forEach((r, i) => {
+  T("alswie", "aw." + (i+1), r[0], [[r[1]]], r[2], {hint:"als / wie"});
+});
+[
+ [["Er ist größer als ich.", "Er ist größer wie ich."], 0, "größer wie is colloquial and wrong in the exam. Komparativ + als."],
+ [["Sie ist so gut wie ich.", "Sie ist so gut als ich."], 0, "so + Positiv + wie."],
+ [["Er ist genauso alt wie ich.", "Er ist genauso alt als ich."], 0, "genauso … wie."],
+ [["Ich trinke lieber Tee als Kaffee.", "Ich trinke lieber Tee wie Kaffee."], 0, "lieber is a Komparativ → als."],
+ [["Berlin ist nicht so warm wie Rom.", "Berlin ist nicht so warm als Rom."], 0, "nicht so … wie."],
+ [["Das ist besser als nichts.", "Das ist besser wie nichts."], 0, "besser is a Komparativ → als."],
+].forEach((r, i) => {
+  M("alswie", "aw.mc." + (i+1), "Which sentence is correct?", r[0], r[1], r[2]);
+});
+
+/* ---------------- 6. am or der/die/das? ---------------- */
+const AM = "After a verb with no noun following: am + -sten.";
+const ART = (a, why) => a + " because a noun follows (" + why + "): article + -ste + ending.";
+[
+ ["Im Juli ist es ___ wärmsten.", ["am"], AM],
+ ["Das ist ___ schnellste Auto.", ["das"], ART("das", "das Auto, Nominativ")],
+ ["Sie läuft ___ schnellsten.", ["am"], AM],
+ ["Sie ist ___ Beste.", ["die"], "Used as a noun (die Beste), so the article, not am. Both 'Sie ist die Beste' and 'Sie ist am besten' work after sein."],
+ ["Was magst du ___ meisten?", ["am"], AM],
+ ["Das ist ___ beste Idee.", ["die"], ART("die", "die Idee, Nominativ")],
+ ["Er ist ___ jüngste Spieler im Team.", ["der"], ART("der", "der Spieler, Nominativ")],
+ ["Ich nehme ___ billigsten Flug.", ["den"], ART("den", "der Flug, Akkusativ")],
+ ["Er ist ___ Jüngste unter uns.", ["der"], "Used as a noun (der Jüngste): article + -ste."],
+ ["Welches Buch findest du ___ interessantesten?", ["am"], AM],
+ ["Berlin gefällt mir ___ besten.", ["am"], AM],
+ ["Das ist ___ größte Stadt in Deutschland.", ["die"], ART("die", "die Stadt, Nominativ")],
+ ["Von allen Sportarten mag ich Fußball ___ liebsten.", ["am"], AM],
+ ["Wer ist ___ Älteste in der Familie?", ["der", "die"], "Used as a noun: der/die Älteste. Never am before a noun-like form with a capital."],
+ ["Von allen Flüssen Europas ist die Wolga ___ längsten.", ["am"], AM],
+ ["Hier ist es ___ schönsten.", ["am"], AM],
+ ["Das ist ___ wichtigste Frage.", ["die"], ART("die", "die Frage, Nominativ")],
+ ["___ meisten Leute fahren mit dem Auto.", ["Die"], "die meisten Leute: superlative of viel before a noun takes the article and an ending.", {cs:1}],
+ ["Er arbeitet ___ schnellsten von allen.", ["am"], AM],
+ ["Das ist ___ höchste Berg Europas.", ["der"], ART("der", "der Berg, Nominativ")],
+ ["Im Winter sind die Tage ___ kürzesten.", ["am"], AM],
+ ["Sie hat ___ schönste Stimme im Chor.", ["die"], ART("die", "die Stimme, Akkusativ")],
+ ["Wer singt ___ lautesten?", ["am"], AM],
+ ["Das ist ___ beste Restaurant der Stadt.", ["das"], ART("das", "das Restaurant, Nominativ")],
+ ["Diese Aufgabe ist ___ schwierigsten.", ["am"], AM],
+ ["Er hat ___ meisten Punkte.", ["die"], ART("die", "die Punkte, Akkusativ Plural")],
+ ["Welcher Weg ist ___ kürzesten?", ["am"], AM],
+ ["___ liebsten esse ich Pizza.", ["Am"], "am liebsten (of gern) stands alone, so am — capitalised at the start of the sentence.", {cs:1}],
+ ["Das ist ___ teuerste Hotel hier.", ["das"], ART("das", "das Hotel, Nominativ")],
+ ["Sie gehört zu ___ besten Spielerinnen.", ["den"], ART("den", "Dativ Plural after zu")],
+].forEach((r, i) => {
+  T("amder", "ad." + (i+1), r[0], [r[1]], r[2], Object.assign({hint:"am / der / die / das / den …"}, r[3] || {}));
+});
+[
+ [["Sie ist die Schnellste.", "Sie ist die am schnellsten.", "Sie ist am schnellste."], 0, "Either 'am schnellsten' or 'die Schnellste' — never am + article, and am always ends in -sten."],
+ [["Das ist die beste Idee.", "Das ist die am besten Idee.", "Das ist am beste Idee."], 0, "Before a noun: article + -ste + ending. am is only for the stand-alone form."],
+ [["Im Juli ist es am wärmsten.", "Im Juli ist es das wärmste.", "Im Juli ist es der wärmste."], 0, "No noun follows and it's a stand-alone predicate: am wärmsten."],
+ [["Er ist der Jüngste unter uns.", "Er ist am Jüngste unter uns.", "Er ist der jüngsten unter uns."], 0, "As a noun: der Jüngste (capital, ending -e after der)."],
+ [["Ich nehme den billigsten Flug.", "Ich nehme am billigsten Flug.", "Ich nehme den billigste Flug."], 0, "Before a noun: den billigsten Flug (Akkusativ, -en)."],
+ [["Welches Auto fährt am schnellsten?", "Welches Auto fährt das schnellste?", "Welches Auto fährt am schnellste?"], 0, "Adverbial use after a verb: am schnellsten."],
+].forEach((r, i) => {
+  M("amder", "ad.mc." + (i+1), "Which sentence is correct?", r[0], r[1], r[2]);
+});
+
+/* ---------------- 7. Endings before a noun ---------------- */
+// [prompt, base, degree, answer, ending explanation, case-sensitive?]
+[
+ ["Das ist der ___ Bruder.", "alt", "K", "ältere", "der + Nominativ maskulin → -e"],
+ ["Das ist der ___ Bruder.", "alt", "S", "älteste", "der + Nominativ maskulin → -e"],
+ ["Er ist ein ___ Kollege von mir.", "alt", "K", "älterer", "ein + Nominativ maskulin → -er (the article shows no gender, so the adjective does)"],
+ ["Das ist mein ___ Bruder.", "alt", "S", "ältester", "mein + Nominativ maskulin → -er"],
+ ["Der ___ Weg führt über den Berg.", "kurz", "K", "kürzere", "der + Nominativ maskulin → -e"],
+ ["Das ist der ___ Spieler.", "gut", "S", "beste", "der + Nominativ maskulin → -e"],
+ ["Ein ___ Weg wäre gut.", "kurz", "K", "kürzerer", "ein + Nominativ maskulin → -er"],
+ ["Mein ___ Sohn studiert in Köln.", "jung", "S", "jüngster", "mein + Nominativ maskulin → -er"],
+ ["Das ist der ___ Berg der Welt.", "hoch", "S", "höchste", "der + Nominativ maskulin → -e"],
+ ["Ein ___ Preis wäre fair.", "niedrig", "K", "niedrigerer", "ein + Nominativ maskulin → -er"],
+ ["Das ist die ___ Schwester.", "jung", "K", "jüngere", "die + Nominativ feminin → -e"],
+ ["Sie ist meine ___ Schwester.", "jung", "S", "jüngste", "meine + Nominativ feminin → -e"],
+ ["Eine ___ Wohnung wäre gut.", "groß", "K", "größere", "eine + Nominativ feminin → -e"],
+ ["Das ist die ___ Stadt in Deutschland.", "groß", "S", "größte", "die + Nominativ feminin → -e"],
+ ["Das ist eine ___ Idee.", "gut", "K", "bessere", "eine + Nominativ feminin → -e"],
+ ["Das ist die ___ Idee.", "gut", "S", "beste", "die + Nominativ feminin → -e"],
+ ["Die ___ Straße ist gesperrt.", "breit", "K", "breitere", "die + Nominativ feminin → -e"],
+ ["Meine ___ Freundin heißt Anna.", "gut", "S", "beste", "meine + Nominativ feminin → -e"],
+ ["Das ist die ___ Lösung.", "einfach", "S", "einfachste", "die + Nominativ feminin → -e"],
+ ["Das ist das ___ Auto.", "schnell", "S", "schnellste", "das + Nominativ neutrum → -e"],
+ ["Das ___ Kind schläft noch.", "klein", "K", "kleinere", "das + Nominativ neutrum → -e"],
+ ["Ein ___ Zimmer wäre besser.", "groß", "K", "größeres", "ein + Nominativ neutrum → -es"],
+ ["Das ist mein ___ Kind.", "jung", "S", "jüngstes", "mein + Nominativ neutrum → -es"],
+ ["Das ist das ___ Buch.", "interessant", "S", "interessanteste", "das + Nominativ neutrum → -e"],
+ ["Ein ___ Auto kostet mehr.", "neu", "K", "neueres", "ein + Nominativ neutrum → -es"],
+ ["Das ___ Gebäude der Stadt ist der Dom.", "hoch", "S", "höchste", "das + Nominativ neutrum → -e"],
+ ["Wir nehmen den ___ Weg.", "kurz", "K", "kürzeren", "den + Akkusativ maskulin → -en"],
+ ["Ich nehme den ___ Flug.", "billig", "S", "billigsten", "den + Akkusativ maskulin → -en"],
+ ["Ich habe einen ___ Bruder.", "alt", "K", "älteren", "einen + Akkusativ maskulin → -en"],
+ ["Ich besuche meinen ___ Bruder.", "alt", "S", "ältesten", "meinen + Akkusativ maskulin → -en"],
+ ["Ich suche einen ___ Job.", "gut", "K", "besseren", "einen + Akkusativ maskulin → -en"],
+ ["Wir sehen den ___ Film.", "neu", "S", "neuesten", "den + Akkusativ maskulin → -en", null, ["neusten"]],
+ ["Kennst du einen ___ Supermarkt?", "billig", "K", "billigeren", "einen + Akkusativ maskulin → -en"],
+ ["Ich suche eine ___ Wohnung.", "billig", "K", "billigere", "eine + Akkusativ feminin → -e (same as Nominativ)"],
+ ["Wir wählen die ___ Route.", "kurz", "S", "kürzeste", "die + Akkusativ feminin → -e"],
+ ["Hast du eine ___ Idee?", "gut", "K", "bessere", "eine + Akkusativ feminin → -e"],
+ ["Sie kauft die ___ Jacke.", "warm", "S", "wärmste", "die + Akkusativ feminin → -e"],
+ ["Ich nehme die ___ Bahn.", "nah", "S", "nächste", "die + Akkusativ feminin → -e. nah → nächst- (irregular)"],
+ ["Ich möchte ein ___ Zimmer.", "groß", "K", "größeres", "ein + Akkusativ neutrum → -es (same as Nominativ)"],
+ ["Wir kaufen das ___ Auto.", "schnell", "S", "schnellste", "das + Akkusativ neutrum → -e"],
+ ["Sie sucht ein ___ Hotel.", "billig", "K", "billigeres", "ein + Akkusativ neutrum → -es"],
+ ["Ich wähle das ___ Menü.", "günstig", "S", "günstigste", "das + Akkusativ neutrum → -e"],
+ ["Ich spiele mit meinem ___ Bruder.", "jung", "K", "jüngeren", "meinem + Dativ → -en"],
+ ["Sie wohnt im ___ Haus der Straße.", "hoch", "S", "höchsten", "im = in dem + Dativ → -en"],
+ ["Er wohnt in der ___ Stadt Deutschlands.", "groß", "S", "größten", "der + Dativ feminin → -en"],
+ ["Ich fahre mit meiner ___ Schwester.", "alt", "K", "älteren", "meiner + Dativ feminin → -en"],
+ ["Wir übernachten in einem ___ Hotel.", "billig", "K", "billigeren", "einem + Dativ neutrum → -en"],
+ ["Ich spreche mit dem ___ Kind.", "klein", "S", "kleinsten", "dem + Dativ neutrum → -en"],
+ ["Sie arbeitet in einer ___ Firma.", "groß", "K", "größeren", "einer + Dativ feminin → -en"],
+ ["Am ___ Tag des Jahres gehen wir schwimmen.", "heiß", "S", "heißesten", "am = an dem + Dativ → -en"],
+ ["Wir treffen uns mit meinem ___ Freund.", "gut", "S", "besten", "meinem + Dativ maskulin → -en"],
+ ["Die ___ Kinder gehen schon zur Schule.", "alt", "K", "älteren", "die + Plural → -en"],
+ ["Meine ___ Kinder wohnen nicht mehr zu Hause.", "alt", "S", "ältesten", "meine + Plural → -en"],
+ ["Das sind die ___ Schüler der Klasse.", "gut", "S", "besten", "die + Plural → -en"],
+ ["Die ___ Preise ärgern die Kunden.", "hoch", "K", "höheren", "die + Plural → -en"],
+ ["Keine ___ Preise, bitte!", "hoch", "K", "höheren", "keine + Plural → -en"],
+ ["Die ___ Leute fahren mit dem Auto.", "viel", "S", "meisten", "die + Plural → -en. viel → meist-"],
+ ["Ich habe ___ Zeit als früher.", "viel", "K", "mehr", "mehr and weniger take no ending before a noun"],
+ ["Er hat ___ Freunde als ich.", "wenig", "K", "weniger", "mehr and weniger take no ending before a noun"],
+ ["Sie ist die ___.", "gut", "S", "Beste", "Used as a noun: capital letter, die + -e", 1],
+ ["Er ist der ___ unter uns.", "jung", "S", "Jüngste", "Used as a noun: capital letter, der + -e", 1],
+ ["Das ___ kommt zum Schluss.", "gut", "S", "Beste", "Used as a noun: capital letter, das + -e", 1],
+ ["Sie ist die ___ von allen.", "schnell", "S", "Schnellste", "Used as a noun: capital letter, die + -e", 1],
+ ["Er ist der ___ in der Familie.", "alt", "S", "Älteste", "Used as a noun: capital letter, der + -e", 1],
+ ["Das ist das ___ am Sommer.", "schön", "S", "Schönste", "Used as a noun (the nicest thing): capital letter, das + -e", 1],
+ ["Das ist ein ___ Modell.", "modern", "K", "moderneres", "ein + Nominativ neutrum → -es"],
+ ["Das ist ein ___ Weg.", "einfach", "K", "einfacherer", "ein + Nominativ maskulin → -er"],
+ ["Ich brauche eine ___ Tasche.", "klein", "K", "kleinere", "eine + Akkusativ feminin → -e"],
+ ["Wir fahren mit dem ___ Zug.", "nah", "S", "nächsten", "dem + Dativ maskulin → -en. nah → nächst- (the next train)"],
+ ["Sie hat die ___ Note bekommen.", "schlecht", "S", "schlechteste", "die + Akkusativ feminin → -e"],
+ ["Das ist der ___ Tag meines Lebens.", "schön", "S", "schönste", "der + Nominativ maskulin → -e"],
+ ["Ich habe einen ___ Vorschlag.", "gut", "K", "besseren", "einen + Akkusativ maskulin → -en"],
+ ["Wo ist die ___ Haltestelle?", "nah", "S", "nächste", "die + Nominativ feminin → -e. nah → nächst-"],
+].forEach((r, i) => {
+  const L = LX[r[1]];
+  const deg = r[2] === "K" ? "Komparativ" : "Superlativ";
+  const base = r[2] === "K" ? L.k : L.s;
+  const x = {hint: r[1] + " · " + deg};
+  if(r[5]) x.cs = 1;
+  const answers = [r[3]].concat(r[6] || []);
+  const tail = r[3] === base ? " (no ending)." : " (" + base + " + ending).";
+  T("endings", "end." + (i+1), r[0], [answers], r[4] + ": " + r[3] + tail, x);
+});
+
+/* ---------------- 8. Exam patterns ---------------- */
+[
+ ["Ich trinke ___ Tee als Kaffee.", "gern · Komparativ", [["lieber"]], "gern → lieber → am liebsten."],
+ ["___ spiele ich Fußball.", "gern · Superlativ", [["Am liebsten"]], "am liebsten, capitalised at the start; the verb follows in position 2.", {cs:1}],
+ ["Ich esse ___ Pizza als Pasta.", "gern · Komparativ", [["lieber"]], "gern → lieber."],
+ ["Ich fahre ___ mit dem Zug als mit dem Bus.", "gern · Komparativ", [["lieber"]], "gern → lieber."],
+ ["Was machst du ___?", "gern · Superlativ", [["am liebsten"]], "gern → am liebsten."],
+ ["Was magst du ___?", "viel · Superlativ", [["am meisten"]], "viel → mehr → am meisten."],
+ ["Die Mieten werden ___ teurer.", "more and more", [["immer"]], "immer + Komparativ = more and more."],
+ ["Mein Deutsch wird immer ___.", "gut", [["besser"]], "immer + Komparativ: immer besser."],
+ ["Die Tage werden immer ___.", "kurz", [["kürzer"]], "immer + Komparativ: immer kürzer."],
+ ["Es wird immer ___.", "kalt", [["kälter"]], "immer + Komparativ: immer kälter."],
+ ["Die Stadt wird immer ___.", "groß", [["größer"]], "immer + Komparativ: immer größer."],
+ ["Das Leben wird immer ___.", "teuer", [["teurer"]], "immer + Komparativ: immer teurer (the e drops)."],
+ ["Es wird immer ___.", "dunkel", [["dunkler"]], "immer + Komparativ: immer dunkler (the e drops)."],
+ ["Je ___ ich übe, desto ___ wird mein Deutsch.", "viel / gut", [["mehr"], ["besser"]], "je + Komparativ … desto + Komparativ."],
+ ["Je früher du kommst, ___ besser.", "the … the", [["desto", "umso"]], "je … desto (or umso)."],
+ ["___ mehr, desto besser.", "the … the", [["Je"]], "Je mehr, desto besser.", {cs:1}],
+ ["Je ___ du fährst, desto gefährlicher wird es.", "schnell", [["schneller"]], "je + Komparativ."],
+ ["Je ___ ich werde, desto weniger schlafe ich.", "alt", [["älter"]], "je + Komparativ: je älter."],
+ ["Je länger ich warte, ___ nervöser werde ich.", "the … the", [["desto", "umso"]], "je … desto / umso."],
+ ["Sie ist die Beste ___ allen.", "naming the group", [["von"]], "die Beste von allen."],
+ ["Berlin ist die größte Stadt ___ Deutschland.", "naming the group", [["in"]], "die größte Stadt in Deutschland (or Deutschlands)."],
+ ["Er ist der Jüngste ___ uns.", "naming the group", [["unter", "von"]], "der Jüngste unter uns / von uns."],
+ ["Das ist das höchste Gebäude ___ der Stadt.", "naming the group", [["in"]], "das höchste Gebäude in der Stadt."],
+ ["Er ist der beste Spieler ___ der Mannschaft.", "naming the group", [["in"]], "der beste Spieler in der Mannschaft."],
+ ["Die neue Wohnung ist ___ größer.", "much", [["viel"]], "viel + Komparativ = much bigger."],
+ ["Kannst du ___ langsamer sprechen?", "a little", [["etwas", "ein bisschen", "ein wenig"]], "etwas / ein bisschen + Komparativ = a little slower."],
+ ["Heute ist es ___ kälter als gestern.", "even", [["noch"]], "noch + Komparativ = even colder."],
+ ["Das neue Handy ist ___ teurer.", "much", [["viel"]], "viel + Komparativ."],
+ ["Kannst du ___ lauter sprechen?", "a bit", [["ein bisschen", "etwas", "ein wenig"]], "ein bisschen / etwas + Komparativ."],
+ ["Er ist ___ älter als ich.", "a little", [["etwas", "ein bisschen", "ein wenig"]], "etwas / ein bisschen + Komparativ."],
+ ["Ich habe ___ Zeit, aber ___ Geld.", "more / less", [["mehr"], ["weniger"]], "mehr / weniger take no ending before a noun."],
+ ["Er hat ___ Freunde als ich.", "fewer", [["weniger"]], "weniger + noun, no ending."],
+ ["Ich brauche ___ Schlaf.", "more", [["mehr"]], "mehr + noun, no ending."],
+ ["___ Leute fahren heute mit dem Rad.", "more", [["Mehr"]], "Mehr + noun, no ending; capital at sentence start.", {cs:1}],
+ ["Er kommt ___ zu spät.", "oft · Komparativ", [["öfter"]], "oft → öfter."],
+ ["Sie kommt ___ zu spät.", "oft · Superlativ", [["am häufigsten", "am öftesten"]], "oft → öfter → am häufigsten."],
+ ["Ich wohne ___ am Bahnhof als du.", "nah", [["näher"]], "nah → näher → am nächsten."],
+ ["Der Berg ist ___, als ich dachte.", "hoch", [["höher"]], "hoch → höher → am höchsten."],
+ ["Diese Übung ist ___ schwieriger als die letzte.", "much", [["viel"]], "viel + Komparativ."],
+ ["Dein Deutsch wird ___ besser!", "more and more", [["immer"]], "immer + Komparativ."],
+].forEach((r, i) => {
+  T("patterns", "pat." + (i+1), r[0], r[2], r[3], Object.assign({hint:r[1]}, r[4] || {}));
+});
+
+/* ---------------- 9. Fix the mistake ---------------- */
+// [wrong sentence with *marked* part, correction(s), explanation]
+[
+ ["Das Auto ist *mehr schnell* als das Fahrrad.", ["schneller"], "German never uses mehr + adjective. Add -er."],
+ ["Er ist größer *wie* ich.", ["als"], "Komparativ + als."],
+ ["Sie ist so gut *als* ich.", ["wie"], "so … wie."],
+ ["Das Essen ist *guter* als gestern.", ["besser"], "gut is irregular: besser."],
+ ["Er läuft *am gutesten*.", ["am besten"], "gut is irregular: am besten."],
+ ["Berlin ist *am größesten*.", ["am größten"], "groß is the exception: am größten."],
+ ["Das ist die *am besten* Idee.", ["beste"], "Before a noun: article + -ste, never am."],
+ ["Ich habe *mehre* Zeit.", ["mehr"], "mehr takes no ending."],
+ ["Das Hotel ist *teuerer*.", ["teurer"], "teuer drops the e: teurer."],
+ ["Es wird immer *dunkeler*.", ["dunkler"], "dunkel drops the e: dunkler."],
+ ["Je mehr ich lerne, *desto ich verstehe besser*.", ["desto besser verstehe ich", "umso besser verstehe ich"], "desto + Komparativ + verb + subject."],
+ ["Ich esse *gerner* Pizza.", ["lieber"], "gern is irregular: lieber."],
+ ["Das ist *vieler* Geld.", ["mehr"], "viel is irregular: mehr, and it takes no ending."],
+ ["Der Berg ist *hocher*.", ["höher"], "hoch → höher (umlaut, and the c drops)."],
+ ["Der Bahnhof ist *naher*.", ["näher"], "nah → näher (umlaut)."],
+ ["Im Sommer ist es *wärmer wie* im Winter.", ["wärmer als"], "Komparativ + als."],
+ ["Kannst du *mehr langsam* sprechen?", ["langsamer"], "No mehr + adjective: langsamer."],
+ ["Das ist ein *besser* Vorschlag.", ["besserer"], "Before a noun the Komparativ needs an ending: ein besserer Vorschlag."],
+ ["Ich suche eine *billiger* Wohnung.", ["billigere"], "eine + Akkusativ feminin → billigere."],
+ ["Wir nehmen den *kürzer* Weg.", ["kürzeren"], "den + Akkusativ maskulin → kürzeren."],
+ ["Er ist *jung als* ich.", ["jünger als"], "als needs a Komparativ: jünger als."],
+ ["Sie ist *so alt als* ich.", ["so alt wie"], "so … wie."],
+ ["*Am liebste* trinke ich Tee.", ["Am liebsten"], "am always ends in -sten: am liebsten.", {cs:1}],
+ ["Mein Deutsch wird *immer gut*.", ["immer besser"], "immer + Komparativ."],
+ ["Heute ist es *mehr kalt* als gestern.", ["kälter"], "No mehr + adjective: kälter."],
+ ["Das ist *am wichtigste*.", ["am wichtigsten"], "am + -sten, always -en at the end."],
+ ["Sie ist *die älter* Schwester.", ["die ältere"], "Before a noun the Komparativ takes an ending: die ältere Schwester."],
+ ["Das Auto ist *am schnellst*.", ["am schnellsten"], "am + -sten."],
+ ["Er ist *am älteste*.", ["am ältesten"], "am + -sten: am ältesten."],
+ ["Ich finde Berlin *interessanter wie* München.", ["interessanter als"], "Komparativ + als."],
+ ["Er hat *wenigere* Zeit.", ["weniger"], "weniger takes no ending."],
+ ["Es ist *so heiß als* in Spanien.", ["so heiß wie"], "so … wie."],
+ ["Sie spricht *lauter wie* er.", ["lauter als"], "Komparativ + als."],
+ ["Der Zug ist *am langsamesten*.", ["am langsamsten"], "-est only after d, t, s, ß, z, sch, x. langsam ends in m: am langsamsten."],
+ ["Er ist *am jüngesten*.", ["am jüngsten"], "-est only after d, t, s, ß, z, sch, x. jung ends in ng: am jüngsten."],
+ ["Das ist *das alteste* Haus der Stadt.", ["das älteste"], "alt takes an umlaut: das älteste Haus."],
+ ["Ich habe mehr Bücher *wie* du.", ["als"], "mehr is a Komparativ: mehr … als."],
+ ["Mein Bruder ist *älter wie* ich.", ["älter als"], "Komparativ + als."],
+ ["Die Zitrone ist *sauerer* als der Apfel.", ["saurer"], "sauer drops the e: saurer."],
+ ["Sie ist *die Schnellsten* von allen.", ["die Schnellste"], "Singular: die Schnellste (die + -e)."],
+].forEach((r, i) => {
+  const shown = r[0].replace(/\*([^*]+)\*/, "___");
+  const wrong = r[0].match(/\*([^*]+)\*/)[1];
+  T("fix", "fix." + (i+1), shown, [r[1]], r[2], Object.assign({hint:"✗ " + wrong + " — write the correct version", wrong}, r[3] || {}));
+});
+
+/* ---------------- 10. Word order (build) ---------------- */
+[
+ ["The more I practise, the better my German gets.", "Je mehr ich übe, desto besser wird mein Deutsch.", [], "je-clause: verb at the end (übe). desto + Komparativ + verb + subject (desto besser wird mein Deutsch)."],
+ ["The earlier you come, the better.", "Je früher du kommst, desto besser.", [], "je + Komparativ … verb at the end; the desto part can be just desto + Komparativ."],
+ ["The longer I wait, the more nervous I get.", "Je länger ich warte, desto nervöser werde ich.", [], "desto nervöser + verb (werde) + subject (ich)."],
+ ["The more you earn, the more tax you pay.", "Je mehr man verdient, desto mehr Steuern zahlt man.", [], "desto mehr Steuern + verb (zahlt) + subject (man)."],
+ ["I like drinking coffee most of all.", "Am liebsten trinke ich Kaffee.", ["Ich trinke am liebsten Kaffee.", "Kaffee trinke ich am liebsten."], "Am liebsten in position 1 → verb in position 2, then the subject."],
+ ["In July it is warmest.", "Im Juli ist es am wärmsten.", ["Es ist im Juli am wärmsten.", "Am wärmsten ist es im Juli."], "am wärmsten at the end; verb in position 2."],
+ ["Berlin is bigger than Hamburg.", "Berlin ist größer als Hamburg.", [], "Komparativ + als + the thing compared."],
+ ["Berlin is not as warm as Rome.", "Berlin ist nicht so warm wie Rom.", [], "nicht so + Positiv + wie."],
+ ["That is the best idea.", "Das ist die beste Idee.", [], "article + Superlativ + ending + noun."],
+ ["I'll take the cheapest flight.", "Ich nehme den billigsten Flug.", ["Den billigsten Flug nehme ich."], "den + billigsten (Akkusativ) + Flug."],
+ ["Rents are getting more and more expensive.", "Die Mieten werden immer teurer.", [], "werden + immer + Komparativ at the end."],
+ ["She is the best of all.", "Sie ist die Beste von allen.", ["Von allen ist sie die Beste."], "die Beste + von allen."],
+ ["I'd rather drink tea than coffee.", "Ich trinke lieber Tee als Kaffee.", ["Lieber trinke ich Tee als Kaffee.", "Tee trinke ich lieber als Kaffee."], "lieber after the verb; als introduces the comparison."],
+ ["Can you speak a little more slowly?", "Kannst du etwas langsamer sprechen?", [], "Modal verb first (question), etwas + Komparativ, infinitive at the end."],
+ ["Today it is even colder than yesterday.", "Heute ist es noch kälter als gestern.", ["Es ist heute noch kälter als gestern."], "noch + Komparativ + als."],
+ ["The older I get, the less I sleep.", "Je älter ich werde, desto weniger schlafe ich.", [], "desto weniger + verb (schlafe) + subject (ich)."],
+ ["The faster you drive, the more dangerous it gets.", "Je schneller du fährst, desto gefährlicher wird es.", [], "desto gefährlicher + verb (wird) + subject (es)."],
+ ["The more I eat, the fatter I get.", "Je mehr ich esse, umso dicker werde ich.", [], "umso works exactly like desto: umso dicker + verb + subject."],
+ ["My German is getting better and better.", "Mein Deutsch wird immer besser.", [], "werden + immer + Komparativ."],
+ ["He is the youngest of us.", "Er ist der Jüngste von uns.", ["Von uns ist er der Jüngste."], "der Jüngste (as a noun) + von uns."],
+ ["The earlier we leave, the sooner we arrive.", "Je früher wir losfahren, desto eher kommen wir an.", [], "je-clause verb at the end (losfahren); desto eher + verb (kommen) + subject, separable prefix an at the very end."],
+ ["What do you like best?", "Was magst du am liebsten?", [], "am liebsten at the end of the question."],
+].forEach((r, i) => {
+  B("order", "ord." + (i+1), r[0], r[1], r[2], r[3]);
+});
+
+/* ---------------- 11. Which adjective? (reverse) ---------------- */
+[
+ ["besser", "gut"], ["lieber", "gern"], ["mehr", "viel"], ["näher", "nah"], ["öfter", "oft"],
+ ["höher", "hoch"], ["am meisten", "viel"], ["am liebsten", "gern"], ["am nächsten", "nah"],
+ ["am häufigsten", "oft"], ["am besten", "gut"], ["größer", "groß"], ["am dunkelsten", "dunkel"],
+ ["teurer", "teuer"], ["weniger", "wenig"], ["am wenigsten", "wenig"], ["älter", "alt"],
+ ["saurer", "sauer"], ["dunkler", "dunkel"], ["am höchsten", "hoch"], ["klüger", "klug"], ["am kürzesten", "kurz"],
+].forEach((r, i) => {
+  const L = LX[r[1]];
+  const acc = [r[1]].concat(r[1] === "gern" ? ["lieb"] : []);
+  T("reverse", "rev." + (i+1), r[0] + " ← ___", [acc], r[1] + " → " + L.k + " → " + (L.s ? "am " + L.s + "en" : "—") + (r[1] === "gern" ? " (lieb → lieber → am liebsten has the same forms)" : "") + ".", {hint:"the Positiv (base form)"});
+});
+
+/* ---------------- 12. Know the rule ---------------- */
+[
+ ["How is the Komparativ of a long adjective like interessant formed?", ["interessanter — always add -er", "mehr interessant", "interessantester"], 0, "German never uses mehr + adjective for the comparative, no matter how long the adjective is."],
+ ["Which adjectives take an umlaut in the Komparativ?", ["Most short adjectives with a, o, u (alt, groß, jung)", "All adjectives with a, o, u", "Only adjectives ending in -t"], 0, "Short adjectives with a/o/u usually take it; laut, klar, langsam and all long adjectives don't."],
+ ["Superlativ before a noun uses …", ["der / die / das + -ste + ending", "am + -sten", "either, they are interchangeable"], 0, "Before a noun (or as a noun): article + -ste. am is only for the stand-alone form."],
+ ["Superlativ after a verb with no noun following uses …", ["am + -sten", "der / die / das + -ste", "-er + als"], 0, "Im Juli ist es am wärmsten."],
+ ["Which adjective is the exception to -est after ß?", ["groß → am größten", "heiß → am heißten", "süß → am süßten"], 0, "groß → am größten. heiß and süß are regular: am heißesten, am süßesten."],
+ ["mehr and weniger before a noun …", ["take no ending", "take the normal adjective ending", "are capitalised"], 0, "mehr Zeit, weniger Geld — never mehre / wenigere."],
+ ["so … ___ and Komparativ + ___ ?", ["wie / als", "als / wie", "wie / wie"], 0, "so groß wie · größer als."],
+ ["In Je mehr ich übe, …, where is the verb of the je-clause?", ["At the end", "In position 2", "Right after je"], 0, "Je + Komparativ + subject … + verb at the end (like a subordinate clause)."],
+ ["In the desto-clause, what comes right after desto + Komparativ?", ["The verb, then the subject", "The subject, then the verb", "A comma"], 0, "desto besser wird mein Deutsch: verb in position 2, subject after it."],
+ ["Er ist am schnellsten. Which sentence means the same and is also correct?", ["Er ist der Schnellste.", "Er ist die am schnellsten.", "Er ist am schnellste."], 0, "After sein both forms are fine: am schnellsten or der Schnellste."],
+ ["-el adjectives like dunkel form the Komparativ by …", ["dropping the e: dunkler", "keeping the e: dunkeler", "adding an umlaut: dünkler"], 0, "dunkel → dunkler, edel → edler."],
+ ["After d, t, s, ß, z, sch, x the Superlativ adds …", ["-est (am ältesten)", "-st (am ältsten)", "-sten only with am"], 0, "am ältesten, am heißesten, am kürzesten, am hübschesten."],
+ ["To name the group compared: Sie ist die Beste ___ allen.", ["von", "als", "wie"], 0, "von / in / unter name the group: die Beste von allen, die größte Stadt in Deutschland, der Jüngste unter uns."],
+ ["Which of these comparatives is correct?", ["teurer, saurer, sicherer", "teuerer, sauerer, sicherer", "teurer, saurer, sichrer"], 0, "Only vowel + -er (teuer, sauer) and -el drop the e. sicher, lecker, trocken keep it."],
+ ["Which sentence uses immer correctly?", ["Die Mieten werden immer teurer.", "Die Mieten werden immer teuer.", "Die Mieten werden immer am teuersten."], 0, "immer + Komparativ = more and more."],
+ ["Superlativ of an adjective ending in unstressed -isch (praktisch)?", ["am praktischsten", "am praktischesten", "am praktischten"], 0, "Unstressed -isch takes only -st, unlike hübsch → am hübschesten."],
+].forEach((r, i) => {
+  M("rule", "rule." + (i+1), r[0], r[1], r[2], r[3]);
+});
+
+/* ---------------- 13. Produce it ---------------- */
+[
+ ["Tom is faster than Max.", ["Tom ist schneller als Max."], "Komparativ + als."],
+ ["Berlin is bigger than Hamburg.", ["Berlin ist größer als Hamburg."], "groß → größer, + als."],
+ ["Berlin is not as warm as Rome.", ["Berlin ist nicht so warm wie Rom."], "nicht so … wie."],
+ ["He is just as old as I am.", ["Er ist genauso alt wie ich.", "Er ist so alt wie ich.", "Er ist ebenso alt wie ich."], "genauso … wie; after wie the pronoun stays Nominativ (ich)."],
+ ["In July it is warmest.", ["Im Juli ist es am wärmsten.", "Es ist im Juli am wärmsten."], "am + -sten."],
+ ["She runs the fastest.", ["Sie läuft am schnellsten.", "Sie rennt am schnellsten."], "Adverbial: am schnellsten."],
+ ["That is the fastest car.", ["Das ist das schnellste Auto."], "das + schnellste + Auto."],
+ ["She is the best.", ["Sie ist die Beste.", "Sie ist am besten."], "As a noun: die Beste (capital). am besten is also correct after sein."],
+ ["I'd rather drink tea than coffee.", ["Ich trinke lieber Tee als Kaffee.", "Lieber trinke ich Tee als Kaffee."], "gern → lieber; als."],
+ ["I like playing football most of all.", ["Am liebsten spiele ich Fußball.", "Ich spiele am liebsten Fußball."], "am liebsten."],
+ ["Rents are getting more and more expensive.", ["Die Mieten werden immer teurer."], "immer + Komparativ; teuer → teurer."],
+ ["My German is getting better and better.", ["Mein Deutsch wird immer besser."], "immer + besser."],
+ ["The more I practise, the better my German gets.", ["Je mehr ich übe, desto besser wird mein Deutsch.", "Je mehr ich übe, umso besser wird mein Deutsch."], "je … desto / umso; verb at the end of the je-clause, verb right after desto besser."],
+ ["I have more time but less money.", ["Ich habe mehr Zeit, aber weniger Geld."], "mehr / weniger take no ending."],
+ ["The new flat is much bigger.", ["Die neue Wohnung ist viel größer."], "viel + Komparativ."],
+ ["Can you speak a little more slowly? (du)", ["Kannst du etwas langsamer sprechen?", "Kannst du ein bisschen langsamer sprechen?", "Kannst du ein wenig langsamer sprechen?", "Könntest du etwas langsamer sprechen?", "Könntest du ein bisschen langsamer sprechen?"], "etwas / ein bisschen + Komparativ."],
+ ["Today it is even colder than yesterday.", ["Heute ist es noch kälter als gestern.", "Es ist heute noch kälter als gestern."], "noch + Komparativ + als."],
+ ["I'm looking for a cheaper flat.", ["Ich suche eine billigere Wohnung.", "Ich suche eine günstigere Wohnung."], "eine + Akkusativ feminin → billigere."],
+ ["We'll take the shorter way.", ["Wir nehmen den kürzeren Weg."], "den + Akkusativ maskulin → kürzeren."],
+ ["I'll take the cheapest flight.", ["Ich nehme den billigsten Flug.", "Ich nehme den günstigsten Flug."], "den + billigsten."],
+ ["That's the best player.", ["Das ist der beste Spieler.", "Das ist die beste Spielerin."], "der + beste + Spieler."],
+ ["She is the youngest of us.", ["Sie ist die Jüngste von uns.", "Sie ist die Jüngste unter uns."], "die Jüngste (as a noun) + von / unter uns."],
+ ["Berlin is the biggest city in Germany.", ["Berlin ist die größte Stadt in Deutschland.", "Berlin ist die größte Stadt Deutschlands."], "die größte Stadt in Deutschland."],
+ ["What do you like most? (du)", ["Was magst du am liebsten?", "Was magst du am meisten?", "Was gefällt dir am besten?"], "am liebsten / am meisten."],
+ ["The earlier you come, the better. (du)", ["Je früher du kommst, desto besser.", "Je früher du kommst, umso besser."], "je … desto."],
+ ["It is getting darker and darker.", ["Es wird immer dunkler."], "immer + dunkler (the e drops)."],
+ ["My older brother lives in Munich.", ["Mein älterer Bruder wohnt in München.", "Mein älterer Bruder lebt in München."], "mein + Nominativ maskulin → älterer."],
+ ["I play with my younger brother.", ["Ich spiele mit meinem jüngeren Bruder."], "meinem + Dativ → jüngeren."],
+ ["Which mountain is the highest?", ["Welcher Berg ist am höchsten?", "Welcher Berg ist der höchste?"], "am höchsten (or der höchste) after sein."],
+ ["This is the most interesting book.", ["Das ist das interessanteste Buch."], "-est after t; das + interessanteste."],
+ ["He is older than me.", ["Er ist älter als ich."], "älter als ich (Nominativ after als)."],
+ ["Which way is the shortest?", ["Welcher Weg ist am kürzesten?", "Welcher Weg ist der kürzeste?"], "am kürzesten: -est after z."],
+ ["The children are getting bigger and bigger.", ["Die Kinder werden immer größer."], "immer + größer."],
+ ["Vegetables are healthier than chocolate.", ["Gemüse ist gesünder als Schokolade.", "Gemüse ist gesunder als Schokolade."], "gesund → gesünder + als."],
+].forEach((r, i) => {
+  T("produce", "prod." + (i+1), r[0], [r[1]], r[2], {hint:"full sentence in German", loose:1, en:1});
+});
+
+const BY_TOPIC = {};
+TOPIC_ORDER.forEach(t => BY_TOPIC[t] = BANK.filter(q => q.topic === t));
+BANK.forEach(q => { q.ord = BY_TOPIC[q.topic].indexOf(q) / BY_TOPIC[q.topic].length; });
+
+const RULES_HTML = "<h2>The three forms</h2>\n<table>\n<tr><th>Positiv</th><th>Komparativ</th><th>Superlativ</th></tr>\n<tr><td>schnell</td><td>schnell<b>er</b></td><td>am schnell<b>sten</b> · der schnell<b>ste</b></td></tr>\n<tr><td>Tom ist schnell.</td><td>Tom ist schneller <b>als</b> Max.</td><td>Tom ist am schnellsten. · Tom ist der schnellste Spieler.</td></tr>\n</table>\n\n<h2>Komparativ</h2>\n<p>Adjective + <b>-er</b>: klein → kleiner, schön → schöner, interessant → interessanter. German never uses <em>mehr</em> + adjective. ✗ mehr interessant → ✓ interessanter.</p>\n<p><b>Umlaut</b> for most short adjectives with a, o, u: alt → älter, lang → länger, warm → wärmer, kalt → kälter, stark → stärker, arm → ärmer, hart → härter, krank → kränker, nah → näher, groß → größer, hoch → höher, oft → öfter, jung → jünger, kurz → kürzer, klug → klüger, gesund → gesünder (Duden also allows gesunder), dumm → dümmer.</p>\n<p><b>No umlaut</b>: laut, klar, froh, voll, rund, bunt, schlank, flach, langsam, toll, stolz, falsch, dunkel, sauer — and every longer adjective (interessant, langweilig …).</p>\n<p><b>Spelling</b>: -el and vowel + -er drop the e: dunkel → dunkler, edel → edler, teuer → teurer, sauer → saurer. Consonant + -er / -en keep it: sicher → sicherer, lecker → leckerer, trocken → trockener. Adjectives ending in -e add only -r: leise → leiser, müde → müder.</p>\n<table>\n<tr><th>Positiv</th><th>Komparativ</th><th>Superlativ</th></tr>\n<tr><td>gut</td><td>besser</td><td>am besten</td></tr>\n<tr><td>viel</td><td>mehr</td><td>am meisten</td></tr>\n<tr><td>gern</td><td>lieber</td><td>am liebsten</td></tr>\n<tr><td>hoch</td><td>höher</td><td>am höchsten</td></tr>\n<tr><td>nah</td><td>näher</td><td>am nächsten</td></tr>\n<tr><td>groß</td><td>größer</td><td>am größten</td></tr>\n<tr><td>oft</td><td>öfter</td><td>am häufigsten</td></tr>\n</table>\n<p><b>als</b> after a Komparativ, <b>wie</b> after so / genauso / ebenso / doppelt so + Positiv: Berlin ist größer <b>als</b> Hamburg. · Berlin ist nicht so warm <b>wie</b> Rom. · Er ist genauso alt <b>wie</b> ich. Also: anders <b>als</b>.</p>\n<p><b>viel / noch / etwas / ein bisschen</b> + Komparativ: viel größer, noch kälter, etwas langsamer.</p>\n\n<h2>Superlativ</h2>\n<p><b>am + -sten</b> after a verb when no noun follows: Im Juli ist es am wärmsten. · Sie läuft am schnellsten. · Was magst du am meisten?</p>\n<p><b>der / die / das + -ste</b> before a noun or used as a noun: das schnellste Auto · Sie ist die Beste. After <em>sein</em> both work: Er ist am schnellsten = Er ist der Schnellste. Never <em>am</em> before a noun: ✗ die am besten Idee → ✓ die beste Idee.</p>\n<p><b>-est</b> after d, t, s, ß, z, sch, x: am ältesten, am lautesten, am heißesten, am kürzesten, am hübschesten, am interessantesten, am nervösesten. Also after -e adjectives once the e is dropped: leise → am leisesten, müde → am müdesten. Exceptions: groß → am größten; unstressed -isch takes only -st: praktisch → am praktischsten.</p>\n<p><b>Naming the group</b>: die Beste <b>von</b> allen · die größte Stadt <b>in</b> Deutschland · der Jüngste <b>unter</b> uns.</p>\n\n<h2>Before a noun: adjective endings</h2>\n<p>Komparativ and Superlativ take the normal adjective endings after -er / -st.</p>\n<table>\n<tr><th></th><th>der / die / das</th><th>ein / kein / mein</th></tr>\n<tr><td>Nom. m</td><td>der älter<b>e</b> / ältest<b>e</b> Bruder</td><td>ein älter<b>er</b> / mein ältest<b>er</b> Bruder</td></tr>\n<tr><td>Nom. f</td><td>die älter<b>e</b> / ältest<b>e</b> Schwester</td><td>eine älter<b>e</b> / meine ältest<b>e</b> Schwester</td></tr>\n<tr><td>Nom. n</td><td>das älter<b>e</b> / ältest<b>e</b> Kind</td><td>ein älter<b>es</b> / mein ältest<b>es</b> Kind</td></tr>\n<tr><td>Akk. m</td><td>den älter<b>en</b> / ältest<b>en</b> Bruder</td><td>einen älter<b>en</b> / meinen ältest<b>en</b> Bruder</td></tr>\n<tr><td>Akk. f / n</td><td colspan=\"2\">= Nominativ</td></tr>\n<tr><td>Dat. (all)</td><td>dem / der älter<b>en</b> / ältest<b>en</b> …</td><td>einem / einer älter<b>en</b> / meinem ältest<b>en</b> …</td></tr>\n<tr><td>Plural Nom. / Akk.</td><td>die älter<b>en</b> / ältest<b>en</b> Kinder</td><td>meine älter<b>en</b> / ältest<b>en</b> Kinder</td></tr>\n</table>\n<p>Ich suche eine <b>billigere</b> Wohnung. · Wir nehmen den <b>kürzeren</b> Weg. · Ich spiele mit meinem <b>jüngeren</b> Bruder. · Das ist der <b>beste</b> Spieler. · Ich nehme den <b>billigsten</b> Flug. · Sie wohnt im <b>höchsten</b> Haus der Straße.</p>\n<p><b>mehr / weniger</b> before a noun take no ending: mehr Zeit, weniger Geld. Used as a noun, the superlative is capitalised: die Beste, der Jüngste, das Wichtigste.</p>\n\n<h2>Patterns for the exam</h2>\n<p><b>lieber / am liebsten</b>: Ich trinke lieber Tee als Kaffee. · Am liebsten spiele ich Fußball.</p>\n<p><b>immer + Komparativ</b> (more and more): Die Mieten werden immer teurer. · Mein Deutsch wird immer besser.</p>\n<p><b>je … desto / umso</b>: Je mehr ich übe, <b>desto</b> besser wird mein Deutsch. · Je früher du kommst, <b>umso</b> besser. Word order: <em>je</em> + Komparativ … verb at the end | <em>desto</em> + Komparativ + verb + subject.</p>\n\n<h2>Common mistakes</h2>\n<table>\n<tr><th>✗</th><th>✓</th><th>Why</th></tr>\n<tr><td>mehr schnell</td><td>schneller</td><td>no mehr + adjective</td></tr>\n<tr><td>größer wie ich</td><td>größer als ich</td><td>Komparativ + als</td></tr>\n<tr><td>so gut als ich</td><td>so gut wie ich</td><td>so … wie</td></tr>\n<tr><td>guter / am gutesten</td><td>besser / am besten</td><td>irregular</td></tr>\n<tr><td>am größesten</td><td>am größten</td><td>groß is the exception</td></tr>\n<tr><td>die am besten Idee</td><td>die beste Idee</td><td>no am before a noun</td></tr>\n<tr><td>mehre Zeit</td><td>mehr Zeit</td><td>mehr / weniger take no ending</td></tr>\n<tr><td>teuerer</td><td>teurer</td><td>vowel + -er drops the e</td></tr>\n<tr><td>Je mehr ich lerne, desto ich verstehe besser.</td><td>…, desto besser verstehe ich.</td><td>desto + Komparativ + verb</td></tr>\n</table>\n\n<h2>Must-know adjectives</h2>\n<table class=\"lex\">\n<tr><th>Positiv</th><th>Komparativ</th><th>Superlativ</th></tr>\n<tr><td>alt</td><td>älter</td><td>am ältesten</td></tr>\n<tr><td>jung</td><td>jünger</td><td>am jüngsten</td></tr>\n<tr><td>groß</td><td>größer</td><td>am größten</td></tr>\n<tr><td>klein</td><td>kleiner</td><td>am kleinsten</td></tr>\n<tr><td>gut</td><td>besser</td><td>am besten</td></tr>\n<tr><td>schlecht</td><td>schlechter</td><td>am schlechtesten</td></tr>\n<tr><td>viel</td><td>mehr</td><td>am meisten</td></tr>\n<tr><td>wenig</td><td>weniger</td><td>am wenigsten</td></tr>\n<tr><td>gern</td><td>lieber</td><td>am liebsten</td></tr>\n<tr><td>hoch</td><td>höher</td><td>am höchsten</td></tr>\n<tr><td>nah</td><td>näher</td><td>am nächsten</td></tr>\n<tr><td>teuer</td><td>teurer</td><td>am teuersten</td></tr>\n<tr><td>billig</td><td>billiger</td><td>am billigsten</td></tr>\n<tr><td>dunkel</td><td>dunkler</td><td>am dunkelsten</td></tr>\n<tr><td>kurz</td><td>kürzer</td><td>am kürzesten</td></tr>\n<tr><td>schnell</td><td>schneller</td><td>am schnellsten</td></tr>\n<tr><td>langsam</td><td>langsamer</td><td>am langsamsten</td></tr>\n<tr><td>warm</td><td>wärmer</td><td>am wärmsten</td></tr>\n<tr><td>kalt</td><td>kälter</td><td>am kältesten</td></tr>\n<tr><td>heiß</td><td>heißer</td><td>am heißesten</td></tr>\n<tr><td>stark</td><td>stärker</td><td>am stärksten</td></tr>\n<tr><td>schön</td><td>schöner</td><td>am schönsten</td></tr>\n<tr><td>laut</td><td>lauter</td><td>am lautesten</td></tr>\n<tr><td>gesund</td><td>gesünder</td><td>am gesündesten</td></tr>\n<tr><td>klug</td><td>klüger</td><td>am klügsten</td></tr>\n<tr><td>wichtig</td><td>wichtiger</td><td>am wichtigsten</td></tr>\n<tr><td>interessant</td><td>interessanter</td><td>am interessantesten</td></tr>\n<tr><td>oft</td><td>öfter</td><td>am häufigsten</td></tr>\n</table>\n";
+/* ============================ storage ============================ */
+const KEY = "komparativ.v1";
+const mem = {};
+const store = {
+  get(k){ try{ return localStorage.getItem(k); }catch(e){ return k in mem ? mem[k] : null; } },
+  set(k,v){ try{ localStorage.setItem(k,v); }catch(e){ mem[k]=v; } },
+  del(k){ try{ localStorage.removeItem(k); }catch(e){ delete mem[k]; } }
+};
+let PERSISTS = true;
+try{ localStorage.setItem(KEY+".probe","1"); localStorage.removeItem(KEY+".probe"); }
+catch(e){ PERSISTS = false; }
+
+/* ============================ model ============================== */
+const DAY = 86400000;
+// Leitner boxes. 0 = new or lapsed, 5 = mastered. A box is only left when
+// the item is due, so five correct answers must be spread over ≥ 11 days.
+const IVL = [0, 10*60000, 1*DAY, 3*DAY, 7*DAY, 21*DAY];
+const MASTER_BOX = 5;
+// A wrong answer drops an item three boxes: 5 → 2, 4 → 1, 3 or below → 0.
+// So a slip on a mastered item costs three more spaced successes over ≥ 10 days
+// (box 2 → 3 now, → 4 after 3 days, → 5 after 7 more).
+const LAPSE_DROP = 3;
+let NOW = () => Date.now();
+const setNow = f => { NOW = f; };
+
+let S = load();
+function blank(){
+  return {v:1, items:{}, stats:{answered:0, correct:0, sessions:0, days:{}, lastDay:null, streak:0, best:0}, prefs:{size:20}};
+}
+function load(){
+  try{
+    const raw = store.get(KEY);
+    if(!raw) return blank();
+    const p = JSON.parse(raw);
+    if(!p || p.v !== 1) return blank();
+    const b = blank();
+    p.items = p.items || {};
+    p.stats = Object.assign(b.stats, p.stats || {});
+    p.stats.days = p.stats.days || {};
+    p.prefs = Object.assign(b.prefs, p.prefs || {});
+    return p;
+  }catch(e){ return blank(); }
+}
+let saveTimer = null;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveNow, 120);
+}
+function saveNow(){ clearTimeout(saveTimer); saveTimer = null; store.set(KEY, JSON.stringify(S)); }
+
+function rec(id){
+  if(!S.items[id]) S.items[id] = {b:0, due:0, s:0, c:0, w:0, lap:0, seen:0, last:0};
+  return S.items[id];
+}
+const boxOf = id => (S.items[id] ? S.items[id].b : 0);
+const seen = id => !!(S.items[id] && S.items[id].seen > 0);
+const isMastered = id => boxOf(id) >= MASTER_BOX;
+const isDue = id => { const r = S.items[id]; return !r || r.seen === 0 || r.due <= NOW(); };
+const dueAt = id => (S.items[id] && S.items[id].seen > 0 ? S.items[id].due : NOW());
+
+function dayKey(t){
+  const d = new Date(t);
+  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+function touchDay(ok){
+  const now = NOW(), today = dayKey(now), yday = dayKey(now - DAY);
+  const st = S.stats;
+  const d = st.days[today] || (st.days[today] = {a:0, c:0});
+  d.a++; if(ok) d.c++;
+  if(st.lastDay !== today){
+    st.streak = (st.lastDay === yday) ? st.streak + 1 : 1;
+    st.lastDay = today;
+  }
+  if(st.streak > (st.best || 0)) st.best = st.streak;
+  // keep the day log bounded
+  const keys = Object.keys(st.days).sort();
+  while(keys.length > 120) delete st.days[keys.shift()];
+}
+// grade an answer. promotable = the item was due, so a correct answer moves it up a box
+function grade(id, ok, promotable){
+  const r = rec(id), now = NOW();
+  r.seen++; r.last = now;
+  S.stats.answered++;
+  if(ok){
+    r.c++; r.s++; S.stats.correct++;
+    if(promotable){
+      if(r.b < MASTER_BOX) r.b++;
+      r.due = now + IVL[r.b];
+    }
+  }else{
+    r.w++; r.s = 0;
+    if(r.b > 0) r.lap++;
+    r.b = Math.max(0, r.b - LAPSE_DROP); r.due = now;
+  }
+  touchDay(ok);
+  save();
+  return r;
+}
+
+function counts(topics){
+  const pool = topics ? BANK.filter(q => topics.includes(q.topic)) : BANK;
+  const c = {n:pool.length, mastered:0, seen:0, due:0, fresh:0, boxes:[0,0,0,0,0,0]};
+  pool.forEach(q => {
+    const b = boxOf(q.id);
+    c.boxes[b]++;
+    if(b >= MASTER_BOX) c.mastered++;
+    if(seen(q.id)){ c.seen++; if(isDue(q.id)) c.due++; } else c.fresh++;
+  });
+  return c;
+}
+function weakPool(topics){
+  const pool = topics ? BANK.filter(q => topics.includes(q.topic)) : BANK;
+  return pool.filter(q => S.items[q.id] && S.items[q.id].w > 0 && !isMastered(q.id))
+    .sort((a,b) => {
+      const ra = S.items[a.id], rb = S.items[b.id];
+      const sa = ra.lap*2 + ra.w/(ra.c+ra.w), sb = rb.lap*2 + rb.w/(rb.c+rb.w);
+      return sb - sa;
+    });
+}
+function shuffle(arr, rnd){
+  const a = arr.slice(); rnd = rnd || Math.random;
+  for(let i = a.length-1; i > 0; i--){ const j = Math.floor(rnd()*(i+1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+function seeded(str){
+  let h = 2166136261;
+  for(let i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return () => { h += 0x6D2B79F5; let t = Math.imul(h ^ (h >>> 15), 1 | h); t ^= t + Math.imul(t ^ (t >>> 7), 61 | t); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+const freshOrder = (a,b) => (a.ord - b.ord) || (TOPIC_ORDER.indexOf(a.topic) - TOPIC_ORDER.indexOf(b.topic));
+
+// mode: "srs" (everything due, then new), "topic", "weak"
+function buildQueue(mode, topics, n){
+  n = n || S.prefs.size || 20;
+  const pool = BANK.filter(q => topics.includes(q.topic));
+  let q = [];
+  if(mode === "weak"){
+    weakPool(topics).slice(0, n).forEach(it => q.push({q:it, promotable:isDue(it.id), retry:false}));
+    return shuffle(q);
+  }
+  const due = shuffle(pool.filter(it => seen(it.id) && isDue(it.id)));
+  due.slice(0, n).forEach(it => q.push({q:it, promotable:true, retry:false}));
+  if(q.length < n){
+    const fresh = pool.filter(it => !seen(it.id)).sort(freshOrder);
+    fresh.slice(0, n - q.length).forEach(it => q.push({q:it, promotable:true, retry:false}));
+  }
+  if(q.length === 0){
+    // nothing is scheduled: a practice round of the soonest-due items, not promotable
+    const early = pool.filter(it => seen(it.id) && !isDue(it.id)).sort((a,b) => dueAt(a.id) - dueAt(b.id));
+    early.slice(0, n).forEach(it => q.push({q:it, promotable:false, retry:false}));
+  }
+  return q;
+}
+
+/* ============================ checking =========================== */
+const SHORT = {"a:":"ä","o:":"ö","u:":"ü","A:":"Ä","O:":"Ö","U:":"Ü","s:":"ß"};
+const expandShortcuts = s => s.replace(/[aouAOUs]:/g, m => SHORT[m] || m);
+function norm(s, q){
+  let t = String(s == null ? "" : s).normalize("NFC")
+    .replace(/[\u2018\u2019\u02BC]/g, "'").replace(/\u00A0/g, " ")
+    .replace(/\s+/g, " ").trim();
+  if(q && (q.loose || q.type === "build")){
+    t = t.replace(/[.,!?;:„“”"'«»]/g, "").replace(/\s+/g, " ").trim();
+  }else{
+    t = t.replace(/[.!?]+$/, "").trim();
+  }
+  if(!(q && q.cs)) t = t.toLowerCase();
+  return t;
+}
+function check(q, input){
+  if(q.type === "type"){
+    const arr = Array.isArray(input) ? input : [input];
+    const gaps = q.answers.map((acc, i) => acc.some(a => norm(a, q) === norm(arr[i], q)));
+    return {ok: gaps.every(Boolean), gaps, canon: q.answers.map(a => a[0])};
+  }
+  if(q.type === "mc"){
+    return {ok: input === q.answer, canon: [q.options[q.answer]]};
+  }
+  if(q.type === "build"){
+    const s = (Array.isArray(input) ? input.join(" ") : String(input || ""));
+    const ok = [q.sentence].concat(q.alts).some(a => norm(a, q) === norm(s, q));
+    return {ok, canon: [q.sentence]};
+  }
+  throw new Error("unknown type " + q.type);
+}
+function tilesFor(q){
+  const tiles = q.sentence.split(" ");
+  const rnd = seeded(q.id);
+  let sh = shuffle(tiles, rnd);
+  // the starting order must not already be an accepted sentence
+  for(let i = 0; i < 20 && check(q, sh).ok; i++) sh = shuffle(tiles, rnd);
+  if(check(q, sh).ok) sh = sh.slice(1).concat(sh.slice(0, 1));
+  return sh;
+}
+function optionOrder(q){
+  const idx = q.options.map((_, i) => i);
+  return q.type === "mc" && q.topic === "rule" ? idx : shuffle(idx, seeded(q.id));
+}
+
+/* ============================ session ============================ */
+let SESSION = null;
+function startRound(mode, topics){
+  topics = topics || TOPIC_ORDER;
+  const queue = buildQueue(mode, topics, S.prefs.size);
+  if(!queue.length) return null;
+  S.stats.sessions++; save();
+  SESSION = {mode, topics, queue, i:0, results:[], answered:null, input:null, finished:false, startedAt:NOW()};
+  return SESSION;
+}
+function current(){ return SESSION && !SESSION.finished ? SESSION.queue[SESSION.i] : null; }
+function answerCurrent(input){
+  const e = current(); if(!e || SESSION.answered) return null;
+  const res = check(e.q, input);
+  const before = boxOf(e.q.id);
+  const promotable = e.promotable && !e.retry;
+  const r = grade(e.q.id, res.ok, promotable);
+  const result = {id:e.q.id, ok:res.ok, retry:e.retry, promoted: res.ok && promotable, from:before, to:r.b, due:r.due};
+  SESSION.results.push(result);
+  if(!res.ok && !e.retry) SESSION.queue.push({q:e.q, promotable:false, retry:true});
+  SESSION.answered = Object.assign({res}, result);
+  SESSION.input = input;
+  return SESSION.answered;
+}
+function advance(){
+  if(!SESSION || !SESSION.answered) return;
+  SESSION.answered = null; SESSION.input = null;
+  SESSION.i++;
+  if(SESSION.i >= SESSION.queue.length) SESSION.finished = true;
+}
+function endSession(){ SESSION = null; }
+
+/* ============================ data =============================== */
+function exportJSON(){ saveNow(); return JSON.stringify(S); }
+function importJSON(text){
+  const p = JSON.parse(text);
+  if(!p || p.v !== 1 || typeof p.items !== "object") throw new Error("Not a Komparativ progress file");
+  S = p; S.prefs = Object.assign(blank().prefs, S.prefs || {}); S.stats = Object.assign(blank().stats, S.stats || {});
+  saveNow();
+  return counts();
+}
+function resetAll(){ clearTimeout(saveTimer); saveTimer = null; S = blank(); store.del(KEY); SESSION = null; }
+
+/* ============================ validation ========================= */
+function validateBank(){
+  const issues = [], ids = new Set();
+  BANK.forEach(q => {
+    const where = q.id;
+    if(!q.id) issues.push("missing id");
+    if(ids.has(q.id)) issues.push("duplicate id " + where); ids.add(q.id);
+    if(!TOPICS[q.topic]) issues.push("unknown topic " + where);
+    if(!q.expl) issues.push("no explanation " + where);
+    if(q.type === "type"){
+      const gaps = (q.prompt.match(/___/g) || []).length;
+      if(gaps !== q.answers.length && !(gaps === 0 && q.answers.length === 1)) issues.push("gap count " + where);
+      q.answers.forEach(a => { if(!a.length || a.some(s => !s.trim())) issues.push("empty answer " + where); });
+    }else if(q.type === "mc"){
+      if(!Array.isArray(q.options) || q.options.length < 2) issues.push("options " + where);
+      if(new Set(q.options.map(o => o.toLowerCase())).size !== q.options.length) issues.push("duplicate options " + where);
+      if(!(q.answer >= 0 && q.answer < q.options.length)) issues.push("answer index " + where);
+    }else if(q.type === "build"){
+      if(q.sentence.split(" ").length < 3) issues.push("too few tiles " + where);
+      const sortKey = s => norm(s, q).split(" ").sort().join(" ");
+      q.alts.forEach(a => { if(sortKey(a) !== sortKey(q.sentence)) issues.push("alt uses different words " + where); });
+    }else issues.push("type " + where);
+  });
+  return issues;
+}
+
+/* ============================ ui helpers ======================== */
+function h(tag, attrs, ...kids){
+  const el = document.createElement(tag);
+  if(attrs) for(const k in attrs){
+    const v = attrs[k];
+    if(v == null || v === false) continue;
+    if(k === "class") el.className = v;
+    else if(k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else if(k === "html") el.innerHTML = v;
+    else el.setAttribute(k, v === true ? "" : v);
+  }
+  kids.flat().forEach(c => { if(c == null || c === false) return; el.append(c.nodeType ? c : document.createTextNode(String(c))); });
+  return el;
+}
+function fmtDue(t){
+  const d = t - NOW();
+  if(d <= 0) return "now";
+  if(d < 3600000) return Math.max(1, Math.round(d/60000)) + " min";
+  if(d < DAY) return Math.round(d/3600000) + " h";
+  const days = Math.round(d/DAY);
+  return days + (days === 1 ? " day" : " days");
+}
+function pct(a, b){ return b ? Math.round(100*a/b) : 0; }
+function boxBar(c){
+  const bar = h("div", {class:"boxbar", role:"img", "aria-label": c.mastered + " of " + c.n + " mastered"});
+  for(let b = 5; b >= 0; b--){
+    if(!c.boxes[b]) continue;
+    bar.append(h("span", {class:"seg b" + b, style:"flex:" + c.boxes[b]}));
+  }
+  return bar;
+}
+const UI = {tab:"drill", topicPick:null, resetArmed:false};
+let view;
+
+/* ============================ views ============================== */
+function render(){
+  view.innerHTML = "";
+  document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === UI.tab ? "true" : "false"));
+  if(UI.tab === "drill"){
+    if(!SESSION) renderHome();
+    else if(SESSION.finished) renderSummary();
+    else renderQuestion();
+  }
+  else if(UI.tab === "rules") renderRules();
+  else if(UI.tab === "progress") renderProgress();
+  else renderData();
+}
+
+function renderHome(){
+  const c = counts();
+  const weak = weakPool().length;
+  const home = h("section", {class:"home"});
+  const lede = h("p", {class:"lede"});
+  if(c.seen === 0){
+    lede.append(c.n + " items across " + TOPIC_ORDER.length + " topics. Each one climbs five boxes on spaced correct answers; a wrong answer drops it three. Mastery means every item sits in box 5.");
+  }else{
+    lede.append(h("strong", null, c.due + " due"), ", ", h("strong", null, c.fresh + " new"), ", ", h("strong", null, c.mastered + " of " + c.n + " mastered"), ".");
+  }
+  home.append(lede);
+  home.append(boxBar(c));
+  const size = S.prefs.size || 20;
+  const dueNow = Math.min(c.due, size);
+  const newNow = Math.min(c.fresh, size - dueNow);
+  let label = "Start review";
+  if(c.seen > 0){
+    const parts = [];
+    if(dueNow) parts.push(dueNow + " due");
+    if(newNow) parts.push(newNow + " new");
+    label = parts.length ? "Start review · " + parts.join(" + ") : "Nothing due — practise early";
+  }
+  home.append(h("div", {class:"start"},
+    h("button", {class:"primary big", onclick:() => { startRound("srs", TOPIC_ORDER); render(); }}, label),
+    h("div", {class:"size"}, "Round of ",
+      ...[10, 20, 40].map(n => h("button", {class:"chip" + (n === size ? " on" : ""), onclick:() => { S.prefs.size = n; save(); render(); }}, String(n))))
+  ));
+  const list = h("div", {class:"topics"});
+  TOPIC_ORDER.forEach(t => {
+    const tc = counts([t]);
+    const row = h("div", {class:"trow"},
+      h("div", {class:"tinfo"},
+        h("div", {class:"tname"}, TOPICS[t].name, h("span", {class:"tcount"}, tc.mastered + "/" + tc.n)),
+        h("div", {class:"tblurb"}, TOPICS[t].blurb),
+        boxBar(tc)),
+      h("button", {class:"ghost", onclick:() => { startRound("topic", [t]); render(); }}, tc.due ? "Drill · " + tc.due + " due" : "Drill")
+    );
+    list.append(row);
+  });
+  home.append(h("h2", null, "Focus on one topic"), list);
+  if(weak){
+    home.append(h("div", {class:"weak"},
+      h("button", {class:"ghost", onclick:() => { startRound("weak", TOPIC_ORDER); render(); }}, "Weak spots · " + weak + " items you have missed")));
+  }
+  view.append(home);
+}
+
+function promptEl(q, ans){
+  const p = h("p", {class:"prompt" + (q.en ? " en" : "")});
+  if(q.type === "type"){
+    const parts = q.prompt.split("___");
+    parts.forEach((txt, i) => {
+      p.append(txt);
+      if(i < parts.length - 1 && ans){
+        const given = (SESSION.input[i] || "").trim();
+        p.append(h("span", {class:"given " + (ans.res.gaps[i] ? "ok" : "bad")}, given || "—"));
+      }else if(i < parts.length - 1){
+        const inp = h("input", {type:"text", class:"gap", autocomplete:"off", autocapitalize:"off", spellcheck:"false", "aria-label":"answer " + (i+1), "data-gap":i,
+          oninput: ev => onShortcut(ev.target),
+          onkeydown: ev => { if(ev.key === "Enter"){ ev.preventDefault(); ev.stopPropagation(); submitType(); } }});
+        const longest = Math.max(...q.answers[i].map(a => a.length));
+        inp.style.width = Math.min(26, Math.max(7, longest + 2)) + "ch";
+        p.append(inp);
+      }
+    });
+  }else p.append(q.prompt);
+  return p;
+}
+function freeInput(q){
+  const inp = h("input", {type:"text", class:"gap free", autocomplete:"off", autocapitalize:"off", spellcheck:"false", "aria-label":"your German sentence", "data-gap":0, placeholder:"Auf Deutsch …",
+    oninput: ev => onShortcut(ev.target),
+    onkeydown: ev => { if(ev.key === "Enter"){ ev.preventDefault(); ev.stopPropagation(); submitType(); } }});
+  return h("div", {class:"freewrap"}, inp);
+}
+function onShortcut(el){
+  const v = el.value, nv = expandShortcuts(v);
+  if(nv !== v){ const pos = el.selectionStart; el.value = nv; try{ el.setSelectionRange(pos-1, pos-1); }catch(e){} }
+}
+function insertChar(ch){
+  const el = document.activeElement;
+  const inputs = [...view.querySelectorAll("input.gap")];
+  const target = inputs.includes(el) ? el : inputs[0];
+  if(!target) return;
+  const a = target.selectionStart || 0, b = target.selectionEnd || 0;
+  target.value = target.value.slice(0, a) + ch + target.value.slice(b);
+  target.focus(); try{ target.setSelectionRange(a+1, a+1); }catch(e){}
+}
+function submitType(){
+  const inputs = [...view.querySelectorAll("input.gap")];
+  if(!inputs.length || SESSION.answered) return;
+  const vals = inputs.map(i => i.value);
+  if(vals.every(v => !v.trim())) { inputs[0].focus(); return; }
+  answerCurrent(vals); render();
+}
+let BUILD = null; // {chosen:[indices], tiles:[...]} for the current build item
+
+function renderQuestion(){
+  const e = current(), q = e.q;
+  const wrap = h("section", {class:"drill"});
+  const modeName = SESSION.mode === "srs" ? "Review" : SESSION.mode === "weak" ? "Weak spots" : TOPICS[SESSION.topics[0]].name;
+  wrap.append(h("div", {class:"round"}, h("span", null, modeName), h("span", null, (SESSION.i+1) + " / " + SESSION.queue.length)));
+  const rail = h("div", {class:"rail", "aria-hidden":"true"});
+  SESSION.queue.forEach((en, i) => {
+    const r = SESSION.results[i];
+    rail.append(h("i", {class: i === SESSION.i ? "cur" : r ? (r.ok ? "ok" : "bad") : ""}));
+  });
+  wrap.append(rail);
+
+  const card = h("article", {class:"card"});
+  const b = SESSION.answered ? SESSION.answered.from : boxOf(q.id);
+  const wasNew = SESSION.answered ? (S.items[q.id].seen <= 1 && !e.retry) : !seen(q.id);
+  const tag = h("div", {class:"tag"}, TOPICS[q.topic].name, h("span", null, wasNew ? "new" : "box " + b));
+  if(e.retry) tag.append(h("span", {class:"note"}, "second try"));
+  else if(!e.promotable) tag.append(h("span", {class:"note"}, "early review — no promotion"));
+  card.append(tag);
+  if(q.wrong){
+    const full = q.prompt.replace("___", "\u0000");
+    const [pre, post] = full.split("\u0000");
+    card.append(h("p", {class:"wrongline"}, "✗ ", pre, h("s", null, q.wrong), post));
+  }
+  const ans = SESSION.answered;
+  card.append(promptEl(q, ans));
+  if(q.type === "type" && !q.prompt.includes("___")){
+    if(ans) card.append(h("p", {class:"prompt given-line"}, h("span", {class:"given " + (ans.ok ? "ok" : "bad")}, (SESSION.input[0] || "").trim() || "—")));
+    else card.append(freeInput(q));
+  }
+  if(q.hint && !q.wrong) card.append(h("p", {class:"hint"}, q.hint));
+  else if(q.wrong) card.append(h("p", {class:"hint"}, "Type the corrected part"));
+
+  if(q.type === "type" && !ans){
+    card.append(h("div", {class:"keys"}, ...["ä","ö","ü","ß"].map(ch => h("button", {class:"key", type:"button", tabindex:"-1", onclick:() => insertChar(ch)}, ch)),
+      h("span", {class:"kbd"}, "or type a: o: u: s:")));
+    if(!ans) card.append(h("div", {class:"actions"}, h("button", {class:"primary", onclick:submitType}, "Check"), h("span", {class:"kbd"}, "Enter")));
+  }
+  else if(q.type === "mc"){
+    const order = optionOrder(q);
+    const list = h("div", {class:"options", role:"group"});
+    order.forEach((oi, n) => {
+      const cls = ["opt"];
+      if(ans){ if(oi === q.answer) cls.push("right"); else if(SESSION.input === oi) cls.push("wrong"); }
+      list.append(h("button", {class:cls.join(" "), disabled:!!ans, onclick:() => { answerCurrent(oi); render(); }},
+        h("b", null, String(n+1)), q.options[oi]));
+    });
+    card.append(list);
+  }
+  else if(q.type === "build"){
+    if(!BUILD || BUILD.id !== q.id || BUILD.i !== SESSION.i) BUILD = {id:q.id, i:SESSION.i, tiles:tilesFor(q), chosen:[]};
+    const chosen = h("div", {class:"chosen", "aria-label":"your sentence"});
+    if(!BUILD.chosen.length) chosen.append(h("span", {class:"ph"}, "Tap the words in order"));
+    BUILD.chosen.forEach((ti, k) => chosen.append(h("button", {class:"tile picked", disabled:!!ans, onclick:() => { BUILD.chosen.splice(k,1); render(); }}, BUILD.tiles[ti])));
+    card.append(chosen);
+    const pool = h("div", {class:"pool"});
+    const remaining = BUILD.tiles.map((t, i) => i).filter(i => !BUILD.chosen.includes(i));
+    remaining.forEach((ti, n) => pool.append(h("button", {class:"tile", disabled:!!ans, onclick:() => { BUILD.chosen.push(ti); render(); }}, h("b", null, String(n+1)), BUILD.tiles[ti])));
+    card.append(pool);
+    if(!ans) card.append(h("div", {class:"actions"},
+      h("button", {class:"primary", disabled: BUILD.chosen.length !== BUILD.tiles.length, onclick:submitBuild}, "Check"),
+      h("span", {class:"kbd"}, "digits pick · Backspace undo · Enter check")));
+  }
+
+  if(ans){
+    const fb = h("div", {class:"fb " + (ans.ok ? "ok" : "bad")});
+    fb.append(h("div", {class:"verdict"}, ans.ok ? "Richtig" : "Nicht ganz"));
+    if(q.type === "type"){
+      const given = SESSION.input;
+      q.answers.forEach((acc, i) => {
+        const line = h("div", {class:"ans"});
+        if(q.answers.length > 1) line.append(h("span", {class:"gapno"}, "gap " + (i+1) + ": "));
+        line.append(h("strong", null, acc[0]));
+        const matched = acc.find(a => norm(a, q) === norm(given[i], q));
+        if(matched && matched !== acc[0]) line.append(" — your ", h("em", null, matched), " is also correct");
+        else if(!ans.res.gaps[i] && given[i] && given[i].trim()) line.append(" — you wrote ", h("s", null, given[i].trim()));
+        if(acc.length > 1 && (!matched || matched === acc[0])) line.append(h("span", {class:"alt"}, " also: " + acc.slice(1).join(", ")));
+        fb.append(line);
+      });
+    }else if(q.type === "mc"){
+      fb.append(h("div", {class:"ans"}, h("strong", null, q.options[q.answer])));
+    }else{
+      fb.append(h("div", {class:"ans"}, h("strong", null, q.sentence)));
+      if(q.alts.length) fb.append(h("div", {class:"alt"}, "also: " + q.alts.join(" · ")));
+      if(!ans.ok) fb.append(h("div", {class:"ans"}, "you built: ", h("s", null, BUILD.chosen.map(i => BUILD.tiles[i]).join(" "))));
+    }
+    fb.append(h("p", {class:"expl"}, q.expl));
+    let sched;
+    if(ans.retry) sched = ans.ok ? "Good — it stays in box " + ans.to + " and comes back in your next review." : "Still in box " + ans.to + ". It will be due at your next review.";
+    else if(ans.promoted) sched = ans.to >= MASTER_BOX ? "Box 5 — mastered. Next check in " + fmtDue(ans.due) + "." : "Up to box " + ans.to + ". Due again in " + fmtDue(ans.due) + ".";
+    else if(ans.ok) sched = "Correct, but this item wasn't due yet, so it stays in box " + ans.to + ".";
+    else sched = (ans.to === 0 ? "Back to box 0." : "Down to box " + ans.to + ".") + " It comes up again at the end of this round.";
+    fb.append(h("div", {class:"sched"}, sched));
+    card.append(fb);
+    const last = SESSION.i + 1 >= SESSION.queue.length;
+    const next = h("button", {class:"primary", onclick:() => { advance(); render(); }}, last ? "Finish round" : "Next");
+    card.append(h("div", {class:"actions"}, next, h("span", {class:"kbd"}, "Enter")));
+    setTimeout(() => next.focus(), 0);
+  }
+  wrap.append(card);
+  view.append(wrap);
+  if(!ans){
+    const first = view.querySelector("input.gap");
+    if(first) setTimeout(() => first.focus(), 0);
+  }
+}
+function submitBuild(){
+  if(!BUILD || SESSION.answered || BUILD.chosen.length !== BUILD.tiles.length) return;
+  answerCurrent(BUILD.chosen.map(i => BUILD.tiles[i])); render();
+}
+
+function renderSummary(){
+  const rs = SESSION.results.filter(r => !r.retry);
+  const ok = rs.filter(r => r.ok).length, promoted = rs.filter(r => r.promoted).length, mastered = rs.filter(r => r.promoted && r.to >= MASTER_BOX).length;
+  const sec = h("section", {class:"summary"});
+  sec.append(h("h2", null, "Round done"));
+  sec.append(h("p", {class:"lede"}, h("strong", null, ok + " of " + rs.length), " correct on the first try. ", promoted ? promoted + " moved up a box" : "Nothing moved up", mastered ? ", " + mastered + " reached mastery." : "."));
+  const missed = rs.filter(r => !r.ok);
+  if(missed.length){
+    const ul = h("ul", {class:"missed"});
+    missed.forEach(r => {
+      const q = BANK.find(x => x.id === r.id);
+      const a = q.type === "mc" ? q.options[q.answer] : q.type === "build" ? q.sentence : q.answers.map(x => x[0]).join(" / ");
+      ul.append(h("li", null, h("span", {class:"mq"}, q.prompt.replace(/___/g, "…")), h("strong", null, a)));
+    });
+    sec.append(h("h3", null, "Look again"), ul);
+  }
+  const c = counts();
+  sec.append(h("p", {class:"lede"}, c.due + " due now · " + c.fresh + " new · " + c.mastered + " of " + c.n + " mastered."));
+  const again = h("button", {class:"primary", onclick:() => { const m = SESSION.mode, t = SESSION.topics; endSession(); if(!startRound(m, t)) { UI.tab = "drill"; } render(); }}, "Another round");
+  sec.append(h("div", {class:"actions"}, again, h("button", {class:"ghost", onclick:() => { endSession(); render(); }}, "Back to start")));
+  view.append(sec);
+  setTimeout(() => again.focus(), 0);
+}
+
+function renderProgress(){
+  const c = counts();
+  const sec = h("section", {class:"progress"});
+  sec.append(h("h2", null, c.mastered + " of " + c.n + " mastered"), h("p", {class:"lede"}, pct(c.mastered, c.n) + "% of the bank sits in box 5. " + (c.mastered === c.n ? "Everything is mastered — keep the 21-day reviews going." : "")));
+  sec.append(boxBar(c));
+  const legend = h("div", {class:"legend"});
+  ["new / lapsed","box 1 · 10 min","box 2 · 1 day","box 3 · 3 days","box 4 · 7 days","box 5 · mastered"].forEach((l, b) => legend.append(h("span", null, h("i", {class:"b" + b}), l + " (" + c.boxes[b] + ")")));
+  sec.append(legend);
+  const st = S.stats;
+  const grid = h("div", {class:"grid"});
+  const stat = (n, l) => h("div", {class:"stat"}, h("b", null, String(n)), h("span", null, l));
+  const tomorrow = BANK.filter(q => seen(q.id) && !isDue(q.id) && dueAt(q.id) <= NOW() + DAY).length;
+  grid.append(stat(c.due, "due now"), stat(tomorrow, "due within a day"), stat(c.fresh, "not yet seen"),
+    stat(st.answered, "answers"), stat(pct(st.correct, st.answered) + "%", "accuracy"), stat(st.streak, st.streak === 1 ? "day streak" : "day streak (best " + (st.best||0) + ")"));
+  sec.append(grid);
+
+  sec.append(h("h3", null, "By topic"));
+  const list = h("div", {class:"topics"});
+  TOPIC_ORDER.forEach(t => {
+    const tc = counts([t]);
+    list.append(h("div", {class:"trow"}, h("div", {class:"tinfo"},
+      h("div", {class:"tname"}, TOPICS[t].name, h("span", {class:"tcount"}, tc.mastered + "/" + tc.n + (tc.due ? " · " + tc.due + " due" : ""))),
+      boxBar(tc))));
+  });
+  sec.append(list);
+
+  const fc = [];
+  for(let d = 0; d < 7; d++){
+    const a = NOW() + d*DAY, b = a + DAY;
+    fc.push(BANK.filter(q => seen(q.id) && dueAt(q.id) < b && (d === 0 ? true : dueAt(q.id) >= a)).length);
+  }
+  const fcEl = h("div", {class:"forecast"});
+  const mx = Math.max(1, ...fc);
+  fc.forEach((n, d) => fcEl.append(h("div", {class:"fday"}, h("i", {style:"height:" + Math.max(2, Math.round(60*n/mx)) + "px"}), h("b", null, String(n)), h("span", null, d === 0 ? "today" : d === 1 ? "tmrw" : "+" + d + "d"))));
+  sec.append(h("h3", null, "Reviews coming up"), fcEl);
+
+  const trouble = weakPool().slice(0, 12);
+  if(trouble.length){
+    const ul = h("ul", {class:"missed"});
+    trouble.forEach(q => {
+      const r = S.items[q.id];
+      const a = q.type === "mc" ? q.options[q.answer] : q.type === "build" ? q.sentence : q.answers.map(x => x[0]).join(" / ");
+      ul.append(h("li", null, h("span", {class:"mq"}, q.prompt.replace(/___/g, "…") + " — " + r.w + " wrong, " + r.c + " right"), h("strong", null, a)));
+    });
+    sec.append(h("h3", null, "Items that keep slipping"), ul);
+  }
+  view.append(sec);
+}
+
+function renderData(){
+  const sec = h("section", {class:"data"});
+  sec.append(h("h2", null, "Your progress data"));
+  sec.append(h("p", {class:"lede"}, PERSISTS ? "Progress is saved in this browser's local storage under the key " + KEY + ". It stays on this device; clearing site data deletes it, so export a copy now and then." : "This browser is blocking local storage, so progress lives only until you close the page. Export before you leave."));
+  const c = counts();
+  sec.append(h("p", null, c.seen + " items seen · " + S.stats.answered + " answers · " + c.mastered + " mastered."));
+
+  const dl = h("button", {class:"primary", onclick:() => {
+    const blob = new Blob([exportJSON()], {type:"application/json"});
+    const a = h("a", {href:URL.createObjectURL(blob), download:"komparativ-progress-" + dayKey(NOW()) + ".json"});
+    document.body.append(a); a.click(); a.remove();
+  }}, "Download progress");
+  const ta = h("textarea", {class:"io", rows:"4", placeholder:"…or paste an exported file here and import", "aria-label":"import text"});
+  const msg = h("p", {class:"msg"});
+  const imp = h("button", {class:"ghost", onclick:() => {
+    try{ const r = importJSON(ta.value.trim()); msg.textContent = "Imported: " + r.seen + " items seen, " + r.mastered + " mastered."; ta.value = ""; }
+    catch(e){ msg.textContent = "Could not import: " + e.message; }
+  }}, "Import");
+  const file = h("input", {type:"file", accept:"application/json,.json", "aria-label":"import file", onchange: ev => {
+    const f = ev.target.files[0]; if(!f) return;
+    const rd = new FileReader();
+    rd.onload = () => { try{ const r = importJSON(String(rd.result)); msg.textContent = "Imported: " + r.seen + " items seen, " + r.mastered + " mastered."; }catch(e){ msg.textContent = "Could not import: " + e.message; } };
+    rd.readAsText(f);
+  }});
+  sec.append(h("div", {class:"actions"}, dl, h("label", {class:"ghost filebtn"}, "Import a file", file)));
+  sec.append(ta, h("div", {class:"actions"}, imp), msg);
+
+  const reset = h("button", {class:"danger", onclick:() => {
+    if(!UI.resetArmed){ UI.resetArmed = true; reset.textContent = "Tap again to erase everything"; setTimeout(() => { UI.resetArmed = false; if(reset.isConnected) reset.textContent = "Reset all progress"; }, 4000); return; }
+    UI.resetArmed = false; resetAll(); render();
+  }}, "Reset all progress");
+  sec.append(h("h3", null, "Start over"), h("div", {class:"actions"}, reset));
+
+  sec.append(h("h3", null, "How scheduling works"),
+    h("p", null, "Every item starts in box 0. A correct answer moves it up one box, but only when it was due: 10 minutes, then 1, 3, 7 and 21 days. So the fastest route to box 5 is five spaced correct answers over eleven days. A wrong answer drops the item three boxes (a mastered item falls to box 2, so it has to be proved three more times over at least ten days) and it reappears at the end of the round. Rounds show due items first, then new ones; when nothing is scheduled you can still practise, but early answers don't move items up."));
+  view.append(sec);
+}
+
+function renderRules(){
+  const sec = h("section", {class:"rules"});
+  sec.innerHTML = RULES_HTML;
+  view.append(sec);
+}
+
+/* ============================ keyboard =========================== */
+function onKey(ev){
+  if(ev.defaultPrevented || ev.altKey || ev.ctrlKey || ev.metaKey) return;
+  if(UI.tab !== "drill" || !SESSION || SESSION.finished) return;
+  const e = current(); if(!e) return;
+  const inInput = /^(INPUT|TEXTAREA)$/.test(document.activeElement && document.activeElement.tagName);
+  if(SESSION.answered){
+    // the Next button holds focus after an answer; let its native click handle Enter so it can't advance twice
+    if(ev.key === "Enter" && !(document.activeElement && document.activeElement.tagName === "BUTTON")){ ev.preventDefault(); advance(); render(); }
+    return;
+  }
+  if(e.q.type === "mc"){
+    const n = parseInt(ev.key, 10);
+    if(n >= 1 && n <= e.q.options.length){ ev.preventDefault(); const order = optionOrder(e.q); answerCurrent(order[n-1]); render(); }
+  }else if(e.q.type === "build" && BUILD){
+    const remaining = BUILD.tiles.map((t, i) => i).filter(i => !BUILD.chosen.includes(i));
+    const n = parseInt(ev.key, 10);
+    if(n >= 1 && n <= remaining.length){ ev.preventDefault(); BUILD.chosen.push(remaining[n-1]); render(); }
+    else if(ev.key === "Backspace" && !inInput){ ev.preventDefault(); BUILD.chosen.pop(); render(); }
+    else if(ev.key === "Enter"){ ev.preventDefault(); submitBuild(); }
+  }else if(e.q.type === "type" && ev.key === "Enter" && !inInput){ ev.preventDefault(); submitType(); }
+}
+
+/* ============================ boot ============================== */
+function boot(){
+  view = document.getElementById("view");
+  document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => { UI.tab = b.dataset.tab; render(); }));
+  document.addEventListener("keydown", onKey);
+  window.addEventListener("beforeunload", saveNow);
+  document.addEventListener("visibilitychange", () => { if(document.hidden) saveNow(); });
+  render();
+}
+boot();
+
+window.KS = {
+  BANK, TOPICS, TOPIC_ORDER, BY_TOPIC, LEX, IVL, MASTER_BOX, KEY,
+  get S(){ return S; }, get SESSION(){ return SESSION; }, get BUILD(){ return BUILD; }, UI,
+  setNow, load, save, saveNow, grade, rec, boxOf, seen, isDue, isMastered, dueAt, counts, weakPool,
+  buildQueue, startRound, current, answerCurrent, advance, endSession,
+  check, norm, expandShortcuts, tilesFor, optionOrder, validateBank,
+  exportJSON, importJSON, resetAll, render, submitType, submitBuild,
+  reload(){ S = load(); SESSION = null; render(); }
+};
+
+</script>
+</body>
+</html>
