@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Präpositionen drill</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;1,7..72,400&family=Public+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Präpositionen drill — styles */
+:root {
+  --bg: #F5F7FA; --surface: #FFFFFF; --ink: #1B1F27; --muted: #5C6370; --faint: #8A919E; --line: #D9DEE6; --line-strong: #B9C1CC;
+  --akk: #D9480F; --dat: #2457D6; --gen: #0E7C7B; --two: #7E3AF2;
+  --ok: #1E8449; --ok-bg: #E7F5EC; --bad: #B4234B; --bad-bg: #FBE9EE; --warn-bg: #FFF4D6; --warn: #7A5A00;
+  --serif: 'Literata', Georgia, 'Times New Roman', serif;
+  --sans: 'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --radius: 10px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); }
+body { font-family: var(--sans); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+#app { max-width: 640px; margin: 0 auto; padding: 20px 20px 64px; }
+a { color: var(--dat); }
+button { font: inherit; color: inherit; cursor: pointer; }
+h1, h2, h3 { font-family: var(--serif); font-weight: 500; line-height: 1.2; margin: 0; }
+h1 { font-size: 30px; letter-spacing: -0.01em; }
+h2 { font-size: 22px; margin: 28px 0 10px; }
+h3 { font-size: 17px; margin: 18px 0 6px; }
+p { margin: 0 0 10px; }
+.muted { color: var(--muted); }
+.faint { color: var(--faint); }
+.small { font-size: 13px; }
+.de { font-family: var(--serif); }
+
+/* top bar */
+.top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.top h1 { font-size: 22px; }
+.top h1 span { color: var(--faint); font-weight: 400; }
+.nav { display: flex; gap: 4px; }
+.nav button { background: none; border: 0; padding: 6px 10px; border-radius: 6px; color: var(--muted); font-size: 14px; }
+.nav button:hover { background: #E9EDF3; color: var(--ink); }
+.nav button[aria-current="page"] { color: var(--ink); font-weight: 600; background: #E9EDF3; }
+
+/* notices */
+.notice { background: var(--warn-bg); color: var(--warn); border-radius: 8px; padding: 10px 12px; font-size: 14px; margin: 0 0 14px; }
+.notice.error { background: var(--bad-bg); color: var(--bad); }
+.notice.ok { background: var(--ok-bg); color: var(--ok); }
+
+/* hero */
+.hero { margin: 8px 0 22px; }
+.hero svg { width: 100%; height: auto; display: block; }
+.hero .legend { display: flex; gap: 18px; font-size: 13px; color: var(--muted); margin-top: 6px; }
+.hero .legend b { font-weight: 600; }
+.dat-t { color: var(--dat); } .akk-t { color: var(--akk); } .gen-t { color: var(--gen); } .two-t { color: var(--two); }
+
+/* mastery bar */
+.mbar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: #E3E7EE; margin: 6px 0; }
+.mbar span { display: block; height: 100%; }
+.mbar .b0 { background: #E3E7EE; } .mbar .b1 { background: #C9D2E3; } .mbar .b2 { background: #A9B9D6; } .mbar .b3 { background: #7F98C6; } .mbar .b4 { background: #4F73B8; } .mbar .b5 { background: var(--ok); }
+.mbar.small { height: 8px; border-radius: 4px; margin: 4px 0 0; }
+.stat-row { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; color: var(--muted); }
+.stat-row b { color: var(--ink); font-weight: 600; }
+
+/* controls */
+.controls { display: grid; grid-template-columns: 1fr; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin: 16px 0; }
+.ctl { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ctl label { font-size: 13px; color: var(--muted); min-width: 56px; }
+.seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 8px; overflow: hidden; }
+.seg button { background: var(--surface); border: 0; padding: 6px 12px; font-size: 14px; color: var(--muted); border-right: 1px solid var(--line); }
+.seg button:last-child { border-right: 0; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.btn { background: var(--surface); border: 1px solid var(--line-strong); border-radius: 8px; padding: 8px 14px; font-size: 14px; }
+.btn:hover { border-color: var(--ink); }
+.btn.primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+.btn.primary:hover { background: #000; }
+.btn.danger { color: var(--bad); border-color: var(--bad); }
+.btn.link { border: 0; background: none; color: var(--dat); padding: 4px 6px; }
+.btn:disabled { opacity: .45; cursor: default; }
+.mode-help { font-size: 13px; color: var(--muted); }
+
+/* concept list */
+.concepts { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.concept { display: grid; grid-template-columns: 1fr auto; gap: 4px 14px; padding: 12px 0; border-bottom: 1px solid var(--line); align-items: center; }
+.concept .name { font-family: var(--serif); font-size: 17px; }
+.concept .blurb { font-size: 13px; color: var(--muted); grid-column: 1 / -1; }
+.concept .counts { font-size: 13px; color: var(--muted); }
+.concept .mbar { grid-column: 1 / -1; }
+.concept .focus { justify-self: end; }
+
+/* session */
+.sess-top { display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+.sess-top .pos { font-variant-numeric: tabular-nums; }
+.pbar { height: 4px; background: #E3E7EE; border-radius: 2px; overflow: hidden; margin-bottom: 22px; }
+.pbar span { display: block; height: 100%; background: var(--ink); transition: width .2s; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 22px 18px; }
+.card .instr { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+.card .instr .tag { display: inline-block; font-size: 11px; letter-spacing: .02em; color: var(--faint); margin-left: 6px; }
+.card .gloss { font-size: 14px; color: var(--muted); margin-bottom: 12px; }
+.prompt { font-family: var(--serif); font-size: 24px; line-height: 1.55; margin: 6px 0 16px; word-wrap: break-word; }
+.prompt .blank { display: inline-block; min-width: 3ch; border-bottom: 2px solid var(--line-strong); height: 1em; vertical-align: -0.1em; margin: 0 2px; }
+.prompt .blank.filled { border-bottom-color: var(--ink); }
+.fill { font: inherit; color: var(--ink); background: #F5F7FA; border: 0; border-bottom: 2px solid var(--ink); border-radius: 4px 4px 0 0; padding: 0 6px; margin: 0 2px; min-width: 3ch; outline: none; text-align: center; line-height: 1.3; }
+.fill:focus { background: #EEF3FF; border-bottom-color: var(--dat); }
+.fill.bad { background: var(--bad-bg); border-bottom-color: var(--bad); color: var(--bad); }
+.fill.good { background: var(--ok-bg); border-bottom-color: var(--ok); color: var(--ok); }
+.fill.wide { text-align: left; width: 100%; max-width: 100%; margin: 6px 0 0; display: block; font-size: 22px; padding: 4px 8px; }
+.prompt .arrow { color: var(--faint); margin: 0 .3em; }
+.choices { list-style: none; padding: 0; margin: 4px 0 12px; display: grid; gap: 8px; }
+.choice { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 8px; padding: 10px 12px; font-family: var(--serif); font-size: 18px; }
+.choice:hover { border-color: var(--ink); }
+.choice .key { font-family: var(--sans); font-size: 12px; color: var(--faint); border: 1px solid var(--line); border-radius: 4px; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.choice[aria-pressed="true"] { border-color: var(--ink); background: #F0F3F8; }
+.choice.good { border-color: var(--ok); background: var(--ok-bg); }
+.choice.bad { border-color: var(--bad); background: var(--bad-bg); }
+.choice:disabled { cursor: default; }
+.actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
+.actions .spacer { flex: 1; }
+.kbd { font-size: 12px; color: var(--faint); }
+.kbd kbd { font-family: var(--sans); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; font-size: 11px; }
+.feedback { border-radius: 8px; padding: 12px 14px; margin: 14px 0 0; font-size: 15px; }
+.feedback.good { background: var(--ok-bg); color: #145A32; }
+.feedback.bad { background: var(--bad-bg); color: #7A1633; }
+.feedback .verdict { font-weight: 600; }
+.feedback .answer { font-family: var(--serif); font-size: 20px; margin: 4px 0; }
+.feedback .answer .alt { font-size: 15px; color: var(--muted); font-family: var(--sans); }
+.feedback .explain { color: var(--ink); margin-top: 6px; }
+.feedback .box { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.feedback .box .up { color: var(--ok); } .feedback .box .down { color: var(--bad); }
+
+/* summary */
+.big { font-family: var(--serif); font-size: 40px; line-height: 1.1; margin: 8px 0 2px; }
+.missed { list-style: none; padding: 0; margin: 8px 0 0; border-top: 1px solid var(--line); }
+.missed li { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.missed .p { font-family: var(--serif); font-size: 17px; }
+.missed .a { font-size: 14px; color: var(--muted); }
+.missed .a b { color: var(--ok); font-family: var(--serif); font-weight: 500; }
+
+/* progress */
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 8px 0 14px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+.tile .v { font-family: var(--serif); font-size: 24px; }
+.tile .k { font-size: 12px; color: var(--muted); }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 6px 8px 6px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; color: var(--muted); font-size: 12px; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; padding-right: 0; }
+.boxes { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin: 8px 0 14px; }
+.boxes .col { text-align: center; font-size: 12px; color: var(--muted); }
+.boxes .bar { height: 60px; display: flex; align-items: flex-end; margin-bottom: 4px; }
+.boxes .bar span { display: block; width: 100%; background: #A9B9D6; border-radius: 3px 3px 0 0; min-height: 2px; }
+.boxes .col:last-child .bar span { background: var(--ok); }
+.boxes .n { color: var(--ink); font-weight: 600; }
+.io { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; align-items: center; }
+textarea.io-text { width: 100%; min-height: 80px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; border: 1px solid var(--line-strong); border-radius: 8px; padding: 8px; }
+.toggle { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+
+/* rules */
+.rules h2 { margin-top: 30px; }
+.rules table td:first-child { font-family: var(--serif); font-size: 16px; white-space: nowrap; }
+.rules .grp { margin: 8px 0 12px; }
+.rules .grp b { font-family: var(--serif); font-weight: 500; font-size: 17px; }
+.rules .list { font-family: var(--serif); font-size: 17px; }
+.rules .en { color: var(--muted); font-size: 13px; }
+.rules ul { padding-left: 18px; margin: 4px 0 10px; }
+.rules li { margin: 2px 0; }
+.pill { display: inline-block; font-size: 11px; padding: 1px 6px; border-radius: 4px; color: #fff; vertical-align: middle; margin-left: 4px; }
+.pill.A { background: var(--akk); } .pill.D { background: var(--dat); } .pill.G { background: var(--gen); } .pill.W { background: var(--two); }
+
+@media (max-width: 480px) {
+  #app { padding: 14px 14px 56px; }
+  .prompt { font-size: 21px; }
+  .top h1 { font-size: 19px; }
+}
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script id="data">
+/* Präpositionen drill — data bank.
+   Everything German here is hand-written from the notes "German 16: Prepositions & Verbs with Fixed Prepositions".
+   Object specs: { det, g, n, nomN?, adj?, nomAdj?, pron? }
+     det  : 'der' (definite) or an ein-word base ('ein','kein','mein','dein','sein','ihr','unser','euer','Ihr')
+     g    : 'm' | 'f' | 'n' | 'p'
+     n    : noun as it appears in the sentence (may be dative-plural / genitive / weak form)
+     nomN : nominative noun form when it differs from n
+     adj  : adjective as it appears in the sentence (not drilled)
+     pron : personal pronoun in nominative ('ich','du','er','sie','es','wir','ihr','sie-pl','Sie')
+*/
+(function (root) {
+'use strict';
+
+const CASE_NAME = { A: 'Akkusativ', D: 'Dativ', G: 'Genitiv', W: 'Akkusativ or Dativ' };
+
+// ---------- 1. Prepositions by case ----------
+const PREPS = [
+  { p: 'durch', c: 'A', en: 'through' },
+  { p: 'für', c: 'A', en: 'for' },
+  { p: 'gegen', c: 'A', en: 'against; around (time)' },
+  { p: 'ohne', c: 'A', en: 'without' },
+  { p: 'um', c: 'A', en: 'around; at (clock time)' },
+  { p: 'bis', c: 'A', en: 'until' },
+  { p: 'entlang', c: 'A', en: 'along (after the noun)' },
+  { p: 'aus', c: 'D', en: 'from, out of' },
+  { p: 'bei', c: 'D', en: 'at (a person / company), near' },
+  { p: 'mit', c: 'D', en: 'with; by (transport)' },
+  { p: 'nach', c: 'D', en: 'to (places); after' },
+  { p: 'seit', c: 'D', en: 'since, for (still ongoing)' },
+  { p: 'von', c: 'D', en: 'from, of' },
+  { p: 'zu', c: 'D', en: 'to (people / places)' },
+  { p: 'ab', c: 'D', en: 'from ... on' },
+  { p: 'gegenüber', c: 'D', en: 'opposite' },
+  { p: 'wegen', c: 'G', en: 'because of' },
+  { p: 'während', c: 'G', en: 'during' },
+  { p: 'trotz', c: 'G', en: 'despite' },
+  { p: 'statt', c: 'G', en: 'instead of' },
+  { p: 'anstatt', c: 'G', en: 'instead of' },
+  { p: 'an', c: 'W', en: 'at, on (vertical surface)' },
+  { p: 'auf', c: 'W', en: 'on (top of)' },
+  { p: 'hinter', c: 'W', en: 'behind' },
+  { p: 'in', c: 'W', en: 'in, into' },
+  { p: 'neben', c: 'W', en: 'next to' },
+  { p: 'über', c: 'W', en: 'above, over' },
+  { p: 'unter', c: 'W', en: 'under' },
+  { p: 'vor', c: 'W', en: 'in front of; before' },
+  { p: 'zwischen', c: 'W', en: 'between' },
+];
+
+// Article drills: [prep, det, gender, noun in sentence, nominative noun (if different), adj (optional)]
+const CASE_PHRASES = [
+  ['durch', 'der', 'm', 'Park'], ['durch', 'der', 'f', 'Stadt'], ['durch', 'der', 'n', 'Fenster'],
+  ['für', 'mein', 'm', 'Bruder'], ['für', 'der', 'p', 'Kinder'], ['für', 'ein', 'n', 'Geschenk'],
+  ['gegen', 'der', 'f', 'Wand'], ['gegen', 'der', 'm', 'Baum'], ['gegen', 'der', 'n', 'Gesetz'],
+  ['ohne', 'ein', 'm', 'Schirm'], ['ohne', 'mein', 'f', 'Brille'], ['ohne', 'der', 'p', 'Kinder'],
+  ['um', 'der', 'f', 'Ecke'], ['um', 'der', 'm', 'See'], ['um', 'der', 'n', 'Haus'],
+  ['entlang', 'der', 'f', 'Straße'], ['entlang', 'der', 'm', 'Fluss'],
+  ['aus', 'der', 'f', 'Schweiz'], ['aus', 'der', 'n', 'Haus'], ['aus', 'der', 'm', 'Garten'],
+  ['bei', 'mein', 'm', 'Bruder'], ['bei', 'der', 'f', 'Arbeit'], ['bei', 'der', 'p', 'Nachbarn'],
+  ['mit', 'der', 'n', 'Auto'], ['mit', 'mein', 'f', 'Freundin'], ['mit', 'der', 'p', 'Kindern', 'Kinder'],
+  ['nach', 'der', 'f', 'Arbeit'], ['nach', 'der', 'n', 'Essen'], ['nach', 'der', 'm', 'Unterricht'],
+  ['seit', 'ein', 'n', 'Jahr'], ['seit', 'ein', 'f', 'Woche'], ['seit', 'der', 'm', 'Sommer'],
+  ['von', 'mein', 'f', 'Mutter'], ['von', 'der', 'm', 'Chef'], ['von', 'der', 'p', 'Eltern'],
+  ['zu', 'der', 'm', 'Arzt'], ['zu', 'der', 'f', 'Arbeit'], ['zu', 'mein', 'p', 'Eltern'],
+  ['ab', 'der', 'm', 'Januar', null, '1.', '1.'], ['ab', 'der', 'n', 'Wochenende'], ['ab', 'der', 'm', 'Monat', null, 'nächsten', 'nächste'],
+  ['gegenüber', 'der', 'm', 'Bahnhof'], ['gegenüber', 'der', 'f', 'Kirche'], ['gegenüber', 'mein', 'f', 'Wohnung'],
+  ['wegen', 'der', 'n', 'Wetters', 'Wetter'], ['wegen', 'der', 'f', 'Arbeit'], ['wegen', 'der', 'm', 'Regens', 'Regen'],
+  ['während', 'der', 'n', 'Essens', 'Essen'], ['während', 'der', 'f', 'Woche'], ['während', 'der', 'm', 'Unterrichts', 'Unterricht'],
+  ['trotz', 'der', 'm', 'Regens', 'Regen'], ['trotz', 'der', 'f', 'Kälte'], ['trotz', 'der', 'n', 'Wetters', 'Wetter'],
+  ['statt', 'ein', 'n', 'Buches', 'Buch'], ['statt', 'ein', 'f', 'Antwort'], ['statt', 'ein', 'm', 'Briefes', 'Brief'],
+];
+
+// Pronoun drills: [prep, pronoun]
+const CASE_PRONOUNS = [
+  ['ohne', 'ich'], ['für', 'du'], ['gegen', 'er'], ['um', 'sie-pl'], ['durch', 'wir'], ['ohne', 'ihr'], ['für', 'Sie'],
+  ['mit', 'du'], ['von', 'ich'], ['bei', 'er'], ['zu', 'wir'], ['nach', 'sie'], ['gegenüber', 'Sie'], ['mit', 'ihr'], ['zu', 'sie'], ['bei', 'sie-pl'], ['von', 'er'],
+];
+
+// ---------- 1.4 Two-way prepositions ----------
+// { p, det, g, n, nD? (dative form if different), pos, mov, pv?: [correct, distractor], mv?: [correct, distractor] }
+const WECHSEL = [
+  { p: 'in', det: 'der', g: 'f', n: 'Ecke', pos: 'Die Lampe steht in der Ecke.', mov: 'Ich stelle die Lampe in die Ecke.', pv: ['steht', 'stellt'], mv: ['stelle', 'stehe'] },
+  { p: 'auf', det: 'der', g: 'm', n: 'Tisch', pos: 'Der Schlüssel liegt auf dem Tisch.', mov: 'Ich lege den Schlüssel auf den Tisch.', pv: ['liegt', 'legt'], mv: ['lege', 'liege'] },
+  { p: 'auf', det: 'der', g: 'n', n: 'Sofa', pos: 'Er sitzt auf dem Sofa.', mov: 'Er setzt sich auf das Sofa.', pv: ['sitzt', 'setzt'], mv: ['setzt', 'sitzt'] },
+  { p: 'an', det: 'der', g: 'f', n: 'Wand', pos: 'Das Bild hängt an der Wand.', mov: 'Ich hänge das Bild an die Wand.' },
+  { p: 'in', det: 'der', g: 'm', n: 'Umschlag', pos: 'Der Brief steckt im Umschlag.', mov: 'Ich stecke den Brief in den Umschlag.' },
+  { p: 'in', det: 'der', g: 'n', n: 'Regal', pos: 'Die Bücher stehen im Regal.', mov: 'Ich stelle die Bücher ins Regal.', pv: ['stehen', 'stellen'], mv: ['stelle', 'stehe'] },
+  { p: 'in', det: 'der', g: 'm', n: 'Schrank', pos: 'Die Jacke hängt im Schrank.', mov: 'Ich hänge die Jacke in den Schrank.' },
+  { p: 'in', det: 'der', g: 'f', n: 'Schublade', pos: 'Das Handy liegt in der Schublade.', mov: 'Ich lege das Handy in die Schublade.', pv: ['liegt', 'legt'], mv: ['lege', 'liege'] },
+  { p: 'unter', det: 'der', g: 'n', n: 'Bett', pos: 'Die Katze schläft unter dem Bett.', mov: 'Die Katze kriecht unter das Bett.' },
+  { p: 'vor', det: 'der', g: 'n', n: 'Sofa', pos: 'Der Teppich liegt vor dem Sofa.', mov: 'Ich lege den Teppich vor das Sofa.', pv: ['liegt', 'legt'], mv: ['lege', 'liege'] },
+  { p: 'hinter', det: 'der', g: 'n', n: 'Haus', pos: 'Das Auto steht hinter dem Haus.', mov: 'Er fährt das Auto hinter das Haus.', pv: ['steht', 'stellt'] },
+  { p: 'über', det: 'der', g: 'm', n: 'Tisch', pos: 'Die Lampe hängt über dem Tisch.', mov: 'Ich hänge die Lampe über den Tisch.' },
+  { p: 'neben', det: 'der', g: 'n', n: 'Fenster', pos: 'Der Stuhl steht neben dem Fenster.', mov: 'Ich stelle den Stuhl neben das Fenster.', pv: ['steht', 'stellt'], mv: ['stelle', 'stehe'] },
+  { p: 'zwischen', det: 'der', g: 'p', n: 'Eltern', pos: 'Das Kind sitzt zwischen den Eltern.', mov: 'Das Kind setzt sich zwischen die Eltern.', pv: ['sitzt', 'setzt'], mv: ['setzt', 'sitzt'] },
+  { p: 'in', det: 'der', g: 'n', n: 'Kino', pos: 'Wir sind im Kino.', mov: 'Wir gehen ins Kino.' },
+  { p: 'in', det: 'der', g: 'n', n: 'Büro', pos: 'Sie arbeitet im Büro.', mov: 'Sie geht ins Büro.' },
+  { p: 'in', det: 'der', g: 'm', n: 'Garten', pos: 'Die Kinder spielen im Garten.', mov: 'Ich schicke die Kinder in den Garten.' },
+  { p: 'in', det: 'der', g: 'f', n: 'Küche', pos: 'Ich bin in der Küche.', mov: 'Ich gehe in die Küche.' },
+  { p: 'in', det: 'der', g: 'f', n: 'Stadt', pos: 'Er wohnt in der Stadt.', mov: 'Er zieht in die Stadt.' },
+  { p: 'auf', det: 'der', g: 'm', n: 'Boden', pos: 'Der Hund liegt auf dem Boden.', mov: 'Der Hund legt sich auf den Boden.', pv: ['liegt', 'legt'], mv: ['legt', 'liegt'] },
+  { p: 'auf', det: 'der', g: 'n', n: 'Fensterbrett', pos: 'Die Vase steht auf dem Fensterbrett.', mov: 'Ich stelle die Vase auf das Fensterbrett.', pv: ['steht', 'stellt'], mv: ['stelle', 'stehe'] },
+  { p: 'über', det: 'der', g: 'n', n: 'Bett', pos: 'Das Poster hängt über dem Bett.', mov: 'Ich hänge das Poster über das Bett.' },
+  { p: 'unter', det: 'der', g: 'm', n: 'Tisch', pos: 'Der Koffer steht unter dem Tisch.', mov: 'Ich stelle den Koffer unter den Tisch.', pv: ['steht', 'stellt'], mv: ['stelle', 'stehe'] },
+  { p: 'vor', det: 'der', g: 'f', n: 'Tür', pos: 'Die Schuhe stehen vor der Tür.', mov: 'Ich stelle die Schuhe vor die Tür.', pv: ['stehen', 'stellen'], mv: ['stelle', 'stehe'] },
+  { p: 'hinter', det: 'der', g: 'f', n: 'Garage', pos: 'Das Fahrrad steht hinter der Garage.', mov: 'Ich stelle das Fahrrad hinter die Garage.', pv: ['steht', 'stellt'], mv: ['stelle', 'stehe'] },
+  { p: 'auf', det: 'der', g: 'm', n: 'Spielplatz', pos: 'Die Kinder sind auf dem Spielplatz.', mov: 'Die Kinder gehen auf den Spielplatz.' },
+  { p: 'an', det: 'der', g: 'm', n: 'Tisch', pos: 'Wir sitzen am Tisch.', mov: 'Wir setzen uns an den Tisch.', pv: ['sitzen', 'setzen'], mv: ['setzen', 'sitzen'] },
+  { p: 'an', det: 'der', g: 'n', n: 'Fenster', pos: 'Er steht am Fenster.', mov: 'Er geht ans Fenster.' },
+  { p: 'in', det: 'der', g: 'f', n: 'Tasche', pos: 'Das Geld ist in der Tasche.', mov: 'Ich stecke das Geld in die Tasche.' },
+  { p: 'in', det: 'der', g: 'm', n: 'Kühlschrank', pos: 'Die Milch steht im Kühlschrank.', mov: 'Ich stelle die Milch in den Kühlschrank.', pv: ['steht', 'stellt'], mv: ['stelle', 'stehe'] },
+  { p: 'in', det: 'der', g: 'n', n: 'Auto', pos: 'Ich sitze im Auto.', mov: 'Ich steige ins Auto.' },
+  { p: 'über', det: 'der', g: 'f', n: 'Straße', pos: 'Die Ampel hängt über der Straße.', mov: 'Wir gehen über die Straße.' },
+  { p: 'in', det: 'der', g: 'n', n: 'Bett', pos: 'Sie liegt im Bett.', mov: 'Sie legt sich ins Bett.', pv: ['liegt', 'legt'], mv: ['legt', 'liegt'] },
+  { p: 'neben', det: 'der', g: 'm', n: 'Stuhl', pos: 'Der Ball liegt neben dem Stuhl.', mov: 'Ich lege den Ball neben den Stuhl.', pv: ['liegt', 'legt'], mv: ['lege', 'liege'] },
+  { p: 'an', det: 'der', g: 'm', n: 'See', pos: 'Wir sind am See.', mov: 'Wir fahren an den See.' },
+  { p: 'auf', det: 'der', g: 'm', n: 'Balkon', pos: 'Die Blumen stehen auf dem Balkon.', mov: 'Ich stelle die Blumen auf den Balkon.', pv: ['stehen', 'stellen'], mv: ['stelle', 'stehe'] },
+  { p: 'über', det: 'der', g: 'f', n: 'Tür', pos: 'Die Uhr hängt über der Tür.', mov: 'Ich hänge die Uhr über die Tür.' },
+  { p: 'vor', det: 'der', g: 'f', n: 'Haustür', pos: 'Das Paket liegt vor der Haustür.', mov: 'Der Bote legt das Paket vor die Haustür.', pv: ['liegt', 'legt'], mv: ['legt', 'liegt'] },
+  { p: 'zwischen', det: 'der', g: 'p', n: 'Stühle', nD: 'Stühlen', pos: 'Der Hund sitzt zwischen den Stühlen.', mov: 'Der Hund setzt sich zwischen die Stühle.', pv: ['sitzt', 'setzt'], mv: ['setzt', 'sitzt'] },
+  { p: 'hinter', det: 'der', g: 'm', n: 'Vorhang', pos: 'Die Katze versteckt sich hinter dem Vorhang.', mov: 'Ich stelle den Koffer hinter den Vorhang.', mv: ['stelle', 'stehe'] },
+  { p: 'in', det: 'der', g: 'f', n: 'Schule', pos: 'Die Kinder sind in der Schule.', mov: 'Die Kinder gehen in die Schule.' },
+  { p: 'auf', det: 'der', g: 'm', n: 'Stuhl', pos: 'Die Tasche liegt auf dem Stuhl.', mov: 'Ich lege die Tasche auf den Stuhl.', pv: ['liegt', 'legt'], mv: ['lege', 'liege'] },
+  { p: 'neben', det: 'der', g: 'f', n: 'Tür', pos: 'Der Schirm steht neben der Tür.', mov: 'Ich stelle den Schirm neben die Tür.', pv: ['steht', 'stellt'], mv: ['stelle', 'stehe'] },
+  { p: 'an', det: 'der', g: 'm', n: 'Strand', pos: 'Wir liegen am Strand.', mov: 'Wir fahren an den Strand.' },
+  { p: 'in', det: 'der', g: 'n', n: 'Wasser', pos: 'Die Kinder sind im Wasser.', mov: 'Die Kinder springen ins Wasser.' },
+  { p: 'unter', det: 'der', g: 'm', n: 'Baum', pos: 'Wir sitzen unter dem Baum.', mov: 'Wir setzen uns unter den Baum.', pv: ['sitzen', 'setzen'], mv: ['setzen', 'sitzen'] },
+  { p: 'auf', det: 'der', g: 'f', n: 'Bank', pos: 'Eine Frau sitzt auf der Bank.', mov: 'Eine Frau setzt sich auf die Bank.', pv: ['sitzt', 'setzt'], mv: ['setzt', 'sitzt'] },
+  { p: 'in', det: 'der', g: 'm', n: 'Koffer', pos: 'Die Kleider sind im Koffer.', mov: 'Ich packe die Kleider in den Koffer.' },
+  { p: 'an', det: 'der', g: 'f', n: 'Decke', pos: 'Die Lampe hängt an der Decke.', mov: 'Ich hänge die Lampe an die Decke.' },
+  { p: 'in', det: 'der', g: 'f', n: 'Garage', pos: 'Das Auto steht in der Garage.', mov: 'Ich fahre das Auto in die Garage.', pv: ['steht', 'stellt'] },
+];
+
+// Time expressions with two-way prepositions: always Dativ. [prompt, answers, hint, explanation]
+const WECHSEL_TIME = [
+  ['Wir treffen uns ___ Montag.', ['am', 'an dem'], '(an, der Montag)', 'Time expressions with an / in / vor / zwischen are always Dativ: an + dem Montag → am Montag.'],
+  ['___ Mai fahre ich nach Algerien.', ['Im', 'In dem'], '(in, der Mai)', 'Months and seasons: in + Dativ → im Mai.'],
+  ['Wasch dir ___ Essen die Hände.', ['vor dem'], '(vor, das Essen)', 'vor with a time meaning ("before") is always Dativ: vor dem Essen.'],
+  ['Ich komme ___ Abend vorbei.', ['am', 'an dem'], '(an, der Abend)', 'Parts of the day: an + Dativ → am Abend.'],
+  ['___ Sommer ist es in Berlin heiß.', ['Im', 'In dem'], '(in, der Sommer)', 'Seasons: in + Dativ → im Sommer.'],
+  ['Wir treffen uns ___ Wochenende.', ['am', 'an dem'], '(an, das Wochenende)', 'am Wochenende: an + Dativ (das Wochenende → dem).'],
+  ['___ Nacht schlafe ich schlecht.', ['In der'], '(in, die Nacht)', 'in der Nacht: in + Dativ (die Nacht → der).'],
+  ['Ich habe ___ Terminen eine kurze Pause.', ['zwischen den'], '(zwischen, die Termine)', 'zwischen with time is Dativ; Dativ plural adds -n: zwischen den Terminen.'],
+  ['Ich habe ___ Prüfung viel gelernt.', ['vor der'], '(vor, die Prüfung — before the exam)', 'vor with a time meaning is always Dativ: vor der Prüfung.'],
+  ['Wir fahren ___ Sommerferien nach Kabylien.', ['in den'], '(in, die Sommerferien — in the summer holidays)', 'Time with in → Dativ; Dativ plural: in den Sommerferien.'],
+];
+
+// ---------- 2. Contractions ----------
+const CONTRACTIONS = [
+  ['an dem', 'am', true], ['an das', 'ans', true], ['in dem', 'im', true], ['in das', 'ins', true],
+  ['zu dem', 'zum', true], ['zu der', 'zur', true], ['von dem', 'vom', true], ['bei dem', 'beim', true],
+  ['auf das', 'aufs', false], ['durch das', 'durchs', false], ['für das', 'fürs', false], ['um das', 'ums', false],
+];
+// Sentence-level contraction drills: [prompt, contraction, long form]
+const CONTRACTION_SENTENCES = [
+  ['Ich warte ___ Eingang.', 'am', 'an dem'],
+  ['Wir fahren ___ Meer.', 'ans', 'an das'],
+  ['Er ist ___ Büro.', 'im', 'in dem'],
+  ['Sie geht ___ Kino.', 'ins', 'in das'],
+  ['Ich lege das Buch ___ Regal.', 'aufs', 'auf das'],
+  ['Der Ball fliegt ___ Fenster.', 'durchs', 'durch das'],
+  ['Ich fahre ___ Arzt.', 'zum', 'zu dem'],
+  ['Sie geht ___ Arbeit.', 'zur', 'zu der'],
+  ['Das ist ein Brief ___ Chef.', 'vom', 'von dem'],
+  ['Ich bin gerade ___ Friseur.', 'beim', 'bei dem'],
+  ['Danke ___ Geschenk!', 'fürs', 'für das'],
+  ['Es geht ___ Geld.', 'ums', 'um das'],
+];
+
+// ---------- 3. Time ----------
+// [prompt, answers, English, explanation]
+const TIME = [
+  ['Der Zug fährt ___ 7 Uhr.', ['um'], 'The train leaves at 7 o\'clock.', 'Clock time: um (um 7 Uhr, um Mitternacht).'],
+  ['Wir treffen uns ___ Freitag.', ['am'], 'We are meeting on Friday.', 'Days: am (an + dem).'],
+  ['Ich habe ___ Wochenende Zeit.', ['am'], 'I have time at the weekend.', 'am Wochenende — the weekend behaves like a day.'],
+  ['___ Morgen trinke ich Kaffee.', ['Am'], 'In the morning I drink coffee.', 'Parts of the day: am Morgen, am Nachmittag, am Abend — but in der Nacht.'],
+  ['Sie hat ___ 3. Mai Geburtstag.', ['am'], 'Her birthday is on the 3rd of May.', 'Dates: am 3. Mai.'],
+  ['___ der Nacht ist es kalt.', ['In'], 'At night it is cold.', 'Night is the exception: in der Nacht (in + Dativ), not "am".'],
+  ['Ich fliege ___ Juli nach Nigeria.', ['im'], 'I am flying to Nigeria in July.', 'Months: im (in + dem).'],
+  ['___ Winter schneit es oft.', ['Im'], 'In winter it often snows.', 'Seasons: im Winter, im Sommer.'],
+  ['Er ist ___ Jahr 2000 geboren.', ['im'], 'He was born in the year 2000.', 'Years with "Jahr": im Jahr 2000 (without "Jahr", no preposition: "Er ist 2000 geboren").'],
+  ['Wir ziehen ___ zwei Wochen um.', ['in'], 'We are moving in two weeks (from now).', 'A point in the future: in + Dativ (in zwei Wochen, in einem Jahr).'],
+  ['Ich rufe dich ___ einer Stunde an.', ['in'], 'I will call you in an hour.', 'A point in the future: in einer Stunde.'],
+  ['Ich wohne ___ 2020 in Berlin.', ['seit'], 'I have been living in Berlin since 2020.', 'seit = started in the past and still going on → present tense in German.'],
+  ['Sie lernt ___ einem Jahr Deutsch.', ['seit'], 'She has been learning German for a year (and still is).', 'seit + Dativ for an ongoing duration; English "for" is a trap here.'],
+  ['Ich bin ___ drei Jahren nach Berlin gezogen.', ['vor'], 'I moved to Berlin three years ago.', 'vor + Dativ = "ago" (finished action, past tense).'],
+  ['Er hat ___ zwei Tagen angerufen.', ['vor'], 'He called two days ago.', 'vor = ago. The Dativ plural of Tage is Tagen.'],
+  ['Wasch dir ___ dem Essen die Hände.', ['vor'], 'Wash your hands before the meal.', 'vor + Dativ = before.'],
+  ['___ der Arbeit gehe ich ins Fitnessstudio.', ['Nach'], 'After work I go to the gym.', 'nach + Dativ = after.'],
+  ['___ nächster Woche arbeite ich im Homeoffice.', ['Ab'], 'From next week on I work from home.', 'ab + Dativ = starting from (future): ab nächster Woche, ab morgen.'],
+  ['Das Angebot gilt ___ 1. Dezember.', ['ab'], 'The offer is valid from the 1st of December on.', 'ab = from ... on (looking forward). seit would mean the start is already in the past.'],
+  ['Ich bleibe ___ Freitag in Berlin.', ['bis'], 'I am staying in Berlin until Friday.', 'bis = until (no article needed before day names).'],
+  ['Ich habe bis ___ 30. November Zeit.', ['zum'], 'I have time until the 30th of November.', 'With an article, bis needs zu: bis zum 30. November (zu + Dativ).'],
+  ['Ich arbeite ___ 9 ___ 17 Uhr.', ['von bis'], 'I work from 9 to 5.', 'from ... to: von ... bis.'],
+  ['Das Geschäft ist ___ Montag ___ Freitag geöffnet.', ['von bis'], 'The shop is open from Monday to Friday.', 'von Montag bis Freitag.'],
+  ['___ des Essens sprechen wir nicht über die Arbeit.', ['Während'], 'During the meal we do not talk about work.', 'während + Genitiv (des Essens). The Genitiv article tells you it cannot be "bei".'],
+  ['___ Essen sprechen wir nicht über die Arbeit.', ['Beim', 'Bei dem'], 'During the meal we do not talk about work.', 'bei + Dativ also means "during": beim Essen (bei + dem).'],
+  ['Ich fahre ___ zwei Wochen nach Spanien.', ['für'], 'I am going to Spain for two weeks.', 'A planned duration: für + Akkusativ.'],
+  ['Der Termin ist ___ 8 und 9 Uhr.', ['zwischen'], 'The appointment is between 8 and 9.', 'zwischen + Dativ.'],
+  ['Ich komme ___ 10 Uhr.', ['gegen'], 'I will come around 10 (approximately).', 'gegen + Akkusativ = approximately (gegen 10 Uhr). um would mean exactly at 10.'],
+  ['___ Weihnachten fahre ich nach Hause.', ['Zu', 'An'], 'At Christmas I go home.', 'Holidays: zu Weihnachten (also "an Weihnachten" in the south).'],
+  ['___ Ostern besuchen wir meine Eltern.', ['An', 'Zu'], 'At Easter we visit my parents.', 'Holidays: an Ostern / zu Ostern.'],
+  ['___ Abend gehe ich ins Kino.', ['Am'], 'In the evening I am going to the cinema.', 'Parts of the day: am Abend.'],
+  ['___ Sommer fahre ich ans Meer.', ['Im'], 'In summer I go to the seaside.', 'Seasons: im Sommer.'],
+  ['Der Bus kommt genau ___ halb neun.', ['um'], 'The bus comes at exactly half past eight.', 'Exact clock time: um.'],
+  ['Ich bin ___ Montag ___ Freitag im Büro.', ['von bis'], 'I am in the office from Monday to Friday.', 'von ... bis.'],
+  ['___ einer Woche habe ich Urlaub.', ['In'], 'In a week (from now) I have holidays.', 'Point in the future: in + Dativ.'],
+  ['___ einer Woche hatte ich Urlaub.', ['Vor'], 'A week ago I had holidays.', 'vor = ago; the past tense (hatte) is the signal.'],
+  ['Er lebt ___ zehn Jahren in Deutschland.', ['seit'], 'He has been living in Germany for ten years.', 'seit: ongoing → present tense (lebt).'],
+  ['Er hat ___ zehn Jahren in Deutschland gelebt.', ['vor'], 'He lived in Germany ten years ago.', 'vor: finished → past tense (hat gelebt).'],
+  ['Ich lerne ___ drei Monaten für die Prüfung.', ['seit'], 'I have been studying for the exam for three months.', 'seit + Dativ: ongoing.'],
+  ['Die Bibliothek ist ___ Samstag geschlossen.', ['am'], 'The library is closed on Saturday.', 'Days: am Samstag.'],
+  ['Ich habe ___ 15. September einen Termin.', ['am'], 'I have an appointment on the 15th of September.', 'Dates: am 15. September.'],
+  ['___ Frühling blühen die Bäume.', ['Im'], 'In spring the trees blossom.', 'Seasons: im Frühling.'],
+  ['Wir fliegen ___ 6 Uhr morgens.', ['um'], 'We fly at 6 in the morning.', 'Clock time: um 6 Uhr.'],
+  ['___ Nachmittag habe ich frei.', ['Am'], 'In the afternoon I am free.', 'Parts of the day: am Nachmittag.'],
+  ['Der Laden schließt ___ Mitternacht.', ['um'], 'The shop closes at midnight.', 'um Mitternacht (clock time).'],
+  ['Ich bleibe ___ zum Ende des Monats.', ['bis'], 'I am staying until the end of the month.', 'bis zum Ende: bis + zu (Dativ) when there is an article.'],
+  ['___ zwei Jahren war ich in Algerien.', ['Vor'], 'Two years ago I was in Algeria.', 'vor + Dativ = ago.'],
+  ['Die Heizung läuft ___ Oktober.', ['ab'], 'The heating runs from October on.', 'ab = from ... on.'],
+  ['Sie hat ___ nächsten Freitag Urlaub.', ['bis'], 'She is on holiday until next Friday.', 'bis = until.'],
+  ['Er kommt ___ eine Woche zu Besuch.', ['für'], 'He is coming to visit for a week.', 'Planned duration: für + Akkusativ (für eine Woche).'],
+  ['Wir haben ___ dem Kurs noch Zeit für einen Kaffee.', ['nach'], 'After the course we still have time for a coffee.', 'nach + Dativ = after.'],
+  ['Ruf mich bitte ___ 19 Uhr an.', ['gegen'], 'Please call me around 7 pm (approximately).', 'gegen = approximately; um would be exactly at 7.'],
+  ['___ Frühstück lese ich die Zeitung.', ['Beim', 'Bei dem'], 'During breakfast I read the newspaper.', 'bei + Dativ = during: beim Frühstück.'],
+  ['___ des Kurses darf man nicht telefonieren.', ['Während'], 'During the course you may not make phone calls.', 'während + Genitiv (des Kurses).'],
+  ['___ Ende der Woche bin ich fertig.', ['Am'], 'At the end of the week I will be finished.', 'am Ende (an + dem Ende).'],
+  ['Der Film beginnt ___ 20:15 Uhr.', ['um'], 'The film starts at 8:15 pm.', 'Clock time: um.'],
+  ['___ dem 1. Januar gilt das neue Gesetz.', ['Ab'], 'From the 1st of January (next year) on, the new law will apply.', 'ab + Dativ = from ... on (future). seit would mean it already started.'],
+  ['___ Wochenende fahren wir aufs Land.', ['Am'], 'At the weekend we drive to the countryside.', 'am Wochenende.'],
+  ['Sie arbeitet ___ drei Jahren bei Siemens.', ['seit'], 'She has been working at Siemens for three years.', 'seit + Dativ: ongoing, present tense.'],
+  ['Wir sind ___ einer Stunde angekommen.', ['vor'], 'We arrived an hour ago.', 'vor = ago (finished, Perfekt).'],
+  ['Die Prüfung ist ___ einem Monat.', ['in'], 'The exam is in a month (from now).', 'Point in the future: in einem Monat.'],
+  ['Ich habe ___ 2019 keinen Urlaub gemacht.', ['seit'], 'I have not been on holiday since 2019.', 'seit 2019 — still true now.'],
+  ['Das Konzert dauert ___ 20 ___ 23 Uhr.', ['von bis'], 'The concert lasts from 8 to 11 pm.', 'von ... bis.'],
+  ['Der Kurs beginnt ___ September.', ['im'], 'The course starts in September.', 'Months: im September.'],
+  ['Ich habe ___ Dienstag einen Termin beim Arzt.', ['am'], 'I have a doctor\'s appointment on Tuesday.', 'Days: am Dienstag.'],
+  ['Das Museum ist ___ 10 Uhr geöffnet.', ['ab'], 'The museum is open from 10 o\'clock on (its opening time).', 'ab 10 Uhr = from 10 on (opening time). seit 10 Uhr would mean it has already been open since 10.'],
+];
+// seit vs vor: pick the verb form. [prompt, options, correct index, explanation]
+const TIME_TENSE = [
+  ['Ich ___ seit 2020 in Berlin.', ['wohne', 'wohnte', 'habe gewohnt'], 0, 'seit + still true now → present tense.'],
+  ['Ich ___ vor drei Jahren nach Berlin gezogen.', ['bin', 'habe', 'werde'], 0, 'vor drei Jahren = three years ago → Perfekt with sein (bin ... gezogen).'],
+  ['Wir ___ uns seit zehn Jahren.', ['kennen', 'kannten', 'haben gekannt'], 0, 'seit + ongoing → present tense: Wir kennen uns seit zehn Jahren.'],
+  ['Sie ___ vor einem Jahr ihren Job gewechselt.', ['hat', 'ist', 'wird'], 0, 'vor einem Jahr = a year ago → Perfekt with haben (hat gewechselt).'],
+  ['Er ___ seit zwei Stunden auf den Bus.', ['wartet', 'wartete', 'hat gewartet'], 0, 'seit zwei Stunden — still waiting → present tense.'],
+  ['Ich habe ___ zwei Jahren mit dem Deutschkurs angefangen.', ['vor', 'seit', 'ab'], 0, 'A finished action in the past (habe angefangen) → vor = ago.'],
+  ['Ich lerne ___ zwei Jahren Deutsch.', ['seit', 'vor', 'für'], 0, 'Present tense + still going on → seit.'],
+  ['Wir wohnen ___ einem Monat in der neuen Wohnung.', ['seit', 'vor', 'ab'], 0, 'Present tense, ongoing → seit.'],
+  ['Wir sind ___ einem Monat umgezogen.', ['vor', 'seit', 'ab'], 0, 'Perfekt, finished → vor = ago.'],
+  ['___ morgen habe ich einen neuen Vertrag.', ['Ab', 'Seit', 'Vor'], 0, 'Starting point in the future → ab.'],
+];
+
+// ---------- 4. Place ----------
+// [prompt, answers, English, hint (nominative noun or null), explanation]
+const PLACE = [
+  // Wohin?
+  ['Ich fahre ___ Berlin.', ['nach'], 'I am going to Berlin.', null, 'Cities without an article: nach.'],
+  ['Wir fliegen ___ Nigeria.', ['nach'], 'We are flying to Nigeria.', null, 'Countries without an article: nach.'],
+  ['Gehen Sie hier ___ links.', ['nach'], 'Turn left here.', null, 'Directions: nach links, nach rechts, nach oben.'],
+  ['Ich gehe jetzt ___ Hause.', ['nach'], 'I am going home now.', null, 'Home as a destination: nach Hause. (At home: zu Hause.)'],
+  ['Wir fahren ___ Schweiz.', ['in die'], 'We are going to Switzerland.', '(die Schweiz)', 'Countries with an article: in + Akkusativ → in die Schweiz.'],
+  ['Sie fliegt ___ Türkei.', ['in die'], 'She is flying to Turkey.', '(die Türkei)', 'Countries with an article: in die Türkei.'],
+  ['Gehst du heute ___ Kino?', ['ins', 'in das'], 'Are you going to the cinema today?', '(das Kino)', 'Enclosed spaces: in + Akkusativ → ins Kino.'],
+  ['Ich fahre ___ Stadt.', ['in die'], 'I am going into town.', '(die Stadt)', 'in die Stadt (enclosed space / area you enter).'],
+  ['Ich gehe ___ Anna.', ['zu'], 'I am going to Anna\'s.', null, 'People: zu (zu Anna, zu dir).'],
+  ['Ich muss ___ Arzt.', ['zum', 'zu dem'], 'I have to go to the doctor.', '(der Arzt)', 'People and general destinations: zu + Dativ → zum Arzt.'],
+  ['Sie fährt ___ Arbeit.', ['zur', 'zu der'], 'She is driving to work.', '(die Arbeit)', 'zu + Dativ → zur Arbeit.'],
+  ['Kommst du ___ Party?', ['zur', 'zu der'], 'Are you coming to the party?', '(die Party)', 'Events: zu + Dativ → zur Party.'],
+  ['Wir gehen ___ Markt.', ['auf den', 'zum', 'zu dem'], 'We are going to the market.', '(der Markt)', 'Open places: auf + Akkusativ → auf den Markt (zum Markt is also fine as a plain destination).'],
+  ['Sie fahren ___ Insel.', ['auf die', 'zur'], 'They are going to the island.', '(die Insel)', 'Islands: auf + Akkusativ → auf die Insel (zur Insel as a plain destination is fine too).'],
+  ['Am Wochenende fahren wir ___ Land.', ['aufs', 'auf das'], 'At the weekend we are going to the countryside.', '(das Land)', 'Countryside: aufs Land (auf + das).'],
+  ['Im Sommer fahren wir ___ Meer.', ['ans', 'an das'], 'In summer we go to the seaside.', '(das Meer)', 'Water and edges: an + Akkusativ → ans Meer.'],
+  ['Wir gehen ___ See.', ['an den', 'zum'], 'We are going to the lake.', '(der See)', 'Water: an + Akkusativ → an den See (zum See as a plain destination is fine too).'],
+  ['Ich gehe ___ Bäcker.', ['zum', 'zu dem'], 'I am going to the bakery.', '(der Bäcker)', 'Shops named after a person: zum Bäcker, zum Friseur.'],
+  ['Er geht ___ Schule.', ['in die', 'zur', 'zu der'], 'He is going to school.', '(die Schule)', 'Both work: in die Schule (the building) and zur Schule (the destination).'],
+  ['Ich gehe ___ Post.', ['zur', 'auf die', 'zu der'], 'I am going to the post office.', '(die Post)', 'Institutions: auf die Post or zur Post are both used.'],
+  ['Wir fahren ___ Bahnhof.', ['zum', 'zu dem'], 'We are driving to the station.', '(der Bahnhof)', 'General destination: zum Bahnhof.'],
+  ['Ich fliege ___ USA.', ['in die'], 'I am flying to the USA.', '(die USA, plural)', 'Countries with an article (plural): in die USA.'],
+  ['Sie geht ___ Universität.', ['zur', 'an die', 'in die', 'zu der'], 'She is going to the university.', '(die Universität)', 'zur Universität (destination), an die Universität (to study there) or in die Universität (the building).'],
+  ['Er fährt ___ Italien.', ['nach'], 'He is going to Italy.', null, 'Countries without an article: nach.'],
+  ['Gehen wir ___ Restaurant?', ['ins', 'in das'], 'Shall we go to the restaurant?', '(das Restaurant)', 'Enclosed space: ins Restaurant.'],
+  ['Sie geht ___ Supermarkt.', ['in den', 'zum', 'zu dem'], 'She is going to the supermarket.', '(der Supermarkt)', 'in den Supermarkt (into the building) or zum Supermarkt (as a destination).'],
+  ['Ich gehe ___ Friseur.', ['zum', 'zu dem'], 'I am going to the hairdresser.', '(der Friseur)', 'People / businesses named after a person: zum Friseur.'],
+  ['Wir fahren ___ Berge.', ['in die'], 'We are going to the mountains.', '(die Berge, plural)', 'in die Berge (fixed: mountains as a region you enter).'],
+  ['Er geht ___ Fitnessstudio.', ['ins', 'in das'], 'He is going to the gym.', '(das Fitnessstudio)', 'Enclosed space: ins Fitnessstudio.'],
+  ['Ich gehe ___ Bank.', ['zur', 'auf die', 'zu der'], 'I am going to the bank.', '(die Bank)', 'zur Bank or auf die Bank (institution).'],
+  ['Fährst du morgen ___ Flughafen?', ['zum', 'zu dem'], 'Are you going to the airport tomorrow?', '(der Flughafen)', 'General destination: zum Flughafen.'],
+  ['Wir gehen ___ Sportplatz.', ['auf den', 'zum', 'zu dem'], 'We are going to the sports ground.', '(der Sportplatz)', 'Open place: auf den Sportplatz (or zum Sportplatz as a destination).'],
+  ['Biegen Sie hier ___ rechts ab.', ['nach'], 'Turn right here.', null, 'Directions: nach rechts.'],
+  ['Ich fliege morgen ___ Algier.', ['nach'], 'I am flying to Algiers tomorrow.', null, 'Cities: nach Algier.'],
+  ['Wir gehen heute Abend ___ Konzert.', ['ins', 'zum', 'in das', 'zu dem'], 'We are going to a concert tonight.', '(das Konzert)', 'ins Konzert or zum Konzert (event).'],
+  ['Er geht ___ Toilette.', ['auf die', 'zur', 'zu der'], 'He is going to the toilet.', '(die Toilette)', 'auf die Toilette (fixed) or zur Toilette.'],
+  ['Wir fahren ___ Frankreich.', ['nach'], 'We are going to France.', null, 'Countries without an article: nach.'],
+  ['Kommst du mit ___ Fußballplatz?', ['auf den', 'zum', 'zu dem'], 'Are you coming along to the football pitch?', '(der Fußballplatz)', 'Open place: auf den Fußballplatz (or zum ... as a destination).'],
+  ['Ich muss ___ Zahnarzt.', ['zum', 'zu dem'], 'I have to go to the dentist.', '(der Zahnarzt)', 'People: zum Zahnarzt.'],
+  ['Am Samstag fahren wir ___ Ostsee.', ['an die'], 'On Saturday we are going to the Baltic Sea.', '(die Ostsee)', 'Water: an + Akkusativ → an die Ostsee.'],
+  // Wo?
+  ['Ich wohne ___ Berlin.', ['in'], 'I live in Berlin.', null, 'Cities: in Berlin.'],
+  ['Sie lebt ___ Schweiz.', ['in der'], 'She lives in Switzerland.', '(die Schweiz)', 'Countries with an article, position: in + Dativ → in der Schweiz.'],
+  ['Er arbeitet ___ Büro.', ['im', 'in dem'], 'He works in the office.', '(das Büro)', 'Enclosed space, position: im Büro (in + dem).'],
+  ['Sie ist ___ Theater.', ['im', 'in dem'], 'She is at the theatre.', '(das Theater)', 'Position: im Theater.'],
+  ['Ich bin ___ Anna.', ['bei'], 'I am at Anna\'s.', null, 'At a person\'s place: bei Anna.'],
+  ['Ich bin gerade ___ Arzt.', ['beim', 'bei dem'], 'I am at the doctor\'s right now.', '(der Arzt)', 'People: bei + Dativ → beim Arzt.'],
+  ['Sie arbeitet ___ Siemens.', ['bei'], 'She works at Siemens.', null, 'Companies: bei Siemens.'],
+  ['Er ist noch ___ Arbeit.', ['bei der', 'auf der'], 'He is still at work.', '(die Arbeit)', 'bei der Arbeit (standard; "auf der Arbeit" is colloquial).'],
+  ['Wir sind ___ Markt.', ['auf dem'], 'We are at the market.', '(der Markt)', 'Open places, position: auf + Dativ → auf dem Markt.'],
+  ['Ich bin ___ Post.', ['auf der', 'bei der', 'in der'], 'I am at the post office.', '(die Post)', 'Institutions: auf der Post (bei der Post and in der Post are also used).'],
+  ['Die Kinder spielen ___ Straße.', ['auf der'], 'The children are playing in the street.', '(die Straße)', 'Open place: auf der Straße.'],
+  ['Wir sind ___ Meer.', ['am', 'an dem'], 'We are at the seaside.', '(das Meer)', 'Water and edges, position: an + Dativ → am Meer.'],
+  ['Ich warte ___ Bahnhof.', ['am', 'im'], 'I am waiting at the station.', '(der Bahnhof)', 'am Bahnhof (at the station); im Bahnhof = inside the building.'],
+  ['Sie steht ___ Tür.', ['an der'], 'She is standing at the door.', '(die Tür)', 'Edges / points: an der Tür.'],
+  ['Das Café ist ___ Ecke.', ['an der'], 'The café is on the corner.', '(die Ecke)', 'an der Ecke.'],
+  ['Ich bin ___ Hause.', ['zu'], 'I am at home.', null, 'At home: zu Hause (fixed).'],
+  ['Sie wohnt noch ___ ihren Eltern.', ['bei'], 'She still lives with her parents.', null, 'At a person\'s place: bei + Dativ (bei ihren Eltern).'],
+  ['Wir sind ___ Insel Rügen.', ['auf der'], 'We are on the island of Rügen.', '(die Insel)', 'Islands: auf der Insel.'],
+  ['Er lebt ___ Land.', ['auf dem'], 'He lives in the countryside.', '(das Land)', 'auf dem Land (countryside).'],
+  ['Ich bin ___ Uni.', ['an der', 'in der'], 'I am at university.', '(die Uni)', 'an der Uni (as a student) or in der Uni (in the building).'],
+  ['Sie ist ___ Türkei.', ['in der'], 'She is in Turkey.', '(die Türkei)', 'Countries with an article: in der Türkei.'],
+  ['Er ist ___ USA.', ['in den'], 'He is in the USA.', '(die USA, plural)', 'Dativ plural: in den USA.'],
+  ['Wir sitzen ___ Restaurant.', ['im', 'in dem'], 'We are sitting in the restaurant.', '(das Restaurant)', 'Position: im Restaurant.'],
+  ['Ich bin ___ Friseur.', ['beim', 'bei dem'], 'I am at the hairdresser\'s.', '(der Friseur)', 'People: beim Friseur.'],
+  ['Das Auto steht ___ Parkplatz.', ['auf dem'], 'The car is in the car park.', '(der Parkplatz)', 'Open place: auf dem Parkplatz.'],
+  ['Er studiert ___ Universität Hamburg.', ['an der'], 'He studies at the University of Hamburg.', '(die Universität)', 'Institutions of study: an der Universität.'],
+  ['Wir wohnen ___ Fluss.', ['am', 'an dem'], 'We live by the river.', '(der Fluss)', 'Water: am Fluss.'],
+  ['Ich bin ___ Bank.', ['auf der', 'in der', 'bei der'], 'I am at the bank.', '(die Bank)', 'auf der Bank / in der Bank / bei der Bank are all used.'],
+  ['Sie ist ___ Flughafen.', ['am', 'im'], 'She is at the airport.', '(der Flughafen)', 'am Flughafen (im Flughafen = inside the terminal).'],
+  ['Ich arbeite ___ einem Start-up.', ['bei'], 'I work at a start-up.', null, 'Companies: bei + Dativ.'],
+  ['Mein Sohn ist ___ Schule.', ['in der'], 'My son is at school.', '(die Schule)', 'Position: in der Schule.'],
+  ['Er ist ___ Zahnarzt.', ['beim', 'bei dem'], 'He is at the dentist\'s.', '(der Zahnarzt)', 'People: beim Zahnarzt.'],
+  ['Wir wohnen ___ Berlin-Neukölln.', ['in'], 'We live in Berlin-Neukölln.', null, 'Cities / districts: in.'],
+  ['Ich bin ___ Bushaltestelle.', ['an der'], 'I am at the bus stop.', '(die Bushaltestelle)', 'Edges / points: an der Bushaltestelle.'],
+  // Woher?
+  ['Ich komme ___ Port Harcourt.', ['aus'], 'I come from Port Harcourt.', null, 'Origin, cities and countries: aus.'],
+  ['Er kommt gerade ___ Küche.', ['aus der'], 'He is just coming out of the kitchen.', '(die Küche)', 'Out of an enclosed space: aus + Dativ → aus der Küche.'],
+  ['Sie kommt ___ Büro.', ['aus dem'], 'She is coming from the office.', '(das Büro)', 'Enclosed space: aus dem Büro.'],
+  ['Ich komme gerade ___ Anna.', ['von'], 'I am just coming from Anna\'s.', null, 'From a person: von Anna.'],
+  ['Er kommt ___ Arzt.', ['vom', 'von dem'], 'He is coming from the doctor\'s.', '(der Arzt)', 'From a person: von + Dativ → vom Arzt.'],
+  ['Sie kommt ___ Arbeit.', ['von der'], 'She is coming from work.', '(die Arbeit)', 'bei der Arbeit there → von der Arbeit back.'],
+  ['Wir kommen ___ Markt.', ['vom', 'von dem'], 'We are coming from the market.', '(der Markt)', 'auf dem Markt there → vom Markt back.'],
+  ['Ich komme ___ Schweiz.', ['aus der'], 'I come from Switzerland.', '(die Schweiz)', 'Countries with an article: aus der Schweiz.'],
+  ['Sie kommen ___ Kino.', ['aus dem'], 'They are coming out of the cinema.', '(das Kino)', 'Enclosed space: aus dem Kino.'],
+  ['Er kommt ___ Bahnhof.', ['vom', 'von dem'], 'He is coming from the station.', '(der Bahnhof)', 'am Bahnhof there → vom Bahnhof back.'],
+  ['Die Kinder kommen ___ Schule.', ['aus der', 'von der'], 'The children are coming from school.', '(die Schule)', 'aus der Schule (out of the building) or von der Schule.'],
+  ['Ich komme ___ Frankreich.', ['aus'], 'I come from France.', null, 'Countries without an article: aus.'],
+  ['Er kommt ___ Meer.', ['vom', 'von dem'], 'He is coming back from the sea.', '(das Meer)', 'am Meer there → vom Meer back.'],
+  ['Sie kommt ___ Party.', ['von der'], 'She is coming from the party.', '(die Party)', 'Events: von der Party.'],
+  ['Wir kommen ___ Stadt.', ['aus der'], 'We are coming from town.', '(die Stadt)', 'in der Stadt there → aus der Stadt back.'],
+  ['Er kommt ___ Friseur.', ['vom', 'von dem'], 'He is coming from the hairdresser\'s.', '(der Friseur)', 'beim Friseur there → vom Friseur back.'],
+  ['Der Käse kommt ___ Schweiz.', ['aus der'], 'The cheese comes from Switzerland.', '(die Schweiz)', 'Origin: aus der Schweiz.'],
+  ['Ich komme ___ Fitnessstudio.', ['aus dem', 'vom', 'von dem'], 'I am coming from the gym.', '(das Fitnessstudio)', 'aus dem Fitnessstudio (out of the building) or vom Fitnessstudio.'],
+  ['Sie kommt ___ Flughafen.', ['vom', 'von dem'], 'She is coming from the airport.', '(der Flughafen)', 'am Flughafen there → vom Flughafen back.'],
+];
+// Round trip: [there, back-prompt, answers, explanation]
+const PLACE_ROUNDTRIP = [
+  ['Ich fahre nach Berlin.', 'Ich komme ___ Berlin.', ['aus'], 'nach there → aus back.'],
+  ['Ich gehe zum Arzt.', 'Ich komme ___ Arzt.', ['vom', 'von dem'], 'zu there → von back.'],
+  ['Ich gehe ins Büro.', 'Ich komme ___ Büro.', ['aus dem'], 'in there → aus back.'],
+  ['Ich gehe auf den Markt.', 'Ich komme ___ Markt.', ['vom', 'von dem'], 'auf there → von back.'],
+  ['Ich gehe zu Anna.', 'Ich komme ___ Anna.', ['von'], 'zu there → von back.'],
+  ['Ich fahre ans Meer.', 'Ich komme ___ Meer.', ['vom', 'von dem'], 'an there → von back.'],
+  ['Ich fahre in die Schweiz.', 'Ich komme ___ Schweiz.', ['aus der'], 'in there → aus back.'],
+  ['Ich gehe zur Arbeit.', 'Ich komme ___ Arbeit.', ['von der'], 'zu there → von back.'],
+  ['Ich fahre nach Hause.', 'Ich komme ___ Hause.', ['von zu'], 'nach Hause there → von zu Hause back (fixed expression).'],
+  ['Ich gehe ins Kino.', 'Ich komme ___ Kino.', ['aus dem'], 'in there → aus back.'],
+];
+// Choice: nach vs in vs zu. [prompt, options, correct, explanation]
+const PLACE_CHOICE = [
+  ['Ich fahre ___ Schweiz.', ['in die', 'nach', 'zur'], 0, 'Countries with an article take in + Akkusativ; nach is only for names without an article.'],
+  ['Ich fahre ___ Berlin.', ['nach', 'in', 'zu'], 0, 'Cities: nach.'],
+  ['Ich gehe ___ Arzt.', ['zum', 'nach dem', 'in den'], 0, 'People: zu.'],
+  ['Ich gehe ___ Hause.', ['nach', 'zu', 'in'], 0, 'Going home: nach Hause.'],
+  ['Ich bin ___ Hause.', ['zu', 'nach', 'in'], 0, 'Being at home: zu Hause.'],
+  ['Ich bin ___ Anna.', ['bei', 'zu', 'in'], 0, 'At a person\'s place: bei.'],
+  ['Ich fahre ___ Insel.', ['auf die', 'in die', 'nach der'], 0, 'Islands: auf + Akkusativ.'],
+  ['Ich komme ___ Arzt.', ['vom', 'aus dem', 'beim'], 0, 'zu / bei there → von back.'],
+  ['Ich komme ___ Büro.', ['aus dem', 'im', 'beim'], 0, 'in there → aus back.'],
+  ['Wir fahren ___ Meer.', ['ans', 'ins', 'zum'], 0, 'Water: an + Akkusativ.'],
+  ['Ich wohne ___ Berlin.', ['in', 'bei', 'an'], 0, 'Cities, position: in.'],
+  ['Sie arbeitet ___ Siemens.', ['bei', 'in', 'an'], 0, 'Companies: bei.'],
+];
+
+// ---------- 5. Verbs with fixed prepositions ----------
+function o(det, g, n, extra) { return Object.assign({ det: det, g: g, n: n }, extra || {}); }
+function pr(pron) { return { pron: pron }; }
+function bare(n, adj) { return { det: null, g: null, n: n, adj: adj || null }; }
+// S(text, obj, who) — who: 'thing' (da-word possible), 'person' (preposition + pronoun) or 'inst' (institution: no replacement drill)
+function S(t, obj, who, extra) { return Object.assign({ t: t, obj: obj, who: who || 'thing' }, extra || {}); }
+
+const VERBS = [
+  // an + A
+  { v: 'denken an', c: 'A', en: 'to think of (remember someone / something)', syn: ['sich erinnern an'], s: [S('Ich denke oft an meine Familie.', o('mein', 'f', 'Familie'), 'person'), S('Denkst du noch an den Termin?', o('der', 'm', 'Termin'))] },
+  { v: 'sich erinnern an', c: 'A', en: 'to remember', syn: ['denken an'], s: [S('Erinnerst du dich an den Urlaub?', o('der', 'm', 'Urlaub')), S('Ich erinnere mich gut an meine Lehrerin.', o('mein', 'f', 'Lehrerin'), 'person')] },
+  { v: 'sich gewöhnen an', c: 'A', en: 'to get used to', s: [S('Ich habe mich an das Wetter gewöhnt.', o('der', 'n', 'Wetter')), S('Er gewöhnt sich langsam an die Kälte.', o('der', 'f', 'Kälte'))] },
+  { v: 'glauben an', c: 'A', en: 'to believe in', s: [S('Sie glaubt an Gott.', bare('Gott'), 'person'), S('Ich glaube an dich.', pr('du'), 'person')] },
+  { v: 'schreiben an', c: 'A', en: 'to write to', s: [S('Ich schreibe an den Vermieter.', o('der', 'm', 'Vermieter'), 'person'), S('Sie schreibt an ihre Tante.', o('ihr', 'f', 'Tante'), 'person')] },
+  { v: 'sich wenden an', c: 'A', en: 'to turn to (for help)', s: [S('Wenden Sie sich an die Rezeption.', o('der', 'f', 'Rezeption'), 'inst'), S('Er wendet sich an seinen Chef.', o('sein', 'm', 'Chef'), 'person')] },
+  // an + D
+  { v: 'teilnehmen an', c: 'D', en: 'to take part in', s: [S('Ich nehme am Kurs teil.', o('der', 'm', 'Kurs')), S('Sie nimmt an einem Wettbewerb teil.', o('ein', 'm', 'Wettbewerb'))] },
+  { v: 'arbeiten an', c: 'D', en: 'to work on', s: [S('Er arbeitet an einem Projekt.', o('ein', 'n', 'Projekt')), S('Wir arbeiten an der Lösung.', o('der', 'f', 'Lösung'))] },
+  { v: 'leiden an', c: 'D', en: 'to suffer from (an illness)', s: [S('Sie leidet an einer Krankheit.', o('ein', 'f', 'Krankheit'), 'thing', { alt: ['unter'] })] },
+  { v: 'leiden unter', c: 'D', en: 'to suffer from (a burden, e.g. stress)', s: [S('Er leidet unter dem Stress.', o('der', 'm', 'Stress')), S('Viele leiden unter der Hitze.', o('der', 'f', 'Hitze'))] },
+  { v: 'zweifeln an', c: 'D', en: 'to doubt', s: [S('Ich zweifle am Plan.', o('der', 'm', 'Plan')), S('Zweifelst du an mir?', pr('ich'), 'person')] },
+  // auf + A
+  { v: 'warten auf', c: 'A', en: 'to wait for', s: [S('Ich warte auf den Bus.', o('der', 'm', 'Bus')), S('Wir warten auf dich.', pr('du'), 'person'), S('Sie wartet auf eine Antwort.', o('ein', 'f', 'Antwort'))] },
+  { v: 'sich freuen auf', c: 'A', en: 'to look forward to', s: [S('Ich freue mich auf das Wochenende.', o('der', 'n', 'Wochenende')), S('Die Kinder freuen sich auf die Ferien.', o('der', 'p', 'Ferien'))] },
+  { v: 'sich vorbereiten auf', c: 'A', en: 'to prepare for', s: [S('Ich bereite mich auf die Prüfung vor.', o('der', 'f', 'Prüfung')), S('Er bereitet sich auf das Gespräch vor.', o('der', 'n', 'Gespräch'))] },
+  { v: 'achten auf', c: 'A', en: 'to pay attention to', syn: ['aufpassen auf'], s: [S('Achten Sie auf die Endungen!', o('der', 'p', 'Endungen')), S('Achte auf deine Gesundheit.', o('dein', 'f', 'Gesundheit'))] },
+  { v: 'aufpassen auf', c: 'A', en: 'to look after, keep an eye on', syn: ['achten auf'], s: [S('Kannst du auf die Kinder aufpassen?', o('der', 'p', 'Kinder'), 'person'), S('Pass auf den Hund auf!', o('der', 'm', 'Hund'), 'person')] },
+  { v: 'sich konzentrieren auf', c: 'A', en: 'to concentrate on', s: [S('Konzentrier dich auf die Arbeit.', o('der', 'f', 'Arbeit')), S('Ich konzentriere mich auf meinen Job.', o('mein', 'm', 'Job'))] },
+  { v: 'antworten auf', c: 'A', en: 'to reply to', s: [S('Er antwortet auf meine Frage.', o('mein', 'f', 'Frage')), S('Sie antwortet nicht auf die E-Mail.', o('der', 'f', 'E-Mail'))] },
+  { v: 'reagieren auf', c: 'A', en: 'to react to', s: [S('Wie hat sie auf die Nachricht reagiert?', o('der', 'f', 'Nachricht')), S('Er reagiert auf die Kritik.', o('der', 'f', 'Kritik'))] },
+  { v: 'sich verlassen auf', c: 'A', en: 'to rely on', s: [S('Ich kann mich auf dich verlassen.', pr('du'), 'person'), S('Wir verlassen uns auf den Fahrplan.', o('der', 'm', 'Fahrplan'))] },
+  { v: 'hoffen auf', c: 'A', en: 'to hope for', s: [S('Wir hoffen auf gutes Wetter.', bare('Wetter', 'gutes')), S('Sie hofft auf eine Antwort.', o('ein', 'f', 'Antwort'))] },
+  { v: 'verzichten auf', c: 'A', en: 'to do without, give up', s: [S('Ich verzichte auf Zucker.', bare('Zucker')), S('Er verzichtet auf das Auto.', o('der', 'n', 'Auto'))] },
+  // für + A
+  { v: 'sich interessieren für', c: 'A', en: 'to be interested in (verb)', syn: ['interessiert sein an', 'interessiert an'], s: [S('Ich interessiere mich für Fußball.', bare('Fußball')), S('Sie interessiert sich für die Stelle.', o('der', 'f', 'Stelle'))] },
+  { v: 'sich bedanken für', c: 'A', en: 'to say thank you for', syn: ['danken für'], s: [S('Ich bedanke mich für die Hilfe.', o('der', 'f', 'Hilfe')), S('Wir bedanken uns für das Geschenk.', o('der', 'n', 'Geschenk'))] },
+  { v: 'danken für', c: 'A', en: 'to thank for', syn: ['sich bedanken für'], s: [S('Danke für die Einladung!', o('der', 'f', 'Einladung')), S('Ich danke dir für den Tipp.', o('der', 'm', 'Tipp'))] },
+  { v: 'sich entschuldigen für', c: 'A', en: 'to apologise for', s: [S('Er entschuldigt sich für die Verspätung.', o('der', 'f', 'Verspätung')), S('Ich entschuldige mich für den Fehler.', o('der', 'm', 'Fehler'))] },
+  { v: 'sich entscheiden für', c: 'A', en: 'to decide on', s: [S('Ich habe mich für die Wohnung entschieden.', o('der', 'f', 'Wohnung')), S('Er entscheidet sich für das Angebot.', o('der', 'n', 'Angebot'))] },
+  { v: 'sorgen für', c: 'A', en: 'to provide for, see to (sorgen)', s: [S('Sie sorgt für ihre Eltern.', o('ihr', 'p', 'Eltern'), 'person'), S('Ich sorge für das Essen.', o('der', 'n', 'Essen'))] },
+  { v: 'ausgeben für', c: 'A', en: 'to spend (money) on', s: [S('Ich gebe viel Geld für Essen aus.', bare('Essen')), S('Er gibt zu viel Geld für sein Auto aus.', o('sein', 'n', 'Auto'))] },
+  // mit + D
+  { v: 'sprechen mit', c: 'D', en: 'to speak with', syn: ['reden mit', 'sich unterhalten mit'], s: [S('Ich spreche mit dem Chef.', o('der', 'm', 'Chef'), 'person'), S('Sprichst du mit deiner Mutter?', o('dein', 'f', 'Mutter'), 'person')] },
+  { v: 'reden mit', c: 'D', en: 'to talk with', syn: ['sprechen mit', 'sich unterhalten mit'], s: [S('Ich rede mit meinen Freunden.', o('mein', 'p', 'Freunden', { nomN: 'Freunde' }), 'person')] },
+  { v: 'telefonieren mit', c: 'D', en: 'to talk on the phone with', s: [S('Sie telefoniert mit ihrer Mutter.', o('ihr', 'f', 'Mutter'), 'person'), S('Ich telefoniere mit dem Arzt.', o('der', 'm', 'Arzt'), 'person')] },
+  { v: 'sich treffen mit', c: 'D', en: 'to meet up with', s: [S('Ich treffe mich mit Freunden.', bare('Freunden'), 'person'), S('Er trifft sich mit seiner Freundin.', o('sein', 'f', 'Freundin'), 'person')] },
+  { v: 'sich unterhalten mit', c: 'D', en: 'to chat with', syn: ['reden mit', 'sprechen mit'], s: [S('Wir unterhalten uns mit den Nachbarn.', o('der', 'p', 'Nachbarn'), 'person')] },
+  { v: 'sich verabreden mit', c: 'D', en: 'to arrange to meet with', s: [S('Ich habe mich mit Tom verabredet.', bare('Tom'), 'person'), S('Sie verabredet sich mit einer Kollegin.', o('ein', 'f', 'Kollegin'), 'person')] },
+  { v: 'sich beschäftigen mit', c: 'D', en: 'to occupy oneself with', s: [S('Er beschäftigt sich mit Grammatik.', bare('Grammatik')), S('Ich beschäftige mich mit dem Thema.', o('der', 'n', 'Thema'))] },
+  { v: 'anfangen mit', c: 'D', en: 'to start with', syn: ['beginnen mit'], s: [S('Wann fängst du mit dem Kurs an?', o('der', 'm', 'Kurs'))] },
+  { v: 'beginnen mit', c: 'D', en: 'to begin with', syn: ['anfangen mit'], s: [S('Wir beginnen mit der Arbeit.', o('der', 'f', 'Arbeit'))] },
+  { v: 'aufhören mit', c: 'D', en: 'to stop (doing)', s: [S('Ich höre mit dem Rauchen auf.', o('der', 'n', 'Rauchen'))] },
+  { v: 'rechnen mit', c: 'D', en: 'to expect, count on', s: [S('Wir rechnen mit Regen.', bare('Regen')), S('Ich rechne mit einer Antwort.', o('ein', 'f', 'Antwort'))] },
+  { v: 'sich streiten mit', c: 'D', en: 'to argue with', s: [S('Sie streitet sich mit ihrem Bruder.', o('ihr', 'm', 'Bruder'), 'person')] },
+  { v: 'vergleichen mit', c: 'D', en: 'to compare with', s: [S('Vergleich das nicht mit früher.', bare('früher')), S('Er vergleicht Berlin mit seiner Heimatstadt.', o('sein', 'f', 'Heimatstadt'))] },
+  { v: 'zu tun haben mit', c: 'D', en: 'to have to do with', s: [S('Das hat nichts mit dir zu tun.', pr('du'), 'person'), S('Das hat mit dem Wetter zu tun.', o('der', 'n', 'Wetter'))] },
+  // über + A
+  { v: 'sprechen über', c: 'A', en: 'to talk about (a topic)', syn: ['reden über'], s: [S('Wir sprechen über das Problem.', o('der', 'n', 'Problem'))] },
+  { v: 'reden über', c: 'A', en: 'to talk about', syn: ['sprechen über'], s: [S('Sie reden über den Film.', o('der', 'm', 'Film'))] },
+  { v: 'diskutieren über', c: 'A', en: 'to discuss', syn: ['sprechen über', 'reden über'], s: [S('Wir diskutieren über den Vorschlag.', o('der', 'm', 'Vorschlag'))] },
+  { v: 'sich freuen über', c: 'A', en: 'to be glad about (now or in the past)', s: [S('Ich freue mich über das Geschenk.', o('der', 'n', 'Geschenk')), S('Sie freut sich über die Blumen.', o('der', 'p', 'Blumen'))] },
+  { v: 'sich ärgern über', c: 'A', en: 'to be annoyed about', syn: ['sich aufregen über'], s: [S('Ich ärgere mich über den Fehler.', o('der', 'm', 'Fehler')), S('Er ärgert sich über seinen Nachbarn.', o('sein', 'm', 'Nachbarn', { nomN: 'Nachbar' }), 'person')] },
+  { v: 'sich aufregen über', c: 'A', en: 'to get worked up about', syn: ['sich ärgern über'], s: [S('Reg dich nicht über Kleinigkeiten auf!', bare('Kleinigkeiten')), S('Sie regt sich über den Verkehr auf.', o('der', 'm', 'Verkehr'))] },
+  { v: 'nachdenken über', c: 'A', en: 'to reflect on, think over', s: [S('Ich denke über das Angebot nach.', o('der', 'n', 'Angebot')), S('Er denkt über seine Zukunft nach.', o('sein', 'f', 'Zukunft'))] },
+  { v: 'sich informieren über', c: 'A', en: 'to inform oneself about', s: [S('Informieren Sie sich über die Kurse.', o('der', 'p', 'Kurse')), S('Ich informiere mich über die Stadt.', o('der', 'f', 'Stadt'))] },
+  { v: 'berichten über', c: 'A', en: 'to report on', s: [S('Die Zeitung berichtet über den Unfall.', o('der', 'm', 'Unfall'))] },
+  { v: 'lachen über', c: 'A', en: 'to laugh about', s: [S('Alle lachen über den Witz.', o('der', 'm', 'Witz')), S('Lach nicht über mich!', pr('ich'), 'person')] },
+  { v: 'sich beschweren über', c: 'A', en: 'to complain about', s: [S('Er beschwert sich über den Lärm.', o('der', 'm', 'Lärm')), S('Die Gäste beschweren sich über das Essen.', o('der', 'n', 'Essen'))] },
+  { v: 'sich wundern über', c: 'A', en: 'to be surprised about', s: [S('Ich wundere mich über die Preise.', o('der', 'p', 'Preise'))] },
+  // um + A
+  { v: 'sich kümmern um', c: 'A', en: 'to take care of, look after (kümmern)', s: [S('Ich kümmere mich um den Umzug.', o('der', 'm', 'Umzug')), S('Sie kümmert sich um ihre Kinder.', o('ihr', 'p', 'Kinder'), 'person')] },
+  { v: 'bitten um', c: 'A', en: 'to ask for, request (help, a favour)', s: [S('Darf ich um Hilfe bitten?', bare('Hilfe')), S('Er bittet um einen Termin.', o('ein', 'm', 'Termin'))] },
+  { v: 'sich bewerben um', c: 'A', en: 'to apply for (a job)', s: [S('Sie bewirbt sich um die Stelle.', o('der', 'f', 'Stelle'))] },
+  { v: 'es geht um', c: 'A', en: 'it is about', syn: ['es handelt sich um'], s: [S('Es geht um die Miete.', o('der', 'f', 'Miete')), S('Es geht um deinen Antrag.', o('dein', 'm', 'Antrag'))] },
+  { v: 'sich Sorgen machen um', c: 'A', en: 'to worry about', syn: ['sich sorgen um'], s: [S('Ich mache mir Sorgen um dich.', pr('du'), 'person'), S('Sie macht sich Sorgen um ihren Vater.', o('ihr', 'm', 'Vater'), 'person')] },
+  { v: 'sich sorgen um', c: 'A', en: 'to be worried about', syn: ['sich Sorgen machen um'], s: [S('Er sorgt sich um seine Gesundheit.', o('sein', 'f', 'Gesundheit'))] },
+  { v: 'es handelt sich um', c: 'A', en: 'it is a matter of', syn: ['es geht um'], s: [S('Es handelt sich um ein Missverständnis.', o('ein', 'n', 'Missverständnis'))] },
+  // von + D
+  { v: 'träumen von', c: 'D', en: 'to dream of', s: [S('Ich träume von einer eigenen Wohnung.', o('ein', 'f', 'Wohnung', { adj: 'eigenen', nomAdj: 'eigene' })), S('Er träumt von einem Haus am Meer.', o('ein', 'n', 'Haus'))] },
+  { v: 'erzählen von', c: 'D', en: 'to tell about', s: [S('Erzähl mir von deiner Reise!', o('dein', 'f', 'Reise'))] },
+  { v: 'halten von', c: 'D', en: 'to think of (have an opinion about)', s: [S('Was hältst du von der Idee?', o('der', 'f', 'Idee')), S('Was hältst du von ihm?', pr('er'), 'person')] },
+  { v: 'abhängen von', c: 'D', en: 'to depend on', s: [S('Das hängt vom Wetter ab.', o('der', 'n', 'Wetter')), S('Es hängt von dir ab.', pr('du'), 'person')] },
+  { v: 'sich erholen von', c: 'D', en: 'to recover from', s: [S('Ich erhole mich von der Arbeit.', o('der', 'f', 'Arbeit')), S('Sie erholt sich von der Krankheit.', o('der', 'f', 'Krankheit'))] },
+  { v: 'sich verabschieden von', c: 'D', en: 'to say goodbye to', s: [S('Ich verabschiede mich von den Kollegen.', o('der', 'p', 'Kollegen'), 'person')] },
+  { v: 'sich trennen von', c: 'D', en: 'to separate from', s: [S('Sie hat sich von ihm getrennt.', pr('er'), 'person'), S('Er trennt sich von seiner Frau.', o('sein', 'f', 'Frau'), 'person')] },
+  { v: 'handeln von', c: 'D', en: 'to be about (a film, a book)', s: [S('Der Film handelt von einer Familie.', o('ein', 'f', 'Familie'))] },
+  // vor + D
+  { v: 'Angst haben vor', c: 'D', en: 'to be afraid of', syn: ['sich fürchten vor'], s: [S('Ich habe Angst vor Spinnen.', bare('Spinnen')), S('Sie hat Angst vor dem Hund.', o('der', 'm', 'Hund'))] },
+  { v: 'sich fürchten vor', c: 'D', en: 'to be scared of', syn: ['Angst haben vor'], s: [S('Er fürchtet sich vor der Prüfung.', o('der', 'f', 'Prüfung'))] },
+  { v: 'warnen vor', c: 'D', en: 'to warn of', s: [S('Sie warnt vor dem Sturm.', o('der', 'm', 'Sturm')), S('Die Polizei warnt vor dem Betrüger.', o('der', 'm', 'Betrüger'), 'person')] },
+  { v: 'schützen vor', c: 'D', en: 'to protect from', s: [S('Die Creme schützt vor der Sonne.', o('der', 'f', 'Sonne'))] },
+  { v: 'sich schützen vor', c: 'D', en: 'to protect oneself from', s: [S('Wir schützen uns vor dem Regen.', o('der', 'm', 'Regen'))] },
+  // zu + D
+  { v: 'gehören zu', c: 'D', en: 'to belong to, be part of', s: [S('Das gehört zu meinen Aufgaben.', o('mein', 'p', 'Aufgaben')), S('Sie gehört zur Gruppe.', o('der', 'f', 'Gruppe'))] },
+  { v: 'einladen zu', c: 'D', en: 'to invite to', s: [S('Ich lade dich zum Essen ein.', o('der', 'n', 'Essen')), S('Sie lädt uns zur Party ein.', o('der', 'f', 'Party'))] },
+  { v: 'passen zu', c: 'D', en: 'to go with, match', s: [S('Die Schuhe passen zur Hose.', o('der', 'f', 'Hose')), S('Der Wein passt zum Fisch.', o('der', 'm', 'Fisch'))] },
+  { v: 'gratulieren zu', c: 'D', en: 'to congratulate on', s: [S('Ich gratuliere dir zum Geburtstag!', o('der', 'm', 'Geburtstag')), S('Wir gratulieren ihr zur Beförderung.', o('der', 'f', 'Beförderung'))] },
+  { v: 'führen zu', c: 'D', en: 'to lead to', s: [S('Stress führt zu Problemen.', bare('Problemen')), S('Das führt zu einem Streit.', o('ein', 'm', 'Streit'))] },
+  // nach + D
+  { v: 'fragen nach', c: 'D', en: 'to ask about, ask after (the way, a price)', syn: ['sich erkundigen nach'], s: [S('Er fragt nach dem Weg.', o('der', 'm', 'Weg')), S('Sie fragt nach deiner Telefonnummer.', o('dein', 'f', 'Telefonnummer'))] },
+  { v: 'suchen nach', c: 'D', en: 'to search for', s: [S('Ich suche nach einer Wohnung.', o('ein', 'f', 'Wohnung')), S('Wir suchen nach dem Schlüssel.', o('der', 'm', 'Schlüssel'))] },
+  { v: 'sich erkundigen nach', c: 'D', en: 'to enquire about', syn: ['fragen nach'], s: [S('Ich erkundige mich nach dem Termin.', o('der', 'm', 'Termin'))] },
+  { v: 'riechen nach', c: 'D', en: 'to smell of', s: [S('Das riecht nach Kaffee.', bare('Kaffee'))] },
+  { v: 'schmecken nach', c: 'D', en: 'to taste of', s: [S('Die Suppe schmeckt nach Knoblauch.', bare('Knoblauch'))] },
+  // aus + D
+  { v: 'kommen aus', c: 'D', en: 'to come from', syn: ['stammen aus'], s: [S('Ich komme aus Nigeria.', bare('Nigeria')), S('Er kommt aus der Türkei.', o('der', 'f', 'Türkei'))] },
+  { v: 'stammen aus', c: 'D', en: 'to originate from', syn: ['kommen aus'], s: [S('Der Käse stammt aus der Schweiz.', o('der', 'f', 'Schweiz'))] },
+  { v: 'bestehen aus', c: 'D', en: 'to consist of', s: [S('Der Test besteht aus drei Teilen.', bare('Teilen', 'drei')), S('Die Wohnung besteht aus zwei Zimmern.', bare('Zimmern', 'zwei'))] },
+  // bei + D
+  { v: 'sich bedanken bei', c: 'D', en: 'to say thank you to (a person)', s: [S('Ich bedanke mich bei dir.', pr('du'), 'person'), S('Er bedankt sich bei seinen Kollegen.', o('sein', 'p', 'Kollegen'), 'person')] },
+  { v: 'sich entschuldigen bei', c: 'D', en: 'to apologise to (a person)', s: [S('Er entschuldigt sich bei seiner Chefin.', o('sein', 'f', 'Chefin'), 'person')] },
+  { v: 'sich beschweren bei', c: 'D', en: 'to complain to (a person)', s: [S('Wir beschweren uns beim Vermieter.', o('der', 'm', 'Vermieter'), 'person')] },
+  { v: 'sich melden bei', c: 'D', en: 'to get in touch with', s: [S('Melden Sie sich bei mir.', pr('ich'), 'person'), S('Ich melde mich morgen bei dir.', pr('du'), 'person')] },
+  { v: 'sich bewerben bei', c: 'D', en: 'to apply to (a company)', s: [S('Ich bewerbe mich bei einer Firma.', o('ein', 'f', 'Firma'), 'inst')] },
+  { v: 'helfen bei', c: 'D', en: 'to help with', s: [S('Kannst du mir bei den Hausaufgaben helfen?', o('der', 'p', 'Hausaufgaben')), S('Sie hilft mir beim Umzug.', o('der', 'm', 'Umzug'))] },
+  { v: 'arbeiten bei', c: 'D', en: 'to work at (a company)', s: [S('Ich arbeite bei einer Firma in Berlin.', o('ein', 'f', 'Firma'), 'inst')] },
+  // in + A, gegen + A, sein für / gegen
+  { v: 'sich verlieben in', c: 'A', en: 'to fall in love with', s: [S('Er hat sich in sie verliebt.', pr('sie'), 'person'), S('Sie hat sich in ihren Nachbarn verliebt.', o('ihr', 'm', 'Nachbarn', { nomN: 'Nachbar' }), 'person')] },
+  { v: 'protestieren gegen', c: 'A', en: 'to protest against', s: [S('Viele protestieren gegen die Mieterhöhung.', o('der', 'f', 'Mieterhöhung'))] },
+  { v: 'kämpfen gegen', c: 'A', en: 'to fight against', s: [S('Sie kämpfen gegen die Krankheit.', o('der', 'f', 'Krankheit'))] },
+  { v: 'sein gegen', c: 'A', en: 'to be against', s: [S('Ich bin gegen den Plan.', o('der', 'm', 'Plan'))] },
+  { v: 'sein für', c: 'A', en: 'to be in favour of', s: [S('Wir sind für die Idee.', o('der', 'f', 'Idee'))] },
+];
+
+// 5.1 Verbs with two prepositions (person + thing): [prompt, answers (two words), pattern, explanation]
+const VERBS_TWO = [
+  ['Ich bedanke mich ___ dir ___ die Hilfe.', ['bei für'], 'sich bedanken bei jemandem für etwas', 'bei = the person you thank, für = what you thank them for.', 'I thank you for the help.'],
+  ['Er entschuldigt sich ___ ihr ___ den Fehler.', ['bei für'], 'sich entschuldigen bei jemandem für etwas', 'bei = the person, für = the reason.', 'He apologises to her for the mistake.'],
+  ['Wir beschweren uns ___ Vermieter ___ den Lärm.', ['beim über', 'bei dem über'], 'sich beschweren bei jemandem über etwas', 'bei = the person you complain to, über = what you complain about.', 'We complain to the landlord about the noise.'],
+  ['Ich bewerbe mich ___ Siemens ___ eine Stelle.', ['bei um'], 'sich bewerben bei einer Firma um eine Stelle', 'bei = the company, um = the job.', 'I am applying to Siemens for a job.'],
+  ['Ich erkundige mich ___ der Bank ___ dem Kredit.', ['bei nach'], 'sich erkundigen bei jemandem nach etwas', 'bei = whom you ask, nach = what you ask about.', 'I am asking the bank about the loan.'],
+  ['Sie informiert sich ___ Arzt ___ die Behandlung.', ['beim über', 'bei dem über'], 'sich informieren bei jemandem über etwas', 'bei = the source, über = the topic.', 'She is finding out from the doctor about the treatment.'],
+  ['Ich spreche ___ dem Chef ___ das Gehalt.', ['mit über'], 'sprechen mit jemandem über etwas', 'mit = the partner, über = the topic.', 'I am talking with the boss about the salary.'],
+  ['Er streitet sich ___ ihr ___ Geld.', ['mit über', 'mit um'], 'sich streiten mit jemandem über etwas', 'mit = the partner, über = the topic (um = what is at stake is also fine).', 'He is arguing with her about money.'],
+  ['Ich bedanke mich ___ meiner Kollegin ___ die Unterstützung.', ['bei für'], 'sich bedanken bei jemandem für etwas', 'bei + person, für + thing.', 'I thank my colleague for the support.'],
+  ['Sie entschuldigt sich ___ dem Lehrer ___ die Verspätung.', ['bei für'], 'sich entschuldigen bei jemandem für etwas', 'bei + person, für + thing.', 'She apologises to the teacher for being late.'],
+  ['Die Mieter beschweren sich ___ der Hausverwaltung ___ die Heizung.', ['bei über'], 'sich beschweren bei jemandem über etwas', 'bei + person / office, über + problem.', 'The tenants complain to the property management about the heating.'],
+  ['Er bewirbt sich ___ einer Bank ___ einen Ausbildungsplatz.', ['bei um'], 'sich bewerben bei ... um ...', 'bei + company, um + position.', 'He is applying to a bank for an apprenticeship.'],
+  ['Wir erkundigen uns ___ der Rezeption ___ dem Frühstück.', ['bei nach'], 'sich erkundigen bei jemandem nach etwas', 'bei + whom, nach + what.', 'We are asking at reception about breakfast.'],
+  ['Ich informiere mich ___ der Beraterin ___ die Kurse.', ['bei über'], 'sich informieren bei jemandem über etwas', 'bei + whom, über + what.', 'I am finding out from the adviser about the courses.'],
+  ['Sie diskutiert ___ ihren Kollegen ___ das Projekt.', ['mit über'], 'diskutieren mit jemandem über etwas', 'mit + partner, über + topic.', 'She is discussing the project with her colleagues.'],
+  ['Die Kinder streiten sich ___ ihrem Vater ___ die Regeln.', ['mit über', 'mit um'], 'sich streiten mit jemandem über etwas', 'mit + partner, über + topic (um is also possible).', 'The children are arguing with their father about the rules.'],
+  ['Wir sprechen ___ dem Vermieter ___ die Kündigung.', ['mit über'], 'sprechen mit jemandem über etwas', 'mit + partner, über + topic.', 'We are talking with the landlord about the notice.'],
+  ['Er redet ___ seiner Frau ___ den Umzug.', ['mit über'], 'reden mit jemandem über etwas', 'mit + partner, über + topic.', 'He is talking with his wife about the move.'],
+];
+// choice: which preposition for the person vs the thing
+const VERBS_TWO_CHOICE = [
+  ['sich bewerben — the company', ['bei', 'um', 'für'], 0, 'sich bewerben bei einer Firma (the company), um eine Stelle (the job).'],
+  ['sich bewerben — the job', ['um', 'bei', 'für'], 0, 'sich bewerben um eine Stelle.'],
+  ['sich bedanken — the person', ['bei', 'für', 'mit'], 0, 'sich bedanken bei jemandem.'],
+  ['sich bedanken — the reason', ['für', 'bei', 'über'], 0, 'sich bedanken für etwas.'],
+  ['sich beschweren — the person', ['bei', 'über', 'mit'], 0, 'sich beschweren bei jemandem.'],
+  ['sich beschweren — the problem', ['über', 'bei', 'für'], 0, 'sich beschweren über etwas.'],
+  ['sprechen — the partner', ['mit', 'über', 'zu'], 0, 'sprechen mit jemandem.'],
+  ['sprechen — the topic', ['über', 'mit', 'von'], 0, 'sprechen über etwas.'],
+  ['sich erkundigen — what you ask about', ['nach', 'über', 'für'], 0, 'sich erkundigen nach etwas.'],
+  ['sich informieren — the topic', ['über', 'nach', 'von'], 0, 'sich informieren über etwas.'],
+  ['sich entschuldigen — the person', ['bei', 'für', 'an'], 0, 'sich entschuldigen bei jemandem.'],
+  ['sich streiten — the partner', ['mit', 'über', 'gegen'], 0, 'sich streiten mit jemandem.'],
+];
+
+// 5.2 Easily confused: [prompt, answers, English, explanation]
+const CONFUSED = [
+  ['Ich freue mich ___ den Urlaub im Sommer.', ['auf'], 'I am looking forward to the holiday in summer.', 'sich freuen auf = something in the future.'],
+  ['Ich freue mich ___ das schöne Wetter heute.', ['über'], 'I am happy about the nice weather today.', 'sich freuen über = something happening now or already happened.'],
+  ['Sie freut sich ___ ihren Geburtstag nächste Woche.', ['auf'], 'She is looking forward to her birthday next week.', 'Future → auf.'],
+  ['Er freut sich ___ die gute Note.', ['über'], 'He is pleased about the good grade (he already got it).', 'Already happened → über.'],
+  ['Wir freuen uns ___ deinen Besuch am Wochenende.', ['auf'], 'We are looking forward to your visit at the weekend.', 'Future → auf.'],
+  ['Die Kinder freuen sich ___ die Geschenke, die sie bekommen haben.', ['über'], 'The children are happy about the presents they received.', 'Already received → über.'],
+  ['Ich freue mich ___ das Wiedersehen mit dir nächsten Monat.', ['auf'], 'I am looking forward to seeing you again next month.', 'Future → auf.'],
+  ['Ich habe mich sehr ___ deine Nachricht gefreut.', ['über'], 'I was very happy about your message.', 'Past → über.'],
+  ['Ich denke oft ___ meine Kindheit.', ['an'], 'I often think of my childhood.', 'denken an = think of / remember.'],
+  ['Ich denke ___ deinen Vorschlag nach.', ['über'], 'I am thinking your suggestion over.', 'nachdenken über = reflect on.'],
+  ['Was hältst du ___ dem neuen Kollegen?', ['von'], 'What do you think of the new colleague?', 'halten von = have an opinion about.'],
+  ['Sie denkt ___ ihren Bruder in Kanada.', ['an'], 'She is thinking of her brother in Canada.', 'denken an = think of someone.'],
+  ['Er denkt lange ___ die Frage nach.', ['über'], 'He thinks about the question for a long time.', 'nachdenken über.'],
+  ['Was halten Sie ___ diesem Plan?', ['von'], 'What do you think of this plan?', 'halten von + Dativ.'],
+  ['Ich spreche morgen ___ meinem Chef.', ['mit'], 'I am speaking with my boss tomorrow.', 'sprechen mit = the partner.'],
+  ['Wir sprechen ___ das Wetter.', ['über'], 'We are talking about the weather.', 'sprechen über = the topic.'],
+  ['Sie redet ___ ihrer Freundin.', ['mit'], 'She is talking with her friend.', 'reden mit = the partner.'],
+  ['Sie redet ___ ihre Probleme.', ['über'], 'She is talking about her problems.', 'reden über = the topic.'],
+  ['Ich bewerbe mich ___ die Stelle als Entwickler.', ['um'], 'I am applying for the job as a developer.', 'sich bewerben um = the job.'],
+  ['Ich bewerbe mich ___ einer Firma in München.', ['bei'], 'I am applying to a company in Munich.', 'sich bewerben bei = the company.'],
+  ['Sie bewirbt sich ___ einen Studienplatz.', ['um'], 'She is applying for a university place.', 'um = the position / place.'],
+  ['Er bewirbt sich ___ der Deutschen Bahn.', ['bei'], 'He is applying to Deutsche Bahn.', 'bei = the company.'],
+  ['Ich interessiere mich ___ Musik.', ['für'], 'I am interested in music.', 'The verb sich interessieren takes für (Akkusativ).'],
+  ['Wir sind interessiert ___ einer Zusammenarbeit.', ['an'], 'We are interested in a collaboration.', 'The adjective interessiert takes an (Dativ).'],
+  ['Bist du ___ dem Angebot interessiert?', ['an'], 'Are you interested in the offer?', 'interessiert an + Dativ.'],
+  ['Er interessiert sich ___ Geschichte.', ['für'], 'He is interested in history.', 'sich interessieren für.'],
+  ['Ich warte ___ den Zug.', ['auf'], 'I am waiting for the train.', 'warten auf — never "warten für".'],
+  ['Ich habe Angst ___ Hunden.', ['vor'], 'I am afraid of dogs.', 'Angst haben vor — never "Angst von".'],
+  ['Er leidet ___ einer schweren Krankheit.', ['an', 'unter'], 'He suffers from a serious illness.', 'leiden an = an illness (unter is also heard; an is the textbook form).'],
+  ['Sie leidet ___ dem Lärm.', ['unter'], 'She suffers from the noise.', 'leiden unter = a burden (stress, noise, heat).'],
+  ['Ich bedanke mich ___ Ihnen.', ['bei'], 'I thank you (formal).', 'sich bedanken bei = the person.'],
+  ['Ich bedanke mich ___ die Einladung.', ['für'], 'I say thank you for the invitation.', 'sich bedanken für = the reason.'],
+  ['Sie entschuldigt sich ___ ihrem Kollegen.', ['bei'], 'She apologises to her colleague.', 'sich entschuldigen bei = the person.'],
+  ['Sie entschuldigt sich ___ den Lärm.', ['für'], 'She apologises for the noise.', 'sich entschuldigen für = the reason.'],
+  ['Wir beschweren uns ___ den Lärm.', ['über'], 'We complain about the noise.', 'sich beschweren über = the problem.'],
+  ['Wir beschweren uns ___ der Hausverwaltung.', ['bei'], 'We complain to the property management.', 'sich beschweren bei = the person or office.'],
+  ['Ich erkundige mich ___ den Öffnungszeiten.', ['nach'], 'I am enquiring about the opening hours.', 'sich erkundigen nach = what you ask about.'],
+  ['Ich informiere mich ___ die Kurse.', ['über'], 'I am finding out about the courses.', 'sich informieren über = the topic.'],
+  ['Wir warten ___ eine Antwort von der Behörde.', ['auf'], 'We are waiting for a reply from the authority.', 'warten auf + Akkusativ.'],
+  ['Denk bitte ___ deinen Termin morgen!', ['an'], 'Please remember your appointment tomorrow!', 'denken an = remember.'],
+];
+const CONFUSED_CHOICE = [
+  ['sich freuen ___ — something in the future', ['auf', 'über', 'an'], 0, 'auf = future, über = now or past.'],
+  ['sich freuen ___ — something that already happened', ['über', 'auf', 'an'], 0, 'über = now or past.'],
+  ['think of / remember someone', ['denken an', 'nachdenken über', 'halten von'], 0, 'denken an = remember.'],
+  ['reflect on a decision', ['nachdenken über', 'denken an', 'halten von'], 0, 'nachdenken über = reflect on.'],
+  ['have an opinion about something', ['halten von', 'denken an', 'nachdenken über'], 0, 'halten von = opinion.'],
+  ['sprechen ___ — the topic', ['über', 'mit', 'von'], 0, 'über = topic; mit = partner.'],
+  ['sprechen ___ — the partner', ['mit', 'über', 'zu'], 0, 'mit = partner.'],
+  ['to wait for', ['warten auf', 'warten für', 'warten an'], 0, 'warten auf — never für.'],
+  ['to be afraid of', ['Angst haben vor', 'Angst haben von', 'Angst haben für'], 0, 'Angst haben vor — never von.'],
+  ['interessiert ___ (adjective)', ['an', 'für', 'auf'], 0, 'The adjective takes an + Dativ; the verb sich interessieren takes für.'],
+  ['sich interessieren ___ (verb)', ['für', 'an', 'auf'], 0, 'The verb takes für + Akkusativ.'],
+  ['leiden ___ — an illness', ['an', 'unter', 'von'], 0, 'leiden an = illness; leiden unter = burden.'],
+];
+
+// ---------- 6. Adjectives and nouns ----------
+const ADJS = [
+  { v: 'stolz auf', c: 'A', en: 'proud of', s: [S('Ich bin stolz auf dich.', pr('du'), 'person'), S('Sie ist stolz auf ihren Sohn.', o('ihr', 'm', 'Sohn'), 'person')] },
+  { v: 'neugierig auf', c: 'A', en: 'curious about', s: [S('Ich bin neugierig auf das Ergebnis.', o('der', 'n', 'Ergebnis'))] },
+  { v: 'böse auf', c: 'A', en: 'angry with', syn: ['wütend auf', 'sauer auf'], s: [S('Sie ist böse auf ihren Bruder.', o('ihr', 'm', 'Bruder'), 'person')] },
+  { v: 'wütend auf', c: 'A', en: 'furious with', syn: ['böse auf', 'sauer auf'], s: [S('Er ist wütend auf seinen Chef.', o('sein', 'm', 'Chef'), 'person')] },
+  { v: 'sauer auf', c: 'A', en: 'annoyed with', syn: ['böse auf', 'wütend auf'], s: [S('Sie ist sauer auf ihn.', pr('er'), 'person')] },
+  { v: 'froh über', c: 'A', en: 'glad about', syn: ['glücklich über'], s: [S('Ich bin froh über die Nachricht.', o('der', 'f', 'Nachricht'))] },
+  { v: 'glücklich über', c: 'A', en: 'happy about', syn: ['froh über'], s: [S('Wir sind glücklich über das Ergebnis.', o('der', 'n', 'Ergebnis'))] },
+  { v: 'traurig über', c: 'A', en: 'sad about', s: [S('Sie ist traurig über den Abschied.', o('der', 'm', 'Abschied'))] },
+  { v: 'verantwortlich für', c: 'A', en: 'responsible for', s: [S('Sie ist verantwortlich für das Team.', o('der', 'n', 'Team'))] },
+  { v: 'dankbar für', c: 'A', en: 'grateful for', s: [S('Ich bin dankbar für deine Hilfe.', o('dein', 'f', 'Hilfe'))] },
+  { v: 'wichtig für', c: 'A', en: 'important for', s: [S('Sport ist wichtig für die Gesundheit.', o('der', 'f', 'Gesundheit'))] },
+  { v: 'typisch für', c: 'A', en: 'typical of', s: [S('Das ist typisch für Berlin.', bare('Berlin'))] },
+  { v: 'bekannt für', c: 'A', en: 'known for', s: [S('Die Stadt ist bekannt für ihre Museen.', o('ihr', 'p', 'Museen'))] },
+  { v: 'verliebt in', c: 'A', en: 'in love with', s: [S('Sie ist verliebt in ihren Kollegen.', o('ihr', 'm', 'Kollegen', { nomN: 'Kollege' }), 'person')] },
+  { v: 'zufrieden mit', c: 'D', en: 'satisfied with', s: [S('Ich bin zufrieden mit der Arbeit.', o('der', 'f', 'Arbeit'))] },
+  { v: 'einverstanden mit', c: 'D', en: 'in agreement with', s: [S('Bist du mit dem Plan einverstanden?', o('der', 'm', 'Plan'))] },
+  { v: 'fertig mit', c: 'D', en: 'finished with', s: [S('Ich bin fertig mit der Arbeit.', o('der', 'f', 'Arbeit'))] },
+  { v: 'verheiratet mit', c: 'D', en: 'married to', s: [S('Er ist mit einer Ärztin verheiratet.', o('ein', 'f', 'Ärztin'), 'person')] },
+  { v: 'interessiert an', c: 'D', en: 'interested in (adjective)', s: [S('Ich bin interessiert an der Stelle.', o('der', 'f', 'Stelle'))] },
+  { v: 'begeistert von', c: 'D', en: 'enthusiastic about', s: [S('Er ist begeistert von Berlin.', bare('Berlin')), S('Sie ist begeistert vom Konzert.', o('der', 'n', 'Konzert'))] },
+  { v: 'überzeugt von', c: 'D', en: 'convinced of', s: [S('Ich bin überzeugt von der Idee.', o('der', 'f', 'Idee'))] },
+  { v: 'abhängig von', c: 'D', en: 'dependent on', s: [S('Das ist abhängig vom Wetter.', o('der', 'n', 'Wetter'))] },
+  { v: 'gut in', c: 'D', en: 'good at', s: [S('Ich bin gut in Mathe.', bare('Mathe'))] },
+  { v: 'schlecht in', c: 'D', en: 'bad at', s: [S('Er ist schlecht in Chemie.', bare('Chemie'))] },
+  { v: 'nett zu', c: 'D', en: 'nice to', syn: ['freundlich zu'], s: [S('Sei nett zu deiner Schwester.', o('dein', 'f', 'Schwester'), 'person')] },
+  { v: 'freundlich zu', c: 'D', en: 'friendly to', syn: ['nett zu'], s: [S('Sie ist freundlich zu den Gästen.', o('der', 'p', 'Gästen', { nomN: 'Gäste' }), 'person')] },
+];
+const NOUNS = [
+  { v: 'die Angst vor', c: 'D', en: 'the fear of', s: [S('Die Angst vor der Prüfung ist groß.', o('der', 'f', 'Prüfung'))] },
+  { v: 'die Lust auf', c: 'A', en: 'the desire for, feeling like', s: [S('Hast du Lust auf Pizza?', bare('Pizza')), S('Ich habe Lust auf einen Kaffee.', o('ein', 'm', 'Kaffee'))] },
+  { v: 'die Zeit für', c: 'A', en: 'the time for', s: [S('Ich habe keine Zeit für Sport.', bare('Sport')), S('Hast du Zeit für einen Kaffee?', o('ein', 'm', 'Kaffee'))] },
+  { v: 'das Interesse an', c: 'D', en: 'the interest in', s: [S('Sie hat Interesse an der Stelle.', o('der', 'f', 'Stelle'))] },
+  { v: 'die Antwort auf', c: 'A', en: 'the answer to', s: [S('Das ist die Antwort auf meine Frage.', o('mein', 'f', 'Frage'))] },
+  { v: 'die Frage nach', c: 'D', en: 'the question about', s: [S('Die Frage nach dem Preis ist wichtig.', o('der', 'm', 'Preis'))] },
+  { v: 'die Bitte um', c: 'A', en: 'the request for', s: [S('Das ist eine Bitte um Hilfe.', bare('Hilfe')), S('Er schickt eine Bitte um einen Termin.', o('ein', 'm', 'Termin'))] },
+  { v: 'die Erinnerung an', c: 'A', en: 'the memory of', s: [S('Die Erinnerung an den Urlaub ist schön.', o('der', 'm', 'Urlaub'))] },
+  { v: 'der Grund für', c: 'A', en: 'the reason for', s: [S('Der Grund für die Kündigung ist unklar.', o('der', 'f', 'Kündigung'))] },
+  { v: 'die Sorge um', c: 'A', en: 'the worry about', s: [S('Die Sorge um die Kinder ist groß.', o('der', 'p', 'Kinder'), 'person')] },
+];
+
+// ---------- 7. Pronominal adverbs ----------
+const DA_PREPS = ['an', 'auf', 'aus', 'bei', 'für', 'in', 'mit', 'nach', 'über', 'um', 'von', 'vor', 'zu'];
+// Question words: [prompt, answers, gloss, explanation]
+const WO_QUESTIONS = [
+  ['___ wartest du?', ['Worauf'], '(thing — warten auf)', 'Thing → wo(r)- word: worauf.'],
+  ['___ wartest du?', ['Auf wen'], '(person — warten auf)', 'Person → auf wen (Akkusativ), no wo-word.'],
+  ['___ denkst du?', ['Woran'], '(thing — denken an)', 'Thing → woran.'],
+  ['___ denkst du?', ['An wen'], '(person — denken an)', 'Person → an wen.'],
+  ['___ sprichst du?', ['Mit wem'], '(person — sprechen mit)', 'Person + Dativ → mit wem, no wo-word.'],
+  ['___ fährst du?', ['Womit'], '(thing — fahren mit, e.g. by car)', 'Thing → womit.'],
+  ['___ interessierst du dich?', ['Wofür'], '(thing — sich interessieren für)', 'Thing → wofür.'],
+  ['___ freust du dich?', ['Worauf'], '(thing, future — sich freuen auf)', 'Thing → worauf.'],
+  ['___ ärgerst du dich?', ['Worüber'], '(thing — sich ärgern über)', 'Thing → worüber.'],
+  ['___ träumst du?', ['Wovon'], '(thing — träumen von)', 'Thing → wovon.'],
+  ['___ hast du Angst?', ['Wovor'], '(thing — Angst haben vor)', 'Thing → wovor.'],
+  ['___ kümmerst du dich?', ['Worum'], '(thing — sich kümmern um)', 'Thing → worum.'],
+  ['___ kümmerst du dich?', ['Um wen'], '(person — sich kümmern um)', 'Person → um wen.'],
+  ['___ erinnerst du dich?', ['Woran'], '(thing — sich erinnern an)', 'Thing → woran.'],
+  ['___ bedankst du dich?', ['Bei wem'], '(person — sich bedanken bei)', 'Person + Dativ → bei wem.'],
+  ['___ bedankst du dich?', ['Wofür'], '(thing — sich bedanken für)', 'Thing → wofür.'],
+  ['___ gehört das?', ['Wozu'], '(thing — gehören zu)', 'Thing → wozu.'],
+  ['___ fragst du?', ['Wonach'], '(thing — fragen nach)', 'Thing → wonach.'],
+  ['___ besteht der Test?', ['Woraus'], '(thing — bestehen aus)', 'Thing → woraus.'],
+  ['___ bist du zufrieden?', ['Womit'], '(thing — zufrieden mit)', 'Thing → womit.'],
+  ['___ bist du stolz?', ['Auf wen'], '(person — stolz auf)', 'Person → auf wen.'],
+  ['___ redet ihr?', ['Worüber'], '(topic — reden über)', 'Topic / thing → worüber.'],
+  ['___ hilfst du ihm?', ['Wobei'], '(thing — helfen bei)', 'Thing → wobei.'],
+  ['___ telefonierst du?', ['Mit wem'], '(person — telefonieren mit)', 'Person + Dativ → mit wem.'],
+  ['___ hast du dich verabschiedet?', ['Von wem'], '(person — sich verabschieden von)', 'Person + Dativ → von wem.'],
+  ['___ leidet sie?', ['Woran'], '(thing — leiden an)', 'Thing → woran (leiden an + Dativ, but the wo-word is the same).'],
+  ['___ verlässt du dich?', ['Auf wen'], '(person — sich verlassen auf)', 'Person → auf wen.'],
+  ['___ hoffst du?', ['Worauf'], '(thing — hoffen auf)', 'Thing → worauf.'],
+];
+// Before dass- / infinitive clauses: [prompt, answers, explanation]
+const DA_CLAUSES = [
+  ['Ich freue mich ___, dass du kommst.', ['darauf'], 'sich freuen auf → darauf points forward to the dass-clause.'],
+  ['Ich freue mich ___, dich zu sehen.', ['darauf'], 'sich freuen auf + infinitive clause → darauf.'],
+  ['Ich denke ___, dass ich morgen einen Termin habe.', ['daran'], 'denken an → daran.'],
+  ['Er interessiert sich ___, wie das funktioniert.', ['dafür'], 'sich interessieren für → dafür.'],
+  ['Ich bedanke mich ___, dass du mir geholfen hast.', ['dafür'], 'sich bedanken für → dafür.'],
+  ['Sie wartet ___, dass der Bus kommt.', ['darauf'], 'warten auf → darauf.'],
+  ['Wir sprechen ___, wie wir das Problem lösen.', ['darüber'], 'sprechen über → darüber.'],
+  ['Ich ärgere mich ___, dass ich den Zug verpasst habe.', ['darüber'], 'sich ärgern über → darüber.'],
+  ['Er kümmert sich ___, dass alles funktioniert.', ['darum'], 'sich kümmern um → darum.'],
+  ['Ich habe Angst ___, die Prüfung nicht zu bestehen.', ['davor'], 'Angst haben vor → davor.'],
+  ['Sie träumt ___, ein eigenes Haus zu haben.', ['davon'], 'träumen von → davon.'],
+  ['Ich erinnere mich ___, dass wir das besprochen haben.', ['daran'], 'sich erinnern an → daran.'],
+  ['Achte ___, dass du pünktlich bist.', ['darauf'], 'achten auf → darauf.'],
+  ['Wir bitten ___, dass Sie sich anmelden.', ['darum'], 'bitten um → darum.'],
+  ['Er gewöhnt sich ___, früh aufzustehen.', ['daran'], 'sich gewöhnen an → daran.'],
+  ['Ich hoffe ___, dass alles gut geht.', ['darauf'], 'hoffen auf → darauf.'],
+  ['Sie beschwert sich ___, dass die Heizung nicht funktioniert.', ['darüber'], 'sich beschweren über → darüber.'],
+  ['Es geht ___, dass wir die Miete pünktlich zahlen.', ['darum'], 'es geht um → darum.'],
+  ['Wir bereiten uns ___ vor, dass die Prüfung schwer wird.', ['darauf'], 'sich vorbereiten auf → darauf.'],
+  ['Denk ___, die Tür abzuschließen!', ['daran'], 'denken an → daran.'],
+  ['Ich bin stolz ___, dass ich die Prüfung bestanden habe.', ['darauf'], 'stolz auf → darauf.'],
+  ['Er ist zufrieden ___, wie das Projekt läuft.', ['damit'], 'zufrieden mit → damit.'],
+  ['Sie hat sich ___ entschieden, in Berlin zu bleiben.', ['dafür'], 'sich entscheiden für → dafür.'],
+  ['Ich habe mich ___ gewöhnt, dass es hier früh dunkel wird.', ['daran'], 'sich gewöhnen an → daran.'],
+  ['Wir verlassen uns ___, dass du pünktlich bist.', ['darauf'], 'sich verlassen auf → darauf.'],
+];
+
+const D = root.PraepData = {
+  CASE_NAME: CASE_NAME, PREPS: PREPS, CASE_PHRASES: CASE_PHRASES, CASE_PRONOUNS: CASE_PRONOUNS,
+  WECHSEL: WECHSEL, WECHSEL_TIME: WECHSEL_TIME, CONTRACTIONS: CONTRACTIONS, CONTRACTION_SENTENCES: CONTRACTION_SENTENCES,
+  TIME: TIME, TIME_TENSE: TIME_TENSE, PLACE: PLACE, PLACE_ROUNDTRIP: PLACE_ROUNDTRIP, PLACE_CHOICE: PLACE_CHOICE,
+  VERBS: VERBS, VERBS_TWO: VERBS_TWO, VERBS_TWO_CHOICE: VERBS_TWO_CHOICE, CONFUSED: CONFUSED, CONFUSED_CHOICE: CONFUSED_CHOICE,
+  ADJS: ADJS, NOUNS: NOUNS, DA_PREPS: DA_PREPS, WO_QUESTIONS: WO_QUESTIONS, DA_CLAUSES: DA_CLAUSES,
+};
+return D;
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+</script>
+<script id="engine">
+/* Präpositionen drill — engine */
+(function (root) {
+'use strict';
+const D = root.PraepData;
+const CASE_NAME = D.CASE_NAME;
+
+// ---------- inflection ----------
+const DEF = { m: { N: 'der', A: 'den', D: 'dem', G: 'des' }, f: { N: 'die', A: 'die', D: 'der', G: 'der' }, n: { N: 'das', A: 'das', D: 'dem', G: 'des' }, p: { N: 'die', A: 'die', D: 'den', G: 'der' } };
+const EIN = { m: { N: '', A: 'en', D: 'em', G: 'es' }, f: { N: 'e', A: 'e', D: 'er', G: 'er' }, n: { N: '', A: '', D: 'em', G: 'es' }, p: { N: 'e', A: 'e', D: 'en', G: 'er' } };
+const PRON = {
+  ich: { A: 'mich', D: 'mir' }, du: { A: 'dich', D: 'dir' }, er: { A: 'ihn', D: 'ihm' }, sie: { A: 'sie', D: 'ihr' }, es: { A: 'es', D: 'ihm' },
+  wir: { A: 'uns', D: 'uns' }, ihr: { A: 'euch', D: 'euch' }, 'sie-pl': { A: 'sie', D: 'ihnen' }, Sie: { A: 'Sie', D: 'Ihnen' },
+};
+const PRON_LABEL = { ich: 'ich', du: 'du', er: 'er', sie: 'sie (she)', es: 'es', wir: 'wir', ihr: 'ihr (you, plural)', 'sie-pl': 'sie (they)', Sie: 'Sie (formal)' };
+const GENDER_PRON = { m: 'er', f: 'sie', n: 'es', p: 'sie-pl' };
+const CONTR = {}; const CONTR_REV = {}; const CONTR_STD = {};
+D.CONTRACTIONS.forEach(function (c) { CONTR[c[0]] = c[1]; CONTR_REV[c[1]] = c[0]; CONTR_STD[c[1]] = c[2]; });
+const DA_STARTS_VOWEL = /^[aeiouäöü]/;
+
+function inflectDet(base, g, c) {
+  if (base === 'der') return DEF[g][c];
+  const end = EIN[g][c];
+  const stem = (base === 'euer' && end) ? 'eur' : base;
+  return stem + end;
+}
+function daWord(p) { return (DA_STARTS_VOWEL.test(p) ? 'dar' : 'da') + p; }
+function woWord(p) { return (DA_STARTS_VOWEL.test(p) ? 'wor' : 'wo') + p; }
+
+// Describe how the object phrase (prep + det + noun) appears in a sentence under case c.
+// Returns { forms: [long, contracted?], found, prep, det, noun, nomPhrase, contracted }
+function objectForms(p, obj, c) {
+  if (obj.pron) {
+    const word = PRON[obj.pron][c];
+    return { forms: [p + ' ' + word], prep: p, pronWord: word, pron: obj.pron, nomPhrase: null };
+  }
+  const tail = (obj.adj ? ' ' + obj.adj : '') + ' ' + obj.n;
+  if (!obj.det) return { forms: [p + tail], prep: p, det: null, noun: obj.n, nomPhrase: null };
+  const det = inflectDet(obj.det, obj.g, c);
+  const long = p + ' ' + det;
+  const forms = [long + tail];
+  const ctr = CONTR[long];
+  if (ctr) forms.push(ctr + tail);
+  const nomDet = inflectDet(obj.det, obj.g, 'N');
+  const nomPhrase = nomDet + (obj.nomAdj ? ' ' + obj.nomAdj : obj.adj ? ' ' + obj.adj : '') + ' ' + (obj.nomN || obj.n);
+  return { forms: forms, prep: p, det: det, long: long, contracted: ctr || null, noun: obj.n, tail: tail, nomPhrase: nomPhrase };
+}
+// whole-word search: the phrase must start at the beginning or after a space and end at the end or before a space / punctuation
+function wordIndex(sentence, phrase) {
+  let from = 0;
+  while (from <= sentence.length) {
+    const i = sentence.indexOf(phrase, from); if (i < 0) return -1;
+    const before = i === 0 ? ' ' : sentence[i - 1]; const after = i + phrase.length >= sentence.length ? ' ' : sentence[i + phrase.length];
+    if (before === ' ' && /[ .,!?;:]/.test(after)) return i;
+    from = i + 1;
+  }
+  return -1;
+}
+// Find which form is present in the sentence; returns index into forms or -1
+function findForm(sentence, forms) {
+  for (let i = 0; i < forms.length; i++) if (wordIndex(sentence, forms[i]) >= 0) return i;
+  return -1;
+}
+function replaceOnce(s, needle, repl) {
+  const trimmed = needle.replace(/ $/, ''); const trailing = needle.length - trimmed.length;
+  const i = wordIndex(s, trimmed);
+  if (i < 0) throw new Error('phrase not found: "' + needle + '" in "' + s + '"');
+  return s.slice(0, i) + repl + s.slice(i + trimmed.length + trailing);
+}
+
+// ---------- concepts ----------
+const CONCEPTS = [
+  { id: 'case', name: 'Prepositions by case', short: 'Case', blurb: 'Which prepositions always take Akkusativ, Dativ or Genitiv — and the article or pronoun that follows.' },
+  { id: 'wechsel', name: 'Two-way prepositions', short: 'Wo / Wohin', blurb: 'an, auf, hinter, in, neben, über, unter, vor, zwischen: Wo? → Dativ, Wohin? → Akkusativ. Position verbs vs movement verbs.' },
+  { id: 'contr', name: 'Contractions', short: 'am / ins / zur', blurb: 'an dem → am, in das → ins, zu der → zur and the rest.' },
+  { id: 'time', name: 'Time', short: 'Time', blurb: 'um, am, im, in, seit, vor, nach, ab, bis, von … bis, während, für, zwischen, gegen.' },
+  { id: 'place', name: 'Place', short: 'Place', blurb: 'Wohin? (nach, in, zu, auf, an) · Wo? (in, bei, auf, an) · Woher? (aus, von) and the round-trip rule.' },
+  { id: 'verb', name: 'Verbs with prepositions', short: 'Verbs', blurb: 'The preposition and its case are part of the verb: warten auf, denken an, sich kümmern um …' },
+  { id: 'verb2', name: 'Two prepositions and easily confused pairs', short: 'Confusables', blurb: 'bei … für, mit … über · freuen auf / über · denken an / nachdenken über / halten von · bewerben um / bei.' },
+  { id: 'adj', name: 'Adjectives and nouns with prepositions', short: 'Adjectives', blurb: 'stolz auf, zufrieden mit, die Angst vor, die Lust auf …' },
+  { id: 'da', name: 'Pronominal adverbs', short: 'da- / wo-', blurb: 'darauf / worauf for things, auf ihn / auf wen for people; da-words before dass-clauses.' },
+];
+const CONCEPT_BY_ID = {}; CONCEPTS.forEach(function (c) { CONCEPT_BY_ID[c.id] = c; });
+
+// ---------- item construction ----------
+function hash(s) { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
+function caseLabel(c) { return CASE_NAME[c]; }
+function mk(fields) {
+  const it = Object.assign({ kind: 'type', match: 'exact' }, fields);
+  if (it.kind === 'choice') { it.answers = [it.options[it.correct]]; }
+  if (it.gloss) it.gloss = it.gloss.replace(/^\((.*)\)$/, '$1');
+  it.id = it.concept + ':' + hash(it.kind + '|' + it.prompt + '|' + (it.gloss || '') + '|' + it.answers.join('/'));
+  it.blanks = (it.prompt.match(/___/g) || []).length;
+  return it;
+}
+function mkType(concept, prompt, answers, opts) { return mk(Object.assign({ concept: concept, kind: 'type', prompt: prompt, answers: answers }, opts || {})); }
+function mkChoice(concept, prompt, options, correct, opts) { return mk(Object.assign({ concept: concept, kind: 'choice', prompt: prompt, options: options, correct: correct }, opts || {})); }
+
+function prepDistractors(p, c, n) {
+  // other prepositions, prefer ones plausible for the same case
+  const pool = D.PREPS.filter(function (x) { return x.p !== p && x.p !== 'anstatt' && x.p !== 'entlang' && x.p !== 'gegenüber'; }).map(function (x) { return x.p; });
+  const primary = ['an', 'auf', 'über', 'für', 'um', 'mit', 'von', 'vor', 'zu', 'nach', 'aus', 'bei', 'in', 'gegen'].filter(function (x) { return x !== p; });
+  const out = []; const seen = {};
+  primary.concat(pool).forEach(function (x) { if (!seen[x] && out.length < n) { seen[x] = 1; out.push(x); } });
+  return out;
+}
+
+function headVariants(head) {
+  const out = [head];
+  if (/^sich /.test(head)) out.push(head.replace(/^sich /, ''));
+  if (/^sein /.test(head)) out.push(head.replace(/^sein (.+)$/, '$1 sein'));
+  if (/^es /.test(head)) out.push(head.replace(/^es /, ''));
+  if (/^(die|der|das) /.test(head)) out.push(head.replace(/^(die|der|das) /, ''));
+  return out;
+}
+// accept the long form of a standard contraction (am → an dem) and vice versa, keeping capitalisation
+function withContractionVariants(answers) {
+  const out = answers.slice();
+  answers.forEach(function (a) {
+    const toks = a.split(' '); const first = toks[0]; const lower = first.toLowerCase(); const cap = first[0] !== lower[0];
+    const fix = function (x) { return cap ? x[0].toUpperCase() + x.slice(1) : x; };
+    if (CONTR_REV[lower]) { const v = [fix(CONTR_REV[lower])].concat(toks.slice(1)).join(' '); if (out.indexOf(v) < 0) out.push(v); }
+    if (toks.length >= 2) { const two = lower + ' ' + toks[1]; if (CONTR[two]) { const v = [fix(CONTR[two])].concat(toks.slice(2)).join(' '); if (out.indexOf(v) < 0) out.push(v); } }
+  });
+  return out;
+}
+function buildEntryItems(concept, entry, items, opts) {
+  opts = opts || {};
+  const p = entry.v.split(' ').pop();
+  const head = entry.v;
+  const c = entry.c;
+  const rule = head + ' + ' + caseLabel(c);
+  // recall: English → German. Synonyms with the same preposition (entry.syn) are accepted too.
+  const recallAnswers = [];
+  [head].concat(entry.syn || []).forEach(function (v) { headVariants(v).forEach(function (a) { if (recallAnswers.indexOf(a) < 0) recallAnswers.push(a); }); });
+  items.push(mkType(concept, entry.en, recallAnswers, {
+    instruction: opts.recallInstruction || 'Give the German verb with its preposition.',
+    explain: rule + '.', tag: p + ' + ' + c, kindLabel: 'recall',
+  }));
+  // case choice
+  items.push(mkChoice(concept, head + ' + ?', ['Akkusativ', 'Dativ'], c === 'A' ? 0 : 1, {
+    instruction: 'Which case follows?',
+    explain: rule + '. ' + caseRule(p, c), tag: p + ' + ' + c,
+  }));
+  entry.s.forEach(function (sent) {
+    const f = objectForms(p, sent.obj, c);
+    const idx = findForm(sent.t, f.forms);
+    if (idx < 0) throw new Error('sentence does not contain expected phrase: ' + sent.t + ' / ' + f.forms.join(' | '));
+    const used = f.forms[idx];
+    const contracted = idx === 1;
+    const glossEn = sent.en || entry.en;
+    // 1. preposition only (a contracted sentence is covered by item 2)
+    const alt = sent.alt || []; // other prepositions that are also acceptable in this sentence (same case)
+    if (!contracted) {
+      items.push(mkType(concept, replaceOnce(sent.t, p + ' ', '___ '), [p].concat(alt), {
+        instruction: 'Fill in the missing preposition.', gloss: '(' + glossEn + ')',
+        explain: rule + '.' + (alt.length ? ' (' + alt.join(' / ') + ' is also heard here.)' : ''), tag: p + ' + ' + c,
+      }));
+    }
+    // 2. preposition + article
+    if (f.det) {
+      let answers = contracted ? [f.contracted, f.long] : (f.contracted ? [f.long, f.contracted] : [f.long]);
+      alt.forEach(function (ap) { answers = answers.concat(withContractionVariants([ap + ' ' + f.det])); });
+      items.push(mkType(concept, replaceOnce(sent.t, used, '___' + f.tail), answers, {
+        instruction: 'Fill in the preposition and the article.', gloss: '(' + f.nomPhrase + ' — ' + glossEn + ')',
+        explain: rule + ': ' + f.nomPhrase + ' → ' + used + '.' + (f.contracted ? ' ' + f.long + ' = ' + f.contracted + '.' : ''), tag: p + ' + ' + c,
+      }));
+      // 3. article only (not for contracted sentences)
+      if (!contracted) {
+        items.push(mkType(concept, replaceOnce(sent.t, used, p + ' ___' + f.tail), [f.det], {
+          instruction: 'Fill in the article.', gloss: '(' + f.nomPhrase + ')',
+          explain: rule + ': ' + f.nomPhrase + ' → ' + used + '.', tag: p + ' + ' + c,
+        }));
+      }
+    }
+    // 4. pronoun
+    if (f.pron) {
+      items.push(mkType(concept, replaceOnce(sent.t, used, p + ' ___'), [f.pronWord], {
+        instruction: 'Fill in the pronoun.', gloss: '(' + PRON_LABEL[f.pron] + ')',
+        explain: rule + ': ' + PRON_LABEL[f.pron] + ' → ' + f.pronWord + ' (' + caseLabel(c) + ').', tag: p + ' + ' + c,
+      }));
+    }
+    // 5. da-word / person pronoun (concept 'da')
+    if (opts.da && D.DA_PREPS.indexOf(p) >= 0 && !f.pron) {
+      const stripped = replaceOnce(sent.t, used, '___');
+      if (sent.who === 'thing') {
+        items.push(mkType('da', sent.t + ' → ' + stripped, [daWord(p)], {
+          instruction: 'Replace the object with a da-word.', gloss: '(' + glossEn + ')',
+          explain: 'A thing or idea → da(r)-word: ' + daWord(p) + ' (' + (DA_STARTS_VOWEL.test(p) ? 'dar- before a vowel' : 'da- before a consonant') + ').', tag: 'da-',
+        }));
+      } else if (sent.who === 'person' && f.det) {
+        const gp = GENDER_PRON[sent.obj.g];
+        const right = p + ' ' + PRON[gp][c];
+        const wrongCase = p + ' ' + PRON[gp][c === 'A' ? 'D' : 'A'];
+        const opts3 = [right, daWord(p), wrongCase];
+        items.push(mkChoice('da', sent.t + ' → ' + stripped, opts3, 0, {
+          instruction: 'Replace the object. It is a person, so no da-word.', gloss: '(' + glossEn + ')',
+          explain: 'People take preposition + pronoun, not a da-word: ' + right + ' (' + caseLabel(c) + ').', tag: 'person',
+        }));
+      }
+    }
+  });
+}
+function caseRule(p, c) {
+  if (['für', 'um', 'gegen', 'durch', 'ohne'].indexOf(p) >= 0) return p + ' is always Akkusativ.';
+  if (['vor', 'von', 'mit', 'zu', 'bei', 'nach', 'aus', 'seit', 'unter'].indexOf(p) >= 0) return p + ' is always Dativ here.';
+  if (['an', 'auf', 'über', 'in'].indexOf(p) >= 0) {
+    if (c === 'A') return 'Abstract use of an / auf / über / in → Akkusativ.';
+    return 'Exception to the abstract-use rule: this one takes Dativ.';
+  }
+  return '';
+}
+
+function generate() {
+  const items = [];
+  // --- case ---
+  D.PREPS.forEach(function (x) {
+    const opts = ['Akkusativ', 'Dativ', 'Genitiv', 'Akkusativ or Dativ (two-way)'];
+    const correct = { A: 0, D: 1, G: 2, W: 3 }[x.c];
+    items.push(mkChoice('case', x.p, opts, correct, {
+      instruction: 'Which case does this preposition take?', gloss: '(' + x.en + ')',
+      explain: x.p + ' → ' + (x.c === 'W' ? 'two-way: Wo? Dativ, Wohin? Akkusativ' : 'always ' + caseLabel(x.c)) + '.', tag: x.c,
+    }));
+  });
+  const groups = { A: 'durch für gegen ohne um bis entlang', D: 'aus bei mit nach seit von zu ab gegenüber', G: 'wegen während trotz statt', W: 'an auf hinter in neben über unter vor zwischen' };
+  Object.keys(groups).forEach(function (c) {
+    const lists = c === 'G' ? [groups[c], groups[c] + ' anstatt', groups[c].replace('statt', 'anstatt')] : [groups[c]];
+    items.push(mkType('case', 'List the ' + (c === 'W' ? 'two-way' : 'always ' + caseLabel(c)) + ' prepositions from the notes.', lists, {
+      instruction: 'Type them in any order, separated by spaces.', match: 'set',
+      explain: (c === 'W' ? 'Wechselpräpositionen' : caseLabel(c)) + ': ' + groups[c].split(' ').join(' · ') + '.', tag: c, kindLabel: 'recall',
+    }));
+  });
+  D.CASE_PHRASES.forEach(function (r) {
+    const p = r[0], det = r[1], g = r[2], n = r[3], nomN = r[4] || n, adj = r[5] || null, nomAdj = r[6] || adj;
+    const c = D.PREPS.filter(function (x) { return x.p === p; })[0].c;
+    const dform = inflectDet(det, g, c);
+    const nom = inflectDet(det, g, 'N') + ' ' + (nomAdj ? nomAdj + ' ' : '') + nomN;
+    const phrase = p === 'entlang' ? '___ ' + (adj ? adj + ' ' : '') + n + ' entlang' : p + ' ___ ' + (adj ? adj + ' ' : '') + n;
+    const full = p === 'entlang' ? dform + ' ' + n + ' entlang' : p + ' ' + dform + ' ' + (adj ? adj + ' ' : '') + n;
+    const answers = [dform];
+    const ctr = CONTR[p + ' ' + dform];
+    items.push(mkType('case', phrase, answers, {
+      instruction: 'Fill in the article.', gloss: '(' + nom + ')',
+      explain: p + ' + ' + caseLabel(c) + ': ' + nom + ' → ' + full + '.' + (ctr ? ' Usually contracted: ' + ctr + ' ' + n + '.' : '') + (p === 'entlang' ? ' entlang comes after the noun.' : ''), tag: p,
+    }));
+  });
+  D.CASE_PRONOUNS.forEach(function (r) {
+    const p = r[0], pron = r[1];
+    const c = D.PREPS.filter(function (x) { return x.p === p; })[0].c;
+    items.push(mkType('case', p + ' ___', [PRON[pron][c]], {
+      instruction: 'Fill in the pronoun.', gloss: '(' + PRON_LABEL[pron] + ')',
+      explain: p + ' + ' + caseLabel(c) + ': ' + PRON_LABEL[pron] + ' → ' + PRON[pron][c] + '.', tag: p,
+    }));
+  });
+
+  // --- wechsel ---
+  D.WECHSEL.forEach(function (w) {
+    const objD = { det: w.det, g: w.g, n: w.nD || w.n };
+    const objA = { det: w.det, g: w.g, n: w.n };
+    const fD = objectForms(w.p, objD, 'D'), fA = objectForms(w.p, objA, 'A');
+    const iD = findForm(w.pos, fD.forms), iA = findForm(w.mov, fA.forms);
+    if (iD < 0) throw new Error('position sentence mismatch: ' + w.pos + ' / ' + fD.forms.join('|'));
+    if (iA < 0) throw new Error('movement sentence mismatch: ' + w.mov + ' / ' + fA.forms.join('|'));
+    const usedD = fD.forms[iD], usedA = fA.forms[iA];
+    const nom = inflectDet(w.det, w.g, 'N') + ' ' + w.n;
+    const ansD = iD === 1 ? [fD.contracted, fD.long] : (fD.contracted ? [fD.long, fD.contracted] : [fD.long]);
+    const ansA = iA === 1 ? [fA.contracted, fA.long] : (fA.contracted ? [fA.long, fA.contracted] : [fA.long]);
+    items.push(mkType('wechsel', replaceOnce(w.pos, usedD, '___' + fD.tail), ansD, {
+      instruction: 'Fill in the preposition and the article.', gloss: '(' + w.p + ', ' + nom + ')',
+      explain: 'Wo? Position, no movement → Dativ: ' + usedD + '.' + (w.g === 'p' ? ' Dativ plural adds -n.' : ''), tag: 'Wo',
+    }));
+    items.push(mkType('wechsel', replaceOnce(w.mov, usedA, '___' + fA.tail), ansA, {
+      instruction: 'Fill in the preposition and the article.', gloss: '(' + w.p + ', ' + nom + ')',
+      explain: 'Wohin? Movement towards a place → Akkusativ: ' + usedA + '.', tag: 'Wohin',
+    }));
+    const optsCase = ['Wo? → Dativ', 'Wohin? → Akkusativ'];
+    items.push(mkChoice('wechsel', replaceOnce(w.pos, usedD, w.p + ' ___' + fD.tail), optsCase, 0, {
+      instruction: 'Position or movement? Which case?', gloss: '(' + nom + ')',
+      explain: 'No movement to a new place → Wo? → Dativ: ' + usedD + '.', tag: 'Wo',
+    }));
+    items.push(mkChoice('wechsel', replaceOnce(w.mov, usedA, w.p + ' ___' + fA.tail), optsCase, 1, {
+      instruction: 'Position or movement? Which case?', gloss: '(' + nom + ')',
+      explain: 'Movement towards a place → Wohin? → Akkusativ: ' + usedA + '.', tag: 'Wohin',
+    }));
+    if (w.pv) {
+      items.push(mkChoice('wechsel', replaceOnce(w.pos, w.pv[0] + ' ', '___ '), [w.pv[0], w.pv[1]], 0, {
+        instruction: 'Which verb fits? The article tells you the case.',
+        explain: 'Dativ (' + usedD + ') = position → position verb ' + w.pv[0] + '.', tag: 'Wo',
+      }));
+    }
+    if (w.mv) {
+      items.push(mkChoice('wechsel', replaceOnce(w.mov, w.mv[0] + ' ', '___ '), [w.mv[0], w.mv[1]], 0, {
+        instruction: 'Which verb fits? The article tells you the case.',
+        explain: 'Akkusativ (' + usedA + ') = movement → movement verb ' + w.mv[0] + '.', tag: 'Wohin',
+      }));
+    }
+  });
+  D.WECHSEL_TIME.forEach(function (r) {
+    items.push(mkType('wechsel', r[0], withContractionVariants(r[1]), { instruction: 'Fill in the gap.', gloss: r[2], explain: r[3], tag: 'time' }));
+  });
+
+  // --- contractions ---
+  D.CONTRACTIONS.forEach(function (c) {
+    items.push(mkType('contr', c[0] + ' → ?', [c[1]], { instruction: 'Contract it.', explain: c[0] + ' = ' + c[1] + (c[2] ? '.' : ' (mainly spoken; the long form is always fine).'), tag: c[1], kindLabel: 'recall' }));
+    items.push(mkType('contr', c[1] + ' = ? + ?', [c[0]], { instruction: 'Expand the contraction.', explain: c[1] + ' = ' + c[0] + '.', tag: c[1], kindLabel: 'recall' }));
+  });
+  D.CONTRACTION_SENTENCES.forEach(function (r) {
+    items.push(mkType('contr', r[0], [r[1]], { instruction: 'Fill in the contracted form.', gloss: '(' + r[2] + ')', explain: r[2] + ' → ' + r[1] + '.', tag: r[1] }));
+  });
+
+  // --- time ---
+  D.TIME.forEach(function (r) {
+    items.push(mkType('time', r[0], withContractionVariants(r[1]), { instruction: r[0].split('___').length > 2 ? 'Fill in both gaps.' : 'Fill in the missing preposition.', gloss: r[2], explain: r[3], tag: r[1][0].toLowerCase() }));
+  });
+  D.TIME_TENSE.forEach(function (r) {
+    items.push(mkChoice('time', r[0], r[1], r[2], { instruction: 'seit or vor? Pick the form that fits.', explain: r[3], tag: 'seit/vor' }));
+  });
+
+  // --- place ---
+  D.PLACE.forEach(function (r) {
+    items.push(mkType('place', r[0], withContractionVariants(r[1]), { instruction: r[3] ? 'Fill in the preposition and, if needed, the article.' : 'Fill in the preposition.', gloss: r[3] ? r[3].replace(/^\((.*)\)$/, '$1') + ' — ' + r[2] : r[2], explain: r[4], tag: r[1][0].split(' ')[0] }));
+  });
+  D.PLACE_ROUNDTRIP.forEach(function (r) {
+    items.push(mkType('place', r[0] + ' → ' + r[1], withContractionVariants(r[2]), { instruction: 'Coming back: fill in the preposition (and article).', explain: r[3], tag: 'Woher' }));
+  });
+  D.PLACE_CHOICE.forEach(function (r) {
+    items.push(mkChoice('place', r[0], r[1], r[2], { instruction: 'Pick the right preposition.', explain: r[3], tag: r[1][r[2]] }));
+  });
+
+  // --- verbs ---
+  D.VERBS.forEach(function (v) { buildEntryItems('verb', v, items, { da: true }); });
+  // --- verb2 ---
+  D.VERBS_TWO.forEach(function (r) {
+    items.push(mkType('verb2', r[0], withContractionVariants(r[1]), { instruction: 'Fill in both prepositions.', gloss: r[4], explain: r[2] + ' — ' + r[3], tag: 'two' }));
+  });
+  D.VERBS_TWO_CHOICE.forEach(function (r) {
+    items.push(mkChoice('verb2', r[0], r[1], r[2], { instruction: 'Which preposition?', explain: r[3], tag: 'two' }));
+  });
+  D.CONFUSED.forEach(function (r) {
+    items.push(mkType('verb2', r[0], withContractionVariants(r[1]), { instruction: 'Fill in the missing preposition.', gloss: r[2], explain: r[3], tag: 'confused' }));
+  });
+  D.CONFUSED_CHOICE.forEach(function (r) {
+    items.push(mkChoice('verb2', r[0], r[1], r[2], { instruction: 'Pick the right one.', explain: r[3], tag: 'confused' }));
+  });
+  // --- adjectives and nouns ---
+  D.ADJS.forEach(function (a) { buildEntryItems('adj', a, items, { da: true, recallInstruction: 'Give the German adjective with its preposition.' }); });
+  D.NOUNS.forEach(function (n) { buildEntryItems('adj', n, items, { da: true, recallInstruction: 'Give the German noun with its preposition.' }); });
+  // --- da ---
+  D.DA_PREPS.forEach(function (p) {
+    items.push(mkType('da', p + ' → da-word', [daWord(p)], { instruction: 'Form the statement word (da- / dar-).', explain: daWord(p) + ': ' + (DA_STARTS_VOWEL.test(p) ? 'dar- before a vowel.' : 'da- before a consonant.'), tag: 'da-', kindLabel: 'recall' }));
+    items.push(mkType('da', p + ' → wo-word', [woWord(p)], { instruction: 'Form the question word (wo- / wor-).', explain: woWord(p) + ': ' + (DA_STARTS_VOWEL.test(p) ? 'wor- before a vowel.' : 'wo- before a consonant.'), tag: 'wo-', kindLabel: 'recall' }));
+  });
+  D.WO_QUESTIONS.forEach(function (r) {
+    items.push(mkType('da', r[0], r[1], { instruction: 'Fill in the question word.', gloss: r[2], explain: r[3], tag: 'wo-' }));
+  });
+  D.DA_CLAUSES.forEach(function (r) {
+    items.push(mkType('da', r[0], r[1], { instruction: 'Fill in the da-word that points to the clause.', explain: r[2], tag: 'da-' }));
+  });
+  // uniqueness
+  const seen = {};
+  items.forEach(function (it) { if (seen[it.id]) throw new Error('duplicate item id: ' + it.id + ' ' + it.prompt); seen[it.id] = 1; });
+  return items;
+}
+
+// ---------- answer checking ----------
+function fold(s) { return s.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss'); }
+function norm(s, strict) {
+  s = String(s == null ? '' : s).toLowerCase().replace(/[.,!?;:()\u2014\u2013\-\/]+/g, ' ').replace(/\s+/g, ' ').trim();
+  return strict ? s : fold(s);
+}
+function normSet(s, strict) { return norm(s, strict).split(' ').filter(Boolean).sort().join(' '); }
+function check(item, input, strict) {
+  if (item.kind === 'choice') {
+    const ok = input === item.correct;
+    return { ok: ok, canonical: item.options[item.correct] };
+  }
+  const f = item.match === 'set' ? normSet : norm;
+  const u = f(input, strict);
+  if (!u) return { ok: false, canonical: item.answers[0], empty: true };
+  for (let i = 0; i < item.answers.length; i++) {
+    if (f(item.answers[i], strict) === u) return { ok: true, canonical: item.answers[i], index: i };
+  }
+  // loose match but strict mismatch → report umlaut issue
+  if (strict) {
+    for (let i = 0; i < item.answers.length; i++) if (norm(item.answers[i], false) === norm(input, false)) return { ok: false, canonical: item.answers[0], umlaut: true };
+  }
+  return { ok: false, canonical: item.answers[0] };
+}
+
+// ---------- Leitner scheduler ----------
+const MIN = 60 * 1000, HOUR = 60 * MIN, DAY = 24 * HOUR;
+const INTERVALS = [0, 30 * MIN, 4 * HOUR, DAY, 3 * DAY, 7 * DAY];
+const MASTER_BOX = 5;
+const MASTERED_INTERVALS = [14 * DAY, 30 * DAY, 60 * DAY];
+function fresh() { return { box: 0, due: 0, seen: 0, ok: 0, miss: 0, streak: 0, last: 0 }; }
+function isDue(st, now) { return !st || st.due <= now; }
+function grade(st, ok, now) {
+  st = st || fresh();
+  st.seen++; st.last = now;
+  if (!ok) { st.miss++; st.streak = 0; st.box = 0; st.due = now; return { st: st, change: 'reset' }; }
+  st.ok++; st.streak++;
+  if (st.seen > 1 && now < st.due) return { st: st, change: 'early' };
+  if (st.box < MASTER_BOX) {
+    st.box++; st.due = now + INTERVALS[st.box];
+    if (st.box === MASTER_BOX) { st.masteredAt = now; st.mast = 0; return { st: st, change: 'mastered' }; }
+    return { st: st, change: 'up' };
+  }
+  const k = Math.min(st.mast || 0, MASTERED_INTERVALS.length - 1);
+  st.mast = (st.mast || 0) + 1;
+  st.due = now + MASTERED_INTERVALS[k];
+  return { st: st, change: 'keep' };
+}
+function fmtInterval(ms) {
+  if (ms < HOUR) return Math.round(ms / MIN) + ' min';
+  if (ms < DAY) return Math.round(ms / HOUR) + ' h';
+  return Math.round(ms / DAY) + ' d';
+}
+
+// ---------- session building ----------
+function shuffle(a, rnd) { rnd = rnd || Math.random; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+// round-robin interleave by concept so a session is not 20 items of the same verb
+function interleave(list) {
+  const buckets = {}; const order = [];
+  list.forEach(function (it) { if (!buckets[it.concept]) { buckets[it.concept] = []; order.push(it.concept); } buckets[it.concept].push(it); });
+  const out = []; let more = true;
+  while (more) { more = false; order.forEach(function (c) { if (buckets[c].length) { out.push(buckets[c].shift()); more = true; } }); }
+  return out;
+}
+function buildSession(items, states, mode, n, now, rnd, concept) {
+  rnd = rnd || Math.random;
+  let pool = concept ? items.filter(function (i) { return i.concept === concept; }) : items.slice();
+  const st = function (i) { return states[i.id]; };
+  if (mode === 'exam') {
+    const byC = {}; pool.forEach(function (i) { (byC[i.concept] = byC[i.concept] || []).push(i); });
+    Object.keys(byC).forEach(function (k) { shuffle(byC[k], rnd); });
+    const keys = Object.keys(byC); const out = [];
+    let guard = 0;
+    while (out.length < n && guard++ < 10000) {
+      let any = false;
+      keys.forEach(function (k) { if (out.length < n && byC[k].length) { out.push(byC[k].shift()); any = true; } });
+      if (!any) break;
+    }
+    return { queue: shuffle(out, rnd), mode: mode, note: null };
+  }
+  if (mode === 'weak') {
+    const weak = pool.filter(function (i) { const s = st(i); return s && s.miss > 0; });
+    weak.sort(function (a, b) { const sa = st(a), sb = st(b); const ra = sa.miss / (sa.ok + sa.miss), rb = sb.miss / (sb.ok + sb.miss); return (rb - ra) || (sb.miss - sa.miss) || (sa.box - sb.box); });
+    if (!weak.length) return { queue: [], mode: mode, note: 'No weak spots yet: nothing has been answered wrongly. Practise first.' };
+    return { queue: shuffle(weak.slice(0, n), rnd), mode: mode, note: null };
+  }
+  // practice: due (lowest box first, then oldest due) → new. Never pads with items that are not yet due:
+  // a correct answer before an item is due does not promote it, so drilling it early is wasted effort.
+  const due = [], fresh_ = []; let nextDue = Infinity;
+  pool.forEach(function (i) { const s = st(i); if (!s) fresh_.push(i); else if (s.due <= now) due.push(i); else if (s.due < nextDue) nextDue = s.due; });
+  due.sort(function (a, b) { const sa = st(a), sb = st(b); return (sa.box - sb.box) || (sa.due - sb.due); });
+  shuffle(fresh_, rnd);
+  let queue = interleave(due).slice(0, n);
+  if (queue.length < n) queue = queue.concat(interleave(fresh_).slice(0, n - queue.length));
+  const nDue = Math.min(due.length, n);
+  let note = null;
+  if (!queue.length) note = nextDue === Infinity ? 'Nothing to practise here.' : 'Nothing is due right now. Next review in ' + fmtInterval(Math.max(nextDue - now, MIN)) + '.';
+  return { queue: shuffle(queue, rnd), mode: mode, note: note, nextDue: nextDue === Infinity ? null : nextDue, counts: { due: nDue, fresh: queue.length - nDue } };
+}
+// re-insert a missed item 3–6 places later
+function requeue(queue, pos, item, rnd) {
+  rnd = rnd || Math.random;
+  const gap = 3 + Math.floor(rnd() * 4);
+  const at = Math.min(queue.length, pos + gap);
+  queue.splice(at, 0, item);
+  return at;
+}
+
+// ---------- stats ----------
+function summarize(items, states, now) {
+  const boxes = [0, 0, 0, 0, 0, 0]; let due = 0, seen = 0, mastered = 0, ok = 0, miss = 0;
+  const perConcept = {};
+  CONCEPTS.forEach(function (c) { perConcept[c.id] = { total: 0, seen: 0, mastered: 0, due: 0, boxes: [0, 0, 0, 0, 0, 0], ok: 0, miss: 0 }; });
+  items.forEach(function (i) {
+    const s = states[i.id]; const pc = perConcept[i.concept]; pc.total++;
+    const b = s ? s.box : 0; boxes[b]++; pc.boxes[b]++;
+    if (s) { seen++; pc.seen++; ok += s.ok; miss += s.miss; pc.ok += s.ok; pc.miss += s.miss; if (s.box >= MASTER_BOX) { mastered++; pc.mastered++; } if (s.due <= now) { due++; pc.due++; } }
+  });
+  return { total: items.length, boxes: boxes, due: due, seen: seen, fresh: items.length - seen, mastered: mastered, ok: ok, miss: miss, perConcept: perConcept };
+}
+function forecast(items, states, now) {
+  const out = { now: 0, today: 0, tomorrow: 0, week: 0 };
+  const endToday = new Date(now); endToday.setHours(23, 59, 59, 999);
+  items.forEach(function (i) {
+    const s = states[i.id]; if (!s) return;
+    if (s.due <= now) out.now++;
+    else if (s.due <= endToday.getTime()) out.today++;
+    else if (s.due <= endToday.getTime() + DAY) out.tomorrow++;
+    else if (s.due <= now + 7 * DAY) out.week++;
+  });
+  return out;
+}
+
+// ---------- state ----------
+const STORAGE_KEY = 'praepositionen-drill:v1';
+function emptyState() { return { v: 1, items: {}, sessions: 0, days: {}, strict: false, length: 20 }; }
+function validateState(raw) {
+  if (!raw || typeof raw !== 'object' || raw.v !== 1 || typeof raw.items !== 'object') throw new Error('not a progress export from this app');
+  const s = emptyState();
+  s.sessions = +raw.sessions || 0; s.strict = !!raw.strict; s.length = [10, 20, 40].indexOf(+raw.length) >= 0 ? +raw.length : 20;
+  s.days = raw.days && typeof raw.days === 'object' ? raw.days : {};
+  Object.keys(raw.items).forEach(function (k) {
+    const r = raw.items[k]; if (!r || typeof r !== 'object') return;
+    s.items[k] = { box: Math.max(0, Math.min(MASTER_BOX, +r.box || 0)), due: +r.due || 0, seen: +r.seen || 0, ok: +r.ok || 0, miss: +r.miss || 0, streak: +r.streak || 0, last: +r.last || 0 };
+    if (r.masteredAt) s.items[k].masteredAt = +r.masteredAt;
+    if (r.mast) s.items[k].mast = +r.mast || 0;
+  });
+  return s;
+}
+function dayKey(now) { const d = new Date(now); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+
+root.PraepCore = {
+  CONCEPTS: CONCEPTS, CONCEPT_BY_ID: CONCEPT_BY_ID, CASE_NAME: CASE_NAME,
+  inflectDet: inflectDet, wordIndex: wordIndex, daWord: daWord, woWord: woWord, objectForms: objectForms, PRON: PRON, DEF: DEF, CONTR: CONTR, CONTR_REV: CONTR_REV,
+  generate: generate, check: check, norm: norm, fold: fold,
+  INTERVALS: INTERVALS, MASTER_BOX: MASTER_BOX, MASTERED_INTERVALS: MASTERED_INTERVALS, MIN: MIN, HOUR: HOUR, DAY: DAY,
+  fresh: fresh, isDue: isDue, grade: grade, fmtInterval: fmtInterval,
+  buildSession: buildSession, requeue: requeue, shuffle: shuffle, interleave: interleave,
+  summarize: summarize, forecast: forecast,
+  STORAGE_KEY: STORAGE_KEY, emptyState: emptyState, validateState: validateState, dayKey: dayKey,
+};
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+</script>
+<script id="ui">
+/* Präpositionen drill — UI */
+(function (root) {
+'use strict';
+const C = root.PraepCore, D = root.PraepData, doc = root.document;
+const ITEMS = C.generate();
+const BY_ID = {}; ITEMS.forEach(function (i) { BY_ID[i.id] = i; });
+const EXAM_LENGTH = 30;
+
+// ---------- storage (localStorage with in-memory fallback) ----------
+const store = (function () {
+  let mem = null, ok = true;
+  try { const t = '__praep_probe'; root.localStorage.setItem(t, '1'); root.localStorage.removeItem(t); } catch (e) { ok = false; }
+  return {
+    ok: ok,
+    read: function () { if (!ok) return mem; try { return root.localStorage.getItem(C.STORAGE_KEY); } catch (e) { return mem; } },
+    write: function (s) { mem = s; if (!ok) return; try { root.localStorage.setItem(C.STORAGE_KEY, s); } catch (e) { ok = false; } },
+    clear: function () { mem = null; if (!ok) return; try { root.localStorage.removeItem(C.STORAGE_KEY); } catch (e) {} },
+  };
+})();
+function load() { try { const raw = store.read(); if (raw) return C.validateState(JSON.parse(raw)); } catch (e) {} return C.emptyState(); }
+function save() { store.write(JSON.stringify(state)); }
+let state = load();
+
+const app = { view: 'home', mode: 'practice', concept: null, session: null, phase: 'ask', picked: null, last: null, notice: null, ioMsg: null, confirmReset: false, showExport: false, clock: null };
+function now() { return app.clock ? app.clock() : Date.now(); }
+
+// ---------- helpers ----------
+function h(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function pct(a, b) { return b ? Math.round(100 * a / b) + '%' : '–'; }
+function el() { return doc.getElementById('app'); }
+function qs(sel) { return el().querySelector(sel); }
+function qsa(sel) { return Array.prototype.slice.call(el().querySelectorAll(sel)); }
+function conceptName(id) { return C.CONCEPT_BY_ID[id] ? C.CONCEPT_BY_ID[id].name : id; }
+function modeName(m) { return m === 'exam' ? 'Exam' : m === 'weak' ? 'Weak spots' : 'Practice'; }
+function isFill(ans) { return ans.indexOf('→') < 0; } // choice options like 'Wo? → Dativ' are labels, not text for the blank
+function fillBlanks(prompt, answer) {
+  // render the prompt with the answer written into its blanks (for summaries)
+  const parts = prompt.split('___');
+  if (parts.length === 1) return h(prompt);
+  if (!isFill(answer)) return h(prompt);
+  const toks = answer.split(' ');
+  const perBlank = parts.length - 1 === toks.length ? toks : [answer];
+  let out = '';
+  for (let i = 0; i < parts.length; i++) { out += h(parts[i]); if (i < parts.length - 1) out += '<b>' + h(perBlank[i] != null ? perBlank[i] : '') + '</b>'; }
+  return out;
+}
+function blankWidth(item) {
+  let len = 0;
+  item.answers.forEach(function (a) {
+    if (item.blanks === 2) a.split(' ').forEach(function (t) { len = Math.max(len, t.length); });
+    else len = Math.max(len, a.length);
+  });
+  return Math.max(3, len + 1) + 'ch';
+}
+function streak(days, t) {
+  let n = 0; const d = new Date(t); d.setHours(12, 0, 0, 0);
+  if (!days[C.dayKey(d.getTime())]) d.setDate(d.getDate() - 1); // a streak may still be alive if today has no session yet
+  while (days[C.dayKey(d.getTime())]) { n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+
+// ---------- hero: the nine two-way prepositions around a box ----------
+const HERO = '<svg viewBox="0 0 600 236" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The nine two-way prepositions positioned around a box">' +
+  '<style>.lb{font-family:Literata,Georgia,serif;font-size:17px;fill:#1B1F27}.cs{font-family:"Public Sans",system-ui,sans-serif;font-size:13px}.dt{fill:#7E3AF2}.ln{stroke:#B9C1CC;stroke-width:1.5;fill:none}</style>' +
+  // the box: front face, top face, right face
+  '<path class="ln" d="M215 105 H355 V195 H215 Z"/>' +
+  '<path class="ln" d="M215 105 L255 78 H395 L355 105"/>' +
+  '<path class="ln" d="M355 105 L395 78 V168 L355 195"/>' +
+  // second box for zwischen
+  '<path class="ln" d="M535 118 H580 V195 H535 Z"/><path class="ln" d="M535 118 L558 104 H600 L580 118 M580 118 L600 104 V181 L580 195"/>' +
+  // dots + labels
+  '<circle class="dt" cx="325" cy="38" r="5"/><text class="lb" x="337" y="43">über</text>' +
+  '<circle class="dt" cx="325" cy="88" r="5"/><text class="lb" x="337" y="93">auf</text>' +
+  '<circle class="dt" cx="285" cy="150" r="5"/><text class="lb" x="297" y="155">in</text>' +
+  '<circle class="dt" cx="285" cy="222" r="5"/><text class="lb" x="297" y="227">unter</text>' +
+  '<circle class="dt" cx="176" cy="205" r="5"/><text class="lb" x="120" y="210">vor</text>' +
+  '<circle class="dt" cx="430" cy="62" r="5"/><text class="lb" x="442" y="67">hinter</text>' +
+  '<circle class="dt" cx="150" cy="150" r="5"/><text class="lb" x="86" y="155">neben</text>' +
+  '<circle class="dt" cx="372" cy="140" r="5"/><text class="lb" x="403" y="145">an</text>' +
+  '<circle class="dt" cx="470" cy="160" r="5"/><text class="lb" x="428" y="190">zwischen</text>' +
+  // Wo / Wohin legend
+  '<text class="cs" x="0" y="20" fill="#2457D6">Wo? → Dativ</text>' +
+  '<text class="cs" x="0" y="42" fill="#D9480F">Wohin? → Akkusativ</text>' +
+  '</svg>';
+
+// ---------- session flow ----------
+function startSession(mode, concept) {
+  mode = mode || app.mode; concept = concept === undefined ? app.concept : concept;
+  const n = mode === 'exam' ? EXAM_LENGTH : state.length;
+  const s = C.buildSession(ITEMS, state.items, mode, n, now(), null, concept);
+  if (s.note) { app.notice = s.note; app.view = 'home'; render(); return false; }
+  if (!s.queue.length) { app.notice = 'Nothing to practise here yet.'; app.view = 'home'; render(); return false; }
+  app.notice = null;
+  app.session = { queue: s.queue, pos: 0, mode: mode, concept: concept || null, answered: 0, correct: 0, missed: [], counted: false, changes: { up: 0, mastered: 0, reset: 0, early: 0 }, startedAt: now(), counts: s.counts || null };
+  app.view = 'session'; app.phase = 'ask'; app.picked = null; app.last = null;
+  render();
+  return true;
+}
+function currentItem() { const s = app.session; return s && s.queue[s.pos]; }
+function readInput() {
+  const inputs = qsa('input.fill');
+  return inputs.map(function (i) { return i.value.trim(); }).join(' ').trim();
+}
+function submit(inputOverride) {
+  const it = currentItem(); if (!it || app.phase !== 'ask') return;
+  let res;
+  if (it.kind === 'choice') {
+    if (app.picked == null) return;
+    res = C.check(it, app.picked, state.strict);
+    res.input = it.options[app.picked];
+  } else {
+    const input = inputOverride != null ? inputOverride : readInput();
+    res = C.check(it, input, state.strict);
+    res.input = input;
+    if (res.empty) { const f = qs('input.fill'); if (f) f.focus(); return; }
+  }
+  gradeAnswer(it, res, false);
+}
+function reveal() {
+  const it = currentItem(); if (!it || app.phase !== 'ask' || app.session.mode === 'exam') return;
+  gradeAnswer(it, { ok: false, canonical: it.answers[0], input: it.kind === 'choice' ? null : readInput() }, true);
+}
+function gradeAnswer(it, res, revealed) {
+  const s = app.session; const t = now();
+  const g = C.grade(state.items[it.id], res.ok, t); state.items[it.id] = g.st;
+  const dk = C.dayKey(t); const day = state.days[dk] || (state.days[dk] = { ok: 0, miss: 0 }); if (res.ok) day.ok++; else day.miss++;
+  if (!s.counted) { s.counted = true; state.sessions++; }
+  s.answered++;
+  if (res.ok) s.correct++; else {
+    if (s.missed.indexOf(it.id) < 0) s.missed.push(it.id);
+    if (s.mode !== 'exam') C.requeue(s.queue, s.pos, it);
+  }
+  s.changes[g.change === 'keep' ? 'up' : g.change]++;
+  app.last = { ok: res.ok, canonical: res.canonical, umlaut: !!res.umlaut, input: res.input, revealed: revealed, change: g.change, box: g.st.box, due: g.st.due - t };
+  app.phase = 'feedback';
+  save(); render();
+}
+function next() {
+  const s = app.session; if (!s || app.phase !== 'feedback') return;
+  s.pos++; app.picked = null; app.last = null;
+  if (s.pos >= s.queue.length) { app.view = 'summary'; app.phase = 'done'; }
+  else app.phase = 'ask';
+  render();
+}
+function endSession() {
+  const s = app.session; if (!s) return;
+  if (!s.answered) { app.session = null; app.view = 'home'; }
+  else { app.view = 'summary'; app.phase = 'done'; }
+  render();
+}
+function setView(v) { app.view = v; app.ioMsg = null; app.confirmReset = false; app.showExport = false; render(); }
+
+// ---------- keyboard ----------
+doc.addEventListener('keydown', function (e) {
+  if (app.view !== 'session') return;
+  const it = currentItem(); if (!it) return;
+  const tag = (e.target && e.target.tagName) || '';
+  if (tag === 'BUTTON' || tag === 'A') return; // buttons handle Enter / Space themselves (Reveal / Next / End)
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    if (app.phase === 'feedback') { next(); return; }
+    if (e.shiftKey) { reveal(); return; }
+    if (it.kind === 'type') {
+      const inputs = qsa('input.fill');
+      if (inputs.length > 1) { // two blanks: Enter in a filled first blank jumps to an empty second one
+        const idx = inputs.indexOf(e.target);
+        const empty = inputs.findIndex(function (i) { return !i.value.trim(); });
+        if (empty >= 0 && empty !== idx && inputs[idx] && inputs[idx].value.trim()) { inputs[empty].focus(); return; }
+      }
+      submit(); return;
+    }
+    if (it.kind === 'choice' && app.picked != null) submit();
+    return;
+  }
+  if (e.key === 'Escape') { e.preventDefault(); endSession(); return; }
+  if (app.phase !== 'ask' || tag === 'INPUT' || tag === 'TEXTAREA') return;
+  if (it.kind === 'choice' && /^[1-9]$/.test(e.key)) { const n = +e.key - 1; if (n < it.options.length) { e.preventDefault(); app.picked = n; submit(); } }
+});
+
+// ---------- click delegation ----------
+function bindClicks() {
+  el().addEventListener('click', function (e) {
+    const b = e.target.closest ? e.target.closest('[data-act]') : null; if (!b) return;
+    const act = b.getAttribute('data-act'), v = b.getAttribute('data-v');
+    if (act === 'view') setView(v);
+    else if (act === 'mode') { app.mode = v; app.notice = null; render(); }
+    else if (act === 'len') { state.length = +v; save(); render(); }
+    else if (act === 'start') startSession(app.mode, null);
+    else if (act === 'focus') startSession('practice', v);
+    else if (act === 'again') startSession(app.session ? app.session.mode : app.mode, app.session ? app.session.concept : null);
+    else if (act === 'pick') { app.picked = +v; submit(); }
+    else if (act === 'check') submit();
+    else if (act === 'reveal') reveal();
+    else if (act === 'next') next();
+    else if (act === 'end') endSession();
+    else if (act === 'strict') { state.strict = !state.strict; save(); render(); }
+    else if (act === 'export') { app.showExport = !app.showExport; app.ioMsg = null; render(); }
+    else if (act === 'download') download();
+    else if (act === 'import') importState();
+    else if (act === 'reset') { app.confirmReset = true; render(); }
+    else if (act === 'reset-yes') { state = C.emptyState(); store.clear(); save(); app.confirmReset = false; app.ioMsg = 'Progress reset.'; render(); }
+    else if (act === 'reset-no') { app.confirmReset = false; render(); }
+    else if (act === 'dismiss') { app.notice = null; render(); }
+  });
+}
+function download() {
+  try {
+    const blob = new root.Blob([JSON.stringify(state)], { type: 'application/json' });
+    const a = doc.createElement('a'); a.href = root.URL.createObjectURL(blob); a.download = 'praepositionen-progress.json'; doc.body.appendChild(a); a.click(); doc.body.removeChild(a);
+  } catch (e) { app.ioMsg = 'Download is not available here — copy the text instead.'; render(); }
+}
+function importState() {
+  const ta = qs('#import-text'); if (!ta) return;
+  try {
+    const parsed = C.validateState(JSON.parse(ta.value));
+    // keep only ids that exist in this build
+    Object.keys(parsed.items).forEach(function (k) { if (!BY_ID[k]) delete parsed.items[k]; });
+    state = parsed; save();
+    app.ioMsg = 'Imported ' + Object.keys(state.items).length + ' questions with history.'; render();
+  } catch (e) { app.ioMsg = 'That is not a progress export from this app.'; render(); }
+}
+
+// ---------- rendering ----------
+function render() {
+  const a = el(); if (!a) return;
+  if (app.view === 'home') a.innerHTML = renderHome();
+  else if (app.view === 'session') a.innerHTML = renderSession();
+  else if (app.view === 'summary') a.innerHTML = renderSummary();
+  else if (app.view === 'progress') a.innerHTML = renderProgress();
+  else if (app.view === 'rules') a.innerHTML = renderRules();
+  afterRender();
+}
+function afterRender() {
+  if (app.view === 'session' && app.phase === 'ask') { const f = qs('input.fill'); if (f) f.focus(); }
+  if (app.view === 'session' && app.phase === 'feedback') { const n = qs('[data-act="next"]'); if (n) n.focus(); }
+  if (root.scrollTo && app.view !== 'session') try { root.scrollTo(0, 0); } catch (e) {}
+}
+function top(active) {
+  const nav = [['home', 'Home'], ['rules', 'Rules'], ['progress', 'Progress']].map(function (n) {
+    return '<button data-act="view" data-v="' + n[0] + '"' + (active === n[0] ? ' aria-current="page"' : '') + '>' + n[1] + '</button>';
+  }).join('');
+  return '<div class="top"><h1>Präpositionen <span>· drill</span></h1><div class="nav">' + nav + '</div></div>' +
+    (store.ok ? '' : '<div class="notice">Your browser blocked local storage, so progress will not survive a reload. Open this file directly in a normal browser tab to save progress.</div>');
+}
+function mbar(boxes, total, small) {
+  return '<div class="mbar' + (small ? ' small' : '') + '">' + boxes.map(function (n, i) { return '<span class="b' + i + '" style="width:' + (total ? 100 * n / total : 0) + '%"></span>'; }).join('') + '</div>';
+}
+
+function renderHome() {
+  const t = now(); const sum = C.summarize(ITEMS, state.items, t); const fc = C.forecast(ITEMS, state.items, t);
+  let out = top('home');
+  if (app.notice) out += '<div class="notice">' + h(app.notice) + ' <button class="btn link" data-act="dismiss">OK</button></div>';
+  out += '<div class="hero">' + HERO + '</div>';
+  out += '<div class="stat-row"><span><b>' + sum.mastered + '</b> of ' + sum.total + ' mastered</span><span><b>' + fc.now + '</b> due now</span><span><b>' + sum.fresh + '</b> not seen yet</span>' + (state.sessions ? '<span><b>' + streak(state.days, t) + '</b> day streak</span>' : '') + '</div>';
+  out += mbar(sum.boxes, sum.total);
+  out += '<div class="small faint">Boxes 0 → 5, left to right. Green = mastered (five correct answers over at least four days).</div>';
+  const help = { practice: 'Due questions first, then new ones. Wrong answers come back in the same session.', weak: 'The questions you have missed most often.', exam: EXAM_LENGTH + ' questions across all concepts, no reveal, no retries.' };
+  out += '<div class="controls">' +
+    '<div class="ctl"><label>Mode</label><div class="seg">' + ['practice', 'weak', 'exam'].map(function (m) { return '<button data-act="mode" data-v="' + m + '" aria-pressed="' + (app.mode === m) + '">' + modeName(m) + '</button>'; }).join('') + '</div><span class="mode-help">' + help[app.mode] + '</span></div>' +
+    '<div class="ctl"><label>Length</label><div class="seg">' + [10, 20, 40].map(function (n) { return '<button data-act="len" data-v="' + n + '" aria-pressed="' + (state.length === n && app.mode !== 'exam') + '"' + (app.mode === 'exam' ? ' disabled' : '') + '>' + n + '</button>'; }).join('') + '</div>' + (app.mode === 'exam' ? '<span class="mode-help">exam = ' + EXAM_LENGTH + '</span>' : '') + '</div>' +
+    '<div class="ctl"><button class="btn primary" data-act="start">Start ' + modeName(app.mode).toLowerCase() + '</button><span class="kbd">Enter checks · 1–9 picks · Shift+Enter reveals · Esc ends</span></div>' +
+    '</div>';
+  out += '<h2>Concepts</h2><ul class="concepts">' + C.CONCEPTS.map(function (c) {
+    const pc = sum.perConcept[c.id];
+    return '<li class="concept"><span class="name">' + h(c.name) + '</span><button class="btn focus" data-act="focus" data-v="' + c.id + '">Focus</button>' +
+      '<span class="blurb">' + h(c.blurb) + '</span>' + mbar(pc.boxes, pc.total, true) +
+      '<span class="counts">' + pc.mastered + ' / ' + pc.total + ' mastered · ' + pc.due + ' due · ' + (pc.total - pc.seen) + ' new</span></li>';
+  }).join('') + '</ul>';
+  return out;
+}
+
+function renderPrompt(it) {
+  const parts = it.prompt.split('___');
+  const fb = app.phase === 'feedback', last = app.last;
+  if (it.kind === 'choice') {
+    return '<div class="prompt" lang="de">' + parts.map(function (p, i) {
+      if (i === parts.length - 1) return h(p);
+      return h(p) + (fb && isFill(last.canonical) ? '<b>' + h(last.canonical) + '</b>' : '<span class="blank' + (fb ? ' filled' : '') + '"></span>');
+    }).join('') + '</div>';
+  }
+  const w = blankWidth(it);
+  const disabled = fb ? ' disabled' : '';
+  if (it.blanks === 0) {
+    const cls = fb ? (last.ok ? ' good' : ' bad') : '';
+    const val = fb ? (last.ok ? last.canonical : (last.revealed && !last.input ? last.canonical : last.input || '')) : '';
+    return '<div class="prompt" lang="' + (it.kindLabel === 'recall' && /^[a-z]/.test(it.prompt) && !/→/.test(it.prompt) ? 'en' : 'de') + '">' + h(it.prompt) + '</div>' +
+      '<input class="fill wide' + cls + '" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" lang="de" aria-label="answer" value="' + h(val) + '"' + disabled + '>';
+  }
+  // inline inputs in the blanks
+  let vals = [];
+  if (fb) {
+    if (last.ok) { const toks = last.canonical.split(' '); vals = it.blanks === toks.length ? toks : [last.canonical]; }
+    else { const toks = (last.input || '').split(' ').filter(Boolean); vals = it.blanks === 2 && toks.length === 2 ? toks : [last.input || '']; if (last.revealed && !last.input) { const ct = last.canonical.split(' '); vals = it.blanks === ct.length ? ct : [last.canonical]; } }
+  }
+  const cls = fb ? (last.ok ? ' good' : ' bad') : '';
+  let k = 0;
+  return '<div class="prompt" lang="de">' + parts.map(function (p, i) {
+    if (i === parts.length - 1) return h(p);
+    const idx = k++;
+    return h(p) + '<input class="fill' + cls + '" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" lang="de" aria-label="blank ' + (idx + 1) + '" style="width:' + w + '" value="' + h(vals[idx] || '') + '"' + disabled + '>';
+  }).join('') + '</div>';
+}
+function renderSession() {
+  const s = app.session, it = currentItem();
+  const fb = app.phase === 'feedback', last = app.last;
+  let out = top(null);
+  out += '<div class="sess-top"><span class="pos">' + (s.pos + 1) + ' / ' + s.queue.length + '</span><span>' + h(s.concept ? conceptName(s.concept) : modeName(s.mode)) + (s.concept ? ' · focus' : '') + '</span><button class="btn link" data-act="end">End (Esc)</button></div>';
+  out += '<div class="pbar"><span style="width:' + (100 * s.pos / s.queue.length) + '%"></span></div>';
+  out += '<div class="card">';
+  out += '<div class="instr">' + h(it.instruction) + '<span class="tag">' + h(C.CONCEPT_BY_ID[it.concept].short) + '</span></div>';
+  if (it.gloss) out += '<div class="gloss">' + h(it.gloss) + '</div>';
+  out += renderPrompt(it);
+  if (it.kind === 'choice') {
+    out += '<ul class="choices">' + it.options.map(function (o, i) {
+      let cls = '';
+      if (fb) { if (i === it.correct) cls = ' good'; else if (last.input === o && !last.ok) cls = ' bad'; }
+      return '<li><button class="choice' + cls + '" data-act="pick" data-v="' + i + '" aria-pressed="' + (app.picked === i) + '"' + (fb ? ' disabled' : '') + '><span class="key">' + (i + 1) + '</span><span>' + h(o) + '</span></button></li>';
+    }).join('') + '</ul>';
+  }
+  out += '<div class="actions">';
+  if (!fb) {
+    if (it.kind === 'type') out += '<button class="btn primary" data-act="check">Check</button>';
+    else out += '<span class="kbd">Press <kbd>1</kbd>–<kbd>' + it.options.length + '</kbd> or click an answer</span>';
+    if (s.mode !== 'exam') out += '<button class="btn" data-act="reveal">Reveal</button>';
+    out += '<span class="spacer"></span><span class="kbd"><kbd>Enter</kbd> check' + (s.mode !== 'exam' ? ' · <kbd>Shift</kbd>+<kbd>Enter</kbd> reveal' : '') + '</span>';
+  } else {
+    out += '<button class="btn primary" data-act="next">' + (s.pos + 1 >= s.queue.length ? 'Finish' : 'Next') + '</button><span class="spacer"></span><span class="kbd"><kbd>Enter</kbd> continues</span>';
+  }
+  out += '</div>';
+  if (fb) out += renderFeedback(it, last, s);
+  out += '</div>';
+  return out;
+}
+function renderFeedback(it, last, s) {
+  let out = '<div class="feedback ' + (last.ok ? 'good' : 'bad') + '">';
+  out += '<div class="verdict">' + (last.ok ? 'Richtig.' : last.revealed ? 'Revealed — counts as a miss.' : last.umlaut ? 'Not quite — spelling. Umlauts count in strict mode.' : 'Not quite.') + '</div>';
+  if (!last.ok || last.umlaut || (last.input && C.norm(last.input, true) !== C.norm(last.canonical, true))) {
+    const alts = it.kind === 'type' ? it.answers.slice(1) : [];
+    out += '<div class="answer" lang="de">' + h(last.canonical) + (alts.length ? ' <span class="alt">also: ' + h(alts.join(' / ')) + '</span>' : '') + '</div>';
+  }
+  if (it.explain) out += '<div class="explain">' + h(it.explain) + '</div>';
+  let box;
+  if (last.change === 'reset') box = '<span class="down">Back to box 0.</span> ' + (s.mode === 'exam' ? 'It is due again now.' : 'It comes back later in this session.');
+  else if (last.change === 'mastered') box = '<span class="up">Mastered — box 5.</span> Comes back in ' + C.fmtInterval(last.due) + ' to make sure it sticks.';
+  else if (last.change === 'keep') box = '<span class="up">Still mastered.</span> Next check in ' + C.fmtInterval(last.due) + '.';
+  else if (last.change === 'early') box = 'Correct, but it was not due yet — box ' + last.box + ' unchanged.';
+  else box = '<span class="up">Box ' + (last.box - 1) + ' → ' + last.box + '.</span> Due again in ' + C.fmtInterval(last.due) + '.';
+  out += '<div class="box">' + box + '</div></div>';
+  return out;
+}
+
+function renderSummary() {
+  const s = app.session; let out = top(null);
+  const acc = pct(s.correct, s.answered);
+  out += '<h2 style="margin-top:4px">' + h(modeName(s.mode)) + (s.concept ? ' · ' + h(conceptName(s.concept)) : '') + '</h2>';
+  out += '<div class="big">' + s.correct + ' / ' + s.answered + '</div><p class="muted">' + acc + ' correct' + (s.pos < s.queue.length ? ' · ended early' : '') + '</p>';
+  const ch = s.changes;
+  out += '<div class="stat-row"><span><b>' + ch.up + '</b> moved up</span><span><b>' + ch.mastered + '</b> newly mastered</span><span><b>' + ch.reset + '</b> reset to box 0</span>' + (ch.early ? '<span><b>' + ch.early + '</b> not due yet</span>' : '') + '</div>';
+  if (s.missed.length) {
+    out += '<h3>Missed this session</h3><ul class="missed">' + s.missed.map(function (id) {
+      const it = BY_ID[id]; const ans = it.answers[0];
+      return '<li><div class="p" lang="de">' + fillBlanks(it.prompt, ans) + '</div><div class="a">' + (it.blanks ? '' : '<b>' + h(ans) + '</b> · ') + h(it.explain || '') + '</div></li>';
+    }).join('') + '</ul>';
+  } else out += '<p class="muted">Nothing missed. ' + (s.mode === 'exam' ? 'Clean sheet.' : 'Keep going until every box is green.') + '</p>';
+  out += '<div class="actions" style="margin-top:18px"><button class="btn primary" data-act="again">Another ' + h(modeName(s.mode).toLowerCase()) + (s.concept ? ' (focus)' : '') + '</button><button class="btn" data-act="view" data-v="home">Home</button><button class="btn" data-act="view" data-v="progress">Progress</button></div>';
+  return out;
+}
+
+function renderProgress() {
+  const t = now(); const sum = C.summarize(ITEMS, state.items, t); const fc = C.forecast(ITEMS, state.items, t);
+  let out = top('progress');
+  out += '<h2 style="margin-top:0">Progress</h2>';
+  out += '<div class="grid2">' + [
+    [sum.mastered + ' / ' + sum.total, 'mastered'], [pct(sum.ok, sum.ok + sum.miss), 'accuracy, all time'], [sum.seen, 'questions seen'], [state.sessions, 'sessions'], [Object.keys(state.days).length, 'active days'], [streak(state.days, t), 'day streak'],
+  ].map(function (x) { return '<div class="tile"><div class="v">' + h(x[0]) + '</div><div class="k">' + h(x[1]) + '</div></div>'; }).join('') + '</div>';
+  out += '<h3>Boxes</h3><div class="boxes">' + sum.boxes.map(function (n, i) {
+    const mx = Math.max.apply(null, sum.boxes) || 1;
+    return '<div class="col"><div class="bar"><span style="height:' + Math.max(2, 100 * n / mx) + '%"></span></div><div class="n">' + n + '</div>' + (i === 5 ? 'mastered' : 'box ' + i) + '</div>';
+  }).join('') + '</div>';
+  out += '<h3>Coming up</h3><div class="stat-row"><span><b>' + fc.now + '</b> due now</span><span><b>' + fc.today + '</b> later today</span><span><b>' + fc.tomorrow + '</b> tomorrow</span><span><b>' + fc.week + '</b> rest of the week</span></div>';
+  out += '<h3>By concept</h3><table><tr><th>Concept</th><th class="num">Mastered</th><th class="num">Due</th><th class="num">Accuracy</th></tr>' + C.CONCEPTS.map(function (c) {
+    const pc = sum.perConcept[c.id];
+    return '<tr><td>' + h(c.name) + mbar(pc.boxes, pc.total, true) + '</td><td class="num">' + pc.mastered + ' / ' + pc.total + '</td><td class="num">' + pc.due + '</td><td class="num">' + pct(pc.ok, pc.ok + pc.miss) + '</td></tr>';
+  }).join('') + '</table>';
+  const hard = ITEMS.filter(function (i) { const s = state.items[i.id]; return s && s.miss >= 1; }).map(function (i) { const s = state.items[i.id]; return { it: i, s: s, rate: s.miss / s.seen }; })
+    .sort(function (a, b) { return (b.s.miss - a.s.miss) || (b.rate - a.rate); }).slice(0, 10);
+  if (hard.length) {
+    out += '<h3>Hardest questions</h3><ul class="missed">' + hard.map(function (x) {
+      return '<li><div class="p" lang="de">' + fillBlanks(x.it.prompt, x.it.answers[0]) + '</div><div class="a">' + (x.it.blanks ? '' : '<b>' + h(x.it.answers[0]) + '</b> · ') + 'missed ' + x.s.miss + ' of ' + x.s.seen + ' · box ' + x.s.box + '</div></li>';
+    }).join('') + '</ul>';
+  }
+  out += '<h3>Settings</h3><label class="toggle"><input type="checkbox" data-act="strict"' + (state.strict ? ' checked' : '') + '> Strict spelling: ü ≠ ue, ß ≠ ss</label>';
+  out += '<h3>Backup</h3>';
+  if (app.ioMsg) out += '<div class="notice ok">' + h(app.ioMsg) + '</div>';
+  out += '<div class="io"><button class="btn" data-act="export">' + (app.showExport ? 'Hide export' : 'Export as text') + '</button><button class="btn" data-act="download">Download JSON</button></div>';
+  if (app.showExport) out += '<textarea class="io-text" id="export-text" readonly>' + h(JSON.stringify(state)) + '</textarea>';
+  out += '<p class="small muted" style="margin-top:8px">Import: paste an export below.</p><textarea class="io-text" id="import-text" placeholder="paste here"></textarea><div class="io"><button class="btn" data-act="import">Import</button></div>';
+  out += '<h3>Reset</h3>';
+  if (app.confirmReset) out += '<div class="notice error">Really delete all progress? This cannot be undone.</div><div class="io"><button class="btn danger" data-act="reset-yes">Yes, delete everything</button><button class="btn" data-act="reset-no">Cancel</button></div>';
+  else out += '<div class="io"><button class="btn danger" data-act="reset">Reset all progress</button></div>';
+  return out;
+}
+
+// ---------- rules (reference, generated from the data bank) ----------
+function pill(c) { return '<span class="pill ' + c + '">' + (c === 'W' ? 'A / D' : c) + '</span>'; }
+function renderRules() {
+  let out = top('rules') + '<div class="rules">';
+  out += '<h2 style="margin-top:0">1 · Prepositions by case</h2>';
+  ['A', 'D', 'G', 'W'].forEach(function (c) {
+    const list = D.PREPS.filter(function (p) { return p.c === c; });
+    out += '<div class="grp"><b>' + (c === 'W' ? 'Two-way (Wechselpräpositionen)' : 'Always ' + D.CASE_NAME[c]) + '</b>' + pill(c) + '<div class="list">' + list.map(function (p) { return h(p.p) + ' <span class="en">' + h(p.en) + '</span>'; }).join(' · ') + '</div></div>';
+  });
+  out += '<p>Two-way: <b class="dat-t">Wo? (position) → Dativ</b>, <b class="akk-t">Wohin? (movement to) → Akkusativ</b>. Position verbs stehen · liegen · sitzen · hängen · stecken (Dativ) vs movement verbs stellen · legen · setzen · hängen · stecken (Akkusativ). Time expressions with an, in, vor, zwischen always take Dativ: am Montag, im Mai, vor einer Woche.</p>';
+  out += '<h2>2 · Contractions</h2><table>' + D.CONTRACTIONS.map(function (c) { return '<tr><td>' + h(c[0]) + ' → ' + h(c[1]) + '</td><td class="en">' + (c[2] ? 'standard' : 'mainly spoken') + '</td></tr>'; }).join('') + '</table><p class="en">No contraction for an der, in der, auf dem, bei der, von der, zu den …</p>';
+  out += '<h2>3 · Time</h2><table>' + [
+    ['um', 'clock time', 'um 8 Uhr'], ['am', 'day, part of day, date, weekend', 'am Montag, am Morgen, am 3. Mai'], ['im', 'month, season, year with Jahr', 'im Mai, im Sommer, im Jahr 2020'], ['in + Dativ', 'in the future (from now)', 'in zwei Wochen'],
+    ['seit + Dativ', 'since / for — still going on (present tense)', 'seit 2020, seit drei Jahren'], ['vor + Dativ', 'ago', 'vor zwei Tagen'], ['nach + Dativ', 'after', 'nach dem Essen'], ['ab + Dativ', 'from … on (start)', 'ab morgen, ab dem 1. Mai'],
+    ['bis (+ Akk.)', 'until', 'bis Freitag, bis 17 Uhr'], ['von … bis', 'from … to', 'von 9 bis 17 Uhr, von Montag bis Freitag'], ['während + Genitiv', 'during', 'während des Unterrichts'], ['für + Akkusativ', 'for (planned duration)', 'für zwei Wochen'],
+    ['zwischen + Dativ', 'between', 'zwischen 8 und 9 Uhr'], ['gegen + Akkusativ', 'around (approximately)', 'gegen 8 Uhr'], ['zu / an', 'holidays', 'zu Weihnachten, an Ostern'],
+  ].map(function (r) { return '<tr><td>' + h(r[0]) + '</td><td class="en">' + h(r[1]) + '</td><td>' + h(r[2]) + '</td></tr>'; }).join('') + '</table>';
+  out += '<h2>4 · Place</h2><table>' + [
+    ['Wohin?', 'nach', 'cities, countries without article, home', 'nach Berlin, nach Hause'], ['', 'in + Akk.', 'countries with article, buildings you enter', 'in die Schweiz, ins Kino'], ['', 'zu + Dat.', 'people, shops, events', 'zum Arzt, zur Party'], ['', 'auf + Akk.', 'public buildings, islands, open places', 'auf die Post, auf eine Insel'], ['', 'an + Akk.', 'water, borders', 'ans Meer, an die Grenze'],
+    ['Wo?', 'in + Dat.', 'inside', 'in der Schule'], ['', 'bei + Dat.', 'at a person / company', 'bei Anna, bei Siemens'], ['', 'auf + Dat.', 'public buildings, islands', 'auf der Post, auf der Insel'], ['', 'an + Dat.', 'water, edges', 'am Meer, am Fenster'], ['', 'zu Hause', 'at home', 'Ich bin zu Hause.'],
+    ['Woher?', 'aus + Dat.', 'from inside / origin', 'aus der Schule, aus Nigeria'], ['', 'von + Dat.', 'from a person / place you were at', 'von Anna, vom Arzt'],
+  ].map(function (r) { return '<tr><td>' + h(r[0]) + '</td><td>' + h(r[1]) + '</td><td class="en">' + h(r[2]) + '</td><td>' + h(r[3]) + '</td></tr>'; }).join('') + '</table><p class="en">Round trip: in / nach → back with aus; zu / bei / auf / an → back with von.</p>';
+  out += '<h2>5 · Verbs with fixed prepositions</h2>';
+  const groups = {}; D.VERBS.forEach(function (v) { const k = v.v.split(' ').pop() + ' + ' + v.c; (groups[k] = groups[k] || []).push(v); });
+  Object.keys(groups).sort().forEach(function (k) {
+    const p = k.split(' + ')[0], c = k.split(' + ')[1];
+    out += '<div class="grp"><b>' + h(p) + '</b>' + pill(c) + '<ul>' + groups[k].map(function (v) { return '<li lang="de">' + h(v.v) + ' <span class="en">' + h(v.en) + '</span></li>'; }).join('') + '</ul></div>';
+  });
+  out += '<h3>Two prepositions</h3><ul>' + D.VERBS_TWO.map(function (r) { return '<li>' + h(r[2]) + ' <span class="en">' + h(r[3]) + '</span></li>'; }).filter(function (x, i, a) { return a.indexOf(x) === i; }).join('') + '</ul>';
+  out += '<h3>Easily confused</h3><ul>' + [
+    'sich freuen auf (future) / sich freuen über (now or past)', 'denken an (remember) / nachdenken über (reflect) / halten von (have an opinion of)', 'sprechen mit (the partner) / sprechen über (the topic)',
+    'sich bewerben um (the job) / sich bewerben bei (the company)', 'sich interessieren für / interessiert sein an', 'warten auf (never "warten für")', 'Angst haben vor (never "Angst haben von")',
+  ].map(function (s) { return '<li>' + h(s) + '</li>'; }).join('') + '</ul>';
+  out += '<h2>6 · Adjectives and nouns</h2>';
+  ['A', 'D'].forEach(function (c) {
+    out += '<div class="grp"><b>Adjectives + ' + D.CASE_NAME[c] + '</b>' + pill(c) + '<div class="list">' + D.ADJS.filter(function (a) { return a.c === c; }).map(function (a) { return h(a.v) + ' <span class="en">' + h(a.en) + '</span>'; }).join(' · ') + '</div></div>';
+  });
+  out += '<div class="grp"><b>Nouns</b><div class="list">' + D.NOUNS.map(function (a) { return h(a.v) + pill(a.c) + ' <span class="en">' + h(a.en) + '</span>'; }).join(' · ') + '</div></div>';
+  out += '<h2>7 · da- and wo-words</h2><p>Things and ideas: <b>da(r)- + preposition</b> in statements, <b>wo(r)- + preposition</b> in questions; dar- / wor- before a vowel. People: preposition + pronoun (an ihn, mit ihr) and preposition + wen / wem. A da-word also points forward to a dass-clause or infinitive: <span lang="de">Ich freue mich darauf, dass du kommst.</span></p>';
+  out += '<table>' + D.DA_PREPS.map(function (p) { return '<tr><td>' + h(p) + '</td><td>' + h(C.daWord(p)) + '</td><td>' + h(C.woWord(p)) + '</td></tr>'; }).join('') + '</table>';
+  out += '</div>';
+  return out;
+}
+
+// ---------- boot ----------
+bindClicks();
+render();
+root.PraepApp = { app: app, items: ITEMS, byId: BY_ID, render: render, getState: function () { return state; }, setState: function (s) { state = s; save(); }, startSession: startSession, submit: submit, reveal: reveal, next: next, endSession: endSession, setView: setView, currentItem: currentItem, store: store, HERO: HERO, EXAM_LENGTH: EXAM_LENGTH };
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+</script>
+</body>
+</html>
