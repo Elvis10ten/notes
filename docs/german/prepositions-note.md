@@ -1,4 +1,4 @@
-# German 16: Prepositions & Verbs with Fixed Prepositions
+# Prepositions & Verbs with Fixed Prepositions
 
 ---
 

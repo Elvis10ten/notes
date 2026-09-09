@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light">
-<title>Präpositionen drill</title>
+<title>Prepositions — Practice</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;1,7..72,400&family=Public+Sans:wght@400;600&display=swap" rel="stylesheet">
@@ -1557,6 +1557,7 @@ function gradeAnswer(it, res, revealed) {
     if (s.mode !== 'exam') C.requeue(s.queue, s.pos, it);
   }
   s.changes[g.change === 'keep' ? 'up' : g.change]++;
+  if (window.deutschHome) deutschHome.answer(res.ok);
   app.last = { ok: res.ok, canonical: res.canonical, umlaut: !!res.umlaut, input: res.input, revealed: revealed, change: g.change, box: g.st.box, due: g.st.due - t };
   app.phase = 'feedback';
   save(); render();
@@ -1878,5 +1879,6 @@ root.PraepApp = { app: app, items: ITEMS, byId: BY_ID, render: render, getState:
 })(typeof globalThis !== 'undefined' ? globalThis : this);
 
 </script>
+<script src="deutsch-home.js"></script>
 </body>
 </html>

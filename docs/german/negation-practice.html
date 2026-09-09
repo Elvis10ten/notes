@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Verneinung — nicht, kein und der Rest</title>
+<title>Negation — Practice</title>
 <style>
 :root{
   --paper:#EDEBE3; --card:#F8F7F2; --card-2:#E7E5DB;
@@ -327,6 +327,7 @@ function grade(id, ok){
     S.stats.lastDay = d;
   }
   save();
+  if (window.deutschHome) deutschHome.answer(ok);
 }
 
 /* ============================ helpers ============================ */
@@ -799,5 +800,6 @@ $("#nav-home").onclick = ()=>{ renderHome(); show("home"); };
 $("#nav-prog").onclick = ()=>{ renderProg(); show("prog"); };
 renderHome(); show("home");
 </script>
+<script src="deutsch-home.js"></script>
 </body>
 </html>

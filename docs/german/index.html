@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161615" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-title" content="German">
+<link rel="icon" href="/assets/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
 <title>German — Overview</title>
 <style>
   :root {
@@ -69,6 +76,9 @@
   .last { color:var(--muted); font-size:.75rem; margin-top:.5rem; }
   .last:empty { display:none; }
   .last[data-never] { opacity:.65; }
+  .meter { height:4px; margin-top:.65rem; border-radius:2px; background:var(--accent-soft); overflow:hidden; }
+  .meter > div { height:100%; border-radius:2px; background:var(--accent); transition:width .3s; }
+  .meter[hidden] { display:none; }
 
   /* Grammar topics: the whole card opens the trainer; a small chip in the corner opens the notes.
      The chip reuses the number badge's palette so the two read as one system. */
@@ -121,7 +131,7 @@
   footer { margin-top:2.5rem; color:var(--muted); font-size:.8rem; }
 
   @media (prefers-reduced-motion: reduce) {
-    a.card, li.topic, li.topic > .note, .continue, .btn, .backup { transition:none; }
+    a.card, li.topic, li.topic > .note, .continue, .btn, .backup, .meter > div { transition:none; }
     a.card:hover, li.topic:hover { transform:none; }
   }
 </style>
@@ -133,7 +143,7 @@
       <h1>German — Overview</h1>
       <p class="sub">Trainers and vocabulary for the telc B1</p>
     </div>
-    <a class="continue" id="continue" href="nouns-practice.html" title="Opens the trainer you haven't practiced for the longest">
+    <a class="continue" id="continue" href="nouns-practice.html" title="Opens the topic that needs practice most">
       <span class="cta">Continue practicing</span>
       <span class="target">1. Nouns &amp; gender</span>
     </a>
@@ -156,6 +166,7 @@
         <div class="body">
           <div class="name">Nouns &amp; gender</div>
           <div class="desc">der, die or das? Pick the right article</div>
+          <div class="meter" role="meter" aria-label="Recent accuracy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><div></div></div>
           <div class="last"></div>
         </div>
       </a>
@@ -166,6 +177,7 @@
         <div class="body">
           <div class="name">Plurals</div>
           <div class="desc">Endings and umlaut: -e, -en, -er, -s</div>
+          <div class="meter" role="meter" aria-label="Recent accuracy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><div></div></div>
           <div class="last"></div>
         </div>
       </a>
@@ -176,6 +188,7 @@
         <div class="body">
           <div class="name">Present tense</div>
           <div class="desc">Conjugating regular and irregular verbs</div>
+          <div class="meter" role="meter" aria-label="Recent accuracy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><div></div></div>
           <div class="last"></div>
         </div>
       </a>
@@ -186,6 +199,7 @@
         <div class="body">
           <div class="name">Cases</div>
           <div class="desc">Nominativ, Akkusativ, Dativ, Genitiv</div>
+          <div class="meter" role="meter" aria-label="Recent accuracy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><div></div></div>
           <div class="last"></div>
         </div>
       </a>
@@ -196,6 +210,7 @@
         <div class="body">
           <div class="name">Separable &amp; inseparable verbs</div>
           <div class="desc">Prefixes and the Satzklammer</div>
+          <div class="meter" role="meter" aria-label="Recent accuracy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><div></div></div>
           <div class="last"></div>
         </div>
       </a>
@@ -206,6 +221,7 @@
         <div class="body">
           <div class="name">Modal verbs</div>
           <div class="desc">können, müssen, dürfen, sollen, wollen, mögen</div>
+          <div class="meter" role="meter" aria-label="Recent accuracy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><div></div></div>
           <div class="last"></div>
         </div>
       </a>
@@ -216,6 +232,7 @@
         <div class="body">
           <div class="name">Word order</div>
           <div class="desc">Verb in position 2, subordinate clauses, Satzklammer</div>
+          <div class="meter" role="meter" aria-label="Recent accuracy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><div></div></div>
           <div class="last"></div>
         </div>
       </a>
@@ -226,6 +243,7 @@
         <div class="body">
           <div class="name">Imperative</div>
           <div class="desc">du, ihr and Sie forms</div>
+          <div class="meter" role="meter" aria-label="Recent accuracy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><div></div></div>
           <div class="last"></div>
         </div>
       </a>
@@ -236,6 +254,7 @@
         <div class="body">
           <div class="name">Negation</div>
           <div class="desc">nicht or kein? Where it goes in the sentence</div>
+          <div class="meter" role="meter" aria-label="Recent accuracy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><div></div></div>
           <div class="last"></div>
         </div>
       </a>
@@ -246,6 +265,7 @@
         <div class="body">
           <div class="name">Perfekt</div>
           <div class="desc">haben or sein? Forming the Partizip II</div>
+          <div class="meter" role="meter" aria-label="Recent accuracy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><div></div></div>
           <div class="last"></div>
         </div>
       </a>
@@ -256,6 +276,7 @@
         <div class="body">
           <div class="name">Futur I</div>
           <div class="desc">werden + infinitive</div>
+          <div class="meter" role="meter" aria-label="Recent accuracy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><div></div></div>
           <div class="last"></div>
         </div>
       </a>
@@ -266,6 +287,7 @@
         <div class="body">
           <div class="name">Präteritum</div>
           <div class="desc">war, hatte, konnte … and the key irregular verbs</div>
+          <div class="meter" role="meter" aria-label="Recent accuracy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><div></div></div>
           <div class="last"></div>
         </div>
       </a>
@@ -276,6 +298,7 @@
         <div class="body">
           <div class="name">Prepositions</div>
           <div class="desc">Dativ, Akkusativ or two-way preposition?</div>
+          <div class="meter" role="meter" aria-label="Recent accuracy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><div></div></div>
           <div class="last"></div>
         </div>
       </a>
@@ -286,6 +309,7 @@
         <div class="body">
           <div class="name">Komparativ &amp; Superlativ</div>
           <div class="desc">größer als, am größten, so … wie</div>
+          <div class="meter" role="meter" aria-label="Recent accuracy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><div></div></div>
           <div class="last"></div>
         </div>
       </a>
@@ -296,6 +320,7 @@
         <div class="body">
           <div class="name">Subordinate clauses</div>
           <div class="desc">weil, dass, wenn, als, obwohl … and the verb at the end</div>
+          <div class="meter" role="meter" aria-label="Recent accuracy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><div></div></div>
           <div class="last"></div>
         </div>
       </a>
@@ -306,6 +331,7 @@
         <div class="body">
           <div class="name">Infinitiv mit zu</div>
           <div class="desc">vorhaben zu, anfangen zu, um … zu</div>
+          <div class="meter" role="meter" aria-label="Recent accuracy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><div></div></div>
           <div class="last"></div>
         </div>
       </a>
@@ -316,6 +342,7 @@
         <div class="body">
           <div class="name">Konjunktiv II</div>
           <div class="desc">würde, hätte, wäre, könnte – wishes, requests, unreal conditions</div>
+          <div class="meter" role="meter" aria-label="Recent accuracy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><div></div></div>
           <div class="last"></div>
         </div>
       </a>
@@ -369,7 +396,7 @@
     <div class="status" id="backup-status" role="status" aria-live="polite"></div>
   </section>
 
-  <footer>“Continue practicing” opens the trainer you haven't opened for the longest.</footer>
+  <footer>“Continue practicing” picks a topic you haven't practiced yet, otherwise the one with the lowest recent accuracy, minus one point for every day since you last practiced it. Accuracy is over your last 20 answers.</footer>
 </main>
 
 <script>
@@ -409,6 +436,10 @@
     return m;
   }
 
+  // Written by deutsch-home.js inside each trainer: { "<file>": { total, correct, recent: [1,0,…], sessions, updatedAt } }
+  const PROGRESS_KEY = 'deutsch-home:progress';
+  const loadProgress = () => { try { return JSON.parse(localStorage.getItem(PROGRESS_KEY)) || {}; } catch (e) { return {}; } };
+
   const cards  = Array.from(document.querySelectorAll('a.card'));     // every link that shows a "last opened" line
   const drills = Array.from(document.querySelectorAll('ol a.card'));
   const topics = Array.from(document.querySelectorAll('ol > li'));
@@ -420,28 +451,52 @@
     const b = new Date(ts); b.setHours(0, 0, 0, 0);
     return Math.round((a - b) / 86400000);
   }
-  function label(ts) {
-    if (!ts) return 'Never opened';
+  function ago(ts) {
     const d = dayDiff(ts);
-    if (d <= 0) return 'Last opened today';
-    if (d === 1) return 'Last opened yesterday';
-    if (d < 14) return 'Last opened ' + d + ' days ago';
-    return 'Last opened ' + Math.floor(d / 7) + ' weeks ago';
+    if (d <= 0) return 'today';
+    if (d === 1) return 'yesterday';
+    if (d < 14) return d + ' days ago';
+    return Math.floor(d / 7) + ' weeks ago';
+  }
+  const label = (ts) => ts ? 'Last opened ' + ago(ts) : 'Never opened';
+
+  // Recent accuracy in percent (the last 20 answers), or null before the first answer.
+  function accuracy(p) {
+    if (!p) return null;
+    if (Array.isArray(p.recent) && p.recent.length) return Math.round(100 * p.recent.reduce((s, x) => s + x, 0) / p.recent.length);
+    return p.total ? Math.round(100 * p.correct / p.total) : null;
   }
 
   function render() {
-    const m = load();
+    const m = load(), prog = loadProgress();
     cards.forEach(a => {
       const el = a.querySelector('.last');
       if (!el) return;
-      const ts = m[hrefOf(a)];
-      el.textContent = label(ts);
-      el.toggleAttribute('data-never', !ts);
+      const href = hrefOf(a), p = prog[href], acc = accuracy(p);
+      if (acc === null) {
+        el.textContent = label(m[href]);
+        el.toggleAttribute('data-never', !m[href]);
+      } else {
+        el.textContent = acc + '% recent accuracy · practiced ' + ago(p.updatedAt || m[href]);
+        el.removeAttribute('data-never');
+      }
+      const meter = a.querySelector('.meter');
+      if (meter) {
+        meter.hidden = acc === null;
+        meter.firstElementChild.style.width = (acc || 0) + '%';
+        meter.setAttribute('aria-valuenow', acc || 0);
+      }
     });
 
-    // Least recently opened drill: never-opened first (in order), otherwise the oldest.
-    let pick = drills.find(a => !m[hrefOf(a)]);
-    if (!pick) pick = drills.slice().sort((x, y) => m[hrefOf(x)] - m[hrefOf(y)])[0];
+    // What needs practice most (lower is needier): a topic never practiced comes first (never opened before merely
+    // opened), otherwise recent accuracy minus one point per day since the last session, capped at 30 points.
+    const score = (href) => {
+      const p = prog[href], acc = accuracy(p);
+      if (acc === null) return m[href] ? -1 : -2;
+      return acc - Math.min(30, p.updatedAt ? dayDiff(p.updatedAt) : 0);
+    };
+    const when = (href) => (prog[href] && prog[href].updatedAt) || m[href] || 0;   // ties go to the least recent
+    const pick = drills.slice().sort((x, y) => (score(hrefOf(x)) - score(hrefOf(y))) || (when(hrefOf(x)) - when(hrefOf(y))))[0];
     if (pick && btn) {
       btn.setAttribute('href', hrefOf(pick));
       btn.querySelector('.target').textContent =
@@ -535,7 +590,7 @@
     let bytes = 0; keys.forEach(k => { bytes += (k.length + data[k].length) * 2; });
     const m = meta();
     const parts = [keys.length + (keys.length === 1 ? ' entry' : ' entries') + ' stored (≈ ' + fmtSize(bytes) + ')'];
-    if (m && m.exportedAt) parts.push('Last backed up ' + label(new Date(m.exportedAt).getTime()).replace('Last opened ', ''));
+    if (m && m.exportedAt) parts.push('Last backed up ' + ago(new Date(m.exportedAt).getTime()));
     else parts.push('Never backed up');
     statsEl.textContent = parts.join(' — ');
   }

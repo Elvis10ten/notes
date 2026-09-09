@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Subordinate clauses — conjunction first, verb last</title>
+<title>Subordinate clauses — Practice</title>
 <style>
 :root{
   --paper:#EDEBE3; --card:#F8F7F2; --card-2:#E7E5DB;
@@ -313,6 +313,7 @@ function grade(id, ok){
     S.stats.lastDay = d;
   }
   save();
+  if (window.deutschHome) deutschHome.answer(ok);
 }
 
 /* ============================ helpers ============================ */
@@ -959,5 +960,6 @@ $("#nav-ref").onclick = ()=>{ renderRef(); show("ref"); };
 $("#nav-prog").onclick = ()=>{ renderProg(); show("prog"); };
 renderHome(); show("home");
 </script>
+<script src="deutsch-home.js"></script>
 </body>
 </html>

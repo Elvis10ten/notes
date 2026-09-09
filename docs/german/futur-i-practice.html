@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Futur I — Drill</title>
+<title>Futur I — Practice</title>
 <style>
   :root{
     --bg:#F2F4F8; --surface:#FFFFFF; --ink:#16213A; --muted:#5B667A; --line:#D9DEE8;
@@ -567,6 +567,7 @@ function grade(id, ok){
   }
   state.history.push(id); if(state.history.length > 50) state.history.shift();
   save();
+  if (window.deutschHome) deutschHome.answer(ok);
 }
 function stats(cats){
   const pool = BANK.filter(q => !cats || cats.includes(q.cat));
@@ -827,5 +828,6 @@ function submit(){
 renderHome();
 window.__t = {BANK, exportProgress, importProgress, validateImport, get session(){return session}, get state(){return state}, stats, checkOrder, checkTyped};
 </script>
+<script src="deutsch-home.js"></script>
 </body>
 </html>

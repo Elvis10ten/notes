@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Präteritum — ging, hatte, konnte</title>
+<title>Präteritum — Practice</title>
 <style>
 :root{
   --paper:#EDEBE3; --card:#F8F7F2; --card-2:#E7E5DB;
@@ -27999,6 +27999,7 @@ function record(id, ok, wasDue){
     r.b = 0; r.due = NOW();
   }
   save();
+  if (window.deutschHome) deutschHome.answer(ok);
   return r;
 }
 
@@ -28553,5 +28554,6 @@ window.__pt = {
   setLen(n){ LEN = n; }, inputs, finish
 };
 </script>
+<script src="deutsch-home.js"></script>
 </body>
 </html>

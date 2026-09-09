@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>German Modal Verbs — Drill to Mastery</title>
+<title>Modal verbs — Practice</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
@@ -1248,6 +1248,7 @@ function check() {
     right = item.orders.some(o => o.length === ses.built.length && o.every((t, k) => t === ses.built[k]));
   }
   grade(item, right, ses.hinted);
+  if (window.deutschHome) deutschHome.answer(right);
   if (item.type !== 'cloze') ses.viaAlt = false;
   ses.state = 'shown'; ses.lastRight = right;
   showVerdict(item, right, given);
@@ -1289,6 +1290,7 @@ function override() {
   const item = nextItem(); const s = st(item.id);
   s.w--; s.l--; s.c++; s.s++; s.b = Math.min(INTERVALS.length - 1, (s.pb ?? s.b) + 1);
   s.due = Date.now() + INTERVALS[s.b] * DAY; save();
+  if (window.deutschHome) deutschHome.amend(true);
   ses.lastRight = true; ses.right++;
   advance(true, item);
 }
@@ -1522,5 +1524,6 @@ renderDrill();
 renderMeter();
 
 </script>
+<script src="deutsch-home.js"></script>
 </body>
 </html>

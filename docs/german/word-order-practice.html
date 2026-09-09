@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Wortstellung — German word order</title>
+<title>Word order — Practice</title>
 <meta name="color-scheme" content="light">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2235,6 +2235,7 @@ function Drill() {
     if (sess.mode !== 'exam') grade(q, ok, true); else { const s2 = st(q.i); s2.n++; ok ? s2.c++ : s2.w++; save(); }
     sess.log.push({ i: q.i, ok });
     ok ? sess.right++ : sess.wrong++;
+    if (window.deutschHome) deutschHome.answer(ok);
     if (!ok && sess.mode !== 'exam' && !sess.redone.has(q.i)) {
       sess.redone.add(q.i);
       const at = Math.min(sess.queue.length, sess.idx + 4);
@@ -2247,6 +2248,7 @@ function Drill() {
     if (locked) return;
     if (sess.mode !== 'exam') { grade(q, false, true); }
     sess.wrong++;
+    if (window.deutschHome) deutschHome.answer(false);
     sess.log.push({ i: q.i, ok: false });
     if (sess.mode !== 'exam' && !sess.redone.has(q.i)) {
       sess.redone.add(q.i);
@@ -2433,5 +2435,6 @@ document.querySelectorAll('.nav button').forEach(b => b.onclick = () => go(b.dat
 render();
 
 </script>
+<script src="deutsch-home.js"></script>
 </body>
 </html>

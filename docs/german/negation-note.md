@@ -1,4 +1,4 @@
-# German 9: Negation
+# Negation
 | In front of a noun           | Use   | Example                                                      |
 |------------------------------|-------|--------------------------------------------------------------|
 | ein /eine / einen            | kein  | Ich habe ein Auto. -> Ich habe **kein** Auto.                |

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Konjunktiv II — wäre, hätte, würde</title>
+<title>Konjunktiv II — Practice</title>
 <style>
 :root{
   --paper:#EDEBE3; --card:#F8F7F2; --card-2:#E7E5DB;
@@ -324,6 +324,7 @@ function grade(id, ok, promotable){
   }
   touchDay();
   save();
+  if (window.deutschHome) deutschHome.answer(ok);
   return r;
 }
 
@@ -960,5 +961,6 @@ window.K2 = {
   setNow(fn){ NOW = fn; }, get session(){ return SESSION; }, get ui(){ return UI; }, show
 };
 </script>
+<script src="deutsch-home.js"></script>
 </body>
 </html>

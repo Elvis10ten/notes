@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Komparativ & Superlativ — drill to mastery</title>
+<title>Komparativ &amp; Superlativ — Practice</title>
 <meta name="description" content="Spaced-repetition drills for German comparative and superlative forms (telc B1).">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1116,6 +1116,7 @@ function answerCurrent(input){
   const r = grade(e.q.id, res.ok, promotable);
   const result = {id:e.q.id, ok:res.ok, retry:e.retry, promoted: res.ok && promotable, from:before, to:r.b, due:r.due};
   SESSION.results.push(result);
+  if (window.deutschHome) deutschHome.answer(res.ok);
   if(!res.ok && !e.retry) SESSION.queue.push({q:e.q, promotable:false, retry:true});
   SESSION.answered = Object.assign({res}, result);
   SESSION.input = input;
@@ -1583,5 +1584,6 @@ window.KS = {
 };
 
 </script>
+<script src="deutsch-home.js"></script>
 </body>
 </html>

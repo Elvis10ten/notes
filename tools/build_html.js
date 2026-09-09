@@ -1,4 +1,5 @@
 import {writeFile} from 'fs/promises';
+import {existsSync} from 'fs';
 import {resolve} from 'path';
 import {marked} from "marked";
 import markedKatex from "marked-katex-extension";
@@ -60,8 +61,13 @@ async function buildHTMLFile(dir, markdownFileName) {
     let srcHTML = await marked(srcMarkdown);
 
     if (inPlaceMarkdownDirs.includes(dir)) {
-        // These notes belong to the index next to them (e.g. docs/german/index.html), so link back there instead of the site home.
-        srcHTML = `<div><a href="index.html" class="back-link">Übersicht</a></div>` + srcHTML;
+        // These notes belong to the overview next to them (docs/german/index.html), so link back there instead of the
+        // site home, and to the matching trainer (<topic>-practice.html) when there is one.
+        const practice = markdownFileName.replace(/-note\.md$/, '-practice.html');
+        const hasPractice = practice !== markdownFileName && existsSync(resolve(dir, practice));
+        srcHTML = `<div><a href="index.html" class="back-link">← Overview</a>`
+            + (hasPractice ? ` · <a href="${practice}" class="back-link">Practice this topic</a>` : '')
+            + `</div>` + srcHTML;
     } else if (!indexFileNames.includes(markdownFileName)) {
         srcHTML = `<div><a href="/" class="back-link">Home</a></div>` + srcHTML;
     }

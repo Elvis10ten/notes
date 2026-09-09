@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>trennbar — German prefix verbs to mastery</title>
+<title>Separable &amp; inseparable verbs — Practice</title>
 <style>:root{
   --ground:#0d1420; --panel:#141d2b; --raised:#1a2534; --line:#263242; --line-soft:#1f2b3a;
   --ink:#e9eef4; --dim:#8ba0b5; --faint:#5d7086;
@@ -1778,6 +1778,7 @@ function submit(val, gaveUp) {
   }
   wasEarly = gradedEarly(it);
   grade(it, ok);
+  if (window.deutschHome) deutschHome.answer(ok);
   if (!ok) {
     const n = (reins[it.id] = (reins[it.id] || 0) + 1);
     if (n <= 3) queue.splice(Math.min(3 + 7 * n, queue.length), 0, it);
@@ -1973,6 +1974,7 @@ function paintExam() {
 }
 function examAnswer(it, ok, val) {
   examMode.results.push({ id: it.id, ok: ok, val: val });
+  if (window.deutschHome) deutschHome.answer(ok);
   examMode.i++;
   paintExam();
 }
@@ -2221,5 +2223,6 @@ function boot() {
 }
 boot();
 </script>
+<script src="deutsch-home.js"></script>
 </body>
 </html>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light">
-<title>Perfekt drill</title>
+<title>Perfekt — Practice</title>
 <style>
 :root {
   --paper: #EDF0F5;
@@ -1588,6 +1588,7 @@ textarea.io { width: 100%; min-height: 90px; font-family: ui-monospace, Menlo, C
     r.answer = answer;
     C.applyAnswer(state, it.id, r.correct, app.now());
     app.session.record(it.id, r.correct);
+    if (window.deutschHome) deutschHome.answer(r.correct);
     // record() advanced the queue; step back so feedback shows this item, then advance on Next
     app.session.pos -= 1; app.session.done = false;
     app.lastResult = r;
@@ -1758,5 +1759,6 @@ textarea.io { width: 100%; min-height: 90px; font-family: ui-monospace, Menlo, C
 })();
 
 </script>
+<script src="deutsch-home.js"></script>
 </body>
 </html>

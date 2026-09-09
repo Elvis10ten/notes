@@ -1,4 +1,4 @@
-# German 13: Subordinate clauses
+# Subordinate clauses
 A subordinate clause cannot stand alone. It’s introduced by:
 * A subordinating conjunction
 * A relative pronoun or

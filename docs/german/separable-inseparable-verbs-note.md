@@ -1,4 +1,4 @@
-# German 5: Separable & inseparable verbs
+# Separable & inseparable verbs
 German builds huge families of verbs by attaching a prefix to a base verb.
 
 | Base                 | + prefix      | Meaning             |

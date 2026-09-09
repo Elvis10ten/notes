@@ -1,4 +1,4 @@
-# German 14: Konjunktiv II
+# Konjunktiv II
 Konjunktiv II marks something as **not real**: a wish, a hypothesis, a suggestion, or a softened request.
 
 | Function           | Example                                        | English                    |

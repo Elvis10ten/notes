@@ -1,4 +1,4 @@
-# German 7: Word order
+# Word order
 ## 1. The field model
 | Vorfeld             | Left bracket | Mittelfeld                     | Right bracket         | Nachfeld        |
 |---------------------|--------------|--------------------------------|-----------------------|-----------------|
