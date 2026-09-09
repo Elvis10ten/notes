@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Präsens — German present tense drill</title>
+<title>Present tense — Practice</title>
 <style>
 :root{
   --bg:#0E1116; --panel:#161A21; --panel2:#1D222B; --line:#2A313C; --line2:#39424F;
@@ -766,6 +766,7 @@ function submit(it, skipped){
   }
   s.answered=true; s.done++; if(ok) s.right++;
   grade(it, ok);
+  if (window.deutschHome) deutschHome.answer(ok);
   s.log.push({it, ok, given});
   if(s.exam){ next(); return; }
   showFeedback(it, ok, given, skipped);
@@ -1097,5 +1098,6 @@ gehen, stehen, denken, kennen, leben, legen, rufen.</p>
   render();
 })();
 </script>
+<script src="deutsch-home.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-# German 4: Present tense
+# Present tense
 
 There is no continuous form. Use an adverb like gerade, jetzt, im Moment, etc to stress “right now”. e.g. Ich esse jetzt.
 ## 1. Regular verbs

@@ -1,4 +1,4 @@
-# German 15: Präteritum
+# Präteritum
 ## 1. What the Präteritum is
 The Präteritum (also *Imperfekt*, "simple past") is the **one-word past tense**: *ich ging, er hatte, wir konnten*.
 

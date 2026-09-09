@@ -1,4 +1,4 @@
-# German 11: Futur I
+# Futur I
 **Form**: `werden` (conjugated, position 2) + **Infinitiv** (end of clause). e.g., Ich **werde** morgen nach Berlin **fahren**.
 
 ## 1. Conjugation of werden

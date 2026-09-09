@@ -1,4 +1,4 @@
-# German 10: Perfekt
+# Perfekt
 
 ## 1. What it is and when to use it
 

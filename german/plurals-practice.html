@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="dark">
-<title>Plurale — German plurals to mastery</title>
+<title>Plurals — Practice</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -749,6 +749,7 @@ function resolve(entry, okFlag, detail, card) {
   S.meta.answers++; if (okFlag) S.meta.correct++;
   const before = level(st(item.id), item);
   setState(item.id, grade(st(item.id), okFlag, mode, Date.now()));
+  if (window.deutschHome) deutschHome.answer(okFlag);
   const after = level(st(item.id), item);
   const NEXT = { article: 'class', class: 'produce' };
   if (okFlag) {
@@ -955,6 +956,7 @@ function renderExamCard() {
     exam.answers.push({ id: item.id, ok: res.ok, typed: inp.value.trim() });
     setState(item.id, grade(st(item.id), res.ok, 'produce', Date.now()));
     S.meta.answers++; if (res.ok) S.meta.correct++;
+    if (window.deutschHome) deutschHome.answer(res.ok);
     exam.i++; renderExamCard();
   };
   inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); go(); } });
@@ -1067,5 +1069,6 @@ document.addEventListener('keydown', e => {
 })();
 
 </script>
+<script src="deutsch-home.js"></script>
 </body>
 </html>

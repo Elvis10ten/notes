@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#F5F7FA">
-<title>Infinitiv mit zu — drill to mastery</title>
+<title>Infinitiv mit zu — Practice</title>
 <style>
 :root{
   --paper:#F5F7FA; --panel:#FFFFFF; --ink:#16213A; --muted:#66718A; --line:#D7DDE6; --line2:#EDF0F4;
@@ -454,6 +454,7 @@ function check() {
   if (g.ok) { ses.ok++; if (s.b > before) ses.promoted++; if (s.b >= MASTER && before < MASTER) ses.mastered++; }
   else { ses.wrong++; }
   ses.results.push({ id: item.id, ok: g.ok, resp, alt: g.alt, hinted: ses.hinted });
+  if (window.deutschHome) deutschHome.answer(g.ok);
   ses.q.shift();
   if (!g.ok && !ses.exam) { ses.retry[item.id] = true; ses.q.splice(Math.min(3, ses.q.length), 0, item.id); }
   if (ses.exam) { next(); return; }
@@ -672,5 +673,6 @@ function renderRules() {
 go('home');
 
 </script>
+<script src="deutsch-home.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-# German 1: Nouns
+# Nouns
 * Every German noun carries a gender, number, and case.
 * Nouns are always capitalized, regardless of position in the sentence. e.g., Ich mag meine Frau.
 * Gender is grammatical, not biological. Roughly 80% of genders are predictable from the ending or the meaning category.

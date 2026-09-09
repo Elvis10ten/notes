@@ -1,4 +1,4 @@
-# German 12: Der Infinitiv mit zu
+# Der Infinitiv mit zu
 When a sentence has a second verb that is **not** modal or a Futur auxiliary, that verb usually appears as **zu + Infinitiv at the very end** of its clause.
 
 | Main clause   | (Komma) | Infinitivgruppe -> ends with zu + Infinitiv |

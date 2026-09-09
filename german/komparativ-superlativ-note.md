@@ -1,4 +1,4 @@
-# German 17: Komparativ & Superlativ
+# Komparativ & Superlativ
 
 ## 1. The three forms
 

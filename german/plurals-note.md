@@ -1,4 +1,4 @@
-# German 2: Plurals
+# Plurals
 
 ## 1. When to use -s
 * **Loanwords**: e.g., das Hotel -> Hotels; das Restaurant -> Restaurants; der Chef -> Chefs; das Team -> Teams; das Handy -> Handys; die Party -> Partys.

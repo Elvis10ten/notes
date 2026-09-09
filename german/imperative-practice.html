@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Imperativ — Drill</title>
+<title>Imperative — Practice</title>
 <style>
   
   :root{color-scheme:light}
@@ -536,6 +536,7 @@ function finish(ok, given, revealed){
   if(exam){ return examAnswer(ok); }
   session.done++; if(ok) session.right++;
   prog[cur.id] = grade(prog[cur.id], ok, Date.now());
+  if (window.deutschHome) deutschHome.answer(ok);
   if(!ok) queue.splice(Math.min(4, queue.length), 0, cur);   // come back soon
   persist();
 
@@ -649,6 +650,7 @@ function examAnswer(ok){
   exam.log.push({item:cur, ok});
   if(ok) exam.right++;
   prog[cur.id] = grade(prog[cur.id], ok, Date.now());
+  if (window.deutschHome) deutschHome.answer(ok);
   persist();
   exam.i++;
   paintExamItem();
@@ -840,5 +842,6 @@ window.app = {
   nextItem(); paintMastery();
 })();
 </script>
+<script src="deutsch-home.js"></script>
 </body>
 </html>

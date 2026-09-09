@@ -1,4 +1,4 @@
-# German 6: Modal verbs
+# Modal verbs
 | Verb        | Core meaning                              | Example                          |
 |-------------|-------------------------------------------|----------------------------------|
 | **dürfen**  | permission / prohibition (negated)        | Hier **darf** man nicht rauchen. |

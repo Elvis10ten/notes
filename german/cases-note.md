@@ -1,4 +1,4 @@
-# German 3: Cases
+# Cases
 
 ## 1. How are cases decided?
 

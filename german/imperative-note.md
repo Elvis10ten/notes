@@ -1,4 +1,4 @@
-# German 8: Imperative
+# Imperative
 | Address                        | Form                                 | Example         |
 |--------------------------------|--------------------------------------|-----------------|
 | du — one person, informal      | verb stem, no pronoun                | **Komm!**       |
