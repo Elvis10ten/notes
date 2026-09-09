@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Perfekt drill</title>
+<style>
+:root {
+  --paper: #EDF0F5;
+  --surface: #FFFFFF;
+  --ink: #131A2B;
+  --muted: #5E6778;
+  --line: #D3D8E2;
+  --line-strong: #A9B1C0;
+  --aux: #2F4BD8;
+  --aux-soft: #E4E9FB;
+  --pp: #C2410C;
+  --pp-soft: #FBE7DC;
+  --ok: #1B7F5A;
+  --ok-soft: #DDF3E8;
+  --bad: #B42318;
+  --bad-soft: #FBE3E0;
+  --serif: "Charter", "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --radius: 6px;
+  --box0: #E6E9F0; --box1: #C9D4F5; --box2: #9FB2EE; --box3: #6F8BE6; --box4: #4463DE; --box5: #1B7F5A;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--sans); font-size: 16px; line-height: 1.5;
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible, a:focus-visible, .chip:focus-visible { outline: 3px solid #8FA3F0; outline-offset: 2px; }
+.de { font-family: var(--serif); }
+.aux { color: var(--aux); font-weight: 600; }
+.pp { color: var(--pp); font-weight: 600; }
+b { font-weight: 650; }
+
+#app { max-width: 680px; margin: 0 auto; padding: 20px 16px 60px; }
+header.top { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+header.top h1 { font-family: var(--serif); font-weight: 400; font-size: 24px; margin: 0; letter-spacing: -0.01em; }
+header.top h1 button { background: none; border: 0; padding: 0; font: inherit; color: inherit; }
+header.top nav { display: flex; gap: 16px; }
+.linkbtn { background: none; border: 0; padding: 0; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+.linkbtn:hover { color: var(--ink); }
+.linkbtn.current { color: var(--ink); text-decoration: none; }
+
+/* hero: the Satzklammer, drawn */
+.hero { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px 22px 22px; margin-bottom: 20px; }
+.hero .klammer { font-family: var(--serif); font-size: 30px; line-height: 1.35; position: relative; padding-bottom: 18px; margin: 0; }
+.hero .hero-en { color: var(--muted); margin: 4px 0 0; font-size: 15px; }
+.hero .hero-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.hero .legend { color: var(--muted); font-size: 13px; margin: 14px 0 0; }
+.klammer { position: relative; }
+.klammer .br { display: block; position: absolute; height: 9px; border: 1.5px solid var(--line-strong); border-top: 0; pointer-events: none; }
+.klammer .br.hidden { display: none; }
+@media (max-width: 480px) { .hero .klammer { font-size: 24px; } }
+
+/* mastery strip */
+.strip { display: flex; align-items: center; gap: 14px; margin: 0 0 22px; flex-wrap: wrap; }
+.bar { display: flex; flex: 1 1 200px; height: 10px; background: var(--box0); border-radius: 5px; overflow: hidden; }
+.bar span { display: block; height: 100%; }
+.strip .nums { color: var(--muted); font-size: 14px; white-space: nowrap; }
+.strip .nums b { color: var(--ink); }
+
+/* home panels */
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 16px; }
+.panel h2 { font-size: 17px; font-weight: 600; margin: 0 0 12px; }
+.row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.row .lbl { color: var(--muted); font-size: 14px; min-width: 64px; }
+.seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: var(--radius); overflow: hidden; }
+.seg button { border: 0; background: var(--surface); padding: 6px 14px; color: var(--muted); border-right: 1px solid var(--line); min-height: 40px; }
+.seg button:last-child { border-right: 0; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.modehelp { color: var(--muted); font-size: 14px; margin: -4px 0 14px 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 1px solid var(--line-strong); background: var(--surface); border-radius: 999px; padding: 6px 12px; font-size: 14px; color: var(--muted); min-height: 36px; }
+.chip[aria-pressed="true"] { background: var(--aux-soft); border-color: var(--aux); color: var(--ink); }
+.primary { background: var(--ink); color: #fff; border: 0; border-radius: var(--radius); padding: 12px 22px; font-weight: 600; min-height: 46px; }
+.primary:hover { background: #262E42; }
+.primary:disabled { opacity: 0.5; cursor: default; }
+.secondary { background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--radius); padding: 11px 18px; min-height: 46px; }
+.actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 16px; }
+.toggle { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); cursor: pointer; }
+.toggle input { width: 18px; height: 18px; margin: 0; }
+.note { color: var(--muted); font-size: 14px; }
+.warn { background: #FFF4D6; border: 1px solid #F0D48A; border-radius: var(--radius); padding: 10px 14px; font-size: 14px; margin-bottom: 16px; }
+
+/* concept rows */
+.concepts { display: grid; grid-template-columns: 1fr; gap: 0; }
+.concept { -webkit-appearance: none; appearance: none; font: inherit; display: grid; grid-template-columns: 1fr auto; grid-template-areas: "name nums" "bar bar" "desc desc"; gap: 4px 12px; padding: 12px 0; border: 0; border-top: 1px solid var(--line); text-align: left; background: none; width: 100%; color: inherit; }
+.concept:first-child { border-top: 0; }
+.concept .name { grid-area: name; font-weight: 600; }
+.concept .nums { grid-area: nums; color: var(--muted); font-size: 14px; }
+.concept .bar { grid-area: bar; margin-top: 4px; }
+.concept .desc { grid-area: desc; color: var(--muted); font-size: 14px; }
+.concept[aria-pressed="true"] .name::before { content: "\2713  "; color: var(--aux); }
+.concept:not([disabled]):hover .name { text-decoration: underline; text-underline-offset: 3px; }
+
+/* session */
+.session-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 12px; color: var(--muted); font-size: 14px; }
+.session-head .concept-name { text-align: right; }
+.progress-dots { height: 4px; background: var(--box0); border-radius: 2px; overflow: hidden; margin-bottom: 20px; }
+.progress-dots span { display: block; height: 100%; background: var(--ink); transition: width 200ms ease; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px 22px; }
+.card .prompt { font-family: var(--serif); font-size: 28px; line-height: 1.3; margin: 0 0 6px; overflow-wrap: anywhere; }
+.card .prompt.small { font-size: 24px; }
+.card .sub { color: var(--muted); margin: 0 0 16px; min-height: 8px; }
+.card .instruction { font-size: 15px; margin: 0 0 12px; }
+.inputrow { display: flex; gap: 10px; align-items: stretch; flex-wrap: wrap; }
+.inputrow .prefix { font-family: var(--serif); font-size: 20px; align-self: center; color: var(--muted); }
+.answer { flex: 1 1 220px; font-family: var(--serif); font-size: 20px; padding: 10px 12px; border: 1.5px solid var(--line-strong); border-radius: var(--radius); background: #FBFCFE; min-height: 48px; }
+.answer:focus { border-color: var(--aux); outline: 0; box-shadow: 0 0 0 3px var(--aux-soft); }
+.answer[disabled] { background: var(--paper); color: var(--muted); }
+.options { display: grid; gap: 8px; }
+.options.two { grid-template-columns: 1fr 1fr; }
+.opt { text-align: left; background: var(--surface); border: 1.5px solid var(--line-strong); border-radius: var(--radius); padding: 12px 14px; min-height: 48px; font-size: 16px; display: flex; gap: 12px; align-items: center; }
+.opt .key { color: var(--muted); font-size: 13px; min-width: 14px; }
+.opt.de .txt { font-family: var(--serif); font-size: 20px; }
+.opt:not([disabled]):hover { border-color: var(--ink); }
+.opt.right { border-color: var(--ok); background: var(--ok-soft); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.opt[disabled] { cursor: default; }
+.order-target { min-height: 56px; border: 1.5px dashed var(--line-strong); border-radius: var(--radius); padding: 8px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; background: #FBFCFE; }
+.order-target .empty { color: var(--muted); font-size: 14px; padding: 4px 6px; }
+.order-pool { display: flex; flex-wrap: wrap; gap: 8px; }
+.tok { font-family: var(--serif); font-size: 19px; background: var(--surface); border: 1.5px solid var(--line-strong); border-radius: var(--radius); padding: 6px 12px; min-height: 42px; display: inline-flex; align-items: center; gap: 8px; }
+.tok .key { font-family: var(--sans); color: var(--muted); font-size: 12px; }
+.tok.used { visibility: hidden; }
+.order-target .tok { background: var(--aux-soft); border-color: var(--aux); }
+.order-target .punct { font-family: var(--serif); font-size: 19px; color: var(--muted); }
+.check-row { display: flex; gap: 12px; align-items: center; margin-top: 14px; flex-wrap: wrap; }
+.hint { color: var(--muted); font-size: 13px; }
+.kbd { display: inline-block; border: 1px solid var(--line-strong); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; font-size: 12px; color: var(--muted); background: #fff; }
+@media (hover: none) { .hint, .opt .key, .tok .key { display: none; } }
+
+/* feedback */
+.feedback { margin-top: 18px; border-left: 4px solid var(--ok); padding: 14px 16px; background: var(--ok-soft); border-radius: 0 var(--radius) var(--radius) 0; }
+.feedback.bad { border-left-color: var(--bad); background: var(--bad-soft); }
+.feedback .verdict { font-weight: 600; margin: 0 0 6px; }
+.feedback .correct { font-family: var(--serif); font-size: 22px; margin: 0 0 8px; overflow-wrap: anywhere; position: relative; padding-bottom: 12px; }
+.feedback .yours { color: var(--muted); font-size: 14px; margin: 0 0 8px; }
+.feedback .yours s { color: var(--bad); }
+.feedback .explain { font-size: 15px; margin: 0; }
+.feedback .sched { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+.feedback .spelling { font-size: 14px; margin: 6px 0 0; }
+
+/* summary */
+.summary .big { font-family: var(--serif); font-size: 42px; line-height: 1.1; margin: 0 0 4px; }
+.summary .missed { margin-top: 16px; }
+.summary .missed h2 { margin-bottom: 8px; }
+.summary .missed ul { padding-left: 18px; margin: 0; }
+.summary .missed li { margin-bottom: 8px; }
+.summary .missed .de { font-size: 18px; }
+
+/* progress view */
+.boxes { display: flex; gap: 6px 14px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin-top: 8px; }
+.boxes span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; background: var(--c); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; }
+.stat .v { font-family: var(--serif); font-size: 28px; line-height: 1.1; }
+.stat .k { color: var(--muted); font-size: 13px; }
+.trouble { list-style: none; padding: 0; margin: 0; }
+.trouble li { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-top: 1px solid var(--line); }
+.trouble li:first-child { border-top: 0; }
+.trouble .de { font-size: 18px; }
+textarea.io { width: 100%; min-height: 90px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; border: 1px solid var(--line-strong); border-radius: var(--radius); padding: 8px; }
+
+.concept[disabled] { color: inherit; opacity: 1; cursor: default; }
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script id="core">
+/* Perfekt drill — core (data, item generation, answer checking, Leitner scheduling).
+   Pure JS, no DOM. Exposed as globalThis.PerfektCore so the UI and headless tests share it. */
+(function () {
+  'use strict';
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // 1. Verb bank
+  //    [infinitive, Partizip II, aux (h|s), class, reason, English, base infinitive?]
+  //    class: reg = regular (weak) · str = strong · mix = mixed · sep = separable
+  //           insep = inseparable prefix · ier = -ieren
+  //    reason: sein → move | state | special ; haben → obj | refl | stat | other
+  // ───────────────────────────────────────────────────────────────────────────
+  const VERB_ROWS = [
+    // regular (weak)
+    ['machen','gemacht','h','reg','obj','to do, make'],
+    ['kaufen','gekauft','h','reg','obj','to buy'],
+    ['lernen','gelernt','h','reg','obj','to learn'],
+    ['spielen','gespielt','h','reg','obj','to play'],
+    ['wohnen','gewohnt','h','reg','stat','to live (reside)'],
+    ['arbeiten','gearbeitet','h','reg','other','to work'],
+    ['öffnen','geöffnet','h','reg','obj','to open'],
+    ['regnen','geregnet','h','reg','other','to rain'],
+    ['warten','gewartet','h','reg','other','to wait'],
+    ['antworten','geantwortet','h','reg','other','to answer'],
+    ['reden','geredet','h','reg','other','to talk'],
+    ['rechnen','gerechnet','h','reg','other','to calculate'],
+    ['baden','gebadet','h','reg','other','to bathe'],
+    ['heiraten','geheiratet','h','reg','obj','to marry'],
+    ['zeichnen','gezeichnet','h','reg','obj','to draw'],
+    ['fragen','gefragt','h','reg','obj','to ask'],
+    ['sagen','gesagt','h','reg','obj','to say'],
+    ['hören','gehört','h','reg','obj','to hear'],
+    ['suchen','gesucht','h','reg','obj','to look for'],
+    ['brauchen','gebraucht','h','reg','obj','to need'],
+    ['kochen','gekocht','h','reg','obj','to cook'],
+    ['tanzen','getanzt','h','reg','other','to dance'],
+    ['lachen','gelacht','h','reg','other','to laugh'],
+    ['weinen','geweint','h','reg','other','to cry'],
+    ['zeigen','gezeigt','h','reg','obj','to show'],
+    ['glauben','geglaubt','h','reg','other','to believe'],
+    ['leben','gelebt','h','reg','stat','to live'],
+    ['lieben','geliebt','h','reg','obj','to love'],
+    ['schenken','geschenkt','h','reg','obj','to give (as a gift)'],
+    ['schicken','geschickt','h','reg','obj','to send'],
+    ['putzen','geputzt','h','reg','obj','to clean'],
+    ['üben','geübt','h','reg','obj','to practise'],
+    ['holen','geholt','h','reg','obj','to fetch'],
+    ['stellen','gestellt','h','reg','obj','to put (upright)'],
+    ['legen','gelegt','h','reg','obj','to lay, put (flat)'],
+    ['parken','geparkt','h','reg','obj','to park'],
+    ['frühstücken','gefrühstückt','h','reg','other','to have breakfast'],
+    ['bauen','gebaut','h','reg','obj','to build'],
+    ['feiern','gefeiert','h','reg','obj','to celebrate'],
+    ['malen','gemalt','h','reg','obj','to paint'],
+    ['wünschen','gewünscht','h','reg','obj','to wish'],
+    ['zahlen','gezahlt','h','reg','obj','to pay'],
+    ['grillen','gegrillt','h','reg','obj','to barbecue'],
+    ['sammeln','gesammelt','h','reg','obj','to collect'],
+    ['dauern','gedauert','h','reg','other','to last, take (time)'],
+    ['kosten','gekostet','h','reg','other','to cost'],
+    ['schmecken','geschmeckt','h','reg','other','to taste (good)'],
+    ['passen','gepasst','h','reg','other','to fit'],
+    ['klingeln','geklingelt','h','reg','other','to ring'],
+    ['sich freuen','gefreut','h','reg','refl','to be glad'],
+    ['sich setzen','gesetzt','h','reg','refl','to sit down'],
+    ['sich duschen','geduscht','h','reg','refl','to take a shower'],
+    ['sich ärgern','geärgert','h','reg','refl','to get annoyed'],
+    ['reisen','gereist','s','reg','move','to travel'],
+    ['wandern','gewandert','s','reg','move','to hike'],
+    ['landen','gelandet','s','reg','move','to land'],
+    ['stürzen','gestürzt','s','reg','move','to fall (over)'],
+    // strong (irregular)
+    ['sehen','gesehen','h','str','obj','to see'],
+    ['trinken','getrunken','h','str','obj','to drink'],
+    ['schreiben','geschrieben','h','str','obj','to write'],
+    ['nehmen','genommen','h','str','obj','to take'],
+    ['gehen','gegangen','s','str','move','to go'],
+    ['bitten','gebeten','h','str','obj','to ask for'],
+    ['bleiben','geblieben','s','str','special','to stay'],
+    ['brechen','gebrochen','h','str','obj','to break'],
+    ['essen','gegessen','h','str','obj','to eat'],
+    ['fahren','gefahren','s','str','move','to drive, go'],
+    ['fallen','gefallen','s','str','move','to fall'],
+    ['finden','gefunden','h','str','obj','to find'],
+    ['fliegen','geflogen','s','str','move','to fly'],
+    ['geben','gegeben','h','str','obj','to give'],
+    ['gewinnen','gewonnen','h','str','obj','to win'],
+    ['haben','gehabt','h','str','obj','to have'],
+    ['halten','gehalten','h','str','obj','to hold, stop'],
+    ['heißen','geheißen','h','str','other','to be called'],
+    ['helfen','geholfen','h','str','other','to help'],
+    ['kommen','gekommen','s','str','move','to come'],
+    ['lassen','gelassen','h','str','obj','to let, leave'],
+    ['laufen','gelaufen','s','str','move','to run, walk'],
+    ['leihen','geliehen','h','str','obj','to lend, borrow'],
+    ['lesen','gelesen','h','str','obj','to read'],
+    ['liegen','gelegen','h','str','stat','to lie'],
+    ['schlafen','geschlafen','h','str','stat','to sleep'],
+    ['schließen','geschlossen','h','str','obj','to close'],
+    ['schneiden','geschnitten','h','str','obj','to cut'],
+    ['schwimmen','geschwommen','s','str','move','to swim'],
+    ['sein','gewesen','s','str','special','to be'],
+    ['singen','gesungen','h','str','obj','to sing'],
+    ['sitzen','gesessen','h','str','stat','to sit'],
+    ['sprechen','gesprochen','h','str','other','to speak'],
+    ['stehen','gestanden','h','str','stat','to stand'],
+    ['steigen','gestiegen','s','str','move','to climb, rise'],
+    ['sterben','gestorben','s','str','state','to die'],
+    ['tragen','getragen','h','str','obj','to carry, wear'],
+    ['treffen','getroffen','h','str','obj','to meet'],
+    ['tun','getan','h','str','obj','to do'],
+    ['waschen','gewaschen','h','str','obj','to wash'],
+    ['werden','geworden','s','str','state','to become'],
+    ['wachsen','gewachsen','s','str','state','to grow'],
+    ['springen','gesprungen','s','str','move','to jump'],
+    ['rufen','gerufen','h','str','obj','to call, shout'],
+    ['schlagen','geschlagen','h','str','obj','to hit'],
+    ['lügen','gelogen','h','str','other','to lie (tell a lie)'],
+    ['riechen','gerochen','h','str','other','to smell'],
+    ['scheinen','geschienen','h','str','other','to shine, seem'],
+    ['backen','gebacken','h','str','obj','to bake'],
+    ['braten','gebraten','h','str','obj','to fry, roast'],
+    ['werfen','geworfen','h','str','obj','to throw'],
+    ['stehlen','gestohlen','h','str','obj','to steal'],
+    ['leiden','gelitten','h','str','other','to suffer'],
+    ['streiten','gestritten','h','str','other','to argue'],
+    ['schreien','geschrien','h','str','other','to scream'],
+    ['gießen','gegossen','h','str','obj','to pour, water'],
+    ['ziehen','gezogen','h','str','obj','to pull'],
+    ['reiten','geritten','s','str','move','to ride (a horse)'],
+    ['messen','gemessen','h','str','obj','to measure'],
+    ['laden','geladen','h','str','obj','to load'],
+    ['fangen','gefangen','h','str','obj','to catch'],
+    ['bieten','geboten','h','str','obj','to offer'],
+    ['binden','gebunden','h','str','obj','to tie'],
+    // mixed
+    ['bringen','gebracht','h','mix','obj','to bring'],
+    ['denken','gedacht','h','mix','other','to think'],
+    ['kennen','gekannt','h','mix','obj','to know (people, places)'],
+    ['wissen','gewusst','h','mix','obj','to know (facts)'],
+    ['nennen','genannt','h','mix','obj','to name, call'],
+    ['rennen','gerannt','s','mix','move','to run'],
+    ['brennen','gebrannt','h','mix','other','to burn'],
+    // separable
+    ['aufstehen','aufgestanden','s','sep','state','to get up','stehen'],
+    ['einkaufen','eingekauft','h','sep','other','to shop','kaufen'],
+    ['anrufen','angerufen','h','sep','obj','to call (phone)','rufen'],
+    ['fernsehen','ferngesehen','h','sep','other','to watch TV','sehen'],
+    ['mitbringen','mitgebracht','h','sep','obj','to bring along','bringen'],
+    ['abholen','abgeholt','h','sep','obj','to pick up','holen'],
+    ['anfangen','angefangen','h','sep','other','to begin','fangen'],
+    ['einladen','eingeladen','h','sep','obj','to invite','laden'],
+    ['ankommen','angekommen','s','sep','move','to arrive','kommen'],
+    ['aufmachen','aufgemacht','h','sep','obj','to open','machen'],
+    ['zumachen','zugemacht','h','sep','obj','to close','machen'],
+    ['mitkommen','mitgekommen','s','sep','move','to come along','kommen'],
+    ['aufräumen','aufgeräumt','h','sep','obj','to tidy up'],
+    ['ausgehen','ausgegangen','s','sep','move','to go out','gehen'],
+    ['zurückkommen','zurückgekommen','s','sep','move','to come back','kommen'],
+    ['einsteigen','eingestiegen','s','sep','move','to get in / on','steigen'],
+    ['aussteigen','ausgestiegen','s','sep','move','to get off / out','steigen'],
+    ['umsteigen','umgestiegen','s','sep','move','to change (trains)','steigen'],
+    ['anziehen','angezogen','h','sep','obj','to put on (clothes)','ziehen'],
+    ['umziehen','umgezogen','s','sep','move','to move house','ziehen'],
+    ['einziehen','eingezogen','s','sep','move','to move in','ziehen'],
+    ['vorbereiten','vorbereitet','h','sep','obj','to prepare'],
+    ['anprobieren','anprobiert','h','sep','obj','to try on'],
+    ['kennenlernen','kennengelernt','h','sep','obj','to get to know','lernen'],
+    ['stattfinden','stattgefunden','h','sep','other','to take place','finden'],
+    ['teilnehmen','teilgenommen','h','sep','other','to take part','nehmen'],
+    ['wegfahren','weggefahren','s','sep','move','to drive away','fahren'],
+    ['abfahren','abgefahren','s','sep','move','to depart','fahren'],
+    ['losfahren','losgefahren','s','sep','move','to set off','fahren'],
+    ['zurückfahren','zurückgefahren','s','sep','move','to drive back','fahren'],
+    ['aufhören','aufgehört','h','sep','other','to stop','hören'],
+    ['zuhören','zugehört','h','sep','other','to listen','hören'],
+    ['aussehen','ausgesehen','h','sep','other','to look (appear)','sehen'],
+    ['wiedersehen','wiedergesehen','h','sep','obj','to see again','sehen'],
+    ['mitnehmen','mitgenommen','h','sep','obj','to take along','nehmen'],
+    ['abnehmen','abgenommen','h','sep','other','to lose weight','nehmen'],
+    ['zunehmen','zugenommen','h','sep','other','to gain weight','nehmen'],
+    ['vorstellen','vorgestellt','h','sep','obj','to introduce','stellen'],
+    ['einschlafen','eingeschlafen','s','sep','state','to fall asleep','schlafen'],
+    ['aufwachen','aufgewacht','s','sep','state','to wake up'],
+    ['aufpassen','aufgepasst','h','sep','other','to pay attention','passen'],
+    ['anmelden','angemeldet','h','sep','obj','to register'],
+    ['ausfüllen','ausgefüllt','h','sep','obj','to fill in'],
+    ['abgeben','abgegeben','h','sep','obj','to hand in','geben'],
+    ['zurückgeben','zurückgegeben','h','sep','obj','to give back','geben'],
+    ['nachdenken','nachgedacht','h','sep','other','to think (about)','denken'],
+    ['abschließen','abgeschlossen','h','sep','obj','to lock, complete','schließen'],
+    ['aufschreiben','aufgeschrieben','h','sep','obj','to write down','schreiben'],
+    ['anschauen','angeschaut','h','sep','obj','to look at'],
+    ['mitmachen','mitgemacht','h','sep','other','to join in','machen'],
+    ['herunterladen','heruntergeladen','h','sep','obj','to download','laden'],
+    ['ausmachen','ausgemacht','h','sep','obj','to switch off','machen'],
+    ['anmachen','angemacht','h','sep','obj','to switch on','machen'],
+    ['weitergehen','weitergegangen','s','sep','move','to go on','gehen'],
+    ['nachschlagen','nachgeschlagen','h','sep','obj','to look up (a word)','schlagen'],
+    ['vorhaben','vorgehabt','h','sep','obj','to plan, intend','haben'],
+    // inseparable prefix
+    ['besuchen','besucht','h','insep','obj','to visit'],
+    ['bekommen','bekommen','h','insep','obj','to get, receive'],
+    ['erzählen','erzählt','h','insep','obj','to tell'],
+    ['verstehen','verstanden','h','insep','obj','to understand'],
+    ['vergessen','vergessen','h','insep','obj','to forget'],
+    ['gefallen','gefallen','h','insep','other','to please, like'],
+    ['entscheiden','entschieden','h','insep','other','to decide'],
+    ['beginnen','begonnen','h','insep','other','to begin'],
+    ['empfehlen','empfohlen','h','insep','obj','to recommend'],
+    ['erklären','erklärt','h','insep','obj','to explain'],
+    ['bezahlen','bezahlt','h','insep','obj','to pay'],
+    ['verkaufen','verkauft','h','insep','obj','to sell'],
+    ['verlieren','verloren','h','insep','obj','to lose'],
+    ['gehören','gehört','h','insep','other','to belong'],
+    ['bestellen','bestellt','h','insep','obj','to order'],
+    ['erreichen','erreicht','h','insep','obj','to reach'],
+    ['versuchen','versucht','h','insep','obj','to try'],
+    ['verdienen','verdient','h','insep','obj','to earn'],
+    ['beantworten','beantwortet','h','insep','obj','to answer (something)'],
+    ['sich erinnern','erinnert','h','insep','refl','to remember'],
+    ['sich entschuldigen','entschuldigt','h','insep','refl','to apologise'],
+    ['sich verspäten','verspätet','h','insep','refl','to be late'],
+    ['sich bewerben','beworben','h','insep','refl','to apply (for a job)'],
+    ['erkennen','erkannt','h','insep','obj','to recognise'],
+    ['verbringen','verbracht','h','insep','obj','to spend (time)'],
+    ['zerstören','zerstört','h','insep','obj','to destroy'],
+    ['missverstehen','missverstanden','h','insep','obj','to misunderstand'],
+    ['verschlafen','verschlafen','h','insep','other','to oversleep'],
+    ['verlassen','verlassen','h','insep','obj','to leave'],
+    ['besprechen','besprochen','h','insep','obj','to discuss'],
+    ['vergleichen','verglichen','h','insep','obj','to compare'],
+    ['benutzen','benutzt','h','insep','obj','to use'],
+    ['bedeuten','bedeutet','h','insep','other','to mean'],
+    ['besichtigen','besichtigt','h','insep','obj','to visit (sights)'],
+    ['beschreiben','beschrieben','h','insep','obj','to describe'],
+    ['erhalten','erhalten','h','insep','obj','to receive'],
+    ['erlauben','erlaubt','h','insep','obj','to allow'],
+    ['entdecken','entdeckt','h','insep','obj','to discover'],
+    ['erleben','erlebt','h','insep','obj','to experience'],
+    ['verpassen','verpasst','h','insep','obj','to miss (a train)'],
+    ['bemerken','bemerkt','h','insep','obj','to notice'],
+    ['verletzen','verletzt','h','insep','obj','to injure'],
+    ['geschehen','geschehen','s','insep','special','to happen'],
+    ['gelingen','gelungen','s','insep','special','to succeed'],
+    ['begegnen','begegnet','s','insep','special','to meet (by chance)'],
+    ['übernachten','übernachtet','h','insep','other','to stay overnight'],
+    ['wiederholen','wiederholt','h','insep','obj','to repeat'],
+    ['unterschreiben','unterschrieben','h','insep','obj','to sign'],
+    ['übersetzen','übersetzt','h','insep','obj','to translate'],
+    ['empfangen','empfangen','h','insep','obj','to receive, welcome'],
+    // -ieren
+    ['studieren','studiert','h','ier','obj','to study'],
+    ['telefonieren','telefoniert','h','ier','other','to phone'],
+    ['passieren','passiert','s','ier','special','to happen'],
+    ['reparieren','repariert','h','ier','obj','to repair'],
+    ['probieren','probiert','h','ier','obj','to try (taste)'],
+    ['fotografieren','fotografiert','h','ier','obj','to photograph'],
+    ['funktionieren','funktioniert','h','ier','other','to work (function)'],
+    ['informieren','informiert','h','ier','obj','to inform'],
+    ['organisieren','organisiert','h','ier','obj','to organise'],
+    ['diskutieren','diskutiert','h','ier','other','to discuss'],
+    ['reservieren','reserviert','h','ier','obj','to reserve'],
+    ['sich interessieren','interessiert','h','ier','refl','to be interested'],
+    ['kopieren','kopiert','h','ier','obj','to copy'],
+    ['trainieren','trainiert','h','ier','other','to train'],
+    ['buchstabieren','buchstabiert','h','ier','obj','to spell'],
+    ['gratulieren','gratuliert','h','ier','other','to congratulate'],
+    ['akzeptieren','akzeptiert','h','ier','obj','to accept'],
+    ['kontrollieren','kontrolliert','h','ier','obj','to check'],
+    ['notieren','notiert','h','ier','obj','to note down'],
+    ['korrigieren','korrigiert','h','ier','obj','to correct'],
+    ['renovieren','renoviert','h','ier','obj','to renovate'],
+    ['sich konzentrieren','konzentriert','h','ier','refl','to concentrate'],
+    ['präsentieren','präsentiert','h','ier','obj','to present'],
+    ['markieren','markiert','h','ier','obj','to mark'],
+    ['existieren','existiert','h','ier','other','to exist'],
+  ];
+
+  const VERBS = VERB_ROWS.map(function (r, i) {
+    return { idx: i, inf: r[0], pp: r[1], aux: r[2], cls: r[3], why: r[4], en: r[5], base: r[6] || null };
+  });
+  const VERB_BY_INF = {};
+  VERBS.forEach(function (v) { VERB_BY_INF[v.inf] = v; });
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // 2. Sentence bank
+  //    s = subject (as written mid-sentence) · p = person (ich du er wir ihr sie)
+  //    v = finite present form · sep = separable prefix (present) · mid = middle field
+  //    aux + pp = Perfekt · inf = verb · en = English · form = st | q | w
+  //    front = fronted element (statements only) · neg = "nicht before Partizip II" is the
+  //    correct negation of this sentence · why = aux reason when it differs from the verb default
+  // ───────────────────────────────────────────────────────────────────────────
+  const SENTENCES = [
+    { s:'ich', p:'ich', v:'esse', mid:'die Pizza', aux:'habe', pp:'gegessen', inf:'essen', en:'I ate the pizza.', neg:true },
+    { s:'wir', p:'wir', v:'fahren', mid:'nach Hamburg', aux:'sind', pp:'gefahren', inf:'fahren', en:'We went to Hamburg.' },
+    { s:'du', p:'du', v:'frühstückst', mid:'schon', aux:'hast', pp:'gefrühstückt', inf:'frühstücken', en:'Have you had breakfast yet?', form:'q' },
+    { s:'ich', p:'ich', v:'besuche', mid:'am Samstag meine Oma', aux:'habe', pp:'besucht', inf:'besuchen', en:'I visited my grandma on Saturday.', neg:true },
+    { s:'ich', p:'ich', v:'besuche', mid:'meine Oma', aux:'habe', pp:'besucht', inf:'besuchen', en:'On Saturday I visited my grandma.', front:'am Samstag' },
+    { s:'du', p:'du', v:'schläfst', mid:'gut', aux:'hast', pp:'geschlafen', inf:'schlafen', en:'Did you sleep well?', form:'q' },
+    { s:'du', p:'du', v:'machst', mid:'am Wochenende', aux:'hast', pp:'gemacht', inf:'machen', en:'What did you do at the weekend?', form:'w', w:'Was' },
+    { s:'ich', p:'ich', v:'arbeite', mid:'heute', aux:'habe', pp:'gearbeitet', inf:'arbeiten', en:'I worked today.', neg:true },
+    { s:'er', p:'er', v:'kommt', mid:'um acht Uhr', aux:'ist', pp:'gekommen', inf:'kommen', en:'He came at eight o\u2019clock.', neg:true },
+    { s:'ihr', p:'ihr', v:'trinkt', mid:'den Kaffee', aux:'habt', pp:'getrunken', inf:'trinken', en:'You (pl.) drank the coffee.', neg:true },
+    { s:'meine Eltern', p:'sie', v:'fliegen', mid:'nach Spanien', aux:'sind', pp:'geflogen', inf:'fliegen', en:'My parents flew to Spain.' },
+    { s:'ich', p:'ich', v:'kaufe', mid:'das Brot', aux:'habe', pp:'gekauft', inf:'kaufen', en:'I bought the bread.', neg:true },
+    { s:'du', p:'du', v:'liest', mid:'das Buch', aux:'hast', pp:'gelesen', inf:'lesen', en:'You read the book.', neg:true },
+    { s:'Sie', p:'sie', v:'verstehen', mid:'die Frage', aux:'haben', pp:'verstanden', inf:'verstehen', en:'You (formal) understood the question.', neg:true },
+    { s:'wir', p:'wir', v:'bleiben', mid:'zu Hause', aux:'sind', pp:'geblieben', inf:'bleiben', en:'We stayed at home.' },
+    { s:'er', p:'er', v:'steht', sep:'auf', mid:'um sieben Uhr', aux:'ist', pp:'aufgestanden', inf:'aufstehen', en:'He got up at seven o\u2019clock.', neg:true },
+    { s:'ich', p:'ich', v:'rufe', sep:'an', mid:'meine Mutter', aux:'habe', pp:'angerufen', inf:'anrufen', en:'I called my mother.', neg:true },
+    { s:'wir', p:'wir', v:'sehen', sep:'fern', mid:'abends', aux:'haben', pp:'ferngesehen', inf:'fernsehen', en:'We watched TV in the evening.', neg:true },
+    { s:'sie', p:'er', v:'bringt', sep:'mit', mid:'den Kuchen', aux:'hat', pp:'mitgebracht', inf:'mitbringen', en:'She brought the cake along.', neg:true },
+    { s:'ich', p:'ich', v:'hole', sep:'ab', mid:'dich vom Bahnhof', aux:'habe', pp:'abgeholt', inf:'abholen', en:'I picked you up from the station.' },
+    { s:'du', p:'du', v:'studierst', mid:'Informatik', aux:'hast', pp:'studiert', inf:'studieren', en:'You studied computer science.' },
+    { s:'er', p:'er', v:'telefoniert', mid:'mit seiner Schwester', aux:'hat', pp:'telefoniert', inf:'telefonieren', en:'He phoned his sister.' },
+    { s:'ein Unfall', p:'er', v:'passiert', mid:'auf der Straße', aux:'ist', pp:'passiert', inf:'passieren', en:'An accident happened on the street.' },
+    { s:'er', p:'er', v:'repariert', mid:'das Fahrrad', aux:'hat', pp:'repariert', inf:'reparieren', en:'He repaired the bike.', neg:true },
+    { s:'ich', p:'ich', v:'probiere', mid:'den Kuchen', aux:'habe', pp:'probiert', inf:'probieren', en:'I tried the cake.', neg:true },
+    { s:'wir', p:'wir', v:'gehen', mid:'ins Kino', aux:'sind', pp:'gegangen', inf:'gehen', en:'We went to the cinema.' },
+    { s:'das Kind', p:'er', v:'schläft', sep:'ein', mid:'', aux:'ist', pp:'eingeschlafen', inf:'einschlafen', en:'The child fell asleep.', neg:true },
+    { s:'ich', p:'ich', v:'wache', sep:'auf', mid:'um sechs Uhr', aux:'bin', pp:'aufgewacht', inf:'aufwachen', en:'I woke up at six o\u2019clock.', neg:true },
+    { s:'er', p:'er', v:'wird', mid:'Arzt', aux:'ist', pp:'geworden', inf:'werden', en:'He became a doctor.' },
+    { s:'der Hund', p:'er', v:'stirbt', mid:'', aux:'ist', pp:'gestorben', inf:'sterben', en:'The dog died.', neg:true },
+    { s:'die Kinder', p:'sie', v:'wachsen', mid:'schnell', aux:'sind', pp:'gewachsen', inf:'wachsen', en:'The children grew quickly.' },
+    { s:'wir', p:'wir', v:'sind', mid:'in Berlin', aux:'sind', pp:'gewesen', inf:'sein', en:'We were in Berlin.' },
+    { s:'es', p:'er', v:'regnet', mid:'den ganzen Tag', aux:'hat', pp:'geregnet', inf:'regnen', en:'It rained the whole day.', neg:true },
+    { s:'ich', p:'ich', v:'fahre', mid:'das Auto', aux:'habe', pp:'gefahren', inf:'fahren', en:'I drove the car.', neg:true, why:'obj' },
+    { s:'der Pilot', p:'er', v:'fliegt', mid:'das Flugzeug', aux:'hat', pp:'geflogen', inf:'fliegen', en:'The pilot flew the plane.', neg:true, why:'obj' },
+    { s:'sie', p:'er', v:'fliegt', mid:'nach Rom', aux:'ist', pp:'geflogen', inf:'fliegen', en:'She flew to Rome.' },
+    { s:'die Kinder', p:'sie', v:'schwimmen', mid:'ans andere Ufer', aux:'sind', pp:'geschwommen', inf:'schwimmen', en:'The children swam to the other shore.' },
+    { s:'ich', p:'ich', v:'laufe', mid:'jeden Morgen im Park', aux:'bin', pp:'gelaufen', inf:'laufen', en:'I ran in the park every morning.' },
+    { s:'du', p:'du', v:'ziehst', sep:'um', mid:'nach München', aux:'bist', pp:'umgezogen', inf:'umziehen', en:'You moved to Munich.' },
+    { s:'er', p:'er', v:'steigt', sep:'ein', mid:'in den Bus', aux:'ist', pp:'eingestiegen', inf:'einsteigen', en:'He got on the bus.' },
+    { s:'wir', p:'wir', v:'steigen', sep:'aus', mid:'am Hauptbahnhof', aux:'sind', pp:'ausgestiegen', inf:'aussteigen', en:'We got off at the main station.' },
+    { s:'ich', p:'ich', v:'falle', mid:'vom Fahrrad', aux:'bin', pp:'gefallen', inf:'fallen', en:'I fell off the bike.' },
+    { s:'das Experiment', p:'er', v:'gelingt', mid:'', aux:'ist', pp:'gelungen', inf:'gelingen', en:'The experiment succeeded.', neg:true },
+    { s:'ich', p:'ich', v:'begegne', mid:'meinem Nachbarn', aux:'bin', pp:'begegnet', inf:'begegnen', en:'I ran into my neighbour.', neg:true },
+    { s:'ich', p:'ich', v:'denke', mid:'an dich', aux:'habe', pp:'gedacht', inf:'denken', en:'I thought of you.' },
+    { s:'sie', p:'er', v:'kennt', mid:'den Mann', aux:'hat', pp:'gekannt', inf:'kennen', en:'She knew the man.', neg:true },
+    { s:'wir', p:'wir', v:'wissen', mid:'die Antwort', aux:'haben', pp:'gewusst', inf:'wissen', en:'We knew the answer.', neg:true },
+    { s:'er', p:'er', v:'bringt', mid:'mir Blumen', aux:'hat', pp:'gebracht', inf:'bringen', en:'He brought me flowers.' },
+    { s:'ihr', p:'ihr', v:'rennt', mid:'zum Bus', aux:'seid', pp:'gerannt', inf:'rennen', en:'You (pl.) ran to the bus.' },
+    { s:'das Haus', p:'er', v:'brennt', mid:'', aux:'hat', pp:'gebrannt', inf:'brennen', en:'The house burned.', neg:true },
+    { s:'ich', p:'ich', v:'lade', sep:'ein', mid:'dich zum Essen', aux:'habe', pp:'eingeladen', inf:'einladen', en:'I invited you for dinner.' },
+    { s:'wir', p:'wir', v:'kaufen', sep:'ein', mid:'heute', aux:'haben', pp:'eingekauft', inf:'einkaufen', en:'We went shopping today.', neg:true },
+    { s:'wir', p:'wir', v:'kaufen', sep:'ein', mid:'im Supermarkt', aux:'haben', pp:'eingekauft', inf:'einkaufen', en:'Today we shopped at the supermarket.', front:'heute' },
+    { s:'der Zug', p:'er', v:'kommt', sep:'an', mid:'pünktlich', aux:'ist', pp:'angekommen', inf:'ankommen', en:'The train arrived on time.' },
+    { s:'sie', p:'er', v:'macht', sep:'auf', mid:'das Fenster', aux:'hat', pp:'aufgemacht', inf:'aufmachen', en:'She opened the window.', neg:true },
+    { s:'ich', p:'ich', v:'räume', sep:'auf', mid:'mein Zimmer', aux:'habe', pp:'aufgeräumt', inf:'aufräumen', en:'I tidied my room.', neg:true },
+    { s:'wir', p:'wir', v:'gehen', sep:'aus', mid:'am Freitag', aux:'sind', pp:'ausgegangen', inf:'ausgehen', en:'We went out on Friday.', neg:true },
+    { s:'er', p:'er', v:'bereitet', sep:'vor', mid:'das Essen', aux:'hat', pp:'vorbereitet', inf:'vorbereiten', en:'He prepared the food.', neg:true },
+    { s:'ich', p:'ich', v:'probiere', sep:'an', mid:'die Jacke', aux:'habe', pp:'anprobiert', inf:'anprobieren', en:'I tried on the jacket.', neg:true },
+    { s:'ich', p:'ich', v:'lerne', sep:'kennen', mid:'viele Leute', aux:'habe', pp:'kennengelernt', inf:'kennenlernen', en:'I got to know many people.' },
+    { s:'das Konzert', p:'er', v:'findet', sep:'statt', mid:'im Park', aux:'hat', pp:'stattgefunden', inf:'stattfinden', en:'The concert took place in the park.' },
+    { s:'ich', p:'ich', v:'nehme', sep:'teil', mid:'an dem Kurs', aux:'habe', pp:'teilgenommen', inf:'teilnehmen', en:'I took part in the course.' },
+    { s:'die Gäste', p:'sie', v:'fahren', sep:'weg', mid:'um zehn Uhr', aux:'sind', pp:'weggefahren', inf:'wegfahren', en:'The guests drove away at ten o\u2019clock.', neg:true },
+    { s:'du', p:'du', v:'hörst', sep:'zu', mid:'mir', aux:'hast', pp:'zugehört', inf:'zuhören', en:'You listened to me.', neg:true },
+    { s:'er', p:'er', v:'sieht', sep:'aus', mid:'müde', aux:'hat', pp:'ausgesehen', inf:'aussehen', en:'He looked tired.' },
+    { s:'ich', p:'ich', v:'nehme', sep:'mit', mid:'den Regenschirm', aux:'habe', pp:'mitgenommen', inf:'mitnehmen', en:'I took the umbrella along.', neg:true },
+    { s:'sie', p:'er', v:'stellt', sep:'vor', mid:'ihren Freund', aux:'hat', pp:'vorgestellt', inf:'vorstellen', en:'She introduced her boyfriend.', neg:true },
+    { s:'ihr', p:'ihr', v:'passt', sep:'auf', mid:'im Unterricht', aux:'habt', pp:'aufgepasst', inf:'aufpassen', en:'You (pl.) paid attention in class.', neg:true },
+    { s:'ich', p:'ich', v:'fülle', sep:'aus', mid:'das Formular', aux:'habe', pp:'ausgefüllt', inf:'ausfüllen', en:'I filled in the form.', neg:true },
+    { s:'wir', p:'wir', v:'denken', sep:'nach', mid:'über das Problem', aux:'haben', pp:'nachgedacht', inf:'nachdenken', en:'We thought about the problem.' },
+    { s:'er', p:'er', v:'schließt', sep:'ab', mid:'die Tür', aux:'hat', pp:'abgeschlossen', inf:'abschließen', en:'He locked the door.', neg:true },
+    { s:'ich', p:'ich', v:'schreibe', sep:'auf', mid:'die Adresse', aux:'habe', pp:'aufgeschrieben', inf:'aufschreiben', en:'I wrote down the address.', neg:true },
+    { s:'ich', p:'ich', v:'lade', sep:'herunter', mid:'die App', aux:'habe', pp:'heruntergeladen', inf:'herunterladen', en:'I downloaded the app.', neg:true },
+    { s:'sie', p:'er', v:'bekommt', mid:'ein Geschenk', aux:'hat', pp:'bekommen', inf:'bekommen', en:'She got a present.' },
+    { s:'er', p:'er', v:'erzählt', mid:'eine Geschichte', aux:'hat', pp:'erzählt', inf:'erzählen', en:'He told a story.' },
+    { s:'wir', p:'wir', v:'vergessen', mid:'den Termin', aux:'haben', pp:'vergessen', inf:'vergessen', en:'We forgot the appointment.', neg:true },
+    { s:'der Film', p:'er', v:'gefällt', mid:'mir', aux:'hat', pp:'gefallen', inf:'gefallen', en:'I liked the film.', neg:true },
+    { s:'ich', p:'ich', v:'entscheide', mid:'mich für das rote Auto', aux:'habe', pp:'entschieden', inf:'entscheiden', en:'I decided on the red car.' },
+    { s:'der Kurs', p:'er', v:'beginnt', mid:'um neun Uhr', aux:'hat', pp:'begonnen', inf:'beginnen', en:'The course began at nine o\u2019clock.', neg:true },
+    { s:'sie', p:'er', v:'empfiehlt', mid:'das Restaurant', aux:'hat', pp:'empfohlen', inf:'empfehlen', en:'She recommended the restaurant.', neg:true },
+    { s:'der Lehrer', p:'er', v:'erklärt', mid:'die Grammatik', aux:'hat', pp:'erklärt', inf:'erklären', en:'The teacher explained the grammar.', neg:true },
+    { s:'ich', p:'ich', v:'bezahle', mid:'die Rechnung', aux:'habe', pp:'bezahlt', inf:'bezahlen', en:'I paid the bill.', neg:true },
+    { s:'wir', p:'wir', v:'verkaufen', mid:'unser Auto', aux:'haben', pp:'verkauft', inf:'verkaufen', en:'We sold our car.', neg:true },
+    { s:'du', p:'du', v:'verlierst', mid:'deinen Schlüssel', aux:'hast', pp:'verloren', inf:'verlieren', en:'You lost your key.', neg:true },
+    { s:'ich', p:'ich', v:'bestelle', mid:'eine Pizza', aux:'habe', pp:'bestellt', inf:'bestellen', en:'I ordered a pizza.' },
+    { s:'die Kinder', p:'sie', v:'verstehen', mid:'den Lehrer', aux:'haben', pp:'verstanden', inf:'verstehen', en:'The children understood the teacher.', neg:true },
+    { s:'er', p:'er', v:'erreicht', mid:'den Zug', aux:'hat', pp:'erreicht', inf:'erreichen', en:'He caught the train.', neg:true },
+    { s:'ich', p:'ich', v:'erinnere', mid:'mich an den Urlaub', aux:'habe', pp:'erinnert', inf:'sich erinnern', en:'I remembered the holiday.' },
+    { s:'wir', p:'wir', v:'verbringen', mid:'den Sommer in Italien', aux:'haben', pp:'verbracht', inf:'verbringen', en:'We spent the summer in Italy.' },
+    { s:'er', p:'er', v:'verschläft', mid:'', aux:'hat', pp:'verschlafen', inf:'verschlafen', en:'He overslept.', neg:true },
+    { s:'ich', p:'ich', v:'verlasse', mid:'das Haus um acht', aux:'habe', pp:'verlassen', inf:'verlassen', en:'I left the house at eight.' },
+    { s:'wir', p:'wir', v:'besprechen', mid:'das Projekt', aux:'haben', pp:'besprochen', inf:'besprechen', en:'We discussed the project.', neg:true },
+    { s:'ich', p:'ich', v:'benutze', mid:'den Computer', aux:'habe', pp:'benutzt', inf:'benutzen', en:'I used the computer.', neg:true },
+    { s:'die Touristen', p:'sie', v:'besichtigen', mid:'das Schloss', aux:'haben', pp:'besichtigt', inf:'besichtigen', en:'The tourists visited the castle.', neg:true },
+    { s:'er', p:'er', v:'unterschreibt', mid:'den Vertrag', aux:'hat', pp:'unterschrieben', inf:'unterschreiben', en:'He signed the contract.', neg:true },
+    { s:'ich', p:'ich', v:'übersetze', mid:'den Text', aux:'habe', pp:'übersetzt', inf:'übersetzen', en:'I translated the text.', neg:true },
+    { s:'wir', p:'wir', v:'übernachten', mid:'im Hotel', aux:'haben', pp:'übernachtet', inf:'übernachten', en:'We stayed overnight in the hotel.' },
+    { s:'der Schüler', p:'er', v:'wiederholt', mid:'die Lektion', aux:'hat', pp:'wiederholt', inf:'wiederholen', en:'The pupil repeated the lesson.', neg:true },
+    { s:'das Handy', p:'er', v:'funktioniert', mid:'', aux:'hat', pp:'funktioniert', inf:'funktionieren', en:'The phone worked.', neg:true },
+    { s:'ich', p:'ich', v:'reserviere', mid:'einen Tisch', aux:'habe', pp:'reserviert', inf:'reservieren', en:'I reserved a table.' },
+    { s:'wir', p:'wir', v:'diskutieren', mid:'über Politik', aux:'haben', pp:'diskutiert', inf:'diskutieren', en:'We discussed politics.' },
+    { s:'sie', p:'er', v:'fotografiert', mid:'die Berge', aux:'hat', pp:'fotografiert', inf:'fotografieren', en:'She photographed the mountains.', neg:true },
+    { s:'ich', p:'ich', v:'gratuliere', mid:'ihm zum Geburtstag', aux:'habe', pp:'gratuliert', inf:'gratulieren', en:'I congratulated him on his birthday.' },
+    { s:'er', p:'er', v:'trainiert', mid:'jeden Tag', aux:'hat', pp:'trainiert', inf:'trainieren', en:'He trained every day.' },
+    { s:'wir', p:'wir', v:'reisen', mid:'nach Italien', aux:'sind', pp:'gereist', inf:'reisen', en:'We travelled to Italy.' },
+    { s:'das Flugzeug', p:'er', v:'landet', mid:'in Paris', aux:'ist', pp:'gelandet', inf:'landen', en:'The plane landed in Paris.' },
+    { s:'ihr', p:'ihr', v:'wandert', mid:'in den Bergen', aux:'seid', pp:'gewandert', inf:'wandern', en:'You (pl.) hiked in the mountains.' },
+    { s:'ich', p:'ich', v:'warte', mid:'auf den Bus', aux:'habe', pp:'gewartet', inf:'warten', en:'I waited for the bus.' },
+    { s:'er', p:'er', v:'antwortet', mid:'mir', aux:'hat', pp:'geantwortet', inf:'antworten', en:'He answered me.', neg:true },
+    { s:'wir', p:'wir', v:'reden', mid:'über das Wetter', aux:'haben', pp:'geredet', inf:'reden', en:'We talked about the weather.' },
+    { s:'sie', p:'er', v:'öffnet', mid:'das Fenster', aux:'hat', pp:'geöffnet', inf:'öffnen', en:'She opened the window.', neg:true },
+    { s:'ich', p:'ich', v:'zeichne', mid:'ein Bild', aux:'habe', pp:'gezeichnet', inf:'zeichnen', en:'I drew a picture.' },
+    { s:'meine Eltern', p:'sie', v:'heiraten', mid:'in Berlin', aux:'haben', pp:'geheiratet', inf:'heiraten', en:'My parents got married in Berlin.', why:'other' },
+    { s:'wir', p:'wir', v:'spielen', mid:'Fußball', aux:'haben', pp:'gespielt', inf:'spielen', en:'We played football.' },
+    { s:'du', p:'du', v:'wohnst', mid:'in Köln', aux:'hast', pp:'gewohnt', inf:'wohnen', en:'You lived in Cologne.' },
+    { s:'ich', p:'ich', v:'sehe', mid:'den Film', aux:'habe', pp:'gesehen', inf:'sehen', en:'I saw the film.', neg:true },
+    { s:'er', p:'er', v:'schreibt', mid:'einen Brief', aux:'hat', pp:'geschrieben', inf:'schreiben', en:'He wrote a letter.' },
+    { s:'wir', p:'wir', v:'nehmen', mid:'den Bus', aux:'haben', pp:'genommen', inf:'nehmen', en:'We took the bus.', neg:true },
+    { s:'ich', p:'ich', v:'gehe', mid:'nach Hause', aux:'bin', pp:'gegangen', inf:'gehen', en:'I went home.' },
+    { s:'sie', p:'er', v:'bittet', mid:'um Hilfe', aux:'hat', pp:'gebeten', inf:'bitten', en:'She asked for help.', why:'other' },
+    { s:'er', p:'er', v:'bricht', mid:'sich das Bein', aux:'hat', pp:'gebrochen', inf:'brechen', en:'He broke his leg.' },
+    { s:'ich', p:'ich', v:'finde', mid:'meinen Schlüssel', aux:'habe', pp:'gefunden', inf:'finden', en:'I found my key.', neg:true },
+    { s:'du', p:'du', v:'gibst', mid:'mir das Buch', aux:'hast', pp:'gegeben', inf:'geben', en:'You gave me the book.', neg:true },
+    { s:'unsere Mannschaft', p:'er', v:'gewinnt', mid:'das Spiel', aux:'hat', pp:'gewonnen', inf:'gewinnen', en:'Our team won the game.', neg:true },
+    { s:'ich', p:'ich', v:'habe', mid:'keine Zeit', aux:'habe', pp:'gehabt', inf:'haben', en:'I had no time.' },
+    { s:'der Bus', p:'er', v:'hält', mid:'an der Ecke', aux:'hat', pp:'gehalten', inf:'halten', en:'The bus stopped at the corner.', why:'other' },
+    { s:'ich', p:'ich', v:'helfe', mid:'meiner Schwester', aux:'habe', pp:'geholfen', inf:'helfen', en:'I helped my sister.', neg:true },
+    { s:'er', p:'er', v:'lässt', mid:'den Hund im Garten', aux:'hat', pp:'gelassen', inf:'lassen', en:'He left the dog in the garden.' },
+    { s:'ich', p:'ich', v:'leihe', mid:'dir mein Fahrrad', aux:'habe', pp:'geliehen', inf:'leihen', en:'I lent you my bike.', neg:true },
+    { s:'das Buch', p:'er', v:'liegt', mid:'auf dem Tisch', aux:'hat', pp:'gelegen', inf:'liegen', en:'The book lay on the table.' },
+    { s:'er', p:'er', v:'schließt', mid:'das Fenster', aux:'hat', pp:'geschlossen', inf:'schließen', en:'He closed the window.', neg:true },
+    { s:'sie', p:'er', v:'schneidet', mid:'das Brot', aux:'hat', pp:'geschnitten', inf:'schneiden', en:'She cut the bread.', neg:true },
+    { s:'wir', p:'wir', v:'singen', mid:'ein Lied', aux:'haben', pp:'gesungen', inf:'singen', en:'We sang a song.' },
+    { s:'ich', p:'ich', v:'sitze', mid:'im Café', aux:'habe', pp:'gesessen', inf:'sitzen', en:'I sat in the café.' },
+    { s:'du', p:'du', v:'sprichst', mid:'mit dem Chef', aux:'hast', pp:'gesprochen', inf:'sprechen', en:'You spoke with the boss.' },
+    { s:'wir', p:'wir', v:'stehen', mid:'vor der Tür', aux:'haben', pp:'gestanden', inf:'stehen', en:'We stood in front of the door.' },
+    { s:'er', p:'er', v:'trägt', mid:'eine Jacke', aux:'hat', pp:'getragen', inf:'tragen', en:'He wore a jacket.' },
+    { s:'ich', p:'ich', v:'treffe', mid:'meine Freunde', aux:'habe', pp:'getroffen', inf:'treffen', en:'I met my friends.', neg:true },
+    { s:'sie', p:'er', v:'wäscht', mid:'die Wäsche', aux:'hat', pp:'gewaschen', inf:'waschen', en:'She washed the laundry.', neg:true },
+    { s:'ich', p:'ich', v:'springe', mid:'ins Wasser', aux:'bin', pp:'gesprungen', inf:'springen', en:'I jumped into the water.' },
+    { s:'der Vater', p:'er', v:'ruft', mid:'die Kinder', aux:'hat', pp:'gerufen', inf:'rufen', en:'The father called the children.', neg:true },
+    { s:'er', p:'er', v:'lügt', mid:'', aux:'hat', pp:'gelogen', inf:'lügen', en:'He lied.', neg:true },
+    { s:'die Sonne', p:'er', v:'scheint', mid:'', aux:'hat', pp:'geschienen', inf:'scheinen', en:'The sun shone.', neg:true },
+    { s:'ich', p:'ich', v:'backe', mid:'einen Kuchen', aux:'habe', pp:'gebacken', inf:'backen', en:'I baked a cake.' },
+    { s:'das Kind', p:'er', v:'wirft', mid:'den Ball', aux:'hat', pp:'geworfen', inf:'werfen', en:'The child threw the ball.', neg:true },
+    { s:'jemand', p:'er', v:'stiehlt', mid:'mein Fahrrad', aux:'hat', pp:'gestohlen', inf:'stehlen', en:'Someone stole my bike.' },
+    { s:'die Kinder', p:'sie', v:'streiten', mid:'', aux:'haben', pp:'gestritten', inf:'streiten', en:'The children argued.', neg:true },
+    { s:'ich', p:'ich', v:'gieße', mid:'die Blumen', aux:'habe', pp:'gegossen', inf:'gießen', en:'I watered the flowers.', neg:true },
+    { s:'wir', p:'wir', v:'reiten', mid:'zum Strand', aux:'sind', pp:'geritten', inf:'reiten', en:'We rode (horses) to the beach.' },
+    { s:'er', p:'er', v:'misst', mid:'die Temperatur', aux:'hat', pp:'gemessen', inf:'messen', en:'He measured the temperature.', neg:true },
+    { s:'ich', p:'ich', v:'ziehe', mid:'den Wagen', aux:'habe', pp:'gezogen', inf:'ziehen', en:'I pulled the cart.', neg:true },
+    { s:'wir', p:'wir', v:'feiern', mid:'meinen Geburtstag', aux:'haben', pp:'gefeiert', inf:'feiern', en:'We celebrated my birthday.', neg:true },
+    { s:'ich', p:'ich', v:'dusche', mid:'mich', aux:'habe', pp:'geduscht', inf:'sich duschen', en:'I took a shower.', neg:true },
+    { s:'er', p:'er', v:'setzt', mid:'sich auf den Stuhl', aux:'hat', pp:'gesetzt', inf:'sich setzen', en:'He sat down on the chair.' },
+    { s:'wir', p:'wir', v:'freuen', mid:'uns über das Geschenk', aux:'haben', pp:'gefreut', inf:'sich freuen', en:'We were glad about the present.' },
+    { s:'du', p:'du', v:'ärgerst', mid:'dich über den Fehler', aux:'hast', pp:'geärgert', inf:'sich ärgern', en:'You were annoyed about the mistake.' },
+    { s:'er', p:'er', v:'stürzt', mid:'vom Fahrrad', aux:'ist', pp:'gestürzt', inf:'stürzen', en:'He fell off the bike.' },
+    { s:'die Vorlesung', p:'er', v:'dauert', mid:'zwei Stunden', aux:'hat', pp:'gedauert', inf:'dauern', en:'The lecture lasted two hours.' },
+    { s:'das Essen', p:'er', v:'schmeckt', mid:'gut', aux:'hat', pp:'geschmeckt', inf:'schmecken', en:'The food tasted good.' },
+    { s:'ich', p:'ich', v:'schicke', mid:'dir eine E-Mail', aux:'habe', pp:'geschickt', inf:'schicken', en:'I sent you an email.' },
+    { s:'wir', p:'wir', v:'suchen', mid:'den Schlüssel', aux:'haben', pp:'gesucht', inf:'suchen', en:'We looked for the key.', neg:true },
+    { s:'du', p:'du', v:'zeigst', mid:'mir die Stadt', aux:'hast', pp:'gezeigt', inf:'zeigen', en:'You showed me the city.', neg:true },
+    { s:'er', p:'er', v:'bewirbt', mid:'sich um die Stelle', aux:'hat', pp:'beworben', inf:'sich bewerben', en:'He applied for the job.' },
+    { s:'ich', p:'ich', v:'verspäte', mid:'mich', aux:'habe', pp:'verspätet', inf:'sich verspäten', en:'I was late.', neg:true },
+    { s:'sie', p:'er', v:'entschuldigt', mid:'sich bei mir', aux:'hat', pp:'entschuldigt', inf:'sich entschuldigen', en:'She apologised to me.' },
+    { s:'ich', p:'ich', v:'interessiere', mid:'mich für Musik', aux:'habe', pp:'interessiert', inf:'sich interessieren', en:'I was interested in music.' },
+    { s:'wir', p:'wir', v:'konzentrieren', mid:'uns auf die Arbeit', aux:'haben', pp:'konzentriert', inf:'sich konzentrieren', en:'We concentrated on the work.' },
+    { s:'du', p:'du', v:'erkennst', mid:'mich', aux:'hast', pp:'erkannt', inf:'erkennen', en:'You recognised me.', neg:true },
+    { s:'wir', p:'wir', v:'verpassen', mid:'den Zug', aux:'haben', pp:'verpasst', inf:'verpassen', en:'We missed the train.', neg:true },
+    { s:'ich', p:'ich', v:'vergleiche', mid:'die Preise', aux:'habe', pp:'verglichen', inf:'vergleichen', en:'I compared the prices.', neg:true },
+    { s:'er', p:'er', v:'verliert', mid:'das Spiel', aux:'hat', pp:'verloren', inf:'verlieren', en:'He lost the game.', neg:true },
+    { s:'sie', p:'er', v:'verdient', mid:'viel Geld', aux:'hat', pp:'verdient', inf:'verdienen', en:'She earned a lot of money.' },
+    { s:'ihr', p:'ihr', v:'beantwortet', mid:'die Fragen', aux:'habt', pp:'beantwortet', inf:'beantworten', en:'You (pl.) answered the questions.', neg:true },
+    { s:'das Kind', p:'er', v:'rennt', mid:'nach Hause', aux:'ist', pp:'gerannt', inf:'rennen', en:'The child ran home.' },
+    { s:'der Sturm', p:'er', v:'zerstört', mid:'das Haus', aux:'hat', pp:'zerstört', inf:'zerstören', en:'The storm destroyed the house.', neg:true },
+    { s:'ich', p:'ich', v:'organisiere', mid:'die Party', aux:'habe', pp:'organisiert', inf:'organisieren', en:'I organised the party.', neg:true },
+    { s:'du', p:'du', v:'korrigierst', mid:'den Fehler', aux:'hast', pp:'korrigiert', inf:'korrigieren', en:'You corrected the mistake.', neg:true },
+    { s:'wir', p:'wir', v:'renovieren', mid:'die Wohnung', aux:'haben', pp:'renoviert', inf:'renovieren', en:'We renovated the flat.', neg:true },
+    { s:'er', p:'er', v:'kontrolliert', mid:'die Tickets', aux:'hat', pp:'kontrolliert', inf:'kontrollieren', en:'He checked the tickets.', neg:true },
+    { s:'ich', p:'ich', v:'kopiere', mid:'die Datei', aux:'habe', pp:'kopiert', inf:'kopieren', en:'I copied the file.', neg:true },
+    { s:'ich', p:'ich', v:'wünsche', mid:'dir alles Gute', aux:'habe', pp:'gewünscht', inf:'wünschen', en:'I wished you all the best.' },
+    { s:'wir', p:'wir', v:'grillen', mid:'im Garten', aux:'haben', pp:'gegrillt', inf:'grillen', en:'We barbecued in the garden.', why:'other' },
+    { s:'ihr', p:'ihr', v:'tanzt', mid:'die ganze Nacht', aux:'habt', pp:'getanzt', inf:'tanzen', en:'You (pl.) danced all night.' },
+    { s:'er', p:'er', v:'lacht', mid:'laut', aux:'hat', pp:'gelacht', inf:'lachen', en:'He laughed loudly.' },
+    { s:'ich', p:'ich', v:'parke', mid:'das Auto vor dem Haus', aux:'habe', pp:'geparkt', inf:'parken', en:'I parked the car in front of the house.' },
+    { s:'ich', p:'ich', v:'stelle', mid:'die Vase auf den Tisch', aux:'habe', pp:'gestellt', inf:'stellen', en:'I put the vase on the table.' },
+    { s:'wir', p:'wir', v:'bauen', mid:'ein Haus', aux:'haben', pp:'gebaut', inf:'bauen', en:'We built a house.' },
+    { s:'der Wecker', p:'er', v:'klingelt', mid:'um sechs', aux:'hat', pp:'geklingelt', inf:'klingeln', en:'The alarm rang at six.', neg:true },
+    { s:'ich', p:'ich', v:'setze', mid:'mich', aux:'habe', pp:'gesetzt', inf:'sich setzen', en:'I sat down.', neg:true },
+    { s:'er', p:'er', v:'hört', sep:'auf', mid:'mit dem Rauchen', aux:'hat', pp:'aufgehört', inf:'aufhören', en:'He stopped smoking.' },
+    { s:'wir', p:'wir', v:'kommen', sep:'zurück', mid:'um Mitternacht', aux:'sind', pp:'zurückgekommen', inf:'zurückkommen', en:'We came back at midnight.', neg:true },
+    { s:'ich', p:'ich', v:'sehe', sep:'wieder', mid:'meinen alten Freund', aux:'habe', pp:'wiedergesehen', inf:'wiedersehen', en:'I saw my old friend again.', neg:true },
+    { s:'du', p:'du', v:'gibst', sep:'ab', mid:'die Hausaufgaben', aux:'hast', pp:'abgegeben', inf:'abgeben', en:'You handed in the homework.', neg:true },
+    { s:'sie', p:'er', v:'gibt', sep:'zurück', mid:'mir das Geld', aux:'hat', pp:'zurückgegeben', inf:'zurückgeben', en:'She gave me back the money.', neg:true },
+    { s:'er', p:'er', v:'zieht', sep:'an', mid:'die Jacke', aux:'hat', pp:'angezogen', inf:'anziehen', en:'He put on the jacket.', neg:true },
+    { s:'wir', p:'wir', v:'ziehen', sep:'ein', mid:'in die neue Wohnung', aux:'sind', pp:'eingezogen', inf:'einziehen', en:'We moved into the new flat.' },
+    { s:'ich', p:'ich', v:'steige', sep:'um', mid:'in Köln', aux:'bin', pp:'umgestiegen', inf:'umsteigen', en:'I changed trains in Cologne.' },
+    { s:'der Zug', p:'er', v:'fährt', sep:'ab', mid:'um neun', aux:'ist', pp:'abgefahren', inf:'abfahren', en:'The train departed at nine.', neg:true },
+    { s:'ich', p:'ich', v:'melde', sep:'an', mid:'mich für den Kurs', aux:'habe', pp:'angemeldet', inf:'anmelden', en:'I registered for the course.' },
+    { s:'wir', p:'wir', v:'schauen', sep:'an', mid:'die Bilder', aux:'haben', pp:'angeschaut', inf:'anschauen', en:'We looked at the pictures.', neg:true },
+    { s:'ich', p:'ich', v:'schlage', sep:'nach', mid:'das Wort', aux:'habe', pp:'nachgeschlagen', inf:'nachschlagen', en:'I looked up the word.', neg:true },
+    { s:'er', p:'er', v:'macht', sep:'aus', mid:'das Licht', aux:'hat', pp:'ausgemacht', inf:'ausmachen', en:'He switched off the light.', neg:true },
+    { s:'die Kinder', p:'sie', v:'machen', sep:'mit', mid:'beim Spiel', aux:'haben', pp:'mitgemacht', inf:'mitmachen', en:'The children joined in the game.' },
+    { s:'ich', p:'ich', v:'nehme', sep:'ab', mid:'fünf Kilo', aux:'habe', pp:'abgenommen', inf:'abnehmen', en:'I lost five kilos.' },
+    // yes/no questions
+    { s:'ihr', p:'ihr', v:'seht', mid:'den Film', aux:'habt', pp:'gesehen', inf:'sehen', en:'Did you (pl.) see the film?', form:'q' },
+    { s:'Sie', p:'sie', v:'verstehen', mid:'mich', aux:'haben', pp:'verstanden', inf:'verstehen', en:'Did you (formal) understand me?', form:'q' },
+    { s:'er', p:'er', v:'kommt', sep:'mit', mid:'', aux:'ist', pp:'mitgekommen', inf:'mitkommen', en:'Did he come along?', form:'q' },
+    { s:'du', p:'du', v:'stehst', sep:'auf', mid:'früh', aux:'bist', pp:'aufgestanden', inf:'aufstehen', en:'Did you get up early?', form:'q' },
+    { s:'ihr', p:'ihr', v:'esst', mid:'schon', aux:'habt', pp:'gegessen', inf:'essen', en:'Have you (pl.) eaten yet?', form:'q', why:'other' },
+    { s:'du', p:'du', v:'bist', mid:'in Paris', aux:'bist', pp:'gewesen', inf:'sein', en:'Were you in Paris?', form:'q' },
+    { s:'sie', p:'sie', v:'gewinnen', mid:'das Spiel', aux:'haben', pp:'gewonnen', inf:'gewinnen', en:'Did they win the game?', form:'q' },
+    { s:'du', p:'du', v:'rufst', sep:'an', mid:'deine Eltern', aux:'hast', pp:'angerufen', inf:'anrufen', en:'Did you call your parents?', form:'q' },
+    { s:'ihr', p:'ihr', v:'fahrt', mid:'mit dem Zug', aux:'seid', pp:'gefahren', inf:'fahren', en:'Did you (pl.) go by train?', form:'q' },
+    { s:'er', p:'er', v:'bezahlt', mid:'die Rechnung', aux:'hat', pp:'bezahlt', inf:'bezahlen', en:'Did he pay the bill?', form:'q' },
+    { s:'du', p:'du', v:'schläfst', sep:'ein', mid:'sofort', aux:'bist', pp:'eingeschlafen', inf:'einschlafen', en:'Did you fall asleep immediately?', form:'q' },
+    { s:'ihr', p:'ihr', v:'räumt', sep:'auf', mid:'die Küche', aux:'habt', pp:'aufgeräumt', inf:'aufräumen', en:'Did you (pl.) tidy the kitchen?', form:'q' },
+    // W-questions
+    { s:'ihr', p:'ihr', v:'kommt', sep:'an', mid:'', aux:'seid', pp:'angekommen', inf:'ankommen', en:'When did you (pl.) arrive?', form:'w', w:'Wann' },
+    { s:'du', p:'du', v:'wohnst', mid:'', aux:'hast', pp:'gewohnt', inf:'wohnen', en:'Where did you live?', form:'w', w:'Wo' },
+    { s:'er', p:'er', v:'bleibt', mid:'zu Hause', aux:'ist', pp:'geblieben', inf:'bleiben', en:'Why did he stay at home?', form:'w', w:'Warum' },
+    { s:'ihr', p:'ihr', v:'wartet', mid:'', aux:'habt', pp:'gewartet', inf:'warten', en:'How long did you (pl.) wait?', form:'w', w:'Wie lange' },
+    { s:'du', p:'du', v:'bestellst', mid:'', aux:'hast', pp:'bestellt', inf:'bestellen', en:'What did you order?', form:'w', w:'Was' },
+    { s:'die Kinder', p:'sie', v:'laufen', mid:'', aux:'sind', pp:'gelaufen', inf:'laufen', en:'Where did the children run to?', form:'w', w:'Wohin' },
+    { s:'', p:'er', v:'kommt', sep:'mit', mid:'', aux:'ist', pp:'mitgekommen', inf:'mitkommen', en:'Who came along?', form:'w', w:'Wer' },
+    { s:'', p:'er', v:'gewinnt', mid:'das Spiel', aux:'hat', pp:'gewonnen', inf:'gewinnen', en:'Who won the game?', form:'w', w:'Wer' },
+    { s:'du', p:'du', v:'lernst', mid:'Deutsch', aux:'hast', pp:'gelernt', inf:'lernen', en:'Where did you learn German?', form:'w', w:'Wo' },
+    { s:'Sie', p:'sie', v:'arbeiten', mid:'', aux:'haben', pp:'gearbeitet', inf:'arbeiten', en:'Where did you (formal) work?', form:'w', w:'Wo' },
+    { s:'du', p:'du', v:'stehst', sep:'auf', mid:'', aux:'bist', pp:'aufgestanden', inf:'aufstehen', en:'When did you get up?', form:'w', w:'Wann' },
+    { s:'er', p:'er', v:'sagt', mid:'', aux:'hat', pp:'gesagt', inf:'sagen', en:'What did he say?', form:'w', w:'Was' },
+    // fronted statements
+    { s:'ich', p:'ich', v:'gehe', mid:'ins Fitnessstudio', aux:'bin', pp:'gegangen', inf:'gehen', en:'After work I went to the gym.', front:'nach der Arbeit' },
+    { s:'er', p:'er', v:'fährt', mid:'nach Berlin', aux:'ist', pp:'gefahren', inf:'fahren', en:'On Monday he went to Berlin.', front:'am Montag' },
+    { s:'das Kind', p:'er', v:'schläft', sep:'ein', mid:'', aux:'ist', pp:'eingeschlafen', inf:'einschlafen', en:'At eight o\u2019clock the child fell asleep.', front:'um acht Uhr' },
+    { s:'wir', p:'wir', v:'fahren', mid:'jeden Tag ans Meer', aux:'sind', pp:'gefahren', inf:'fahren', en:'On holiday we went to the sea every day.', front:'im Urlaub' },
+    { s:'sie', p:'er', v:'ruft', mid:'die Polizei', aux:'hat', pp:'gerufen', inf:'rufen', en:'Then she called the police.', front:'dann' },
+    { s:'ich', p:'ich', v:'lerne', mid:'Deutsch', aux:'habe', pp:'gelernt', inf:'lernen', en:'In the evening I studied German.', front:'am Abend' },
+    { s:'wir', p:'wir', v:'essen', mid:'Kuchen', aux:'haben', pp:'gegessen', inf:'essen', en:'On Sunday we ate cake.', front:'am Sonntag' },
+    { s:'meine Schwester', p:'er', v:'zieht', sep:'um', mid:'nach Wien', aux:'ist', pp:'umgezogen', inf:'umziehen', en:'In summer my sister moved to Vienna.', front:'im Sommer' },
+  ];
+
+  // Hand-written subordinate clauses (weil / obwohl) — the frame supplies the main clause.
+  // clause present: s + mid + sep+v ; clause Perfekt: s + mid + pp + aux
+  const SUBS = [
+    { frame:'Ich bin müde, weil', s:'ich', p:'ich', v:'arbeite', mid:'heute lange', aux:'habe', pp:'gearbeitet', inf:'arbeiten', en:'I am tired because I worked long today.' },
+    { frame:'Er ist glücklich, weil', s:'er', p:'er', v:'gewinnt', mid:'das Spiel', aux:'hat', pp:'gewonnen', inf:'gewinnen', en:'He is happy because he won the game.' },
+    { frame:'Wir sind nass, weil', s:'es', p:'er', v:'regnet', mid:'', aux:'hat', pp:'geregnet', inf:'regnen', en:'We are wet because it rained.' },
+    { frame:'Sie ist traurig, weil', s:'ihre Katze', p:'er', v:'stirbt', mid:'', aux:'ist', pp:'gestorben', inf:'sterben', en:'She is sad because her cat died.' },
+    { frame:'Ich habe Hunger, obwohl', s:'ich', p:'ich', v:'esse', mid:'schon viel', aux:'habe', pp:'gegessen', inf:'essen', en:'I am hungry although I have already eaten a lot.' },
+    { frame:'Er kommt zu spät, weil', s:'er', p:'er', v:'verpasst', mid:'den Bus', aux:'hat', pp:'verpasst', inf:'verpassen', en:'He is late because he missed the bus.' },
+    { frame:'Ich kenne die Stadt, weil', s:'ich', p:'ich', v:'wohne', mid:'dort', aux:'habe', pp:'gewohnt', inf:'wohnen', en:'I know the city because I lived there.' },
+    { frame:'Wir sind zufrieden, obwohl', s:'wir', p:'wir', v:'verlieren', mid:'das Spiel', aux:'haben', pp:'verloren', inf:'verlieren', en:'We are satisfied although we lost the game.' },
+    { frame:'Du bist fit, weil', s:'du', p:'du', v:'trainierst', mid:'viel', aux:'hast', pp:'trainiert', inf:'trainieren', en:'You are fit because you trained a lot.' },
+    { frame:'Sie ist nicht da, weil', s:'sie', p:'er', v:'fährt', mid:'nach Hamburg', aux:'ist', pp:'gefahren', inf:'fahren', en:'She is not here because she went to Hamburg.' },
+    { frame:'Ich bin müde, weil', s:'ich', p:'ich', v:'stehe', sep:'auf', mid:'früh', aux:'bin', pp:'aufgestanden', inf:'aufstehen', en:'I am tired because I got up early.' },
+    { frame:'Er ist sauer, weil', s:'ich', p:'ich', v:'rufe', sep:'an', mid:'ihn nicht', aux:'habe', pp:'angerufen', inf:'anrufen', en:'He is angry because I did not call him.' },
+    { frame:'Wir wissen es, obwohl', s:'niemand', p:'er', v:'sagt', mid:'es uns', aux:'hat', pp:'gesagt', inf:'sagen', en:'We know it although nobody told us.' },
+    { frame:'Ich verstehe alles, weil', s:'der Lehrer', p:'er', v:'erklärt', mid:'es gut', aux:'hat', pp:'erklärt', inf:'erklären', en:'I understand everything because the teacher explained it well.' },
+    { frame:'Ihr seid braun, weil', s:'ihr', p:'ihr', v:'liegt', mid:'lange in der Sonne', aux:'habt', pp:'gelegen', inf:'liegen', en:'You (pl.) are tanned because you lay in the sun for a long time.' },
+    { frame:'Sie hat kein Geld, weil', s:'sie', p:'er', v:'kauft', mid:'ein neues Auto', aux:'hat', pp:'gekauft', inf:'kaufen', en:'She has no money because she bought a new car.' },
+  ];
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // 3. Grammar tables and helpers
+  // ───────────────────────────────────────────────────────────────────────────
+  const PERSONS = ['ich', 'du', 'er', 'wir', 'ihr', 'sie'];
+  const PERSON_LABEL = { ich:'ich', du:'du', er:'er / sie / es', wir:'wir', ihr:'ihr', sie:'sie / Sie' };
+  const HABEN = { ich:'habe', du:'hast', er:'hat', wir:'haben', ihr:'habt', sie:'haben' };
+  const SEIN = { ich:'bin', du:'bist', er:'ist', wir:'sind', ihr:'seid', sie:'sind' };
+
+  const CLASS_NAME = { reg:'regular (weak)', str:'irregular (strong)', mix:'mixed', sep:'separable', insep:'inseparable prefix', ier:'-ieren verb' };
+  const INSEP_PREFIXES = ['be', 'emp', 'ent', 'er', 'ge', 'miss', 'ver', 'zer', 'über', 'unter', 'wieder'];
+
+  const WHY_TEXT = {
+    move: 'movement from A to B → sein',
+    state: 'change of state → sein',
+    special: 'special case, just learn it (sein, bleiben, passieren, geschehen, gelingen, begegnen) → sein',
+    obj: 'takes an accusative object → haben',
+    refl: 'reflexive verb → haben',
+    stat: 'stationary verb (sitting, standing, lying, sleeping, living: no movement from A to B) → haben',
+    other: 'not movement, not a change of state, not a special case → haben',
+  };
+
+  function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+  function join(parts) { return parts.filter(function (x) { return x && x.length; }).join(' '); }
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) { return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]; });
+  }
+  function A(x) { return '<span class="aux">' + esc(x) + '</span>'; }
+  function P(x) { return '<span class="pp">' + esc(x) + '</span>'; }
+
+  function verbAuxWord(v) { return v.aux === 's' ? 'sein' : 'haben'; }
+  function dictForm(v, person) { return v.aux === 's' ? SEIN[person] : HABEN[person]; }
+
+  // Is this verb's Partizip II built without ge-? (inseparable, -ieren, or separable + such a base)
+  function hasGe(v) {
+    if (v.cls === 'insep' || v.cls === 'ier') return false;
+    if (v.cls === 'sep') { return v.pp.indexOf('ge') !== -1 && !/ier(t)$/.test(v.pp) && !/^(vor|an|aus|ein|mit|ab|zu)be/.test(v.pp); }
+    return true;
+  }
+
+  function sepPrefix(v) {
+    if (v.cls !== 'sep') return '';
+    if (v.base) return v.inf.slice(0, v.inf.length - v.base.length);
+    // no listed base: prefix is everything before "ge" (or before the stem for no-ge participles)
+    var i = v.pp.indexOf('ge');
+    if (i > 0 && hasGe(v)) return v.pp.slice(0, i);
+    var m = v.inf.match(/^(vor|an|aus|ein|mit|ab|zu|auf)/);
+    return m ? m[1] : '';
+  }
+
+  function explainPP(v) {
+    var stem, e;
+    switch (v.cls) {
+      case 'reg':
+        stem = v.pp.replace(/^ge/, '').replace(/e?t$/, '');
+        e = /et$/.test(v.pp) && /(t|d|[^aeiouäöü][mn])$/.test(stem)
+          ? 'Regular verb: ge + ' + esc(stem) + ' + <b>et</b> (stem ends in -t, -d or consonant + m/n, so an e is inserted).'
+          : 'Regular verb: ge + ' + esc(stem) + ' + t.';
+        return e + ' Partizip II: ' + P(v.pp) + '.';
+      case 'str':
+        if (v.inf === 'haben') return 'Irregular: haben → ' + P('gehabt') + ' (ge + hab + t, but the b stays).';
+        if (v.inf === 'tun') return 'Irregular (strong) verb: ge + ta + n. Partizip II: ' + P('getan') + '. Must be memorised.';
+        stem = v.inf.replace(/e?n$/, '');
+        var ppStem = v.pp.replace(/^ge/, '').replace(/en$/, '');
+        return 'Irregular (strong) verb: ge + ' + (stem === ppStem ? esc(stem) : esc(stem) + ' → <b>' + esc(ppStem) + '</b>') + ' + en. Partizip II: ' + P(v.pp) + '. Must be memorised.';
+      case 'mix':
+        return 'Mixed verb: ge + changed stem + t (like a weak verb, but the stem changes). Partizip II: ' + P(v.pp) + '.' + (v.aux === 's' ? ' Note: rennen uses sein.' : '');
+      case 'sep': {
+        var pre = sepPrefix(v);
+        var rest = v.pp.slice(pre.length);
+        if (!hasGe(v)) {
+          return 'Separable verb, but the base verb takes no ge- (' + (/iert$/.test(v.pp) ? '-ieren verb' : 'inseparable prefix') + '): ' + esc(pre) + ' + ' + esc(rest) + '. Partizip II: ' + P(v.pp) + '.';
+        }
+        var baseV = v.base ? VERB_BY_INF[v.base] : null;
+        return 'Separable verb: prefix + ge + rest → ' + esc(pre) + '|' + esc(rest) + (baseV ? ' (base verb ' + esc(baseV.inf) + ' → ' + esc(baseV.pp) + ')' : '') + '. Partizip II: ' + P(v.pp) + '.';
+      }
+      case 'insep': {
+        var pfx = INSEP_PREFIXES.filter(function (p) { return v.inf.replace(/^sich /, '').indexOf(p) === 0; }).sort(function (a, b) { return b.length - a.length; })[0] || '';
+        var ppEnd = /en$/.test(v.pp) ? ' The base is irregular, so it ends in -en.' : '';
+        if (pfx === 'ge') return 'The verb already starts with the inseparable prefix <b>ge-</b>, so no second ge- is added. Partizip II: ' + P(v.pp) + '.' + ppEnd;
+        return 'Inseparable prefix <b>' + esc(pfx) + '-</b>: no ge-. Partizip II: ' + P(v.pp) + '.' + ppEnd;
+      }
+      case 'ier':
+        return '-ieren verb: no ge-, always ends in -t. Partizip II: ' + P(v.pp) + '.';
+    }
+    return '';
+  }
+
+  function explainAux(v, why) {
+    var w = why || v.why;
+    return cap(WHY_TEXT[w]) + '.';
+  }
+
+  // Sentence rendering ───────────────────────────────────────────────────────
+  function presentMain(S) {
+    var punct = (S.form === 'q' || S.form === 'w') ? '?' : '.';
+    var parts;
+    if (S.form === 'q') parts = [cap(S.v), S.s, S.mid, S.sep];
+    else if (S.form === 'w') parts = [S.w, S.v, S.s, S.mid, S.sep];
+    else if (S.front) parts = [cap(S.front), S.v, S.s, S.mid, S.sep];
+    else parts = [cap(S.s), S.v, S.mid, S.sep];
+    return join(parts) + punct;
+  }
+
+  // chunks of the Perfekt main clause, in the correct order (no punctuation)
+  function perfektChunks(S) {
+    if (S.form === 'q') return [cap(S.aux), S.s, S.mid, S.pp].filter(Boolean);
+    if (S.form === 'w') return [S.w, S.aux, S.s, S.mid, S.pp].filter(Boolean);
+    if (S.front) return [cap(S.front), S.aux, S.s, S.mid, S.pp].filter(Boolean);
+    return [cap(S.s), S.aux, S.mid, S.pp].filter(Boolean);
+  }
+  function perfektMain(S) {
+    return perfektChunks(S).join(' ') + ((S.form === 'q' || S.form === 'w') ? '?' : '.');
+  }
+  function perfektMainHtml(S) {
+    return perfektChunks(S).map(function (c) {
+      if (c === S.pp) return P(c);
+      if (c.toLowerCase() === S.aux) return A(c);
+      return esc(c);
+    }).join(' ') + ((S.form === 'q' || S.form === 'w') ? '?' : '.');
+  }
+
+  function negChunks(S) {
+    return [cap(S.s), S.aux, S.mid, 'nicht', S.pp].filter(Boolean);
+  }
+  function negSentence(S) { return negChunks(S).join(' ') + '.'; }
+
+  // Subordinate-clause frames derived from a sentence
+  var FRAMES_3 = ['Ich weiß, dass', 'Ich glaube, dass', 'Ich habe gehört, dass'];
+  var FRAMES_1 = ['Er sagt, dass', 'Sie hat gesagt, dass', 'Mein Freund weiß, dass'];
+  function subFrame(S, i) {
+    if (S.form === 'w') return 'Ich weiß nicht, ' + S.w.toLowerCase();
+    if (S.form === 'q') return 'Ich weiß nicht, ob';
+    var list = (S.p === 'ich' || S.p === 'wir') ? FRAMES_1 : FRAMES_3;
+    return list[i % list.length];
+  }
+  // the clause after the conjunction: present and Perfekt
+  function subPresentClause(S) { return join([S.s, S.mid, (S.sep || '') + S.v]); }
+  function subPerfektClause(S) { return join([S.s, S.mid, S.pp, S.aux]); }
+  function subPerfektChunks(S) { return [S.s, S.mid, S.pp, S.aux].filter(Boolean); }
+  function subPerfektHtml(S) { return join([esc(S.s), esc(S.mid), P(S.pp), A(S.aux)]); }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // 4. Answer normalisation and checking
+  // ───────────────────────────────────────────────────────────────────────────
+  function normStrict(s) {
+    return String(s || '').toLowerCase()
+      .replace(/[.,!?;:"“”„'’`]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+  function normLoose(s) {
+    return normStrict(s).replace(/ß/g, 'ss').replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue');
+  }
+
+  function specialsSubset(user, canon) {
+    var us = user.match(/[äöüß]/g) || [], cs = canon.match(/[äöüß]/g) || [];
+    return us.every(function (ch) { return cs.indexOf(ch) !== -1; });
+  }
+
+  // Result: { correct, exact, spelling } — spelling=true means it only matched after
+  // folding umlauts/ß (accepted unless strict mode; the UI shows the proper spelling).
+  function checkTyped(item, answer, strict) {
+    var a = normStrict(answer);
+    var loose = normLoose(answer);
+    var exact = item.answers.some(function (x) { return normStrict(x) === a; });
+    if (exact) return { correct: true, exact: true, spelling: false };
+    // Folded match: the learner may type ae/oe/ue/ss for ä/ö/ü/ß (no German keyboard),
+    // but must not introduce a special character the correct answer does not have (gegoßen ≠ gegossen).
+    var folded = item.answers.some(function (x) { return normLoose(x) === loose && specialsSubset(a, normStrict(x)); });
+    if (folded) return { correct: !strict, exact: false, spelling: true };
+    return { correct: false, exact: false, spelling: false };
+  }
+
+  function checkChoice(item, index) { return { correct: index === item.answer, exact: true, spelling: false }; }
+
+  function checkOrder(item, chunks) {
+    var ok = chunks.length === item.chunks.length && chunks.every(function (c, i) { return c === item.chunks[i]; });
+    return { correct: ok, exact: true, spelling: false };
+  }
+
+  function check(item, answer, strict) {
+    if (item.kind === 'type') return checkTyped(item, answer, strict);
+    if (item.kind === 'choice') return checkChoice(item, answer);
+    if (item.kind === 'order') return checkOrder(item, answer);
+    throw new Error('unknown item kind ' + item.kind);
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // 5. Item generation
+  //    kind: type (typed input) · choice (buttons) · order (arrange chunks)
+  // ───────────────────────────────────────────────────────────────────────────
+  const CONCEPTS = [
+    { id:'pp',     name:'Partizip II: build it',          short:'Partizip II',   desc:'Infinitive → Partizip II for regular, irregular, mixed, separable, inseparable and -ieren verbs.' },
+    { id:'rev',    name:'Partizip II: recognise it',      short:'Recognise',     desc:'Irregular Partizip II → infinitive. Reading-direction recall for the strong forms.' },
+    { id:'aux',    name:'haben or sein: in a sentence',   short:'haben / sein',  desc:'Pick the helper in a real sentence, including the accusative-object trap (ist gefahren vs hat gefahren).' },
+    { id:'rule',   name:'haben or sein: the rule',        short:'The rule',      desc:'Name the reason: movement, change of state, special case, or everything else → haben.' },
+    { id:'helper', name:'Helper verbs and full forms',    short:'Helper',        desc:'Conjugate haben/sein and produce the full form (ihr + fahren → seid gefahren).' },
+    { id:'trans',  name:'Present → Perfekt',              short:'Transform',     desc:'Rewrite a present-tense sentence in the Perfekt, keeping the word order.' },
+    { id:'order',  name:'Word order: Satzklammer',        short:'Word order',    desc:'Arrange the pieces: helper in position 2, Partizip II at the end, reversed in subordinate clauses.' },
+    { id:'sub',    name:'Subordinate clauses',            short:'Nebensatz',     desc:'weil, dass, ob, obwohl and W-words: Partizip II + helper at the very end.' },
+    { id:'neg',    name:'Negation with nicht',            short:'Negation',      desc:'nicht goes directly before the Partizip II.' },
+  ];
+  const CONCEPT_BY_ID = {};
+  CONCEPTS.forEach(function (c) { CONCEPT_BY_ID[c.id] = c; });
+
+  function buildItems() {
+    var items = [];
+    var i, v, S;
+    var reflexiveSich = function (inf) { return /^sich /.test(inf); };
+
+    // pp: infinitive → Partizip II (every verb)
+    for (i = 0; i < VERBS.length; i++) {
+      v = VERBS[i];
+      items.push({
+        id: 'pp:' + v.inf, concept: 'pp', kind: 'type', inf: v.inf,
+        prompt: v.inf, sub: v.en, instruction: 'Type the Partizip II',
+        answers: reflexiveSich(v.inf) ? [v.pp, 'sich ' + v.pp] : [v.pp],
+        display: v.pp, displayHtml: P(v.pp),
+        explain: explainPP(v) + ' Full form: ' + A(dictForm(v, 'er')) + ' ' + P(v.pp) + ' (' + explainAux(v).replace(/\.$/, '') + ').',
+      });
+    }
+
+    // rev: Partizip II → infinitive (irregular forms, not separable duplicates)
+    for (i = 0; i < VERBS.length; i++) {
+      v = VERBS[i];
+      var irregular = v.cls === 'mix' || ((v.cls === 'str' || v.cls === 'insep') && /en$/.test(v.pp) && v.pp !== v.inf.replace(/^sich /, ''));
+      if (!irregular) continue;
+      var rest = VERBS.filter(function (o) { return o !== v && o.pp === v.pp; }); // duplicate participles (none expected)
+      if (rest.length) continue;
+      items.push({
+        id: 'rev:' + v.inf, concept: 'rev', kind: 'type', inf: v.inf,
+        prompt: (v.aux === 's' ? 'ist ' : 'hat ') + v.pp, sub: v.en, instruction: 'Type the infinitive',
+        answers: [v.inf, v.inf.replace(/^sich /, '')], display: v.inf, displayHtml: esc(v.inf),
+        explain: esc(v.pp) + ' is the Partizip II of <b>' + esc(v.inf) + '</b>. ' + explainPP(v),
+      });
+    }
+
+    // aux: helper in a sentence (choice)
+    for (i = 0; i < SENTENCES.length; i++) {
+      S = SENTENCES[i];
+      var chunks = perfektChunks(S);
+      var blanked = chunks.map(function (c) { return c.toLowerCase() === S.aux ? '___' : c; }).join(' ') + ((S.form === 'q' || S.form === 'w') ? '?' : '.');
+      var vb = VERB_BY_INF[S.inf];
+      var isSein = SEIN[S.p] === S.aux;
+      items.push({
+        id: 'aux:' + i, concept: 'aux', kind: 'choice', inf: S.inf,
+        prompt: blanked, sub: S.en, instruction: 'Which helper verb goes in the gap?',
+        options: [HABEN[S.p], SEIN[S.p]], answer: isSein ? 1 : 0, display: S.aux, displayHtml: A(S.aux),
+        explain: explainAux(vb, S.why) + ' ' + perfektMainHtml(S) + (S.why === 'obj' ? ' Compare: without an object, ' + esc(S.inf) + ' takes sein (ist ' + esc(vb.pp) + ').' : ''),
+      });
+    }
+
+    // rule: which rule decides the helper (choice) — all sein verbs + stationary/reflexive + a sample of the rest
+    var RULE_OPTIONS = ['Movement from A to B → sein', 'Change of state → sein', 'Special case (sein, bleiben, passieren …) → sein', 'Everything else → haben'];
+    var RULE_INDEX = { move:0, state:1, special:2, obj:3, refl:3, stat:3, other:3 };
+    for (i = 0; i < VERBS.length; i++) {
+      v = VERBS[i];
+      var include = v.aux === 's' || v.why === 'stat' || v.why === 'refl' || (i % 4 === 0);
+      if (!include) continue;
+      items.push({
+        id: 'rule:' + v.inf, concept: 'rule', kind: 'choice', inf: v.inf,
+        prompt: v.inf, sub: v.en, instruction: 'Which rule decides the helper verb?',
+        options: RULE_OPTIONS, answer: RULE_INDEX[v.why], display: RULE_OPTIONS[RULE_INDEX[v.why]],
+        explain: explainAux(v) + ' → ' + A(dictForm(v, 'er')) + ' ' + P(v.pp) + '.',
+      });
+    }
+
+    // helper: conjugation of haben / sein (12)
+    var pIdx;
+    for (pIdx = 0; pIdx < PERSONS.length; pIdx++) {
+      var pr = PERSONS[pIdx];
+      items.push({ id: 'hlp:haben:' + pr, concept: 'helper', kind: 'type', inf: 'haben',
+        prompt: PERSON_LABEL[pr] + ' + haben', sub: 'present tense of the helper', instruction: 'Type the conjugated form',
+        answers: [HABEN[pr]], display: HABEN[pr], displayHtml: A(HABEN[pr]), explain: 'haben: ich habe, du hast, er/sie/es hat, wir haben, ihr habt, sie/Sie haben.' });
+      items.push({ id: 'hlp:sein:' + pr, concept: 'helper', kind: 'type', inf: 'sein',
+        prompt: PERSON_LABEL[pr] + ' + sein', sub: 'present tense of the helper', instruction: 'Type the conjugated form',
+        answers: [SEIN[pr]], display: SEIN[pr], displayHtml: A(SEIN[pr]), explain: 'sein: ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.' });
+    }
+
+    // full: pronoun + infinitive → helper + Partizip II (all sein verbs + a third of the haben verbs; no reflexives)
+    for (i = 0; i < VERBS.length; i++) {
+      v = VERBS[i];
+      if (reflexiveSich(v.inf)) continue;
+      if (!(v.aux === 's' || i % 3 === 0)) continue;
+      var person = PERSONS[(i * 7 + 3) % PERSONS.length];
+      var form = dictForm(v, person) + ' ' + v.pp;
+      var label = person === 'er' ? ['er', 'sie', 'es'][i % 3] : person === 'sie' ? ['sie (pl.)', 'Sie'][i % 2] : person;
+      items.push({
+        id: 'full:' + v.inf, concept: 'helper', kind: 'type', inf: v.inf,
+        prompt: label + ' + ' + v.inf, sub: v.en, instruction: 'Type helper + Partizip II (e.g. "sind gefahren")',
+        answers: [form], display: form, displayHtml: A(dictForm(v, person)) + ' ' + P(v.pp),
+        explain: explainAux(v) + ' ' + esc(verbAuxWord(v)) + ' with ' + esc(label) + ' → ' + A(dictForm(v, person)) + '. ' + explainPP(v),
+      });
+    }
+
+    // trans: present sentence → Perfekt sentence (typed)
+    for (i = 0; i < SENTENCES.length; i++) {
+      S = SENTENCES[i];
+      items.push({
+        id: 'tr:' + i, concept: 'trans', kind: 'type', inf: S.inf,
+        prompt: presentMain(S), sub: S.en, instruction: 'Rewrite in the Perfekt. Keep the word order' + (S.front ? ' (start with "' + cap(S.front) + '")' : '') + '.',
+        answers: [perfektMain(S)], display: perfektMain(S), displayHtml: perfektMainHtml(S),
+        explain: transExplain(S),
+      });
+    }
+
+    // order: arrange chunks — main clause, subordinate clause, negation
+    for (i = 0; i < SENTENCES.length; i++) {
+      S = SENTENCES[i];
+      var mainChunks = perfektChunks(S);
+      if (mainChunks.length >= 3) {
+        items.push({
+          id: 'wo:' + i + ':m', concept: 'order', kind: 'order', inf: S.inf,
+          prompt: S.en, sub: null, instruction: (S.form === 'q') ? 'Build the yes/no question' : (S.form === 'w') ? 'Build the W-question' : S.front ? 'Build the statement (it starts with "' + cap(S.front) + '")' : 'Build the statement',
+          chunks: mainChunks, punct: (S.form === 'q' || S.form === 'w') ? '?' : '.', display: perfektMain(S), displayHtml: perfektMainHtml(S),
+          explain: orderExplain(S),
+        });
+      }
+      var subChunks = [subFrame(S, i)].concat(subPerfektChunks(S));
+      if (subChunks.length >= 4 && i % 2 === 0) {
+        items.push({
+          id: 'wo:' + i + ':s', concept: 'order', kind: 'order', inf: S.inf,
+          prompt: S.en, sub: null, instruction: 'Build the sentence with the subordinate clause',
+          chunks: subChunks, punct: '.', display: subChunks.join(' ') + '.', displayHtml: esc(subChunks[0]) + ' ' + subPerfektHtml(S) + '.',
+          explain: 'Subordinate clause (' + esc(subChunks[0].split(' ').pop()) + '): the conjugated helper goes to the very end, after the Partizip II → … ' + P(S.pp) + ' ' + A(S.aux) + '.',
+        });
+      }
+      if (S.neg && i % 2 === 1) {
+        items.push({
+          id: 'wo:' + i + ':n', concept: 'order', kind: 'order', inf: S.inf,
+          prompt: S.en, sub: null, instruction: 'Negate the whole statement with "nicht"',
+          chunks: negChunks(S), punct: '.', display: negSentence(S), displayHtml: negChunks(S).map(function (c) { return c === S.pp ? P(c) : c.toLowerCase() === S.aux ? A(c) : c === 'nicht' ? '<b>nicht</b>' : esc(c); }).join(' ') + '.',
+          explain: '<b>nicht</b> goes directly before the Partizip II: … nicht ' + P(S.pp) + '. The helper stays in position 2.',
+        });
+      }
+    }
+
+    // sub: typed subordinate clauses — from sentences (dass / ob / W-word) and the hand-written weil/obwohl set
+    for (i = 0; i < SENTENCES.length; i++) {
+      S = SENTENCES[i];
+      var frame = subFrame(S, i);
+      var conj = frame.split(' ').pop();
+      items.push({
+        id: 'sub:' + i, concept: 'sub', kind: 'type', inf: S.inf,
+        prompt: frame + ' ' + subPresentClause(S) + '.', sub: S.en, instruction: 'Rewrite the clause after "' + conj + '" in the Perfekt',
+        prefix: frame, answers: [subPerfektClause(S), conj + ' ' + subPerfektClause(S), frame + ' ' + subPerfektClause(S)],
+        display: frame + ' ' + subPerfektClause(S) + '.', displayHtml: esc(frame) + ' ' + subPerfektHtml(S) + '.',
+        explain: 'After <b>' + esc(conj) + '</b> the conjugated verb goes to the end. In the Perfekt that is the helper, so the order at the end is Partizip II + helper: … ' + P(S.pp) + ' ' + A(S.aux) + '.' + (S.sep ? ' In the present tense the separable prefix rejoins the verb at the end (' + esc(S.sep + S.v) + '); in the Perfekt it is inside the participle (' + esc(S.pp) + ').' : ''),
+      });
+    }
+    for (i = 0; i < SUBS.length; i++) {
+      S = SUBS[i];
+      var conj2 = S.frame.split(' ').pop();
+      items.push({
+        id: 'subx:' + i, concept: 'sub', kind: 'type', inf: S.inf,
+        prompt: S.frame + ' ' + subPresentClause(S) + '.', sub: S.en, instruction: 'Rewrite the clause after "' + conj2 + '" in the Perfekt',
+        prefix: S.frame, answers: [subPerfektClause(S), conj2 + ' ' + subPerfektClause(S), S.frame + ' ' + subPerfektClause(S)],
+        display: S.frame + ' ' + subPerfektClause(S) + '.', displayHtml: esc(S.frame) + ' ' + subPerfektHtml(S) + '.',
+        explain: 'After <b>' + esc(conj2) + '</b>: Partizip II + helper at the very end → … ' + P(S.pp) + ' ' + A(S.aux) + '.',
+      });
+      items.push({
+        id: 'wo:x' + i + ':s', concept: 'order', kind: 'order', inf: S.inf,
+        prompt: S.en, sub: null, instruction: 'Build the sentence with the subordinate clause',
+        chunks: [S.frame].concat(subPerfektChunks(S)), punct: '.', display: S.frame + ' ' + subPerfektClause(S) + '.', displayHtml: esc(S.frame) + ' ' + subPerfektHtml(S) + '.',
+        explain: 'Subordinate clause (' + esc(conj2) + '): the conjugated helper goes to the very end, after the Partizip II → … ' + P(S.pp) + ' ' + A(S.aux) + '.',
+      });
+    }
+
+    // neg: typed negation with nicht
+    for (i = 0; i < SENTENCES.length; i++) {
+      S = SENTENCES[i];
+      if (!S.neg) continue;
+      items.push({
+        id: 'neg:' + i, concept: 'neg', kind: 'type', inf: S.inf,
+        prompt: perfektMain(S), sub: S.en, instruction: 'Negate the whole sentence with "nicht"',
+        answers: [negSentence(S)], display: negSentence(S),
+        displayHtml: negChunks(S).map(function (c) { return c === S.pp ? P(c) : c.toLowerCase() === S.aux ? A(c) : c === 'nicht' ? '<b>nicht</b>' : esc(c); }).join(' ') + '.',
+        explain: '<b>nicht</b> goes directly before the Partizip II: … nicht ' + P(S.pp) + '. Everything else stays where it was.',
+      });
+    }
+
+    return items;
+  }
+
+  function transExplain(S) {
+    var vb = VERB_BY_INF[S.inf];
+    var parts = [];
+    parts.push('Helper ' + A(S.aux) + ' takes the verb\u2019s place in position 2' + (S.form === 'q' ? ' (position 1 in a yes/no question)' : '') + '; the Partizip II ' + P(S.pp) + ' goes to the end.');
+    if (S.sep) parts.push('Separable verb: the prefix ' + esc(S.sep) + ' (which stood at the end in the present) is now inside the participle: ' + esc(S.pp) + '.');
+    parts.push(explainAux(vb, S.why));
+    if (S.form === 'w') parts.push('W-question: W-word first, then the helper, then the subject.');
+    if (S.front) parts.push('Something else is in position 1, so the subject moves behind the helper (' + A(S.aux) + ' ' + esc(S.s) + ').');
+    return parts.join(' ');
+  }
+  function orderExplain(S) {
+    if (S.form === 'q') return 'Yes/no question: helper first, subject second, Partizip II ' + P(S.pp) + ' at the end.';
+    if (S.form === 'w') return 'W-question: W-word, then helper ' + A(S.aux) + ' in position 2, then the subject, Partizip II ' + P(S.pp) + ' at the end.';
+    if (S.front) return 'Statement starting with "' + esc(cap(S.front)) + '": helper ' + A(S.aux) + ' stays in position 2, so the subject comes after it. Partizip II ' + P(S.pp) + ' at the end.';
+    return 'Statement: subject, helper ' + A(S.aux) + ' in position 2, everything else, Partizip II ' + P(S.pp) + ' at the end (Satzklammer).';
+  }
+  // ───────────────────────────────────────────────────────────────────────────
+  // 6. Leitner scheduler
+  //    box 0 = new / failed → due now · box 5 = mastered (kept on a long review cycle)
+  // ───────────────────────────────────────────────────────────────────────────
+  var MIN = 60 * 1000, HOUR = 60 * MIN, DAY = 24 * HOUR;
+  var INTERVALS = [0, 30 * MIN, 4 * HOUR, 1 * DAY, 3 * DAY, 7 * DAY];
+  var MASTER_BOX = 5;
+  var STORAGE_KEY = 'perfekt-drill:v1';
+
+  function createState() {
+    return { v: 1, items: {}, stats: { answered: 0, correct: 0, sessions: 0, days: {} }, history: [], settings: { len: 20, concepts: [], strict: false, mode: 'drill' } };
+  }
+  function loadState(storage) {
+    try {
+      var raw = storage && storage.getItem(STORAGE_KEY);
+      if (!raw) return createState();
+      var st = JSON.parse(raw);
+      if (!st || st.v !== 1) return createState();
+      var base = createState();
+      st.items = st.items || {};
+      st.stats = Object.assign(base.stats, st.stats || {});
+      st.history = st.history || [];
+      st.settings = Object.assign(base.settings, st.settings || {});
+      return st;
+    } catch (e) { return createState(); }
+  }
+  function saveState(state, storage) {
+    try { storage.setItem(STORAGE_KEY, JSON.stringify(state)); return true; } catch (e) { return false; }
+  }
+  function rec(state, id) {
+    return state.items[id] || { b: 0, d: 0, n: 0, c: 0, l: 0, s: 0 }; // box, due, seen, correct, lapses, streak
+  }
+  function isDue(r, now) { return r.n > 0 && r.d <= now; }
+  function isNew(r) { return r.n === 0; }
+  function isMastered(r) { return r.b >= MASTER_BOX; }
+
+  function dayKey(now) { var d = new Date(now); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+
+  // Apply an answer; returns the updated record
+  function applyAnswer(state, id, correct, now) {
+    var r = rec(state, id);
+    r.n += 1;
+    if (correct) {
+      r.c += 1; r.s += 1;
+      r.b = Math.min(MASTER_BOX, r.b + 1);
+      r.d = now + (r.b === MASTER_BOX && r.s > MASTER_BOX ? Math.min(INTERVALS[MASTER_BOX] * (r.s - MASTER_BOX + 1), 60 * DAY) : INTERVALS[r.b]);
+    } else {
+      r.s = 0; r.l += 1; r.b = 0; r.d = now;
+    }
+    state.items[id] = r;
+    state.stats.answered += 1;
+    if (correct) state.stats.correct += 1;
+    var k = dayKey(now);
+    state.stats.days[k] = (state.stats.days[k] || 0) + 1;
+    return r;
+  }
+
+  function filterItems(items, concepts) {
+    if (!concepts || !concepts.length) return items;
+    var set = {}; concepts.forEach(function (c) { set[c] = true; });
+    return items.filter(function (it) { return set[it.concept]; });
+  }
+
+  function shuffle(arr, rnd) {
+    rnd = rnd || Math.random;
+    for (var i = arr.length - 1; i > 0; i--) { var j = Math.floor(rnd() * (i + 1)); var t = arr[i]; arr[i] = arr[j]; arr[j] = t; }
+    return arr;
+  }
+
+  // Interleave new items across concepts so early sessions mix question types
+  function roundRobin(items) {
+    var buckets = {}, order = [];
+    items.forEach(function (it) { if (!buckets[it.concept]) { buckets[it.concept] = []; order.push(it.concept); } buckets[it.concept].push(it); });
+    var out = [], more = true;
+    while (more) {
+      more = false;
+      order.forEach(function (c) { if (buckets[c].length) { out.push(buckets[c].shift()); more = true; } });
+    }
+    return out;
+  }
+
+  // Build a session: list of item ids
+  // mode: drill (due → new → ahead) · weak (lapsed / low boxes) · exam (random across everything)
+  function buildSession(state, items, opts, now, rnd) {
+    opts = opts || {};
+    rnd = rnd || Math.random;
+    var len = opts.len || 20;
+    var pool = filterItems(items, opts.concepts);
+    var picked = [];
+    var recs = {};
+    pool.forEach(function (it) { recs[it.id] = rec(state, it.id); });
+
+    if (opts.mode === 'exam') {
+      picked = shuffle(pool.slice(), rnd).slice(0, len);
+    } else if (opts.mode === 'weak') {
+      var weak = pool.filter(function (it) { var r = recs[it.id]; return r.n > 0 && (r.l > 0 || r.b <= 1); });
+      weak.sort(function (a, b) { var ra = recs[a.id], rb = recs[b.id]; return (rb.l - ra.l) || (ra.b - rb.b) || (ra.d - rb.d); });
+      picked = weak.slice(0, len);
+      if (picked.length < len) {
+        var restW = pool.filter(function (it) { return picked.indexOf(it) === -1 && recs[it.id].n > 0; });
+        restW.sort(function (a, b) { return recs[a.id].b - recs[b.id].b || recs[a.id].d - recs[b.id].d; });
+        picked = picked.concat(restW.slice(0, len - picked.length));
+      }
+    } else {
+      var due = pool.filter(function (it) { return isDue(recs[it.id], now); });
+      due.sort(function (a, b) { var ra = recs[a.id], rb = recs[b.id]; return (ra.b - rb.b) || (ra.d - rb.d); });
+      picked = due.slice(0, len);
+      if (picked.length < len) {
+        var fresh = roundRobin(pool.filter(function (it) { return isNew(recs[it.id]); }));
+        picked = picked.concat(fresh.slice(0, len - picked.length));
+      }
+      if (picked.length < len && opts.ahead !== false) {
+        var ahead = pool.filter(function (it) { var r = recs[it.id]; return r.n > 0 && !isDue(r, now) && picked.indexOf(it) === -1; });
+        ahead.sort(function (a, b) { var ra = recs[a.id], rb = recs[b.id]; return (ra.b - rb.b) || (ra.d - rb.d); });
+        picked = picked.concat(ahead.slice(0, len - picked.length));
+      }
+    }
+    return shuffle(picked.map(function (it) { return it.id; }), rnd);
+  }
+
+  // A running session: queue of ids; wrong answers are re-queued a few positions later
+  function Session(ids, mode) {
+    this.queue = ids.slice();
+    this.mode = mode || 'drill';
+    this.pos = 0;
+    this.first = {};      // id → first-attempt correctness
+    this.attempts = 0;
+    this.correct = 0;
+    this.retryGap = 4;
+    this.done = false;
+    this.total = ids.length;
+  }
+  Session.prototype.current = function () { return this.done ? null : this.queue[this.pos]; };
+  Session.prototype.remaining = function () { return this.queue.length - this.pos; };
+  Session.prototype.record = function (id, correct) {
+    this.attempts += 1;
+    if (correct) this.correct += 1;
+    if (!(id in this.first)) this.first[id] = correct;
+    if (!correct && this.mode !== 'exam') {
+      var at = Math.min(this.queue.length, this.pos + 1 + this.retryGap);
+      this.queue.splice(at, 0, id);
+    }
+    this.pos += 1;
+    if (this.pos >= this.queue.length) this.done = true;
+  };
+  Session.prototype.summary = function () {
+    var ids = Object.keys(this.first);
+    var firstCorrect = ids.filter(function (k) { return this.first[k]; }, this).length;
+    return { items: ids.length, firstTryCorrect: firstCorrect, attempts: this.attempts, correct: this.correct, missed: ids.filter(function (k) { return !this.first[k]; }, this) };
+  };
+
+  function finishSession(state, session, now) {
+    state.stats.sessions += 1;
+    var sm = session.summary();
+    state.history.unshift({ t: now, mode: session.mode, items: sm.items, first: sm.firstTryCorrect, attempts: sm.attempts });
+    if (state.history.length > 100) state.history.length = 100;
+  }
+
+  // Progress summaries
+  function progress(state, items, now) {
+    var byConcept = {};
+    CONCEPTS.forEach(function (c) { byConcept[c.id] = { total: 0, boxes: [0, 0, 0, 0, 0, 0], mastered: 0, due: 0, fresh: 0 }; });
+    var overall = { total: 0, mastered: 0, due: 0, fresh: 0, boxes: [0, 0, 0, 0, 0, 0] };
+    items.forEach(function (it) {
+      var r = rec(state, it.id), c = byConcept[it.concept];
+      c.total += 1; c.boxes[r.b] += 1; overall.total += 1; overall.boxes[r.b] += 1;
+      if (isMastered(r)) { c.mastered += 1; overall.mastered += 1; }
+      if (isDue(r, now)) { c.due += 1; overall.due += 1; }
+      if (isNew(r)) { c.fresh += 1; overall.fresh += 1; }
+    });
+    return { byConcept: byConcept, overall: overall };
+  }
+
+  function troubleVerbs(state, items, limit) {
+    var agg = {};
+    items.forEach(function (it) {
+      var r = state.items[it.id]; if (!r || !r.l) return;
+      var a = agg[it.inf] || (agg[it.inf] = { inf: it.inf, lapses: 0, items: 0 });
+      a.lapses += r.l; a.items += 1;
+    });
+    return Object.keys(agg).map(function (k) { return agg[k]; }).sort(function (a, b) { return b.lapses - a.lapses; }).slice(0, limit || 10);
+  }
+
+  function streakDays(state, now) {
+    var days = state.stats.days || {}, n = 0, d = new Date(now);
+    if (!days[dayKey(d.getTime())]) d.setDate(d.getDate() - 1); // today not yet counted: streak may still be alive from yesterday
+    while (days[dayKey(d.getTime())]) { n += 1; d.setDate(d.getDate() - 1); }
+    return n;
+  }
+
+  function formatInterval(ms) {
+    if (ms < HOUR) return Math.round(ms / MIN) + ' min';
+    if (ms < DAY) return Math.round(ms / HOUR) + ' h';
+    return Math.round(ms / DAY) + ' d';
+  }
+
+  var ITEMS = buildItems();
+  var ITEM_BY_ID = {};
+  ITEMS.forEach(function (it) { ITEM_BY_ID[it.id] = it; });
+
+  globalThis.PerfektCore = {
+    VERBS: VERBS, VERB_BY_INF: VERB_BY_INF, SENTENCES: SENTENCES, SUBS: SUBS, ITEMS: ITEMS, ITEM_BY_ID: ITEM_BY_ID,
+    CONCEPTS: CONCEPTS, CONCEPT_BY_ID: CONCEPT_BY_ID, CLASS_NAME: CLASS_NAME, HABEN: HABEN, SEIN: SEIN, PERSONS: PERSONS, WHY_TEXT: WHY_TEXT,
+    INTERVALS: INTERVALS, MASTER_BOX: MASTER_BOX, STORAGE_KEY: STORAGE_KEY,
+    presentMain: presentMain, perfektMain: perfektMain, perfektChunks: perfektChunks, perfektMainHtml: perfektMainHtml, negSentence: negSentence, negChunks: negChunks,
+    subFrame: subFrame, subPresentClause: subPresentClause, subPerfektClause: subPerfektClause, hasGe: hasGe, sepPrefix: sepPrefix, explainPP: explainPP, explainAux: explainAux,
+    normStrict: normStrict, normLoose: normLoose, check: check, esc: esc, cap: cap,
+    createState: createState, loadState: loadState, saveState: saveState, rec: rec, isDue: isDue, isNew: isNew, isMastered: isMastered,
+    applyAnswer: applyAnswer, buildSession: buildSession, Session: Session, finishSession: finishSession, progress: progress, troubleVerbs: troubleVerbs, streakDays: streakDays,
+    formatInterval: formatInterval, shuffle: shuffle, dayKey: dayKey,
+  };
+})();
+
+</script>
+<script id="ui">
+/* Perfekt drill — UI. Depends on PerfektCore (globalThis). */
+(function () {
+  'use strict';
+  var C = globalThis.PerfektCore;
+  var esc = C.esc;
+
+  // ── storage ────────────────────────────────────────────────────────────────
+  var storage = null, storageWarning = '';
+  try {
+    var s = globalThis.localStorage;
+    s.setItem('perfekt-drill:test', '1'); s.removeItem('perfekt-drill:test');
+    storage = s;
+  } catch (e) {
+    storage = null;
+    storageWarning = 'Progress can\u2019t be saved here (no local storage). Open this file directly in a browser to keep your progress between visits.';
+  }
+  var state = C.loadState(storage);
+  function persist() { if (storage) C.saveState(state, storage); }
+
+  // ── app state ──────────────────────────────────────────────────────────────
+  var app = {
+    view: 'home',          // home | session | summary | progress
+    session: null,         // C.Session
+    sessionOpts: null,
+    phase: 'ask',          // ask | feedback
+    picked: null,          // choice index or order chunk list
+    orderPool: null,       // shuffled chunks for the current order item
+    lastResult: null,
+    heroIdx: 0,
+    notice: '',
+    now: function () { return Date.now(); },
+  };
+
+  var HERO = C.SENTENCES.filter(function (S) { return !S.form && !S.front && S.mid; });
+
+  var root = document.getElementById('app');
+
+  // ── rendering helpers ──────────────────────────────────────────────────────
+  function bar(boxes, total) {
+    if (!total) return '<span class="bar"></span>';
+    var html = '';
+    for (var b = 5; b >= 1; b--) {
+      var pct = boxes[b] / total * 100;
+      if (pct > 0) html += '<span style="width:' + pct.toFixed(2) + '%;background:var(--box' + b + ')" title="box ' + b + ': ' + boxes[b] + '"></span>';
+    }
+    return '<span class="bar" role="img" aria-label="' + Math.round(boxes[5] / total * 100) + '% mastered">' + html + '</span>';
+  }
+
+  function drawBrackets() {
+    var nodes = root.querySelectorAll('.klammer');
+    for (var i = 0; i < nodes.length; i++) {
+      var k = nodes[i];
+      var br = k.querySelector('.br');
+      if (!br) { br = document.createElement('span'); br.className = 'br'; k.appendChild(br); }
+      var a = k.querySelector('.aux'), p = k.querySelector('.pp');
+      if (!a || !p || !k.offsetWidth || a.offsetTop !== p.offsetTop || p.offsetLeft <= a.offsetLeft) { br.className = 'br hidden'; continue; }
+      var left = a.offsetLeft, right = p.offsetLeft + p.offsetWidth;
+      br.className = 'br';
+      br.style.left = left + 'px';
+      br.style.width = (right - left) + 'px';
+      br.style.top = (a.offsetTop + a.offsetHeight - 2) + 'px';
+    }
+  }
+  var resizeTimer = null;
+  globalThis.addEventListener('resize', function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(drawBrackets, 80); });
+
+  function header(current) {
+    var nav = ['home', 'progress'].map(function (v) {
+      var label = v === 'home' ? 'Drill' : 'Progress';
+      return '<button class="linkbtn' + (current === v ? ' current' : '') + '" data-nav="' + v + '">' + label + '</button>';
+    }).join('');
+    return '<header class="top"><h1><button data-nav="home" aria-label="Perfekt drill, home">Perfekt</button></h1><nav>' + nav + '</nav></header>';
+  }
+
+  // ── home ───────────────────────────────────────────────────────────────────
+  function renderHome() {
+    var now = app.now();
+    var pg = C.progress(state, C.ITEMS, now);
+    var st = state.settings;
+    var H = HERO[app.heroIdx % HERO.length];
+    var heroHtml = C.perfektChunks(H).map(function (c) {
+      if (c === H.pp) return '<span class="pp">' + esc(c) + '</span>';
+      if (c.toLowerCase() === H.aux) return '<span class="aux">' + esc(c) + '</span>';
+      return esc(c);
+    }).join(' ') + '.';
+    var due = pg.overall.due, fresh = pg.overall.fresh, mastered = pg.overall.mastered, total = pg.overall.total;
+    var modes = [['drill', 'Drill'], ['weak', 'Weak spots'], ['exam', 'Exam']];
+    var modeHelp = {
+      drill: 'Reviews what is due, then introduces new questions, then pulls the weakest items forward. Wrong answers come back within the session.',
+      weak: 'Only questions you have missed before or that sit in the lowest boxes.',
+      exam: 'A random sample across everything you have selected, scored at the end. Wrong answers are not repeated.',
+    }[st.mode];
+    var lens = [10, 20, 40];
+    var conceptChips = C.CONCEPTS.map(function (c) {
+      var on = st.concepts.indexOf(c.id) !== -1;
+      return '<button class="chip" data-concept="' + c.id + '" aria-pressed="' + on + '">' + esc(c.short) + '</button>';
+    }).join('');
+    var conceptRows = C.CONCEPTS.map(function (c) {
+      var p = pg.byConcept[c.id];
+      var on = st.concepts.indexOf(c.id) !== -1;
+      return '<button class="concept" data-concept="' + c.id + '" aria-pressed="' + on + '">' +
+        '<span class="name">' + esc(c.name) + '</span>' +
+        '<span class="nums">' + p.mastered + ' / ' + p.total + ' mastered' + (p.due ? ' \u00b7 ' + p.due + ' due' : '') + '</span>' +
+        bar(p.boxes, p.total) +
+        '<span class="desc">' + esc(c.desc) + '</span></button>';
+    }).join('');
+    var poolSize = C.ITEMS.filter(function (it) { return !st.concepts.length || st.concepts.indexOf(it.concept) !== -1; }).length;
+
+    root.innerHTML = header('home') +
+      (storageWarning ? '<div class="warn">' + esc(storageWarning) + '</div>' : '') +
+      '<section class="hero">' +
+        '<p class="klammer" lang="de">' + heroHtml + '</p>' +
+        '<div class="hero-row"><p class="hero-en">' + esc(H.en) + '</p><button class="linkbtn" data-act="hero-next">Another example</button></div>' +
+        '<p class="legend">The Satzklammer: <span class="aux">helper</span> in position 2, <span class="pp">Partizip II</span> at the end. The colours stay the same everywhere in the app.</p>' +
+      '</section>' +
+      '<div class="strip">' + bar(pg.overall.boxes, total) + '<div class="nums"><b>' + mastered + '</b> of ' + total + ' mastered \u00b7 <b>' + due + '</b> due now \u00b7 ' + fresh + ' not yet seen</div></div>' +
+      '<section class="panel">' +
+        '<h2>Start a session</h2>' +
+        '<div class="row"><span class="lbl">Mode</span><span class="seg" role="group" aria-label="Mode">' + modes.map(function (m) { return '<button data-mode="' + m[0] + '" aria-pressed="' + (st.mode === m[0]) + '">' + m[1] + '</button>'; }).join('') + '</span></div>' +
+        '<p class="modehelp">' + modeHelp + '</p>' +
+        '<div class="row"><span class="lbl">Length</span><span class="seg" role="group" aria-label="Session length">' + lens.map(function (n) { return '<button data-len="' + n + '" aria-pressed="' + (st.len === n) + '">' + n + '</button>'; }).join('') + '</span></div>' +
+        '<div class="row" style="align-items:flex-start"><span class="lbl" style="padding-top:8px">Focus</span><div class="chips"><button class="chip" data-concept="" aria-pressed="' + (st.concepts.length === 0) + '">Everything</button>' + conceptChips + '</div></div>' +
+        '<div class="row"><label class="toggle"><input type="checkbox" data-strict ' + (st.strict ? 'checked' : '') + '> Strict spelling (ae/oe/ue/ss for \u00e4/\u00f6/\u00fc/\u00df count as wrong)</label></div>' +
+        '<div class="actions"><button class="primary" data-act="start"' + (poolSize ? '' : ' disabled') + '>Start ' + (st.mode === 'exam' ? 'exam' : 'session') + '</button><span class="note">' + poolSize + ' questions in the selected focus</span></div>' +
+        (app.notice ? '<p class="note" role="status" style="margin:10px 0 0;color:var(--bad)">' + esc(app.notice) + '</p>' : '') +
+      '</section>' +
+      '<section class="panel">' +
+        '<h2>Concepts</h2><p class="note" style="margin-top:-6px">Tap a concept to focus a session on it. Mastered means five correct answers in a row spread over at least four days; one mistake sends a question back to the start.</p>' +
+        '<div class="concepts">' + conceptRows + '</div>' +
+      '</section>';
+    drawBrackets();
+  }
+
+  // ── session ────────────────────────────────────────────────────────────────
+  function startSession() {
+    var st = state.settings;
+    var ids = C.buildSession(state, C.ITEMS, { len: st.len, mode: st.mode, concepts: st.concepts }, app.now());
+    if (!ids.length) {
+      app.notice = st.mode === 'weak' ? 'No weak spots yet in this focus. Answer some questions in Drill mode first.' : 'Nothing to drill in this focus.';
+      app.view = 'home'; render(); return;
+    }
+    app.notice = '';
+    app.session = new C.Session(ids, st.mode);
+    app.sessionOpts = { mode: st.mode, len: st.len, concepts: st.concepts.slice() };
+    app.view = 'session';
+    prepareQuestion();
+    render();
+  }
+  function prepareQuestion() {
+    app.phase = 'ask';
+    app.picked = null;
+    app.lastResult = null;
+    var it = currentItem();
+    if (it && it.kind === 'order') {
+      var pool = it.chunks.slice();
+      // shuffle until the order differs from the answer (always possible with ≥3 distinct chunks)
+      var tries = 0;
+      do { C.shuffle(pool); tries++; } while (tries < 20 && pool.every(function (c, i) { return c === it.chunks[i]; }));
+      app.orderPool = pool;
+      app.picked = [];
+    }
+  }
+  function currentItem() { var id = app.session && app.session.current(); return id ? C.ITEM_BY_ID[id] : null; }
+
+  function renderSession() {
+    var it = currentItem();
+    if (!it) { app.view = 'summary'; return renderSummary(); }
+    var ses = app.session;
+    var concept = C.CONCEPT_BY_ID[it.concept];
+    var answered = ses.pos, totalQ = ses.queue.length;
+    var body = '';
+    if (it.kind === 'type') {
+      body = '<div class="inputrow">' + (it.prefix ? '<span class="prefix" lang="de">' + esc(it.prefix) + '</span>' : '') +
+        '<input class="answer" lang="de" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Your answer" data-answer' + (app.phase === 'feedback' ? ' disabled' : '') + '>' +
+        (app.phase === 'ask' ? '<button class="primary" data-act="check">Check</button>' : '') + '</div>';
+    } else if (it.kind === 'choice') {
+      var isDe = it.concept === 'aux';
+      body = '<div class="options' + (it.options.length === 2 ? ' two' : '') + '" role="group" aria-label="Options">' + it.options.map(function (o, i) {
+        var cls = 'opt' + (isDe ? ' de' : '');
+        if (app.phase === 'feedback') { if (i === it.answer) cls += ' right'; else if (i === app.picked) cls += ' wrong'; }
+        return '<button class="' + cls + '" data-opt="' + i + '"' + (app.phase === 'feedback' ? ' disabled' : '') + '><span class="key">' + (i + 1) + '</span><span class="txt">' + esc(o) + '</span></button>';
+      }).join('') + '</div>';
+    } else if (it.kind === 'order') {
+      var target = app.picked.map(function (c, i) { return '<button class="tok" data-untok="' + i + '" lang="de" aria-label="Remove ' + esc(c) + '"' + (app.phase === 'feedback' ? ' disabled' : '') + '>' + esc(c) + '</button>'; }).join('');
+      var full = app.picked.length === it.chunks.length;
+      body = '<div class="order-target" aria-label="Your sentence">' + (target || '<span class="empty">Tap the pieces in order</span>') + (full ? '<span class="punct">' + it.punct + '</span>' : '') + '</div>' +
+        '<div class="order-pool">' + app.orderPool.map(function (c, i) {
+          var used = app.picked.indexOf(c) !== -1;
+          return '<button class="tok' + (used ? ' used' : '') + '" data-tok="' + i + '" lang="de"' + (used || app.phase === 'feedback' ? ' disabled' : '') + '><span class="key">' + (i + 1) + '</span>' + esc(c) + '</button>';
+        }).join('') + '</div>' +
+        (app.phase === 'ask' ? '<div class="check-row"><button class="primary" data-act="check"' + (full ? '' : ' disabled') + '>Check</button><span class="hint"><span class="kbd">1</span>\u2013<span class="kbd">' + app.orderPool.length + '</span> pick, <span class="kbd">\u232b</span> undo, <span class="kbd">\u21b5</span> check</span></div>' : '');
+    }
+
+    var fb = '';
+    if (app.phase === 'feedback') {
+      var r = app.lastResult;
+      var rec = C.rec(state, it.id);
+      var correctHtml = it.displayHtml || (it.kind === 'type' && it.concept === 'pp' ? '<span class="pp">' + esc(it.display) + '</span>' : it.kind === 'type' && it.concept === 'helper' && it.id.indexOf('full:') === 0 ? '<span class="aux">' + esc(it.display.split(' ')[0]) + '</span> <span class="pp">' + esc(it.display.split(' ')[1]) + '</span>' : esc(it.display));
+      var yours = '';
+      if (!r.correct) {
+        if (it.kind === 'type') yours = r.answer ? '<p class="yours">You wrote: <s lang="de">' + esc(r.answer) + '</s></p>' : '<p class="yours">You left it blank.</p>';
+        if (it.kind === 'order') yours = '<p class="yours">You built: <s lang="de">' + esc(r.answer.join(' ')) + '</s></p>';
+      }
+      var sched = r.correct
+        ? (rec.b >= C.MASTER_BOX ? 'Mastered. Next check in ' + C.formatInterval(rec.d - app.now()) + '.' : 'Box ' + rec.b + ' of ' + C.MASTER_BOX + '. Comes back in ' + C.formatInterval(rec.d - app.now()) + '.')
+        : (ses.mode === 'exam' ? 'Back to box 0.' : 'Back to box 0. You\u2019ll see it again in a few questions.');
+      var spelling = r.spelling ? '<p class="spelling">' + (r.correct ? 'Accepted, but note the spelling: ' : 'Spelling: ') + '<b lang="de">' + esc(it.display) + '</b></p>' : '';
+      fb = '<div class="feedback' + (r.correct ? '' : ' bad') + '" role="status">' +
+        '<p class="verdict">' + (r.correct ? 'Correct' : 'Not quite') + '</p>' +
+        '<p class="correct klammer" lang="de">' + correctHtml + '</p>' + yours + spelling +
+        '<p class="explain">' + it.explain + '</p>' +
+        '<p class="sched">' + sched + '</p>' +
+        '<div class="check-row"><button class="primary" data-act="next">' + (ses.remaining() > 1 ? 'Next' : 'Finish') + '</button><span class="hint"><span class="kbd">\u21b5</span> next</span></div>' +
+      '</div>';
+    }
+
+    root.innerHTML = header('home') +
+      '<div class="session-head"><button class="linkbtn" data-act="end">End session</button><span>' + (answered + 1) + ' of ' + totalQ + (ses.mode === 'exam' ? ' \u00b7 exam' : '') + '</span><span class="concept-name">' + esc(concept.name) + '</span></div>' +
+      '<div class="progress-dots"><span style="width:' + (answered / totalQ * 100).toFixed(1) + '%"></span></div>' +
+      '<section class="card">' +
+        '<p class="prompt' + (it.prompt.length > 40 ? ' small' : '') + '" lang="' + (it.kind === 'order' ? 'en' : 'de') + '">' + esc(it.prompt) + '</p>' +
+        (it.sub ? '<p class="sub">' + esc(it.sub) + '</p>' : '<p class="sub"></p>') +
+        '<p class="instruction">' + esc(it.instruction) + '</p>' +
+        body + fb +
+      '</section>';
+    if (app.phase === 'ask' && it.kind === 'type') { var inp = root.querySelector('[data-answer]'); if (inp) inp.focus(); }
+    if (app.phase === 'feedback') { var nb = root.querySelector('[data-act="next"]'); if (nb) nb.focus(); }
+    drawBrackets();
+  }
+
+  function submit() {
+    var it = currentItem(); if (!it || app.phase !== 'ask') return;
+    var answer;
+    if (it.kind === 'type') { var inp = root.querySelector('[data-answer]'); answer = inp ? inp.value : ''; }
+    else if (it.kind === 'choice') { if (app.picked === null) return; answer = app.picked; }
+    else { if (app.picked.length !== it.chunks.length) return; answer = app.picked.slice(); }
+    var r = C.check(it, answer, state.settings.strict);
+    r.answer = answer;
+    C.applyAnswer(state, it.id, r.correct, app.now());
+    app.session.record(it.id, r.correct);
+    // record() advanced the queue; step back so feedback shows this item, then advance on Next
+    app.session.pos -= 1; app.session.done = false;
+    app.lastResult = r;
+    app.phase = 'feedback';
+    persist();
+    render();
+  }
+  function next() {
+    if (app.phase !== 'feedback') return;
+    app.session.pos += 1;
+    if (app.session.pos >= app.session.queue.length) { app.session.done = true; finish(); return; }
+    prepareQuestion();
+    render();
+  }
+  function finish() {
+    C.finishSession(state, app.session, app.now());
+    persist();
+    app.view = 'summary';
+    render();
+  }
+  function endEarly() {
+    if (app.session.attempts === 0) { app.view = 'home'; app.session = null; render(); return; }
+    finish();
+  }
+
+  function renderSummary() {
+    var ses = app.session;
+    var sm = ses.summary();
+    var pct = sm.items ? Math.round(sm.firstTryCorrect / sm.items * 100) : 0;
+    var missed = sm.missed.map(function (id) {
+      var it = C.ITEM_BY_ID[id];
+      return '<li><span class="note">' + esc(C.CONCEPT_BY_ID[it.concept].short) + ' \u00b7 ' + esc(it.prompt) + '</span><br><span class="de" lang="de">' + (it.displayHtml || esc(it.display)) + '</span></li>';
+    }).join('');
+    var pg = C.progress(state, C.ITEMS, app.now());
+    root.innerHTML = header('home') +
+      '<section class="panel summary">' +
+        '<p class="big">' + pct + '%</p>' +
+        '<p>' + sm.firstTryCorrect + ' of ' + sm.items + ' right on the first try' + (sm.attempts > sm.items ? ', ' + (sm.attempts - sm.items) + ' retr' + (sm.attempts - sm.items === 1 ? 'y' : 'ies') : '') + (ses.mode === 'exam' ? ' (exam)' : '') + '.</p>' +
+        '<p class="note">' + pg.overall.mastered + ' of ' + pg.overall.total + ' questions mastered overall \u00b7 ' + pg.overall.due + ' due now.</p>' +
+        (missed ? '<div class="missed"><h2>Missed</h2><ul>' + missed + '</ul></div>' : '<p>Nothing missed.</p>') +
+        '<div class="actions"><button class="primary" data-act="again">Another session</button><button class="secondary" data-nav="home">Back</button></div>' +
+      '</section>';
+    drawBrackets();
+  }
+
+  // ── progress view ──────────────────────────────────────────────────────────
+  function renderProgress() {
+    var now = app.now();
+    var pg = C.progress(state, C.ITEMS, now);
+    var o = pg.overall;
+    var acc = state.stats.answered ? Math.round(state.stats.correct / state.stats.answered * 100) : 0;
+    var rows = C.CONCEPTS.map(function (c) {
+      var p = pg.byConcept[c.id];
+      return '<button class="concept" disabled style="cursor:default"><span class="name">' + esc(c.name) + '</span><span class="nums">' + p.mastered + ' / ' + p.total + ' mastered \u00b7 ' + p.due + ' due \u00b7 ' + p.fresh + ' new</span>' + bar(p.boxes, p.total) + '</button>';
+    }).join('');
+    var trouble = C.troubleVerbs(state, C.ITEMS, 12);
+    var tHtml = trouble.length ? '<ul class="trouble">' + trouble.map(function (t) {
+      var v = C.VERB_BY_INF[t.inf];
+      return '<li><span><span class="de" lang="de">' + esc(t.inf) + '</span>' + (v ? ' <span class="note">\u2192 <span class="aux">' + esc(v.aux === 's' ? 'ist' : 'hat') + '</span> <span class="pp">' + esc(v.pp) + '</span></span>' : '') + '</span><span class="note">' + t.lapses + ' miss' + (t.lapses === 1 ? '' : 'es') + '</span></li>';
+    }).join('') + '</ul>' : '<p class="note">No mistakes recorded yet.</p>';
+    var legend = [5, 4, 3, 2, 1, 0].map(function (b) { return '<span style="--c:var(--box' + b + ')">' + (b === 5 ? 'mastered' : b === 0 ? 'new / reset' : 'box ' + b) + ' ' + o.boxes[b] + '</span>'; }).join('');
+    root.innerHTML = header('progress') +
+      '<section class="panel"><h2>Overall</h2>' + bar(o.boxes, o.total) + '<div class="boxes">' + legend + '</div>' +
+        '<p class="note" style="margin-top:12px">Intervals between boxes: ' + C.INTERVALS.slice(1).map(C.formatInterval).join(' \u2192 ') + '. A mastered question keeps coming back at growing intervals; a mistake at any point resets it to box 0.</p></section>' +
+      '<section class="panel"><h2>By concept</h2><div class="concepts">' + rows + '</div></section>' +
+      '<section class="panel"><h2>Verbs you keep missing</h2>' + tHtml + '</section>' +
+      '<section class="panel"><h2>Stats</h2><div class="stats">' +
+        '<div class="stat"><div class="v">' + state.stats.answered + '</div><div class="k">answers</div></div>' +
+        '<div class="stat"><div class="v">' + acc + '%</div><div class="k">accuracy</div></div>' +
+        '<div class="stat"><div class="v">' + state.stats.sessions + '</div><div class="k">sessions</div></div>' +
+        '<div class="stat"><div class="v">' + C.streakDays(state, now) + '</div><div class="k">day streak</div></div>' +
+      '</div></section>' +
+      '<section class="panel"><h2>Your data</h2><p class="note">Progress lives in this browser only. Export to move it to another device or keep a backup.</p>' +
+        '<div class="actions"><button class="secondary" data-act="export">Export progress</button><button class="secondary" data-act="import-show">Import</button><button class="secondary" data-act="reset">Reset everything</button></div>' +
+        '<div data-io hidden style="margin-top:12px"><textarea class="io" data-io-text aria-label="Progress JSON"></textarea><div class="actions"><button class="primary" data-act="import">Load this JSON</button><button class="secondary" data-act="copy">Copy</button><span class="note" data-io-msg></span></div></div>' +
+      '</section>';
+  }
+
+  // ── events ─────────────────────────────────────────────────────────────────
+  root.addEventListener('click', function (e) {
+    var t = e.target.closest('button');
+    if (!t || t.disabled) return;
+    var st = state.settings;
+    if (t.hasAttribute('data-nav')) {
+      var v = t.getAttribute('data-nav');
+      if (app.view === 'session' && v === 'home') { endEarly(); return; }
+      if (app.view === 'session' && app.session && app.session.attempts > 0) { C.finishSession(state, app.session, app.now()); persist(); }
+      app.view = v; app.session = null; app.notice = ''; render(); return;
+    }
+    if (t.hasAttribute('data-mode')) { st.mode = t.getAttribute('data-mode'); app.notice = ''; persist(); render(); return; }
+    if (t.hasAttribute('data-len')) { st.len = +t.getAttribute('data-len'); app.notice = ''; persist(); render(); return; }
+    if (t.hasAttribute('data-concept')) {
+      app.notice = '';
+      var c = t.getAttribute('data-concept');
+      if (!c) st.concepts = [];
+      else { var i = st.concepts.indexOf(c); if (i === -1) st.concepts.push(c); else st.concepts.splice(i, 1); }
+      persist(); render(); return;
+    }
+    var act = t.getAttribute('data-act');
+    if (act === 'hero-next') { app.heroIdx = (app.heroIdx + 1 + Math.floor(Math.random() * (HERO.length - 1))) % HERO.length; render(); return; }
+    if (act === 'start' || act === 'again') { startSession(); return; }
+    if (act === 'check') { submit(); return; }
+    if (act === 'next') { next(); return; }
+    if (act === 'end') { endEarly(); return; }
+    if (t.hasAttribute('data-opt') && app.phase === 'ask') { app.picked = +t.getAttribute('data-opt'); submit(); return; }
+    if (t.hasAttribute('data-tok') && app.phase === 'ask') { pickTok(+t.getAttribute('data-tok')); return; }
+    if (t.hasAttribute('data-untok') && app.phase === 'ask') { app.picked.splice(+t.getAttribute('data-untok'), 1); render(); return; }
+    if (act === 'export') { showIO(JSON.stringify(state)); return; }
+    if (act === 'import-show') { showIO(''); return; }
+    if (act === 'copy') { var ta = root.querySelector('[data-io-text]'); ta.select(); try { document.execCommand('copy'); ioMsg('Copied.'); } catch (err) { ioMsg('Select the text and copy it manually.'); } return; }
+    if (act === 'import') { importJSON(); return; }
+    if (act === 'reset') { if (globalThis.confirm && !globalThis.confirm('Delete all progress and start from zero?')) return; state = C.createState(); persist(); render(); return; }
+  });
+  root.addEventListener('change', function (e) {
+    if (e.target.hasAttribute('data-strict')) { state.settings.strict = e.target.checked; persist(); }
+  });
+  function pickTok(i) {
+    var it = currentItem(); if (!it || it.kind !== 'order') return;
+    var c = app.orderPool[i];
+    if (c === undefined || app.picked.indexOf(c) !== -1 || app.picked.length >= it.chunks.length) return;
+    app.picked.push(c); render();
+  }
+  function showIO(text) {
+    var box = root.querySelector('[data-io]'); if (!box) return;
+    box.hidden = false; var ta = root.querySelector('[data-io-text]'); ta.value = text; ioMsg(text ? 'Copy this text to back up or move your progress.' : 'Paste exported progress here.'); ta.focus();
+  }
+  function ioMsg(m) { var el = root.querySelector('[data-io-msg]'); if (el) el.textContent = m; }
+  function importJSON() {
+    var ta = root.querySelector('[data-io-text]'); if (!ta) return;
+    try {
+      var obj = JSON.parse(ta.value);
+      if (!obj || obj.v !== 1 || typeof obj.items !== 'object') throw new Error('bad');
+      var fake = { getItem: function () { return JSON.stringify(obj); } };
+      state = C.loadState(fake); persist(); ioMsg('Loaded. ' + Object.keys(state.items).length + ' questions with history.'); render();
+    } catch (err) { ioMsg('That is not a progress export from this app.'); }
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (app.view !== 'session') return;
+    var it = currentItem(); if (!it) return;
+    var tag = (e.target && e.target.tagName) || '';
+    if (e.key === 'Enter') {
+      if (app.phase === 'feedback') { e.preventDefault(); next(); return; }
+      if (it.kind === 'type' && tag === 'INPUT') { e.preventDefault(); submit(); return; }
+      if (it.kind === 'order') { e.preventDefault(); submit(); return; }
+      return;
+    }
+    if (e.key === 'Escape') { e.preventDefault(); endEarly(); return; }
+    if (app.phase !== 'ask' || tag === 'INPUT' || tag === 'TEXTAREA') return;
+    if (it.kind === 'choice' && /^[1-9]$/.test(e.key)) { var n = +e.key - 1; if (n < it.options.length) { app.picked = n; submit(); } return; }
+    if (it.kind === 'order') {
+      if (/^[1-9]$/.test(e.key)) { pickTok(+e.key - 1); return; }
+      if (e.key === 'Backspace') { e.preventDefault(); if (app.picked.length) { app.picked.pop(); render(); } return; }
+    }
+  });
+
+  function render() {
+    if (app.view === 'home') renderHome();
+    else if (app.view === 'session') renderSession();
+    else if (app.view === 'summary') renderSummary();
+    else if (app.view === 'progress') renderProgress();
+    try { globalThis.scrollTo(0, 0); } catch (err) { /* not available */ }
+  }
+
+  // exposed for the headless test suite
+  globalThis.PerfektApp = { app: app, render: render, getState: function () { return state; }, startSession: startSession, submit: submit, next: next, HERO: HERO };
+  render();
+})();
+
+</script>
+</body>
+</html>
