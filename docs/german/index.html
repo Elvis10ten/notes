@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<title>Deutsch — Übersicht</title>
+<title>German — Overview</title>
 <style>
   :root {
     --bg:#f7f7f5; --card:#fff; --text:#1a1a1a; --muted:#6b6b6b;
@@ -66,7 +66,7 @@
   .body { min-width:0; flex:1; }
   .name { font-weight:600; font-size:1.02rem; }
   .desc { color:var(--muted); font-size:.87rem; margin-top:.2rem; }
-  .last, .soon-label { color:var(--muted); font-size:.75rem; margin-top:.5rem; }
+  .last { color:var(--muted); font-size:.75rem; margin-top:.5rem; }
   .last:empty { display:none; }
   .last[data-never] { opacity:.65; }
 
@@ -86,15 +86,12 @@
     background:var(--accent-soft); color:var(--accent);
     font-size:.8rem; font-weight:600; font-variant-numeric:tabular-nums;
   }
-  li.topic > .card.soon { cursor:default; }
-  li.topic > .card.soon::before { background:none; border:1px dashed var(--border); color:var(--muted); }
   li.topic > .note {
-    display:flex; align-items:center; flex:0 0 auto; padding:0 .9rem;
-    border-left:1px solid var(--border);
-    color:var(--muted); font-size:.8rem; font-weight:600; text-decoration:none;
-    transition:color .15s, background .15s;
+    display:flex; align-items:center; flex:0 0 auto; padding:0 1.1rem 0 .6rem;
+    color:var(--accent); font-size:.8rem; font-weight:600; text-decoration:none;
+    transition:background .15s;
   }
-  li.topic > .note:hover { color:var(--accent); background:var(--accent-soft); }
+  li.topic > .note:hover { background:var(--accent-soft); }
   li.topic > .card:focus-visible, li.topic > .note:focus-visible { outline:2px solid var(--accent); outline-offset:-3px; }
 
   /* Backup */
@@ -133,12 +130,12 @@
 <main>
   <header>
     <div>
-      <h1>Deutsch — Übersicht</h1>
-      <p class="sub">Trainer und Wortschatz für die telc B1</p>
+      <h1>German — Overview</h1>
+      <p class="sub">Trainers and vocabulary for the telc B1</p>
     </div>
-    <a class="continue" id="continue" href="nouns-practice.html" title="Öffnet den Trainer, den du am längsten nicht geübt hast">
-      <span class="cta">Weiter üben</span>
-      <span class="target">1. Nomen &amp; Genus</span>
+    <a class="continue" id="continue" href="nouns-practice.html" title="Opens the trainer you haven't practiced for the longest">
+      <span class="cta">Continue practicing</span>
+      <span class="target">1. Nouns &amp; gender</span>
     </a>
   </header>
 
@@ -146,163 +143,163 @@
     <li><a class="card" href="wortschatz.html">
       <div class="body">
         <div class="name">Wortschatz</div>
-        <div class="desc">Vokabeln lernen und wiederholen</div>
+        <div class="desc">Learn and review vocabulary</div>
         <div class="last"></div>
       </div>
     </a></li>
   </ul>
 
-  <h2>Grammatik</h2>
+  <h2>Grammar</h2>
   <ol>
     <li class="topic">
       <a class="card" href="nouns-practice.html">
         <div class="body">
-          <div class="name">Nomen &amp; Genus</div>
-          <div class="desc">der, die oder das? Artikel sicher zuordnen</div>
+          <div class="name">Nouns &amp; gender</div>
+          <div class="desc">der, die or das? Pick the right article</div>
           <div class="last"></div>
         </div>
       </a>
-      <a class="note" href="nouns-note.html" aria-label="Notizen: Nomen &amp; Genus">Notizen</a>
+      <a class="note" href="nouns-note.html" aria-label="Notes: Nouns &amp; gender">Notes</a>
     </li>
     <li class="topic">
       <a class="card" href="plurals-practice.html">
         <div class="body">
-          <div class="name">Pluralformen</div>
-          <div class="desc">Endungen und Umlaut: -e, -en, -er, -s</div>
+          <div class="name">Plurals</div>
+          <div class="desc">Endings and umlaut: -e, -en, -er, -s</div>
           <div class="last"></div>
         </div>
       </a>
-      <a class="note" href="plurals-note.html" aria-label="Notizen: Pluralformen">Notizen</a>
+      <a class="note" href="plurals-note.html" aria-label="Notes: Plurals">Notes</a>
     </li>
     <li class="topic">
       <a class="card" href="present-tense-practice.html">
         <div class="body">
-          <div class="name">Präsens</div>
-          <div class="desc">Regelmäßige und unregelmäßige Verben konjugieren</div>
+          <div class="name">Present tense</div>
+          <div class="desc">Conjugating regular and irregular verbs</div>
           <div class="last"></div>
         </div>
       </a>
-      <a class="note" href="present-tense-note.html" aria-label="Notizen: Präsens">Notizen</a>
+      <a class="note" href="present-tense-note.html" aria-label="Notes: Present tense">Notes</a>
     </li>
     <li class="topic">
       <a class="card" href="cases-practice.html">
         <div class="body">
-          <div class="name">Kasus</div>
+          <div class="name">Cases</div>
           <div class="desc">Nominativ, Akkusativ, Dativ, Genitiv</div>
           <div class="last"></div>
         </div>
       </a>
-      <a class="note" href="cases-note.html" aria-label="Notizen: Kasus">Notizen</a>
+      <a class="note" href="cases-note.html" aria-label="Notes: Cases">Notes</a>
     </li>
     <li class="topic">
       <a class="card" href="separable-inseparable-verbs-practice.html">
         <div class="body">
-          <div class="name">Trennbare &amp; untrennbare Verben</div>
-          <div class="desc">Vorsilben und Satzklammer</div>
+          <div class="name">Separable &amp; inseparable verbs</div>
+          <div class="desc">Prefixes and the Satzklammer</div>
           <div class="last"></div>
         </div>
       </a>
-      <a class="note" href="separable-inseparable-verbs-note.html" aria-label="Notizen: Trennbare &amp; untrennbare Verben">Notizen</a>
+      <a class="note" href="separable-inseparable-verbs-note.html" aria-label="Notes: Separable &amp; inseparable verbs">Notes</a>
     </li>
     <li class="topic">
       <a class="card" href="modal-verbs-practice.html">
         <div class="body">
-          <div class="name">Modalverben</div>
+          <div class="name">Modal verbs</div>
           <div class="desc">können, müssen, dürfen, sollen, wollen, mögen</div>
           <div class="last"></div>
         </div>
       </a>
-      <a class="note" href="modal-verbs-note.html" aria-label="Notizen: Modalverben">Notizen</a>
+      <a class="note" href="modal-verbs-note.html" aria-label="Notes: Modal verbs">Notes</a>
     </li>
     <li class="topic">
       <a class="card" href="word-order-practice.html">
         <div class="body">
-          <div class="name">Wortstellung</div>
-          <div class="desc">Verb auf Position 2, Nebensätze, Satzklammer</div>
+          <div class="name">Word order</div>
+          <div class="desc">Verb in position 2, subordinate clauses, Satzklammer</div>
           <div class="last"></div>
         </div>
       </a>
-      <a class="note" href="word-order-note.html" aria-label="Notizen: Wortstellung">Notizen</a>
+      <a class="note" href="word-order-note.html" aria-label="Notes: Word order">Notes</a>
     </li>
     <li class="topic">
       <a class="card" href="imperative-practice.html">
         <div class="body">
-          <div class="name">Imperativ</div>
-          <div class="desc">du-, ihr- und Sie-Form</div>
+          <div class="name">Imperative</div>
+          <div class="desc">du, ihr and Sie forms</div>
           <div class="last"></div>
         </div>
       </a>
-      <a class="note" href="imperative-note.html" aria-label="Notizen: Imperativ">Notizen</a>
+      <a class="note" href="imperative-note.html" aria-label="Notes: Imperative">Notes</a>
     </li>
     <li class="topic">
       <a class="card" href="negation-practice.html">
         <div class="body">
           <div class="name">Negation</div>
-          <div class="desc">nicht oder kein? Stellung im Satz</div>
+          <div class="desc">nicht or kein? Where it goes in the sentence</div>
           <div class="last"></div>
         </div>
       </a>
-      <a class="note" href="negation-note.html" aria-label="Notizen: Negation">Notizen</a>
+      <a class="note" href="negation-note.html" aria-label="Notes: Negation">Notes</a>
     </li>
     <li class="topic">
       <a class="card" href="perfekt-practice.html">
         <div class="body">
           <div class="name">Perfekt</div>
-          <div class="desc">haben oder sein? Partizip II bilden</div>
+          <div class="desc">haben or sein? Forming the Partizip II</div>
           <div class="last"></div>
         </div>
       </a>
-      <a class="note" href="perfekt-note.html" aria-label="Notizen: Perfekt">Notizen</a>
+      <a class="note" href="perfekt-note.html" aria-label="Notes: Perfekt">Notes</a>
     </li>
     <li class="topic">
       <a class="card" href="futur-i-practice.html">
         <div class="body">
           <div class="name">Futur I</div>
-          <div class="desc">werden + Infinitiv</div>
+          <div class="desc">werden + infinitive</div>
           <div class="last"></div>
         </div>
       </a>
-      <a class="note" href="futur-i-note.html" aria-label="Notizen: Futur I">Notizen</a>
+      <a class="note" href="futur-i-note.html" aria-label="Notes: Futur I">Notes</a>
     </li>
     <li class="topic">
       <a class="card" href="praeteritum-practice.html">
         <div class="body">
           <div class="name">Präteritum</div>
-          <div class="desc">war, hatte, konnte … und die wichtigsten unregelmäßigen Verben</div>
+          <div class="desc">war, hatte, konnte … and the key irregular verbs</div>
           <div class="last"></div>
         </div>
       </a>
-      <a class="note" href="praeteritum-note.html" aria-label="Notizen: Präteritum">Notizen</a>
+      <a class="note" href="praeteritum-note.html" aria-label="Notes: Präteritum">Notes</a>
     </li>
     <li class="topic">
       <a class="card" href="prepositions-practice.html">
         <div class="body">
-          <div class="name">Präpositionen</div>
-          <div class="desc">Dativ, Akkusativ oder Wechselpräposition?</div>
+          <div class="name">Prepositions</div>
+          <div class="desc">Dativ, Akkusativ or two-way preposition?</div>
           <div class="last"></div>
         </div>
       </a>
-      <a class="note" href="prepositions-note.html" aria-label="Notizen: Präpositionen">Notizen</a>
+      <a class="note" href="prepositions-note.html" aria-label="Notes: Prepositions">Notes</a>
     </li>
     <li class="topic">
-      <div class="card soon" title="Für dieses Thema gibt es noch keine Übung">
+      <a class="card" href="komparativ-superlativ-practice.html">
         <div class="body">
           <div class="name">Komparativ &amp; Superlativ</div>
           <div class="desc">größer als, am größten, so … wie</div>
-          <div class="soon-label">Übung folgt</div>
+          <div class="last"></div>
         </div>
-      </div>
-      <a class="note" href="komparativ-superlativ-note.html" aria-label="Notizen: Komparativ &amp; Superlativ">Notizen</a>
+      </a>
+      <a class="note" href="komparativ-superlativ-note.html" aria-label="Notes: Komparativ &amp; Superlativ">Notes</a>
     </li>
     <li class="topic">
       <a class="card" href="subordinate-clauses-practice.html">
         <div class="body">
-          <div class="name">Nebensätze</div>
-          <div class="desc">weil, dass, wenn, als, obwohl … und das Verb am Ende</div>
+          <div class="name">Subordinate clauses</div>
+          <div class="desc">weil, dass, wenn, als, obwohl … and the verb at the end</div>
           <div class="last"></div>
         </div>
       </a>
-      <a class="note" href="subordinate-clauses-note.html" aria-label="Notizen: Nebensätze">Notizen</a>
+      <a class="note" href="subordinate-clauses-note.html" aria-label="Notes: Subordinate clauses">Notes</a>
     </li>
     <li class="topic">
       <a class="card" href="infinitiv-mit-zu-practice.html">
@@ -312,67 +309,67 @@
           <div class="last"></div>
         </div>
       </a>
-      <a class="note" href="infinitiv-mit-zu-note.html" aria-label="Notizen: Infinitiv mit zu">Notizen</a>
+      <a class="note" href="infinitiv-mit-zu-note.html" aria-label="Notes: Infinitiv mit zu">Notes</a>
     </li>
     <li class="topic">
       <a class="card" href="konjunktiv-ii-practice.html">
         <div class="body">
           <div class="name">Konjunktiv II</div>
-          <div class="desc">würde, hätte, wäre, könnte – Wünsche, Bitten, irreale Bedingungen</div>
+          <div class="desc">würde, hätte, wäre, könnte – wishes, requests, unreal conditions</div>
           <div class="last"></div>
         </div>
       </a>
-      <a class="note" href="konjunktiv-ii-note.html" aria-label="Notizen: Konjunktiv II">Notizen</a>
+      <a class="note" href="konjunktiv-ii-note.html" aria-label="Notes: Konjunktiv II">Notes</a>
     </li>
   </ol>
 
-  <h2>Sonstiges</h2>
+  <h2>More</h2>
   <ul class="misc">
     <li><a class="card" href="deutschtrainer.html">
       <div class="body">
         <div class="name">Deutschtrainer</div>
-        <div class="desc">Allgemeiner Übungstrainer</div>
+        <div class="desc">General practice trainer, A1–A2</div>
         <div class="last"></div>
       </div>
     </a></li>
     <li><a class="card" href="line-a2-b1.html">
       <div class="body">
-        <div class="name">Linie A2–B1</div>
-        <div class="desc">Kursbuch-Material, Niveau A2 bis B1</div>
+        <div class="name">Line A2–B1</div>
+        <div class="desc">Coursebook material, level A2 to B1</div>
         <div class="last"></div>
       </div>
     </a></li>
     <li><a class="card" href="mission-b1.html">
       <div class="body">
         <div class="name">Mission B1</div>
-        <div class="desc">Prüfungsvorbereitung Niveau B1</div>
+        <div class="desc">70-day telc B1 exam coach</div>
         <div class="last"></div>
       </div>
     </a></li>
     <li><a class="card" href="telc-vokabeltrainer.html">
       <div class="body">
         <div class="name">telc Vokabeltrainer</div>
-        <div class="desc">Wortschatz für die telc-Prüfung</div>
+        <div class="desc">Vocabulary for the telc exam</div>
         <div class="last"></div>
       </div>
     </a></li>
   </ul>
 
-  <h2>Sicherung</h2>
+  <h2>Backup</h2>
   <section class="backup" id="backup">
-    <div class="name">Fortschritt sichern und übertragen</div>
-    <div class="desc">Alle Trainer speichern ihren Stand nur in diesem Browser. Exportiere eine Datei nach iCloud&nbsp;Drive und importiere sie auf dem anderen Gerät – oder zieh sie einfach hierher.</div>
+    <div class="name">Back up and transfer your progress</div>
+    <div class="desc">Every trainer keeps its progress only in this browser. Export a file to iCloud&nbsp;Drive and import it on the other device – or simply drop it here.</div>
     <div class="stats" id="backup-stats"></div>
     <div class="actions">
-      <button class="btn primary" id="export-btn" type="button">Exportieren</button>
-      <button class="btn" id="share-btn" type="button" hidden>Teilen …</button>
-      <button class="btn" id="import-btn" type="button">Importieren …</button>
+      <button class="btn primary" id="export-btn" type="button">Export</button>
+      <button class="btn" id="share-btn" type="button" hidden>Share …</button>
+      <button class="btn" id="import-btn" type="button">Import …</button>
       <input type="file" id="import-file" accept=".json,application/json" hidden>
     </div>
     <div class="status" id="backup-status" role="status" aria-live="polite"></div>
   </section>
 
-  <footer>„Weiter üben" öffnet den Trainer, den du am längsten nicht geöffnet hast.</footer>
+  <footer>“Continue practicing” opens the trainer you haven't opened for the longest.</footer>
 </main>
 
 <script>
@@ -413,7 +410,7 @@
   }
 
   const cards  = Array.from(document.querySelectorAll('a.card'));     // every link that shows a "last opened" line
-  const drills = Array.from(document.querySelectorAll('ol a.card'));  // trainers only; a topic without one is a plain div
+  const drills = Array.from(document.querySelectorAll('ol a.card'));
   const topics = Array.from(document.querySelectorAll('ol > li'));
   const btn    = document.getElementById('continue');
   const hrefOf = (a) => a.getAttribute('href');
@@ -424,12 +421,12 @@
     return Math.round((a - b) / 86400000);
   }
   function label(ts) {
-    if (!ts) return 'Noch nie geöffnet';
+    if (!ts) return 'Never opened';
     const d = dayDiff(ts);
-    if (d <= 0) return 'Zuletzt heute';
-    if (d === 1) return 'Zuletzt gestern';
-    if (d < 14) return 'Zuletzt vor ' + d + ' Tagen';
-    return 'Zuletzt vor ' + Math.floor(d / 7) + ' Wochen';
+    if (d <= 0) return 'Last opened today';
+    if (d === 1) return 'Last opened yesterday';
+    if (d < 14) return 'Last opened ' + d + ' days ago';
+    return 'Last opened ' + Math.floor(d / 7) + ' weeks ago';
   }
 
   function render() {
@@ -452,7 +449,7 @@
     }
   }
 
-  // Only opening a trainer counts as practice; the notes tab (a.note) does not move the "Weiter üben" pick.
+  // Only opening a trainer counts as practice; the notes tab (a.note) does not move the "Continue practicing" pick.
   document.addEventListener('click', e => {
     const a = e.target.closest('a.card, #continue');
     if (!a) return;
@@ -493,14 +490,14 @@
   }
   function parseBackup(text) {
     let p;
-    try { p = JSON.parse(text); } catch (e) { throw new Error('Die Datei ist kein gültiges JSON.'); }
-    if (!p || typeof p !== 'object' || p.format !== FORMAT) throw new Error('Das ist keine Sicherung dieser Seite.');
-    if (p.version !== 1) throw new Error('Unbekannte Version der Sicherung (' + p.version + ').');
-    if (!p.data || typeof p.data !== 'object' || Array.isArray(p.data)) throw new Error('Die Sicherung enthält keine Daten.');
+    try { p = JSON.parse(text); } catch (e) { throw new Error('The file is not valid JSON.'); }
+    if (!p || typeof p !== 'object' || p.format !== FORMAT) throw new Error('This is not a backup from this page.');
+    if (p.version !== 1) throw new Error('Unknown backup version (' + p.version + ').');
+    if (!p.data || typeof p.data !== 'object' || Array.isArray(p.data)) throw new Error('The backup contains no data.');
     const keys = Object.keys(p.data);
-    if (!keys.length) throw new Error('Die Sicherung ist leer.');
+    if (!keys.length) throw new Error('The backup is empty.');
     for (const k of keys) {
-      if (typeof p.data[k] !== 'string') throw new Error('Ungültiger Eintrag: „' + k + '".');
+      if (typeof p.data[k] !== 'string') throw new Error('Invalid entry: “' + k + '”.');
     }
     return p;
   }
@@ -513,11 +510,11 @@
 
   function fileName(iso) {
     const d = new Date(iso), z = n => String(n).padStart(2, '0');
-    return 'deutsch-sicherung-' + d.getFullYear() + '-' + z(d.getMonth() + 1) + '-' + z(d.getDate())
+    return 'german-backup-' + d.getFullYear() + '-' + z(d.getMonth() + 1) + '-' + z(d.getDate())
          + '-' + z(d.getHours()) + z(d.getMinutes()) + '.json';
   }
   function fmtDate(iso) {
-    try { return new Date(iso).toLocaleString('de-DE', { dateStyle: 'medium', timeStyle: 'short' }); }
+    try { return new Date(iso).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }); }
     catch (e) { return iso; }
   }
   function fmtSize(bytes) {
@@ -537,9 +534,9 @@
     const keys = Object.keys(data);
     let bytes = 0; keys.forEach(k => { bytes += (k.length + data[k].length) * 2; });
     const m = meta();
-    const parts = [keys.length + (keys.length === 1 ? ' Eintrag' : ' Einträge') + ' gespeichert (≈ ' + fmtSize(bytes) + ')'];
-    if (m && m.exportedAt) parts.push('Zuletzt gesichert: ' + label(new Date(m.exportedAt).getTime()).replace('Zuletzt ', ''));
-    else parts.push('Noch nie gesichert');
+    const parts = [keys.length + (keys.length === 1 ? ' entry' : ' entries') + ' stored (≈ ' + fmtSize(bytes) + ')'];
+    if (m && m.exportedAt) parts.push('Last backed up ' + label(new Date(m.exportedAt).getTime()).replace('Last opened ', ''));
+    else parts.push('Never backed up');
     statsEl.textContent = parts.join(' — ');
   }
 
@@ -552,22 +549,22 @@
 
   function doExport() {
     const p = buildBackup();
-    if (!p.keys) { setStatus('Nichts zu sichern – noch kein Trainer geöffnet.', 'err'); return; }
+    if (!p.keys) { setStatus('Nothing to back up – no trainer opened yet.', 'err'); return; }
     download(fileName(p.exportedAt), JSON.stringify(p, null, 2));
     rememberExport(p); renderStats();
-    setStatus(p.keys + ' Einträge exportiert. Die Datei liegt im Download-Ordner von Safari.', 'ok');
+    setStatus(p.keys + ' entries exported. The file is in Safari\'s Downloads folder.', 'ok');
   }
   async function doShare() {
     const p = buildBackup();
-    if (!p.keys) { setStatus('Nichts zu sichern – noch kein Trainer geöffnet.', 'err'); return; }
+    if (!p.keys) { setStatus('Nothing to back up – no trainer opened yet.', 'err'); return; }
     const file = new File([JSON.stringify(p, null, 2)], fileName(p.exportedAt), { type: 'application/json' });
     try {
-      await navigator.share({ files: [file], title: 'Deutsch – Sicherung' });
+      await navigator.share({ files: [file], title: 'German – Backup' });
       rememberExport(p); renderStats();
-      setStatus(p.keys + ' Einträge geteilt.', 'ok');
+      setStatus(p.keys + ' entries shared.', 'ok');
     } catch (e) {
       if (e && e.name === 'AbortError') return;          // user closed the share sheet
-      setStatus('Teilen nicht möglich – bitte „Exportieren" verwenden.', 'err');
+      setStatus('Sharing is not available – please use “Export”.', 'err');
     }
   }
   async function doImportText(text) {
@@ -575,22 +572,22 @@
     try { p = parseBackup(text); }
     catch (e) { setStatus(e.message, 'err'); return; }
     const n = Object.keys(p.data).length;
-    const ok = confirm('Sicherung vom ' + fmtDate(p.exportedAt) + ' (' + n + ' Einträge) importieren?\n\n'
-                     + 'Vorhandener Fortschritt zu diesen Einträgen wird überschrieben. Schließe vorher offene Trainer-Tabs.');
-    if (!ok) { setStatus('Import abgebrochen.'); return; }
+    const ok = confirm('Import the backup from ' + fmtDate(p.exportedAt) + ' (' + n + ' entries)?\n\n'
+                     + 'Existing progress for these entries will be overwritten. Close any open trainer tabs first.');
+    if (!ok) { setStatus('Import cancelled.'); return; }
     try {
       const written = applyBackup(p);
       render(); renderStats();
-      setStatus(written + ' Einträge importiert. Öffne einen Trainer, um den Stand zu sehen.', 'ok');
+      setStatus(written + ' entries imported. Open a trainer to see the restored progress.', 'ok');
     } catch (e) {
-      setStatus('Import fehlgeschlagen: ' + (e && e.message ? e.message : 'Speicher voll oder blockiert.'), 'err');
+      setStatus('Import failed: ' + (e && e.message ? e.message : 'storage is full or blocked.'), 'err');
     }
   }
   function doImportFile(file) {
     if (!file) return;
     const r = new FileReader();
     r.onload  = () => doImportText(String(r.result));
-    r.onerror = () => setStatus('Datei konnte nicht gelesen werden.', 'err');
+    r.onerror = () => setStatus('The file could not be read.', 'err');
     r.readAsText(file);
   }
 
