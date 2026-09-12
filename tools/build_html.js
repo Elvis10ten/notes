@@ -67,7 +67,8 @@ async function buildHTMLFile(dir, markdownFileName) {
         const hasPractice = practice !== markdownFileName && existsSync(resolve(dir, practice));
         srcHTML = `<div><a href="index.html" class="back-link">← Overview</a>`
             + (hasPractice ? ` · <a href="${practice}" class="back-link">Practice this topic</a>` : '')
-            + `</div>` + srcHTML;
+            + `</div>` + srcHTML
+            + `\n<script src="deutsch-home.js"></script>`;   // analytics, shared with the overview and the trainers
     } else if (!indexFileNames.includes(markdownFileName)) {
         srcHTML = `<div><a href="/" class="back-link">Home</a></div>` + srcHTML;
     }

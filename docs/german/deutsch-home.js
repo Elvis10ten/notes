@@ -1,6 +1,7 @@
-/* deutsch-home.js — shared by every trainer in this folder, loaded just before </body>.
+/* deutsch-home.js — shared by every page in this folder (overview, trainers, notes), loaded just before </body>.
  *
- * 1. Adds a small "Overview · Notes" bar at the top of the page.
+ * 0. Loads Google Analytics on every page. Put the measurement ID in GA_ID below; leave it empty to disable.
+ * 1. Adds a small "Overview · Notes" bar at the top of each trainer.
  * 2. Records the visit, so the overview's "last opened" line is right even when a trainer
  *    is opened from a bookmark instead of from the overview.
  * 3. Exposes window.deutschHome.answer(isCorrect). A trainer calls it once for every answer it
@@ -14,9 +15,27 @@
 (function () {
   'use strict';
 
-  var file = decodeURIComponent((location.pathname.split('/').pop() || '').split('?')[0]);
-  if (!file) return;
+  var GA_ID = 'G-D7XLZDC9HP';   // Google Analytics measurement ID (Admin → Data streams)
+
+  var file = decodeURIComponent((location.pathname.split('/').pop() || 'index.html').split('?')[0]);
+  var isOverview = file === 'index.html';
+  var isNote = /-note\.html$/.test(file);
   var notesFile = /-practice\.html$/.test(file) ? file.replace(/-practice\.html$/, '-note.html') : null;
+
+  /* ---------- 0. Analytics ---------- */
+  if (GA_ID && /^https?:$/.test(location.protocol)) {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', GA_ID);
+    var ga = document.createElement('script');
+    ga.async = true;
+    ga.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA_ID);
+    document.head.appendChild(ga);
+  }
+
+  // The overview and the note pages only need analytics; the bar and progress tracking are for the trainers.
+  if (isOverview || isNote) return;
 
   function read(key) { try { return JSON.parse(localStorage.getItem(key)) || {}; } catch (e) { return {}; } }
   function write(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {} }
