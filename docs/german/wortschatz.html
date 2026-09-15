@@ -219,7 +219,7 @@
   .sent-en{font-family:Charter,Georgia,serif; font-size:21px; line-height:1.35; font-weight:600; letter-spacing:-.005em;}
   .sent-de{margin-top:16px; font-size:17.5px; line-height:1.7; color:var(--ink);}
   .gap{
-    display:inline-block; border-bottom:2px solid var(--accent); min-height:1.2em; line-height:1.2; margin:0 2px;
+    display:inline-block; border-bottom:2px solid var(--accent); min-height:1.2em; min-width:6ch; line-height:1.2; margin:0 2px;
     text-align:center; vertical-align:baseline; padding:0 4px; color:var(--ink-soft);
   }
   .gap i{font-size:13px; font-style:italic; color:var(--accent);}
@@ -240,12 +240,15 @@
   .sent-fb{margin-top:18px; border-radius:12px; padding:12px 14px; border:1.5px solid transparent;}
   .sent-fb.good{background:var(--ok-bg); border-color:#c2d8bf; color:var(--ok);}
   .sent-fb.bad{background:var(--bad-bg); border-color:#e3c2bd; color:var(--bad);}
+  .sent-fb.syn{background:#f7efdc; border-color:#e6d3a3; color:#7a5a12;}
+  .sent-fb.syn .sent-in{border-color:#e6d3a3;}
   .sent-fb .fbh{font-weight:700; font-size:15px;}
   .sent-full{margin-top:6px; font-size:16px; color:var(--ink); line-height:1.5;}
   .sent-full b{font-size:19px; font-family:Charter,Georgia,serif;}
   .sent-typed{margin-top:4px; font-size:13px; color:var(--ink-soft);}
   .retype-lbl{margin-top:10px; font-size:13px; font-weight:600;}
   .sent-fb .sent-in{width:100%; margin-top:6px; border-color:#e3c2bd;}
+  .sent-fb .sent-in.good{border-color:#c2d8bf; background:var(--ok-bg); color:var(--ok);}
   .sent-lemma{margin-top:12px; padding-top:10px; border-top:1px dashed var(--line); color:var(--ink); font-size:14px; display:flex; flex-wrap:wrap; gap:4px 12px; align-items:baseline;}
   .sent-lemma .lw{font-family:Charter,Georgia,serif; font-weight:700; font-size:16px;}
   .sent-lemma .lw .art{font-weight:400;}
@@ -684,7 +687,7 @@ const Sent = (function(){
         add(e, [ti]);
       }
     }
-    return { sents, items, entries };
+    return { sents, items, entries, index };
   }
 
   /* ---------- grading ---------- */
@@ -706,11 +709,47 @@ const Sent = (function(){
     }
     const gt = translit(gl.join(" ")).split(" ");
     if (same(gt, exp)) return { ok: true, notes: ["umlaut"] };
+    const ss = x => x.replace(/ß/g, "ss");
+    if (same(gl.map(ss), exp.map(ss)) && exp.some(x => x.indexOf("ß") >= 0)) return { ok: true, notes: ["sharp-s"] };
     const close = fold(gl.join(" ")) === fold(exp.join(" "));
     return { ok: false, why: close ? "spelling" : "wrong" };
   }
 
-  return { build, analyze, tokenize, grade, lemmaAlts, plurals, verbForms, adjForms, looksVerb, fold, umlaut, ARTS };
+  /* A wrong answer that is a valid form of *another* headword with an overlapping English gloss,
+     inflected the same way as the expected answer, is a synonym that the English sentence could not
+     rule out (seltsam/merkwürdig, Werbung/Reklame). Returns that entry's word index, else -1. */
+  const GLOSS_STOP = new Set("the a an to of in on at for with and or be is are sth sb someone something oneself one ones not from into out off up down have has do".split(" "));
+  function glossWords(g){ return new Set(g.toLowerCase().replace(/\(.*?\)/g, " ").split(/[^a-z]+/).filter(w => w.length >= 3 && !GLOSS_STOP.has(w))); }
+  function synonymOf(bank, WORDS, typed, targetWi, expected){
+    let got = normAns(typed); if (!got) return -1;
+    let gl = got.toLowerCase().split(" ");
+    const exp = normAns(expected).toLowerCase().split(" ");
+    if (gl.length === 2 && exp.length === 1 && ARTS.has(gl[0])) gl = gl.slice(1);      // optional article typed
+    if (gl.length !== exp.length) return -1;
+    const gt = gl.join(" "), et = exp[exp.length - 1];
+    const target = bank.entries[targetWi], tr = WORDS[targetWi];
+    const tg = glossWords(tr[4]);
+    const suffixOf = (form, e) => { for (const a of lemmaAlts(e.r[0])){ const b = a.text.toLowerCase(); if (form.startsWith(b)) return form.slice(b.length); } return null; };
+    const isPl = (form, e) => plurals(lemmaAlts(e.r[0])[0].text, e.r[2]).some(pl => pl.toLowerCase() === form);
+    const hits = bank.index.get(gt) || [];
+    for (const h of hits){
+      const e = h.e; if (e.wi === targetWi || h.sep) continue;
+      const r = e.r;
+      const g = glossWords(r[4]);
+      let overlap = false; for (const w of tg) if (g.has(w)) overlap = true;
+      if (!overlap) continue;
+      if (e.noun !== target.noun) continue;
+      if (e.noun){ if (isPl(gt, e) !== isPl(et, target)) continue; }
+      else if (!e.verb && !target.verb){                 // adjectives/adverbs: same declension ending
+        const s1 = suffixOf(gt, e), s2 = suffixOf(et, target);
+        if (s1 == null || s2 == null || s1 !== s2) continue;
+      }
+      return e.wi;
+    }
+    return -1;
+  }
+
+  return { build, analyze, tokenize, grade, synonymOf, lemmaAlts, plurals, verbForms, adjForms, looksVerb, fold, umlaut, ARTS };
 })();
 
 "use strict";
@@ -1448,7 +1487,22 @@ function spersist(immediate){
 let BANK = null;
 function bank(){ if (!BANK) BANK = Sent.build(WORDS, SUPP); return BANK; }
 const FLUENT_CTX = 3;
-const itemId = it => it.sid + ":" + it.spans[0][0];
+function shash(str){ let h = 5381; for (let i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
+// id = hash of sentence text + gap offset: stays valid when sentences are added to or removed from the bank
+const itemId = it => shash(bank().sents[it.sid].de) + ":" + it.spans[0][0];
+function migrateSentIds(){   // records written by the first version used "sentenceIndex:offset"
+  let touched = false;
+  for (const k in SS.prog){
+    const p = SS.prog[k];
+    const conv = id => { const m = /^(\d+):(\d+)$/.exec(id); if (!m) return id; const s = bank().sents[+m[1]]; return s ? shash(s.de) + ":" + m[2] : null; };
+    if (p.ok && Object.keys(p.ok).some(id => /^\d+:\d+$/.test(id))){
+      const ok = {}; for (const id in p.ok){ const nid = conv(id); if (nid) ok[nid] = p.ok[id]; }
+      p.ok = ok; touched = true;
+    }
+    if (p.last && /^\d+:\d+$/.test(p.last)){ p.last = conv(p.last); touched = true; }
+  }
+  if (touched) spersist(true);
+}
 
 function sentEligible(r){
   const p = S.prog[keyOf(r)];
@@ -1522,7 +1576,7 @@ function shuffle(a){ for (let i = a.length - 1; i > 0; i--){ const j = Math.floo
 function makeEntry(wi, idx, excludeId){
   const it = pickItem(wi, excludeId);
   const kind = chooseKind(it, idx);
-  const e = { wi, it, kind, stage: stageOf(wi, it) };
+  const e = { wi, it, kind, stage: stageOf(wi, it), ctxN: Math.min(bank().items[wi].length, distinctOk(SS.prog[keyOf(WORDS[wi])]) + 1) };
   if (kind === "build"){
     const chunks = buildChunks(bank().sents[it.sid]);
     let pool = shuffle(chunks.slice());
@@ -1553,7 +1607,9 @@ function startSent(){
 function curEntry(){ return ssession.queue[ssession.i]; }
 function expectedFor(e){ return e.stage === 3 && e.it.art ? e.it.artAns : e.it.ans; }
 
-function sentRecord(e, correct){
+function sentRecord(e, res){
+  // outcome: ok (box up) · hinted / synonym (box unchanged, back in 10 min, re-queued) · wrong (box reset, re-queued)
+  const outcome = res.ok ? (ssession.hintUsed ? "hinted" : "ok") : (res.why === "synonym" ? "synonym" : "wrong");
   const r = WORDS[e.wi], k = keyOf(r);
   let p = SS.prog[k];
   if (!p) p = SS.prog[k] = { b: 0, d: 0, n: 0, w: 0, ok: {}, last: null };
@@ -1565,21 +1621,21 @@ function sentRecord(e, correct){
   const dk = dayKey(Date.now());
   const dd = SS.days[dk] || (SS.days[dk] = { r: 0, ok: 0 });
   dd.r++;
-  const hinted = ssession.hintUsed && correct;
-  if (correct) dd.ok++;
-  if (hinted){
-    p.d = Date.now() + WRONG_DELAY;                       // box unchanged: prove it without the hint
-  } else if (correct){
+  if (outcome === "ok"){
+    dd.ok++;
     p.b = Math.min(p.b + 1, 5);
     p.d = Date.now() + INTERVALS[p.b];
     p.ok[id] = (p.ok[id] || 0) + 1;
-  } else {
+    ssession.ok++;
+  } else if (outcome === "wrong"){
     p.b = 0;
     p.d = Date.now() + WRONG_DELAY;
     p.w++;
+    ssession.bad++;
+  } else {
+    p.d = Date.now() + WRONG_DELAY;                       // hinted / synonym: prove it later without help
   }
-  if (correct && !hinted) ssession.ok++; else if (!correct) ssession.bad++;
-  if (!correct || hinted){
+  if (outcome !== "ok"){
     const pos = Math.min(ssession.i + 5, ssession.queue.length);
     ssession.queue.splice(pos, 0, makeEntry(e.wi, pos, id));
     ssession.total++;
@@ -1601,10 +1657,14 @@ function sentCheck(){
     const article = e.stage !== 3 && e.it.art ? s.de.slice(e.it.art[0], e.it.art[1]) : null;
     ssession.result = Sent.grade(val, expectedFor(e), { noun: WORDS[e.wi][1] !== "", article });
     ssession.result.typed = val;
+    if (!ssession.result.ok && ssession.result.why === "wrong"){
+      const alt = Sent.synonymOf(bank(), WORDS, val, e.wi, expectedFor(e));
+      if (alt >= 0){ ssession.result.why = "synonym"; ssession.result.alt = alt; }
+    }
   }
   ssession.phase = "fb";
   ssession.retyped = ssession.result.ok || e.kind === "build";   // recall errors must be retyped before Next
-  sentRecord(e, ssession.result.ok);
+  sentRecord(e, ssession.result);
   render();
 }
 function sentNext(){
@@ -1676,11 +1736,11 @@ function renderSentHome(root){
   root.appendChild(el("div", {class:"hint"}, hint));
   root.appendChild(el("div", {class:"sent-legend"},
     "A word counts as fluent once it reaches box 5 here and you’ve produced it correctly in at least " + FLUENT_CTX + " different sentences (or every sentence available for it). " +
-    "Difficulty rises with the box: first a meaning hint, then only the English sentence, then for nouns the article or determiner too."));
+    "Difficulty rises with the box: first a meaning hint, then only the English sentence, then for nouns the article or determiner too. " +
+    "A synonym that also fits the sentence counts neither right nor wrong — the word simply comes back later."));
 }
 
 /* ---------- rendering: exercise ---------- */
-function gapWidth(ans){ return Math.max(5, Math.min(18, ans.length + 1)) + "ch"; }
 function renderGapped(e, reveal){
   const s = bank().sents[e.it.sid];
   const de = s.de;
@@ -1694,7 +1754,7 @@ function renderGapped(e, reveal){
     if (a > pos) wrap.appendChild(document.createTextNode(de.slice(pos, a)));
     if (reveal) wrap.appendChild(el("mark", {class:"sent-ans"}, de.slice(a, b)));
     else {
-      const gap = el("span", {class:"gap", style:"min-width:" + gapWidth(de.slice(a, b))});
+      const gap = el("span", {class:"gap"});
       if (i === 0 && e.stage === 1) gap.appendChild(el("i", null, glossOf(WORDS[e.wi])));
       wrap.appendChild(gap);
     }
@@ -1739,7 +1799,7 @@ function renderSent(root){
   const card = el("div", {class:"scard"});
   const kindTxt = e.kind === "build" ? "Build" : (e.stage === 1 ? "Recall · hint" : e.stage === 2 ? "Recall" : "Recall · article");
   card.appendChild(el("div", {class:"scard-top"},
-    el("span", {class:"tag"}, kindTxt + " · " + Math.min(nItems, distinctOk(p) + 1) + "/" + nItems),
+    el("span", {class:"tag"}, kindTxt + " · " + e.ctxN + "/" + nItems),
     el("span", {class:"lvltag"}, LV[r[5]] + " · box " + (p ? p.b : 0))));
   card.appendChild(el("div", {class:"sent-en"}, s.en || "(no translation)"));
 
@@ -1748,13 +1808,12 @@ function renderSent(root){
     card.appendChild(renderGapped(e, fb));
     if (!fb){
       const inp = el("input", {id:"sent-in", class:"sent-in", type:"text", lang:"de", placeholder: e.stage === 3 ? "article/determiner + noun" : "German word",
-        autocapitalize:"off", autocorrect:"off", autocomplete:"off", spellcheck:"false",
+        autocapitalize:"off", autocorrect:"off", autocomplete:"off", spellcheck:"false", enterkeyhint:"go",
         onkeydown: ev => { if (ev.key === "Enter"){ ev.preventDefault(); sentCheck(); } }});
       card.appendChild(el("div", {class:"sent-row"}, inp, el("button", {class:"btn sent-check", onclick: sentCheck}, "Check")));
       card.appendChild(el("div", {class:"sent-tools"},
         el("button", {class:"linkbtn", onclick: sentHint}, "First letter"),
         el("span", {id:"sent-hint-txt", class:"sent-hint"})));
-      setTimeout(() => { const x = $("#sent-in"); if (x) x.focus(); }, 30);
     }
   } else {
     // build mode
@@ -1775,29 +1834,39 @@ function renderSent(root){
 
   if (fb){
     const res = ssession.result;
-    const box = el("div", {class:"sent-fb " + (res.ok ? "good" : "bad")});
+    const box = el("div", {class:"sent-fb " + (res.ok ? "good" : res.why === "synonym" ? "syn" : "bad")});
     if (res.ok){
       let msg = "Richtig!";
       if (ssession.hintUsed) msg = "Right — but with a hint, so it comes back later.";
       else if (res.notes.includes("cap")) msg = "Right. Remember: nouns are capitalised — " + expectedFor(e);
       else if (res.notes.includes("umlaut")) msg = "Right. Written with umlaut: " + expectedFor(e);
+      else if (res.notes.includes("sharp-s")) msg = "Right. Written with ß: " + expectedFor(e);
       box.appendChild(el("div", {class:"fbh"}, msg));
       if (e.kind === "build") box.appendChild(el("div", {class:"sent-full"}, s.de));
     } else {
       const exp = e.kind === "build" ? s.de : expectedFor(e);
-      box.appendChild(el("div", {class:"fbh"}, res.why === "spelling" ? "Almost — check the spelling." : "Not quite."));
+      box.appendChild(el("div", {class:"fbh"},
+        res.why === "spelling" ? "Almost — check the spelling." :
+        res.why === "synonym" ? "“" + res.typed.trim() + "” fits too — this sentence practises:" : "Not quite."));
       box.appendChild(el("div", {class:"sent-full"}, e.kind === "build" ? exp : null, e.kind === "build" ? null : el("b", null, exp)));
       if (res.typed) box.appendChild(el("div", {class:"sent-typed"}, "You wrote: " + res.typed));
       if (e.kind === "recall"){
-        box.appendChild(el("div", {class:"retype-lbl"}, ssession.retyped ? "Correct — go on." : "Type the correct answer once to continue"));
+        const lbl = el("div", {class:"retype-lbl"}, ssession.retyped ? "Correct — go on." : "Type the correct answer once to continue");
+        box.appendChild(lbl);
         if (!ssession.retyped){
+          // validated live on every keystroke (mobile keyboards don't reliably send Enter); Enter then advances
+          const markOk = inp => {
+            ssession.retyped = true;
+            inp.classList.add("good"); lbl.textContent = "Correct — go on.";
+            const nb = $(".sent-next"); if (nb) nb.disabled = false;
+          };
           const rt = el("input", {id:"sent-rt", class:"sent-in", type:"text", lang:"de", placeholder: exp,
-            autocapitalize:"off", autocorrect:"off", autocomplete:"off", spellcheck:"false",
+            autocapitalize:"off", autocorrect:"off", autocomplete:"off", spellcheck:"false", enterkeyhint:"go",
+            oninput: ev => { if (!ssession.retyped && Sent.grade(ev.target.value, exp, {}).ok) markOk(ev.target); },
             onkeydown: ev => { if (ev.key !== "Enter") return; ev.preventDefault();
-              const g = Sent.grade(ev.target.value, exp, {});
-              if (g.ok){ ssession.retyped = true; render(); } else { ev.target.classList.add("shake"); setTimeout(() => ev.target.classList.remove("shake"), 400); } }});
+              if (ssession.retyped || Sent.grade(ev.target.value, exp, {}).ok){ if (!ssession.retyped) markOk(ev.target); sentNext(); }
+              else { ev.target.classList.add("shake"); setTimeout(() => ev.target.classList.remove("shake"), 400); } }});
           box.appendChild(rt);
-          setTimeout(() => { const x = $("#sent-rt"); if (x) x.focus(); }, 30);
         }
       }
     }
@@ -1806,9 +1875,11 @@ function renderSent(root){
     const nb = el("button", {class:"start sent-next", onclick: sentNext}, ssession.i + 1 >= ssession.queue.length ? "Finish" : "Next");
     if (!ssession.retyped) nb.disabled = true;
     card.appendChild(nb);
-    if (ssession.retyped) setTimeout(() => { const x = $(".sent-next"); if (x) x.focus(); }, 30);
   }
   root.appendChild(card);
+  // focus synchronously (we are still inside the tap/click handler, which is what iOS needs to open the keyboard)
+  const focusEl = fb ? (ssession.retyped ? $(".sent-next") : $("#sent-rt")) : $("#sent-in");
+  if (focusEl) focusEl.focus();
 }
 
 /* ---------- stats panel for the Stats tab ---------- */
@@ -1830,6 +1901,7 @@ function sentStatsPanel(){
   return panel;
 }
 
+let sbooted = false;
 /* ============ render root ============ */
 function render(){
   const root = $("#main");
@@ -1862,7 +1934,9 @@ document.addEventListener("keydown", e => {
   await SStore.detect();
   const saved = await Store.load();
   const ssaved = await SStore.load();
-  if (ssaved && ssaved.prog){ SS.prog = ssaved.prog; if (ssaved.set) SS.set = Object.assign(SS.set, ssaved.set); if (ssaved.days) SS.days = ssaved.days; }
+  if (ssaved && ssaved.prog){ SS.prog = ssaved.prog; if (ssaved.set) SS.set = Object.assign(SS.set, ssaved.set); if (ssaved.days) SS.days = ssaved.days; migrateSentIds(); }
+  sbooted = true;
+  document.addEventListener("visibilitychange", () => { if (!document.hidden || !sbooted) return; if (saveTimer) persist(true); if (ssaveTimer) spersist(true); });   // flush pending debounced saves only
   if (saved && saved.prog){ S.prog = saved.prog; if (saved.set) S.set = Object.assign(S.set, saved.set); if (saved.days) S.days = saved.days; }
   $("#tab-study").addEventListener("click", () => { setTab("study"); });
   $("#tab-sent").addEventListener("click", () => { setTab("sent"); });
