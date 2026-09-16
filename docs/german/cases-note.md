@@ -24,7 +24,7 @@ These are all spatial prepositions that take Dativ or Akkusativ depending on wha
 
 ### 1.2. Does the verb fix the case?
 * **Nominative verb**s: sein, werden, bleiben. These link the subject to a predicate noun that renames it. e.g., Er is ein guter Arzt, Er wird ein guter Arzt, Er bleibt mein bester Freund.
-* **Dativ verbs**: helfen, danken, gefallen, gehören, passen, schmecken, antworten, folgen, gratulieren, zuhören, vertrauen, begegnen, fehlen, wehtun, passieren, glauben. These are one-object verbswithout an akkusativ object and the receiver is in dativ. e.g., Ich helfe dir, Das Buch gehört meinem Bruder, Es geht mir gut, Das tut mir leid.
+* **Dativ verbs**: helfen, danken, gefallen, gehören, passen, schmecken, antworten, folgen, gratulieren, zuhören, vertrauen, begegnen, fehlen, wehtun, passieren, glauben. These are one-object verbs without an akkusativ object and the receiver is in dativ. e.g., Ich helfe dir, Das Buch gehört meinem Bruder, Es geht mir gut, Das tut mir leid.
 * **Dativ + Akkusativ verbs**: geben, schenken, zeigen, erklären, empfehlen, bringen, schnicken, leihen, erzählen, anbeieten. The person receiving the thing is in Dativ and the thing is in Akkusativ. e.g. Ich schenke meiner Mutter (Dativ) einen Ring (Akkusativ).
 
 ### 1.3. Is it a time expression?
@@ -116,14 +116,14 @@ e.g.,
 | Genitiv   | -en      | -er     | -en     | -er    |
 
 ### 2.6. Relative pronouns change based on case and gender
-Relative pronouns are identical to the definite articles. (this is a simplification for b1)
+Relative pronouns are identical to the definite articles. (This is a simplification for B1)
 
 Gender and number come from the **antecedent**. Case comes from the **role inside the relative clause**. They are decided separately, e.g:
-* ~Der Mann, **der** dort steht~ — **masc.** from *Mann*, **nom.** because it’s the subject of *steht*.
-* ~Der Mann, **den** ich kenne~ — **masc.** from *Mann*, **akk.** because it’s the objectof *kenne*.
-* ~Der Mann, **dem** ich helfe~ — **masc.** from *Mann*, **dat.** because *hilfen* takes dative.
+* Der Mann, **der** dort steht — **masc.** from *Mann*, **nom.** because it’s the subject of *steht*.
+* Der Mann, **den** ich kenne — **masc.** from *Mann*, **akk.** because it’s the objectof *kenne*.
+* Der Mann, **dem** ich helfe — **masc.** from *Mann*, **dat.** because *hilfen* takes dative.
 
-German doesn’t have an equivalent general purpose relative “that” as in English. In English you say “the man that I know”, in german you say “Der mann, den ich kenne”. The relative pronoun is mandatory and must be inflected.
+German doesn’t have an equivalent general-purpose relative “that” as in English. In English you say “the man that I know”, in german you say “Der mann, den ich kenne”. The relative pronoun is mandatory and must be inflected.
 
 Relative clauses are subordinate, so the conjugated verb moves to the end, and the clause is always set off by a comma, e.g., Das Buch, das ich gestern gekauft **habe**, ist gut.
 
