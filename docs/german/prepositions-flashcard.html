@@ -1,0 +1,884 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Präpositionen Flashcards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap">
+<style>
+/* Layout: one narrow study column like a stack of Karteikarten. Deck shelf → single card → rating bar. Each case owns a color used on chips, articles and meters. */
+:root{
+  --bg:#ECEFF3; --surface:#FFFFFF; --sunken:#E1E6ED; --ink:#16202C; --muted:#5A6576; --line:#D3DAE3;
+  --redline:#E3A3A0; --shadow:rgba(22,32,44,.13);
+  --akk:#2C56CC; --dat:#AE5A0C; --gen:#7A3E9F; --wech:#0D7768;
+  --good:#1D8048; --bad:#BE3A31;
+  --f-display:"Literata", Georgia, "Times New Roman", serif;
+  --f-ui:"Instrument Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10141A; --surface:#1A2029; --sunken:#232B36; --ink:#E7EBF1; --muted:#97A1B0; --line:#2D3642;
+    --redline:#7C3D3B; --shadow:rgba(0,0,0,.45);
+    --akk:#8AA5FF; --dat:#EBA25C; --gen:#CB95EA; --wech:#4FC6B3; --good:#58C989; --bad:#F27E74;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#10141A; --surface:#1A2029; --sunken:#232B36; --ink:#E7EBF1; --muted:#97A1B0; --line:#2D3642;
+  --redline:#7C3D3B; --shadow:rgba(0,0,0,.45);
+  --akk:#8AA5FF; --dat:#EBA25C; --gen:#CB95EA; --wech:#4FC6B3; --good:#58C989; --bad:#F27E74;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:16px;line-height:1.5;padding-inline:16px;padding-block:0 56px}
+.wrap{max-width:560px;margin:0 auto;display:grid;gap:18px}
+.view{display:grid;gap:18px;min-width:0}
+.card:focus{outline:none}
+.card:focus-visible{outline:2px solid var(--akk);outline-offset:3px}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--akk);outline-offset:2px}
+
+/* Header */
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:20px 0}
+.brand{margin:0;font-family:var(--f-display);font-weight:700;font-size:1.45rem;line-height:1.1;letter-spacing:-.01em}
+.brand small{display:block;margin-bottom:4px;font-family:var(--f-ui);font-size:.7rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tabs{display:flex;gap:2px;background:var(--sunken);padding:3px;border-radius:999px}
+.tabs button{border:0;background:transparent;color:var(--muted);font-weight:600;font-size:.85rem;padding:6px 13px;border-radius:999px}
+.tabs button[aria-current="page"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px var(--shadow)}
+.saved{font-size:.75rem;color:var(--muted);min-height:1.2em;margin-top:-10px;transition:opacity .4s}
+.saved.warn{color:var(--bad)}
+
+/* Generic */
+h2.sec{margin:0;font-family:var(--f-display);font-size:1.15rem;font-weight:600}
+.lead{margin:0;color:var(--muted);max-width:60ch}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;border:1px solid var(--line);background:var(--surface);padding:11px 16px;font-weight:600;min-height:44px}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.btn.primary:hover{opacity:.9}
+.btn.danger{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 45%,transparent)}
+.btn.small{min-height:36px;padding:7px 12px;font-size:.88rem;border-radius:10px}
+.btn[disabled]{opacity:.45;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.label{font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* Case chips & colors */
+.c-akk{--c:var(--akk)} .c-dat{--c:var(--dat)} .c-gen{--c:var(--gen)} .c-wech{--c:var(--wech)}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;padding:3px 10px;border-radius:999px;color:var(--c,var(--muted));background:color-mix(in srgb,var(--c,var(--muted)) 13%,transparent);border:1px solid color-mix(in srgb,var(--c,var(--muted)) 32%,transparent);white-space:nowrap}
+.hl{font-weight:700;color:var(--c,var(--ink))}
+
+/* Home */
+.overview{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.overview div{background:var(--surface);padding:12px 14px;min-width:0}
+.overview b{display:block;font-family:var(--f-display);font-size:1.6rem;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums}
+.overview span{font-size:.78rem;color:var(--muted)}
+.decks{display:grid;gap:8px}
+.deck{position:relative;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer}
+.deck input{position:absolute;opacity:0;pointer-events:none}
+.deck.on{border-color:var(--ink)}
+.deck:has(input:focus-visible){outline:2px solid var(--akk);outline-offset:2px}
+.deck-main{display:grid;gap:5px;min-width:0}
+.deck-name{font-weight:600}
+.deck-sub{font-size:.82rem;color:var(--muted);font-family:var(--f-display);font-style:italic;overflow-wrap:anywhere}
+.deck-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:.76rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.deck-meta .due{color:var(--ink);font-weight:600}
+.meter{display:flex;height:5px;border-radius:5px;background:var(--sunken);overflow:hidden}
+.meter i{display:block;height:100%}
+.meter .mm{background:var(--good)} .meter .ml{background:color-mix(in srgb,var(--good) 40%,var(--sunken))}
+.tick{width:24px;height:24px;border-radius:7px;border:1.5px solid var(--line);display:grid;place-items:center;color:var(--bg)}
+.deck.on .tick{background:var(--ink);border-color:var(--ink)}
+.tick svg{width:14px;height:14px;opacity:0}
+.deck.on .tick svg{opacity:1}
+.opts{display:grid;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px}
+.seg{display:flex;flex-wrap:wrap;gap:2px;background:var(--sunken);padding:3px;border-radius:10px;width:max-content;max-width:100%}
+.seg button{border:0;background:transparent;padding:6px 12px;border-radius:8px;font-weight:600;font-size:.85rem;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px var(--shadow)}
+.opt{display:grid;gap:6px}
+.opt p{margin:0;font-size:.8rem;color:var(--muted)}
+.start{width:100%;min-height:52px;font-size:1.02rem;border-radius:14px}
+.key{display:grid;gap:8px;font-size:.86rem}
+.key div{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.key em{font-family:var(--f-display);color:var(--muted)}
+
+/* Study */
+.sbar{display:grid;gap:8px}
+.sbar .row{justify-content:space-between}
+.sbar .count{font-variant-numeric:tabular-nums;font-size:.85rem;color:var(--muted)}
+.track{height:4px;background:var(--sunken);border-radius:4px;overflow:hidden}
+.track i{display:block;height:100%;background:var(--ink);transition:width .3s}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:0 1px 2px var(--shadow),0 16px 36px -22px var(--shadow);padding:16px 20px 22px;display:grid;gap:4px}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-bottom:9px;border-bottom:2px solid var(--redline);font-size:.75rem;color:var(--muted)}
+.card-head .deck-tag{font-weight:600;letter-spacing:.07em;text-transform:uppercase;font-size:.68rem}
+.pips{display:flex;gap:4px;align-items:center}
+.pips i{width:7px;height:7px;border-radius:50%;background:var(--sunken);border:1px solid var(--line)}
+.pips i.on{background:var(--good);border-color:var(--good)}
+.ask{margin:18px 0 0;font-size:.8rem;color:var(--muted);font-weight:500}
+.front{margin:4px 0 0;font-family:var(--f-display);font-weight:600;font-size:clamp(2rem,9vw,2.8rem);line-height:1.15;text-wrap:balance;overflow-wrap:anywhere}
+.front.mid{font-size:clamp(1.5rem,6.5vw,2rem)}
+.front.long{font-size:clamp(1.2rem,5vw,1.5rem);line-height:1.3}
+.hint{margin:4px 0 0;color:var(--muted);font-family:var(--f-display);font-style:italic}
+.caseq{margin-top:18px;display:grid;gap:8px}
+.caseq .opts-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.cbtn{border:1.5px solid color-mix(in srgb,var(--c) 40%,transparent);background:color-mix(in srgb,var(--c) 8%,var(--surface));color:var(--c);border-radius:12px;min-height:46px;font-weight:700;padding:8px}
+.cbtn:hover:not([disabled]){background:color-mix(in srgb,var(--c) 16%,var(--surface))}
+.cbtn[disabled]{cursor:default;opacity:.4}
+.cbtn.right{opacity:1;background:var(--c);color:var(--surface);border-color:var(--c)}
+.cbtn.wrong{opacity:1;border-style:dashed;text-decoration:line-through}
+.reveal{margin-top:18px;width:100%}
+.answer{margin-top:18px;padding-top:16px;border-top:1px dashed var(--line);display:grid;gap:12px;animation:rise .25s ease-out}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.verdict{font-size:.85rem;font-weight:600}
+.verdict.ok{color:var(--good)} .verdict.no{color:var(--bad)}
+.ans-main{margin:0;font-family:var(--f-display);font-size:1.75rem;font-weight:600;line-height:1.2;overflow-wrap:anywhere}
+.ans-main.long{font-size:1.2rem;line-height:1.35}
+.ans-sub{margin:0;color:var(--muted);font-family:var(--f-display);font-style:italic}
+.ex{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.ex li{font-family:var(--f-display);font-size:1.05rem;line-height:1.45;padding-left:12px;border-left:2px solid var(--line)}
+.ex li .q{font-family:var(--f-ui);font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--c);margin-right:6px}
+.note{margin:0;font-size:.88rem;color:var(--muted);background:var(--sunken);border-radius:10px;padding:9px 12px}
+.rate{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rate .btn{min-height:54px;font-size:1rem}
+.rate .again{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 40%,transparent)}
+.rate .again.suggest{background:color-mix(in srgb,var(--bad) 10%,var(--surface));border-color:var(--bad)}
+.rate .good{background:var(--good);border-color:var(--good);color:var(--surface)}
+.kbd{font-size:.72rem;opacity:.7;font-weight:500}
+.done{text-align:left;display:grid;gap:14px}
+.done h2{margin:0;font-family:var(--f-display);font-size:1.6rem}
+
+/* Cards list */
+.filters{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.field{display:grid;gap:5px;min-width:0}
+.field label{font-size:.78rem;font-weight:600;color:var(--muted)}
+.field input,.field select,.field textarea{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-height:44px}
+.field textarea{min-height:70px;resize:vertical}
+.field .help{font-size:.74rem;color:var(--muted)}
+.list{display:grid;gap:6px}
+.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;width:100%}
+.item:hover{border-color:var(--muted)}
+.item .f{font-family:var(--f-display);font-weight:600;overflow-wrap:anywhere}
+.item .b{grid-column:1;font-size:.85rem;color:var(--muted);overflow-wrap:anywhere}
+.item .r{grid-row:1 / span 2;grid-column:2;display:grid;gap:6px;justify-items:end}
+.flag{font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.empty{color:var(--muted);font-size:.9rem;padding:12px 0}
+
+/* Editor sheet */
+.scrim{position:fixed;inset:0;background:color-mix(in srgb,var(--ink) 35%,transparent);display:grid;align-items:end;justify-items:center;z-index:10;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+.sheet{background:var(--surface);border:1px solid var(--line);border-radius:20px;width:100%;max-width:560px;max-height:calc(100% - 24px);overflow:auto;padding:18px;display:grid;gap:12px;animation:rise .2s ease-out}
+.sheet h3{margin:0;font-family:var(--f-display);font-size:1.2rem}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.confirm{display:grid;gap:10px;background:color-mix(in srgb,var(--bad) 8%,var(--surface));border:1px solid color-mix(in srgb,var(--bad) 35%,transparent);border-radius:12px;padding:12px}
+.confirm p{margin:0;font-size:.9rem}
+
+/* Settings */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:grid;gap:10px}
+.panel h3{margin:0;font-size:1rem}
+.panel p{margin:0;font-size:.88rem;color:var(--muted)}
+.status{font-size:.82rem;font-weight:600;min-height:1.2em}
+.status.ok{color:var(--good)} .status.no{color:var(--bad)}
+
+@media (max-width:420px){
+  .grid2,.filters{grid-template-columns:1fr}
+  .overview b{font-size:1.35rem}
+}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1 class="brand"><small>Karteikarten</small>Präpositionen</h1>
+    <nav class="tabs" aria-label="Sections">
+      <button type="button" data-view="home" aria-current="page">Study</button>
+      <button type="button" data-view="cards">Cards</button>
+      <button type="button" data-view="settings">Settings</button>
+    </nav>
+  </header>
+  <div class="saved" id="saved" aria-live="polite"></div>
+
+  <!-- HOME -->
+  <main id="v-home" class="view">
+    <p class="lead">Built from your prepositions note. Pick the decks you want, then work through the cards. Progress and your edits stay in this browser.</p>
+    <div class="overview" id="overview"></div>
+    <div id="resume" hidden><button type="button" class="btn start" id="resume-btn">Resume session</button></div>
+    <div class="decks" id="deck-list"></div>
+    <div class="opts">
+      <div class="opt">
+        <span class="label">Cards per session</span>
+        <div class="seg" id="size-seg">
+          <button type="button" data-size="10">10</button>
+          <button type="button" data-size="20">20</button>
+          <button type="button" data-size="40">40</button>
+          <button type="button" data-size="0">All</button>
+        </div>
+      </div>
+      <div class="opt">
+        <span class="label">Direction</span>
+        <div class="seg" id="dir-seg">
+          <button type="button" data-dir="de">German first</button>
+          <button type="button" data-dir="rev">Reversed</button>
+        </div>
+        <p id="dir-help">Reversed shows the meaning or use, and you produce the German. Applies to decks marked ⇄.</p>
+      </div>
+    </div>
+    <button type="button" class="btn primary start" id="start-btn">Start</button>
+    <div class="opts key">
+      <span class="label">Case key</span>
+      <div><span class="chip c-akk">Akkusativ</span><em>durch · für · gegen · ohne · um · bis · entlang</em></div>
+      <div><span class="chip c-dat">Dativ</span><em>aus · bei · mit · nach · seit · von · zu · ab · gegenüber</em></div>
+      <div><span class="chip c-gen">Genitiv</span><em>wegen · während · trotz · (an)statt</em></div>
+      <div><span class="chip c-wech">Wechsel</span><em>an · auf · hinter · in · neben · über · unter · vor · zwischen — Wo? Dativ, Wohin? Akkusativ</em></div>
+    </div>
+  </main>
+
+  <!-- STUDY -->
+  <main id="v-study" class="view" hidden></main>
+
+  <!-- CARDS -->
+  <main id="v-cards" class="view" hidden>
+    <div class="row" style="justify-content:space-between">
+      <h2 class="sec">All cards</h2>
+      <button type="button" class="btn small" id="add-btn">Add card</button>
+    </div>
+    <div class="filters">
+      <div class="field"><label for="cards-deck">Deck</label><select id="cards-deck"></select></div>
+      <div class="field"><label for="cards-q">Search</label><input id="cards-q" type="search" placeholder="e.g. warten, Dativ"></div>
+    </div>
+    <div class="list" id="cards-list"></div>
+  </main>
+
+  <!-- SETTINGS -->
+  <main id="v-settings" class="view" hidden>
+    <h2 class="sec">Settings</h2>
+    <section class="panel">
+      <h3>Saved on this device</h3>
+      <p id="storage-line">Progress, edits and new cards are saved in this browser's local storage. Other devices and browsers keep their own copy.</p>
+    </section>
+    <section class="panel">
+      <h3>Backup</h3>
+      <p>Copy your progress and edits as text, then paste it here on another device to restore.</p>
+      <div class="row"><button type="button" class="btn small" id="copy-backup">Copy backup</button><span class="status" id="copy-status"></span></div>
+      <div class="field"><label for="restore-text">Paste a backup</label><textarea id="restore-text" spellcheck="false"></textarea></div>
+      <div class="row"><button type="button" class="btn small" id="restore-btn">Restore backup</button><span class="status" id="restore-status"></span></div>
+    </section>
+    <section class="panel">
+      <h3>Cards</h3>
+      <p id="hidden-line"></p>
+      <div class="row">
+        <button type="button" class="btn small" id="unhide-btn">Show hidden cards</button>
+        <button type="button" class="btn small" id="unedit-btn">Undo all edits</button>
+      </div>
+    </section>
+    <section class="panel">
+      <h3>Reset progress</h3>
+      <p>Moves every card back to new. Your edits and added cards stay.</p>
+      <div id="reset-area"><button type="button" class="btn small danger" id="reset-btn">Reset progress</button></div>
+    </section>
+  </main>
+</div>
+
+<div class="scrim" id="editor" hidden></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- Content from the note ---------- */
+const CASES={akk:{label:"Akkusativ"},dat:{label:"Dativ"},gen:{label:"Genitiv"},wech:{label:"Wechsel"}};
+const DECKS=[
+  {id:"core",name:"Prepositions by case",sub:"durch, aus, wegen, auf …",cases:["akk","dat","gen","wech"],rev:true,ask:"What does it mean, and which case?",askRev:"Which preposition?"},
+  {id:"wo",name:"Wo? or Wohin?",sub:"Die Lampe steht in ___ Ecke.",cases:["akk","dat"],rev:false,ask:"Fill the gap. Which case?"},
+  {id:"contr",name:"Contractions",sub:"an dem → am",cases:["akk","dat"],rev:true,ask:"Contract it. Which case?",askRev:"What is the long form?"},
+  {id:"time",name:"Time",sub:"um 7 Uhr, am Montag, seit 2020",cases:["akk","dat"],rev:true,ask:"Which preposition?",askRev:"When do you use it?"},
+  {id:"place",name:"Place",sub:"nach, in, zu, bei, aus, von",cases:["akk","dat"],rev:true,ask:"Which preposition?",askRev:"When do you use it?"},
+  {id:"verbs",name:"Verbs with prepositions",sub:"warten auf, sprechen mit …",cases:["akk","dat"],rev:false,ask:"Which preposition, and which case?"},
+  {id:"tricky",name:"Two prepositions & easily confused",sub:"sich bedanken bei … für …",cases:[],rev:false,ask:"What is the pattern?"},
+  {id:"adj",name:"Adjectives & nouns",sub:"stolz auf, die Angst vor",cases:["akk","dat"],rev:false,ask:"Which preposition, and which case?"},
+  {id:"dawo",name:"da- and wo- words",sub:"darauf · worauf",cases:[],rev:true,ask:"da- and wo- form?",askRev:"Which preposition?"}
+];
+const DECK=Object.fromEntries(DECKS.map(d=>[d.id,d]));
+const G="Spoken German often uses Dativ here (wegen dem Wetter). In the exam, use Genitiv.";
+const W="Wo? (position, no movement) → Dativ · Wohin? (movement to a place) → Akkusativ";
+const T="Time expressions with an / in / vor / zwischen are always Dativ.";
+
+const BASE=[];
+function add(deck,front,hint,back,cs,ex,note){
+  BASE.push({id:deck+"|"+front+"|"+(hint||""),deck,front,hint:hint||"",back,case:cs||"",ex:ex||"",note:note||"",base:true});
+}
+const RAW={
+ core:[
+  ["durch","","through","akk","durch *den* Park"],
+  ["für","","for","akk","für *dich*, für *meinen* Bruder"],
+  ["gegen","","against; around (time)","akk","gegen *die* Wand, gegen 8 Uhr"],
+  ["ohne","","without","akk","ohne *mich*, ohne *einen* Schirm"],
+  ["um","","around; at (clock time)","akk","um *die* Ecke, um 8 Uhr"],
+  ["bis","","until","akk","bis nächsten Montag, bis morgen","When another preposition follows (bis zum, bis in die Nacht), that preposition decides the case."],
+  ["entlang","","along","akk","*die* Straße entlang","After the noun it takes Akkusativ. Placed before the noun it takes Genitiv: entlang des Flusses."],
+  ["aus","","from, out of","dat","aus *der* Schweiz, aus *dem* Haus"],
+  ["bei","","at (a person / company), near","dat","bei *meinem* Bruder, bei Siemens"],
+  ["mit","","with; by (transport)","dat","mit *dem* Auto, mit *meiner* Freundin"],
+  ["nach","","to (places); after","dat","nach Berlin, nach *der* Arbeit"],
+  ["seit","","since; for (still ongoing)","dat","seit *einem* Jahr, seit 2020"],
+  ["von","","from, of","dat","von *meiner* Mutter, vom Chef"],
+  ["zu","","to (people / places)","dat","zum Arzt, zur Arbeit, zu *dir*"],
+  ["ab","","from … on","dat","ab morgen, ab *nächster* Woche","With time expressions without an article, Akkusativ is also accepted: ab nächste Woche."],
+  ["gegenüber","","opposite","dat","gegenüber *dem* Bahnhof, *dem* Bahnhof gegenüber","Before or after a noun, but always after a pronoun: mir gegenüber."],
+  ["wegen","","because of","gen","wegen *des* Wetters",G],
+  ["während","","during","gen","während *des* Essens",G],
+  ["trotz","","despite","gen","trotz *des* Regens",G],
+  ["(an)statt","","instead of","gen","statt *eines* Buches",G],
+  ["an","","at, on (a vertical surface, an edge)","wech","Das Bild hängt an *der* Wand. / Ich hänge das Bild an *die* Wand.",W],
+  ["auf","","on (top of)","wech","Das Buch liegt auf *dem* Tisch. / Ich lege das Buch auf *den* Tisch.",W],
+  ["hinter","","behind","wech","Der Hund schläft hinter *dem* Sofa. / Der Hund läuft hinter *das* Sofa.",W],
+  ["in","","in, into","wech","Die Lampe steht in *der* Ecke. / Ich stelle die Lampe in *die* Ecke.",W],
+  ["neben","","next to, beside","wech","Er sitzt neben *mir*. / Er setzt sich neben *mich*.",W],
+  ["über","","over, above","wech","Die Lampe hängt über *dem* Tisch. / Ich hänge die Lampe über *den* Tisch.",W],
+  ["unter","","under, below","wech","Die Katze liegt unter *dem* Bett. / Die Katze kriecht unter *das* Bett.",W],
+  ["vor","","in front of; before (time)","wech","Das Auto steht vor *dem* Haus. / Ich fahre das Auto vor *das* Haus.",W+" "+T],
+  ["zwischen","","between","wech","Der Stuhl steht zwischen *den* Tischen. / Ich stelle den Stuhl zwischen *die* Tische.",W]
+ ],
+ wo:[
+  ["Die Lampe steht in ___ Ecke.","stehen","in *der* Ecke","dat","","stehen = position (Wo?) → Dativ"],
+  ["Ich stelle die Lampe in ___ Ecke.","stellen","in *die* Ecke","akk","","stellen = movement (Wohin?) → Akkusativ"],
+  ["Der Schlüssel liegt auf ___ Tisch.","liegen","auf *dem* Tisch","dat","","liegen = position (Wo?) → Dativ"],
+  ["Ich lege den Schlüssel auf ___ Tisch.","legen","auf *den* Tisch","akk","","legen = movement (Wohin?) → Akkusativ"],
+  ["Er sitzt auf ___ Sofa.","sitzen","auf *dem* Sofa","dat","","sitzen = position (Wo?) → Dativ"],
+  ["Er setzt sich auf ___ Sofa.","sich setzen","auf *das* Sofa","akk","","sich setzen = movement (Wohin?) → Akkusativ"],
+  ["Das Bild hängt an ___ Wand.","hängen (position)","an *der* Wand","dat","","hängen as a state (Wo?) → Dativ"],
+  ["Ich hänge das Bild an ___ Wand.","hängen (movement)","an *die* Wand","akk","","hängen as an action (Wohin?) → Akkusativ"],
+  ["Der Brief steckt ___ Umschlag.","in + ?","*im* Umschlag","dat","","stecken as a state (Wo?) → Dativ: in dem → im"],
+  ["Ich stecke den Brief in ___ Umschlag.","stecken (movement)","in *den* Umschlag","akk","","stecken as an action (Wohin?) → Akkusativ"],
+  ["Wir treffen uns ___ Montag.","an + ?","*am* Montag","dat","",T],
+  ["Ich habe ___ Mai Urlaub.","in + ?","*im* Mai","dat","",T],
+  ["Wasch dir die Hände vor ___ Essen.","vor + das Essen","vor *dem* Essen","dat","",T]
+ ],
+ contr:[
+  ["an dem","","*am*","dat"],["an das","","*ans*","akk"],["in dem","","*im*","dat"],["in das","","*ins*","akk"],
+  ["auf das","","*aufs*","akk"],["durch das","","*durchs*","akk"],["zu dem","","*zum*","dat"],["zu der","","*zur*","dat"],
+  ["von dem","","*vom*","dat"],["bei dem","","*beim*","dat"],["für das","","*fürs*","akk"],["um das","","*ums*","akk"]
+ ],
+ time:[
+  ["clock time","at 7 o'clock","um","akk","um 7 Uhr, um Mitternacht"],
+  ["days, parts of the day, dates, weekend","on Monday","am (an + Dativ)","dat","am Montag, am Morgen, am 3. Mai, am Wochenende"],
+  ["night","at night","in + Dativ","dat","in der Nacht"],
+  ["months, seasons, years","in July","im (in + Dativ)","dat","im Juli, im Winter, im Jahr 2026"],
+  ["a point in the future","in two weeks","in + Dativ","dat","in zwei Wochen, in einem Jahr"],
+  ["from a past point until now (still ongoing)","for / since","seit + Dativ","dat","Ich wohne seit 2020 in Berlin.","seit takes the present tense. vor = finished, “ago” (past tense)."],
+  ["ago (finished)","three years ago","vor + Dativ","dat","Ich bin vor drei Jahren umgezogen.","vor = finished, past tense. seit = still going on, present tense."],
+  ["before / after","before eating","vor / nach + Dativ","dat","vor dem Essen, nach der Arbeit"],
+  ["starting from (future)","from next week","ab + Dativ","dat","ab nächster Woche, ab 1. Dezember"],
+  ["until","until Friday","bis / bis zu","","bis Freitag, bis nächsten Montag, bis zum 30. November","bis alone takes Akkusativ (bis nächsten Montag). In bis zu, zu decides the case: Dativ (bis zum 30. November)."],
+  ["from … to","9 to 5","von … bis","","von 9 bis 17 Uhr, von Montag bis Freitag"],
+  ["during","during work","während + Genitiv / bei + Dativ","","während der Arbeit, beim Essen"],
+  ["planned duration","for two weeks","für + Akkusativ","akk","für zwei Wochen"],
+  ["between (time)","between 8 and 9","zwischen + Dativ","dat","zwischen 8 und 9 Uhr"],
+  ["approximately (time)","around 10","gegen + Akkusativ","akk","gegen 10 Uhr"],
+  ["holidays","at Christmas","zu / an","","zu Weihnachten, an Ostern"]
+ ],
+ place:[
+  ["countries / cities without article, directions, home","Wohin?","nach","dat","nach Berlin, nach Nigeria, nach links, nach Hause"],
+  ["countries with article, enclosed spaces","Wohin?","in + Akkusativ","akk","in die Schweiz, in die Türkei, ins Kino, in die Stadt"],
+  ["people, events, general destinations","Wohin?","zu + Dativ","dat","zu Anna, zum Arzt, zur Arbeit, zur Party"],
+  ["open places, islands, countryside","Wohin?","auf + Akkusativ","akk","auf den Markt, auf die Insel, aufs Land"],
+  ["water, edges, surfaces","Wohin?","an + Akkusativ","akk","ans Meer, an den See, an die Wand"],
+  ["cities, countries, enclosed spaces","Wo?","in + Dativ","dat","in Berlin, in der Schweiz, im Büro, im Kino"],
+  ["people, companies, work","Wo?","bei + Dativ","dat","bei Anna, beim Arzt, bei Siemens, bei der Arbeit"],
+  ["open places, institutions","Wo?","auf + Dativ","dat","auf dem Markt, auf der Post, auf der Straße"],
+  ["water, edges, surfaces","Wo?","an + Dativ","dat","am Meer, am Bahnhof, am Fenster, an der Ecke"],
+  ["at home","Wo?","zu Hause","","Ich bin zu Hause.","Going home is nach Hause (Wohin?)."],
+  ["countries, cities, enclosed spaces","Woher?","aus + Dativ","dat","aus Nigeria, aus der Küche, aus dem Büro"],
+  ["people, events, open places","Woher?","von + Dativ","dat","von Anna, vom Arzt, von der Arbeit, vom Markt"],
+  ["went there with in / nach — coming back?","Woher?","aus","dat","in die Schweiz → aus der Schweiz, nach Berlin → aus Berlin","in / nach there → aus back. zu / bei / auf / an there → von back."],
+  ["went there with zu / bei / auf / an — coming back?","Woher?","von","dat","zum Arzt → vom Arzt, auf den Markt → vom Markt","in / nach there → aus back. zu / bei / auf / an there → von back."]
+ ],
+ tricky:[
+  ["sich bedanken","person + thing","bei jemandem für etwas","","Ich bedanke mich bei dir für die Hilfe."],
+  ["sich entschuldigen","person + thing","bei jemandem für etwas","","Er entschuldigt sich bei ihr für den Fehler."],
+  ["sich beschweren","person + thing","bei jemandem über etwas","","Wir beschweren uns beim Vermieter über den Lärm."],
+  ["sich bewerben","company + job","bei Firma um Stelle","","Ich bewerbe mich bei Siemens um eine Stelle."],
+  ["sich erkundigen","person + thing","bei jemandem nach etwas","","Ich erkundige mich bei der Bank nach dem Kredit."],
+  ["sich informieren","person + thing","bei jemandem über etwas","","Sie informiert sich beim Arzt über die Behandlung."],
+  ["sprechen / diskutieren","person + topic","mit jemandem über etwas","","Ich spreche mit dem Chef über das Gehalt."],
+  ["sich streiten","person + topic","mit jemandem über etwas","","Er streitet sich mit ihr über Geld."],
+  ["sich freuen auf vs. über","","auf = future · über = now or already happened","","Ich freue mich auf das Wochenende. / Ich freue mich über das Geschenk."],
+  ["denken an · nachdenken über · halten von","","think of (remember) · reflect on · have an opinion about",""],
+  ["sprechen mit vs. über","","mit = the partner · über = the topic",""],
+  ["sich bewerben um vs. bei","","um = the job · bei = the company",""],
+  ["sich interessieren für vs. interessiert sein an","","verb: für + Akkusativ · adjective: an + Dativ",""],
+  ["warten ___","not “für”","warten auf","","Ich warte auf den Bus.","Never “warten für”."],
+  ["Angst haben ___","not “von”","Angst haben vor","","Ich habe Angst vor Spinnen.","Never “Angst von”."]
+ ]
+};
+for(const [deck,rows] of Object.entries(RAW)) rows.forEach(r=>add(deck,...r));
+
+const R_ABS="Abstract an / auf / über / in → Akkusativ.";
+const R_ANDAT="Exception to the abstract-an rule: this one takes Dativ.";
+const R_AKK="für / um / gegen → always Akkusativ.";
+const R_DAT="vor / von / mit / zu / bei / nach / aus → always Dativ.";
+const VERBS=[
+ ["an","akk",R_ABS,[["denken","think of, remember","Ich denke oft an meine Familie."],["sich erinnern","remember","Erinnerst du dich an den Urlaub?"],["sich gewöhnen","get used to","Ich habe mich an das Wetter gewöhnt."],["glauben","believe in","Sie glaubt an Gott."],["schreiben","write to","Ich schreibe an den Vermieter."],["sich wenden","turn to","Wenden Sie sich an die Rezeption."]]],
+ ["an","dat",R_ANDAT,[["teilnehmen","take part in","Ich nehme an dem Kurs teil."],["arbeiten","work on (a project)","Er arbeitet an einem Projekt."],["leiden","suffer from (an illness)","Sie leidet an einer Krankheit."],["zweifeln","doubt","Ich zweifle an dem Plan."]]],
+ ["unter","dat","leiden unter takes Dativ.",[["leiden","suffer under (stress)","Er leidet unter dem Stress."]]],
+ ["auf","akk",R_ABS,[["warten","wait for","Ich warte auf den Bus."],["sich freuen","look forward to (future)","Ich freue mich auf das Wochenende."],["sich vorbereiten","prepare for","Ich bereite mich auf die Prüfung vor."],["achten","pay attention to","Achten Sie auf die Endungen!"],["aufpassen","look after, watch","Kannst du auf die Kinder aufpassen?"],["sich konzentrieren","concentrate on","Konzentrier dich auf die Arbeit."],["antworten","reply to","Er antwortet auf meine Frage."],["reagieren","react to","Wie hat sie auf die Nachricht reagiert?"],["sich verlassen","rely on","Ich kann mich auf dich verlassen."],["hoffen","hope for","Wir hoffen auf gutes Wetter."],["verzichten","do without, give up","Ich verzichte auf Zucker."]]],
+ ["für","akk",R_AKK,[["sich interessieren","be interested in","Ich interessiere mich für Fußball."],["sich bedanken","thank for (the thing)","Ich bedanke mich für die Hilfe."],["danken","thank for","Danke für die Einladung!"],["sich entschuldigen","apologise for (the thing)","Er entschuldigt sich für die Verspätung."],["sich entscheiden","decide on","Ich habe mich für die Wohnung entschieden."],["sorgen","take care of, provide for","Sie sorgt für ihre Eltern."],["ausgeben","spend (money) on","Ich gebe viel Geld für Essen aus."]]],
+ ["mit","dat",R_DAT,[["sprechen / reden","talk with (a person)","Ich spreche mit dem Chef."],["telefonieren","be on the phone with","Sie telefoniert mit ihrer Mutter."],["sich treffen","meet up with","Ich treffe mich mit Freunden."],["sich unterhalten","chat with","Wir unterhalten uns mit den Nachbarn."],["sich verabreden","arrange to meet","Ich habe mich mit Tom verabredet."],["sich beschäftigen","deal with, work on","Er beschäftigt sich mit Grammatik."],["anfangen / beginnen","start with","Wann fängst du mit dem Kurs an?"],["aufhören","stop, quit","Ich höre mit dem Rauchen auf."],["rechnen","expect, count on","Wir rechnen mit Regen."],["sich streiten","argue with","Sie streitet sich mit ihrem Bruder."],["vergleichen","compare with","Vergleich das nicht mit früher."],["zu tun haben","have to do with","Das hat nichts mit dir zu tun."]]],
+ ["über","akk",R_ABS,[["sprechen / reden / diskutieren","talk about (a topic)","Wir sprechen über das Problem."],["sich freuen","be happy about (now / past)","Ich freue mich über das Geschenk."],["sich ärgern","be annoyed about","Ich ärgere mich über den Fehler."],["sich aufregen","get worked up about","Reg dich nicht über Kleinigkeiten auf!"],["nachdenken","think about, reflect on","Ich denke über das Angebot nach."],["sich informieren","find out about","Informieren Sie sich über die Kurse."],["berichten","report on","Die Zeitung berichtet über den Unfall."],["lachen","laugh about","Alle lachen über den Witz."],["sich beschweren","complain about (the thing)","Er beschwert sich über den Lärm."],["sich wundern","be surprised at","Ich wundere mich über die Preise."]]],
+ ["um","akk",R_AKK,[["sich kümmern","take care of","Ich kümmere mich um den Umzug."],["bitten","ask for","Darf ich um Hilfe bitten?"],["sich bewerben","apply for (the job)","Sie bewirbt sich um die Stelle."],["es geht","it's about","Es geht um die Miete."],["sich Sorgen machen / sich sorgen","worry about","Ich mache mir Sorgen um dich."],["es handelt sich","it's a matter of","Es handelt sich um ein Missverständnis."]]],
+ ["von","dat",R_DAT,[["träumen","dream of","Ich träume von einer eigenen Wohnung."],["erzählen","tell about","Erzähl mir von deiner Reise!"],["halten","think of (opinion)","Was hältst du von der Idee?"],["abhängen","depend on","Das hängt vom Wetter ab."],["sich erholen","recover from","Ich erhole mich von der Arbeit."],["sich verabschieden","say goodbye to","Ich verabschiede mich von den Kollegen."],["sich trennen","split up with","Sie hat sich von ihm getrennt."],["handeln","be about (a story)","Der Film handelt von einer Familie."]]],
+ ["vor","dat",R_DAT,[["Angst haben","be afraid of","Ich habe Angst vor Spinnen."],["sich fürchten","be scared of","Er fürchtet sich vor der Prüfung."],["warnen","warn about","Sie warnt vor dem Sturm."],["(sich) schützen","protect from","Die Creme schützt vor der Sonne."]]],
+ ["zu","dat",R_DAT,[["gehören","be part of","Das gehört zu meinen Aufgaben."],["einladen","invite to","Ich lade dich zum Essen ein."],["passen","go with, match","Die Schuhe passen zur Hose."],["gratulieren","congratulate on","Ich gratuliere dir zum Geburtstag!"],["führen","lead to","Stress führt zu Problemen."]]],
+ ["nach","dat",R_DAT,[["fragen","ask for / about","Er fragt nach dem Weg."],["suchen","look for","Ich suche nach einer Wohnung."],["sich erkundigen","enquire about","Ich erkundige mich nach dem Termin."],["riechen / schmecken","smell / taste of","Das riecht nach Kaffee."]]],
+ ["aus","dat",R_DAT,[["kommen / stammen","come from","Ich komme aus Nigeria."],["bestehen","consist of","Der Test besteht aus drei Teilen."]]],
+ ["bei","dat",R_DAT,[["sich bedanken","thank (the person)","Ich bedanke mich bei dir."],["sich entschuldigen","apologise to (the person)","Er entschuldigt sich bei seiner Chefin."],["sich beschweren","complain to (the person)","Wir beschweren uns beim Vermieter."],["sich melden","get in touch with","Melden Sie sich bei mir."],["sich bewerben","apply at (the company)","Ich bewerbe mich bei einer Firma."],["helfen","help with","Kannst du mir bei den Hausaufgaben helfen?"],["arbeiten","work at (a company)","Ich arbeite bei einer Firma in Berlin."]]],
+ ["in","akk",R_ABS,[["sich verlieben","fall in love with","Er hat sich in sie verliebt."]]],
+ ["gegen","akk",R_AKK,[["protestieren","protest against","Viele protestieren gegen die Mieterhöhung."],["kämpfen","fight against","Sie kämpfen gegen die Krankheit."],["sein","be against","Ich bin gegen den Plan."]]]
+];
+VERBS.forEach(([p,cs,rule,list])=>list.forEach(([v,h,ex])=>add("verbs",v+" ___",h,p,cs,ex,rule)));
+
+const ADJ=[
+ ["auf","akk",[["stolz","proud of","Ich bin stolz auf dich."],["neugierig","curious about","Ich bin neugierig auf das Ergebnis."],["böse / wütend / sauer","angry with","Sie ist sauer auf ihn."]]],
+ ["über","akk",[["froh / glücklich / traurig","happy / sad about","Ich bin froh über die Nachricht."]]],
+ ["für","akk",[["verantwortlich","responsible for","Sie ist verantwortlich für das Team."],["dankbar","grateful for","Ich bin dankbar für deine Hilfe."],["wichtig / typisch","important / typical for","Das ist typisch für Berlin."],["bekannt","known for","Die Stadt ist bekannt für ihre Museen."]]],
+ ["in","akk",[["verliebt","in love with","Sie ist verliebt in ihren Kollegen."]]],
+ ["mit","dat",[["zufrieden","satisfied with","Ich bin zufrieden mit der Arbeit."],["einverstanden","in agreement with","Bist du damit einverstanden?"],["fertig","finished with","Ich bin fertig mit der Arbeit."],["verheiratet","married to","Er ist mit einer Ärztin verheiratet."]]],
+ ["an","dat",[["interessiert","interested in","Ich bin interessiert an der Stelle."]]],
+ ["von","dat",[["begeistert","enthusiastic about","Er ist begeistert von Berlin."],["überzeugt","convinced of","Ich bin überzeugt von der Idee."],["abhängig","dependent on","Das ist abhängig vom Wetter."]]],
+ ["in","dat",[["gut / schlecht","good / bad at","Ich bin gut in Mathe."]]],
+ ["zu","dat",[["nett / freundlich","nice / friendly to","Sei nett zu deiner Schwester."]]],
+ ["vor","dat",[["die Angst","fear of","die Angst vor der Prüfung"]]],
+ ["auf","akk",[["die Lust","desire for, fancy","Hast du Lust auf Pizza?"],["die Antwort","answer to","die Antwort auf meine Frage"]]],
+ ["für","akk",[["die Zeit","time for","Ich habe keine Zeit für Sport."],["der Grund","reason for","der Grund für die Kündigung"]]],
+ ["an","dat",[["das Interesse","interest in","Interesse an Musik"]]],
+ ["nach","dat",[["die Frage","question about","die Frage nach dem Preis"]]],
+ ["um","akk",[["die Bitte","request for","eine Bitte um Hilfe"],["die Sorge","worry about","die Sorge um die Kinder"]]],
+ ["an","akk",[["die Erinnerung","memory of","die Erinnerung an den Urlaub"]]]
+];
+ADJ.forEach(([p,cs,list])=>list.forEach(([w,h,ex])=>add("adj",w+" ___",h,p,cs,ex)));
+
+const DAWO_NOTE="dar- before a vowel (darauf, darüber), da- before a consonant (damit, davon). Only for things and ideas, never people.";
+[["an","daran","woran"],["auf","darauf","worauf"],["aus","daraus","woraus"],["bei","dabei","wobei"],["für","dafür","wofür"],["in","darin","worin"],["mit","damit","womit"],["nach","danach","wonach"],["über","darüber","worüber"],["um","darum","worum"],["von","davon","wovon"],["vor","davor","wovor"],["zu","dazu","wozu"]]
+ .forEach(([p,da,wo])=>add("dawo",p,"thing / idea","*"+da+"* · *"+wo+"*","","",DAWO_NOTE));
+add("dawo","___ wartest du?","asking about a thing (auf)","*Worauf* wartest du?","","Ich warte *darauf*.","Thing → wo(r)- word.");
+add("dawo","___ wartest du? ","asking about a person (auf)","*Auf wen* wartest du?","","Ich warte *auf ihn*.","Person → preposition + wen / wem.");
+add("dawo","Ich freue mich ___, dass du kommst.","pointing forward (auf)","*darauf*","","Ich freue mich *darauf*, dich zu sehen.","The da-word points forward to a dass- or infinitive clause.");
+
+/* ---------- Storage ---------- */
+const KEY="praepositionen-flashcards-v1";
+const DEFAULT_SETTINGS={decks:["core"],size:20,dir:"de"};
+let store={progress:{},edits:{},custom:[],hidden:[],settings:{...DEFAULT_SETTINGS}};
+let storageOk=true;
+function normalize(s){
+  return {
+    progress:cleanProgress(s&&s.progress),
+    edits:(s&&s.edits&&typeof s.edits==="object"&&!Array.isArray(s.edits))?s.edits:{},
+    custom:Array.isArray(s&&s.custom)?s.custom.filter(c=>c&&c.id&&c.front&&c.back&&DECK[c.deck]):[],
+    hidden:Array.isArray(s&&s.hidden)?s.hidden:[],
+    settings:cleanSettings(s&&s.settings)
+  };
+}
+function cleanSettings(st){
+  st=st||{};
+  return {
+    decks:Array.isArray(st.decks)?st.decks.filter(id=>DECK[id]):DEFAULT_SETTINGS.decks.slice(),
+    size:[0,10,20,40].includes(st.size)?st.size:DEFAULT_SETTINGS.size,
+    dir:st.dir==="rev"?"rev":"de"
+  };
+}
+function cleanProgress(pr){
+  const out={};
+  for(const [id,p] of Object.entries(pr||{})){
+    if(!p||typeof p!=="object")continue;
+    const n=v=>Number.isFinite(+v)?+v:0;
+    out[id]={box:Math.min(5,Math.max(0,Math.round(n(p.box)))),due:n(p.due),right:n(p.right),wrong:n(p.wrong),last:n(p.last)};
+  }
+  return out;
+}
+function load(){
+  try{const raw=localStorage.getItem(KEY); if(raw) store=normalize(JSON.parse(raw));}
+  catch(e){storageOk=false}
+}
+let savedTimer;
+function save(quiet){
+  try{localStorage.setItem(KEY,JSON.stringify(store)); storageOk=true}catch(e){storageOk=false}
+  const el=document.getElementById("saved");
+  if(!storageOk){el.textContent="This browser is blocking storage, so changes will be lost when you close the page.";el.className="saved warn";el.style.opacity=1;return}
+  if(quiet) return;
+  el.textContent="Saved on this device";el.className="saved";el.style.opacity=1;
+  clearTimeout(savedTimer);savedTimer=setTimeout(()=>{el.style.opacity=0},1400);
+}
+
+/* ---------- Helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const rich=s=>esc(s).replace(/\*([^*]+)\*/g,'<b class="hl">$1</b>');
+const strip=s=>String(s||"").replace(/\*/g,"");
+const caseCls=c=>CASES[c]?"c-"+c:"";
+const pct=(a,b)=>b?Math.round(a/b*100):0;
+const DAY=864e5, INT=[0,10*60e3,DAY,3*DAY,7*DAY,16*DAY];
+function allCards(){
+  const hid=new Set(store.hidden);
+  return BASE.filter(c=>!hid.has(c.id)).map(c=>store.edits[c.id]?Object.assign({},c,store.edits[c.id],{edited:true}):c)
+    .concat(store.custom.map(c=>Object.assign({custom:true},c)));
+}
+function cardMap(){const m=new Map();allCards().forEach(c=>m.set(c.id,c));return m}
+function counts(cards){
+  const now=Date.now();let n=0,l=0,m=0,due=0;
+  for(const c of cards){const p=store.progress[c.id];if(!p){n++;due++}else{if(p.box>=4)m++;else l++;if(p.due<=now)due++}}
+  return{n,l,m,due,t:cards.length};
+}
+function pips(id){const b=(store.progress[id]||{}).box||0;let h="";for(let i=1;i<=5;i++)h+=`<i class="${i<=b?"on":""}"></i>`;return `<span class="pips" title="Box ${b} of 5">${h}</span>`}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function sizeLen(s){s=strip(s);return s.length>34?"long":s.length>16?"mid":""}
+
+/* ---------- Views ---------- */
+let view="home";
+function show(v){
+  view=v;
+  ["home","study","cards","settings"].forEach(x=>{document.getElementById("v-"+x).hidden=x!==v});
+  document.querySelectorAll(".tabs button").forEach(b=>{
+    const active=b.dataset.view===v||(v==="study"&&b.dataset.view==="home");
+    if(active)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current");
+  });
+  /* Don't leave focus on a control inside a view that just got hidden. */
+  const ae=document.activeElement;
+  if(ae&&ae!==document.body&&ae.closest("main[hidden]"))ae.blur();
+  if(v==="home")renderHome();
+  if(v==="study"){renderStudy();const sc=$("#study-card");if(sc)sc.focus({preventScroll:true})}
+  if(v==="cards")renderCards();
+  if(v==="settings")renderSettings();
+  window.scrollTo(0,0);
+}
+document.querySelector(".tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(b)show(b.dataset.view)});
+
+/* ---------- Home ---------- */
+const TICK='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>';
+function renderHome(){
+  const cards=allCards(), sel=store.settings.decks;
+  const selCards=cards.filter(c=>sel.includes(c.deck));
+  const all=counts(cards), s=counts(selCards);
+  $("#overview").innerHTML=`<div><b>${all.m}</b><span>mastered of ${all.t}</span></div><div><b>${all.l}</b><span>learning</span></div><div><b>${s.due}</b><span>due in selected</span></div>`;
+  $("#deck-list").innerHTML=DECKS.map(d=>{
+    const k=counts(cards.filter(c=>c.deck===d.id)), on=sel.includes(d.id);
+    return `<label class="deck${on?" on":""}" for="deck-${d.id}">
+      <input type="checkbox" id="deck-${d.id}" data-deck="${d.id}"${on?" checked":""}>
+      <span class="deck-main">
+        <span class="deck-name">${esc(d.name)}${d.rev?' <span title="Can be studied reversed" aria-label="reversible">⇄</span>':""}</span>
+        <span class="deck-sub">${esc(d.sub)}</span>
+        <span class="meter" aria-hidden="true"><i class="mm" style="width:${pct(k.m,k.t)}%"></i><i class="ml" style="width:${pct(k.l,k.t)}%"></i></span>
+        <span class="deck-meta"><span>${k.t} cards</span><span>${k.m} mastered</span><span>${k.n} new</span><span class="due">${k.due} due</span></span>
+      </span>
+      <span class="tick">${TICK}</span>
+    </label>`;
+  }).join("");
+  document.querySelectorAll("#size-seg button").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.size===store.settings.size)));
+  document.querySelectorAll("#dir-seg button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.dir===store.settings.dir)));
+  const anyRev=sel.some(id=>DECK[id]&&DECK[id].rev);
+  $("#dir-help").textContent=anyRev?"Reversed shows the meaning or use, and you produce the German. Applies to decks marked ⇄.":"None of the selected decks can be reversed, so cards show German first.";
+  const btn=$("#start-btn");
+  if(!sel.length){btn.textContent="Select at least one deck";btn.disabled=true}
+  else{
+    btn.disabled=false;
+    const n=store.settings.size?Math.min(store.settings.size,s.due):s.due;
+    btn.textContent=s.due?`Study ${n} card${n===1?"":"s"}`:"Nothing due. Practise your weakest cards";
+    btn.dataset.force=s.due?"":"1";
+  }
+  $("#resume").hidden=!(session&&session.queue.length);
+}
+$("#deck-list").addEventListener("change",e=>{
+  const id=e.target.dataset.deck;if(!id)return;
+  const set=new Set(store.settings.decks);e.target.checked?set.add(id):set.delete(id);
+  store.settings.decks=DECKS.map(d=>d.id).filter(x=>set.has(x));save(true);renderHome();
+});
+$("#size-seg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;store.settings.size=+b.dataset.size;save(true);renderHome()});
+$("#dir-seg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;store.settings.dir=b.dataset.dir;save(true);renderHome()});
+$("#start-btn").addEventListener("click",e=>{startSession(!!e.currentTarget.dataset.force)});
+$("#resume-btn").addEventListener("click",()=>show("study"));
+
+/* ---------- Study session ---------- */
+let session=null;
+function startSession(force){
+  const now=Date.now(), sel=store.settings.decks;
+  const cards=allCards().filter(c=>sel.includes(c.deck));
+  let seen=[],fresh=[];
+  for(const c of cards){const p=store.progress[c.id];if(!p)fresh.push(c);else if(force||p.due<=now)seen.push(c)}
+  seen.sort((a,b)=>{const pa=store.progress[a.id],pb=store.progress[b.id];return pa.box-pb.box||pa.due-pb.due});
+  let pool=seen.concat(shuffle(fresh));
+  if(store.settings.size)pool=pool.slice(0,store.settings.size);
+  if(!pool.length)return;
+  session={queue:shuffle(pool.map(c=>c.id)),total:pool.length,done:0,again:new Set(),firstOk:0,revealed:false,guess:null};
+  show("study");
+}
+function curCard(){return session&&session.queue.length?cardMap().get(session.queue[0]):null}
+function isRev(c){return store.settings.dir==="rev"&&DECK[c.deck]&&DECK[c.deck].rev}
+function caseOptions(c){const d=DECK[c.deck];let o=d&&d.cases.length?d.cases.slice():["akk","dat","gen"];if(c.case&&!o.includes(c.case))o.push(c.case);return o}
+const NAMES_CASE=/Akkusativ|Dativ|Genitiv/;
+/* Ask for the case only when the prompt doesn't already give it away (e.g. reversed "in + Dativ"). */
+function asksCase(c){return !!(c.case&&CASES[c.case]&&!(isRev(c)&&NAMES_CASE.test(c.back)))}
+function caseBadge(c,answerText){
+  if(!c.case||!CASES[c.case])return "";
+  if(c.case!=="wech"&&NAMES_CASE.test(answerText))return "";
+  if(c.case==="wech")return `<span class="row"><span class="chip c-dat">Wo? → Dativ</span><span class="chip c-akk">Wohin? → Akkusativ</span></span>`;
+  return `<span class="row"><span class="chip ${caseCls(c.case)}">+ ${CASES[c.case].label}</span></span>`;
+}
+function exampleHtml(c){
+  if(!c.ex)return "";
+  let ex=c.ex;
+  if(c.case==="wech"&&ex.includes(" / ")){
+    const [a,b]=ex.split(" / ");
+    return `<ul class="ex"><li class="c-dat"><span class="q">Wo?</span>${rich(a)}</li><li class="c-akk"><span class="q">Wohin?</span>${rich(b)}</li></ul>`;
+  }
+  let html;
+  if(!ex.includes("*")&&(c.deck==="verbs"||c.deck==="adj")&&/^[a-zäöüß]+$/i.test(c.back)){
+    const re=new RegExp("(^|[\\s(])("+c.back+")(?=[\\s,.!?])","i");
+    html=esc(ex).replace(re,'$1<b class="hl">$2</b>');
+  }else html=ex.split(" / ").map(rich).join("<br>");
+  return `<ul class="ex"><li class="${caseCls(c.case)}">${html}</li></ul>`;
+}
+function renderStudy(){
+  const v=$("#v-study");
+  if(!session){show("home");return}
+  if(!session.queue.length){renderDone();return}
+  const c=curCard();
+  if(!c){session.queue.shift();renderStudy();return}
+  const d=DECK[c.deck]||{name:"Custom",ask:"",cases:[]};
+  const rev=isRev(c);
+  const promptText=rev?c.back:c.front, promptHint=rev?"":c.hint;
+  const answerText=rev?c.front:c.back, answerSub=rev?c.hint:"";
+  const ask=rev?(d.askRev||d.ask):d.ask;
+  const p=store.progress[c.id];
+  const left=session.total-session.done;
+  const hadFocus=v.contains(document.activeElement);
+  let caseQ="";
+  if(asksCase(c)&&!session.revealed){
+    caseQ=`<div class="caseq"><span class="label">Which case?</span><div class="opts-row">`+
+      caseOptions(c).map((k,i)=>`<button type="button" class="cbtn ${caseCls(k)}" data-case="${k}">${CASES[k].label}${k==="wech"?" (two-way)":""}</button>`).join("")+
+      `</div></div>`;
+  }
+  let answer="";
+  if(session.revealed){
+    let verdict="";
+    if(session.guess){
+      const ok=session.guess===c.case;
+      verdict=`<div class="verdict ${ok?"ok":"no"}">${ok?"Right case: ":"Not quite. It takes "}${CASES[c.case].label}${c.case==="wech"?" (two-way)":""}.</div>`;
+    }
+    answer=`<div class="answer">${verdict}
+      <p class="ans-main ${caseCls(c.case)} ${sizeLen(answerText)==="long"?"long":""}">${rich(answerText)}</p>
+      ${answerSub?`<p class="ans-sub">${esc(answerSub)}</p>`:""}
+      ${caseBadge(c,answerText)}
+      ${exampleHtml(c)}
+      ${c.note?`<p class="note">${esc(c.note)}</p>`:""}
+    </div>`;
+  }
+  v.innerHTML=`
+    <div class="sbar">
+      <div class="row"><span class="count">${session.done} of ${session.total} done${left>0?` · ${session.queue.length} to go`:""}</span>
+      <button type="button" class="btn small" id="end-btn">End session</button></div>
+      <div class="track"><i style="width:${pct(session.done,session.total)}%"></i></div>
+    </div>
+    <article class="card" id="study-card" tabindex="-1" aria-live="polite">
+      <div class="card-head"><span class="deck-tag">${esc(d.name)}${rev?" · reversed":""}</span>${pips(c.id)}</div>
+      <p class="ask">${esc(ask)}</p>
+      <h2 class="front ${sizeLen(promptText)}">${rich(promptText)}</h2>
+      ${promptHint?`<p class="hint">${esc(promptHint)}</p>`:""}
+      ${caseQ}
+      ${session.revealed?"":`<button type="button" class="btn ${asksCase(c)?"":"primary"} reveal" id="reveal-btn">Show answer <span class="kbd">Space</span></button>`}
+      ${answer}
+    </article>
+    ${session.revealed?`<div class="rate">
+      <button type="button" class="btn again${session.guess&&session.guess!==c.case?" suggest":""}" id="again-btn">Again <span class="kbd">1</span></button>
+      <button type="button" class="btn good" id="good-btn">Got it <span class="kbd">2</span></button>
+    </div>`:""}
+    <div class="row" style="justify-content:space-between">
+      <span class="label">${p?`Seen ${p.right+p.wrong}× · ${p.right} right`:"New card"}</span>
+      <button type="button" class="btn small" id="edit-cur">Edit card</button>
+    </div>`;
+  bindStudy();
+  /* Keep keyboard focus in the study area after each re-render, on the card itself so no button fires by accident. */
+  if(hadFocus){const sc=$("#study-card");if(sc)sc.focus({preventScroll:true})}
+}
+function bindStudy(){
+  const v=$("#v-study");
+  v.querySelectorAll(".cbtn").forEach(b=>b.addEventListener("click",()=>guess(b.dataset.case)));
+  const r=$("#reveal-btn");if(r)r.addEventListener("click",reveal);
+  const a=$("#again-btn");if(a)a.addEventListener("click",()=>rate(false));
+  const g=$("#good-btn");if(g)g.addEventListener("click",()=>rate(true));
+  $("#end-btn").addEventListener("click",()=>{session.queue=[];renderDone()});
+  $("#edit-cur").addEventListener("click",()=>{const c=curCard();if(c)openEditor(c.id)});
+}
+function guess(k){if(!session||session.revealed)return;session.guess=k;session.revealed=true;renderStudy()}
+function reveal(){if(!session||session.revealed)return;session.revealed=true;renderStudy()}
+function rate(good){
+  if(!session||!session.revealed)return;
+  const id=session.queue.shift(), now=Date.now();
+  const p=store.progress[id]||{box:0,due:0,right:0,wrong:0};
+  if(good){
+    if(!session.again.has(id)){p.box=Math.min(5,p.box+1);session.firstOk++}
+    else p.box=Math.max(1,p.box);
+    p.right++;session.done++;
+  }else{
+    p.box=1;p.wrong++;session.again.add(id);
+    session.queue.splice(Math.min(3,session.queue.length),0,id);
+  }
+  p.due=now+INT[p.box];p.last=now;
+  store.progress[id]=p;save();
+  session.revealed=false;session.guess=null;
+  renderStudy();
+}
+function renderDone(){
+  const k=counts(allCards());
+  const s=session;
+  $("#v-study").innerHTML=`<div class="card done">
+    <div class="card-head"><span class="deck-tag">Session finished</span></div>
+    <h2>${s.done?"Gut gemacht!":"Session ended"}</h2>
+    <p class="lead">${s.done} card${s.done===1?"":"s"} finished, ${s.firstOk} right on the first try${s.again.size?`, ${s.again.size} needed another round`:""}. You have mastered ${k.m} of ${k.t} cards.</p>
+    <div class="row"><button type="button" class="btn primary" id="more-btn">Study more</button><button type="button" class="btn" id="home-btn">Back to decks</button></div>
+  </div>`;
+  session=null;
+  $("#more-btn").addEventListener("click",()=>{const sel=allCards().filter(c=>store.settings.decks.includes(c.deck));startSession(counts(sel).due===0)});
+  $("#home-btn").addEventListener("click",()=>show("home"));
+}
+document.addEventListener("keydown",e=>{
+  if(view!=="study"||!session||!$("#editor").hidden)return;
+  if(e.repeat||e.ctrlKey||e.metaKey||e.altKey)return;
+  if(e.target.closest&&e.target.closest("input,textarea,select"))return;
+  /* Space / Enter on a focused button keep their normal meaning (press that button). */
+  if((e.key===" "||e.key==="Enter")&&e.target.closest&&e.target.closest("button"))return;
+  const c=curCard();if(!c)return;
+  if(!session.revealed){
+    if(e.key===" "||e.key==="Enter"){e.preventDefault();reveal();return}
+    const k={a:"akk",d:"dat",g:"gen",w:"wech"}[e.key.toLowerCase()];
+    if(k&&asksCase(c)&&caseOptions(c).includes(k))guess(k);
+  }else{
+    if(e.key==="1"){rate(false)}
+    if(e.key==="2"||e.key===" "){e.preventDefault();rate(true)}
+  }
+});
+
+/* ---------- Cards list ---------- */
+function renderCards(){
+  const sel=$("#cards-deck");
+  if(!sel.options.length){
+    sel.innerHTML=`<option value="">All decks</option>`+DECKS.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join("");
+  }
+  const deck=sel.value, q=$("#cards-q").value.trim().toLowerCase();
+  let cards=allCards().filter(c=>!deck||c.deck===deck);
+  if(q)cards=cards.filter(c=>[c.front,c.hint,c.back,c.ex,c.note,CASES[c.case]?CASES[c.case].label:""].join(" ").toLowerCase().includes(q));
+  $("#cards-list").innerHTML=cards.length?cards.map(c=>`
+    <button type="button" class="item" data-id="${esc(c.id)}">
+      <span class="f">${esc(strip(c.front))}${c.hint?` <span class="hint" style="font-weight:400">· ${esc(c.hint)}</span>`:""}</span>
+      <span class="r">${c.case?`<span class="chip ${caseCls(c.case)}">${c.case==="wech"?"Wechsel":CASES[c.case].label}</span>`:""}${pips(c.id)}${c.custom?'<span class="flag">Added</span>':c.edited?'<span class="flag">Edited</span>':""}</span>
+      <span class="b">${esc(strip(c.back))}</span>
+    </button>`).join(""):`<p class="empty">No cards match. Try another word, or add your own card.</p>`;
+}
+$("#cards-deck").addEventListener("change",renderCards);
+$("#cards-q").addEventListener("input",renderCards);
+$("#cards-list").addEventListener("click",e=>{const b=e.target.closest(".item");if(b)openEditor(b.dataset.id)});
+$("#add-btn").addEventListener("click",()=>openEditor(null,$("#cards-deck").value||"core"));
+
+/* ---------- Editor ---------- */
+let editing=null;
+function openEditor(id,deck){
+  const c=id?cardMap().get(id):{id:null,deck:deck||"core",front:"",hint:"",back:"",case:"",ex:"",note:"",custom:true};
+  if(!c)return;
+  editing={id:c.id,custom:!!c.custom,base:!!c.base,edited:!!c.edited,isNew:!id};
+  const ed=$("#editor");
+  ed.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="ed-title">
+    <h3 id="ed-title">${editing.isNew?"Add a card":"Edit card"}</h3>
+    <div class="grid2">
+      <div class="field"><label for="ed-deck">Deck</label><select id="ed-deck" ${editing.isNew?"":"disabled"}>${DECKS.map(d=>`<option value="${d.id}"${d.id===c.deck?" selected":""}>${esc(d.name)}</option>`).join("")}</select></div>
+      <div class="field"><label for="ed-case">Case</label><select id="ed-case">
+        <option value="">No case question</option>${Object.entries(CASES).map(([k,v])=>`<option value="${k}"${k===c.case?" selected":""}>${v.label}${k==="wech"?" (two-way)":""}</option>`).join("")}
+      </select></div>
+    </div>
+    <div class="field"><label for="ed-front">Front</label><input id="ed-front" value="${esc(c.front)}" placeholder="e.g. warten ___"></div>
+    <div class="field"><label for="ed-hint">Hint under the front</label><input id="ed-hint" value="${esc(c.hint)}" placeholder="e.g. wait for"></div>
+    <div class="field"><label for="ed-back">Answer</label><input id="ed-back" value="${esc(c.back)}" placeholder="e.g. auf"><span class="help">Wrap a word in *asterisks* to highlight it.</span></div>
+    <div class="field"><label for="ed-ex">Example</label><textarea id="ed-ex" placeholder="Ich warte auf den Bus.">${esc(c.ex)}</textarea><span class="help">For two-way prepositions, write “Wo? sentence / Wohin? sentence”.</span></div>
+    <div class="field"><label for="ed-note">Note</label><textarea id="ed-note">${esc(c.note)}</textarea></div>
+    <div class="status no" id="ed-err"></div>
+    <div class="row" style="justify-content:space-between">
+      <div class="row">
+        ${editing.isNew?"":`<button type="button" class="btn small danger" id="ed-del">${editing.custom?"Delete card":"Hide card"}</button>`}
+        ${editing.edited?`<button type="button" class="btn small" id="ed-orig">Restore original</button>`:""}
+      </div>
+      <div class="row"><button type="button" class="btn small" id="ed-cancel">Cancel</button><button type="button" class="btn small primary" id="ed-save">Save</button></div>
+    </div>
+    <div id="ed-confirm"></div>
+  </div>`;
+  ed.hidden=false;
+  $("#ed-front").focus();
+  $("#ed-cancel").addEventListener("click",closeEditor);
+  $("#ed-save").addEventListener("click",saveEditor);
+  const del=$("#ed-del");if(del)del.addEventListener("click",confirmDelete);
+  const orig=$("#ed-orig");if(orig)orig.addEventListener("click",()=>{delete store.edits[editing.id];save();closeEditor()});
+}
+function closeEditor(){$("#editor").hidden=true;$("#editor").innerHTML="";editing=null;refresh()}
+function refresh(){if(view==="study")renderStudy();else if(view==="cards")renderCards();else if(view==="home")renderHome();else renderSettings()}
+function saveEditor(){
+  const f={front:$("#ed-front").value.trim(),hint:$("#ed-hint").value.trim(),back:$("#ed-back").value.trim(),case:$("#ed-case").value,ex:$("#ed-ex").value.trim(),note:$("#ed-note").value.trim()};
+  if(!f.front||!f.back){$("#ed-err").textContent="Fill in both the front and the answer.";return}
+  if(editing.isNew){
+    store.custom.push(Object.assign({id:"u"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),deck:$("#ed-deck").value},f));
+  }else if(editing.custom){
+    const i=store.custom.findIndex(x=>x.id===editing.id);if(i>-1)Object.assign(store.custom[i],f);
+  }else{
+    store.edits[editing.id]=f;
+  }
+  save();closeEditor();
+}
+function confirmDelete(){
+  $("#ed-confirm").innerHTML=`<div class="confirm"><p>${editing.custom?"Delete this card and its progress?":"Hide this card from study and the list? You can show hidden cards again in Settings."}</p>
+    <div class="row"><button type="button" class="btn small danger" id="ed-del-yes">${editing.custom?"Delete":"Hide"}</button><button type="button" class="btn small" id="ed-del-no">Keep it</button></div></div>`;
+  $("#ed-del-no").addEventListener("click",()=>{$("#ed-confirm").innerHTML=""});
+  $("#ed-del-yes").addEventListener("click",()=>{
+    const id=editing.id;
+    if(editing.custom){store.custom=store.custom.filter(x=>x.id!==id);delete store.progress[id]}
+    else if(!store.hidden.includes(id))store.hidden.push(id);
+    if(session){const i=session.queue.indexOf(id);if(i>-1){session.queue.splice(i,1);session.total=Math.max(session.done,session.total-1)}session.revealed=false;session.guess=null}
+    save();closeEditor();
+  });
+}
+$("#editor").addEventListener("click",e=>{if(e.target.id==="editor")closeEditor()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#editor").hidden)closeEditor()});
+
+/* ---------- Settings ---------- */
+function renderSettings(){
+  const nh=store.hidden.length, ne=Object.keys(store.edits).length, nc=store.custom.length;
+  $("#hidden-line").textContent=`${nh} hidden, ${ne} edited, ${nc} added by you.`;
+  $("#unhide-btn").disabled=!nh;$("#unedit-btn").disabled=!ne;
+  $("#storage-line").textContent=storageOk
+    ?"Progress, edits and new cards are saved in this browser's local storage. Other devices and browsers keep their own copy."
+    :"This browser is blocking local storage, so changes last only until you close the page. Use Copy backup to keep them.";
+  $("#reset-area").innerHTML=`<button type="button" class="btn small danger" id="reset-btn">Reset progress</button>`;
+  $("#reset-btn").addEventListener("click",()=>{
+    $("#reset-area").innerHTML=`<div class="confirm"><p>Reset progress for all ${allCards().length} cards? This can't be undone.</p><div class="row"><button type="button" class="btn small danger" id="reset-yes">Reset</button><button type="button" class="btn small" id="reset-no">Cancel</button></div></div>`;
+    $("#reset-no").addEventListener("click",renderSettings);
+    $("#reset-yes").addEventListener("click",()=>{
+      store.progress={};session=null;save();renderSettings();
+      $("#reset-area").insertAdjacentHTML("beforeend",'<span class="status ok">Progress reset. Every card is new again.</span>');
+    });
+  });
+}
+$("#unhide-btn").addEventListener("click",()=>{store.hidden=[];save();renderSettings()});
+$("#unedit-btn").addEventListener("click",()=>{store.edits={};save();renderSettings()});
+$("#copy-backup").addEventListener("click",()=>{
+  const text=JSON.stringify(store), st=$("#copy-status");
+  const fallback=()=>{const t=$("#restore-text");t.value=text;t.focus();t.select();st.textContent="Copy the selected text below.";st.className="status ok"};
+  try{navigator.clipboard.writeText(text).then(()=>{st.textContent="Copied";st.className="status ok"},fallback)}catch(e){fallback()}
+});
+$("#restore-btn").addEventListener("click",()=>{
+  const st=$("#restore-status");
+  try{
+    const obj=JSON.parse($("#restore-text").value);
+    if(!obj||typeof obj!=="object"||!("progress" in obj))throw new Error("x");
+    store=normalize(obj);session=null;save();$("#restore-text").value="";
+    st.textContent="Backup restored";st.className="status ok";renderSettings();
+  }catch(e){st.textContent="That text isn't a backup from this app. Paste the whole copied text.";st.className="status no"}
+});
+
+/* ---------- Boot ---------- */
+load();
+if(!storageOk)save(true);
+show("home");
+})();
+</script>
+
+</body></html>
