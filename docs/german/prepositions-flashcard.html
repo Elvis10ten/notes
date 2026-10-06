@@ -176,6 +176,39 @@ h2.sec{margin:0;font-family:var(--f-display);font-size:1.15rem;font-weight:600}
 .status{font-size:.82rem;font-weight:600;min-height:1.2em}
 .status.ok{color:var(--good)} .status.no{color:var(--bad)}
 
+/* Mode switch & active use */
+.seg-wide{width:100%}
+.seg-wide button{flex:1;padding:9px 12px;font-size:.92rem}
+.deck.off{opacity:.55}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.en{margin:6px 0 0;color:var(--muted);font-size:1rem}
+.en.big{font-family:var(--f-display);font-size:1.3rem;line-height:1.35;color:var(--ink);text-wrap:balance}
+.prod{display:grid;gap:12px;margin-top:16px}
+.de-line{margin:0;font-family:var(--f-display);font-size:1.3rem;line-height:2.2;overflow-wrap:anywhere}
+.gapin{font:inherit;font-weight:600;color:var(--ink);background:var(--sunken);border:0;border-bottom:2px solid var(--muted);border-radius:6px 6px 0 0;padding:0 6px;margin:0 2px;min-width:3ch;max-width:100%;text-align:center;line-height:1.5}
+.gapin:focus{outline:none;border-bottom-color:var(--akk);background:color-mix(in srgb,var(--akk) 10%,var(--sunken))}
+.prodta{width:100%;min-height:86px;resize:vertical;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;font-family:var(--f-display);font-size:1.1rem;line-height:1.45}
+.prodta:focus{outline:none;border-color:var(--akk)}
+.ukeys{display:flex;gap:6px;flex-wrap:wrap}
+.ukeys button{min-width:40px;min-height:38px;border:1px solid var(--line);background:var(--sunken);border-radius:8px;font-family:var(--f-display);font-size:1.05rem}
+.gap-ok{color:var(--good)} .gap-bad{color:var(--bad);text-decoration-thickness:2px} .gap-fix{color:var(--good)}
+.model,.yours p,.corrected{margin:4px 0 0;font-family:var(--f-display);font-size:1.12rem;line-height:1.45;overflow-wrap:anywhere}
+.model .hl{color:var(--good)}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:.9rem;font-weight:600}
+.keys .ok{color:var(--good)} .keys .no{color:var(--bad)}
+.target{margin:10px 0 0;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.target .chip{white-space:normal}
+.claude{display:grid;gap:8px;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--sunken)}
+.claude .row{gap:10px}
+.cost{font-size:.75rem;color:var(--muted)}
+.thinking{font-size:.9rem;color:var(--muted)}
+.pill{justify-self:start;font-size:.8rem;font-weight:700;padding:3px 10px;border-radius:999px}
+.v-correct{color:var(--good);background:color-mix(in srgb,var(--good) 15%,transparent)}
+.v-minor{color:var(--dat);background:color-mix(in srgb,var(--dat) 15%,transparent)}
+.v-wrong{color:var(--bad);background:color-mix(in srgb,var(--bad) 15%,transparent)}
+.expl{margin:0;font-size:.93rem}
+.warnline{margin:0;font-size:.9rem;color:var(--bad);font-weight:600}
+
 @media (max-width:420px){
   .grid2,.filters{grid-template-columns:1fr}
   .overview b{font-size:1.35rem}
@@ -196,13 +229,17 @@ h2.sec{margin:0;font-family:var(--f-display);font-size:1.15rem;font-weight:600}
 
   <!-- HOME -->
   <main id="v-home" class="view">
-    <p class="lead">Built from your prepositions note. Pick the decks you want, then work through the cards. Progress and your edits stay in this browser.</p>
+    <div class="seg seg-wide" id="mode-seg" role="group" aria-label="Practice mode">
+      <button type="button" data-mode="rec">Recognise</button>
+      <button type="button" data-mode="use">Use it</button>
+    </div>
+    <p class="lead" id="lead"></p>
     <div class="overview" id="overview"></div>
     <div id="resume" hidden><button type="button" class="btn start" id="resume-btn">Resume session</button></div>
     <div class="decks" id="deck-list"></div>
     <div class="opts">
       <div class="opt">
-        <span class="label">Cards per session</span>
+        <span class="label">Per session</span>
         <div class="seg" id="size-seg">
           <button type="button" data-size="10">10</button>
           <button type="button" data-size="20">20</button>
@@ -210,7 +247,16 @@ h2.sec{margin:0;font-family:var(--f-display);font-size:1.15rem;font-weight:600}
           <button type="button" data-size="0">All</button>
         </div>
       </div>
-      <div class="opt">
+      <div class="opt" id="task-opt" hidden>
+        <span class="label">Exercise</span>
+        <div class="seg" id="task-seg">
+          <button type="button" data-task="gap">Fill the gap</button>
+          <button type="button" data-task="tr">Translate</button>
+          <button type="button" data-task="own">Own sentence</button>
+        </div>
+        <p>Each exercise keeps its own progress. Start with gaps, then move on to translating and writing your own.</p>
+      </div>
+      <div class="opt" id="dir-opt">
         <span class="label">Direction</span>
         <div class="seg" id="dir-seg">
           <button type="button" data-dir="de">German first</button>
@@ -460,9 +506,214 @@ add("dawo","___ wartest du?","asking about a thing (auf)","*Worauf* wartest du?"
 add("dawo","___ wartest du? ","asking about a person (auf)","*Auf wen* wartest du?","","Ich warte *auf ihn*.","Person → preposition + wen / wem.");
 add("dawo","Ich freue mich ___, dass du kommst.","pointing forward (auf)","*darauf*","","Ich freue mich *darauf*, dich zu sehen.","The da-word points forward to a dass- or infinitive clause.");
 
+
+/* ---------- Active use: sentences to produce ----------
+   {answer|also-accepted|~close-but-not-for-writing} marks a gap. */
+const PROD_RAW=[
+ ["core","I'm walking through the park.","Ich gehe {durch den} Park."],
+ ["core","This present is for my brother.","Das Geschenk ist {für meinen} Bruder."],
+ ["core","I never leave the house without an umbrella.","Ich gehe nie {ohne einen} Schirm aus dem Haus."],
+ ["core","The bakery is around the corner.","Die Bäckerei ist {um die} Ecke."],
+ ["core","We're walking along the river.","Wir gehen {den} Fluss entlang.","entlang after the noun takes Akkusativ.",["den Fluss entlang"]],
+ ["core","He's against the plan.","Er ist {gegen den} Plan."],
+ ["core","I'm coming out of the house.","Ich komme {aus dem} Haus."],
+ ["core","I'm staying at my sister's.","Ich wohne {bei meiner} Schwester."],
+ ["core","I go to work by bus.","Ich fahre {mit dem} Bus zur Arbeit."],
+ ["core","After work I'm going to the gym.","{Nach der} Arbeit gehe ich ins Fitnessstudio."],
+ ["core","This letter is from my mother.","Der Brief ist {von meiner} Mutter."],
+ ["core","I'm going to the doctor.","Ich gehe {zum|zu dem} Arzt."],
+ ["core","The pharmacy is opposite the station.","Die Apotheke ist {gegenüber dem} Bahnhof."],
+ ["core","From next week I'll work from home.","{Ab nächster|ab nächste} Woche arbeite ich von zu Hause."],
+ ["core","Because of the weather, we're staying at home.","{Wegen des|~wegen dem} Wetters bleiben wir zu Hause.","People say wegen dem Wetter, but in writing and exams use the Genitiv: wegen des Wetters."],
+ ["core","Nobody talks during the meal.","{Während des} Essens spricht niemand."],
+ ["core","Despite the rain, we're going for a walk.","{Trotz des|~trotz dem} Regens gehen wir spazieren.","trotz takes the Genitiv in writing: trotz des Regens."],
+ ["core","Instead of a book, I'm buying a game.","{Statt eines|anstatt eines} Buches kaufe ich ein Spiel."],
+
+ ["wo","The book is on the table.","Das Buch liegt {auf dem} Tisch.","liegen = position (Wo?) → Dativ"],
+ ["wo","I'm putting the book on the table.","Ich lege das Buch {auf den} Tisch.","legen = movement (Wohin?) → Akkusativ"],
+ ["wo","We're sitting in the kitchen.","Wir sitzen {in der} Küche.","sitzen = position (Wo?) → Dativ"],
+ ["wo","We're going into the kitchen.","Wir gehen {in die} Küche.","gehen into a place (Wohin?) → Akkusativ"],
+ ["wo","The picture is hanging above the sofa.","Das Bild hängt {über dem} Sofa.","hängen as a state (Wo?) → Dativ"],
+ ["wo","I'm hanging the picture above the sofa.","Ich hänge das Bild {über das|übers} Sofa.","hängen as an action (Wohin?) → Akkusativ"],
+ ["wo","The cat is sleeping under the bed.","Die Katze schläft {unter dem} Bett."],
+ ["wo","The car is parked in front of the house.","Das Auto steht {vor dem} Haus.","stehen = position (Wo?) → Dativ"],
+ ["wo","I'm parking the car in front of the house.","Ich stelle das Auto {vor das|vors} Haus.","stellen = movement (Wohin?) → Akkusativ"],
+ ["wo","The bike is behind the house.","Das Fahrrad steht {hinter dem} Haus."],
+ ["wo","Sit down next to me.","Setz dich {neben mich}.","sich setzen = movement (Wohin?) → Akkusativ: mich"],
+ ["wo","She's sitting next to me.","Sie sitzt {neben mir}.","sitzen = position (Wo?) → Dativ: mir"],
+ ["wo","The lamp is standing between the chairs.","Die Lampe steht {zwischen den} Stühlen.","Dativ plural: den Stühlen (the noun gets -n too)."],
+ ["wo","I'm putting the lamp between the chairs.","Ich stelle die Lampe {zwischen die} Stühle."],
+ ["wo","I'm going to the window.","Ich gehe {ans|an das} Fenster."],
+ ["wo","I'm standing at the window.","Ich stehe {am|an dem} Fenster."],
+ ["wo","I'm putting the keys in my bag.","Ich stecke die Schlüssel {in meine} Tasche."],
+ ["wo","The keys are in my bag.","Die Schlüssel sind {in meiner} Tasche."],
+
+ ["time","The course starts at 9 o'clock.","Der Kurs beginnt {um} 9 Uhr.",null,["um 9","um neun"]],
+ ["time","We're meeting on Saturday.","Wir treffen uns {am} Samstag.",null,["am Samstag"]],
+ ["time","My birthday is in May.","Ich habe {im} Mai Geburtstag.",null,["im Mai"]],
+ ["time","I can't sleep at night.","{In der} Nacht kann ich nicht schlafen.",null,["in der Nacht","nachts"]],
+ ["time","I'll be back in two weeks.","Ich bin {in} zwei Wochen zurück.","For a point in the future use in, not nach.",["in zwei Wochen"]],
+ ["time","I moved to Germany three years ago.","Ich bin {vor drei Jahren} nach Deutschland gezogen.","vor + Dativ: the plural noun gets -n, Jahren."],
+ ["time","I've been learning German for a year.","Ich lerne {seit einem} Jahr Deutsch.","seit + Dativ, and the verb stays in the present tense.",["seit einem Jahr"]],
+ ["time","I'm nervous before the exam.","{Vor der} Prüfung bin ich nervös."],
+ ["time","I work from 9 to 5.","Ich arbeite {von} 9 {bis} 17 Uhr."],
+ ["time","The offer is valid until 30 November.","Das Angebot gilt {bis zum|bis zu dem} 30. November."],
+ ["time","I'm flying to Lagos for three weeks.","Ich fliege {für} drei Wochen nach Lagos.","für + Akkusativ for a planned length of time.",["für drei Wochen"]],
+ ["time","I'll call around 8.","Ich rufe {gegen} 8 Uhr an.",null,["gegen 8","gegen acht"]],
+ ["time","At Christmas we're going away.","{Zu|an} Weihnachten fahren wir weg.",null,["zu Weihnachten","an Weihnachten"]],
+ ["time","I'm studying during the holidays.","{Während der} Ferien lerne ich."],
+
+ ["place","In December I'm flying to Nigeria.","Im Dezember fliege ich {nach} Nigeria.",null,["nach Nigeria"]],
+ ["place","We're travelling to Switzerland.","Wir fahren {in die} Schweiz.","Countries with an article take in, not nach."],
+ ["place","I'm going home.","Ich gehe {nach Hause}.","Going home: nach Hause. Being at home: zu Hause."],
+ ["place","I'm at home.","Ich bin {zu Hause|zuhause}.","Being at home: zu Hause. Going home: nach Hause."],
+ ["place","Tonight I'm going to the cinema.","Heute Abend gehe ich {ins|in das} Kino."],
+ ["place","I'm going to Anna's.","Ich gehe {zu} Anna.","To a person: zu.",["zu Anna"]],
+ ["place","I'm at Anna's.","Ich bin {bei} Anna.","At a person's place: bei.",["bei Anna"]],
+ ["place","I'm going to the market.","Ich gehe {auf den} Markt."],
+ ["place","I bought it at the market.","Ich habe das {auf dem} Markt gekauft."],
+ ["place","We're going to the seaside.","Wir fahren {ans|an das} Meer."],
+ ["place","We're going to the island.","Wir fahren {auf die} Insel."],
+ ["place","I'm just coming from the doctor's.","Ich komme gerade {vom|von dem} Arzt.","zum Arzt there, vom Arzt back."],
+ ["place","She comes from Nigeria.","Sie kommt {aus} Nigeria.",null,["aus Nigeria"]],
+ ["place","I'm coming out of the office.","Ich komme {aus dem} Büro."],
+ ["place","I work at Siemens.","Ich arbeite {bei} Siemens.",null,["bei Siemens"]],
+ ["place","I'm at the station.","Ich bin {am|an dem} Bahnhof."],
+ ["place","I'm going to the station.","Ich gehe {zum|zu dem} Bahnhof."],
+
+ ["verbs","I'm waiting for the bus.","Ich warte {auf den} Bus."],
+ ["verbs","I'm looking forward to the weekend.","Ich freue mich {auf das|aufs} Wochenende.","Future → sich freuen auf."],
+ ["verbs","I'm happy about the present.","Ich freue mich {über das|übers} Geschenk.","Now or past → sich freuen über."],
+ ["verbs","I often think of my family.","Ich denke oft {an meine} Familie."],
+ ["verbs","Do you remember the holiday?","Erinnerst du dich {an den} Urlaub?"],
+ ["verbs","I've got used to the weather.","Ich habe mich {an das|ans} Wetter gewöhnt."],
+ ["verbs","I'm taking part in the course.","Ich nehme {am|an dem} Kurs teil.","teilnehmen an takes Dativ."],
+ ["verbs","I'm working on a project.","Ich arbeite {an einem} Projekt.","arbeiten an takes Dativ."],
+ ["verbs","I insist on an answer.","Ich bestehe {auf einer} Antwort.","bestehen auf takes Dativ, an exception to the abstract-auf rule."],
+ ["verbs","I'm preparing for the exam.","Ich bereite mich {auf die} Prüfung vor."],
+ ["verbs","Can you look after the children?","Kannst du {auf die} Kinder aufpassen?"],
+ ["verbs","I can rely on you.","Ich kann mich {auf dich} verlassen."],
+ ["verbs","I'm interested in football.","Ich interessiere mich {für} Fußball.",null,["für Fußball"]],
+ ["verbs","Thanks for the invitation!","Danke {für die} Einladung!"],
+ ["verbs","He apologises for being late.","Er entschuldigt sich {für die} Verspätung."],
+ ["verbs","I've decided on the flat.","Ich habe mich {für die} Wohnung entschieden."],
+ ["verbs","I'm talking to my boss.","Ich spreche {mit meinem} Chef."],
+ ["verbs","We're talking about the problem.","Wir sprechen {über das|übers} Problem."],
+ ["verbs","I'm meeting up with friends.","Ich treffe mich {mit} Freunden.",null,["mit Freunden"]],
+ ["verbs","I'm giving up smoking.","Ich höre {mit dem} Rauchen auf."],
+ ["verbs","We're expecting rain.","Wir rechnen {mit} Regen.",null,["mit Regen"]],
+ ["verbs","I'm annoyed about the mistake.","Ich ärgere mich {über den} Fehler."],
+ ["verbs","I'm thinking about the offer.","Ich denke {über das|übers} Angebot nach.","Reflect on → nachdenken über."],
+ ["verbs","He's complaining about the noise.","Er beschwert sich {über den} Lärm."],
+ ["verbs","I'm taking care of the move.","Ich kümmere mich {um den} Umzug."],
+ ["verbs","May I ask for help?","Darf ich {um} Hilfe bitten?",null,["um Hilfe"]],
+ ["verbs","She's applying for the job.","Sie bewirbt sich {um die} Stelle.","The job → um. The company → bei."],
+ ["verbs","It's about the rent.","Es geht {um die} Miete."],
+ ["verbs","I'm worried about you.","Ich mache mir Sorgen {um dich}."],
+ ["verbs","I dream of my own flat.","Ich träume {von einer} eigenen Wohnung."],
+ ["verbs","What do you think of the idea?","Was hältst du {von der} Idee?","An opinion → halten von."],
+ ["verbs","That depends on the weather.","Das hängt {vom|von dem} Wetter ab."],
+ ["verbs","I'm afraid of spiders.","Ich habe Angst {vor} Spinnen.","Never Angst von.",["vor Spinnen"]],
+ ["verbs","Happy birthday! (I congratulate you on your birthday.)","Ich gratuliere dir {zum} Geburtstag!"],
+ ["verbs","I'm inviting you to dinner.","Ich lade dich {zum} Essen ein."],
+ ["verbs","The shoes go with the trousers.","Die Schuhe passen {zur} Hose."],
+ ["verbs","He's asking the way.","Er fragt {nach dem} Weg."],
+ ["verbs","I'm looking for a flat.","Ich suche {nach einer|eine} Wohnung.","Ich suche eine Wohnung (no preposition) is also correct."],
+ ["verbs","That smells of coffee.","Das riecht {nach} Kaffee.",null,["nach Kaffee"]],
+ ["verbs","The test consists of three parts.","Der Test besteht {aus drei} Teilen.","bestehen aus = consist of. bestehen auf = insist on."],
+ ["verbs","Can you help me with my homework?","Kannst du mir {bei den} Hausaufgaben helfen?"],
+ ["verbs","He fell in love with her.","Er hat sich {in sie} verliebt."],
+ ["verbs","Many people are protesting against the rent increase.","Viele protestieren {gegen die} Mieterhöhung."],
+
+ ["tricky","I'd like to thank you for the help.","Ich bedanke mich {bei dir} {für die} Hilfe.","bei the person, für the thing."],
+ ["tricky","He apologises to her for the mistake.","Er entschuldigt sich {bei ihr} {für den} Fehler.","bei the person, für the thing."],
+ ["tricky","We're complaining to the landlord about the noise.","Wir beschweren uns {beim|bei dem} Vermieter {über den} Lärm.","bei the person, über the thing."],
+ ["tricky","I'm applying to Siemens for a job.","Ich bewerbe mich {bei} Siemens {um eine} Stelle.","bei the company, um the job."],
+ ["tricky","I'm talking to the boss about my salary.","Ich spreche {mit dem} Chef {über mein} Gehalt.","mit the partner, über the topic."],
+ ["tricky","I'm asking the bank about the loan.","Ich erkundige mich {bei der} Bank {nach dem} Kredit.","bei the person or place, nach the thing."],
+
+ ["adj","I'm proud of you.","Ich bin stolz {auf dich}."],
+ ["adj","She's angry with him.","Sie ist sauer {auf ihn}."],
+ ["adj","I'm curious about the result.","Ich bin neugierig {auf das|aufs} Ergebnis."],
+ ["adj","I'm glad about the news.","Ich bin froh {über die} Nachricht."],
+ ["adj","Berlin is known for its museums.","Berlin ist bekannt {für seine} Museen."],
+ ["adj","I'm grateful for your help.","Ich bin dankbar {für deine} Hilfe."],
+ ["adj","I'm satisfied with the work.","Ich bin zufrieden {mit der} Arbeit."],
+ ["adj","Are you done with the book?","Bist du {mit dem} Buch fertig?"],
+ ["adj","He's married to a (female) doctor.","Er ist {mit einer} Ärztin verheiratet."],
+ ["adj","I'm interested in the position.","Ich bin interessiert {an der} Stelle.","The adjective takes an + Dativ. The verb takes für: Ich interessiere mich für …"],
+ ["adj","He's enthusiastic about Berlin.","Er ist begeistert {von} Berlin.",null,["von Berlin"]],
+ ["adj","I'm convinced by the idea.","Ich bin {von der} Idee überzeugt."],
+ ["adj","Be nice to your sister.","Sei nett {zu deiner} Schwester."],
+ ["adj","Do you fancy pizza?","Hast du Lust {auf} Pizza?",null,["auf Pizza"]],
+ ["adj","I have no time for sport.","Ich habe keine Zeit {für} Sport.",null,["für Sport"]],
+ ["adj","My fear of the exam is huge.","Meine Angst {vor der} Prüfung ist groß."],
+ ["adj","What's the reason for the termination?","Was ist der Grund {für die} Kündigung?"],
+
+ ["dawo","What are you waiting for?","{Worauf} wartest du?","A thing → wo(r)- word."],
+ ["dawo","Who are you waiting for?","{Auf wen} wartest du?","A person → preposition + wen / wem."],
+ ["dawo","I'm looking forward to it.","Ich freue mich {darauf}."],
+ ["dawo","What are you thinking about?","{Worüber} denkst du nach?"],
+ ["dawo","I'm not interested in that.","Ich interessiere mich nicht {dafür}."],
+ ["dawo","What are you afraid of?","{Wovor} hast du Angst?"],
+ ["dawo","Who are you talking to?","{Mit wem} sprichst du?","A person → mit wem, not womit."],
+ ["dawo","Don't worry, I'll remember it.","Keine Sorge, ich denke {daran}."],
+ ["dawo","What does that depend on?","{Wovon} hängt das ab?"],
+ ["dawo","I'm looking forward to seeing you.","Ich freue mich {darauf}, dich zu sehen.","The da-word points forward to the zu-clause."]
+];
+
+const OWN_RAW=[
+ ["core","Say how you get to work or to class.","mit + Dativ (transport)","Ich fahre mit der U-Bahn zur Arbeit."],
+ ["core","Say something you can't do without.","ohne + Akkusativ","Ich kann nicht ohne meinen Kaffee arbeiten."],
+ ["core","Say why something went wrong recently.","wegen + Genitiv","Wegen des Streiks bin ich zu spät gekommen."],
+ ["core","Say what you did despite a problem.","trotz + Genitiv","Trotz des Regens bin ich joggen gegangen."],
+ ["wo","Say where you put your keys when you get home, then where they are now.","legen + Akkusativ, then liegen + Dativ","Ich lege die Schlüssel auf den Tisch. Jetzt liegen sie auf dem Tisch."],
+ ["wo","Describe where something is in your room.","a two-way preposition + Dativ (Wo?)","Mein Laptop liegt neben dem Bett."],
+ ["wo","Say where you're hanging or putting something.","a two-way preposition + Akkusativ (Wohin?)","Ich hänge das Foto an die Wand."],
+ ["time","Say how long you've been doing something you still do.","seit + Dativ, present tense","Ich wohne seit drei Jahren in Deutschland."],
+ ["time","Say something you did a while ago.","vor + Dativ (ago), past tense","Vor zwei Wochen habe ich meine Mutter angerufen."],
+ ["time","Say when you get up and what you do on Sundays.","um + clock time, am + day","Ich stehe um sieben Uhr auf. Am Sonntag koche ich."],
+ ["time","Say what you'll do in a few weeks.","in + Dativ (future point)","In drei Wochen fliege ich nach Lagos."],
+ ["place","Say where you're going this weekend.","nach / in / zu / auf / an (Wohin?)","Am Wochenende fahre ich zu meiner Tante nach Hamburg."],
+ ["place","Say where you work or study.","bei / in / an + Dativ (Wo?)","Ich arbeite bei einer Firma in Berlin."],
+ ["place","Say where you come from, and where you have just come from.","aus vs. von","Ich komme aus Nigeria. Gerade komme ich vom Supermarkt."],
+ ["verbs","Say what you're looking forward to.","sich freuen auf + Akkusativ","Ich freue mich auf den Urlaub."],
+ ["verbs","Say what you're interested in.","sich interessieren für + Akkusativ","Ich interessiere mich für Geschichte."],
+ ["verbs","Say what you're afraid of.","Angst haben vor + Dativ","Ich habe Angst vor Prüfungen."],
+ ["verbs","Say what you're waiting for.","warten auf + Akkusativ","Ich warte auf eine Antwort vom Amt."],
+ ["verbs","Say what you need to take care of this week.","sich kümmern um + Akkusativ","Diese Woche muss ich mich um meine Steuererklärung kümmern."],
+ ["verbs","Say what annoys you.","sich ärgern über + Akkusativ","Ich ärgere mich über die Verspätungen der Bahn."],
+ ["verbs","Say what you dream of.","träumen von + Dativ","Ich träume von einem Haus mit Garten."],
+ ["verbs","Say who you often think of.","denken an + Akkusativ","Ich denke oft an meine Großmutter."],
+ ["tricky","Say who you often talk to, and about what.","sprechen mit + Dativ über + Akkusativ","Ich spreche oft mit meiner Schwester über die Arbeit."],
+ ["tricky","Complain to someone about something.","sich beschweren bei + Dativ über + Akkusativ","Ich beschwere mich beim Vermieter über die Heizung."],
+ ["tricky","Thank someone for something.","sich bedanken bei + Dativ für + Akkusativ","Ich bedanke mich bei meiner Kollegin für die Hilfe."],
+ ["adj","Say who or what you're proud of.","stolz auf + Akkusativ","Ich bin stolz auf meinen Bruder."],
+ ["adj","Say what you're happy with at the moment.","zufrieden mit + Dativ","Ich bin mit meiner neuen Wohnung zufrieden."],
+ ["adj","Say what your home city is known for.","bekannt für + Akkusativ","Lagos ist bekannt für seine Musik."],
+ ["dawo","Ask someone what they're waiting for, then answer with a da-word.","wo(r)- question, da(r)- answer","Worauf wartest du? – Ich warte darauf, dass der Laden aufmacht."],
+ ["dawo","Say you're looking forward to something, using a da-word and a dass-clause.","darauf, dass …","Ich freue mich darauf, dass meine Familie mich besucht."]
+];
+
+function parseGaps(de){
+  const parts=[],gaps=[],re=/\{([^}]+)\}/g;let last=0,m;
+  while((m=re.exec(de))){
+    if(m.index>last)parts.push({t:de.slice(last,m.index)});
+    const alts=m[1].split("|"),g={ans:alts[0],ok:[],soft:[]};
+    alts.slice(1).forEach(a=>a.charAt(0)==="~"?g.soft.push(a.slice(1)):g.ok.push(a));
+    parts.push({g});gaps.push(g);last=re.lastIndex;
+  }
+  if(last<de.length)parts.push({t:de.slice(last)});
+  return {parts,gaps,full:parts.map(p=>p.t!=null?p.t:p.g.ans).join("")};
+}
+const PROD=PROD_RAW.map(([deck,en,de,note,key])=>Object.assign({deck,en,de,note:note||"",key:key||null},parseGaps(de)));
+const PROD_BY_DE=new Map(PROD.map(p=>[p.de,p]));
+const OWN_ITEMS=OWN_RAW.map(([deck,task,target,example])=>({id:"o|"+task,kind:"own",deck,task,target,example}));
+const OWN_BY_ID=new Map(OWN_ITEMS.map(o=>[o.id,o]));
+
 /* ---------- Storage ---------- */
 const KEY="praepositionen-flashcards-v1";
-const DEFAULT_SETTINGS={decks:["core"],size:20,dir:"de"};
+const DEFAULT_SETTINGS={decks:["core"],size:20,dir:"de",mode:"rec",task:"gap"};
 let store={progress:{},edits:{},custom:[],hidden:[],settings:{...DEFAULT_SETTINGS}};
 let storageOk=true;
 function normalize(s){
@@ -479,7 +730,9 @@ function cleanSettings(st){
   return {
     decks:Array.isArray(st.decks)?st.decks.filter(id=>DECK[id]):DEFAULT_SETTINGS.decks.slice(),
     size:[0,10,20,40].includes(st.size)?st.size:DEFAULT_SETTINGS.size,
-    dir:st.dir==="rev"?"rev":"de"
+    dir:st.dir==="rev"?"rev":"de",
+    mode:st.mode==="use"?"use":"rec",
+    task:["gap","tr","own"].includes(st.task)?st.task:"gap"
   };
 }
 function cleanProgress(pr){
@@ -541,43 +794,80 @@ function show(v){
   const ae=document.activeElement;
   if(ae&&ae!==document.body&&ae.closest("main[hidden]"))ae.blur();
   if(v==="home")renderHome();
-  if(v==="study"){renderStudy();const sc=$("#study-card");if(sc)sc.focus({preventScroll:true})}
+  if(v==="study"){if(session)session.focusCard=true;renderStudy()}
   if(v==="cards")renderCards();
   if(v==="settings")renderSettings();
   window.scrollTo(0,0);
 }
 document.querySelector(".tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(b)show(b.dataset.view)});
 
+/* ---------- Modes ---------- */
+let sampleFn=null, claudeOff=false;
+try{
+  if(window.claude&&typeof window.claude.use==="function"){
+    window.claude.use("sample").then(s=>{sampleFn=s||null;if(view==="study"&&session)renderStudy()}).catch(()=>{});
+  }
+}catch(e){}
+const claudeReady=()=>!!sampleFn&&!claudeOff;
+function useItems(task){
+  if(task==="own")return OWN_ITEMS;
+  return PROD.map(p=>Object.assign({},p,{id:(task==="gap"?"g|":"t|")+p.de,kind:task}));
+}
+function modeItems(){return store.settings.mode==="use"?useItems(store.settings.task):allCards()}
+function getItem(id){
+  if(!id)return null;
+  if(id.startsWith("g|")||id.startsWith("t|")){const p=PROD_BY_DE.get(id.slice(2));return p?Object.assign({},p,{id,kind:id[0]==="g"?"gap":"tr"}):null}
+  if(id.startsWith("o|"))return OWN_BY_ID.get(id)||null;
+  return cardMap().get(id)||null;
+}
+function unitWord(n,mode,task){const u=mode==="use"?(task==="own"?"prompt":"sentence"):"card";return n===1?u:u+"s"}
+function setPressed(sel,key,val){document.querySelectorAll(sel+" button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset[key]===String(val))))}
+
 /* ---------- Home ---------- */
 const TICK='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>';
+const LEAD={
+  rec:"Recognise each preposition, its meaning and its case. Progress and your edits stay in this browser.",
+  gap:"Read the English, then type the missing German words. Articles and endings count.",
+  tr:"Translate the whole sentence into German. The app checks the key phrase, and Claude can check the rest.",
+  own:"Write a sentence about your own life with the target structure. Claude can check it, or you compare with an example."
+};
 function renderHome(){
-  const cards=allCards(), sel=store.settings.decks;
-  const selCards=cards.filter(c=>sel.includes(c.deck));
-  const all=counts(cards), s=counts(selCards);
+  const st=store.settings, use=st.mode==="use";
+  const items=modeItems(), sel=st.decks;
+  const selItems=items.filter(c=>sel.includes(c.deck));
+  const all=counts(items), s=counts(selItems);
+  $("#lead").textContent=use?LEAD[st.task]:LEAD.rec;
   $("#overview").innerHTML=`<div><b>${all.m}</b><span>mastered of ${all.t}</span></div><div><b>${all.l}</b><span>learning</span></div><div><b>${s.due}</b><span>due in selected</span></div>`;
   $("#deck-list").innerHTML=DECKS.map(d=>{
-    const k=counts(cards.filter(c=>c.deck===d.id)), on=sel.includes(d.id);
-    return `<label class="deck${on?" on":""}" for="deck-${d.id}">
+    const k=counts(items.filter(c=>c.deck===d.id)), on=sel.includes(d.id);
+    const meta=k.t
+      ?`<span>${k.t} ${unitWord(k.t,st.mode,st.task)}</span><span>${k.m} mastered</span><span>${k.n} new</span><span class="due">${k.due} due</span>`
+      :`<span>Nothing to practise in this exercise</span>`;
+    return `<label class="deck${on?" on":""}${k.t?"":" off"}" for="deck-${d.id}">
       <input type="checkbox" id="deck-${d.id}" data-deck="${d.id}"${on?" checked":""}>
       <span class="deck-main">
-        <span class="deck-name">${esc(d.name)}${d.rev?' <span title="Can be studied reversed" aria-label="reversible">⇄</span>':""}</span>
+        <span class="deck-name">${esc(d.name)}${!use&&d.rev?' <span title="Can be studied reversed" aria-label="reversible">⇄</span>':""}</span>
         <span class="deck-sub">${esc(d.sub)}</span>
         <span class="meter" aria-hidden="true"><i class="mm" style="width:${pct(k.m,k.t)}%"></i><i class="ml" style="width:${pct(k.l,k.t)}%"></i></span>
-        <span class="deck-meta"><span>${k.t} cards</span><span>${k.m} mastered</span><span>${k.n} new</span><span class="due">${k.due} due</span></span>
+        <span class="deck-meta">${meta}</span>
       </span>
       <span class="tick">${TICK}</span>
     </label>`;
   }).join("");
-  document.querySelectorAll("#size-seg button").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.size===store.settings.size)));
-  document.querySelectorAll("#dir-seg button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.dir===store.settings.dir)));
+  setPressed("#mode-seg","mode",st.mode);
+  setPressed("#task-seg","task",st.task);
+  setPressed("#size-seg","size",st.size);
+  setPressed("#dir-seg","dir",st.dir);
+  $("#dir-opt").hidden=use; $("#task-opt").hidden=!use;
   const anyRev=sel.some(id=>DECK[id]&&DECK[id].rev);
   $("#dir-help").textContent=anyRev?"Reversed shows the meaning or use, and you produce the German. Applies to decks marked ⇄.":"None of the selected decks can be reversed, so cards show German first.";
   const btn=$("#start-btn");
   if(!sel.length){btn.textContent="Select at least one deck";btn.disabled=true}
+  else if(!selItems.length){btn.textContent="The selected decks have nothing for this exercise";btn.disabled=true}
   else{
     btn.disabled=false;
-    const n=store.settings.size?Math.min(store.settings.size,s.due):s.due;
-    btn.textContent=s.due?`Study ${n} card${n===1?"":"s"}`:"Nothing due. Practise your weakest cards";
+    const n=st.size?Math.min(st.size,s.due):s.due;
+    btn.textContent=s.due?`Start ${n} ${unitWord(n,st.mode,st.task)}`:"Nothing due. Practise your weakest ones";
     btn.dataset.force=s.due?"":"1";
   }
   $("#resume").hidden=!(session&&session.queue.length);
@@ -587,26 +877,35 @@ $("#deck-list").addEventListener("change",e=>{
   const set=new Set(store.settings.decks);e.target.checked?set.add(id):set.delete(id);
   store.settings.decks=DECKS.map(d=>d.id).filter(x=>set.has(x));save(true);renderHome();
 });
+$("#mode-seg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;store.settings.mode=b.dataset.mode;save(true);renderHome()});
+$("#task-seg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;store.settings.task=b.dataset.task;save(true);renderHome()});
 $("#size-seg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;store.settings.size=+b.dataset.size;save(true);renderHome()});
 $("#dir-seg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;store.settings.dir=b.dataset.dir;save(true);renderHome()});
 $("#start-btn").addEventListener("click",e=>{startSession(!!e.currentTarget.dataset.force)});
 $("#resume-btn").addEventListener("click",()=>show("study"));
 
-/* ---------- Study session ---------- */
+/* ---------- Session ---------- */
 let session=null;
+function clearAttempt(){
+  if(!session)return;
+  if(session.claude&&session.claude.ctl)try{session.claude.ctl.abort()}catch(e){}
+  session.revealed=false;session.guess=null;session.answer=null;session.checked=null;session.claude=null;
+}
 function startSession(force){
-  const now=Date.now(), sel=store.settings.decks;
-  const cards=allCards().filter(c=>sel.includes(c.deck));
+  if(session)clearAttempt();
+  const now=Date.now(), st=store.settings;
+  const items=modeItems().filter(c=>st.decks.includes(c.deck));
   let seen=[],fresh=[];
-  for(const c of cards){const p=store.progress[c.id];if(!p)fresh.push(c);else if(force||p.due<=now)seen.push(c)}
+  for(const c of items){const p=store.progress[c.id];if(!p)fresh.push(c);else if(force||p.due<=now)seen.push(c)}
   seen.sort((a,b)=>{const pa=store.progress[a.id],pb=store.progress[b.id];return pa.box-pb.box||pa.due-pb.due});
   let pool=seen.concat(shuffle(fresh));
-  if(store.settings.size)pool=pool.slice(0,store.settings.size);
+  if(st.size)pool=pool.slice(0,st.size);
   if(!pool.length)return;
-  session={queue:shuffle(pool.map(c=>c.id)),total:pool.length,done:0,again:new Set(),firstOk:0,revealed:false,guess:null};
+  session={mode:st.mode,task:st.task,queue:shuffle(pool.map(c=>c.id)),total:pool.length,done:0,again:new Set(),firstOk:0,
+    revealed:false,guess:null,answer:null,checked:null,claude:null};
   show("study");
 }
-function curCard(){return session&&session.queue.length?cardMap().get(session.queue[0]):null}
+function curCard(){return session&&session.queue.length?getItem(session.queue[0]):null}
 function isRev(c){return store.settings.dir==="rev"&&DECK[c.deck]&&DECK[c.deck].rev}
 function caseOptions(c){const d=DECK[c.deck];let o=d&&d.cases.length?d.cases.slice():["akk","dat","gen"];if(c.case&&!o.includes(c.case))o.push(c.case);return o}
 const NAMES_CASE=/Akkusativ|Dativ|Genitiv/;
@@ -632,30 +931,39 @@ function exampleHtml(c){
   }else html=ex.split(" / ").map(rich).join("<br>");
   return `<ul class="ex"><li class="${caseCls(c.case)}">${html}</li></ul>`;
 }
+function sbarHtml(){
+  return `<div class="sbar">
+    <div class="row"><span class="count">${session.done} of ${session.total} done · ${session.queue.length} to go</span>
+    <button type="button" class="btn small" id="end-btn">End session</button></div>
+    <div class="track"><i style="width:${pct(session.done,session.total)}%"></i></div>
+  </div>`;
+}
+function endSession(){clearAttempt();session.queue=[];renderDone()}
 function renderStudy(){
   const v=$("#v-study");
   if(!session){show("home");return}
   if(!session.queue.length){renderDone();return}
   const c=curCard();
-  if(!c){session.queue.shift();renderStudy();return}
+  if(!c){session.queue.shift();session.total=Math.max(session.done,session.total-1);clearAttempt();renderStudy();return}
+  const hadFocus=v.contains(document.activeElement)||!!session.focusCard;
+  session.focusCard=false;
+  if(c.kind==="gap"||c.kind==="tr"||c.kind==="own"){renderProd(c,v,hadFocus);return}
   const d=DECK[c.deck]||{name:"Custom",ask:"",cases:[]};
   const rev=isRev(c);
   const promptText=rev?c.back:c.front, promptHint=rev?"":c.hint;
   const answerText=rev?c.front:c.back, answerSub=rev?c.hint:"";
   const ask=rev?(d.askRev||d.ask):d.ask;
   const p=store.progress[c.id];
-  const left=session.total-session.done;
-  const hadFocus=v.contains(document.activeElement);
   let caseQ="";
   if(asksCase(c)&&!session.revealed){
     caseQ=`<div class="caseq"><span class="label">Which case?</span><div class="opts-row">`+
-      caseOptions(c).map((k,i)=>`<button type="button" class="cbtn ${caseCls(k)}" data-case="${k}">${CASES[k].label}${k==="wech"?" (two-way)":""}</button>`).join("")+
+      caseOptions(c).map(k=>`<button type="button" class="cbtn ${caseCls(k)}" data-case="${k}">${CASES[k].label}${k==="wech"?" (two-way)":""}</button>`).join("")+
       `</div></div>`;
   }
   let answer="";
   if(session.revealed){
     let verdict="";
-    if(session.guess){
+    if(session.guess&&CASES[c.case]){
       const ok=session.guess===c.case;
       verdict=`<div class="verdict ${ok?"ok":"no"}">${ok?"Right case: ":"Not quite. It takes "}${CASES[c.case].label}${c.case==="wech"?" (two-way)":""}.</div>`;
     }
@@ -667,12 +975,7 @@ function renderStudy(){
       ${c.note?`<p class="note">${esc(c.note)}</p>`:""}
     </div>`;
   }
-  v.innerHTML=`
-    <div class="sbar">
-      <div class="row"><span class="count">${session.done} of ${session.total} done${left>0?` · ${session.queue.length} to go`:""}</span>
-      <button type="button" class="btn small" id="end-btn">End session</button></div>
-      <div class="track"><i style="width:${pct(session.done,session.total)}%"></i></div>
-    </div>
+  v.innerHTML=`${sbarHtml()}
     <article class="card" id="study-card" tabindex="-1" aria-live="polite">
       <div class="card-head"><span class="deck-tag">${esc(d.name)}${rev?" · reversed":""}</span>${pips(c.id)}</div>
       <p class="ask">${esc(ask)}</p>
@@ -690,23 +993,19 @@ function renderStudy(){
       <span class="label">${p?`Seen ${p.right+p.wrong}× · ${p.right} right`:"New card"}</span>
       <button type="button" class="btn small" id="edit-cur">Edit card</button>
     </div>`;
-  bindStudy();
-  /* Keep keyboard focus in the study area after each re-render, on the card itself so no button fires by accident. */
-  if(hadFocus){const sc=$("#study-card");if(sc)sc.focus({preventScroll:true})}
-}
-function bindStudy(){
-  const v=$("#v-study");
   v.querySelectorAll(".cbtn").forEach(b=>b.addEventListener("click",()=>guess(b.dataset.case)));
   const r=$("#reveal-btn");if(r)r.addEventListener("click",reveal);
   const a=$("#again-btn");if(a)a.addEventListener("click",()=>rate(false));
   const g=$("#good-btn");if(g)g.addEventListener("click",()=>rate(true));
-  $("#end-btn").addEventListener("click",()=>{session.queue=[];renderDone()});
-  $("#edit-cur").addEventListener("click",()=>{const c=curCard();if(c)openEditor(c.id)});
+  $("#end-btn").addEventListener("click",endSession);
+  $("#edit-cur").addEventListener("click",()=>{const x=curCard();if(x)openEditor(x.id)});
+  /* Keep keyboard focus in the study area after each re-render, on the card itself so no button fires by accident. */
+  if(hadFocus){const sc=$("#study-card");if(sc)sc.focus({preventScroll:true})}
 }
 function guess(k){if(!session||session.revealed)return;session.guess=k;session.revealed=true;renderStudy()}
 function reveal(){if(!session||session.revealed)return;session.revealed=true;renderStudy()}
 function rate(good){
-  if(!session||!session.revealed)return;
+  if(!session||!session.revealed||!session.queue.length)return;
   const id=session.queue.shift(), now=Date.now();
   const p=store.progress[id]||{box:0,due:0,right:0,wrong:0};
   if(good){
@@ -719,20 +1018,226 @@ function rate(good){
   }
   p.due=now+INT[p.box];p.last=now;
   store.progress[id]=p;save();
-  session.revealed=false;session.guess=null;
+  clearAttempt();
   renderStudy();
 }
+
+/* ---------- Active use (produce the German) ---------- */
+const fold=s=>String(s||"").toLowerCase().replace(/[’'`´]/g,"").replace(/[.,!?;:"„“”«»()–-]/g," ").replace(/\s+/g," ").trim();
+const deum=s=>s.replace(/ä/g,"a").replace(/ö/g,"o").replace(/ü/g,"u").replace(/ß/g,"ss").replace(/ae/g,"a").replace(/oe/g,"o").replace(/ue/g,"u");
+function checkGap(val,g){
+  const v=fold(val);
+  if(!v)return{ok:false,empty:true};
+  const forms=[g.ans].concat(g.ok);
+  if(forms.some(f=>fold(f)===v))return{ok:true};
+  if(forms.some(f=>deum(fold(f))===deum(v)))return{ok:true,spell:true};
+  if(g.soft.some(f=>fold(f)===v||deum(fold(f))===deum(v)))return{ok:false,soft:true};
+  return{ok:false};
+}
+function checkTr(text,it){
+  const t=" "+deum(fold(text))+" ";
+  const keys=it.key?it.key.map(k=>({k,forms:[k]})):it.gaps.map(g=>({k:g.ans,forms:[g.ans].concat(g.ok)}));
+  /* With key alternatives (e.g. "um 9" / "um neun"), one match is enough. */
+  const has=f=>t.includes(" "+deum(fold(f))+" ");
+  if(it.key){const hit=keys.find(x=>has(x.k));return{keys:[{k:hit?hit.k:it.key[0],found:!!hit}]}}
+  return{keys:keys.map(x=>{const f=x.forms.find(has);return{k:f||x.k,found:!!f}})};
+}
+function modelHtml(it){return it.parts.map(p=>p.t!=null?esc(p.t):`<b class="hl">${esc(p.g.ans)}</b>`).join("")}
+function umlautRow(){return `<div class="ukeys" aria-label="Insert special letters">${["ä","ö","ü","ß"].map(ch=>`<button type="button" data-ch="${ch}" tabindex="-1">${ch}</button>`).join("")}</div>`}
+const VLABEL={correct:"Correct",minor:"Small fix needed",wrong:"Needs work"};
+function claudePrompt(it,text){
+  const head=it.kind==="tr"
+    ?`A learner of German (around B1) translated an English sentence.\nEnglish: ${JSON.stringify(it.en)}\nOne correct translation: ${JSON.stringify(it.full)}\nLearner's German: ${JSON.stringify(text)}\nOther correct wordings are fine: judge the learner's sentence on its own merits as a translation of the English. "usesTarget" means the sentence uses a correct preposition structure for this meaning.`
+    :`A learner of German (around B1) was asked to write a sentence of their own.\nTask: ${JSON.stringify(it.task)}\nTarget structure: ${JSON.stringify(it.target)}\nLearner's German: ${JSON.stringify(text)}\nThe content can be anything plausible; judge only the German, and whether it uses the target structure.`;
+  return head+`\nCheck prepositions, cases, article and adjective endings, verb position and spelling. Be strict about real errors and do not invent problems. Ignore a missing final full stop.\nReply with only a JSON object:\n{"verdict":"correct"|"minor"|"wrong","usesTarget":true|false,"corrected":"the learner's sentence with every error fixed, unchanged if correct","explanation":"1-3 short sentences in plain English for the learner, naming the preposition and case involved","alternative":"a more natural German version if there is one, otherwise an empty string"}\nUse "minor" for small slips like a spelling mistake or a missing comma. Use "wrong" for an error in preposition, case, ending or word order.`;
+}
+function cleanResult(r){
+  r=r&&typeof r==="object"?r:{};
+  const s=x=>typeof x==="string"?x.slice(0,600):"";
+  return{verdict:["correct","minor","wrong"].includes(r.verdict)?r.verdict:"minor",usesTarget:r.usesTarget!==false,corrected:s(r.corrected),explanation:s(r.explanation),alternative:s(r.alternative)};
+}
+async function claudeCheck(){
+  if(!session||!claudeReady())return;
+  if(session.claude&&session.claude.status==="loading")return;
+  const it=curCard(), text=String(session.answer||"").trim();
+  if(!it||!text)return;
+  const ctl=new AbortController(), myId=session.queue[0], mySession=session;
+  session.claude={status:"loading",ctl};renderStudy();
+  let next;
+  try{
+    const r=await sampleFn.json(claudePrompt(it,text),{signal:ctl.signal});
+    next={status:"done",r:cleanResult(r)};
+  }catch(e){
+    const code=e&&e.code;
+    if(code==="cancelled")next=null;
+    else if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(code)){
+      claudeOff=true;next={status:"error",msg:"Claude checks aren't available on this page right now. Compare with the example instead."};
+    }
+    else if(code==="rate_limited")next={status:"error",msg:"Too many checks at once. Wait a minute, then try again."};
+    else if(code==="session_expired")next={status:"error",msg:"Your claude.ai sign-in expired. Sign in again, then try again."};
+    else if(code==="refused")next={status:"error",msg:"Claude couldn't check this sentence. Try rewording it."};
+    else next={status:"error",msg:"The check didn't finish. Try again."};
+  }
+  if(session!==mySession||session.queue[0]!==myId)return;
+  session.claude=next;renderStudy();
+}
+function claudeBox(it){
+  if(!sampleFn)return "";
+  const cl=session.claude;
+  if(!cl){
+    if(claudeOff)return "";
+    return `<div class="claude"><div class="row"><button type="button" class="btn small" id="claude-btn">Ask Claude to check</button><span class="cost">Uses your Claude usage</span></div></div>`;
+  }
+  if(cl.status==="loading")return `<div class="claude" aria-live="polite"><div class="row" style="justify-content:space-between"><span class="thinking">Claude is checking your sentence. This can take up to a minute.</span><button type="button" class="btn small" id="claude-stop">Stop</button></div></div>`;
+  if(cl.status==="error")return `<div class="claude"><p class="status no">${esc(cl.msg)}</p>${claudeOff?"":`<div class="row"><button type="button" class="btn small" id="claude-btn">Try again</button></div>`}</div>`;
+  const r=cl.r, changed=r.corrected&&fold(r.corrected)!==fold(session.answer);
+  return `<div class="claude" aria-live="polite">
+    <span class="pill v-${r.verdict}">${VLABEL[r.verdict]}</span>
+    ${it.kind==="own"&&!r.usesTarget?`<p class="warnline">This doesn't use the target structure yet: ${esc(it.target)}.</p>`:""}
+    ${changed?`<div><span class="label">Corrected</span><p class="corrected">${esc(r.corrected)}</p></div>`:""}
+    ${r.explanation?`<p class="expl">${esc(r.explanation)}</p>`:""}
+    ${r.alternative&&fold(r.alternative)!==fold(r.corrected)?`<div><span class="label">More natural</span><p class="corrected">${esc(r.alternative)}</p></div>`:""}
+  </div>`;
+}
+const TASK_NAME={gap:"Fill the gap",tr:"Translate",own:"Own sentence"};
+function renderProd(it,v,hadFocus){
+  const d=DECK[it.deck]||{name:""};
+  const ch=session.checked, p=store.progress[it.id];
+  let body="", actions="";
+  if(it.kind==="gap"){
+    if(!Array.isArray(session.answer))session.answer=it.gaps.map(()=>"");
+    let gi=0;
+    const line=it.parts.map(pt=>{
+      if(pt.t!=null)return esc(pt.t);
+      const i=gi++, g=pt.g;
+      if(!ch)return `<input class="gapin" id="gap-${i}" data-i="${i}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" lang="de" aria-label="Gap ${i+1}" value="${esc(session.answer[i])}" style="width:${Math.max(8,String(session.answer[i]||"").length+2)}ch">`;
+      const r=ch.res[i], typed=String(session.answer[i]||"").trim();
+      return r.ok?`<b class="gap-ok">${esc(typed)}</b>`:`<s class="gap-bad">${esc(typed||"…")}</s> <b class="gap-fix">${esc(g.ans)}</b>`;
+    }).join("");
+    body=`<p class="ask">Type the missing words</p><p class="en">${esc(it.en)}</p>
+      <form id="prod-form" class="prod" novalidate><p class="de-line">${line}</p>
+      ${ch?"":umlautRow()+`<button type="submit" class="btn primary reveal">Check <span class="kbd">Enter</span></button>`}</form>`;
+    if(ch){
+      const notes=[];
+      it.gaps.forEach((g,i)=>{const r=ch.res[i];
+        if(r.ok&&r.spell)notes.push(`Spelling: write ${g.ans}.`);
+        if(!r.ok&&r.soft)notes.push(it.note||"Close, but not for writing.");
+        if(r.ok&&!r.spell&&fold(session.answer[i])!==fold(g.ans))notes.push(`Also correct. The model answer uses ${g.ans}.`);
+      });
+      if(it.note&&!notes.includes(it.note))notes.push(it.note);
+      body+=`<div class="answer">
+        <div class="verdict ${ch.ok?"ok":"no"}">${ch.ok?"Right.":"Not quite."}</div>
+        <p class="model">${modelHtml(it)}</p>
+        ${notes.map(n=>`<p class="note">${esc(n)}</p>`).join("")}
+      </div>`;
+      actions=`<div class="rate">${ch.ok?`<span></span>`:`<button type="button" class="btn" id="override-btn">I was right</button>`}
+        <button type="button" class="btn primary" id="next-btn">Next <span class="kbd">Enter</span></button></div>`;
+    }
+  }else{
+    const isOwn=it.kind==="own";
+    body=isOwn
+      ?`<p class="ask">Write your own sentence</p><p class="en big">${esc(it.task)}</p><p class="target"><span class="label">Use</span><span class="chip">${esc(it.target)}</span></p>`
+      :`<p class="ask">Say it in German</p><p class="en big">${esc(it.en)}</p>`;
+    if(!ch){
+      const own=isOwn&&claudeReady();
+      body+=`<form id="prod-form" class="prod" novalidate>
+        <label class="sr" for="prod-text">Your German sentence</label>
+        <textarea id="prod-text" class="prodta" rows="3" lang="de" autocapitalize="sentences" autocorrect="off" spellcheck="false" placeholder="Type your German here">${esc(session.answer||"")}</textarea>
+        ${umlautRow()}
+        <div class="row">
+          <button type="submit" class="btn primary" data-act="${own?"claude":"check"}">${own?"Check with Claude":isOwn?"Compare with example":"Check"}</button>
+          ${own?`<button type="submit" class="btn" data-act="check">Just show an example</button>`:""}
+        </div>
+        ${own?`<span class="cost">Checking uses your Claude usage.</span>`:""}
+      </form>`;
+    }else{
+      const keyList=!isOwn&&ch.keys?`<ul class="keys">${ch.keys.map(k=>`<li class="${k.found?"ok":"no"}">${k.found?"✓ Key phrase used:":"✗ Key phrase missing:"} <b>${esc(k.k)}</b></li>`).join("")}</ul>
+        ${ch.keys.some(k=>!k.found)?`<p class="note">A different wording can still be right. Compare with the model answer${claudeReady()?", or ask Claude":""}.</p>`:""}`:"";
+      body+=`<div class="answer">
+        <div class="yours"><span class="label">Your sentence</span><p>${esc(session.answer)}</p></div>
+        ${keyList}
+        ${claudeBox(it)}
+        <div><span class="label">${isOwn?"Example":"Model answer"}</span><p class="model">${isOwn?esc(it.example):modelHtml(it)}</p></div>
+        ${!isOwn&&it.note?`<p class="note">${esc(it.note)}</p>`:""}
+        <div class="row"><button type="button" class="btn small" id="retry-btn">Edit and check again</button></div>
+      </div>`;
+      const cl=session.claude&&session.claude.status==="done"?session.claude.r:null;
+      const suggestBad=cl?cl.verdict==="wrong"||(isOwn&&!cl.usesTarget):(!isOwn&&ch.keys&&ch.keys.some(k=>!k.found));
+      actions=`<div class="rate">
+        <button type="button" class="btn again${suggestBad?" suggest":""}" id="again-btn">Again <span class="kbd">1</span></button>
+        <button type="button" class="btn good" id="good-btn">Got it <span class="kbd">2</span></button>
+      </div>`;
+    }
+  }
+  v.innerHTML=`${sbarHtml()}
+    <article class="card" id="study-card" tabindex="-1">
+      <div class="card-head"><span class="deck-tag">${esc(d.name)} · ${TASK_NAME[it.kind]}</span>${pips(it.id)}</div>
+      ${body}
+    </article>
+    ${actions}
+    <div class="row"><span class="label">${p?`Seen ${p.right+p.wrong}× · ${p.right} right`:"New"}</span></div>`;
+  bindProd(it,v);
+  if(!ch){const first=v.querySelector(".gapin,.prodta");if(first&&hadFocus)first.focus({preventScroll:true})}
+  else if(hadFocus){const sc=$("#study-card");if(sc)sc.focus({preventScroll:true})}
+}
+let lastInput=null;
+function bindProd(it,v){
+  $("#end-btn").addEventListener("click",endSession);
+  const form=$("#prod-form");
+  if(form){
+    v.querySelectorAll(".gapin").forEach(inp=>inp.addEventListener("input",()=>{session.answer[+inp.dataset.i]=inp.value;inp.style.width=Math.max(8,inp.value.length+2)+"ch"}));
+    const ta=$("#prod-text");
+    if(ta){
+      ta.addEventListener("input",()=>{session.answer=ta.value});
+      ta.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();form.requestSubmit?form.requestSubmit(form.querySelector('[type="submit"]')):form.dispatchEvent(new Event("submit",{cancelable:true}))}});
+    }
+    v.querySelectorAll(".gapin,.prodta").forEach(el=>el.addEventListener("focus",()=>{lastInput=el}));
+    v.querySelectorAll(".ukeys button").forEach(b=>{
+      b.addEventListener("mousedown",e=>e.preventDefault());
+      b.addEventListener("click",()=>{
+        const el=lastInput&&v.contains(lastInput)?lastInput:v.querySelector(".gapin,.prodta");if(!el)return;
+        const s=el.selectionStart??el.value.length, e2=el.selectionEnd??el.value.length;
+        el.value=el.value.slice(0,s)+b.dataset.ch+el.value.slice(e2);
+        el.focus();el.setSelectionRange(s+1,s+1);el.dispatchEvent(new Event("input"));
+      });
+    });
+    form.addEventListener("submit",e=>{
+      e.preventDefault();
+      if(it.kind==="gap"){
+        const res=it.gaps.map((g,i)=>checkGap(session.answer[i],g));
+        if(res.every(r=>r.empty)){const f=v.querySelector(".gapin");if(f)f.focus();return}
+        session.checked={res,ok:res.every(r=>r.ok)};
+      }else{
+        const text=String(session.answer||"").trim();
+        if(!text){if(ta)ta.focus();return}
+        session.answer=text;
+        session.checked=it.kind==="tr"?checkTr(text,it):{own:true};
+        const act=(e.submitter&&e.submitter.dataset.act)||"check";
+        if(act==="claude"){session.revealed=true;session.focusCard=true;claudeCheck();return}
+      }
+      session.revealed=true;session.focusCard=true;renderStudy();
+    });
+  }
+  const on=(id,fn)=>{const el=$(id);if(el)el.addEventListener("click",fn)};
+  on("#next-btn",()=>rate(!!(session.checked&&session.checked.ok)));
+  on("#override-btn",()=>rate(true));
+  on("#again-btn",()=>rate(false));
+  on("#good-btn",()=>rate(true));
+  on("#claude-btn",claudeCheck);
+  on("#claude-stop",()=>{if(session.claude&&session.claude.ctl)session.claude.ctl.abort()});
+  on("#retry-btn",()=>{const keep=session.answer;clearAttempt();session.answer=keep;session.focusCard=true;renderStudy()});
+}
 function renderDone(){
-  const k=counts(allCards());
-  const s=session;
+  const s=session, k=counts(modeItems());
+  const unit=n=>unitWord(n,s.mode,s.task);
   $("#v-study").innerHTML=`<div class="card done">
     <div class="card-head"><span class="deck-tag">Session finished</span></div>
     <h2>${s.done?"Gut gemacht!":"Session ended"}</h2>
-    <p class="lead">${s.done} card${s.done===1?"":"s"} finished, ${s.firstOk} right on the first try${s.again.size?`, ${s.again.size} needed another round`:""}. You have mastered ${k.m} of ${k.t} cards.</p>
-    <div class="row"><button type="button" class="btn primary" id="more-btn">Study more</button><button type="button" class="btn" id="home-btn">Back to decks</button></div>
+    <p class="lead">${s.done} ${unit(s.done)} finished, ${s.firstOk} right on the first try${s.again.size?`, ${s.again.size} needed another round`:""}. You have mastered ${k.m} of ${k.t} ${unit(k.t)} in this exercise.</p>
+    <div class="row"><button type="button" class="btn primary" id="more-btn">Keep going</button><button type="button" class="btn" id="home-btn">Back to decks</button></div>
   </div>`;
   session=null;
-  $("#more-btn").addEventListener("click",()=>{const sel=allCards().filter(c=>store.settings.decks.includes(c.deck));startSession(counts(sel).due===0)});
+  $("#more-btn").addEventListener("click",()=>{const sel=modeItems().filter(c=>store.settings.decks.includes(c.deck));startSession(counts(sel).due===0)});
   $("#home-btn").addEventListener("click",()=>show("home"));
 }
 document.addEventListener("keydown",e=>{
@@ -742,6 +1247,14 @@ document.addEventListener("keydown",e=>{
   /* Space / Enter on a focused button keep their normal meaning (press that button). */
   if((e.key===" "||e.key==="Enter")&&e.target.closest&&e.target.closest("button"))return;
   const c=curCard();if(!c)return;
+  if(c.kind==="gap"||c.kind==="tr"||c.kind==="own"){
+    if(!session.checked)return;
+    if(c.kind==="gap"&&(e.key==="Enter"||e.key===" ")){e.preventDefault();rate(!!session.checked.ok);return}
+    if(c.kind!=="gap"&&session.claude&&session.claude.status==="loading")return;
+    if(c.kind!=="gap"&&e.key==="1")rate(false);
+    if(c.kind!=="gap"&&e.key==="2")rate(true);
+    return;
+  }
   if(!session.revealed){
     if(e.key===" "||e.key==="Enter"){e.preventDefault();reveal();return}
     const k={a:"akk",d:"dat",g:"gen",w:"wech"}[e.key.toLowerCase()];
