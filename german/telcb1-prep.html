@@ -1,0 +1,2263 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>telc B1 Prüfungstrainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  /* Layout: one reading column (max 860px) on a quiet ground; sticky tab rail; drills sit on answer-sheet panels with an OMR timing track and pencil bubbles; a highlighter stroke marks the few things to remember. */
+  --paper:#F1F2ED;
+  --sheet:#FFFFFF;
+  --ink:#1A1E24;
+  --ink-2:#4B525C;
+  --rule:#D4D7CE;
+  --form:#2A47A3;
+  --form-soft:#E5EAF7;
+  --form-mid:#C6D0EE;
+  --on-form:#FFFFFF;
+  --hl:#F4D33C;
+  --good:#1D7A4E;
+  --good-soft:#DCEFE4;
+  --bad:#B4392F;
+  --bad-soft:#F7E2DE;
+  --f-display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#131519;--sheet:#1B1E23;--ink:#E8E9E4;--ink-2:#A6ACB4;--rule:#30343B;
+    --form:#97ACF1;--form-soft:#202844;--form-mid:#36436F;--on-form:#10131C;
+    --hl:rgba(230,198,52,.36);--good:#62C795;--good-soft:#16322A;--bad:#F08F84;--bad-soft:#3A201E;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#131519;--sheet:#1B1E23;--ink:#E8E9E4;--ink-2:#A6ACB4;--rule:#30343B;
+  --form:#97ACF1;--form-soft:#202844;--form-mid:#36436F;--on-form:#10131C;
+  --hl:rgba(230,198,52,.36);--good:#62C795;--good-soft:#16322A;--bad:#F08F84;--bad-soft:#3A201E;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;margin:0}
+a{color:var(--form);text-underline-offset:2px}
+.wrap{max-width:860px;margin:0 auto;padding-inline:16px;padding-block:6px 72px}
+
+/* header + tabs */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:1px solid var(--rule)}
+.top-row{max-width:860px;margin:0 auto;padding-inline:16px;padding-block:10px 0;display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.brand{font-family:var(--f-display);font-weight:700;font-size:20px;letter-spacing:.05em;text-transform:uppercase;margin:0;white-space:nowrap}
+.brand span{color:var(--form)}
+.days-pill{font:500 12px/1 var(--f-mono);color:var(--ink-2);white-space:nowrap;font-variant-numeric:tabular-nums}
+.tabs{max-width:860px;margin:0 auto;display:flex;gap:2px;overflow-x:auto;padding-inline:8px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;font:500 13px/1 var(--f-mono);letter-spacing:.01em;padding:12px 8px 10px;border:0;border-bottom:3px solid transparent;background:none;color:var(--ink-2);cursor:pointer}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--form)}
+.tab:focus-visible{outline:2px solid var(--form);outline-offset:-2px}
+
+/* type */
+.eyebrow{font:500 11.5px/1.35 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin:0}
+h1,h2,h3,h4{text-wrap:balance}
+.hero h1{font-family:var(--f-display);font-weight:700;font-size:clamp(56px,14vw,104px);line-height:.92;letter-spacing:-.005em;margin:14px 0 14px}
+.view>h2,.h2{font-family:var(--f-display);font-weight:700;font-size:clamp(34px,7.5vw,50px);line-height:.98;letter-spacing:.01em;text-transform:uppercase;margin:34px 0 8px}
+.intro{font-size:17.5px;line-height:1.5;max-width:62ch;margin:0 0 10px}
+h3{font-family:var(--f-display);font-weight:600;font-size:28px;line-height:1.05;margin:0}
+h4{font-family:var(--f-body);font-weight:700;font-size:16px;margin:18px 0 6px}
+p{margin:0 0 10px;max-width:68ch}
+ul.plain{margin:6px 0 12px;padding-left:20px;max-width:68ch}
+ul.plain li{margin:4px 0}
+.muted{color:var(--ink-2)}
+.small{font-size:14px}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.hl{background:linear-gradient(176deg,transparent 54%,var(--hl) 54%,var(--hl) 92%,transparent 92%);padding-inline:.06em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+[lang="de"]{hyphens:manual}
+b.de,span.de{font-weight:700}
+
+/* hero ledger */
+.ledger-wrap{margin:34px 0 4px}
+.ledger{position:relative;display:flex;height:52px;border:1.5px solid var(--ink);border-radius:4px}
+.ledger.oral{height:40px;margin-top:38px}
+.seg{flex:0 0 auto;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-right:1.5px solid var(--ink);overflow:hidden}
+.seg:last-of-type{border-right:0}
+.seg.a{background:var(--form-soft)}.seg.b{background:var(--sheet)}
+.seg em{font:600 14px/1 var(--f-display);font-style:normal;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap}
+.seg strong{font:600 13px/1 var(--f-mono);font-variant-numeric:tabular-nums}
+@media (max-width:480px){.seg em{font-size:12px;letter-spacing:0}.seg strong{font-size:12px}}
+.ledger-wrap>.eyebrow{margin-bottom:30px}
+.passline{position:absolute;top:-9px;bottom:-9px;width:0;border-left:2.5px solid var(--bad)}
+.passline span{position:absolute;top:-21px;left:0;transform:translateX(-50%);font:600 12px/1 var(--f-mono);color:var(--bad);white-space:nowrap}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:14px;font-size:13.5px;color:var(--ink-2)}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:26px 0 4px}
+@media (max-width:600px){.facts{grid-template-columns:1fr}}
+.fact{border-top:2px solid var(--ink);padding-top:8px;min-width:0}
+.fact b{display:block;font:700 36px/1 var(--f-display);font-variant-numeric:tabular-nums;margin-bottom:4px}
+.fact span{font-size:14.5px;color:var(--ink-2)}
+
+/* teil blocks */
+.teil{border-top:2px solid var(--ink);margin-top:38px;padding-top:12px}
+.teil-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+.teil-no{font:600 12px/1 var(--f-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--form)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 12px}
+.chip{font:500 12px/1 var(--f-mono);padding:6px 8px;border:1px solid var(--rule);border-radius:4px;color:var(--ink-2);background:var(--sheet);font-variant-numeric:tabular-nums}
+.chip.pts{border-color:var(--form-mid);color:var(--form);background:var(--form-soft)}
+ol.steps{list-style:none;counter-reset:s;padding:0;margin:10px 0 14px;display:grid;gap:10px}
+ol.steps>li{counter-increment:s;display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;max-width:72ch}
+ol.steps>li::before{content:counter(s);font:600 12.5px/24px var(--f-mono);width:25px;height:25px;text-align:center;border:1.5px solid var(--form);border-radius:50%;color:var(--form)}
+.notes{display:grid;gap:10px;margin:12px 0 16px}
+@media (min-width:720px){.notes.two{grid-template-columns:1fr 1fr}}
+.note{padding:12px 14px;border:1px solid var(--rule);background:var(--sheet);border-radius:var(--r);min-width:0}
+.note .lab{font:600 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--bad);display:block;margin-bottom:8px}
+.note.trick .lab{color:var(--good)}
+.note ul{margin:0;padding-left:18px}.note li{margin:4px 0}
+.rules{display:grid;gap:14px 22px;margin:14px 0 6px}
+@media (min-width:720px){.rules{grid-template-columns:1fr 1fr}}
+.rule{border-top:1px solid var(--rule);padding-top:10px;min-width:0}
+.rule b{display:block;font-family:var(--f-display);font-size:21px;font-weight:600;line-height:1.1;margin-bottom:4px}
+.rule p{margin:0;font-size:15px;color:var(--ink-2)}
+
+/* answer sheets */
+.sheet{position:relative;background:var(--sheet);border:1px solid var(--rule);border-radius:var(--r);padding:16px;margin:14px 0;min-width:0}
+.sheet.omr{padding-left:30px}
+.sheet.omr::before{content:"";position:absolute;left:11px;top:18px;bottom:18px;width:5px;background:repeating-linear-gradient(to bottom,var(--ink) 0 7px,transparent 7px 24px);opacity:.75}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px dashed var(--rule)}
+.sheet-title{font:600 12px/1.25 var(--f-mono);letter-spacing:.08em;text-transform:uppercase}
+.textblock{font-size:16px;line-height:1.6;padding:12px 14px;background:var(--paper);border-radius:var(--r);margin:8px 0;max-width:none}
+.textblock p{max-width:68ch}
+.textblock h4{margin-top:0;font-family:var(--f-display);font-size:22px;font-weight:600}
+.q{padding:12px 0;border-bottom:1px dashed var(--rule)}
+.q:last-child{border-bottom:0}
+.qline{margin:0 0 8px;max-width:72ch}
+.qnum{font:600 12px/1 var(--f-mono);color:var(--ink-2);margin-right:6px;font-variant-numeric:tabular-nums}
+.bubbles{display:flex;flex-wrap:wrap;gap:6px}
+.bub{position:relative;display:inline-block;cursor:pointer}
+.bub input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.bub span{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--form);font:600 13px/1 var(--f-mono);color:var(--form);background:var(--sheet);text-transform:lowercase}
+.bub input:checked+span{background:var(--ink);border-color:var(--ink);color:var(--sheet)}
+.bub input:focus-visible+span{outline:2px solid var(--form);outline-offset:2px}
+.bub.no span{box-shadow:0 0 0 3px var(--bad)}
+.bub.ok span{box-shadow:0 0 0 3px var(--good)}
+.bub.sol span{border-color:var(--good);color:var(--good);box-shadow:0 0 0 3px var(--good-soft)}
+.opts{display:grid;gap:4px;margin:6px 0}
+.opt{position:relative;display:grid;grid-template-columns:32px minmax(0,1fr);gap:10px;align-items:start;padding:6px 8px;border-radius:var(--r);cursor:pointer}
+.opt:hover{background:var(--form-soft)}
+.opt input{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+.opt .dot{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--form);display:grid;place-items:center;font:600 13px/1 var(--f-mono);color:var(--form);background:var(--sheet)}
+.opt input:checked~.dot{background:var(--ink);border-color:var(--ink);color:var(--sheet)}
+.opt input:focus-visible~.dot{outline:2px solid var(--form);outline-offset:2px}
+.opt .otext{padding-top:4px;min-width:0}
+.opt.ok{background:var(--good-soft)}.opt.no{background:var(--bad-soft)}
+.opt.sol .dot{border-color:var(--good);color:var(--good);box-shadow:0 0 0 3px var(--good-soft)}
+.opt.locked{cursor:default}.opt.locked:hover{background:transparent}.opt.locked.ok{background:var(--good-soft)}.opt.locked.no{background:var(--bad-soft)}
+.why{margin-top:8px;font-size:14.5px;padding:9px 11px;border-radius:var(--r);background:var(--form-soft);max-width:72ch}
+.why.ok{background:var(--good-soft)}.why.no{background:var(--bad-soft)}
+.why b{font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;margin-right:6px}
+.ads{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin:8px 0 14px}
+.ad{border:1px solid var(--rule);border-radius:var(--r);padding:10px 12px;font-size:14.5px;line-height:1.45;background:var(--paper);min-width:0}
+.ad b{font:600 13px/1 var(--f-mono);display:inline-grid;place-items:center;width:24px;height:24px;border:1.5px solid var(--ink);border-radius:50%;margin-right:6px}
+.headlist{display:grid;gap:4px;margin:6px 0 10px;padding:0;list-style:none}
+.headlist li{display:grid;grid-template-columns:26px minmax(0,1fr);gap:6px;font-size:15px}
+.headlist li b{font-family:var(--f-mono);font-size:13px;padding-top:2px}
+.gapsel{font:600 13.5px/1.2 var(--f-mono);padding:3px 4px;border:1.5px solid var(--form);border-radius:4px;background:var(--sheet);color:var(--ink);max-width:11em}
+.gapsel.ok{border-color:var(--good);background:var(--good-soft)}.gapsel.no{border-color:var(--bad);background:var(--bad-soft)}
+.wordbank{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
+.wordbank span{font:500 13px/1 var(--f-mono);padding:6px 8px;border:1px dashed var(--ink-2);border-radius:4px}
+.wordbank span.used{opacity:.35;text-decoration:line-through}
+
+/* controls */
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.row.between{justify-content:space-between}
+.btn{font:600 13.5px/1 var(--f-mono);letter-spacing:.01em;padding:11px 14px;border-radius:var(--r);border:1.5px solid var(--form);background:var(--form);color:var(--on-form);cursor:pointer;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+.btn:hover{filter:brightness(1.07)}
+.btn.ghost{background:transparent;color:var(--form)}
+.btn.small{padding:8px 10px;font-size:12.5px}
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:none}
+.btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.score{font:600 14px/1.3 var(--f-mono);font-variant-numeric:tabular-nums}
+.pill{display:inline-block;font:600 11.5px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;padding:6px 8px;border-radius:4px}
+.pill.ok{background:var(--good-soft);color:var(--good)}.pill.no{background:var(--bad-soft);color:var(--bad)}.pill.mid{background:var(--form-soft);color:var(--form)}
+.filter{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}
+.filter button{font:500 12.5px/1 var(--f-mono);padding:7px 9px;border:1px solid var(--rule);border-radius:999px;background:var(--sheet);color:var(--ink-2);cursor:pointer}
+.filter button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--sheet)}
+textarea,input[type="text"],input[type="date"],select.field{font:inherit;color:var(--ink);background:var(--sheet);border:1.5px solid var(--rule);border-radius:var(--r);padding:10px 12px;width:100%}
+textarea:focus,input:focus,select.field:focus{outline:2px solid var(--form);outline-offset:0;border-color:var(--form)}
+textarea.letter{min-height:320px;line-height:1.6;resize:vertical}
+label.lbl{display:block;font:600 11.5px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);margin:12px 0 6px}
+.check{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--form);flex:0 0 auto}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;margin:12px 0;border:1px solid var(--rule);border-radius:var(--r);background:var(--sheet)}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+table.wide{min-width:600px}
+th,td{padding:9px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+th{font:600 11px/1.25 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);background:var(--paper)}
+td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.sum td{font-weight:700;border-top:2px solid var(--ink);background:var(--paper)}
+td.sec{font-family:var(--f-display);font-weight:600;font-size:18px;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+
+/* calculator */
+.calc{display:grid;gap:18px}
+@media (min-width:780px){.calc{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}}
+.slider{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:center;margin:4px 0 10px}
+.slider label{font-size:14.5px}
+.slider output{font:600 12.5px/1 var(--f-mono);font-variant-numeric:tabular-nums;color:var(--ink-2);white-space:nowrap}
+.slider input[type="range"]{grid-column:1/-1;width:100%;accent-color:var(--form);margin:4px 0 0}
+.group-lab{font:600 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--form);margin:14px 0 4px}
+.group-lab:first-child{margin-top:0}
+.big{font:700 64px/1 var(--f-display);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.big small{font-size:28px;color:var(--ink-2);font-weight:600}
+.meter{position:relative;height:16px;border:1.5px solid var(--ink);border-radius:3px;margin:14px 0 22px;background:var(--sheet)}
+.meter>i{position:absolute;left:0;top:0;bottom:0;background:var(--form)}
+.meter>b{position:absolute;top:-7px;bottom:-7px;border-left:2.5px solid var(--bad)}
+.levers{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}
+.levers li{display:flex;justify-content:space-between;gap:10px;font-size:14px;border-bottom:1px dashed var(--rule);padding-bottom:6px}
+.levers li span:last-child{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* timers */
+.clock{font:600 44px/1 var(--f-mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.clock.warn{color:var(--bad)}
+.track{position:relative;height:10px;background:var(--form-soft);border-radius:2px;overflow:hidden;margin:10px 0}
+.track>i{position:absolute;left:0;top:0;bottom:0;background:var(--form)}
+.track>s{position:absolute;top:0;bottom:0;border-left:2px solid var(--sheet)}
+.seglist{display:grid;gap:2px;font-size:14px;margin:6px 0 0;padding:0;list-style:none}
+.seglist li{display:flex;justify-content:space-between;gap:8px;padding:5px 8px;border-radius:4px}
+.seglist li span:last-child{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.seglist li.now{background:var(--hl);font-weight:700}
+.seglist li.done{color:var(--ink-2)}
+.seglist li.done span:first-child{text-decoration:line-through}
+
+/* writing + phrases */
+.wgrid{display:grid;gap:16px}
+@media (min-width:820px){.wgrid{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}}
+.taskcard{padding:12px 14px;background:var(--paper);border-radius:var(--r);font-size:15.5px}
+.taskcard ul{margin:6px 0 0;padding-left:20px}
+.phr-group{margin:10px 0}
+.phr-group h5{font:600 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin:0 0 6px}
+.phr{display:flex;flex-wrap:wrap;gap:6px}
+.phr button{font:inherit;font-size:14px;text-align:left;padding:7px 10px;border:1px solid var(--rule);background:var(--sheet);color:var(--ink);border-radius:var(--r);cursor:pointer;max-width:100%}
+.phr button:hover{border-color:var(--form);color:var(--form)}
+.phr button:focus-visible{outline:2px solid var(--form);outline-offset:1px}
+.model{white-space:pre-wrap;font-size:15.5px;line-height:1.6;background:var(--paper);border-radius:var(--r);padding:14px;margin:8px 0}
+.regtable td:first-child{font-weight:700;white-space:nowrap}
+.result-block{margin-top:14px;border-top:2px solid var(--ink);padding-top:12px}
+.grades{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}
+@media (max-width:520px){.grades{grid-template-columns:1fr}}
+.grade{border:1px solid var(--rule);border-radius:var(--r);padding:10px;min-width:0}
+.grade .g{font:700 40px/1 var(--f-display)}
+.grade .n{font:600 11px/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.corr{display:grid;gap:6px;margin:8px 0;padding:0;list-style:none}
+.corr li{padding:8px 10px;background:var(--paper);border-radius:var(--r);font-size:14.5px}
+.corr del{color:var(--bad);text-decoration-thickness:2px}
+.corr ins{color:var(--good);text-decoration:none;font-weight:700}
+
+/* speaking */
+.rmgrid{display:grid;gap:12px 22px;margin:10px 0}
+@media (min-width:720px){.rmgrid{grid-template-columns:1fr 1fr}}
+.rmgrid section{min-width:0}
+.rmgrid h4{margin:6px 0 4px;font-family:var(--f-mono);font-size:11.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--form)}
+.rmgrid ul{margin:0;padding-left:18px}.rmgrid li{margin:3px 0}
+.qa{display:grid;gap:8px;margin:10px 0}
+.qa div{padding:10px 12px;border:1px solid var(--rule);border-radius:var(--r);background:var(--sheet);min-width:0}
+.qa b{display:block}
+.qa span{color:var(--ink-2);font-size:14.5px}
+.topic{padding:14px;background:var(--paper);border-radius:var(--r)}
+.topic h4{margin:0 0 6px;font-family:var(--f-display);font-size:24px;font-weight:600}
+.chat{display:flex;flex-direction:column;gap:8px;max-height:440px;overflow-y:auto;padding:10px;border:1px solid var(--rule);border-radius:var(--r);background:var(--paper);margin:10px 0}
+.msg{max-width:86%;padding:9px 12px;border-radius:12px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}
+.msg.me{align-self:flex-end;background:var(--form);color:var(--on-form);border-bottom-right-radius:3px}
+.msg.ai{align-self:flex-start;background:var(--sheet);border:1px solid var(--rule);border-bottom-left-radius:3px}
+.msg .who{display:block;font:600 10.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;opacity:.75;margin-bottom:5px}
+.feedback{white-space:pre-wrap;font-size:15px;line-height:1.55;padding:12px 14px;background:var(--sheet);border:1px solid var(--rule);border-radius:var(--r);margin-top:10px}
+
+/* grammar */
+.gcards{display:grid;gap:14px}
+@media (min-width:780px){.gcards{grid-template-columns:1fr 1fr}.gcards .full{grid-column:1/-1}}
+.gcard{background:var(--sheet);border:1px solid var(--rule);border-radius:var(--r);padding:14px 16px;min-width:0}
+.gcard h3{font-size:24px;margin-bottom:8px}
+.gcard table{font-size:14px}
+.gcard .tbl-wrap{margin:8px 0;background:var(--paper)}
+.ex{font-size:14.5px;margin:4px 0;max-width:none}
+.ex i{color:var(--ink-2)}
+.mnemo{font-size:14.5px;padding:8px 10px;background:var(--paper);border-radius:var(--r);margin:8px 0}
+
+/* flashcards */
+.card{min-height:210px;border:1.5px solid var(--ink);border-radius:var(--r);background:var(--sheet);padding:22px 18px;display:grid;align-content:center;justify-items:center;gap:10px;text-align:center;cursor:pointer;margin:12px 0;width:100%;font:inherit;color:var(--ink)}
+.card:focus-visible{outline:2px solid var(--form);outline-offset:2px}
+.card .de{font:700 clamp(26px,6vw,34px)/1.1 var(--f-display);overflow-wrap:anywhere}
+.card .en{font-size:18px}
+.card .exs{font-style:italic;color:var(--ink-2);font-size:15.5px;max-width:48ch}
+.card .hint{font:500 11.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.boxes{display:flex;gap:4px;align-items:flex-end;height:44px;margin:6px 0}
+.boxes i{flex:1 1 0;background:var(--form);border-radius:2px 2px 0 0;min-height:2px}
+.boxlab{display:flex;gap:4px;font:500 10.5px/1 var(--f-mono);color:var(--ink-2)}
+.boxlab span{flex:1 1 0;text-align:center}
+
+/* plan */
+.phase{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;padding:12px 0;border-bottom:1px dashed var(--rule)}
+.phase:last-child{border-bottom:0}
+.phase .when{font:600 12.5px/1.4 var(--f-mono);font-variant-numeric:tabular-nums;color:var(--form);white-space:nowrap}
+.phase h4{margin:0 0 4px}
+.phase ul{margin:0;padding-left:18px;font-size:15px}
+.ai-box{margin-top:12px;padding-top:12px;border-top:1px dashed var(--rule)}
+.status{font-size:14px;color:var(--ink-2);min-height:1.4em}
+details{margin:8px 0}
+summary{cursor:pointer;font:600 13px/1.4 var(--f-mono);color:var(--form)}
+summary:focus-visible{outline:2px solid var(--form);outline-offset:2px}
+footer.foot{margin-top:56px;padding-top:14px;border-top:1px solid var(--rule);font-size:13.5px;color:var(--ink-2)}
+footer.foot p{max-width:none}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>
+<header class="top">
+  <div class="top-row">
+    <p class="brand">B1 <span>Trainer</span></p>
+    <span class="days-pill" id="days-pill"></span>
+  </div>
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button class="tab" role="tab" data-tab="plan" aria-selected="true">Strategie</button>
+    <button class="tab" role="tab" data-tab="lesen" aria-selected="false">Lesen</button>
+    <button class="tab" role="tab" data-tab="bausteine" aria-selected="false">Sprachbausteine</button>
+    <button class="tab" role="tab" data-tab="hoeren" aria-selected="false">Hören</button>
+    <button class="tab" role="tab" data-tab="schreiben" aria-selected="false">Schreiben</button>
+    <button class="tab" role="tab" data-tab="sprechen" aria-selected="false">Sprechen</button>
+    <button class="tab" role="tab" data-tab="grammatik" aria-selected="false">Grammatik</button>
+    <button class="tab" role="tab" data-tab="wortschatz" aria-selected="false">Wortschatz</button>
+    <button class="tab" role="tab" data-tab="tag" aria-selected="false">Plan &amp; Prüfungstag</button>
+  </nav>
+</header>
+
+<main class="wrap">
+
+<!-- ============ STRATEGIE ============ -->
+<section class="view" id="v-plan">
+  <div class="hero">
+    <p class="eyebrow">Zertifikat Deutsch · telc Deutsch B1 · unofficial trainer</p>
+    <h1><span class="hl">135</span> von 225.</h1>
+    <p class="intro">That is the pass mark for the written exam. You can drop 90 points and still pass. This trainer shows where the points sit, how to collect them quickly, and drills the language the exam keeps coming back to.</p>
+
+    <div class="ledger-wrap">
+      <p class="eyebrow">Schriftliche Prüfung · 225 Punkte</p>
+      <div class="ledger" role="img" aria-label="Written exam, 225 points: Lesen 75, Sprachbausteine 30, Hören 75, Schreiben 45. Pass line at 135 points.">
+        <div class="seg a" style="flex-basis:33.333%"><em>Lesen</em><strong>75</strong></div>
+        <div class="seg b" style="flex-basis:13.333%"><em>SB</em><strong>30</strong></div>
+        <div class="seg a" style="flex-basis:33.333%"><em>Hören</em><strong>75</strong></div>
+        <div class="seg b" style="flex-basis:20%"><em>Schreiben</em><strong>45</strong></div>
+        <div class="passline" style="left:60%"><span>135</span></div>
+      </div>
+      <div class="ledger oral" role="img" aria-label="Oral exam, 75 points. Pass line at 45 points.">
+        <div class="seg a" style="flex-basis:100%"><em>Mündliche Prüfung · Sprechen</em><strong>75</strong></div>
+        <div class="passline" style="left:60%"><span>45</span></div>
+      </div>
+      <div class="legend"><span>SB = Sprachbausteine</span><span>Red line = 60 %, the pass mark for each part</span></div>
+    </div>
+
+    <div class="facts">
+      <div class="fact"><b>−90</b><span>points of slack in the written exam. Nobody needs everything right.</span></div>
+      <div class="fact"><b>5 P.</b><span>for one item in Lesen 1 and 2, and in Hören 1 and 3.</span></div>
+      <div class="fact"><b>1,5 P.</b><span>for one Sprachbaustein. Answer fast, never get stuck here.</span></div>
+    </div>
+  </div>
+
+  <h2 class="h2">Die Prüfung auf einen Blick</h2>
+  <p class="intro">Every part, how many items it has and what each item is worth. The per-item value is the number to plan your time around.</p>
+  <div class="tbl-wrap">
+    <table class="wide">
+      <thead><tr><th>Teil</th><th>Aufgabe</th><th class="num">Items</th><th class="num">P./Item</th><th class="num">Punkte</th><th>Zeit</th></tr></thead>
+      <tbody>
+        <tr><td class="sec">Lesen 1</td><td>Globalverstehen: 5 short texts, 10 headlines to match</td><td class="num">5</td><td class="num">5</td><td class="num">25</td><td rowspan="5">90 Min. together, no break, any order</td></tr>
+        <tr><td class="sec">Lesen 2</td><td>Detailverstehen: 1 longer text, multiple choice a/b/c</td><td class="num">5</td><td class="num">5</td><td class="num">25</td></tr>
+        <tr><td class="sec">Lesen 3</td><td>Selektives Verstehen: 10 situations, 12 ads (x = no ad fits)</td><td class="num">10</td><td class="num">2,5</td><td class="num">25</td></tr>
+        <tr><td class="sec">SB 1</td><td>Grammatik: letter with 10 gaps, a/b/c</td><td class="num">10</td><td class="num">1,5</td><td class="num">15</td></tr>
+        <tr><td class="sec">SB 2</td><td>Lexik: text with 10 gaps, 15 words to choose from</td><td class="num">10</td><td class="num">1,5</td><td class="num">15</td></tr>
+        <tr><td class="sec">Hören 1</td><td>Globalverstehen: 5 short radio texts, heard <b>once</b>, richtig/falsch</td><td class="num">5</td><td class="num">5</td><td class="num">25</td><td rowspan="3">ca. 30 Min., paced by the recording</td></tr>
+        <tr><td class="sec">Hören 2</td><td>Detailverstehen: 1 longer conversation or interview, heard twice, richtig/falsch</td><td class="num">10</td><td class="num">2,5</td><td class="num">25</td></tr>
+        <tr><td class="sec">Hören 3</td><td>Selektives Verstehen: 5 announcements and phone messages, heard twice, richtig/falsch</td><td class="num">5</td><td class="num">5</td><td class="num">25</td></tr>
+        <tr><td class="sec">Schreiben</td><td>Informal or semi-formal e-mail covering 4 Leitpunkte</td><td class="num">1</td><td class="num">–</td><td class="num">45</td><td>30 Min.</td></tr>
+        <tr class="sum"><td>Schriftlich</td><td>Pass: 60 %</td><td class="num"></td><td class="num"></td><td class="num">135 / 225</td><td>about 2½ h</td></tr>
+        <tr><td class="sec">Sprechen</td><td>In pairs. Teil 1 Einander kennenlernen · Teil 2 Über ein Thema sprechen · Teil 3 Gemeinsam etwas planen</td><td class="num">3</td><td class="num">–</td><td class="num">75</td><td>ca. 15 Min. + 20 Min. preparation</td></tr>
+        <tr class="sum"><td>Mündlich</td><td>Pass: 60 %</td><td class="num"></td><td class="num"></td><td class="num">45 / 75</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <ul class="plain">
+    <li>Written and oral are scored separately, and you need 60 % in each.</li>
+    <li>Inside the written exam, all points go into one pool. A strong Hören can carry weak Sprachbausteine.</li>
+    <li>Wrong answers cost nothing. <span class="hl">Never leave a bubble empty.</span></li>
+    <li>Pass one part and fail the other, and you can usually retake only the failed part within a deadline. Ask your test centre for the current rule.</li>
+    <li>The exam runs on paper, hybrid or digital, depending on the centre. Ask which one you will get.</li>
+  </ul>
+
+  <h2 class="h2">Punkterechner</h2>
+  <p class="intro">Enter how many items you get right in a mock test. The calculator shows whether you pass and where the cheapest extra points are. The values below are an example.</p>
+  <div class="sheet omr" id="calc"></div>
+
+  <h2 class="h2">Regeln, die Punkte bringen</h2>
+  <div class="rules">
+    <div class="rule"><b>Spend minutes where the points are</b><p>One Lesen-2 question is worth 5 points, a Sprachbaustein 1,5. Give Lesen 1 and 2 your calmest attention and move fast through the gaps.</p></div>
+    <div class="rule"><b>Questions follow the text</b><p>In Lesen 2 and Hören 2 the items run in the same order as the text. If you find the answer to item 3, item 4 comes after it.</p></div>
+    <div class="rule"><b>Same words are a warning</b><p>The right option usually paraphrases the text. An option that repeats a word from the text but changes the meaning is the classic trap.</p></div>
+    <div class="rule"><b>Watch the small words</b><p>nicht, kein, nur, erst, noch, schon, alle, immer, nie. One of them can turn a statement from richtig to falsch.</p></div>
+    <div class="rule"><b>Eliminate, then cross out</b><p>In every matching task, solve the sure ones first and cross out what you used. The last items get easier with fewer options left.</p></div>
+    <div class="rule"><b>Read before you listen</b><p>Use every pause in Hören to read the next statements and mark the key word: a time, a place, a price, a change.</p></div>
+    <div class="rule"><b>Four Leitpunkte beat a long letter</b><p>In Schreiben, each guiding point you skip costs more than any grammar mistake. Write two or three sentences per point and stop.</p></div>
+    <div class="rule"><b>Talk with your partner, not at the examiner</b><p>The oral exam rewards interaction. Ask questions, react, agree, disagree with a reason, and summarise.</p></div>
+    <div class="rule"><b>Fill the answer sheet as you go</b><p>Only the Antwortbogen counts. Don't plan on extra minutes to copy answers over at the end.</p></div>
+    <div class="rule"><b>Guess smart, never blank</b><p>Richtig/falsch is a coin flip at worst. In matching tasks, guess among the options you have not used yet.</p></div>
+  </div>
+
+  <h2 class="h2">Deine 90 Minuten</h2>
+  <p class="intro">Lesen and Sprachbausteine share one 90-minute block, and you choose the order. Here is a split that protects the 5-point items. Run it during mock tests so the pacing feels normal on the day.</p>
+  <div class="sheet" id="blocktimer"></div>
+</section>
+
+<!-- ============ LESEN ============ -->
+<section class="view" id="v-lesen" hidden>
+  <h2>Lesen</h2>
+  <p class="intro">Three parts, 75 points, inside the 90-minute block. In every part you are searching for something specific. You rarely need to understand every word.</p>
+
+  <div class="teil">
+    <div class="teil-head"><span class="teil-no">Teil 1</span><h3>Globalverstehen</h3></div>
+    <div class="chips"><span class="chip">5 texts · 10 headlines</span><span class="chip pts">5 P. per item</span><span class="chip">25 P.</span><span class="chip">target 15 min</span></div>
+    <p>Each short text gets one headline. Five headlines are left over, and they are written to tempt you.</p>
+    <ol class="steps">
+      <li>Read all 10 headlines first (one minute). Underline the key idea in each: who, and what happens.</li>
+      <li>Read each text and ask one question: what is this text about as a whole? The first and the last sentence usually tell you.</li>
+      <li>Match the obvious ones, then cross out the headlines you used.</li>
+      <li>For the rest, check the headline against the whole text, not against one sentence in it.</li>
+    </ol>
+    <div class="notes two">
+      <div class="note"><span class="lab">Fallen</span><ul>
+        <li>A headline repeats a word from the text but claims something the text never says.</li>
+        <li>A headline fits a detail, not the main idea.</li>
+        <li>A headline says the opposite: <span lang="de">mehr</span> instead of <span lang="de">weniger</span>, <span lang="de">teurer</span> instead of <span lang="de">kostenlos</span>.</li>
+      </ul></div>
+      <div class="note trick"><span class="lab">Trick</span><ul>
+        <li>Summarise each text in three German words before you look at the headlines again.</li>
+        <li>If two headlines both fit, the right one covers the whole text; the other covers one sentence.</li>
+      </ul></div>
+    </div>
+    <div class="sheet omr" id="drill-l1"></div>
+  </div>
+
+  <div class="teil">
+    <div class="teil-head"><span class="teil-no">Teil 2</span><h3>Detailverstehen</h3></div>
+    <div class="chips"><span class="chip">1 text · 5 questions a/b/c</span><span class="chip pts">5 P. per item</span><span class="chip">25 P.</span><span class="chip">target 20 min</span></div>
+    <p>A newspaper-style article. The questions check specific statements, and they come in the order of the text.</p>
+    <ol class="steps">
+      <li>Read the questions and all options first. Underline what each one is really asking.</li>
+      <li>Skim the text once for the overall topic.</li>
+      <li>For each question, find the matching passage. It comes after the passage of the previous question.</li>
+      <li>Read that passage word by word and rule out options until one is left.</li>
+    </ol>
+    <div class="notes two">
+      <div class="note"><span class="lab">Fallen</span><ul>
+        <li>An option uses exact words from the text but from a different paragraph.</li>
+        <li>An option is true in general, but the text doesn't say it.</li>
+        <li>An option is too strong: <span lang="de">immer, alle, nur, nie</span>.</li>
+      </ul></div>
+      <div class="note trick"><span class="lab">Trick</span><ul>
+        <li>The correct option is almost always a paraphrase: different words, same meaning.</li>
+        <li>Mark each option as "says the text", "contradicts the text" or "not in the text". Only the first one scores.</li>
+      </ul></div>
+    </div>
+    <div class="sheet omr" id="drill-l2"></div>
+  </div>
+
+  <div class="teil">
+    <div class="teil-head"><span class="teil-no">Teil 3</span><h3>Selektives Verstehen</h3></div>
+    <div class="chips"><span class="chip">10 situations · 12 ads</span><span class="chip pts">2,5 P. per item</span><span class="chip">25 P.</span><span class="chip">target 20 min</span></div>
+    <p>People are looking for something, and you scan ads to find what fits. Each ad can be used once, and when no ad fits a situation you mark <b>x</b>.</p>
+    <ol class="steps">
+      <li>Read the situations first and underline the hard criteria: who (children, beginners), when (weekend, evening), where, how much (<span lang="de">höchstens</span> 100 €), and what is excluded (<span lang="de">nicht laut, ohne Auto</span>).</li>
+      <li>Scan the ads for those criteria, not for the topic. Three ads may be about bikes; only one costs less than 100 €.</li>
+      <li>An ad must meet every criterion. One mismatch rules it out.</li>
+      <li>Cross out used ads. If nothing fits all criteria, mark x.</li>
+    </ol>
+    <div class="notes two">
+      <div class="note"><span class="lab">Fallen</span><ul>
+        <li>The topic fits, but one detail doesn't: wrong day, wrong age group, too expensive, indoors instead of outdoors.</li>
+        <li>An ad mentions the same object (a dog, a bike) for a different need.</li>
+      </ul></div>
+      <div class="note trick"><span class="lab">Trick</span><ul>
+        <li>Expect few x answers. If you are marking several, check the criteria again.</li>
+        <li>This part pays 2,5 per item. If time is short, do it fast and keep minutes for Teil 1 and 2.</li>
+      </ul></div>
+    </div>
+    <div class="sheet omr" id="drill-l3"></div>
+  </div>
+</section>
+
+<!-- ============ SPRACHBAUSTEINE ============ -->
+<section class="view" id="v-bausteine" hidden>
+  <h2>Sprachbausteine</h2>
+  <p class="intro">Twenty gaps, 1,5 points each, 30 points in total. The grammar part tests the same handful of structures again and again, so this is where drilling pays off most per hour of study.</p>
+
+  <div class="teil">
+    <div class="teil-head"><span class="teil-no">Teil 1</span><h3>Grammatik</h3></div>
+    <div class="chips"><span class="chip">letter · 10 gaps · a/b/c</span><span class="chip pts">1,5 P. per item</span><span class="chip">15 P.</span><span class="chip">target 10 min</span></div>
+    <ol class="steps">
+      <li>Read the whole sentence, including what comes after the gap. The answer is often decided by the words after it.</li>
+      <li>Name the grammar being tested: connector and verb position, case after a preposition, fixed preposition of a verb, relative pronoun, reflexive pronoun, tense or passive.</li>
+      <li>Check the verb position after the gap. Verb at the end means <span lang="de">weil/obwohl/dass</span>; verb right after means <span lang="de">deshalb/trotzdem</span>; normal order means <span lang="de">denn/aber</span>.</li>
+      <li>If you are unsure after 30 seconds, guess and move on.</li>
+    </ol>
+    <h4>What comes up again and again</h4>
+    <ul class="plain">
+      <li><b>Konnektoren</b>: <span lang="de">weil / denn / deshalb, obwohl / trotzdem, dass / ob, wenn / als, damit / um … zu</span></li>
+      <li><b>Verben mit Präposition</b>: <span lang="de">sich freuen auf/über, warten auf, sich interessieren für, teilnehmen an, sich kümmern um</span></li>
+      <li><b>Relativpronomen</b>: <span lang="de">der, den, dem, dessen, denen</span>, often with a preposition</li>
+      <li><b>Präpositionen + Kasus</b>: <span lang="de">seit / vor, am / im / um, in + Dativ oder Akkusativ</span></li>
+      <li><b>Konjunktiv II and Passiv</b>: <span lang="de">könnten, wäre, hätte, würde; wird / wurde + Partizip</span></li>
+      <li><b>Pronomen</b>: <span lang="de">mir / mich, ihm / ihn, Ihnen</span>, and reflexive <span lang="de">mich / mir</span></li>
+    </ul>
+    <p class="small muted">All of these are explained on one screen each under <a href="#grammatik" data-go="grammatik">Grammatik</a>.</p>
+    <div class="sheet omr" id="drill-sb1"></div>
+  </div>
+
+  <div class="teil">
+    <div class="teil-head"><span class="teil-no">Teil 2</span><h3>Lexik</h3></div>
+    <div class="chips"><span class="chip">text · 10 gaps · 15 words</span><span class="chip pts">1,5 P. per item</span><span class="chip">15 P.</span><span class="chip">target 10 min</span></div>
+    <ol class="steps">
+      <li>Look at the neighbours of each gap and decide what kind of word fits: article before it means a noun; <span lang="de">zu</span> plus gap means a verb; a gap before a noun may be a preposition.</li>
+      <li>Read the 15 words and sort them roughly: prepositions, verbs, nouns, connectors.</li>
+      <li>Fill the sure gaps first and cross out each word you use. Five words stay unused.</li>
+      <li>Read the full text once more with your words in it.</li>
+    </ol>
+    <div class="sheet omr" id="drill-sb2"></div>
+  </div>
+</section>
+
+<!-- ============ HÖREN ============ -->
+<section class="view" id="v-hoeren" hidden>
+  <h2>Hören</h2>
+  <p class="intro">About 30 minutes, 75 points, paced by the recording. Two of the three parts pay 5 points per item, so every statement you read in advance is worth the effort.</p>
+
+  <div class="teil">
+    <div class="teil-head"><span class="teil-no">Teil 1</span><h3>Globalverstehen</h3></div>
+    <div class="chips"><span class="chip">5 radio texts · heard once</span><span class="chip pts">5 P. per item</span><span class="chip">25 P.</span></div>
+    <p>News, weather, short reports. You hear each text only once, and each has one statement about its main message.</p>
+    <ol class="steps">
+      <li>In the pause, read the statement and underline the core claim.</li>
+      <li>Listen for the gist. Ignore numbers and names unless the statement depends on them.</li>
+      <li>Decide right after the text ends and turn your attention to the next statement. There is no second chance, so don't dwell.</li>
+    </ol>
+  </div>
+
+  <div class="teil">
+    <div class="teil-head"><span class="teil-no">Teil 2</span><h3>Detailverstehen</h3></div>
+    <div class="chips"><span class="chip">1 conversation · heard twice</span><span class="chip pts">2,5 P. per item</span><span class="chip">25 P.</span></div>
+    <p>A longer radio interview or conversation with 10 statements in the order of the recording.</p>
+    <ol class="steps">
+      <li>Read all ten statements in the pause and mark the key word in each.</li>
+      <li>First listening: mark an answer for every statement, even a tentative one.</li>
+      <li>Second listening: check only the ones you were unsure about.</li>
+    </ol>
+  </div>
+
+  <div class="teil">
+    <div class="teil-head"><span class="teil-no">Teil 3</span><h3>Selektives Verstehen</h3></div>
+    <div class="chips"><span class="chip">5 announcements · heard twice</span><span class="chip pts">5 P. per item</span><span class="chip">25 P.</span></div>
+    <p>Station announcements, shop announcements, voicemail. Each statement asks about one specific piece of information.</p>
+    <ol class="steps">
+      <li>Read the statement and decide what you are listening for: a time, a platform, a price, a date.</li>
+      <li>Listen for the change. Announcements exist because something is different today: <span lang="de">ausnahmsweise, leider, statt, verschoben, fällt aus</span>.</li>
+      <li>Use the second listening to confirm the exact detail.</li>
+    </ol>
+  </div>
+
+  <div class="notes two">
+    <div class="note"><span class="lab">Fallen</span><ul>
+      <li>Numbers that sound alike: <span lang="de">fünfzehn / fünfzig, dreizehn / dreißig</span>; times like <span lang="de">halb zwei</span> = 1:30, <span lang="de">Viertel vor drei</span> = 2:45.</li>
+      <li>A plan that changes mid-text: <span lang="de">eigentlich … aber jetzt</span>.</li>
+      <li>The statement mentions what you hear, but negated or limited: <span lang="de">nur, erst, nicht mehr, kein</span>.</li>
+    </ul></div>
+    <div class="note trick"><span class="lab">Signalwörter</span><ul>
+      <li>Contrast: <span lang="de">aber, doch, jedoch, allerdings, dagegen, stattdessen</span></li>
+      <li>Change: <span lang="de">ausnahmsweise, leider, verschoben, abgesagt, fällt aus</span></li>
+      <li>Limits: <span lang="de">nur, erst, schon, noch, kaum, sogar</span></li>
+    </ul></div>
+  </div>
+
+  <h2 class="h2">Hörtraining</h2>
+  <p class="intro">Practice texts read aloud by your device's German voice. Like the exam, each one plays once or twice only, so read the statement before you press play.</p>
+  <div class="sheet omr" id="drill-h"></div>
+</section>
+
+<!-- ============ SCHREIBEN ============ -->
+<section class="view" id="v-schreiben" hidden>
+  <h2>Schreiben</h2>
+  <p class="intro">One e-mail in 30 minutes, worth 45 points. It is either informal (to a friend, <i>du</i>) or semi-formal (to someone you know or a company, <i>Sie</i>), and it must answer four guiding points, the Leitpunkte.</p>
+
+  <h3 style="margin-top:22px">How it is scored</h3>
+  <div class="tbl-wrap">
+    <table class="wide">
+      <thead><tr><th>Kriterium</th><th>What raters look at</th><th>How you collect the points</th></tr></thead>
+      <tbody>
+        <tr><td class="sec">I · Aufgabe</td><td>Are all four Leitpunkte covered with fitting content?</td><td>One paragraph per point, two or three sentences each, in the order of the task.</td></tr>
+        <tr><td class="sec">II · Gestaltung</td><td>Register (du or Sie throughout), greeting and closing, logical order, connectors</td><td>Betreff, matching Anrede and Gruß, four or five connectors (<span lang="de">weil, deshalb, außerdem, trotzdem, dass</span>).</td></tr>
+        <tr><td class="sec">III · Richtigkeit</td><td>Grammar, word order, spelling. Do errors get in the way of understanding?</td><td>Short sentences you are sure of, plus a five-minute error check at the end.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="small muted">Each criterion is graded A to D. A clear, complete, slightly simple e-mail scores better than an ambitious one that skips a point.</p>
+
+  <h3 style="margin-top:26px">Die 30-Minuten-Methode</h3>
+  <ol class="steps">
+    <li><b>Minutes 0–5: plan.</b> Decide du or Sie. Write 2–4 German keywords next to each Leitpunkt. Choose your Anrede and Gruß.</li>
+    <li><b>Minutes 5–25: write.</b> Betreff, Anrede, one opening sentence, then one paragraph per Leitpunkt in order, one closing sentence, Gruß. Aim for about 120–150 words; extra length earns nothing and adds mistakes.</li>
+    <li><b>Minutes 25–30: check.</b> Verb in second position? Verb at the end after <span lang="de">weil/dass/wenn</span>? Nouns capitalised? <span lang="de">Sie/Ihnen/Ihr</span> capitalised when formal? Small letter after the comma of the Anrede?</li>
+  </ol>
+
+  <div class="tbl-wrap">
+    <table class="regtable wide">
+      <thead><tr><th>Register</th><th>Anrede</th><th>Pronomen</th><th>Gruß</th></tr></thead>
+      <tbody>
+        <tr><td>informell</td><td lang="de">Liebe Lena, / Lieber Tom, / Hallo Tom,</td><td lang="de">du, dich, dir, dein</td><td lang="de">Viele Grüße / Liebe Grüße / Bis bald</td></tr>
+        <tr><td>halbformell</td><td lang="de">Liebe Frau Koch, / Lieber Herr Wagner,</td><td lang="de">Sie, Ihnen, Ihr</td><td lang="de">Viele Grüße / Freundliche Grüße</td></tr>
+        <tr><td>formell</td><td lang="de">Sehr geehrte Frau Brandt, / Sehr geehrte Damen und Herren,</td><td lang="de">Sie, Ihnen, Ihr</td><td lang="de">Mit freundlichen Grüßen</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="notes two">
+    <div class="note"><span class="lab">Point killers</span><ul>
+      <li>Skipping or barely touching one Leitpunkt.</li>
+      <li>Switching between <i>du</i> and <i>Sie</i>.</li>
+      <li>Copying whole sentences from the task. Rephrase them in your own words.</li>
+      <li>No Anrede or no Gruß, or a formal Gruß in a letter to a friend.</li>
+    </ul></div>
+    <div class="note trick"><span class="lab">Safe moves</span><ul>
+      <li>Open each paragraph so the rater sees which point it answers: <span lang="de">Zu deiner Frage nach …</span>, <span lang="de">Außerdem möchte ich …</span></li>
+      <li>Give every point a reason with <span lang="de">weil</span> or <span lang="de">deshalb</span>. That covers content and grammar at once.</li>
+      <li>Learn one template per register by heart and adapt it.</li>
+    </ul></div>
+  </div>
+
+  <h2 class="h2">Schreibwerkstatt</h2>
+  <p class="intro">Pick a task, start the 30-minute timer and write. Tap a phrase to insert it at your cursor. Your draft stays on this device.</p>
+  <div class="sheet omr" id="write"></div>
+</section>
+
+<!-- ============ SPRECHEN ============ -->
+<section class="view" id="v-sprechen" hidden>
+  <h2>Sprechen</h2>
+  <p class="intro">About 15 minutes in pairs, after 20 minutes of preparation. Two examiners listen. Teil 2 is worth the most. Across all three parts they reward the same thing: a real conversation with your partner.</p>
+  <div class="notes two">
+    <div class="note trick"><span class="lab">Use the 20 minutes</span><ul>
+      <li>Write keywords, not sentences. Reading out full sentences sounds stiff and loses the eye contact with your partner.</li>
+      <li>Teil 2: note the topic of your material, 2 opinions with reasons, 1 example from your life or country, 2 questions for your partner.</li>
+      <li>Teil 3: next to each task point, note one suggestion and one alternative.</li>
+    </ul></div>
+    <div class="note"><span class="lab">Don't</span><ul>
+      <li>Recite a memorised monologue. Examiners hear it at once.</li>
+      <li>Talk only to the examiners. Turn to your partner.</li>
+      <li>Stay silent when stuck. Say <span lang="de">Moment, wie sagt man das …</span> and describe the word.</li>
+    </ul></div>
+  </div>
+
+  <div class="teil">
+    <div class="teil-head"><span class="teil-no">Teil 1</span><h3>Einander kennenlernen</h3></div>
+    <div class="chips"><span class="chip">about 3 min</span><span class="chip">no material needed</span></div>
+    <p>You and your partner get to know each other. Ask as many questions as you answer, and react to what you hear. Ask early whether you use <i>du</i>: <span lang="de">Wollen wir uns duzen?</span></p>
+    <div class="qa" id="sp1"></div>
+    <div class="rmgrid">
+      <section><h4>Reagieren</h4><ul lang="de"><li>Ach, wirklich? Das ist ja interessant!</li><li>Das geht mir genauso.</li><li>Und wie ist das bei dir?</li><li>Wie lange machst du das schon?</li><li>Erzähl mal, wie ist es dort?</li></ul></section>
+      <section><h4>Nachfragen</h4><ul lang="de"><li>Kannst du das bitte noch einmal sagen?</li><li>Wie meinst du das?</li><li>Was gefällt dir daran besonders?</li><li>Und was möchtest du nach der Prüfung machen?</li></ul></section>
+    </div>
+  </div>
+
+  <div class="teil">
+    <div class="teil-head"><span class="teil-no">Teil 2</span><h3>Über ein Thema sprechen</h3></div>
+    <div class="chips"><span class="chip">about 6 min</span><span class="chip pts">highest weight of the three parts</span></div>
+    <p>You get material on a topic, such as a short text or statements. Present the main point, give your opinion with reasons, bring in your own experience, then discuss it with your partner.</p>
+    <ol class="steps">
+      <li><b>Topic:</b> <span lang="de">In meinem Text geht es um … Der Text sagt, dass …</span></li>
+      <li><b>Opinion with a reason:</b> <span lang="de">Ich finde, dass …, weil … Meiner Meinung nach …</span></li>
+      <li><b>Experience or home country:</b> <span lang="de">Bei uns in … ist das anders: … Ich habe selbst erlebt, dass …</span></li>
+      <li><b>Hand over:</b> <span lang="de">Was meinst du dazu? Wie ist das in deinem Land?</span> Then respond to what your partner says.</li>
+    </ol>
+    <div class="rmgrid">
+      <section><h4>Zustimmen</h4><ul lang="de"><li>Da hast du recht.</li><li>Das sehe ich genauso.</li><li>Ja, genau, und außerdem …</li></ul></section>
+      <section><h4>Widersprechen</h4><ul lang="de"><li>Das stimmt schon, aber …</li><li>Das sehe ich ein bisschen anders, denn …</li><li>Ich bin nicht sicher, ob das immer so ist.</li></ul></section>
+    </div>
+    <div class="sheet" id="sp2"></div>
+  </div>
+
+  <div class="teil">
+    <div class="teil-head"><span class="teil-no">Teil 3</span><h3>Gemeinsam etwas planen</h3></div>
+    <div class="chips"><span class="chip">about 5–6 min</span><span class="chip">task sheet with points to settle</span></div>
+    <p>You plan something together, such as a party, a trip or a visit. The sheet lists the points to settle. Cover every point, make suggestions, react to your partner's ideas and agree on a plan.</p>
+    <ol class="steps">
+      <li>Go through the points in the order on the sheet.</li>
+      <li>For each point: suggestion, reaction, decision. Disagree politely at least once, with a reason and an alternative.</li>
+      <li>Split the jobs: <span lang="de">Wer kümmert sich um …? Ich kann … übernehmen.</span></li>
+      <li>Close with a summary: <span lang="de">Also, fassen wir zusammen: …</span></li>
+    </ol>
+    <div class="rmgrid">
+      <section><h4>Vorschlagen</h4><ul lang="de"><li>Wollen wir …?</li><li>Ich schlage vor, dass wir …</li><li>Wie wäre es mit …?</li><li>Wir könnten doch …</li><li>Was hältst du von …?</li></ul></section>
+      <section><h4>Annehmen · Ablehnen</h4><ul lang="de"><li>Gute Idee! / Einverstanden.</li><li>Das finde ich nicht so gut, weil … Vielleicht …?</li><li>Am Samstag kann ich leider nicht. Geht es auch am Sonntag?</li><li>Das ist ein bisschen teuer. Was hältst du von …?</li></ul></section>
+    </div>
+    <div class="sheet" id="sp3"></div>
+  </div>
+</section>
+
+<!-- ============ GRAMMATIK ============ -->
+<section class="view" id="v-grammatik" hidden>
+  <h2>Grammatik</h2>
+  <p class="intro">The structures the exam actually tests, one card each. Read a card, then drill it under <a href="#bausteine" data-go="bausteine">Sprachbausteine</a> with the matching filter.</p>
+  <div class="gcards">
+
+    <div class="gcard full">
+      <h3>Konnektoren und Verbposition</h3>
+      <p class="small">The single most tested point in Sprachbausteine. Choose by what happens to the verb after the connector.</p>
+      <div class="tbl-wrap"><table class="wide">
+        <thead><tr><th>Position 0 · order stays</th><th>Position 1 · verb comes next</th><th>Nebensatz · verb to the end</th></tr></thead>
+        <tbody><tr>
+          <td lang="de">und, aber, oder, denn, sondern</td>
+          <td lang="de">deshalb, deswegen, darum, trotzdem, dann, danach, außerdem, sonst</td>
+          <td lang="de">weil, da, obwohl, dass, ob, wenn, als, damit, bevor, nachdem, während, bis, falls</td>
+        </tr><tr>
+          <td lang="de">Ich bleibe zu Hause, <b>denn</b> ich <b>bin</b> krank.</td>
+          <td lang="de">Ich bin krank, <b>deshalb bleibe</b> ich zu Hause.</td>
+          <td lang="de">Ich bleibe zu Hause, <b>weil</b> ich krank <b>bin</b>.</td>
+        </tr></tbody>
+      </table></div>
+      <p class="ex" lang="de"><b>Paare:</b> nicht nur … sondern auch · entweder … oder · sowohl … als auch · weder … noch · je … desto · zwar … aber</p>
+      <p class="ex"><b lang="de">wenn / als:</b> <span lang="de">als</span> for one event or period in the past; <span lang="de">wenn</span> for repeated events, the present and the future. <b lang="de">dass / ob:</b> <span lang="de">ob</span> replaces a yes/no question. <b lang="de">damit / um … zu:</b> <span lang="de">um … zu</span> needs an infinitive.</p>
+    </div>
+
+    <div class="gcard">
+      <h3>Präpositionen und Kasus</h3>
+      <p class="ex"><b>Akkusativ:</b> <span lang="de">durch, für, gegen, ohne, um</span></p>
+      <p class="mnemo">Remember it as <b>FUDGO</b>: <span lang="de">für, um, durch, gegen, ohne</span>.</p>
+      <p class="ex"><b>Dativ:</b> <span lang="de">aus, bei, mit, nach, seit, von, zu</span> (+ <span lang="de">gegenüber</span>)</p>
+      <p class="mnemo">Sing <span lang="de">aus-bei-mit-nach-seit-von-zu</span> to the tune of the Blue Danube waltz. It sticks.</p>
+      <p class="ex"><b>Wechselpräpositionen:</b> <span lang="de">an, auf, hinter, in, neben, über, unter, vor, zwischen</span> · <span lang="de">wo?</span> → Dativ, <span lang="de">wohin?</span> → Akkusativ</p>
+      <p class="ex" lang="de">Das Bild hängt an <b>der</b> Wand. · Ich hänge das Bild an <b>die</b> Wand.</p>
+      <p class="ex"><b>Genitiv:</b> <span lang="de">wegen, trotz, während, statt</span></p>
+    </div>
+
+    <div class="gcard">
+      <h3>Zeitangaben</h3>
+      <div class="tbl-wrap"><table>
+        <tbody>
+          <tr><td lang="de"><b>am</b> Montag, am Wochenende, am 3. Mai</td></tr>
+          <tr><td lang="de"><b>im</b> Mai, im Sommer, im Jahr 2026</td></tr>
+          <tr><td lang="de"><b>um</b> 8 Uhr</td></tr>
+          <tr><td lang="de"><b>seit</b> drei Jahren <i>(still true now)</i></td></tr>
+          <tr><td lang="de"><b>vor</b> drei Jahren <i>(ago)</i></td></tr>
+          <tr><td lang="de"><b>in</b> zwei Wochen <i>(from now)</i></td></tr>
+          <tr><td lang="de"><b>ab</b> Montag · <b>bis</b> Freitag · <b>von</b> 9 <b>bis</b> 17 Uhr</td></tr>
+        </tbody>
+      </table></div>
+      <p class="small muted">After <span lang="de">seit, vor</span> and <span lang="de">in</span> (time), plural nouns take Dativ <b>-n</b>: <span lang="de">seit drei Jahre<b>n</b></span>.</p>
+    </div>
+
+    <div class="gcard full">
+      <h3>Verben mit Präposition</h3>
+      <div class="tbl-wrap"><table class="wide">
+        <thead><tr><th>Verb</th><th>+ Präp.</th><th>Beispiel</th></tr></thead>
+        <tbody id="vp-table"></tbody>
+      </table></div>
+      <p class="small muted">Ask about things with <span lang="de">wo(r)+Präp.</span> (<span lang="de">Worauf wartest du?</span>) and point back with <span lang="de">da(r)+Präp.</span> (<span lang="de">Ich warte darauf.</span>). For people: <span lang="de">Auf wen wartest du? Ich warte auf ihn.</span></p>
+    </div>
+
+    <div class="gcard">
+      <h3>Relativpronomen</h3>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th></th><th>m</th><th>f</th><th>n</th><th>Pl.</th></tr></thead>
+        <tbody lang="de">
+          <tr><td>Nom</td><td>der</td><td>die</td><td>das</td><td>die</td></tr>
+          <tr><td>Akk</td><td><b>den</b></td><td>die</td><td>das</td><td>die</td></tr>
+          <tr><td>Dat</td><td>dem</td><td>der</td><td>dem</td><td><b>denen</b></td></tr>
+          <tr><td>Gen</td><td>dessen</td><td>deren</td><td>dessen</td><td>deren</td></tr>
+        </tbody>
+      </table></div>
+      <p class="ex">Gender and number come from the noun before. Case comes from the verb or preposition inside the relative clause.</p>
+      <p class="ex" lang="de">Die Kollegin, <b>der</b> ich geholfen habe … <i>(helfen + Dativ)</i></p>
+    </div>
+
+    <div class="gcard">
+      <h3>Konjunktiv II</h3>
+      <p class="ex" lang="de"><b>würde</b> + Infinitiv · <b>hätte · wäre · könnte · müsste · sollte</b></p>
+      <ul class="plain small">
+        <li>Polite request: <span lang="de">Könnten Sie mir bitte … schicken?</span></li>
+        <li>Polite wish: <span lang="de">Ich hätte gern … / Ich würde gern wissen, ob …</span></li>
+        <li>Unreal: <span lang="de">Wenn ich mehr Zeit hätte, würde ich öfter reisen.</span></li>
+        <li>Advice: <span lang="de">Du solltest früher anfangen.</span></li>
+        <li>In letters: <span lang="de">Ich wäre Ihnen dankbar, wenn Sie …</span></li>
+      </ul>
+    </div>
+
+    <div class="gcard">
+      <h3>Passiv</h3>
+      <div class="tbl-wrap"><table>
+        <tbody lang="de">
+          <tr><td>Präsens</td><td>Die Heizung <b>wird</b> repariert.</td></tr>
+          <tr><td>Präteritum</td><td>Das Paket <b>wurde</b> geliefert.</td></tr>
+          <tr><td>Perfekt</td><td>Der Termin <b>ist</b> verschoben <b>worden</b>.</td></tr>
+          <tr><td>mit Modalverb</td><td>Die Wohnung <b>muss</b> renoviert <b>werden</b>.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="small muted">Common in notices and official letters, so it turns up in Lesen and Sprachbausteine.</p>
+    </div>
+
+    <div class="gcard">
+      <h3>Perfekt mit sein</h3>
+      <p class="ex">Movement from A to B or a change of state, plus <span lang="de">sein, bleiben, werden, passieren</span>.</p>
+      <p class="ex" lang="de">gehen, fahren, fliegen, kommen, laufen, umziehen, aufstehen, einschlafen, sterben, wachsen</p>
+      <p class="ex" lang="de">Ich <b>bin</b> nach Berlin gezogen. · Was <b>ist</b> passiert?</p>
+    </div>
+
+    <div class="gcard">
+      <h3>Reflexivpronomen</h3>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th></th><th>Akk</th><th>Dat</th></tr></thead>
+        <tbody lang="de">
+          <tr><td>ich</td><td>mich</td><td>mir</td></tr>
+          <tr><td>du</td><td>dich</td><td>dir</td></tr>
+          <tr><td>er / sie / es / Sie</td><td>sich</td><td>sich</td></tr>
+          <tr><td>wir · ihr</td><td>uns · euch</td><td>uns · euch</td></tr>
+        </tbody>
+      </table></div>
+      <p class="ex">Dativ when the sentence already has an accusative object: <span lang="de">Ich wasche <b>mir</b> die Hände.</span></p>
+    </div>
+
+    <div class="gcard">
+      <h3>Adjektivendungen</h3>
+      <ul class="plain small">
+        <li>After <span lang="de">der / die / das</span>: <b>-e</b> in the nominative singular and in the accusative <span lang="de">die / das</span>; <b>-en</b> everywhere else.</li>
+        <li>After <span lang="de">ein / kein / mein</span>: the adjective shows the gender where the article can't: <span lang="de">ein gut<b>er</b> Kurs, ein gut<b>es</b> Buch, eine gut<b>e</b> Idee</span>; <b>-en</b> in Dativ and Genitiv.</li>
+        <li>No article: the ending of <span lang="de">der/die/das</span>: <span lang="de">mit frisch<b>em</b> Brot</span>.</li>
+      </ul>
+    </div>
+
+    <div class="gcard full">
+      <h3>Fehler, die Punkte kosten</h3>
+      <div class="tbl-wrap"><table class="wide">
+        <thead><tr><th>Falsch</th><th>Richtig</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td lang="de">…, weil ich habe keine Zeit.</td><td lang="de">…, weil ich keine Zeit habe.</td><td>Verb at the end after weil</td></tr>
+          <tr><td lang="de">Ich habe nach Hamburg gefahren.</td><td lang="de">Ich bin nach Hamburg gefahren.</td><td>Movement → sein</td></tr>
+          <tr><td lang="de">Ich freue mich für die Party.</td><td lang="de">Ich freue mich auf die Party.</td><td>Future → auf; past → über</td></tr>
+          <tr><td lang="de">Ich warte für dich.</td><td lang="de">Ich warte auf dich.</td><td>warten auf</td></tr>
+          <tr><td lang="de">seit drei Jahre</td><td lang="de">seit drei Jahren</td><td>Dativ plural -n</td></tr>
+          <tr><td lang="de">Wenn ich gestern nach Hause kam, …</td><td lang="de">Als ich gestern nach Hause kam, …</td><td>One event in the past → als</td></tr>
+          <tr><td lang="de">Liebe Frau Koch, Vielen Dank …</td><td lang="de">Liebe Frau Koch, vielen Dank …</td><td>Small letter after the comma</td></tr>
+          <tr><td lang="de">Können sie mir helfen?</td><td lang="de">Können Sie mir helfen?</td><td>Formal Sie is capitalised</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WORTSCHATZ ============ -->
+<section class="view" id="v-wortschatz" hidden>
+  <h2>Wortschatz</h2>
+  <p class="intro">The exam's texts come from a small world: offices, flats, jobs, doctors, shops, trains and free time. These cards cover the words and fixed phrases that carry those texts, plus the signal words that decide richtig or falsch. Cards you miss come back more often.</p>
+  <div class="sheet" id="fc"></div>
+</section>
+
+<!-- ============ PLAN & TAG ============ -->
+<section class="view" id="v-tag" hidden>
+  <h2>Lernplan</h2>
+  <p class="intro">Enter your exam date. The plan splits the time into four phases and tells you what to do in each.</p>
+  <div class="sheet" id="plangen"></div>
+
+  <h2 class="h2">Prüfungstag</h2>
+  <div class="wgrid">
+    <div class="sheet" id="checklist"></div>
+    <div>
+      <h4 style="margin-top:14px">In the written exam</h4>
+      <ul class="plain">
+        <li>Start the 90-minute block with a time plan in your head, and look at the clock after every part.</li>
+        <li>Transfer answers to the Antwortbogen after each part, not at the end.</li>
+        <li>Before Hören starts, look at the first statements.</li>
+        <li>In Schreiben, tick off each Leitpunkt on the task sheet as you finish it.</li>
+      </ul>
+      <h4>In the oral exam</h4>
+      <ul class="plain">
+        <li>Greet your partner and the examiners. A calm first sentence helps.</li>
+        <li>If you didn't understand: <span lang="de">Entschuldigung, können Sie die Frage bitte wiederholen?</span></li>
+        <li>Help your partner if they get stuck. It shows interaction and costs you nothing.</li>
+      </ul>
+      <h4>Official material</h4>
+      <p>telc offers a free full practice test (Übungstest) with audio and answer key on its <a href="https://www.telc.net/sprachpruefungen/deutsch/zertifikat-deutsch-telc-deutsch-b1/" target="_blank" rel="noopener">Zertifikat Deutsch / telc Deutsch B1 page</a>. Do it once at the start and once near the end, timed, and score it with the <a href="#plan" data-go="plan">Punkterechner</a>.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <p>Unofficial study tool, not affiliated with telc gGmbH. Exam structure checked against telc's published overview for Zertifikat Deutsch / telc Deutsch B1 in October 2026; confirm details such as retake deadlines with your test centre. All practice texts and tasks here are written for training and are not official exam material. Progress and drafts are saved in this browser only.</p>
+</footer>
+</main>
+<script>
+/* ---------- Content data (practice material written for this trainer, not official exam items) ---------- */
+const DATA = {};
+
+DATA.calc = [
+  { g: "Lesen", id: "l1", label: "Lesen · Teil 1", n: 5, w: 5, ex: 3 },
+  { g: "Lesen", id: "l2", label: "Lesen · Teil 2", n: 5, w: 5, ex: 3 },
+  { g: "Lesen", id: "l3", label: "Lesen · Teil 3", n: 10, w: 2.5, ex: 7 },
+  { g: "Sprachbausteine", id: "s1", label: "Sprachbausteine · Teil 1", n: 10, w: 1.5, ex: 6 },
+  { g: "Sprachbausteine", id: "s2", label: "Sprachbausteine · Teil 2", n: 10, w: 1.5, ex: 5 },
+  { g: "Hören", id: "h1", label: "Hören · Teil 1", n: 5, w: 5, ex: 3 },
+  { g: "Hören", id: "h2", label: "Hören · Teil 2", n: 10, w: 2.5, ex: 7 },
+  { g: "Hören", id: "h3", label: "Hören · Teil 3", n: 5, w: 5, ex: 3 }
+];
+
+DATA.block = [
+  ["Lesen Teil 1", 15],
+  ["Lesen Teil 2", 20],
+  ["Lesen Teil 3", 20],
+  ["Sprachbausteine Teil 1", 10],
+  ["Sprachbausteine Teil 2", 10],
+  ["Check + Antwortbogen", 15]
+];
+
+/* Lesen Teil 1 */
+DATA.l1 = {
+  heads: [
+    ["a", "Stadt plant mehr Betreuung für kleine Kinder"],
+    ["b", "Neue Parkplätze für Mitarbeiter"],
+    ["c", "Mit dem Rad ins Büro: Eine Firma hilft"],
+    ["d", "Supermärkte verkaufen weniger Obst"],
+    ["e", "Bibliothek bietet mehr als Bücher"],
+    ["f", "Eltern bleiben lieber zu Hause"],
+    ["g", "Online einkaufen: praktisch, aber nicht für alles"],
+    ["h", "Nasser Sommer freut die Bauern"],
+    ["i", "Bibliotheksausweis bald nicht mehr kostenlos"],
+    ["j", "Hitzewelle an der Nordsee"]
+  ],
+  texts: [
+    { t: "In vielen deutschen Städten fehlen Plätze in Kindertagesstätten. Eltern müssen oft monatelang warten, bis ihr Kind einen Platz bekommt. Viele Mütter und Väter können deshalb nicht so früh wieder arbeiten, wie sie möchten. Die Stadt Leipzig will jetzt bis zum nächsten Jahr zwanzig neue Kitas bauen. Dafür sucht sie auch dringend Erzieherinnen und Erzieher.",
+      a: "a", why: "The text as a whole: the city is building 20 new Kitas. (f) is the trap: parents can't go back to work as early as they want, which is the opposite of preferring to stay home." },
+    { t: "Wer im Sommer mit dem Fahrrad zur Arbeit fährt, kommt oft verschwitzt im Büro an. Eine Firma in Freiburg hat deshalb Duschen und Umkleideräume für ihre Mitarbeiter eingerichtet. Seitdem kommen fast doppelt so viele Kolleginnen und Kollegen mit dem Rad. Der Chef ist zufrieden: Die Mitarbeiter sind seltener krank, und der Parkplatz ist nicht mehr so voll.",
+      a: "c", why: "One company makes cycling to work easier. (b) reuses 'Parkplatz', but the car park is now emptier; nobody builds new spaces." },
+    { t: "Immer mehr Menschen kaufen Lebensmittel im Internet. Besonders beliebt ist der Service bei Familien mit kleinen Kindern und bei älteren Menschen. Eine Umfrage zeigt aber auch: Obst und Gemüse möchten die meisten lieber selbst im Geschäft aussuchen. Sie wollen sehen, ob die Ware frisch ist.",
+      a: "g", why: "Online grocery shopping is popular, but people still want to pick fruit and vegetables themselves. (d) takes the word 'Obst' and builds a claim the text never makes." },
+    { t: "Am Wochenende hat die Stadtbibliothek ihre neuen Räume eröffnet. Neben Büchern und Filmen gibt es jetzt auch einen Raum, in dem man Nähmaschinen, 3D-Drucker und Werkzeug ausleihen und direkt benutzen kann. Das Angebot ist für alle mit Bibliotheksausweis kostenlos. Schon am ersten Tag kamen über 500 Besucher.",
+      a: "e", why: "The library now lends machines and tools. (i) uses 'Bibliotheksausweis' and 'kostenlos' from the text, but says the opposite." },
+    { t: "Zum dritten Mal in Folge hat es im Juli in Norddeutschland mehr geregnet als im Durchschnitt. Für Urlauber an der Nordsee war das ärgerlich, für die Landwirte dagegen nicht: Nach den trockenen Jahren freuen sich viele Bauern über die volle Ernte.",
+      a: "h", why: "A wet July: annoying for tourists, good for farmers. (j) borrows 'Nordsee', but the text is about rain, not heat." }
+  ]
+};
+
+/* Lesen Teil 2 */
+DATA.l2 = {
+  title: "Kaputt? Nicht wegwerfen!",
+  paras: [
+    "Jeden ersten Samstag im Monat ist im Gemeindehaus von Kassel-Wehlheiden viel los. Dann öffnet das Repair-Café, das Martina Kühn vor drei Jahren gegründet hat. Hier reparieren Freiwillige kostenlos Toaster, Lampen, Fahrräder oder Kleidung. Die Besucher sollen aber nicht nur warten, sondern mithelfen. „Wir wollen zeigen, dass man vieles selbst reparieren kann“, sagt Kühn.",
+    "Die Idee hatte die 54-jährige Elektrikerin, als ihre Nachbarin eine fast neue Kaffeemaschine wegwerfen wollte. „Es war nur ein Kabel locker. Das hat fünf Minuten gedauert.“ Am Anfang kamen nur wenige Leute, inzwischen sind es an jedem Termin rund sechzig. Etwa zwei Drittel der Geräte können die Helfer wieder in Ordnung bringen. Wenn Ersatzteile fehlen, bestellen die Besucher sie selbst und kommen beim nächsten Mal wieder.",
+    "Geld verdient das Café nicht. Kaffee und Kuchen gibt es gegen eine Spende, und davon kauft das Team Werkzeug. Probleme gibt es trotzdem: Einige Handwerker in der Stadt finden, dass das Café ihnen Kunden wegnimmt. Kühn sieht das anders. „Wer bei uns merkt, dass eine Reparatur zu schwierig ist, geht danach oft in eine Werkstatt. Viele wussten vorher gar nicht, dass man so etwas noch reparieren lassen kann.“",
+    "Im nächsten Jahr möchte Kühn auch Kurse für Jugendliche anbieten. Dafür sucht sie noch Helfer, die gut mit Computern und Handys umgehen können."
+  ],
+  qs: [
+    { q: "Im Repair-Café …", o: ["reparieren Fachleute die Geräte gegen eine kleine Gebühr.", "sollen die Besucher bei der Reparatur selbst mithelfen.", "kann man jeden Samstag kaputte Geräte abgeben."], a: 1,
+      why: "\"Die Besucher sollen aber nicht nur warten, sondern mithelfen.\" (a) is wrong because repairs are free; (c) it opens on the first Saturday of the month only." },
+    { q: "Martina Kühn hatte die Idee, weil …", o: ["ihre eigene Kaffeemaschine kaputt war.", "sie als Elektrikerin keine Arbeit hatte.", "eine Nachbarin ein Gerät mit einem kleinen Fehler wegwerfen wollte."], a: 2,
+      why: "\"… als ihre Nachbarin eine fast neue Kaffeemaschine wegwerfen wollte. Es war nur ein Kabel locker.\" (a) turns the neighbour's machine into her own." },
+    { q: "Was passiert, wenn ein Ersatzteil fehlt?", o: ["Die Helfer bestellen es und schicken es den Besuchern.", "Die Besucher besorgen es und kommen wieder.", "Das Gerät wird in eine Werkstatt gebracht."], a: 1,
+      why: "\"Wenn Ersatzteile fehlen, bestellen die Besucher sie selbst und kommen beim nächsten Mal wieder.\" (c) borrows 'Werkstatt' from the next paragraph." },
+    { q: "Mit dem Geld aus den Spenden …", o: ["bezahlt das Café die Miete.", "kauft das Team Werkzeug.", "bekommen die Helfer einen kleinen Lohn."], a: 1,
+      why: "\"… davon kauft das Team Werkzeug.\" Rent and wages are never mentioned." },
+    { q: "Was sagt Kühn zur Kritik der Handwerker?", o: ["Das Café bringt ihnen sogar neue Kunden.", "Sie will in Zukunft nur noch kleine Reparaturen machen.", "Die Handwerker sind zu teuer."], a: 0,
+      why: "People who find a repair too hard often go to a workshop afterwards, and many didn't know repair was still possible. That is a paraphrase of 'new customers'." }
+  ]
+};
+
+/* Lesen Teil 3 */
+DATA.l3 = {
+  ads: [
+    ["A", "Waldrallye für Familien: Sonntag, 10–13 Uhr, Treffpunkt Parkplatz Stadtwald. Mit Rätseln und Picknick. Für Kinder von 5 bis 12 Jahren. Keine Anmeldung nötig."],
+    ["B", "Volkshochschule: Englisch für den Beruf (B1). Dienstags und donnerstags, 18:30–20:00 Uhr. Telefonieren, E-Mails, Meetings. Beginn: 4. November."],
+    ["C", "Englisch spielend lernen! Kurse für Kinder ab 5 Jahren, samstags um 10 Uhr, mit Liedern und Spielen."],
+    ["D", "Fahrradbörse im Hof der Gesamtschule: gebrauchte Räder ab 40 €, alle geprüft. Samstag 9–14 Uhr."],
+    ["E", "Fahrradhaus Meyer: Nur diese Woche 20 % Rabatt auf alle neuen Trekkingräder und E-Bikes ab 399 €."],
+    ["F", "Tanztee im Café Lindner: jeden Samstag ab 19 Uhr Walzer, Foxtrott und Tango. Gemütliche Atmosphäre, Live-Klavier, keine laute Musik."],
+    ["G", "Club Nachtwerk: Samstag House und Techno bis 5 Uhr früh. Eintritt 12 €."],
+    ["H", "Möbelbörse der Diakonie: Wir holen gut erhaltene Möbel kostenlos bei Ihnen ab. Rufen Sie uns an und vereinbaren Sie einen Termin."],
+    ["I", "3-Zimmer-Wohnung, 2. Stock, großer Balkon, Nähe Bahnhof, 890 € warm. Keine Haustiere."],
+    ["J", "Hundeschule am Stadtpark: Kurse für junge Hunde und ihre Besitzer, auch am Wochenende."],
+    ["K", "Kinderkino im Rathaus: jeden Sonntag um 15 Uhr Filme für Kinder ab 6 Jahren. Eintritt 3 €."]
+  ],
+  sits: [
+    { s: "Sie möchten am Sonntag mit Ihren Kindern (6 und 9 Jahre) etwas draußen unternehmen.", a: "A", why: "Sunday, outdoors, ages 5–12: all criteria fit A. K is also Sunday and for children, but indoors." },
+    { s: "Ihr Freund möchte abends Englisch lernen, weil er es im Job braucht.", a: "B", why: "Evenings, English for work: B. C is English, but for children on Saturday mornings." },
+    { s: "Sie suchen ein Fahrrad und möchten höchstens 100 Euro ausgeben.", a: "D", why: "Used bikes from 40 €: D. E is about bikes but starts at 399 €, discount or not." },
+    { s: "Ihre Kollegin möchte am Samstagabend tanzen gehen, mag aber keine laute Musik.", a: "F", why: "Saturday evening, dancing, explicitly no loud music: F. G is Saturday dancing, but loud." },
+    { s: "Sie ziehen um und möchten Ihr altes Sofa loswerden, ohne für den Transport zu bezahlen.", a: "H", why: "Free pick-up of furniture: H." },
+    { s: "Sie suchen für sich und Ihren Hund eine Wohnung mit Garten.", a: "x", why: "No ad fits. I is a flat, but has a balcony, not a garden, and pets are not allowed. J is about dogs, not flats. So: x." }
+  ]
+};
+
+/* Sprachbausteine Teil 1: topic keys -> labels */
+DATA.sbTopics = { konn: "Konnektoren", rel: "Relativsätze", vp: "Verb + Präp.", praep: "Präpositionen", kp: "Konjunktiv · Passiv", pron: "Pronomen", form: "Formen · Tempus" };
+DATA.sb1 = [
+  { t: "konn", q: "Ich kann am Samstag leider nicht kommen, ___ ich arbeiten muss.", o: ["weil", "denn", "deshalb"], a: 0, why: "The verb (muss) is at the end, so you need a subordinating connector: weil." },
+  { t: "konn", q: "Ich muss am Samstag arbeiten, ___ kann ich leider nicht kommen.", o: ["deshalb", "weil", "denn"], a: 0, why: "The verb (kann) comes straight after the gap. That's the position-1 pattern: deshalb + verb." },
+  { t: "konn", q: "Ich komme heute nicht zum Kurs, ___ ich bin krank.", o: ["denn", "weil", "deshalb"], a: 0, why: "Normal word order after the gap (ich bin). Only a position-0 connector keeps it: denn." },
+  { t: "konn", q: "___ es stark regnet, machen wir den Ausflug.", o: ["Obwohl", "Trotzdem", "Weil"], a: 0, why: "Contrast plus verb at the end (regnet): obwohl. Trotzdem would need the verb right after it." },
+  { t: "konn", q: "Es regnet stark. ___ machen wir den Ausflug.", o: ["Trotzdem", "Obwohl", "Deshalb"], a: 0, why: "Contrast plus verb right after: trotzdem. Deshalb would make the rain the reason for the trip." },
+  { t: "konn", q: "Können Sie mir sagen, ___ der Kurs auch im Sommer stattfindet?", o: ["ob", "dass", "wenn"], a: 0, why: "Indirect yes/no question: ob." },
+  { t: "konn", q: "___ ich ein Kind war, habe ich viel draußen gespielt.", o: ["Als", "Wenn", "Wann"], a: 0, why: "One period in the past: als. Wenn is for repeated events or the present; wann is a question word." },
+  { t: "konn", q: "Immer ___ ich Zeit habe, gehe ich schwimmen.", o: ["wenn", "als", "ob"], a: 0, why: "Repeated situation (immer): wenn." },
+  { t: "konn", q: "Ich lerne jeden Abend, ___ ich die Prüfung bestehe.", o: ["damit", "um", "dass"], a: 0, why: "Purpose with a conjugated verb (bestehe): damit. Um needs zu + infinitive." },
+  { t: "konn", q: "Ich lerne jeden Abend, ___ die Prüfung zu bestehen.", o: ["um", "damit", "für"], a: 0, why: "Purpose with zu + infinitive: um … zu." },
+  { t: "konn", q: "Nicht nur meine Eltern, ___ auch meine Geschwister kommen zur Feier.", o: ["sondern", "aber", "und"], a: 0, why: "Fixed pair: nicht nur … sondern auch." },
+  { t: "konn", q: "Je mehr ich übe, ___ sicherer werde ich.", o: ["desto", "als", "so"], a: 0, why: "Fixed pair: je + comparative … desto + comparative." },
+  { t: "konn", q: "Ich schreibe Ihnen, ___ ich eine Frage zu Ihrer Anzeige habe.", o: ["weil", "denn", "deshalb"], a: 0, why: "The verb (habe) is at the end: weil. A classic first sentence in exam letters." },
+  { t: "rel", q: "Der Kurs, ___ ich gerade besuche, macht mir viel Spaß.", o: ["den", "der", "dem"], a: 0, why: "Kurs is masculine. In the relative clause it's the object of besuche, so Akkusativ: den." },
+  { t: "rel", q: "Die Kollegin, ___ ich beim Umzug geholfen habe, hat mich zum Essen eingeladen.", o: ["der", "die", "den"], a: 0, why: "helfen takes the Dativ. Feminine Dativ: der." },
+  { t: "rel", q: "Das ist der Nachbar, ___ Auto immer vor unserer Garage steht.", o: ["dessen", "der", "dem"], a: 0, why: "Possession (his car): Genitiv dessen." },
+  { t: "rel", q: "Vielen Dank für deine E-Mail, ___ ich mich sehr gefreut habe.", o: ["über die", "auf die", "für die"], a: 0, why: "The e-mail has already arrived: sich freuen über. Auf is for something still to come." },
+  { t: "rel", q: "Das sind die Freunde, mit ___ ich in den Urlaub fahre.", o: ["denen", "die", "deren"], a: 0, why: "mit + Dativ, plural: denen." },
+  { t: "vp", q: "Ich freue mich schon sehr ___ deinen Besuch nächste Woche.", o: ["auf", "über", "für"], a: 0, why: "Something in the future: sich freuen auf." },
+  { t: "vp", q: "Ich interessiere mich sehr ___ Ihr Angebot.", o: ["für", "an", "über"], a: 0, why: "sich interessieren für + Akkusativ." },
+  { t: "vp", q: "Wir haben eine halbe Stunde ___ den Bus gewartet.", o: ["auf", "für", "an"], a: 0, why: "warten auf + Akkusativ. Never 'warten für'." },
+  { t: "vp", q: "Ich möchte gern ___ dem Wochenendkurs teilnehmen.", o: ["an", "bei", "in"], a: 0, why: "teilnehmen an + Dativ." },
+  { t: "vp", q: "Ich habe mich ___ die Stelle als Verkäuferin beworben.", o: ["um", "an", "über"], a: 0, why: "sich bewerben um (the job), bei (the company)." },
+  { t: "vp", q: "Kannst du dich am Wochenende ___ unsere Katze kümmern?", o: ["um", "für", "auf"], a: 0, why: "sich kümmern um + Akkusativ." },
+  { t: "vp", q: "___ hast du dich so geärgert?", o: ["Worüber", "Darüber", "Wofür"], a: 0, why: "Asking about a thing with sich ärgern über: wo(r) + über = worüber." },
+  { t: "vp", q: "Wir sprechen morgen noch einmal ___.", o: ["darüber", "worüber", "über"], a: 0, why: "Pointing back to a thing already mentioned: da(r) + über. Über alone needs an object." },
+  { t: "kp", q: "Ich ___ Ihnen sehr dankbar, wenn Sie mir bald antworten könnten.", o: ["wäre", "bin", "würde"], a: 0, why: "Polite request in Konjunktiv II: Ich wäre Ihnen dankbar, wenn Sie … könnten." },
+  { t: "kp", q: "___ Sie mir bitte weitere Informationen schicken?", o: ["Könnten", "Hätten", "Wären"], a: 0, why: "schicken needs a modal verb. Könnten Sie …? is the standard polite request." },
+  { t: "kp", q: "Wenn ich mehr Zeit ___, würde ich öfter reisen.", o: ["hätte", "habe", "hatte"], a: 0, why: "Unreal condition: Konjunktiv II hätte." },
+  { t: "kp", q: "Das Paket ___ gestern endlich geliefert.", o: ["wurde", "wird", "hat"], a: 0, why: "Passive in the past (gestern): wurde + Partizip II." },
+  { t: "kp", q: "Die Heizung muss dringend repariert ___.", o: ["werden", "wurden", "worden"], a: 0, why: "Modal verb + passive: Partizip II + werden." },
+  { t: "kp", q: "Ich ___ mir morgen die Haare schneiden.", o: ["lasse", "mache", "habe"], a: 0, why: "Someone else does it for you: lassen + infinitive." },
+  { t: "pron", q: "Kannst du ___ bitte beim Umzug helfen?", o: ["mir", "mich", "ich"], a: 0, why: "helfen takes the Dativ: mir." },
+  { t: "pron", q: "Ich habe ___ gestern im Supermarkt getroffen.", o: ["ihn", "ihm", "er"], a: 0, why: "treffen takes the Akkusativ: ihn." },
+  { t: "pron", q: "Ich muss ___ beeilen, sonst verpasse ich den Zug.", o: ["mich", "mir", "sich"], a: 0, why: "sich beeilen, no other object: Akkusativ mich." },
+  { t: "pron", q: "Ich wasche ___ vor dem Essen die Hände.", o: ["mir", "mich", "sich"], a: 0, why: "There is already an object (die Hände), so the reflexive pronoun goes to the Dativ: mir." },
+  { t: "pron", q: "Liebe Frau Koch, ich danke ___ für Ihre Hilfe.", o: ["Ihnen", "Sie", "Ihr"], a: 0, why: "danken takes the Dativ. Formal: Ihnen, with a capital I." },
+  { t: "praep", q: "Ich wohne ___ drei Jahren in Berlin.", o: ["seit", "vor", "für"], a: 0, why: "Started in the past, still true now: seit + Dativ." },
+  { t: "praep", q: "Ich bin ___ drei Jahren nach Berlin gekommen.", o: ["vor", "seit", "nach"], a: 0, why: "A point in the past (ago): vor + Dativ." },
+  { t: "praep", q: "Wir sehen uns ___ Montag um zehn Uhr.", o: ["am", "im", "um"], a: 0, why: "Days take am; months and seasons im; clock times um." },
+  { t: "praep", q: "Der neue Kurs beginnt ___ September.", o: ["im", "am", "um"], a: 0, why: "Months take im." },
+  { t: "praep", q: "Morgen muss ich ___ Arzt gehen.", o: ["zum", "beim", "nach"], a: 0, why: "Going to a person: zu (zum). Bei is for being there: Ich bin beim Arzt." },
+  { t: "praep", q: "Wir sind letzte Woche in ___ größere Wohnung gezogen.", o: ["eine", "einer", "einem"], a: 0, why: "Movement, wohin?: Akkusativ, in eine." },
+  { t: "praep", q: "Jetzt wohnen wir in ___ größeren Wohnung.", o: ["einer", "eine", "einen"], a: 0, why: "Location, wo?: Dativ, in einer." },
+  { t: "praep", q: "___ des schlechten Wetters hat das Fest im Garten stattgefunden.", o: ["Trotz", "Wegen", "Obwohl"], a: 0, why: "Contrast + Genitiv: trotz. Obwohl would need a clause with its own verb." },
+  { t: "form", q: "Gestern ___ ich mit dem Zug nach Hamburg gefahren.", o: ["bin", "habe", "hat"], a: 0, why: "fahren is movement: Perfekt with sein." },
+  { t: "form", q: "Hast du den Brief schon ___?", o: ["abgeschickt", "geabschickt", "abschicken"], a: 0, why: "Separable verb: ab + ge + schickt." },
+  { t: "form", q: "Berlin ist viel ___ als meine Heimatstadt.", o: ["größer", "großer", "am größten"], a: 0, why: "Comparison with als: comparative größer." },
+  { t: "form", q: "Ich habe keine Lust, am Sonntag ___.", o: ["zu arbeiten", "arbeiten", "arbeite"], a: 0, why: "Lust haben + zu + infinitive." },
+  { t: "form", q: "Wir suchen eine ___ Wohnung in der Nähe vom Zentrum.", o: ["günstige", "günstigen", "günstiger"], a: 0, why: "eine + feminine noun, Akkusativ: -e." },
+  { t: "form", q: "Ich wünsche dir ein ___ neues Jahr!", o: ["gutes", "guten", "gute"], a: 0, why: "ein + neuter noun (Nominativ/Akkusativ): -es." }
+];
+
+/* Sprachbausteine Teil 2 */
+DATA.sb2 = {
+  text: "Liebe Nachbarinnen und Nachbarn,\n\nam Samstag, dem 14. Juni, feiern wir {1} dritten Mal unser Hoffest. Wir beginnen um 15 Uhr {2} Kaffee und Kuchen. Die Kinder können {3} im Garten spielen, für sie gibt es auch eine Malecke. {4} Abend wollen wir grillen. Bitte bringen Sie, {5} möglich, einen Salat oder ein Getränk mit. Damit wir besser planen können, sagen Sie uns bitte {6} Mittwoch Bescheid, ob Sie kommen. Falls es regnet, {7} das Fest im Gemeinschaftsraum statt. Wir {8} uns auch über Ideen für Spiele oder Musik. Wer {9} hat, beim Aufbau zu helfen, kann sich gern bei uns melden. Wir freuen uns {10} einen schönen Nachmittag mit Ihnen!\n\nHerzliche Grüße\nFamilie Yilmaz und Familie Becker",
+  bank: ["Am", "auf", "bis", "darauf", "denn", "findet", "freuen", "gibt", "im", "Lust", "mit", "seit", "wenn", "währenddessen", "zum"],
+  key: { 1: "zum", 2: "mit", 3: "währenddessen", 4: "Am", 5: "wenn", 6: "bis", 7: "findet", 8: "freuen", 9: "Lust", 10: "auf" },
+  why: {
+    1: "zum ersten / zweiten / dritten Mal is a fixed phrase.",
+    2: "beginnen mit + Dativ: Wir beginnen mit Kaffee und Kuchen.",
+    3: "An adverb meaning 'meanwhile' fits between können and im Garten.",
+    4: "Times of day: am Abend, am Nachmittag.",
+    5: "wenn möglich: 'if possible'.",
+    6: "Deadline: bis Mittwoch. Seit would mean since Wednesday.",
+    7: "stattfinden is separable: … findet das Fest … statt. Note the verb comes first after the falls-clause.",
+    8: "sich freuen über: Wir freuen uns über Ideen.",
+    9: "Lust haben, etwas zu tun.",
+    10: "The party is in the future: sich freuen auf."
+  }
+};
+
+/* Hören practice */
+DATA.hoeren = [
+  { teil: "Teil 1 · Globalverstehen", plays: 1,
+    text: "Und nun das Wetter für morgen. Im Norden bleibt es bewölkt, aber trocken. Im Süden gibt es am Nachmittag kräftige Gewitter. Die Temperaturen steigen auf bis zu 28 Grad.",
+    items: [{ s: "Im Norden wird es morgen regnen.", a: "f", why: "„bewölkt, aber trocken“: cloudy but dry. The storms are in the south." }] },
+  { teil: "Teil 1 · Globalverstehen", plays: 1,
+    text: "Die Stadt Hannover will mehr für Radfahrer tun. Bis 2028 sollen 40 Kilometer neue Radwege entstehen. Die Kosten von rund 12 Millionen Euro übernimmt zum großen Teil das Land Niedersachsen.",
+    items: [{ s: "Die Stadt bezahlt die neuen Radwege allein.", a: "f", why: "„übernimmt zum großen Teil das Land“: the state pays most of it. Words like allein, nur and immer in a statement are a warning sign." }] },
+  { teil: "Teil 2 · Detailverstehen", plays: 2,
+    text: "Heute bei uns im Studio: Daniela Ruiz, Krankenpflegerin aus Valencia. Frau Ruiz lebt seit vier Jahren in Bremen. Am Anfang war es nicht leicht, sagt sie. Sie hatte in Spanien schon Deutsch gelernt, aber im Krankenhaus haben alle sehr schnell gesprochen, und viele Patienten sprechen Dialekt. Geholfen haben ihr vor allem die Kolleginnen: Sie haben ihr Wörter erklärt und sie zu ihren Treffen eingeladen. Inzwischen arbeitet Frau Ruiz auf der Kinderstation, und die Arbeit macht ihr großen Spaß. Nur das Wetter findet sie immer noch schwierig. Zurück nach Spanien möchte sie im Moment nicht. Vielleicht später, wenn ihre Eltern Hilfe brauchen.",
+    items: [
+      { s: "Frau Ruiz hat erst in Deutschland angefangen, Deutsch zu lernen.", a: "f", why: "„Sie hatte in Spanien schon Deutsch gelernt.“ The word erst in the statement is the trap." },
+      { s: "Im Krankenhaus war die Sprache am Anfang ein Problem.", a: "r", why: "Everyone spoke fast and many patients speak dialect." },
+      { s: "Ihre Kolleginnen haben ihr geholfen.", a: "r", why: "„Geholfen haben ihr vor allem die Kolleginnen.“" },
+      { s: "Frau Ruiz will bald nach Spanien zurückgehen.", a: "f", why: "„Zurück nach Spanien möchte sie im Moment nicht.“ Maybe later, not soon." }
+    ] },
+  { teil: "Teil 3 · Selektives Verstehen", plays: 2,
+    text: "Achtung an Gleis 7: Der Regionalexpress nach Potsdam, planmäßige Abfahrt 14 Uhr 12, fährt heute ausnahmsweise von Gleis 9. Bitte beachten Sie die Gleisänderung.",
+    items: [{ s: "Der Zug nach Potsdam fährt heute von einem anderen Gleis ab.", a: "r", why: "„ausnahmsweise von Gleis 9“. The change is the whole point of the announcement." }] },
+  { teil: "Teil 3 · Selektives Verstehen", plays: 2,
+    text: "Guten Tag, hier ist die Praxis Doktor Albers. Ihr Termin am Donnerstag um 9 Uhr muss leider ausfallen, weil die Ärztin krank ist. Bitte rufen Sie uns morgen zwischen 8 und 12 Uhr an, damit wir einen neuen Termin vereinbaren können.",
+    items: [{ s: "Sie sollen am Donnerstag um 9 Uhr in die Praxis kommen.", a: "f", why: "The appointment „muss leider ausfallen“. You should call tomorrow between 8 and 12." }] },
+  { teil: "Teil 3 · Selektives Verstehen", plays: 2,
+    text: "Liebe Kundinnen und Kunden, nur heute erhalten Sie in unserer Sportabteilung im zweiten Stock 30 Prozent Rabatt auf alle Laufschuhe. Das Angebot gilt nicht für Sportbekleidung.",
+    items: [{ s: "Heute gibt es Rabatt auf Sportkleidung.", a: "f", why: "Only running shoes. „Das Angebot gilt nicht für Sportbekleidung.“" }] },
+  { teil: "Teil 3 · Selektives Verstehen", plays: 2,
+    text: "Hallo Sam, hier ist Jonas. Du, wegen Samstag: Das Kino um acht ist leider ausverkauft. Ich habe aber Karten für die Vorstellung um halb zehn bekommen. Wir können ja vorher noch etwas essen gehen. Ruf mich kurz zurück, ja?",
+    items: [{ s: "Jonas hat Karten für eine spätere Vorstellung.", a: "r", why: "Eight o'clock is sold out; he got tickets for half past nine." }] }
+];
+
+/* Schreiben tasks */
+DATA.tasks = [
+  { id: "hochzeit", reg: "du", title: "Absage: Hochzeit (informell)",
+    sit: "Ihre Freundin Lena hat Sie zu ihrer Hochzeit im Juni eingeladen. Sie können leider nicht kommen. Schreiben Sie Lena eine E-Mail.",
+    lp: ["Bedanken Sie sich für die Einladung.", "Erklären Sie, warum Sie nicht kommen können.", "Machen Sie einen Vorschlag für ein Treffen.", "Fragen Sie, was sie sich zur Hochzeit wünscht."],
+    model: "Betreff: Deine Hochzeit\n\nLiebe Lena,\n\nvielen Dank für deine Einladung! Ich habe mich wirklich sehr gefreut, und ich freue mich für euch beide.\n\nLeider kann ich im Juni nicht kommen, weil ich an diesem Wochenende eine wichtige Prüfung habe. Den Termin kann ich nicht verschieben. Das tut mir wirklich leid.\n\nWie wäre es, wenn wir uns nach eurer Hochzeitsreise treffen? Ich könnte euch zum Essen einladen, und du zeigst mir alle Fotos. Hättest du Anfang Juli Zeit?\n\nAußerdem möchte ich euch natürlich etwas schenken. Was wünscht ihr euch? Habt ihr vielleicht eine Wunschliste?\n\nIch wünsche euch schon jetzt einen wunderschönen Tag!\n\nViele liebe Grüße\n[Name]" },
+  { id: "kurs", reg: "sie", title: "Anfrage: Wochenendkurs (formell)",
+    sit: "Sie haben in der Zeitung eine Anzeige für einen Deutschkurs am Wochenende gelesen. Schreiben Sie an die Sprachschule, Frau Brandt.",
+    lp: ["Warum interessieren Sie sich für den Kurs?", "Fragen Sie nach Preis und Kurszeiten.", "Fragen Sie, ob es einen Einstufungstest gibt.", "Wie können Sie sich anmelden?"],
+    model: "Betreff: Anfrage zum Deutschkurs am Wochenende\n\nSehr geehrte Frau Brandt,\n\nich habe Ihre Anzeige in der Zeitung gelesen und interessiere mich sehr für Ihren Deutschkurs am Wochenende. Ich arbeite von Montag bis Freitag und habe deshalb nur am Samstag Zeit. Außerdem möchte ich bald die B1-Prüfung machen.\n\nKönnten Sie mir bitte sagen, wie viel der Kurs kostet und wann genau er stattfindet? Ich würde auch gern wissen, wie viele Wochen er dauert.\n\nGibt es vor dem Kurs einen Einstufungstest? Ich lerne seit einem Jahr Deutsch, bin aber nicht sicher, welches Niveau ich habe.\n\nZum Schluss noch eine Frage: Wie kann ich mich anmelden? Geht das auch online?\n\nVielen Dank im Voraus für Ihre Antwort.\n\nMit freundlichen Grüßen\n[Name]" },
+  { id: "schicht", reg: "sie", title: "Bitte vom Kollegen (halbformell)",
+    sit: "Ihr Kollege Herr Wagner hat Sie gefragt, ob Sie nächsten Samstag seine Schicht übernehmen können. Schreiben Sie ihm eine E-Mail.",
+    lp: ["Reagieren Sie auf seine Bitte.", "Erklären Sie, warum Sie nur am Vormittag Zeit haben.", "Machen Sie einen anderen Vorschlag.", "Fragen Sie, was Sie an dem Tag wissen müssen."],
+    model: "" },
+  { id: "umzug", reg: "du", title: "Freund zieht in Ihre Stadt (informell)",
+    sit: "Ihr Freund Tom zieht nächsten Monat in Ihre Stadt und sucht eine Wohnung. Schreiben Sie ihm eine E-Mail.",
+    lp: ["Schreiben Sie, dass Sie sich freuen.", "Geben Sie Tipps für die Wohnungssuche.", "Beschreiben Sie Ihr Stadtviertel.", "Bieten Sie Hilfe beim Umzug an."],
+    model: "" },
+  { id: "drucker", reg: "sie", title: "Beschwerde: Online-Shop (formell)",
+    sit: "Sie haben bei einem Online-Shop einen Drucker bestellt. Er kam zu spät und funktioniert nicht richtig. Schreiben Sie an den Kundenservice.",
+    lp: ["Was haben Sie wann bestellt?", "Beschreiben Sie das Problem.", "Was erwarten Sie jetzt?", "Bitten Sie um eine schnelle Antwort."],
+    model: "Betreff: Bestellung Nr. 48213, Drucker funktioniert nicht\n\nSehr geehrte Damen und Herren,\n\nam 3. März habe ich in Ihrem Online-Shop einen Drucker (Modell PX 200) bestellt. Sie hatten eine Lieferung innerhalb von drei Tagen versprochen, aber das Paket ist erst nach zwei Wochen angekommen.\n\nLeider funktioniert der Drucker nicht richtig. Er druckt nur die Hälfte der Seite, und nach ein paar Seiten erscheint eine Fehlermeldung. Ich habe alles so gemacht, wie es in der Anleitung steht.\n\nIch möchte den Drucker deshalb zurückschicken und erwarte, dass Sie mir ein neues Gerät schicken. Wenn das nicht möglich ist, möchte ich mein Geld zurück.\n\nBitte antworten Sie mir bis Ende der Woche, weil ich den Drucker dringend für meine Arbeit brauche.\n\nMit freundlichen Grüßen\n[Name]" }
+];
+
+/* Phrase builder: register-specific */
+DATA.phrases = [
+  { g: "Betreff", nl: true, du: ["Betreff: Deine Einladung", "Betreff: Deine Nachricht"], sie: ["Betreff: Ihre Anzeige", "Betreff: Anfrage zu …", "Betreff: Beschwerde – Bestellung Nr. …"] },
+  { g: "Anrede", nl: true, du: ["Liebe …,", "Lieber …,", "Hallo …,"], sie: ["Liebe Frau …,", "Lieber Herr …,", "Sehr geehrte Frau …,", "Sehr geehrter Herr …,", "Sehr geehrte Damen und Herren,"] },
+  { g: "Einstieg", du: ["vielen Dank für deine Nachricht.", "ich habe mich sehr über deine E-Mail gefreut.", "tut mir leid, dass ich mich erst jetzt melde.", "ich schreibe dir, weil …"], sie: ["vielen Dank für Ihre E-Mail.", "ich schreibe Ihnen, weil …", "ich habe Ihre Anzeige gelesen und …", "ich wende mich an Sie, weil …"] },
+  { g: "Danken", du: ["Vielen Dank für …!", "Das ist wirklich nett von dir."], sie: ["Herzlichen Dank für …", "Das ist sehr freundlich von Ihnen."] },
+  { g: "Absagen · Entschuldigen", du: ["Leider kann ich nicht kommen, weil …", "Es tut mir wirklich leid, dass …", "Schade, aber …"], sie: ["Leider kann ich den Termin nicht wahrnehmen, weil …", "Es tut mir sehr leid, dass …", "Ich bitte um Entschuldigung, dass …"] },
+  { g: "Vorschlagen", du: ["Wie wäre es, wenn wir …?", "Hast du Lust, … zu …?", "Wir könnten doch …", "Was hältst du von …?"], sie: ["Ich schlage vor, dass …", "Wäre es möglich, dass …?", "Könnten wir vielleicht …?", "Passt es Ihnen am …?"] },
+  { g: "Fragen · Bitten", du: ["Kannst du mir sagen, …?", "Weißt du, ob …?", "Könntest du mir bitte …?"], sie: ["Könnten Sie mir bitte sagen, …?", "Ich würde gern wissen, ob …", "Ich wäre Ihnen dankbar, wenn Sie …", "Ich hätte noch eine Frage zu …"] },
+  { g: "Verbinden", du: ["…, weil …", "Deshalb …", "Außerdem …", "Trotzdem …", "Zu deiner Frage: …"], sie: ["…, weil …", "Deshalb …", "Außerdem …", "Trotzdem …", "Zu Ihrer Frage: …"] },
+  { g: "Beschweren", du: ["Ehrlich gesagt war ich ein bisschen enttäuscht, dass …"], sie: ["Leider muss ich mich über … beschweren.", "Ich erwarte, dass Sie …", "Bitte schicken Sie mir …", "Wenn das nicht möglich ist, möchte ich …"] },
+  { g: "Schluss", du: ["Ich freue mich auf deine Antwort.", "Schreib mir bald!", "Bis bald!"], sie: ["Ich freue mich auf Ihre Antwort.", "Vielen Dank im Voraus.", "Für Rückfragen stehe ich gern zur Verfügung."] },
+  { g: "Gruß", nl: true, du: ["Viele Grüße", "Liebe Grüße", "Herzliche Grüße"], sie: ["Viele Grüße", "Freundliche Grüße", "Mit freundlichen Grüßen"] }
+];
+
+/* Sprechen */
+DATA.sp1 = [
+  ["Woher kommst du?", "Ich komme aus … / Ich bin in … geboren und aufgewachsen."],
+  ["Wo wohnst du, und seit wann?", "Ich wohne seit … Jahren in … Davor habe ich in … gewohnt."],
+  ["Was machst du beruflich?", "Ich arbeite als … bei … / Ich mache gerade eine Ausbildung als …"],
+  ["Wie lange lernst du schon Deutsch, und warum?", "Ich lerne seit … Deutsch, weil ich … möchte."],
+  ["Welche Sprachen sprichst du?", "Ich spreche …, … und ein bisschen …"],
+  ["Was machst du gern in deiner Freizeit?", "In meiner Freizeit … ich gern …, weil …"],
+  ["Erzähl mal von deiner Familie.", "Ich habe … Geschwister. Meine Familie lebt in …"],
+  ["Was sind deine Pläne?", "Nach der Prüfung möchte ich … / In ein paar Jahren will ich …"]
+];
+DATA.sp2 = [
+  { t: "Handys in der Schule", s: "Viele Schulen verbieten Handys im Unterricht und in den Pausen. Sie sagen, die Kinder sollen sich besser konzentrieren und mehr miteinander sprechen." },
+  { t: "Arbeiten im Homeoffice", s: "Immer mehr Firmen erlauben ihren Mitarbeitern, zu Hause zu arbeiten. Viele sparen so Zeit und Geld, andere fühlen sich allein." },
+  { t: "Fast Food", s: "Junge Menschen essen immer häufiger Fast Food. Ernährungsexperten warnen: Wer selten selbst kocht, isst meistens ungesünder." },
+  { t: "Ehrenamt", s: "Viele Menschen arbeiten in ihrer Freizeit ehrenamtlich, zum Beispiel im Sportverein oder in der Nachbarschaftshilfe, ohne Geld dafür zu bekommen." },
+  { t: "Online einkaufen", s: "Kleidung, Bücher, sogar Lebensmittel: Viele Menschen kaufen fast alles im Internet. Kleine Geschäfte in der Innenstadt haben es dadurch schwer." },
+  { t: "Leben auf dem Land", s: "Wegen der hohen Mieten ziehen viele Familien aus der Großstadt aufs Land. Dort ist es ruhiger, aber Busse und Bahnen fahren seltener." },
+  { t: "Haustiere", s: "In vielen Haushalten lebt ein Hund oder eine Katze. Tiere machen glücklich, sagen die Besitzer. Aber sie kosten auch viel Zeit und Geld." },
+  { t: "Sport im Alltag", s: "Viele Menschen nehmen sich vor, mehr Sport zu machen. Im Alltag fehlt dann aber oft die Zeit oder die Motivation." },
+  { t: "Mit dem Zug statt mit dem Flugzeug", s: "Für Reisen innerhalb Europas nehmen immer mehr Menschen den Zug statt des Flugzeugs, weil sie die Umwelt schützen wollen." },
+  { t: "Kinder und Bildschirme", s: "Schon kleine Kinder schauen täglich Videos auf dem Tablet. Manche Eltern finden das praktisch, andere machen sich Sorgen." }
+];
+DATA.sp3 = [
+  { t: "Abschiedsfeier für die Kursleiterin", s: "Ihre Kursleiterin, Frau Neumann, verlässt nächsten Monat die Sprachschule. Sie möchten mit dem Kurs eine kleine Abschiedsfeier organisieren.", p: ["Wann und wo?", "Essen und Getränke?", "Geschenk?", "Wer macht was?"] },
+  { t: "Ausflug mit dem Deutschkurs", s: "Ihr Deutschkurs möchte am Ende des Kurses einen Tagesausflug machen. Planen Sie den Ausflug zusammen.", p: ["Wohin?", "Wie fahren Sie hin?", "Kosten?", "Programm am Tag?", "Treffpunkt und Uhrzeit?"] },
+  { t: "Überraschungsparty für einen Freund", s: "Ein gemeinsamer Freund wird 30. Sie möchten eine Überraschungsparty für ihn organisieren.", p: ["Wo und wann?", "Wen einladen?", "Essen und Musik?", "Geschenk?", "Wie bleibt es eine Überraschung?"] },
+  { t: "Eine Kollegin im Krankenhaus besuchen", s: "Eine Kollegin liegt nach einer Operation im Krankenhaus. Sie möchten sie zusammen besuchen.", p: ["Wann?", "Was bringen Sie mit?", "Wie kommen Sie hin?", "Wer kommt noch mit?"] },
+  { t: "Einem Freund beim Umzug helfen", s: "Ein Freund zieht am Samstag in eine neue Wohnung und hat Sie beide um Hilfe gebeten.", p: ["Wann treffen Sie sich?", "Transporter oder Auto?", "Wer hilft noch?", "Essen für die Helfer?", "Was passiert mit den alten Möbeln?"] },
+  { t: "Sommerfest im Haus", s: "Sie wohnen im selben Haus und möchten im Sommer ein Fest für alle Nachbarn organisieren.", p: ["Termin?", "Wo feiern?", "Essen und Getränke?", "Programm für Kinder?", "Wer informiert die Nachbarn?"] }
+];
+
+/* Grammatik: verbs with prepositions */
+DATA.vp = [
+  ["sich freuen", "auf + A", "Ich freue mich auf das Wochenende. (future)"],
+  ["sich freuen", "über + A", "Ich habe mich über dein Geschenk gefreut. (now / past)"],
+  ["warten", "auf + A", "Ich warte auf den Bus."],
+  ["sich interessieren", "für + A", "Ich interessiere mich für Ihr Angebot."],
+  ["teilnehmen", "an + D", "Ich nehme an dem Kurs teil."],
+  ["sich kümmern", "um + A", "Wer kümmert sich um die Getränke?"],
+  ["sich bewerben", "um + A / bei + D", "Ich bewerbe mich um die Stelle bei Firma X."],
+  ["denken", "an + A", "Denk bitte an die Fahrkarten!"],
+  ["sich erinnern", "an + A", "Ich erinnere mich gern an den Urlaub."],
+  ["sich ärgern", "über + A", "Er ärgert sich über die Verspätung."],
+  ["sich beschweren", "über + A / bei + D", "Ich beschwere mich beim Vermieter über den Lärm."],
+  ["sich entschuldigen", "für + A / bei + D", "Ich entschuldige mich bei Ihnen für den Fehler."],
+  ["sich bedanken", "für + A / bei + D", "Ich bedanke mich bei dir für die Hilfe."],
+  ["bitten", "um + A", "Ich bitte Sie um eine schnelle Antwort."],
+  ["sprechen", "mit + D / über + A", "Ich spreche mit meinem Chef über den Urlaub."],
+  ["sich gewöhnen", "an + A", "Ich habe mich an das Wetter gewöhnt."],
+  ["Angst haben", "vor + D", "Ich habe keine Angst vor der Prüfung."],
+  ["sich verabreden", "mit + D", "Ich bin mit Lena verabredet."],
+  ["einladen", "zu + D", "Ich lade dich zu meinem Geburtstag ein."],
+  ["gratulieren", "zu + D", "Ich gratuliere dir zum Geburtstag."],
+  ["helfen", "bei + D", "Kannst du mir beim Umzug helfen?"],
+  ["Lust haben", "auf + A", "Hast du Lust auf ein Eis?"],
+  ["abhängen", "von + D", "Das hängt vom Wetter ab."],
+  ["träumen", "von + D", "Ich träume von einer eigenen Wohnung."],
+  ["sich vorbereiten", "auf + A", "Ich bereite mich auf die Prüfung vor."]
+];
+
+/* Wortschatz cards: [de, en, example, topic] */
+DATA.fcTopics = { amt: "Ämter", wohnen: "Wohnen", arbeit: "Arbeit", gesund: "Gesundheit", einkauf: "Einkaufen", verkehr: "Verkehr", freizeit: "Freizeit", nvv: "Feste Wendungen", signal: "Signalwörter" };
+DATA.fc = [
+  ["der Antrag, -¨e", "application (form)", "Ich muss einen Antrag auf Kindergeld stellen.", "amt"],
+  ["einen Termin vereinbaren", "to make an appointment", "Ich möchte einen Termin beim Bürgeramt vereinbaren.", "amt"],
+  ["einen Termin absagen / verschieben", "to cancel / postpone an appointment", "Leider muss ich den Termin verschieben.", "amt"],
+  ["die Bescheinigung, -en", "written confirmation, certificate", "Bitte bringen Sie eine Bescheinigung vom Arbeitgeber mit.", "amt"],
+  ["die Unterlagen (Pl.)", "documents, paperwork", "Schicken Sie uns bitte alle Unterlagen bis Freitag.", "amt"],
+  ["ausfüllen", "to fill in (a form)", "Füllen Sie das Formular bitte vollständig aus.", "amt"],
+  ["die Frist, -en", "deadline", "Die Frist endet am 30. November.", "amt"],
+  ["die Gebühr, -en", "fee", "Die Gebühr beträgt 25 Euro.", "amt"],
+  ["Bescheid sagen / geben", "to let someone know", "Sag mir bitte bis Mittwoch Bescheid.", "amt"],
+  ["zuständig sein für", "to be responsible for", "Wer ist für die Anmeldung zuständig?", "amt"],
+  ["die Miete / die Nebenkosten", "rent / utility charges", "Die Miete beträgt 650 Euro plus Nebenkosten.", "wohnen"],
+  ["die Kaution, -en", "deposit", "Die Kaution bekommen Sie nach dem Auszug zurück.", "wohnen"],
+  ["der Vermieter, - / die Vermieterin", "landlord / landlady", "Ich rufe morgen den Vermieter an.", "wohnen"],
+  ["umziehen (ist umgezogen)", "to move house", "Wir sind im Mai umgezogen.", "wohnen"],
+  ["die Hausordnung", "house rules", "Laut Hausordnung ist ab 22 Uhr Ruhe.", "wohnen"],
+  ["reparieren lassen", "to have something repaired", "Die Heizung ist kaputt, wir lassen sie reparieren.", "wohnen"],
+  ["Rücksicht nehmen auf", "to be considerate of", "Bitte nehmen Sie Rücksicht auf die Nachbarn.", "wohnen"],
+  ["die Bewerbung, -en", "job application", "Ich habe meine Bewerbung per E-Mail geschickt.", "arbeit"],
+  ["das Vorstellungsgespräch, -e", "job interview", "Morgen habe ich ein Vorstellungsgespräch.", "arbeit"],
+  ["die Stelle, -n", "position, job", "Die Stelle ist ab Januar frei.", "arbeit"],
+  ["die Schicht, -en", "shift", "Kannst du am Samstag meine Schicht übernehmen?", "arbeit"],
+  ["Überstunden machen", "to work overtime", "Diese Woche musste ich viele Überstunden machen.", "arbeit"],
+  ["kündigen / die Kündigung", "to give notice / notice", "Er hat seine Wohnung zum Monatsende gekündigt.", "arbeit"],
+  ["der Lebenslauf, -¨e", "CV, résumé", "Bitte schicken Sie uns auch Ihren Lebenslauf.", "arbeit"],
+  ["Erfahrung haben in", "to have experience in", "Ich habe drei Jahre Erfahrung im Verkauf.", "arbeit"],
+  ["krankgeschrieben sein", "to be on sick leave", "Ich bin bis Freitag krankgeschrieben.", "arbeit"],
+  ["das Rezept, -e", "prescription; recipe", "Für dieses Medikament brauchen Sie ein Rezept.", "gesund"],
+  ["die Versichertenkarte, -n", "health insurance card", "Bringen Sie bitte Ihre Versichertenkarte mit.", "gesund"],
+  ["die Praxis, Praxen", "doctor's practice", "Die Praxis ist mittwochs nachmittags geschlossen.", "gesund"],
+  ["der Notfall, -¨e", "emergency", "In einem Notfall rufen Sie die 112 an.", "gesund"],
+  ["sich erkälten", "to catch a cold", "Ich habe mich am Wochenende erkältet.", "gesund"],
+  ["umtauschen", "to exchange (an item)", "Kann ich die Hose umtauschen?", "einkauf"],
+  ["zurückgeben", "to return (an item)", "Ohne Kassenbon können Sie die Ware nicht zurückgeben.", "einkauf"],
+  ["der Kassenbon / die Quittung", "receipt", "Bitte heben Sie den Kassenbon auf.", "einkauf"],
+  ["die Rechnung, -en", "invoice, bill", "Die Rechnung liegt dem Paket bei.", "einkauf"],
+  ["die Lieferung, -en", "delivery", "Die Lieferung dauert drei bis fünf Werktage.", "einkauf"],
+  ["sich beschweren über", "to complain about", "Ich möchte mich über den Service beschweren.", "einkauf"],
+  ["das Angebot, -e", "offer; special deal", "Das Angebot gilt nur bis Samstag.", "einkauf"],
+  ["im Voraus", "in advance", "Vielen Dank im Voraus!", "einkauf"],
+  ["die Verspätung, -en", "delay", "Der Zug hat 20 Minuten Verspätung.", "verkehr"],
+  ["ausfallen (fällt aus)", "to be cancelled", "Der Bus fällt heute wegen eines Streiks aus.", "verkehr"],
+  ["umsteigen (ist umgestiegen)", "to change trains / buses", "In Hannover müssen Sie umsteigen.", "verkehr"],
+  ["die Verbindung, -en", "connection", "Gibt es eine direkte Verbindung nach Köln?", "verkehr"],
+  ["das Gleis, -e", "platform, track", "Der Zug fährt heute von Gleis 9 ab.", "verkehr"],
+  ["die Durchsage, -n", "announcement", "Achten Sie bitte auf die Durchsagen.", "verkehr"],
+  ["die Umleitung, -en", "diversion, detour", "Wegen einer Baustelle gibt es eine Umleitung.", "verkehr"],
+  ["der Stau, -s", "traffic jam", "Auf der A2 gibt es zehn Kilometer Stau.", "verkehr"],
+  ["die Veranstaltung, -en", "event", "Die Veranstaltung beginnt um 19 Uhr.", "freizeit"],
+  ["der Eintritt", "admission (fee)", "Der Eintritt ist frei.", "freizeit"],
+  ["ermäßigt", "reduced (price)", "Für Studenten ist der Eintritt ermäßigt.", "freizeit"],
+  ["der Verein, -e", "club, association", "Ich bin Mitglied in einem Sportverein.", "freizeit"],
+  ["ehrenamtlich", "voluntary, unpaid", "Sie arbeitet ehrenamtlich in einer Bibliothek.", "freizeit"],
+  ["sich anmelden für", "to register for", "Ich habe mich für den Kurs angemeldet.", "freizeit"],
+  ["verabredet sein mit", "to have plans with someone", "Ich bin heute mit Freunden verabredet.", "freizeit"],
+  ["eine Entscheidung treffen", "to make a decision", "Wir müssen bis Freitag eine Entscheidung treffen.", "nvv"],
+  ["einen Vorschlag machen", "to make a suggestion", "Darf ich einen Vorschlag machen?", "nvv"],
+  ["Kontakt aufnehmen mit", "to get in touch with", "Bitte nehmen Sie Kontakt mit unserem Kundenservice auf.", "nvv"],
+  ["in Frage kommen", "to be an option", "Ein Termin am Montag kommt für mich nicht in Frage.", "nvv"],
+  ["zur Verfügung stehen", "to be available", "Für Fragen stehe ich gern zur Verfügung.", "nvv"],
+  ["eine Rolle spielen", "to matter, play a role", "Der Preis spielt für mich eine große Rolle.", "nvv"],
+  ["Wert legen auf", "to attach importance to", "Ich lege großen Wert auf Pünktlichkeit.", "nvv"],
+  ["Erfahrungen sammeln", "to gain experience", "Im Praktikum konnte ich viele Erfahrungen sammeln.", "nvv"],
+  ["allerdings / jedoch", "however", "Das Hotel ist schön, allerdings ziemlich teuer.", "signal"],
+  ["stattdessen", "instead", "Das Konzert fällt aus. Stattdessen gibt es einen Filmabend.", "signal"],
+  ["eigentlich", "actually; originally (often: plans changed)", "Eigentlich wollten wir grillen, aber es regnet.", "signal"],
+  ["ausnahmsweise", "exceptionally, for once", "Die Bibliothek ist heute ausnahmsweise bis 22 Uhr geöffnet.", "signal"],
+  ["erst", "not until; only", "Der Zug kommt erst um zehn Uhr.", "signal"],
+  ["schon / bereits", "already", "Die Karten sind bereits ausverkauft.", "signal"],
+  ["kaum", "hardly", "Ich hatte kaum Zeit zum Lernen.", "signal"],
+  ["sogar", "even", "Er spricht sogar ein bisschen Japanisch.", "signal"],
+  ["dagegen", "in contrast, on the other hand", "Im Norden ist es trocken, im Süden dagegen regnet es.", "signal"],
+  ["zum Glück / leider", "luckily / unfortunately", "Zum Glück hat die Ärztin heute noch einen Termin frei.", "signal"]
+];
+
+/* Prüfungstag checklist */
+DATA.check = [
+  ["id", "Valid photo ID, the same one you registered with"],
+  ["conf", "Registration confirmation or invitation letter"],
+  ["pens", "Pencils, eraser and a pen (ask your centre what to use on the answer sheet)"],
+  ["format", "Know whether your exam is on paper, hybrid or digital"],
+  ["oral", "Know the time of your oral exam (it may be on another day)"],
+  ["water", "Water and a small snack for the break"],
+  ["phone", "Phone switched off and packed away; no dictionaries allowed"],
+  ["early", "Arrive 30 minutes early"],
+  ["sleep", "Sleep. No new material the evening before"]
+];
+/* ---------- App ---------- */
+(function () {
+  "use strict";
+
+  /* helpers */
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+  function el(tag, attrs, ...kids) {
+    const n = document.createElement(tag);
+    if (attrs) for (const k of Object.keys(attrs)) {
+      const v = attrs[k];
+      if (v == null || v === false) continue;
+      if (k === "class") n.className = v;
+      else if (k === "text") n.textContent = v;
+      else if (k === "html") n.innerHTML = v;
+      else if (k.slice(0, 2) === "on" && typeof v === "function") n.addEventListener(k.slice(2), v);
+      else n.setAttribute(k, v === true ? "" : v);
+    }
+    for (const c of kids.flat()) {
+      if (c == null || c === false) continue;
+      n.append(c.nodeType ? c : document.createTextNode(String(c)));
+    }
+    return n;
+  }
+  const de = (n) => Number(n).toLocaleString("de-DE", { maximumFractionDigits: 1 });
+  const shuffle = (a) => { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
+  const letters = "abcdefghijklmnop";
+  const mmss = (s) => { s = Math.max(0, Math.round(s)); return String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0"); };
+  let uid = 0; const nid = (p) => p + "-" + (++uid);
+
+  /* storage: per-viewer conveniences only */
+  const KEY = "b1trainer.v1";
+  let ST = {};
+  try { ST = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { ST = {}; }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(ST)); } catch (e) {} };
+
+  /* ---------- AI (Claude via the sample capability) ---------- */
+  let SAMPLE = null;
+  function setAI(on) {
+    $$(".ai-only").forEach((n) => { n.hidden = !on; });
+    $$(".ai-off").forEach((n) => { n.hidden = on; });
+  }
+  async function initAI() {
+    try {
+      if (window.claude && typeof window.claude.use === "function") SAMPLE = await window.claude.use("sample");
+    } catch (e) { SAMPLE = null; }
+    setAI(!!SAMPLE);
+  }
+  function aiErr(e) {
+    const c = e && e.code;
+    if (c === "cancelled") return "";
+    if (["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed"].includes(c)) {
+      SAMPLE = null; setAI(false);
+      return "Claude isn't available for this page in this view.";
+    }
+    if (c === "rate_limited") return "Too many requests right now. Wait a minute, then try again.";
+    if (c === "session_expired") return "Your Claude session expired. Sign in again, then try again.";
+    if (c === "refused") return "Claude declined this request. Change the text and try again.";
+    if (c === "invalid_json") return "The answer came back in an unexpected format. Try again.";
+    if (c === "prompt_too_large") return "The text is too long. Shorten it and try again.";
+    if (c === "empty_completion") return "No answer came back. Try again with a shorter text.";
+    return "The request didn't go through. Try again.";
+  }
+  const aiNote = (txt) => el("p", { class: "small muted ai-off", hidden: true }, txt);
+
+  /* ---------- Tabs ---------- */
+  const TABS = $$(".tab").map((t) => t.dataset.tab);
+  function show(id, scroll) {
+    if (!TABS.includes(id)) id = "plan";
+    $$(".view").forEach((v) => { v.hidden = v.id !== "v-" + id; });
+    $$(".tab").forEach((t) => t.setAttribute("aria-selected", t.dataset.tab === id ? "true" : "false"));
+    ST.tab = id; save();
+    try { history.replaceState(null, "", "#" + id); } catch (e) {}
+    const t = $('.tab[data-tab="' + id + '"]');
+    const bar = $(".tabs");
+    if (t && bar) bar.scrollLeft = Math.max(0, t.offsetLeft - bar.clientWidth / 2 + t.clientWidth / 2);
+    if (scroll) window.scrollTo(0, 0);
+  }
+  $$(".tab").forEach((t) => t.addEventListener("click", () => show(t.dataset.tab, true)));
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("[data-go]");
+    if (a) { e.preventDefault(); show(a.dataset.go, true); }
+  });
+
+  /* ---------- Timer engine ---------- */
+  function Timer(totalSec, onTick) {
+    let acc = 0, start = 0, running = false, iv = null;
+    const elapsed = () => acc + (running ? (Date.now() - start) / 1000 : 0);
+    const tick = () => onTick(Math.min(elapsed(), totalSec), running);
+    return {
+      toggle() {
+        if (running) { acc = elapsed(); running = false; clearInterval(iv); }
+        else { if (elapsed() >= totalSec) acc = 0; start = Date.now(); running = true; iv = setInterval(() => { if (elapsed() >= totalSec) { acc = totalSec; running = false; clearInterval(iv); } tick(); }, 500); }
+        tick();
+      },
+      reset() { running = false; clearInterval(iv); acc = 0; tick(); },
+      get running() { return running; },
+      tick
+    };
+  }
+  function countdown(root, minutes, label) {
+    const total = minutes * 60;
+    const clock = el("div", { class: "clock", text: mmss(total) });
+    const fill = el("i");
+    const btn = el("button", { class: "btn small", type: "button", text: "Start" });
+    const rst = el("button", { class: "btn ghost small", type: "button", text: "Reset" });
+    const t = Timer(total, (sec, run) => {
+      const left = total - sec;
+      clock.textContent = mmss(left);
+      clock.classList.toggle("warn", left <= 300 && sec > 0);
+      fill.style.width = (sec / total * 100) + "%";
+      btn.textContent = run ? "Pause" : (sec > 0 && sec < total ? "Weiter" : "Start");
+    });
+    btn.onclick = () => t.toggle();
+    rst.onclick = () => t.reset();
+    root.append(el("div", { class: "row between" }, el("span", { class: "sheet-title", text: label }), el("div", { class: "row" }, btn, rst)), clock, el("div", { class: "track" }, fill));
+    return t;
+  }
+
+  /* ---------- Bubble widgets ---------- */
+  function bubbles(name, keys, onChange) {
+    const wrap = el("div", { class: "bubbles", role: "radiogroup" });
+    keys.forEach((k) => {
+      const id = nid(name);
+      const inp = el("input", { type: "radio", name, id, value: k, "aria-label": k });
+      if (onChange) inp.addEventListener("change", () => onChange(k));
+      wrap.append(el("label", { class: "bub", for: id }, inp, el("span", { text: k })));
+    });
+    return wrap;
+  }
+  function optRows(name, texts, onChange) {
+    const wrap = el("div", { class: "opts", role: "radiogroup" });
+    texts.forEach((txt, i) => {
+      const id = nid(name);
+      const inp = el("input", { type: "radio", name, id, value: String(i) });
+      if (onChange) inp.addEventListener("change", () => onChange(i));
+      wrap.append(el("label", { class: "opt", for: id }, inp, el("span", { class: "dot", text: letters[i] }), el("span", { class: "otext", lang: "de", text: txt })));
+    });
+    return wrap;
+  }
+  const chosen = (root, name) => { const c = root.querySelector('input[name="' + name + '"]:checked'); return c ? c.value : null; };
+  function markBubbles(root, name, correct) {
+    const pick = chosen(root, name);
+    root.querySelectorAll('input[name="' + name + '"]').forEach((inp) => {
+      const lab = inp.closest("label");
+      lab.classList.remove("ok", "no", "sol");
+      if (inp.value === correct) lab.classList.add(pick === correct ? "ok" : "sol");
+      else if (inp.value === pick) lab.classList.add("no");
+    });
+    return pick === correct;
+  }
+  const whyBox = (ok, txt) => el("div", { class: "why " + (ok ? "ok" : "no") }, el("b", { text: ok ? "Richtig" : "Falsch" }), txt);
+
+  /* ---------- Punkterechner ---------- */
+  (function calc() {
+    const root = $("#calc");
+    const vals = Object.assign({}, ST.calc || {});
+    DATA.calc.forEach((p) => { if (vals[p.id] == null) vals[p.id] = p.ex; });
+    if (vals.w == null) vals.w = 27;
+    if (vals.o == null) vals.o = 50;
+    const left = el("div");
+    const right = el("div");
+    let lastG = "";
+    const outs = {};
+    const slider = (id, label, max, step, fmt) => {
+      const inp = el("input", { type: "range", id: "calc-" + id, min: 0, max, step, value: vals[id] });
+      const out = el("output", { for: "calc-" + id });
+      outs[id] = () => { out.textContent = fmt(vals[id]); };
+      inp.addEventListener("input", () => { vals[id] = Number(inp.value); ST.calc = vals; save(); render(); });
+      return el("div", { class: "slider" }, el("label", { for: "calc-" + id, text: label }), out, inp);
+    };
+    DATA.calc.forEach((p) => {
+      if (p.g !== lastG) { left.append(el("p", { class: "group-lab", text: p.g })); lastG = p.g; }
+      left.append(slider(p.id, p.label, p.n, 1, (v) => v + " / " + p.n + " richtig · " + de(v * p.w) + " P."));
+    });
+    left.append(el("p", { class: "group-lab", text: "Schreiben" }), slider("w", "Your estimate for the e-mail", 45, 1, (v) => v + " / 45 P."));
+    left.append(el("p", { class: "group-lab", text: "Mündliche Prüfung" }), slider("o", "Your estimate for Sprechen", 75, 1, (v) => v + " / 75 P."));
+
+    const big = el("div", { class: "big" });
+    const pill = el("span", { class: "pill" });
+    const meter = el("div", { class: "meter", role: "img" }, el("i"), el("b", { style: "left:60%" }));
+    const margin = el("p", { class: "small" });
+    const oralLine = el("p", { class: "small" });
+    const levers = el("ul", { class: "levers" });
+    right.append(
+      el("p", { class: "eyebrow", text: "Schriftlich" }),
+      el("div", { class: "row" }, big, pill),
+      meter, margin, oralLine,
+      el("p", { class: "eyebrow", style: "margin-top:16px", text: "Cheapest next points" }),
+      levers,
+      el("div", { class: "row", style: "margin-top:14px" }, el("button", { class: "btn ghost small", type: "button", text: "Reset to example", onclick: () => { DATA.calc.forEach((p) => vals[p.id] = p.ex); vals.w = 27; vals.o = 50; ST.calc = vals; save(); DATA.calc.concat([{ id: "w" }, { id: "o" }]).forEach((p) => { const i = $("#calc-" + p.id); if (i) i.value = vals[p.id]; }); render(); } }))
+    );
+    root.append(el("div", { class: "sheet-head" }, el("span", { class: "sheet-title", text: "Mock test result" }), el("span", { class: "small muted", text: "Saved on this device" })), el("div", { class: "calc" }, left, right));
+
+    function render() {
+      Object.values(outs).forEach((f) => f());
+      let written = vals.w;
+      DATA.calc.forEach((p) => { written += vals[p.id] * p.w; });
+      big.innerHTML = "";
+      big.append(de(written), el("small", { text: " / 225" }));
+      const pass = written >= 135;
+      pill.className = "pill " + (pass ? "ok" : "no");
+      pill.textContent = pass ? "bestanden" : "noch nicht";
+      meter.firstChild.style.width = Math.min(100, written / 225 * 100) + "%";
+      meter.setAttribute("aria-label", de(written) + " of 225 points, pass mark 135");
+      margin.textContent = pass
+        ? de(written - 135) + " points above the pass mark. You can still afford " + de(written - 135) + " points of bad luck on the day."
+        : de(135 - written) + " points short of 135. See the cheapest points below.";
+      const op = vals.o >= 45;
+      oralLine.innerHTML = "";
+      oralLine.append(el("b", { text: "Mündlich: " + vals.o + " / 75 " }), el("span", { class: "pill " + (op ? "ok" : "no"), text: op ? "bestanden" : "noch nicht" }));
+      levers.innerHTML = "";
+      DATA.calc.filter((p) => vals[p.id] < p.n).sort((a, b) => b.w - a.w || (b.n - vals[b.id]) - (a.n - vals[a.id])).slice(0, 4).forEach((p) => {
+        levers.append(el("li", {}, el("span", { text: p.label }), el("span", { text: "+" + de(p.w) + " P. per item · " + (p.n - vals[p.id]) + " left" })));
+      });
+      if (vals.w < 36) levers.append(el("li", {}, el("span", { text: "Schreiben: cover all 4 Leitpunkte" }), el("span", { text: "up to +" + (45 - vals.w) + " P." })));
+    }
+    render();
+  })();
+
+  /* ---------- 90-minute block timer ---------- */
+  (function blockTimer() {
+    const root = $("#blocktimer");
+    const total = DATA.block.reduce((s, b) => s + b[1], 0) * 60;
+    const clock = el("div", { class: "clock", text: "00:00 / " + mmss(total) });
+    const now = el("p", { class: "small muted", text: "Press Start when you open the exam booklet." });
+    const fill = el("i");
+    const track = el("div", { class: "track" }, fill);
+    let acc = 0;
+    DATA.block.slice(0, -1).forEach((b) => { acc += b[1]; track.append(el("s", { style: "left:" + (acc * 60 / total * 100) + "%" })); });
+    const list = el("ol", { class: "seglist" });
+    DATA.block.forEach((b) => list.append(el("li", {}, el("span", { text: b[0] }), el("span", { text: b[1] + " min" }))));
+    const btn = el("button", { class: "btn", type: "button", text: "Start" });
+    const rst = el("button", { class: "btn ghost", type: "button", text: "Reset" });
+    const t = Timer(total, (sec, run) => {
+      clock.textContent = mmss(sec) + " / " + mmss(total);
+      fill.style.width = (sec / total * 100) + "%";
+      let a = 0, idx = DATA.block.length - 1;
+      for (let i = 0; i < DATA.block.length; i++) { if (sec < (a + DATA.block[i][1]) * 60) { idx = i; break; } a += DATA.block[i][1]; }
+      $$("li", list).forEach((li, i) => { li.classList.toggle("now", sec > 0 && i === idx && sec < total); li.classList.toggle("done", i < idx || sec >= total); });
+      if (sec >= total) now.textContent = "Time is up. Answers not on the Antwortbogen don't count.";
+      else if (sec > 0) now.textContent = "Now: " + DATA.block[idx][0] + " · " + mmss((a + DATA.block[idx][1]) * 60 - sec) + " left in this part";
+      btn.textContent = run ? "Pause" : (sec > 0 && sec < total ? "Weiter" : "Start");
+    });
+    btn.onclick = () => t.toggle();
+    rst.onclick = () => { t.reset(); now.textContent = "Press Start when you open the exam booklet."; };
+    root.append(el("div", { class: "sheet-head" }, el("span", { class: "sheet-title", text: "Blocktimer · Lesen + Sprachbausteine" }), el("div", { class: "row" }, btn, rst)), clock, track, now, list);
+  })();
+
+  /* ---------- Lesen Teil 1 ---------- */
+  (function l1() {
+    const root = $("#drill-l1");
+    const keys = DATA.l1.heads.map((h) => h[0]);
+    const score = el("span", { class: "score" });
+    const body = el("div");
+    function build() {
+      body.innerHTML = ""; score.textContent = "";
+      const hl = el("ul", { class: "headlist", lang: "de" });
+      DATA.l1.heads.forEach((h) => hl.append(el("li", {}, el("b", { text: h[0] }), el("span", { text: h[1] }))));
+      body.append(el("p", { class: "small muted", text: "Überschriften a–j" }), hl);
+      DATA.l1.texts.forEach((x, i) => {
+        body.append(el("div", { class: "q", "data-i": i },
+          el("div", { class: "textblock", lang: "de" }, el("p", {}, el("span", { class: "qnum", text: String(i + 1) }), x.t)),
+          bubbles("l1-" + i, keys)));
+      });
+    }
+    const check = el("button", { class: "btn", type: "button", text: "Auswerten", onclick: () => {
+      let right = 0;
+      DATA.l1.texts.forEach((x, i) => {
+        const q = $('[data-i="' + i + '"]', body);
+        const ok = markBubbles(q, "l1-" + i, x.a);
+        if (ok) right++;
+        const old = $(".why", q); if (old) old.remove();
+        q.append(whyBox(ok, (ok ? "" : "Answer: " + x.a + ". ") + x.why));
+      });
+      score.textContent = right + " / 5 · " + de(right * 5) + " von 25 P.";
+    } });
+    const again = el("button", { class: "btn ghost", type: "button", text: "Neu", onclick: build });
+    root.append(el("div", { class: "sheet-head" }, el("span", { class: "sheet-title", text: "Übung · Lesen Teil 1" }), score), body, el("div", { class: "row", style: "margin-top:12px" }, check, again));
+    build();
+  })();
+
+  /* ---------- Lesen Teil 2 ---------- */
+  (function l2() {
+    const root = $("#drill-l2");
+    const score = el("span", { class: "score" });
+    const body = el("div");
+    function build() {
+      body.innerHTML = ""; score.textContent = "";
+      const tb = el("div", { class: "textblock", lang: "de" }, el("h4", { text: DATA.l2.title }));
+      DATA.l2.paras.forEach((p) => tb.append(el("p", { text: p })));
+      body.append(tb);
+      DATA.l2.qs.forEach((x, i) => {
+        body.append(el("div", { class: "q", "data-i": i },
+          el("p", { class: "qline", lang: "de" }, el("span", { class: "qnum", text: String(i + 6) }), x.q),
+          optRows("l2-" + i, x.o)));
+      });
+    }
+    const check = el("button", { class: "btn", type: "button", text: "Auswerten", onclick: () => {
+      let right = 0;
+      DATA.l2.qs.forEach((x, i) => {
+        const q = $('[data-i="' + i + '"]', body);
+        const ok = markBubbles(q, "l2-" + i, String(x.a));
+        if (ok) right++;
+        const old = $(".why", q); if (old) old.remove();
+        q.append(whyBox(ok, (ok ? "" : "Answer: " + letters[x.a] + ". ") + x.why));
+      });
+      score.textContent = right + " / 5 · " + de(right * 5) + " von 25 P.";
+    } });
+    const again = el("button", { class: "btn ghost", type: "button", text: "Neu", onclick: build });
+    root.append(el("div", { class: "sheet-head" }, el("span", { class: "sheet-title", text: "Übung · Lesen Teil 2" }), score), body, el("div", { class: "row", style: "margin-top:12px" }, check, again));
+    build();
+  })();
+
+  /* ---------- Lesen Teil 3 ---------- */
+  (function l3() {
+    const root = $("#drill-l3");
+    const keys = DATA.l3.ads.map((a) => a[0]).concat(["x"]);
+    const score = el("span", { class: "score" });
+    const body = el("div");
+    function build() {
+      body.innerHTML = ""; score.textContent = "";
+      body.append(el("p", { class: "small muted", text: "Situationen first, then scan the ads. Mark x if no ad fits." }));
+      DATA.l3.sits.forEach((x, i) => {
+        body.append(el("div", { class: "q", "data-i": i },
+          el("p", { class: "qline", lang: "de" }, el("span", { class: "qnum", text: String(i + 11) }), x.s),
+          bubbles("l3-" + i, keys)));
+      });
+      const ads = el("div", { class: "ads", lang: "de" });
+      DATA.l3.ads.forEach((a) => ads.append(el("div", { class: "ad" }, el("b", { text: a[0] }), a[1])));
+      body.append(el("p", { class: "small muted", style: "margin-top:14px", text: "Anzeigen A–K" }), ads);
+    }
+    const check = el("button", { class: "btn", type: "button", text: "Auswerten", onclick: () => {
+      let right = 0;
+      DATA.l3.sits.forEach((x, i) => {
+        const q = $('[data-i="' + i + '"]', body);
+        const ok = markBubbles(q, "l3-" + i, x.a);
+        if (ok) right++;
+        const old = $(".why", q); if (old) old.remove();
+        q.append(whyBox(ok, (ok ? "" : "Answer: " + x.a + ". ") + x.why));
+      });
+      score.textContent = right + " / " + DATA.l3.sits.length + " · " + de(right * 2.5) + " P.";
+    } });
+    const again = el("button", { class: "btn ghost", type: "button", text: "Neu", onclick: build });
+    root.append(el("div", { class: "sheet-head" }, el("span", { class: "sheet-title", text: "Übung · Lesen Teil 3 (6 Situationen)" }), score), body, el("div", { class: "row", style: "margin-top:12px" }, check, again));
+    build();
+  })();
+
+  /* ---------- Sprachbausteine Teil 1 ---------- */
+  (function sb1() {
+    const root = $("#drill-sb1");
+    let topic = "all";
+    let items = [];
+    let answered = 0, right = 0;
+    const stats = ST.sb1 || {};
+    const score = el("span", { class: "score" });
+    const body = el("div");
+    const status = el("p", { class: "status", "aria-live": "polite" });
+    const filter = el("div", { class: "filter", role: "group", "aria-label": "Topic" });
+    const statLine = el("p", { class: "small muted" });
+    function renderStats() {
+      const tot = Object.values(stats).reduce((a, s) => [a[0] + s[0], a[1] + s[1]], [0, 0]);
+      statLine.textContent = tot[0] ? "All-time on this device: " + tot[1] + " of " + tot[0] + " right (" + Math.round(tot[1] / tot[0] * 100) + " %)." : "";
+    }
+    [["all", "Alle"]].concat(Object.entries(DATA.sbTopics)).forEach(([k, v]) => {
+      filter.append(el("button", { type: "button", "aria-pressed": k === topic ? "true" : "false", text: v, onclick: (e) => {
+        topic = k; $$("button", filter).forEach((b) => b.setAttribute("aria-pressed", b === e.currentTarget ? "true" : "false")); round();
+      } }));
+    });
+    function renderItems(list, src) {
+      items = list; answered = 0; right = 0;
+      body.innerHTML = "";
+      score.textContent = "0 / " + items.length;
+      items.forEach((it, i) => {
+        const order = shuffle([0, 1, 2]);
+        const opts = order.map((k) => it.o[k]);
+        const correct = order.indexOf(it.a);
+        const parts = it.q.split("___");
+        const line = el("p", { class: "qline", lang: "de" }, el("span", { class: "qnum", text: String(i + 21) }), parts[0], el("span", { class: "gap", text: String(i + 21), style: "display:inline-block;min-width:2.4em;border-bottom:2px solid var(--ink);text-align:center;font-family:var(--f-mono);font-size:13px" }), parts.slice(1).join("___"));
+        const q = el("div", { class: "q" }, line);
+        const rows = optRows("sb1-" + i, opts, (pick) => {
+          if (q.dataset.done) return;
+          q.dataset.done = "1";
+          const ok = pick === correct;
+          answered++; if (ok) right++;
+          $$(".opt", rows).forEach((lab, k) => { lab.classList.add("locked"); if (k === correct) lab.classList.add(ok ? "ok" : "sol"); else if (k === pick) lab.classList.add("no"); $("input", lab).disabled = true; });
+          $(".gap", line).textContent = opts[correct];
+          q.append(whyBox(ok, it.why));
+          score.textContent = right + " / " + answered + " · " + de(right * 1.5) + " P.";
+          if (src === "bank") { const s = stats[it.t] || [0, 0]; s[0]++; if (ok) s[1]++; stats[it.t] = s; ST.sb1 = stats; save(); renderStats(); }
+          if (answered === items.length) status.textContent = right + " of " + items.length + " right. " + (right >= 8 ? "That's exam-ready for this topic." : right >= 6 ? "Solid. Read the explanations of the ones you missed." : "Read the matching Grammatik card, then go again.");
+        });
+        q.append(rows);
+        body.append(q);
+      });
+    }
+    function round() {
+      const pool = DATA.sb1.filter((x) => topic === "all" || x.t === topic);
+      status.textContent = "";
+      renderItems(shuffle(pool).slice(0, 10), "bank");
+    }
+    const again = el("button", { class: "btn", type: "button", text: "Neue Runde", onclick: round });
+    let ctl = null;
+    const stop = el("button", { class: "btn ghost small", type: "button", text: "Stop", hidden: true, onclick: () => ctl && ctl.abort() });
+    const gen = el("button", { class: "btn ghost", type: "button", text: "10 new items from Claude", onclick: async () => {
+      if (!SAMPLE) return;
+      ctl = new AbortController();
+      gen.disabled = true; stop.hidden = false;
+      status.textContent = "Claude is writing new items… this can take up to a minute.";
+      const focus = topic === "all" ? "a mix of all of these" : "mainly: " + DATA.sbTopics[topic];
+      const prompt = "Create 10 new practice items in the style of telc Deutsch B1 \"Sprachbausteine Teil 1\" (grammar multiple choice, sentences as they would appear in personal or semi-formal letters and e-mails). Each item is ONE German sentence with exactly one gap written as ___ and three options; exactly one option is correct and the other two are plausible learner errors that are clearly wrong. Grammar areas: connectors and verb position (weil/denn/deshalb, obwohl/trotzdem, dass/ob, wenn/als, damit/um…zu), relative pronouns, verbs with fixed prepositions, prepositions with case, Konjunktiv II for polite requests, passive, pronouns and reflexive pronouns, Perfekt with haben/sein, adjective endings. Focus on " + focus + ". Use B1 vocabulary only.\nReply with ONLY a JSON array of 10 objects like {\"satz\":\"Ich freue mich ___ deinen Besuch.\",\"optionen\":[\"auf\",\"über\",\"für\"],\"loesung\":0,\"erklaerung\":\"One short English sentence giving the rule.\"}";
+      try {
+        const arr = await SAMPLE.json(prompt, { signal: ctl.signal, cache: false });
+        const list = (Array.isArray(arr) ? arr : []).filter((x) => x && typeof x.satz === "string" && x.satz.includes("___") && Array.isArray(x.optionen) && x.optionen.length === 3 && [0, 1, 2].includes(Number(x.loesung)))
+          .map((x) => ({ t: "ai", q: x.satz, o: x.optionen.map(String), a: Number(x.loesung), why: String(x.erklaerung || "") }));
+        if (!list.length) { status.textContent = "The answer had no usable items. Try again."; }
+        else { renderItems(list, "ai"); status.textContent = "New items from Claude. They don't count towards your saved stats."; }
+      } catch (e) { status.textContent = aiErr(e); }
+      finally { gen.disabled = false; stop.hidden = true; }
+    } });
+    root.append(
+      el("div", { class: "sheet-head" }, el("span", { class: "sheet-title", text: "Drill · Sprachbausteine Teil 1" }), score),
+      filter, statLine, body, status,
+      el("div", { class: "row", style: "margin-top:10px" }, again, el("span", { class: "ai-only row", hidden: true }, gen, stop)),
+      aiNote("Opened in Claude, this drill can also generate fresh items on demand.")
+    );
+    renderStats();
+    round();
+  })();
+
+  /* ---------- Sprachbausteine Teil 2 ---------- */
+  (function sb2() {
+    const root = $("#drill-sb2");
+    const score = el("span", { class: "score" });
+    const body = el("div", { class: "textblock", lang: "de", style: "white-space:normal" });
+    const bank = el("div", { class: "wordbank", lang: "de" });
+    const expl = el("div");
+    const sels = {};
+    function updateBank() {
+      const used = Object.values(sels).map((s) => s.value).filter(Boolean);
+      $$("span", bank).forEach((sp) => sp.classList.toggle("used", used.includes(sp.dataset.w)));
+    }
+    function build() {
+      body.innerHTML = ""; bank.innerHTML = ""; expl.innerHTML = ""; score.textContent = "";
+      DATA.sb2.bank.forEach((w, i) => bank.append(el("span", { "data-w": w, text: letters[i].toUpperCase() + " " + w })));
+      DATA.sb2.text.split("\n\n").forEach((para) => {
+        const p = el("p");
+        para.split("\n").forEach((line, li) => {
+          if (li) p.append(el("br"));
+          line.split(/\{(\d+)\}/).forEach((chunk, k) => {
+            if (k % 2 === 0) { if (chunk) p.append(chunk); return; }
+            const n = chunk;
+            const s = el("select", { class: "gapsel", id: "sb2-" + n, "aria-label": "Lücke " + n });
+            s.append(el("option", { value: "", text: n + " …" }));
+            DATA.sb2.bank.forEach((w) => s.append(el("option", { value: w, text: n + " " + w })));
+            s.addEventListener("change", updateBank);
+            sels[n] = s;
+            p.append(s);
+          });
+        });
+        body.append(p);
+      });
+    }
+    const check = el("button", { class: "btn", type: "button", text: "Auswerten", onclick: () => {
+      let right = 0;
+      expl.innerHTML = "";
+      Object.keys(DATA.sb2.key).forEach((n) => {
+        const s = sels[n]; const ok = s.value === DATA.sb2.key[n];
+        s.classList.toggle("ok", ok); s.classList.toggle("no", !ok);
+        if (ok) right++;
+        expl.append(whyBox(ok, n + ": " + DATA.sb2.key[n] + ". " + DATA.sb2.why[n]));
+      });
+      score.textContent = right + " / 10 · " + de(right * 1.5) + " von 15 P.";
+    } });
+    const again = el("button", { class: "btn ghost", type: "button", text: "Neu", onclick: build });
+    root.append(el("div", { class: "sheet-head" }, el("span", { class: "sheet-title", text: "Übung · Sprachbausteine Teil 2" }), score),
+      el("p", { class: "small muted", text: "15 words, 10 gaps, each word once. Used words fade out." }), bank, body,
+      el("div", { class: "row", style: "margin-top:12px" }, check, again), expl);
+    build();
+  })();
+
+  /* ---------- Hören ---------- */
+  (function hoeren() {
+    const root = $("#drill-h");
+    const hasTTS = "speechSynthesis" in window && typeof window.SpeechSynthesisUtterance === "function";
+    let voice = null;
+    function pickVoice() {
+      try {
+        const vs = window.speechSynthesis.getVoices();
+        voice = vs.find((v) => /^de[-_]DE/i.test(v.lang)) || vs.find((v) => /^de/i.test(v.lang)) || null;
+        voiceNote.textContent = voice ? "Voice: " + voice.name : "No German voice found on this device. Playback may use another voice; the transcript appears after you answer.";
+      } catch (e) {}
+    }
+    const voiceNote = el("p", { class: "small muted" });
+    if (hasTTS) { pickVoice(); try { window.speechSynthesis.addEventListener("voiceschanged", pickVoice); } catch (e) {} }
+    else voiceNote.textContent = "This browser can't read text aloud. Read each transcript once, quickly, then answer without looking back.";
+    function speak(text, done) {
+      try {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "de-DE"; if (voice) u.voice = voice; u.rate = 0.95;
+        u.onend = done; u.onerror = done;
+        window.speechSynthesis.speak(u);
+      } catch (e) { done(); }
+    }
+    const score = el("span", { class: "score" });
+    let total = 0, right = 0, done = 0;
+    DATA.hoeren.forEach((h) => { total += h.items.length; });
+    root.append(el("div", { class: "sheet-head" }, el("span", { class: "sheet-title", text: "Übung · Hören" }), score), voiceNote);
+    DATA.hoeren.forEach((h, hi) => {
+      let plays = 0;
+      const box = el("div", { class: "q" });
+      const cnt = el("span", { class: "small muted mono", text: "0 / " + h.plays });
+      const tx = el("details", { hidden: !(!hasTTS) }, el("summary", { text: "Transkript" }), el("p", { class: "textblock", lang: "de", text: h.text }));
+      const play = el("button", { class: "btn small", type: "button", text: "Abspielen", onclick: () => {
+        if (plays >= h.plays) return;
+        plays++; cnt.textContent = plays + " / " + h.plays;
+        play.disabled = true; play.textContent = "läuft …";
+        speak(h.text, () => { play.textContent = "Abspielen"; play.disabled = plays >= h.plays; });
+      } });
+      if (!hasTTS) play.hidden = true;
+      box.append(el("p", { class: "eyebrow", style: "margin-bottom:8px", text: h.teil + " · " + (h.plays === 1 ? "einmal hören" : "zweimal hören") }), el("div", { class: "row", style: "margin-bottom:8px" }, play, cnt));
+      h.items.forEach((it, ii) => {
+        const name = "h-" + hi + "-" + ii;
+        const q = el("div", { style: "margin:8px 0" });
+        const bw = bubbles(name, ["r", "f"], (pick) => {
+          if (q.dataset.done) return;
+          q.dataset.done = "1";
+          const ok = pick === it.a;
+          done++; if (ok) right++;
+          markBubbles(q, name, it.a);
+          $$("input", q).forEach((i) => { i.disabled = true; });
+          q.append(whyBox(ok, (ok ? "" : "Answer: " + (it.a === "r" ? "richtig" : "falsch") + ". ") + it.why));
+          score.textContent = right + " / " + done + " (" + total + " Aufgaben)";
+          if (Array.from(box.querySelectorAll("[data-done]")).length === h.items.length) tx.hidden = false;
+        });
+        q.append(el("div", { class: "row", style: "gap:12px;align-items:flex-start;flex-wrap:nowrap" }, bw, el("p", { class: "qline", lang: "de", style: "padding-top:5px" }, it.s)));
+        box.append(q);
+      });
+      box.append(tx);
+      root.append(box);
+    });
+    root.append(el("p", { class: "small muted", style: "margin-top:10px", text: "Bubbles: r = richtig, f = falsch. In the real exam the speakers are recorded actors, often a bit faster than this voice." }));
+  })();
+
+  /* ---------- Schreiben ---------- */
+  (function schreiben() {
+    const root = $("#write");
+    const W = Object.assign({ task: 0, drafts: {} }, ST.write || {});
+    const persist = () => { ST.write = W; save(); };
+    let reg = DATA.tasks[W.task] ? DATA.tasks[W.task].reg : "du";
+
+    const sel = el("select", { class: "field", id: "w-task" });
+    DATA.tasks.forEach((t, i) => sel.append(el("option", { value: String(i), text: t.title })));
+    sel.value = String(W.task);
+    const card = el("div", { class: "taskcard", lang: "de" });
+    const checks = el("div");
+    const ta = el("textarea", { class: "letter", id: "w-text", lang: "de", spellcheck: "false", placeholder: "Betreff: …\n\nLiebe …,\n\n…" });
+    const wc = el("span", { class: "small muted mono" });
+    const modelBox = el("div");
+    const timerBox = el("div", { style: "margin:10px 0 4px" });
+    countdown(timerBox, 30, "30 Minuten");
+
+    function words() { const m = ta.value.trim().match(/[^\s]+/g); return m ? m.length : 0; }
+    function updWC() {
+      const n = words();
+      wc.textContent = n + " Wörter" + (n === 0 ? "" : n < 80 ? " · too short, develop each point" : n <= 170 ? " · good length" : " · long: more text, more risk");
+    }
+    function loadTask() {
+      const t = DATA.tasks[W.task];
+      card.innerHTML = "";
+      card.append(el("p", { style: "margin-bottom:4px", text: t.sit }), el("p", { class: "small muted", style: "margin-bottom:2px", text: "Schreiben Sie etwas zu allen vier Punkten:" }));
+      checks.innerHTML = "";
+      const ck = (W.checks && W.checks[t.id]) || [];
+      t.lp.forEach((p, i) => {
+        const id = "lp-" + t.id + "-" + i;
+        const cb = el("input", { type: "checkbox", id });
+        cb.checked = !!ck[i];
+        cb.addEventListener("change", () => { W.checks = W.checks || {}; W.checks[t.id] = W.checks[t.id] || []; W.checks[t.id][i] = cb.checked; persist(); });
+        checks.append(el("label", { class: "check", for: id }, cb, el("span", { lang: "de", text: p })));
+      });
+      ta.value = W.drafts[t.id] || "";
+      updWC();
+      reg = t.reg; setReg(reg);
+      modelBox.innerHTML = "";
+      if (t.model) modelBox.append(el("details", {}, el("summary", { text: "Show a model answer" }), el("div", { class: "model", lang: "de", text: t.model }), el("p", { class: "small muted", text: "About 130 words. Every Leitpunkt gets its own paragraph and a reason." })));
+      else modelBox.append(el("p", { class: "small muted", text: "No model answer for this one. Write it yourself, then compare your structure with the other models." }));
+      result.innerHTML = ""; status.textContent = "";
+    }
+    sel.addEventListener("change", () => { W.task = Number(sel.value); persist(); loadTask(); });
+    let tmo = null;
+    ta.addEventListener("input", () => { updWC(); clearTimeout(tmo); tmo = setTimeout(() => { W.drafts[DATA.tasks[W.task].id] = ta.value; persist(); }, 400); });
+
+    /* phrase builder */
+    const regWrap = el("div", { class: "filter", role: "group", "aria-label": "Register" });
+    const regBtns = {};
+    [["du", "du · informell"], ["sie", "Sie · (halb)formell"]].forEach(([k, v]) => {
+      regBtns[k] = el("button", { type: "button", "aria-pressed": "false", text: v, onclick: () => setReg(k) });
+      regWrap.append(regBtns[k]);
+    });
+    const phrBox = el("div");
+    function setReg(k) {
+      reg = k;
+      Object.keys(regBtns).forEach((x) => regBtns[x].setAttribute("aria-pressed", x === k ? "true" : "false"));
+      phrBox.innerHTML = "";
+      DATA.phrases.forEach((g) => {
+        const list = g[k] || [];
+        if (!list.length) return;
+        const row = el("div", { class: "phr" });
+        list.forEach((ph) => row.append(el("button", { type: "button", lang: "de", text: ph, onclick: () => insert(ph + (g.nl ? "\n" : " ")) })));
+        phrBox.append(el("div", { class: "phr-group" }, el("h5", { text: g.g }), row));
+      });
+    }
+    function insert(txt) {
+      const s = ta.selectionStart != null ? ta.selectionStart : ta.value.length;
+      const e = ta.selectionEnd != null ? ta.selectionEnd : ta.value.length;
+      try { ta.setRangeText(txt, s, e, "end"); } catch (err) { ta.value = ta.value.slice(0, s) + txt + ta.value.slice(e); }
+      ta.focus();
+      ta.dispatchEvent(new Event("input"));
+    }
+
+    /* AI grading */
+    const status = el("p", { class: "status", "aria-live": "polite" });
+    const result = el("div");
+    let ctl = null;
+    const stop = el("button", { class: "btn ghost small", type: "button", text: "Stop", hidden: true, onclick: () => ctl && ctl.abort() });
+    const gradeBtn = el("button", { class: "btn", type: "button", text: "Get feedback from Claude", onclick: grade });
+    async function grade() {
+      if (!SAMPLE) return;
+      const t = DATA.tasks[W.task];
+      const n = words();
+      if (n < 30) { status.textContent = "Write at least 30 words first. Feedback on a few lines isn't useful."; return; }
+      ctl = new AbortController();
+      gradeBtn.disabled = true; stop.hidden = false; result.innerHTML = "";
+      status.textContent = "Claude is reading your e-mail like an examiner… this usually takes 20–60 seconds.";
+      const prompt = [
+        "You are an experienced, fair rater for the telc Deutsch B1 (Zertifikat Deutsch) written exam, part Schreiben. Judge at B1 level: do not expect native perfection, but be honest.",
+        "Task given to the candidate (German):", t.sit,
+        "Leitpunkte:", t.lp.map((p, i) => (i + 1) + ". " + p).join("\n"),
+        "Expected register: " + (t.reg === "du" ? "informal (du)" : "semi-formal or formal (Sie)") + ".",
+        "Candidate's e-mail:", '"""', ta.value.slice(0, 6000), '"""',
+        "Rate it on the three telc criteria, each graded A (fully appropriate), B (mostly), C (partly), D (not adequate):",
+        "I Aufgabenbewältigung: are all four Leitpunkte addressed with fitting content?",
+        "II Kommunikative Gestaltung: register used consistently (du/Sie), Betreff, Anrede and Gruß, logical structure, connectors, some variety.",
+        "III Formale Richtigkeit: grammar, word order, spelling; do errors disturb understanding?",
+        "Reply with ONLY this JSON, no other text:",
+        '{"leitpunkte":[{"nr":1,"status":"voll|teilweise|fehlt","kommentar":"short English comment"}],"kriterien":{"I":{"note":"A","kommentar":"1-2 English sentences"},"II":{"note":"B","kommentar":"..."},"III":{"note":"B","kommentar":"..."}},"korrekturen":[{"original":"exact wrong words from the e-mail","korrektur":"corrected German","erklaerung":"short English reason"}],"staerken":["short English point"],"naechster_schritt":"one concrete English tip","verbesserte_version":"the e-mail corrected and slightly improved, still B1 level, same content and register"}',
+        "leitpunkte must have exactly 4 entries. korrekturen: at most 8, most important first. staerken: at most 3."
+      ].join("\n");
+      try {
+        const r = await SAMPLE.json(prompt, { signal: ctl.signal, cache: false });
+        renderResult(r || {});
+        status.textContent = "";
+      } catch (e) { status.textContent = aiErr(e); }
+      finally { gradeBtn.disabled = false; stop.hidden = true; }
+    }
+    function renderResult(r) {
+      result.innerHTML = "";
+      const blk = el("div", { class: "result-block" });
+      const map = { A: 15, B: 10, C: 5, D: 0 };
+      const K = r.kriterien || {};
+      const names = { I: "I · Aufgabe", II: "II · Gestaltung", III: "III · Richtigkeit" };
+      const grades = el("div", { class: "grades" });
+      let est = 0, have = 0;
+      ["I", "II", "III"].forEach((k) => {
+        const g = K[k] || {};
+        const note = String(g.note || "–").trim().charAt(0).toUpperCase();
+        if (map[note] != null) { est += map[note]; have++; }
+        grades.append(el("div", { class: "grade" }, el("div", { class: "n", text: names[k] }), el("div", { class: "g", text: note }), el("p", { class: "small", style: "margin:4px 0 0", text: String(g.kommentar || "") })));
+      });
+      blk.append(el("p", { class: "eyebrow", text: "Claude's rating (practice estimate, not an official score)" }), grades);
+      if (have === 3) blk.append(el("p", { class: "small" }, el("b", { text: "Rough points guide: about " + est + " / 45. " }), el("span", { class: "muted", text: "Counted as A ≈ 15, B ≈ 10, C ≈ 5, D = 0 per criterion." })));
+      if (Array.isArray(r.leitpunkte) && r.leitpunkte.length) {
+        const ul = el("ul", { class: "levers" });
+        r.leitpunkte.slice(0, 4).forEach((lp, i) => {
+          const st = String(lp.status || "");
+          const cls = st === "voll" ? "ok" : st === "fehlt" ? "no" : "mid";
+          ul.append(el("li", {}, el("span", {}, el("b", { text: "Punkt " + (lp.nr || i + 1) + ": " }), String(lp.kommentar || "")), el("span", { class: "pill " + cls, text: st || "?" })));
+        });
+        blk.append(el("h4", { text: "Leitpunkte" }), ul);
+      }
+      if (Array.isArray(r.korrekturen) && r.korrekturen.length) {
+        const ul = el("ul", { class: "corr" });
+        r.korrekturen.slice(0, 8).forEach((c) => ul.append(el("li", {}, el("del", { lang: "de", text: String(c.original || "") }), " → ", el("ins", { lang: "de", text: String(c.korrektur || "") }), el("div", { class: "small muted", text: String(c.erklaerung || "") }))));
+        blk.append(el("h4", { text: "Corrections" }), ul);
+      }
+      if (Array.isArray(r.staerken) && r.staerken.length) {
+        const ul = el("ul", { class: "plain" });
+        r.staerken.slice(0, 3).forEach((s) => ul.append(el("li", { text: String(s) })));
+        blk.append(el("h4", { text: "What works" }), ul);
+      }
+      if (r.naechster_schritt) blk.append(el("h4", { text: "Next step" }), el("p", { text: String(r.naechster_schritt) }));
+      if (r.verbesserte_version) blk.append(el("details", {}, el("summary", { text: "Show the corrected version" }), el("div", { class: "model", lang: "de", text: String(r.verbesserte_version) })));
+      result.append(blk);
+    }
+
+    const left = el("div", {},
+      el("label", { class: "lbl", for: "w-task", text: "Aufgabe" }), sel, el("div", { style: "height:8px" }), card, checks,
+      timerBox,
+      el("label", { class: "lbl", for: "w-text", text: "Deine E-Mail" }), ta,
+      el("div", { class: "row between", style: "margin-top:6px" }, wc,
+        el("button", { class: "btn ghost small", type: "button", text: "Clear draft", onclick: () => { if (!ta.value) return; clearBtnConfirm(); } })),
+      el("div", { class: "ai-box" },
+        el("div", { class: "row ai-only", hidden: true }, gradeBtn, stop),
+        aiNote("Opened in Claude, this page can rate your e-mail on the three telc criteria and correct it."),
+        status, result),
+      modelBox
+    );
+    const confirmRow = el("div", { class: "row", hidden: true, style: "margin-top:6px" }, el("span", { class: "small", text: "Delete this draft?" }),
+      el("button", { class: "btn small", type: "button", text: "Delete", onclick: () => { ta.value = ""; W.drafts[DATA.tasks[W.task].id] = ""; persist(); updWC(); confirmRow.hidden = true; } }),
+      el("button", { class: "btn ghost small", type: "button", text: "Keep", onclick: () => { confirmRow.hidden = true; } }));
+    function clearBtnConfirm() { confirmRow.hidden = false; }
+    left.insertBefore(confirmRow, left.querySelector(".ai-box"));
+    const right = el("div", {}, el("p", { class: "sheet-title", style: "margin:12px 0 4px", text: "Redemittel" }), el("p", { class: "small muted", text: "Tap to insert at the cursor." }), regWrap, phrBox);
+    root.append(el("div", { class: "sheet-head" }, el("span", { class: "sheet-title", text: "Schreibwerkstatt" }), el("span", { class: "small muted", text: "Draft saved on this device" })), el("div", { class: "wgrid" }, left, right));
+    loadTask();
+  })();
+
+  /* ---------- Sprechen ---------- */
+  (function sprechen() {
+    const qa = $("#sp1");
+    DATA.sp1.forEach(([q, a]) => qa.append(el("div", {}, el("b", { lang: "de", text: q }), el("span", { lang: "de", text: a }))));
+
+    /* Teil 2 generator */
+    const r2 = $("#sp2");
+    const topicBox = el("div", { class: "topic", lang: "de" });
+    let last = -1;
+    function pick() {
+      let i; do { i = Math.floor(Math.random() * DATA.sp2.length); } while (i === last && DATA.sp2.length > 1);
+      last = i;
+      const t = DATA.sp2[i];
+      topicBox.innerHTML = "";
+      topicBox.append(el("h4", { text: t.t }), el("p", { text: t.s }),
+        el("ul", { class: "plain small" }, el("li", { text: "Worum geht es in dem Text?" }), el("li", { text: "Was ist Ihre Meinung dazu? Warum?" }), el("li", { text: "Wie ist das in Ihrem Heimatland oder bei Ihnen persönlich?" }), el("li", { text: "Was denkt Ihr Partner / Ihre Partnerin?" })));
+    }
+    const prep = el("div", { style: "margin-top:12px" });
+    countdown(prep, 20, "Vorbereitung · 20 Min.");
+    r2.append(el("div", { class: "sheet-head" }, el("span", { class: "sheet-title", text: "Themenkarte · Teil 2" }), el("button", { class: "btn small", type: "button", text: "Neues Thema", onclick: pick })), topicBox, prep,
+      el("p", { class: "small muted", style: "margin-top:8px", text: "Speak for about 90 seconds following the four steps above, ideally recording yourself on your phone. Then listen back: did you give a reason with every opinion?" }));
+    pick();
+
+    /* Teil 3: task + AI partner */
+    const r3 = $("#sp3");
+    const sel = el("select", { class: "field", id: "sp3-task" });
+    DATA.sp3.forEach((t, i) => sel.append(el("option", { value: String(i), text: t.t })));
+    const card = el("div", { class: "topic", lang: "de" });
+    const chat = el("div", { class: "chat", "aria-live": "polite" });
+    const input = el("textarea", { id: "sp3-in", rows: "2", lang: "de", placeholder: "Deine Antwort auf Deutsch …", style: "min-height:64px" });
+    const status = el("p", { class: "status", "aria-live": "polite" });
+    const fb = el("div");
+    let turns = [];
+    let ctl = null;
+    const task = () => DATA.sp3[Number(sel.value)];
+    function renderCard() {
+      const t = task();
+      card.innerHTML = "";
+      card.append(el("h4", { text: t.t }), el("p", { text: t.s }), el("ul", { class: "plain small" }, t.p.map((p) => el("li", { text: p }))));
+    }
+    function rules() {
+      const t = task();
+      return "You are role-playing my exam partner in the oral part of the telc Deutsch B1 exam, Teil 3 \"Gemeinsam etwas planen\". We must plan this together:\nSituation: " + t.s + "\nPoints to settle: " + t.p.join(" | ") +
+        "\nRules: Speak only German at B1 level, friendly and natural, and use du. Write 1 to 3 short sentences per turn, never a monologue. Make concrete suggestions, react to my ideas, sometimes disagree politely with a reason and offer an alternative, and ask me questions. Make sure every point gets discussed; bring up a missing point yourself. Do not correct my mistakes and do not switch to English. When all points are settled, suggest a short summary and end the plan. Only write your own lines, without a name label.";
+    }
+    function bubble(role, text) {
+      const m = el("div", { class: "msg " + (role === "user" ? "me" : "ai") }, el("span", { class: "who", text: role === "user" ? "Du" : "Partner" }));
+      const body = el("span", { lang: "de", text: text });
+      m.append(body);
+      chat.append(m);
+      chat.scrollTop = chat.scrollHeight;
+      return body;
+    }
+    async function ask() {
+      if (!SAMPLE) return;
+      ctl = new AbortController();
+      const body = bubble("assistant", "…");
+      busy(true);
+      try {
+        const res = await SAMPLE([{ role: "user", content: rules() }].concat(turns.length ? turns : [{ role: "user", content: "Fang bitte an: Begrüße mich kurz und mach einen ersten Vorschlag zum ersten Punkt." }]), {
+          signal: ctl.signal, cache: false, modelTier: "quick",
+          onText: ({ text }) => { body.textContent = text; chat.scrollTop = chat.scrollHeight; }
+        });
+        body.textContent = res.text;
+        turns.push({ role: "assistant", content: res.text });
+        status.textContent = "";
+      } catch (e) {
+        if (e && e.text) { body.textContent = e.text; } else { body.parentElement.remove(); }
+        status.textContent = aiErr(e);
+      } finally { busy(false); }
+    }
+    function busy(b) { send.disabled = b; startBtn.disabled = b; fbBtn.disabled = b; stop.hidden = !b; }
+    const send = el("button", { class: "btn", type: "button", text: "Senden", onclick: () => {
+      const v = input.value.trim(); if (!v) return;
+      turns.push({ role: "user", content: v }); bubble("user", v); input.value = ""; ask();
+    } });
+    input.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send.click(); } });
+    const stop = el("button", { class: "btn ghost small", type: "button", text: "Stop", hidden: true, onclick: () => ctl && ctl.abort() });
+    const startBtn = el("button", { class: "btn ghost", type: "button", text: "Neues Gespräch", onclick: () => { turns = []; chat.innerHTML = ""; fb.innerHTML = ""; status.textContent = ""; ask(); } });
+    const fbBtn = el("button", { class: "btn ghost", type: "button", text: "Feedback", onclick: async () => {
+      if (!SAMPLE) return;
+      const mine = turns.filter((t) => t.role === "user" && !/^Fang bitte an/.test(t.content));
+      if (mine.length < 3) { status.textContent = "Say at least three things first, then ask for feedback."; return; }
+      const t = task();
+      const transcript = turns.map((x) => (x.role === "user" ? "Kandidat: " : "Partner: ") + x.content).join("\n");
+      const prompt = "You are a telc Deutsch B1 oral examiner. Below is a practice conversation for Teil 3 \"Gemeinsam etwas planen\". \"Kandidat\" is the learner; \"Partner\" was a role-play partner. Evaluate only the Kandidat.\nTask: " + t.s + "\nPoints: " + t.p.join(" | ") + "\n\nTranscript:\n" + transcript.slice(-8000) +
+        "\n\nGive concise feedback in English under these headings:\nCoverage: which task points the Kandidat helped settle and which were missing.\nInteraction: suggestions, reactions, questions, agreeing and disagreeing with reasons.\nLanguage: up to 6 of the Kandidat's errors written as \"wrong → right (why)\".\nPhrases for next time: 4 German Redemittel that would have fit.\nLevel: \"on track to pass\", \"borderline\" or \"not yet\", with one sentence why.\nKeep it under 250 words, plain text, no markdown symbols.";
+      ctl = new AbortController();
+      busy(true);
+      fb.innerHTML = "";
+      const box = el("div", { class: "feedback", text: "Thinking…" });
+      fb.append(box);
+      try {
+        const r = await SAMPLE(prompt, { signal: ctl.signal, cache: false, onText: ({ text }) => { box.textContent = text; } });
+        box.textContent = r.text;
+        status.textContent = "";
+      } catch (e) { if (e && e.text) box.textContent = e.text; else box.remove(); status.textContent = aiErr(e); }
+      finally { busy(false); }
+    } });
+    sel.addEventListener("change", () => { renderCard(); turns = []; chat.innerHTML = ""; fb.innerHTML = ""; });
+    r3.append(
+      el("div", { class: "sheet-head" }, el("span", { class: "sheet-title", text: "Aufgabenblatt · Teil 3" })),
+      el("label", { class: "lbl", for: "sp3-task", text: "Aufgabe" }), sel, el("div", { style: "height:8px" }), card,
+      el("div", { class: "ai-only", hidden: true },
+        el("h4", { text: "Practise with Claude as your partner" }),
+        el("p", { class: "small muted", text: "Start the conversation, answer in German, and ask for feedback when you've settled the points." }),
+        chat,
+        el("label", { class: "lbl", for: "sp3-in", text: "Deine Antwort" }), input,
+        el("div", { class: "row", style: "margin-top:8px" }, send, startBtn, fbBtn, stop),
+        status, fb),
+      aiNote("Opened in Claude, this page can play your exam partner for Teil 3 and give feedback afterwards. Until then, practise the task with a classmate using the steps above.")
+    );
+    renderCard();
+  })();
+
+  /* ---------- Grammatik table ---------- */
+  (function vp() {
+    const tb = $("#vp-table");
+    DATA.vp.forEach(([v, p, ex]) => tb.append(el("tr", {}, el("td", { lang: "de", text: v }), el("td", { lang: "de" }, el("b", { text: p })), el("td", { lang: "de", text: ex }))));
+  })();
+
+  /* ---------- Flashcards ---------- */
+  (function flash() {
+    const root = $("#fc");
+    const box = Object.assign({}, ST.fc || {});
+    let topic = ST.fcTopic || "all";
+    let cur = null, flipped = false;
+    const filter = el("div", { class: "filter", role: "group", "aria-label": "Topic" });
+    [["all", "Alle"]].concat(Object.entries(DATA.fcTopics)).forEach(([k, v]) => {
+      filter.append(el("button", { type: "button", "aria-pressed": k === topic ? "true" : "false", text: v, "data-k": k, onclick: () => {
+        topic = k; ST.fcTopic = k; save(); $$("button", filter).forEach((b) => b.setAttribute("aria-pressed", b.dataset.k === k ? "true" : "false")); next(); stats();
+      } }));
+    });
+    const card = el("button", { class: "card", type: "button", "aria-live": "polite" });
+    const yes = el("button", { class: "btn", type: "button", text: "Gewusst" });
+    const no = el("button", { class: "btn ghost", type: "button", text: "Nochmal" });
+    const flip = el("button", { class: "btn ghost", type: "button", text: "Umdrehen" });
+    const bars = el("div", { class: "boxes", role: "img" });
+    const labs = el("div", { class: "boxlab" });
+    ["neu", "1", "2", "3", "sicher"].forEach((x) => labs.append(el("span", { text: x })));
+    const line = el("p", { class: "small muted" });
+    const pool = () => DATA.fc.filter((c) => topic === "all" || c[3] === topic);
+    function next() {
+      const p = pool();
+      const weighted = [];
+      p.forEach((c) => { const b = box[c[0]] || 0; const w = 5 - b; for (let i = 0; i < w; i++) weighted.push(c); });
+      let c; let guard = 0;
+      do { c = weighted[Math.floor(Math.random() * weighted.length)]; guard++; } while (cur && c === cur && guard < 10 && p.length > 1);
+      cur = c; flipped = false; render();
+    }
+    function render() {
+      card.innerHTML = "";
+      card.append(el("span", { class: "hint", text: DATA.fcTopics[cur[3]] }), el("span", { class: "de", lang: "de", text: cur[0] }));
+      if (flipped) card.append(el("span", { class: "en", text: cur[1] }), el("span", { class: "exs", lang: "de", text: cur[2] }));
+      else card.append(el("span", { class: "hint", text: "Tap to see the meaning" }));
+      yes.disabled = !flipped; no.disabled = !flipped;
+    }
+    function stats() {
+      const p = pool();
+      const counts = [0, 0, 0, 0, 0];
+      p.forEach((c) => counts[box[c[0]] || 0]++);
+      const max = Math.max(1, ...counts);
+      bars.innerHTML = "";
+      counts.forEach((n) => bars.append(el("i", { style: "height:" + Math.max(2, n / max * 44) + "px", title: n + " cards" })));
+      bars.setAttribute("aria-label", "Cards per level: " + counts.join(", "));
+      line.textContent = counts[4] + " of " + p.length + " cards in this set are 'sicher'. Cards you miss come back more often.";
+    }
+    const doFlip = () => { flipped = !flipped; render(); };
+    card.onclick = doFlip; flip.onclick = doFlip;
+    yes.onclick = () => { box[cur[0]] = Math.min(4, (box[cur[0]] || 0) + 1); ST.fc = box; save(); stats(); next(); };
+    no.onclick = () => { box[cur[0]] = 0; ST.fc = box; save(); stats(); next(); };
+    root.append(el("div", { class: "sheet-head" }, el("span", { class: "sheet-title", text: "Karteikarten · " + DATA.fc.length + " Karten" })), filter, card,
+      el("div", { class: "row" }, flip, no, yes), el("div", { style: "margin-top:16px" }, bars, labs), line);
+    next(); stats();
+  })();
+
+  /* ---------- Lernplan ---------- */
+  (function plan() {
+    const root = $("#plangen");
+    const inp = el("input", { type: "date", id: "exam-date", style: "max-width:220px" });
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const isoOf = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    const example = new Date(today.getTime() + 42 * 864e5);
+    inp.value = ST.examDate || isoOf(example);
+    const note = el("p", { class: "small muted" });
+    const out = el("div");
+    const fmt = (d) => d.toLocaleDateString("de-DE", { day: "numeric", month: "short" });
+    const addDays = (d, n) => new Date(d.getTime() + n * 864e5);
+    function pill() {
+      const p = $("#days-pill");
+      if (!ST.examDate) { p.textContent = ""; return; }
+      const d = new Date(ST.examDate + "T00:00:00");
+      const n = Math.round((d - today) / 864e5);
+      p.textContent = n > 1 ? "noch " + n + " Tage" : n === 1 ? "Prüfung morgen" : n === 0 ? "Prüfung heute" : "";
+    }
+    function render() {
+      out.innerHTML = "";
+      note.textContent = ST.examDate ? "" : "Example date. Set your own exam date and the plan updates.";
+      const d = new Date(inp.value + "T00:00:00");
+      if (isNaN(d)) { out.append(el("p", { text: "Pick a date to see your plan." })); return; }
+      const days = Math.round((d - today) / 864e5);
+      if (days < 0) { out.append(el("p", { text: "That date is in the past. Pick your upcoming exam date." })); return; }
+      if (days === 0) { out.append(el("p", { text: "Exam day. No new material: read your Redemittel once, check the list below, and go." })); return; }
+      out.append(el("p", {}, el("span", { class: "big", style: "font-size:48px", text: String(days) }), " ", el("span", { class: "muted", text: days === 1 ? "day to go" : "days to go" })));
+      const phases = [
+        { name: "Diagnose", f: 0.1, items: ["Do the free official telc practice test under exam timing.", "Score it with the Punkterechner and note your two weakest parts.", "Read the Strategie tab once, fully."] },
+        { name: "Technik", f: 0.35, items: ["One exam part per day with the steps on its tab, then its practice sheet.", "Daily: one round of Sprachbausteine Teil 1 and 15 flashcards.", "Learn one letter template per register by heart."] },
+        { name: "Schwächen", f: 0.35, items: ["Spend two thirds of your time on your two weakest parts.", "Write two e-mails a week with the 30-minute timer, and get feedback on each.", "Speak three times a week: Teil 2 topic card and a Teil 3 plan with a partner."] },
+        { name: "Simulation", f: 0.2, items: ["Full timed run of the written exam with the Blocktimer.", "One full oral run: 20 minutes of preparation, then all three parts.", "Last two days: Redemittel and Fehler list only. Sleep."] }
+      ];
+      let lens = phases.map((p) => Math.max(1, Math.round(days * p.f)));
+      if (days < 4) lens = [0, 0, Math.max(0, days - 1), 1];
+      let diff = days - lens.reduce((a, b) => a + b, 0);
+      for (let k = 2; diff !== 0; k = (k + 1) % 4) { if (diff > 0) { lens[k]++; diff--; } else if (lens[k] > (days < 4 ? 0 : 1)) { lens[k]--; diff++; } else if (lens.every((l) => l <= 1)) break; }
+      let s = 0;
+      phases.forEach((p, i) => {
+        if (!lens[i]) return;
+        const from = addDays(today, s), to = addDays(today, s + lens[i] - 1);
+        s += lens[i];
+        out.append(el("div", { class: "phase" },
+          el("div", { class: "when", text: (lens[i] === 1 ? fmt(from) : fmt(from) + " – " + fmt(to)) }),
+          el("div", {}, el("h4", { text: p.name + " · " + lens[i] + (lens[i] === 1 ? " Tag" : " Tage") }), el("ul", {}, p.items.map((x) => el("li", { text: x }))))));
+      });
+      out.append(el("p", { class: "small muted", style: "margin-top:10px", text: "Daily minimum, whatever the phase: 10 Sprachbausteine, 15 flashcards, 1 Hören text." }));
+    }
+    inp.addEventListener("change", () => { if (inp.value) { ST.examDate = inp.value; save(); } render(); pill(); });
+    root.append(el("div", { class: "sheet-head" }, el("label", { class: "sheet-title", for: "exam-date", text: "Prüfungsdatum" }), inp), note, out);
+    render(); pill();
+  })();
+
+  /* ---------- Checklist ---------- */
+  (function checklist() {
+    const root = $("#checklist");
+    const done = Object.assign({}, ST.check || {});
+    const count = el("span", { class: "score" });
+    const upd = () => { count.textContent = DATA.check.filter((c) => done[c[0]]).length + " / " + DATA.check.length; };
+    root.append(el("div", { class: "sheet-head" }, el("span", { class: "sheet-title", text: "Mitbringen · Vorbereiten" }), count));
+    DATA.check.forEach(([k, txt]) => {
+      const id = "ck-" + k;
+      const cb = el("input", { type: "checkbox", id });
+      cb.checked = !!done[k];
+      cb.addEventListener("change", () => { done[k] = cb.checked; ST.check = done; save(); upd(); });
+      root.append(el("label", { class: "check", for: id }, cb, el("span", { text: txt })));
+    });
+    root.append(el("button", { class: "btn ghost small", type: "button", style: "margin-top:8px", text: "Untick all", onclick: () => { Object.keys(done).forEach((k) => done[k] = false); ST.check = done; save(); $$("input", root).forEach((i) => i.checked = false); upd(); } }));
+    upd();
+  })();
+
+  /* ---------- start ---------- */
+  const h = (location.hash || "").replace("#", "");
+  show(TABS.includes(h) ? h : (ST.tab || "plan"), false);
+  initAI();
+})();
+</script>
+
+</body></html>
