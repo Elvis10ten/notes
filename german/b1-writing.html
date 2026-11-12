@@ -1,0 +1,976 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>B1 Schreibtrainer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Familjen+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one reading column like an exam answer booklet; sticky tab rail; A–D answer-sheet bubbles as the recurring motif */
+:root{
+  --paper:#ffffff; --card:#ffffff; --ink:#111111; --muted:#5f5f5f; --line:#e2e2e2;
+  --pen:#111111; --pen-soft:#f1f1f1; --markbg:#e8e8e8; --markfg:#111111;
+  --ok:#2e7d4f; --ok-soft:#eef6f0; --warn:#8a6a2e; --warn-soft:#f7f2e6; --bad:#b0443d; --bad-soft:#f9ecea;
+  color-scheme:light;
+  --f-display:"Familjen Grotesk","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:16px/1.65 var(--f-body);margin:0;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--card)}
+.wrap{max-width:900px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px 6px;flex-wrap:wrap}
+.brand h1{font:700 1.25rem/1.2 var(--f-display);margin:0;letter-spacing:-.01em}
+.brand h1 span{color:var(--pen)}
+.meter{display:flex;align-items:center;gap:8px;font:600 .8rem var(--f-mono);color:var(--muted)}
+.bar{width:120px;height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--pen)}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs a{flex:0 0 auto;text-decoration:none;color:var(--muted);font:600 .9rem var(--f-display);padding:6px 12px;border-radius:99px}
+nav.tabs a.on{background:var(--pen-soft);color:var(--pen)}
+nav.tabs a:focus-visible,button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--pen);outline-offset:2px}
+main{padding-block:24px 80px}
+h2{font:700 1.7rem/1.2 var(--f-display);margin:0 0 6px;text-wrap:balance;letter-spacing:-.015em}
+h3{font:700 1.2rem/1.3 var(--f-display);margin:28px 0 8px;text-wrap:balance}
+h4{font:600 1rem var(--f-display);margin:16px 0 6px}
+p{margin:0 0 12px;max-width:68ch}
+.lead{color:var(--muted);font-size:1.05rem}
+.eyebrow{font:600 .72rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--pen)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:12px 0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.grid2>*{min-width:0}
+.de{font-weight:700}
+.en{color:var(--muted)}
+.note{font-size:.88rem;color:var(--muted)}
+mark{background:var(--markbg);color:var(--markfg);padding:0 2px;border-radius:3px}
+.tbl{overflow-x:auto;margin:10px 0}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 .78rem var(--f-mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+button,.btn{font:600 .9rem var(--f-display);border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+button.primary,.btn.primary{background:var(--pen);border-color:var(--pen);color:var(--card)}
+button:hover,.btn:hover{border-color:var(--pen)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{display:inline-block;font:600 .72rem var(--f-mono);padding:2px 8px;border-radius:99px;background:var(--pen-soft);color:var(--pen);letter-spacing:.03em}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}.chip.warn{background:var(--warn-soft);color:var(--warn)}.chip.bad{background:var(--bad-soft);color:var(--bad)}
+/* plan */
+.day{background:var(--card);border:1px solid var(--line);border-radius:12px;margin:14px 0;overflow:hidden}
+.dayhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.dayhead h3{margin:0}
+.item{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:start;padding:10px 18px;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+.item.done .lbl{text-decoration:line-through;color:var(--muted)}
+.item .lbl{min-width:0}
+.item a{color:var(--pen);font-weight:700;text-decoration:none;white-space:nowrap}
+.tick{width:24px;height:24px;border-radius:50%;border:2px solid var(--pen);background:transparent;padding:0;justify-content:center}
+.tick.on{background:var(--pen)}
+.tick.on::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--card)}
+.next{outline:2px solid var(--pen);outline-offset:-2px;background:var(--pen-soft)}
+/* bubbles */
+.bub{display:inline-flex;gap:6px}
+.bub button{width:34px;height:34px;border-radius:50%;padding:0;justify-content:center;border:2px solid var(--pen);color:var(--pen);font:700 .85rem var(--f-mono)}
+.bub button.on{background:var(--pen);color:var(--card)}
+.scoreline{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.big{font:700 2rem var(--f-display)}
+/* quiz */
+.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:10px 0}
+.q .stem{font-weight:700;margin-bottom:8px}
+.opts{display:grid;gap:6px}
+.opts button{justify-content:flex-start;text-align:left;font:400 .95rem var(--f-body);white-space:normal}
+.opts button.right{background:var(--ok-soft);border-color:var(--ok);color:var(--ok);font-weight:700}
+.opts button.wrong{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.expl{margin-top:8px;font-size:.9rem;padding:8px 10px;border-radius:8px;background:var(--pen-soft)}
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;margin:8px 0}
+summary{cursor:pointer;padding:12px 16px;font:600 1rem var(--f-display)}
+details>div{padding:0 16px 14px}
+.ph{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:4px 14px;padding:8px 0;border-top:1px solid var(--line)}
+.ph .n{grid-column:1/-1;font-size:.84rem;color:var(--warn)}
+@media (max-width:560px){.ph{grid-template-columns:1fr}}
+/* flashcards */
+.fc{background:var(--card);border:2px solid var(--pen);border-radius:14px;min-height:190px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:20px;cursor:pointer;width:100%;font:inherit;color:inherit}
+.fc .w{font:700 1.6rem/1.2 var(--f-display)}
+.fc .m{font-size:1.1rem;margin-top:8px}
+.fc .x{color:var(--muted);margin-top:8px;font-size:.92rem}
+/* email / studio */
+.mail{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.mailhead{padding:10px 16px;border-bottom:1px solid var(--line);font:400 .85rem var(--f-mono);color:var(--muted)}
+.mailbody{padding:14px 16px;white-space:pre-wrap}
+.lp{list-style:none;padding:0;margin:8px 0}
+.lp li{display:grid;grid-template-columns:28px 1fr;gap:8px;padding:6px 0;align-items:start}
+textarea,input[type=text]{width:100%;font:16px/1.6 var(--f-body);background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:12px}
+textarea.writing{min-height:360px;font-size:17px}
+.timer{font:700 1.6rem var(--f-mono);font-variant-numeric:tabular-nums}
+.timer.low{color:var(--bad)}
+.find{display:grid;grid-template-columns:22px 1fr;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);font-size:.93rem}
+.dot{width:12px;height:12px;border-radius:50%;margin-top:6px}
+.dot.ok{background:var(--ok)}.dot.warn{background:var(--warn)}.dot.bad{background:var(--bad)}
+.model{white-space:pre-wrap;line-height:1.7}
+.tasklist{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}
+.task{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.task:hover{border-color:var(--pen)}
+.task b{font-family:var(--f-display)}
+.order button{display:block;width:100%;text-align:left;margin:6px 0;font:400 .95rem var(--f-body);white-space:normal;justify-content:flex-start}
+.order .placed{background:var(--pen-soft);border-color:var(--pen)}
+.banner{padding:10px 14px;border-radius:10px;background:var(--bad-soft);color:var(--bad);font-weight:700;margin:8px 0}
+.callout{border-left:4px solid var(--pen);padding:10px 14px;background:var(--pen-soft);border-radius:0 10px 10px 0;margin:12px 0}
+.callout.warn{border-color:var(--warn);background:var(--warn-soft)}
+@media (prefers-reduced-motion:no-preference){.opts button,.tick,.bub button{transition:background .15s,border-color .15s}}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <h1>B1 <span>Schreib</span>trainer</h1>
+      <div class="meter"><span id="pct">0%</span><div class="bar"><i id="pctbar" style="width:0"></i></div><span>Plan</span></div>
+    </div>
+    <nav class="tabs" id="tabs"></nav>
+  </div>
+</header>
+<main class="wrap" id="view"></main>
+
+<script>
+/* ===================== CONTENT ===================== */
+const TABS=[["plan","5-Tage-Plan"],["exam","Die Prüfung"],["parts","Bausteine"],["phrases","Redemittel"],["grammar","Grammatik"],["words","Wörter"],["drills","Übungen"],["studio","Schreiben"]];
+
+const PLAN=[
+ {d:1,t:"Know the target",items:[
+  ["d1a","Exam briefing: format, scoring, what counts as a Leitpunkt. Try the score calculator.",15,"exam"],
+  ["d1b","Components 1–3: Betreff, Anrede, Einleitung. Learn the rules and phrases.",20,"parts"],
+  ["d1c","Quiz: E-Mail components",5,"parts"],
+  ["d1d","Drill: du vs. Sie (register)",15,"drills"],
+  ["d1e","Grammar 1: word order (verb position) + quiz",25,"grammar"],
+  ["d1f","Vocabulary: task-instruction words (deck 1)",15,"words"],
+  ["d1g","Write Task 1 without a timer, run the check, then study the model",25,"task-1"]]},
+ {d:2,t:"Leitpunkte and linking",items:[
+  ["d2a","Components 4–6: Hauptteil, Schluss, Gruß + Leitpunkt pronoun drill",20,"parts"],
+  ["d2b","Connectors table + connector drill",20,"drills"],
+  ["d2c","Redemittel: thanking, suggesting, advice, accepting/declining, asking",25,"phrases"],
+  ["d2d","Grammar 2: Perfekt (haben/sein, participles) + quiz",25,"grammar"],
+  ["d2e","Vocabulary: Reise & Besuch, Feiern & Einladungen",10,"words"],
+  ["d2f","Write Task 7 (semi-formal) and compare with the model",20,"task-7"]]},
+ {d:3,t:"Accuracy",items:[
+  ["d3a","Grammar 3: cases, prepositions, gender shortcuts + quiz",30,"grammar"],
+  ["d3b","Grammar 4: polite forms (Konjunktiv II) and zu + infinitive + quiz",15,"grammar"],
+  ["d3c","Leitpunkt sprint: first 13 points",20,"drills"],
+  ["d3d","Error hunt drill",15,"drills"],
+  ["d3e","TIMED: Task 3 in 30 minutes, then check and self-score",40,"task-3"]]},
+ {d:4,t:"Exam speed",items:[
+  ["d4a","Vocabulary: Wohnung, Kurs & Arbeit, Probleme",15,"words"],
+  ["d4b","Ordering drill (both e-mails)",10,"drills"],
+  ["d4c","TIMED: Task 8 (semi-formal) + check + self-score",40,"task-8"],
+  ["d4d","TIMED: Task 6 (past tense report) + check + self-score",40,"task-6"],
+  ["d4e","Redo the quiz with your lowest score",15,"grammar"]]},
+ {d:5,t:"Dress rehearsal",items:[
+  ["d5a","Write both skeletons from memory and compare",20,"parts"],
+  ["d5b","Leitpunkt sprint: remaining points",15,"drills"],
+  ["d5c","MOCK EXAM: Task 12 under exam rules (no help, 30 min) + check",45,"task-12"],
+  ["d5d","MOCK EXAM: Task 2 (30 min) + check, then read the exam-day checklist",40,"task-2"]]}
+];
+
+/* ---------- Components ---------- */
+const PARTS=[
+ {n:"Betreff",en:"subject line",what:"One short line naming the topic. The task asks for a suitable Betreff, so always write one. A noun phrase is enough; no full sentence needed.",
+  rules:["Start with <b>Re:</b> or <b>AW:</b> (Antwort) when you reply, then the topic.","Keep it under 6 words.","Nouns keep their capital letters."],
+  ph:[["Re: Dein Besuch in Berlin","Re: Your visit to Berlin"],["Re: Deine Einladung","Re: Your invitation"],["Unser Kursabschlussfest","Our end-of-course party"],["Termin für die Reparatur","Appointment for the repair"],["Ihre E-Mail vom 3. März","Your e-mail of 3 March"]]},
+ {n:"Anrede",en:"salutation",what:"Copy the tone of the e-mail you received. A friend who writes „Hallo“ or „Liebe …“ gets du. A teacher, landlord, office or company gets Sie.",
+  rules:["Female name: <b>Liebe</b> Anna, … Male name: <b>Lieber</b> Tom, …","Formal: <b>Sehr geehrte</b> Frau Becker, / <b>Sehr geehrter</b> Herr Schulz,","Unknown person or office: <b>Sehr geehrte Damen und Herren,</b>","Friendly but polite (teacher, neighbour): <b>Liebe Frau Wagner,</b> / <b>Lieber Herr Meier,</b> (still Sie!)","After the comma, the next line starts with a <b>small letter</b>: „Liebe Anna,<br>vielen Dank …“. Nouns stay capital: „herzlichen Glückwunsch“ but „Danke“ → „danke“."],
+  ph:[["Liebe Sara, / Lieber Jonas,","Dear Sara / Dear Jonas (friend)"],["Hallo Tim,","Hi Tim (friend, casual)"],["Liebe Frau Becker,","Dear Ms Becker (polite, warm, Sie)"],["Sehr geehrter Herr Schulz,","Dear Mr Schulz (formal)"],["Sehr geehrte Damen und Herren,","Dear Sir or Madam (unknown)"]]},
+ {n:"Einleitung",en:"introduction",what:"1–2 sentences: thank them and react to their news. This is where you show you read the e-mail.",
+  rules:["Thank + react: „vielen Dank für deine E-Mail. Ich habe mich sehr gefreut, von dir zu hören.“","Do not start with a Leitpunkt straight away. Do not write your life story either."],
+  ph:[["vielen Dank für deine E-Mail!","thank you very much for your e-mail!"],["ich habe mich sehr über deine Nachricht gefreut.","I was very happy about your message."],["schön, von dir zu hören!","nice to hear from you!"],["entschuldige bitte, dass ich erst jetzt antworte.","sorry that I'm only answering now."],["vielen Dank für Ihre E-Mail und die Informationen.","thank you for your e-mail and the information. (Sie)"],["gern beantworte ich Ihre Fragen.","I'm happy to answer your questions. (Sie)"]]},
+ {n:"Hauptteil",en:"main part — the 4 Leitpunkte",what:"Answer all four Leitpunkte. Each one = 2–3 sentences: answer + reason (weil/denn) + one detail. Choose a logical order; the given order is not required. Link them with transition words so they don't stand alone.",
+  rules:["<b>Pronoun switch:</b> the Leitpunkte are written to <i>you</i> as the candidate. „Sie“ in a Leitpunkt = YOU → write „ich“. „er/sie“ = your friend → write „du“ to them.","Example: Leitpunkt „was er mitbringen soll“ → in your mail: „<b>Bring</b> bitte bequeme Schuhe <b>mit</b>.“","One short sentence officially counts, but 2–3 sentences earn points in criteria II and III.","You may say no or make a counter-proposal: that still counts.","If a Leitpunkt is plural („welche Ausflüge“), one example is enough.","Start sentences with different words. Not „Ich … Ich … Ich …“."],
+  ph:[["Zuerst zu deiner Frage nach …","First, about your question regarding … (+ Dat)"],["Was … betrifft, …","As far as … is concerned, … (verb next)"],["Du hast gefragt, wann … Am besten …","You asked when … It's best …"],["Außerdem …","Besides / also … (verb next)"],["Übrigens …","By the way … (verb next)"],["Zum Schluss noch eine Frage: …","Finally, one more question: …"]]},
+ {n:"Schluss",en:"closing sentence",what:"One sentence that ends the conversation politely: looking forward, asking for an answer, or wishing something.",
+  rules:["„Ich freue mich auf …“ + Akk (the future thing). „Ich freue mich über …“ = happy about something you got.","Formal: no imperatives like „Schreib mir!“; use „Ich freue mich auf Ihre Antwort.“"],
+  ph:[["Ich freue mich schon auf deine Antwort.","I'm looking forward to your reply."],["Ich freue mich auf dich / auf deinen Besuch!","I'm looking forward to seeing you / your visit!"],["Schreib mir bald!","Write to me soon! (du)"],["Melde dich, wenn du noch Fragen hast.","Get in touch if you have more questions."],["Ich freue mich auf Ihre Antwort.","I look forward to your reply. (Sie)"],["Vielen Dank im Voraus.","Thank you in advance. (Sie)"]]},
+ {n:"Gruß + Name",en:"sign-off + name",what:"Greeting formula on its own line, NO comma after it, then your name on the next line.",
+  rules:["Informal: Viele Grüße / Liebe Grüße / Herzliche Grüße / Bis bald + first name.","Formal: Mit freundlichen Grüßen + first and last name.","If a polite sender signed „Viele Grüße“, you may answer with „Viele Grüße“ too.","No comma: „Mit freundlichen Grüßen“ ⏎ „Elvis Nnajiofor“. (English puts a comma; German does not.)"],
+  ph:[["Liebe Grüße","Love / best wishes (friend)"],["Viele Grüße","Best regards (friend or polite)"],["Herzliche Grüße","Warm regards"],["Mit freundlichen Grüßen","Yours sincerely (formal)"]]}
+];
+
+const SKELETONS={
+ du:`Betreff: Re: [Thema]
+
+Liebe [Name], / Lieber [Name],
+
+vielen Dank für deine E-Mail! Ich habe mich sehr gefreut, von dir zu hören.
+
+Zuerst zu deiner Frage nach [Leitpunkt 1]: … , weil …
+Was [Leitpunkt 2] betrifft, … Ich finde, dass …
+Außerdem [Leitpunkt 3] … Deshalb …
+Zum Schluss noch [Leitpunkt 4]: Ich schlage vor, dass wir …
+
+Ich freue mich schon auf deine Antwort!
+
+Liebe Grüße
+[Vorname]`,
+ sie:`Betreff: [Thema]
+
+Sehr geehrte Frau [Name], / Sehr geehrter Herr [Name], / Sehr geehrte Damen und Herren,
+
+vielen Dank für Ihre E-Mail. Gern beantworte ich Ihre Fragen.
+
+Zuerst zu [Leitpunkt 1]: … , weil …
+Was [Leitpunkt 2] betrifft, …
+Außerdem möchte ich Sie fragen, ob …
+Zum Schluss hätte ich noch eine Bitte: Könnten Sie mir bitte …?
+
+Ich freue mich auf Ihre Antwort.
+
+Mit freundlichen Grüßen
+[Vorname Nachname]`
+};
+
+/* ---------- Phrase bank ---------- */
+const PHRASES=[
+ {c:"Sich bedanken · thanking",p:[
+  ["Vielen Dank für deine E-Mail / deine Einladung.","Thanks a lot for your e-mail / your invitation.","für + Akkusativ: deine (die E-Mail), deinen (der Brief), dein (das Geschenk)"],
+  ["Danke, dass du an mich gedacht hast.","Thanks for thinking of me.","dass → verb at the end"],
+  ["Herzlichen Dank für Ihre schnelle Antwort.","Many thanks for your quick reply.",""],
+  ["Ich möchte mich bei Ihnen für … bedanken.","I'd like to thank you for …","sich bedanken bei (person) für (thing)"]]},
+ {c:"Freude & Bedauern · joy & regret",p:[
+  ["Ich habe mich sehr über deine Nachricht gefreut.","I was very happy about your message.","sich freuen über = about something now/past"],
+  ["Ich freue mich schon auf das Wochenende.","I'm already looking forward to the weekend.","sich freuen auf = future"],
+  ["Es tut mir wirklich leid, dass …","I'm really sorry that …","verb at the end"],
+  ["Schade, dass wir uns nicht sehen können.","A pity we can't see each other.",""],
+  ["Leider kann ich nicht kommen, weil …","Unfortunately I can't come because …","Leider → verb comes next: Leider kann ich …"]]},
+ {c:"Sich entschuldigen · apologising",p:[
+  ["Entschuldige bitte, dass ich so spät antworte.","Sorry for replying so late. (du)",""],
+  ["Entschuldigen Sie bitte, dass ich gestern nicht gekommen bin.","Please excuse me for not coming yesterday. (Sie)","Perfekt in dass-clause: gekommen bin at the end"],
+  ["Ich möchte mich für das Missverständnis entschuldigen.","I'd like to apologise for the misunderstanding.",""]]},
+ {c:"Gratulieren · congratulating",p:[
+  ["Herzlichen Glückwunsch zum Geburtstag / zur Hochzeit!","Happy birthday / Congratulations on your wedding!","zu + Dativ: zum (der/das), zur (die)"],
+  ["Ich gratuliere dir zu deiner neuen Stelle!","Congratulations on your new job!","gratulieren + Dativ (dir, Ihnen)"],
+  ["Ich wünsche dir / euch alles Gute!","I wish you all the best!",""]]},
+ {c:"Zusagen & absagen · accepting & declining",p:[
+  ["Ich komme sehr gern!","I'd love to come!",""],
+  ["Natürlich bin ich dabei.","Of course I'm in.","dabei sein = to be part of it"],
+  ["Ich nehme gern an der Feier teil.","I'm happy to take part in the party.","teilnehmen an + Dativ"],
+  ["Leider muss ich absagen, weil ich an dem Tag arbeiten muss.","Unfortunately I have to decline because I have to work that day.",""],
+  ["Das passt mir leider nicht so gut.","That doesn't really suit me, unfortunately.","passen + Dativ (mir)"]]},
+ {c:"Vorschlagen · suggesting",p:[
+  ["Ich schlage vor, dass wir zusammen ins Kino gehen.","I suggest that we go to the cinema together.","dass → verb last"],
+  ["Wie wäre es mit einem Picknick im Park?","How about a picnic in the park?","mit + Dativ"],
+  ["Wir könnten am Samstag nach Potsdam fahren.","We could go to Potsdam on Saturday.","könnten + infinitive at the end"],
+  ["Hast du Lust, mit mir Fahrrad zu fahren?","Do you feel like cycling with me?","Lust haben, … zu + infinitive"],
+  ["Was hältst du davon, wenn wir zu Hause kochen?","What do you think about us cooking at home?",""],
+  ["Wie wäre es stattdessen mit Sonntag?","How about Sunday instead?","counter-proposal"]]},
+ {c:"Raten · giving advice",p:[
+  ["Du solltest warme Kleidung mitnehmen.","You should take warm clothes.","solltest + infinitive at the end"],
+  ["An deiner Stelle würde ich den Zug nehmen.","If I were you, I'd take the train.",""],
+  ["Ich empfehle dir, früh zu buchen.","I recommend that you book early.","empfehlen + Dativ, … zu + infinitive"],
+  ["Am besten kommst du im Mai.","It's best if you come in May.","Am besten → verb next"],
+  ["Vergiss nicht, deinen Pass mitzunehmen.","Don't forget to take your passport.","separable verb: mit-zu-nehmen"],
+  ["Bring auf jeden Fall bequeme Schuhe mit.","Definitely bring comfortable shoes.","du-imperative: bring … mit"]]},
+ {c:"Meinung · opinion",p:[
+  ["Ich finde die Idee super, weil …","I think the idea is great because …",""],
+  ["Meiner Meinung nach ist das zu teuer.","In my opinion that's too expensive.","verb comes right after „Meiner Meinung nach“"],
+  ["Ich glaube, dass …","I believe that …",""],
+  ["Für mich ist es wichtig, dass …","For me it's important that …",""],
+  ["Ehrlich gesagt bin ich nicht einverstanden.","To be honest, I don't agree.","einverstanden = in agreement"]]},
+ {c:"Bitten · asking for something",p:[
+  ["Könntest du mir bitte helfen?","Could you help me, please? (du)",""],
+  ["Könnten Sie mir bitte den Plan schicken?","Could you please send me the plan? (Sie)",""],
+  ["Ich hätte eine Bitte: …","I have a request: …",""],
+  ["Wäre es möglich, dass ich später komme?","Would it be possible for me to come later?",""],
+  ["Ich bitte Sie, das Problem schnell zu lösen.","I ask you to solve the problem quickly.",""]]},
+ {c:"Fragen · asking for information",p:[
+  ["Ich möchte gern wissen, ob das Frühstück inklusive ist.","I'd like to know whether breakfast is included.","ob = whether; verb last"],
+  ["Können Sie mir sagen, wann der Kurs beginnt?","Can you tell me when the course starts?","indirect question: verb last"],
+  ["Weißt du schon, wie lange du bleibst?","Do you know yet how long you're staying?",""],
+  ["Ich habe noch eine Frage: …","I have one more question: …",""]]},
+ {c:"Berichten · telling what happened (past)",p:[
+  ["Letztes Wochenende habe ich meine Freunde besucht.","Last weekend I visited my friends.","time first → verb second → participle last"],
+  ["Wir sind mit dem Zug nach Hamburg gefahren.","We went to Hamburg by train.","movement → sein"],
+  ["Es war sehr schön, aber auch ein bisschen anstrengend.","It was very nice, but also a bit tiring.","war = was"],
+  ["Am besten hat mir das Essen gefallen.","I liked the food best.","gefallen + Dativ (mir)"],
+  ["Leider hat es die ganze Zeit geregnet.","Unfortunately it rained the whole time.",""]]},
+ {c:"Pläne & Zeit · plans & time",p:[
+  ["Am Samstag um 15 Uhr habe ich Zeit.","I'm free on Saturday at 3 pm.","am + day, um + clock time"],
+  ["Im Juli / Im Sommer fahre ich nach Hause.","In July / in summer I'm going home.","im + month/season"],
+  ["Nächste Woche ziehe ich um.","I'm moving next week.","present tense + time word = future"],
+  ["Ich habe vor, einen Deutschkurs zu machen.","I'm planning to do a German course.","vorhaben, … zu + infinitive"],
+  ["Vom 2. bis 16. August bin ich im Urlaub.","From 2 to 16 August I'm on holiday.",""]]},
+ {c:"Beschwerde · complaint (Sie)",p:[
+  ["Leider bin ich mit … nicht zufrieden.","Unfortunately I'm not satisfied with …","mit + Dativ"],
+  ["Ich möchte mich über den Lärm beschweren.","I'd like to complain about the noise.","sich beschweren über + Akk"],
+  ["Seit zwei Wochen funktioniert die Heizung nicht.","The heating hasn't worked for two weeks.","seit + present tense"],
+  ["Ich bitte um eine schnelle Lösung.","I ask for a quick solution.",""],
+  ["Ich möchte mein Geld zurückbekommen.","I'd like to get my money back.",""]]},
+ {c:"Begründen · giving reasons",p:[
+  ["…, weil ich viel arbeiten muss.","… because I have to work a lot.","weil → verb LAST"],
+  ["…, denn ich muss viel arbeiten.","… because I have to work a lot.","denn → normal order (verb second)"],
+  ["Ich muss viel arbeiten. Deshalb habe ich keine Zeit.","I have to work a lot. That's why I have no time.","Deshalb → verb NEXT"],
+  ["Das liegt daran, dass …","That's because …",""]]}
+];
+
+const CONNECTORS=[
+ ["und, aber, oder, denn, sondern","no change: subject + verb","Ich komme gern, <b>denn</b> ich <u>habe</u> frei."],
+ ["deshalb, deswegen, trotzdem, außerdem, dann, danach, zuerst, leider, natürlich, übrigens, zum Schluss, am besten","verb comes directly after it","<b>Deshalb</b> <u>komme</u> ich später."],
+ ["weil, dass, wenn, ob, als, obwohl, damit, bevor, nachdem, während, wie, wann, wo","verb goes to the END of the clause","…, <b>weil</b> ich krank <u>bin</u>."],
+ ["Nebensatz first","then the main verb comes first in the next part","<b>Wenn</b> du Zeit hast, <u>besuchen</u> wir das Museum."],
+ ["nicht nur … sondern auch / entweder … oder","pairs","Ich spreche <b>nicht nur</b> Englisch, <b>sondern auch</b> Deutsch."]
+];
+
+/* ---------- Grammar ---------- */
+const GRAMMAR=[
+ {id:"g1",t:"1 · Word order: where the verb goes",html:`
+<p>German sentences have a fixed slot for the verb. Getting this right is the biggest single gain in criterion III.</p>
+<div class="tbl"><table><tr><th>Rule</th><th>Example</th><th>Meaning</th></tr>
+<tr><td>Main clause: conjugated verb is <b>2nd element</b></td><td>Ich <u>habe</u> am Samstag Zeit.</td><td>I have time on Saturday.</td></tr>
+<tr><td>Something else first → verb stays 2nd, subject moves behind (Inversion)</td><td>Am Samstag <u>habe</u> ich Zeit.</td><td>On Saturday I have time.</td></tr>
+<tr><td>Modal verb 2nd, infinitive at the <b>end</b></td><td>Ich <u>kann</u> leider nicht <u>kommen</u>.</td><td>Unfortunately I can't come.</td></tr>
+<tr><td>Perfekt: haben/sein 2nd, participle at the <b>end</b></td><td>Wir <u>sind</u> nach Hamburg <u>gefahren</u>.</td><td>We went to Hamburg.</td></tr>
+<tr><td>Separable verb: prefix at the <b>end</b></td><td>Ich <u>rufe</u> dich morgen <u>an</u>.</td><td>I'll call you tomorrow.</td></tr>
+<tr><td>Subordinate clause (weil, dass, wenn, ob…): verb <b>last</b></td><td>…, weil ich morgen arbeiten <u>muss</u>.</td><td>… because I have to work tomorrow.</td></tr>
+<tr><td>Subordinate clause first → main verb comes right after the comma</td><td>Wenn du Zeit hast, <u>besuchen</u> wir dich.</td><td>If you have time, we'll visit you.</td></tr>
+<tr><td>Indirect question: verb last</td><td>Kannst du mir sagen, wann der Kurs <u>beginnt</u>?</td><td>Can you tell me when the course starts?</td></tr>
+</table></div>
+<div class="callout">Memory trick: <b>Position 2</b> in main clauses, <b>END</b> after weil/dass/wenn/ob. Everything else is a frame (Satzklammer): verb 2 … rest … infinitive/participle/prefix at the end.</div>`},
+ {id:"g2",t:"2 · Perfekt: talking about the past",html:`
+<p>In e-mails you report the past with <b>haben/sein + participle</b>. Only <b>sein, haben</b> and the modal verbs are usually in Präteritum: <b>war, hatte, konnte, musste, wollte, durfte, sollte</b>.</p>
+<h4>haben or sein?</h4>
+<p><b>sein</b> for movement from A to B and change of state: gehen, fahren, fliegen, kommen, laufen, reisen, umziehen, ankommen, aufstehen, einschlafen, werden, passieren — plus <b>sein</b> and <b>bleiben</b>. Everything else: <b>haben</b>.</p>
+<h4>Building the participle</h4>
+<div class="tbl"><table><tr><th>Type</th><th>Pattern</th><th>Examples</th></tr>
+<tr><td>Regular</td><td>ge- … -t</td><td>machen → gemacht, kaufen → gekauft, arbeiten → gearbeitet, wohnen → gewohnt</td></tr>
+<tr><td>Ends in -ieren</td><td>no ge-</td><td>telefonieren → telefoniert, studieren → studiert, passieren → passiert</td></tr>
+<tr><td>Inseparable be-, ver-, er-, ent-, ge-, emp-</td><td>no ge-</td><td>besuchen → besucht, erzählen → erzählt, verstehen → verstanden, bekommen → bekommen</td></tr>
+<tr><td>Separable</td><td>prefix + ge + …</td><td>einkaufen → eingekauft, anrufen → angerufen, mitbringen → mitgebracht, einladen → eingeladen</td></tr>
+</table></div>
+<h4>The 40 participles you need (s = with sein)</h4>
+<div class="tbl"><table><tr><th>Infinitive</th><th>Participle</th><th>Meaning</th></tr>${[
+["sein","gewesen (s)","be"],["haben","gehabt","have"],["werden","geworden (s)","become"],["gehen","gegangen (s)","go"],["kommen","gekommen (s)","come"],["fahren","gefahren (s)","drive/travel"],["fliegen","geflogen (s)","fly"],["bleiben","geblieben (s)","stay"],["laufen","gelaufen (s)","run/walk"],["umziehen","umgezogen (s)","move house"],["ankommen","angekommen (s)","arrive"],["aufstehen","aufgestanden (s)","get up"],["passieren","passiert (s)","happen"],["essen","gegessen","eat"],["trinken","getrunken","drink"],["sehen","gesehen","see"],["lesen","gelesen","read"],["schreiben","geschrieben","write"],["sprechen","gesprochen","speak"],["treffen","getroffen","meet"],["finden","gefunden","find"],["nehmen","genommen","take"],["geben","gegeben","give"],["helfen","geholfen","help"],["schlafen","geschlafen","sleep"],["bekommen","bekommen","receive"],["vergessen","vergessen","forget"],["verstehen","verstanden","understand"],["beginnen","begonnen","begin"],["anfangen","angefangen","start"],["anrufen","angerufen","phone"],["einladen","eingeladen","invite"],["mitbringen","mitgebracht","bring along"],["bringen","gebracht","bring"],["denken","gedacht","think"],["wissen","gewusst","know"],["kennen","gekannt","know (person)"],["gefallen","gefallen","please/like"],["tun","getan","do"],["stehen","gestanden","stand"]].map(r=>`<tr><td>${r[0]}</td><td class="de">${r[1]}</td><td class="en">${r[2]}</td></tr>`).join("")}</table></div>`},
+ {id:"g3",t:"3 · Cases, prepositions and gender shortcuts",html:`
+<div class="callout">Good news from the official rating guide: <b>ending and gender mistakes count less</b> than mistakes that block understanding (like wrong verb agreement). So don't freeze on der/die/das — but learn the fixed phrases below by heart.</div>
+<div class="tbl"><table><tr><th></th><th>der (m)</th><th>die (f)</th><th>das (n)</th><th>die (pl)</th></tr>
+<tr><td><b>Nominativ</b> (subject)</td><td>der / ein / mein</td><td>die / eine / meine</td><td>das / ein / mein</td><td>die / – / meine</td></tr>
+<tr><td><b>Akkusativ</b> (object)</td><td><mark>den / einen / meinen</mark></td><td>die / eine / meine</td><td>das / ein / mein</td><td>die / – / meine</td></tr>
+<tr><td><b>Dativ</b> (to/with)</td><td>dem / einem / meinem</td><td>der / einer / meiner</td><td>dem / einem / meinem</td><td>den …<b>n</b> / meinen …n</td></tr></table></div>
+<p class="note">Only masculine changes in Akkusativ. Dativ plural adds -n to the noun: mit meinen Freunde<b>n</b>, seit zwei Jahre<b>n</b>.</p>
+<h4>Prepositions</h4>
+<div class="tbl"><table><tr><th>Case</th><th>Prepositions</th><th>Fixed phrases</th></tr>
+<tr><td>Akkusativ</td><td>für, ohne, gegen, durch, um</td><td>Danke für <b>deinen</b> Brief / <b>deine</b> E-Mail / <b>dein</b> Geschenk · um 15 Uhr</td></tr>
+<tr><td>Dativ</td><td>mit, bei, nach, von, zu, aus, seit, gegenüber</td><td>mit <b>dem</b> Zug · bei mir · <b>zum</b> Bahnhof · <b>zur</b> Arbeit · seit einem Jahr · nach Hause (going) · zu Hause (being)</td></tr>
+<tr><td>Wechsel: Wohin? → Akk · Wo? → Dat</td><td>in, an, auf, über, unter, vor, hinter, neben, zwischen</td><td>Ich gehe <b>in die</b> Stadt (wohin) · Ich bin <b>in der</b> Stadt (wo) · ins Kino · im Kino · am Bahnhof</td></tr></table></div>
+<h4>Verbs that take Dativ (dir, mir, Ihnen)</h4>
+<p>helfen, danken, gefallen, gratulieren, antworten, passen, schmecken, gehören: Ich helfe <b>dir</b>. Das gefällt <b>mir</b>. Ich gratuliere <b>Ihnen</b>.</p>
+<h4>Gender shortcuts</h4>
+<div class="tbl"><table><tr><th>die</th><th>das</th><th>der</th></tr>
+<tr><td>-ung, -heit, -keit, -schaft, -ion, -tät, -ie: die Einladung, die Information, die Party</td><td>-chen, -ment, -um, infinitives as nouns: das Mädchen, das Zentrum, das Essen</td><td>days, months, seasons, -er persons, -ismus: der Montag, der Mai, der Sommer, der Lehrer</td></tr></table></div>
+<p><b>Exam nouns:</b> die E-Mail · die Nachricht · die Einladung · die Reise · die Wohnung · die Feier · die Party · die Hochzeit · die Frage · die Antwort · die Idee · die Heizung · die Kleidung · die Jahreszeit — der Besuch · der Termin · der Kurs · der Urlaub · der Vorschlag · der Geburtstag · der Umzug · der Schlüssel · der Ausflug · der Zug — das Wochenende · das Geschenk · das Fest · das Wetter · das Problem · das Zimmer · das Hotel · das Essen</p>
+<p class="note">Escape trick: if you don't know the gender, use the plural (die Geschenke) or a possessive with a stable form (meine/deine work for feminine and plural).</p>`},
+ {id:"g4",t:"4 · Polite forms and zu + infinitive",html:`
+<p>Konjunktiv II makes requests and suggestions polite. You only need four forms:</p>
+<div class="tbl"><table><tr><th>Form</th><th>Use</th><th>Example</th></tr>
+<tr><td>würde + infinitive</td><td>would</td><td>An deiner Stelle <b>würde</b> ich früh buchen.</td></tr>
+<tr><td>hätte</td><td>would have / I'd like</td><td>Ich <b>hätte</b> gern einen Termin.</td></tr>
+<tr><td>wäre</td><td>would be</td><td>Es <b>wäre</b> schön, wenn du kommst. · <b>Wäre</b> es möglich, …?</td></tr>
+<tr><td>könnte</td><td>could</td><td><b>Könnten</b> Sie mir bitte helfen? · Wir <b>könnten</b> ins Kino gehen.</td></tr>
+<tr><td>sollte</td><td>should (advice)</td><td>Du <b>solltest</b> eine Jacke mitnehmen.</td></tr></table></div>
+<h4>zu + infinitive (at the end)</h4>
+<p>After: Lust haben · Zeit haben · vergessen · versuchen · vorhaben · empfehlen · Es ist wichtig/schön … → Ich habe Lust, ins Kino <b>zu gehen</b>. Separable verbs put zu in the middle: mit<b>zu</b>bringen, an<b>zu</b>rufen, ein<b>zu</b>kaufen.</p>
+<h4>Imperative (instructions & tips)</h4>
+<div class="tbl"><table><tr><th>du</th><th>ihr</th><th>Sie</th></tr>
+<tr><td>Komm! Schreib mir! Bring … mit! Vergiss nicht …!</td><td>Kommt! Schreibt mir!</td><td>Kommen Sie! Schreiben Sie mir bitte!</td></tr></table></div>`}
+];
+
+const QUIZ={
+ parts:{t:"E-Mail components",items:[
+  ["After „Liebe Anna,“ the next line starts:",["vielen Dank für deine E-Mail!","Vielen Dank für deine E-Mail!","Vielen dank für Deine E-Mail!"],"After the comma the sentence continues, so a small letter (unless the word is a noun)."],
+  ["Formal salutation to Mr Schulz:",["Sehr geehrter Herr Schulz,","Sehr geehrte Herr Schulz,","Lieber Herr Schulz!"],"Herr is masculine → geehrter. Comma, not exclamation mark."],
+  ["You write to a company and don't know the person:",["Sehr geehrte Damen und Herren,","Hallo Firma,","Liebe Kollegen,"],"Standard formal opening for an unknown reader."],
+  ["Which sign-off is correct for a formal e-mail?",["Mit freundlichen Grüßen ⏎ Elvis Nnajiofor","Mit freundlichen Grüßen, ⏎ Elvis Nnajiofor","Liebe Grüße ⏎ Herr Nnajiofor"],"No comma after the Gruß in German. Formal = full name."],
+  ["Must you answer the Leitpunkte in the printed order?",["No, choose a logical order","Yes, exactly that order","Only the first and last must stay"],"The task tells you to think of a suitable order yourself."],
+  ["Is one short sentence enough for a Leitpunkt to count?",["Yes, but 2–3 sentences earn more in criteria II and III","No, minimum 30 words per point","No, every point needs a separate paragraph"],"The official guide counts a Leitpunkt even if it's one short sentence, or combined with another point in one sentence."],
+  ["The friend suggests a hiking trip. You don't like hiking. Does saying no still count?",["Yes, if you decline or make a counter-proposal","No, you must accept","Only if you apologise twice"],"Accepting, declining and counter-proposing all count officially."],
+  ["Which loses the top grade (A) in criterion II?",["Most sentences start with „Ich“","Using „deshalb“","Using a Betreff"],"The official guide names: missing e-mail features, wrong or mixed register, unconnected points, most sentences starting with Ich/Wir."],
+  ["Leitpunkt: „welche Kleidung sie mitnehmen soll“. Who is „sie“?",["Your friend — answer with du: Nimm … mit","You — answer with ich","The examiner"],"Leitpunkte describe the friend in 3rd person. In your mail you talk TO her: du."],
+  ["You must write the date and your address at the top.",["No, it's an e-mail: not required","Yes, or you lose all points","Only the date"],"For the e-mail task, letter features like address and date are not required."]]},
+ register:{t:"du or Sie",items:[
+  ["Formal version of „Hast du am Montag Zeit?“",["Haben Sie am Montag Zeit?","Hast Sie am Montag Zeit?","Haben sie am Montag Zeit?"],"Sie takes the plural verb form and is always capitalised."],
+  ["Formal version of „Schreib mir bald!“",["Schreiben Sie mir bitte bald.","Schreib Sie mir bald!","Schreibt mir bald!"],"Sie-imperative: verb first + Sie."],
+  ["Formal: „Ich freue mich auf deine Antwort.“",["Ich freue mich auf Ihre Antwort.","Ich freue mich auf Sie Antwort.","Ich freue mich auf ihre Antwort."],"Possessive: dein → Ihr (capital I)."],
+  ["Formal: „Ich danke dir für deine Hilfe.“",["Ich danke Ihnen für Ihre Hilfe.","Ich danke Sie für Ihre Hilfe.","Ich danke dich für deine Hilfe."],"danken + Dativ: dir → Ihnen."],
+  ["Formal: „Kannst du mir helfen?“ (most polite)",["Könnten Sie mir bitte helfen?","Kannst Sie mir helfen?","Hilf mir bitte!"],"könnten + bitte = very polite."],
+  ["Formal: „Komm doch vorbei!“",["Kommen Sie doch vorbei!","Komm Sie doch vorbei!","Kommt doch vorbei!"],"Kommt is ihr (several friends), not Sie."],
+  ["You write to two friends, Anna and Ben. „How are you?“",["Wie geht es euch?","Wie geht es dir?","Wie geht es Ihnen?"],"ihr/euch = you (plural, informal)."],
+  ["Which person do you write to with du in the exam?",["The friend who wrote „Hallo, wie geht's?“","Your landlord","The course office of the Volkshochschule"],"Follow the input e-mail: friends and family = du."],
+  ["Your course teacher wrote „Liebe Kursteilnehmer … Ihre Birgit Becker“. You answer:",["Liebe Frau Becker, … Sie","Liebe Birgit, … du","Hallo Becker, … du"],"Warm but formal: Liebe Frau Becker + Sie."],
+  ["Which sentence mixes registers (a mistake)?",["Sehr geehrter Herr Meier, kannst du mir sagen, wann wir starten?","Lieber Tom, kannst du mir sagen, wann wir starten?","Sehr geehrter Herr Meier, können Sie mir sagen, wann wir starten?"],"Sehr geehrter + du = mixed register → loses points in criterion II."]]},
+ conn:{t:"Connectors & word order",items:[
+  ["Ich kann nicht kommen, ___ ich krank bin.",["weil","denn","deshalb"],"Verb „bin“ is at the end → weil."],
+  ["Ich bin krank, ___ kann ich nicht kommen.",["deshalb","weil","denn"],"Verb „kann“ comes right after → deshalb."],
+  ["Ich komme gern, ___ ich habe an dem Tag frei.",["denn","weil","deshalb"],"Normal order (ich habe) → denn."],
+  ["___ es regnet, gehen wir spazieren.",["Obwohl","Trotzdem","Deshalb"],"Even though it rains (verb last) → Obwohl."],
+  ["Es regnet. ___ gehen wir spazieren.",["Trotzdem","Obwohl","Weil"],"Nevertheless → verb next."],
+  ["Ich weiß noch nicht, ___ ich am Samstag Zeit habe.",["ob","dass","wenn"],"ob = whether (yes/no question inside)."],
+  ["Ich hoffe, ___ du bald kommst.",["dass","ob","wenn"],"dass = that."],
+  ["___ du Zeit hast, ruf mich an!",["Wenn","Als","Ob"],"wenn = if/whenever."],
+  ["___ ich nach Berlin gekommen bin, hatte ich keine Wohnung.",["Als","Wenn","Ob"],"als = when, for one event in the past."],
+  ["Ich lerne jeden Tag, ___ ich die Prüfung bestehe.",["damit","denn","sondern"],"damit = so that (purpose)."],
+  ["Zuerst trinken wir Kaffee, ___ gehen wir ins Museum.",["danach","weil","obwohl"],"danach = after that → verb next."],
+  ["Ich spreche nicht nur Englisch, ___ auch ein bisschen Deutsch.",["sondern","aber","oder"],"nicht nur … sondern auch."]]},
+ errors:{t:"Error hunt — pick the correct sentence",items:[
+  ["Last week you travelled to Hamburg:",["Ich bin nach Hamburg gefahren.","Ich habe nach Hamburg gefahren.","Ich bin nach Hamburg gefahrt."],"Movement → sein. Participle: gefahren."],
+  ["Reason with weil:",["Ich kann nicht kommen, weil ich arbeiten muss.","Ich kann nicht kommen, weil ich muss arbeiten.","Ich kann nicht kommen, weil muss ich arbeiten."],"weil → conjugated verb (muss) last."],
+  ["Time first:",["Morgen habe ich Zeit.","Morgen ich habe Zeit.","Morgen ich Zeit habe."],"Verb stays in position 2."],
+  ["Thanking for an e-mail:",["Vielen Dank für deine E-Mail.","Vielen Dank für deinen E-Mail.","Vielen Dank für deiner E-Mail."],"die E-Mail → Akk feminine: deine."],
+  ["Offering help:",["Ich helfe dir gern.","Ich helfe dich gern.","Ich helfe du gern."],"helfen + Dativ → dir."],
+  ["Polite question:",["Können Sie mir sagen, wann der Kurs beginnt?","Können Sie mir sagen, wann beginnt der Kurs?","Können Sie mir sagen, wann der Kurs beginnen?"],"Indirect question → verb last, conjugated."],
+  ["Suggestion:",["Ich schlage vor, dass wir ins Museum gehen.","Ich schlage vor, dass wir gehen ins Museum.","Ich schlage vor, wir dass ins Museum gehen."],"dass → verb last."],
+  ["Inversion:",["Deshalb komme ich später.","Deshalb ich komme später.","Deshalb ich später komme."],"deshalb → verb next."],
+  ["Past evening:",["Gestern sind wir ins Kino gegangen.","Gestern haben wir ins Kino gegangen.","Gestern wir sind ins Kino gegangen."],"gehen → sein; verb 2nd after Gestern."],
+  ["Since two years:",["Ich wohne seit zwei Jahren in Berlin.","Ich wohne seit zwei Jahre in Berlin.","Ich wohne für zwei Jahre in Berlin."],"seit + Dativ plural → Jahren. (für = a planned period.)"],
+  ["Transport:",["Ich fahre mit dem Zug.","Ich fahre mit der Zug.","Ich fahre mit den Zug."],"mit + Dativ, der Zug → dem Zug."],
+  ["Congratulating:",["Ich gratuliere dir zum Geburtstag!","Ich gratuliere dich zum Geburtstag!","Ich gratuliere dir zu der Geburtstag!"],"gratulieren + Dativ; zu + dem = zum."],
+  ["Salutation to Thomas:",["Lieber Thomas,","Liebe Thomas,","Lieben Thomas,"],"Male name → Lieber."],
+  ["Closing:",["Mit freundlichen Grüßen","Mit freundlichen Grüßen,","Mit freundliche Grüße"],"No comma, and the fixed form is „freundlichen Grüßen“."],
+  ["Visit with modal + separable verb:",["Ich möchte dich nächste Woche besuchen.","Ich möchte dich besuchen nächste Woche.","Ich möchte besuchen dich nächste Woche."],"Infinitive at the very end."]]},
+ lp:{t:"Leitpunkt → your sentence (pronoun switch)",items:[
+  ["Leitpunkt: „was er mitbringen soll“ (to your friend Tom)",["Bring bitte eine warme Jacke mit.","Er soll eine warme Jacke mitbringen.","Ich soll eine warme Jacke mitbringen."],"You talk TO Tom: du-imperative."],
+  ["Leitpunkt: „wann Sie Zeit haben“",["Am Samstag habe ich Zeit.","Am Samstag haben Sie Zeit.","Am Samstag hat er Zeit."],"„Sie“ in the Leitpunkt = you, the writer → ich."],
+  ["Leitpunkt: „wo sie übernachten kann“ (friend Lena)",["Du kannst gern bei mir übernachten.","Sie kann bei mir übernachten.","Ich kann bei dir übernachten."],"sie = Lena → du."],
+  ["Leitpunkt: „warum Sie nicht kommen können“",["Leider kann ich nicht kommen, weil ich arbeiten muss.","Sie können nicht kommen.","Warum kannst du nicht kommen?"],"Give YOUR reason."],
+  ["Leitpunkt (to your landlord): „ob Ihre Familie mitkommen darf“",["Darf meine Familie auch mitkommen?","Darf Ihre Familie mitkommen?","Ob deine Familie mitkommen darf?"],"Ihre (in the Leitpunkt) = your own → meine."],
+  ["Leitpunkt: „Ihre Meinung zur Idee“",["Ich finde die Idee super, weil wir dann mehr Zeit haben.","Ihre Meinung ist gut.","Was ist Ihre Meinung?"],"Express YOUR opinion with a reason."]]},
+ g1:{t:"Grammar 1 quiz",items:[
+  ["Choose the correct sentence:",["Am Samstag habe ich Zeit.","Am Samstag ich habe Zeit.","Am Samstag ich Zeit habe."],"Verb 2nd."],
+  ["…, weil …",["…, weil ich morgen arbeiten muss.","…, weil ich muss morgen arbeiten.","…, weil muss ich morgen arbeiten."],"Conjugated verb last."],
+  ["Modal verb:",["Ich kann am Montag leider nicht kommen.","Ich kann am Montag leider nicht komme.","Ich kann kommen am Montag leider nicht."],"Infinitive at the end."],
+  ["Perfekt:",["Wir haben gestern Pizza gegessen.","Wir haben gegessen gestern Pizza.","Wir gestern haben Pizza gegessen."],"Participle at the end."],
+  ["Separable verb:",["Ich rufe dich morgen an.","Ich anrufe dich morgen.","Ich rufe an dich morgen."],"Prefix at the end."],
+  ["Nebensatz first:",["Wenn du Zeit hast, besuchen wir das Museum.","Wenn du Zeit hast, wir besuchen das Museum.","Wenn du hast Zeit, besuchen wir das Museum."],"After the comma the main verb comes first."],
+  ["zu + infinitive:",["Ich habe Lust, ins Kino zu gehen.","Ich habe Lust, zu gehen ins Kino.","Ich habe Lust, ins Kino gehen zu."],"zu + infinitive at the end."],
+  ["Perfekt in a weil-clause:",["…, weil ich krank gewesen bin.","…, weil ich bin krank gewesen.","…, weil ich gewesen krank bin."],"Participle, then the conjugated verb last."],
+  ["Indirect question:",["Weißt du, wo der Bahnhof ist?","Weißt du, wo ist der Bahnhof?","Weißt du, wo der Bahnhof sein?"],"Verb last."],
+  ["denn:",["Ich komme nicht, denn ich habe keine Zeit.","Ich komme nicht, denn habe ich keine Zeit.","Ich komme nicht, denn ich keine Zeit habe."],"denn keeps normal order."]]},
+ g2:{t:"Grammar 2 quiz (Perfekt)",items:[
+  ["Ich ___ nach Hamburg gefahren.",["bin","habe","war"],"Movement → sein."],
+  ["Wir ___ lange geschlafen.",["haben","sind","hatten geschlafen"],"schlafen → haben."],
+  ["Was ___ passiert?",["ist","hat","wird"],"passieren → sein."],
+  ["Ich ___ letztes Jahr umgezogen.",["bin","habe","wurde"],"umziehen → sein."],
+  ["Participle of „kaufen“:",["gekauft","gekaufen","kauft"],"Regular: ge-…-t."],
+  ["Participle of „besuchen“:",["besucht","gebesucht","besuchen"],"be- → no ge-."],
+  ["Participle of „anrufen“:",["angerufen","geanruft","anrufen"],"Separable: an-ge-rufen."],
+  ["Participle of „telefonieren“:",["telefoniert","getelefoniert","telefonieren"],"-ieren → no ge-."],
+  ["Ich ___ zu Hause geblieben.",["bin","habe","hat"],"bleiben → sein."],
+  ["Gestern ___ ich keine Zeit.",["hatte","hätte","hat"],"Präteritum of haben: hatte."],
+  ["Im Urlaub ___ das Wetter super.",["war","wäre","wird"],"Präteritum of sein: war."],
+  ["Participle of „mitbringen“:",["mitgebracht","mitgebringt","gemitbracht"],"mit-ge-bracht."],
+  ["Participle of „verstehen“:",["verstanden","geverstanden","versteht"],"ver- → no ge-."]]},
+ g3:{t:"Grammar 3 quiz (cases)",items:[
+  ["Vielen Dank für ___ Einladung.",["deine","deinen","deiner"],"für + Akk, die Einladung → deine."],
+  ["Ich fahre mit ___ Zug.",["dem","den","der"],"mit + Dativ, der Zug → dem."],
+  ["Ich helfe ___ gern.",["dir","dich","du"],"helfen + Dativ."],
+  ["Wir treffen uns vor ___ Bahnhof. (wo?)",["dem","den","der"],"Wo? → Dativ."],
+  ["Ich gehe heute in ___ Stadt. (wohin?)",["die","der","dem"],"Wohin? → Akk, die Stadt."],
+  ["Ich wohne seit drei ___ in Berlin.",["Jahren","Jahre","Jahr"],"Dativ plural + n."],
+  ["Das Geschenk ist für ___ Bruder.",["meinen","meinem","mein"],"für + Akk masculine."],
+  ["Herzlichen Glückwunsch ___ Geburtstag!",["zum","zur","zu den"],"zu + dem = zum."],
+  ["Nach der Arbeit gehe ich ___ Hause.",["nach","zu","bei"],"Going home = nach Hause."],
+  ["Am Wochenende bin ich ___ Hause.",["zu","nach","bei"],"Being at home = zu Hause."],
+  ["Die Party gefällt ___ sehr.",["mir","mich","ich"],"gefallen + Dativ."],
+  ["Ich habe ___ neuen Job.",["einen","ein","einem"],"haben + Akk, der Job → einen."]]},
+ g4:{t:"Grammar 4 quiz (polite forms, zu)",items:[
+  ["Most polite request:",["Könnten Sie mir bitte helfen?","Helfen Sie mir!","Sie müssen mir helfen."],"Konjunktiv II + bitte."],
+  ["Ich ___ gern einen Termin.",["hätte","hatte","habe würde"],"I'd like = ich hätte gern."],
+  ["Es ___ schön, wenn du kommst.",["wäre","war","würde"],"would be = wäre."],
+  ["An deiner Stelle ___ ich den Zug nehmen.",["würde","werde","wurde"],"would = würde."],
+  ["Ich habe keine Lust, so früh ___.",["aufzustehen","zu aufstehen","aufstehen zu"],"Separable: auf-zu-stehen."],
+  ["Vergiss nicht, den Schlüssel ___.",["mitzunehmen","zu mitnehmen","mitnehmen"],"mit-zu-nehmen."],
+  ["Advice: Du ___ mehr Wasser trinken.",["solltest","sollst","solltet"],"Advice = solltest."],
+  ["Suggestion: Wir ___ am Sonntag ins Kino gehen.",["könnten","konnten","können zu"],"könnten = could (suggestion)."]]}
+};
+
+/* ---------- Vocabulary ---------- */
+const DECKS=[
+ {id:"task",t:"1 · Task-instruction words",w:[
+  ["die Leitpunkte (Pl.)","guiding points: the 4 things you must write about"],["der Betreff","subject line"],["die Anrede","salutation (Dear …)"],["die Einleitung","introduction"],["der Schluss","ending, conclusion"],["die Reihenfolge","order, sequence"],["passend","suitable"],["erhalten","to receive (= bekommen)"],["antworten auf + Akk","to reply to"],["beantworten + Akk","to answer (a question)"],["die Grußformel","closing formula (Viele Grüße…)"],["sich überlegen","to think about, consider"],["etwas zu … schreiben","to write something about …"],["folgend","following"],["der Grund, -¨e","reason"],["begründen","to give reasons"],["der Vorschlag, -¨e","suggestion"],["vorschlagen","to suggest"],["der Rat / der Ratschlag","advice"],["die Meinung","opinion"],["die Erfahrung, -en","experience"],["sich erkundigen nach","to ask about, inquire"],["die Bitte","request"],["die Zusage","acceptance (yes, I'm coming)"],["die Absage","cancellation, decline"],["die Teilnahme","participation"],["teilnehmen an + Dat","to take part in"],["unternehmen","to do (activities)"],["stattfinden","to take place"],["Bescheid geben / sagen","to let someone know"],["sich melden","to get in touch"],["ob","whether, if (yes/no)"],["mitbringen / mitnehmen","bring along / take along"],["sich vorbereiten auf","to prepare for"]]},
+ {id:"travel",t:"2 · Reise & Besuch",w:[
+  ["die Reise, -n","trip, journey"],["der Ausflug, -¨e","excursion, day trip"],["die Sehenswürdigkeit, -en","sight, attraction"],["besichtigen","to visit/tour (a sight)"],["die Stadtrundfahrt","city tour"],["die Unterkunft","accommodation"],["übernachten","to stay overnight"],["buchen","to book"],["abholen","to pick up"],["der Bahnhof / der Flughafen","station / airport"],["die Fahrkarte","ticket"],["die Jahreszeit, -en","season"],["der Frühling / Sommer / Herbst / Winter","spring / summer / autumn / winter"],["heiß / warm / kühl / kalt","hot / warm / cool / cold"],["die Kleidung","clothes"],["der Regenschirm","umbrella"],["bequem","comfortable"],["der Reiseführer","guidebook / tour guide"],["am Meer / am See / in den Bergen","by the sea / at the lake / in the mountains"],["zu Fuß","on foot"],["das Gepäck","luggage"],["sich auf etw. freuen","to look forward to"]]},
+ {id:"party",t:"3 · Feiern & Einladungen",w:[
+  ["die Einladung","invitation"],["einladen","to invite"],["die Feier / das Fest","celebration / party"],["feiern","to celebrate"],["der Geburtstag","birthday"],["die Hochzeit","wedding"],["heiraten","to marry"],["das Geschenk","present"],["schenken","to give (as a gift)"],["der Gutschein","voucher"],["gratulieren + Dat","to congratulate"],["Herzlichen Glückwunsch zu …","Congratulations on …"],["die Gäste (Pl.)","guests"],["die Getränke (Pl.)","drinks"],["der Kuchen","cake"],["dabei sein","to be there, join"],["vorbeikommen","to drop by"],["Lust haben","to feel like"],["Spaß machen","to be fun"],["gemütlich","cosy, relaxed"],["schade","a pity"]]},
+ {id:"home",t:"4 · Wohnung & Nachbarn",w:[
+  ["der Vermieter / die Vermieterin","landlord / landlady"],["die Hausverwaltung","property management"],["die Miete","rent"],["die Nebenkosten (Pl.)","utility costs"],["der Nachbar / die Nachbarin","neighbour"],["umziehen","to move house"],["der Umzug","move (house)"],["einziehen","to move in"],["die Kiste, -n","box"],["die Heizung","heating"],["kaputt","broken"],["funktionieren","to work, function"],["reparieren","to repair"],["der Handwerker","tradesperson"],["der Schlüssel","key"],["der Briefkasten","letterbox"],["der Lärm","noise"],["ruhig / laut","quiet / loud"],["hell / dunkel","bright / dark"],["gießen","to water (plants)"],["sich anmelden (beim Bürgeramt)","to register your address"],["das Treppenhaus","stairwell"]]},
+ {id:"work",t:"5 · Kurs, Arbeit & Termine",w:[
+  ["der Kurs / die Kursleiterin","course / course teacher"],["der Teilnehmer, -","participant"],["die Anmeldung","registration"],["die Gebühr","fee"],["die Prüfung","exam"],["bestehen","to pass (an exam)"],["der Termin","appointment"],["verschieben","to postpone"],["absagen / zusagen","cancel / accept"],["die Stelle","job, position"],["die Bewerbung","application"],["das Vorstellungsgespräch","job interview"],["der Kollege / die Kollegin","colleague"],["die Besprechung","meeting"],["der Betriebsausflug","company outing"],["frei haben","to be off work"],["Urlaub nehmen","to take holiday"],["Überstunden machen","to work overtime"],["das Niveau","level"],["nützlich","useful"]]},
+ {id:"problems",t:"6 · Probleme & Beschwerden",w:[
+  ["die Beschwerde","complaint"],["sich beschweren über + Akk","to complain about"],["zufrieden / unzufrieden","satisfied / dissatisfied"],["enttäuscht","disappointed"],["einverstanden","in agreement"],["der Vertrag","contract"],["kündigen","to cancel (a contract)"],["die Kündigungsfrist","notice period"],["die Rechnung","bill, invoice"],["zurückbekommen","to get back"],["die Lösung","solution"],["lösen","to solve"],["der Fehler","mistake"],["die Erhöhung","increase"],["der Preis","price"],["teuer / günstig","expensive / cheap"],["warten auf + Akk","to wait for"],["ärgerlich","annoying"],["Verständnis haben","to understand (be sympathetic)"],["im Voraus","in advance"]]},
+ {id:"feel",t:"7 · Gefühle & Bewertungen",w:[
+  ["toll / super / wunderbar","great / super / wonderful"],["schrecklich","terrible"],["anstrengend","tiring, exhausting"],["langweilig","boring"],["spannend","exciting"],["lecker","tasty"],["praktisch","practical"],["froh / glücklich","glad / happy"],["traurig","sad"],["überrascht","surprised"],["nervös","nervous"],["müde","tired"],["stolz","proud"],["gespannt","curious, eager to know"],["zum Glück","luckily"],["leider","unfortunately"],["hoffentlich","hopefully"],["ehrlich gesagt","to be honest"],["riesig","huge (sich riesig freuen = be thrilled)"]]}
+];
+
+/* ---------- Leitpunkt sprint ---------- */
+const SPRINT=[
+ ["wann der Besuch am besten passt","du","Am besten kommst du im Mai, weil es dann warm, aber nicht zu heiß ist.","It's best if you come in May because it's warm then but not too hot."],
+ ["was ihr zusammen unternehmen könnt","du","Wir könnten einen Ausflug nach Potsdam machen und das Schloss besichtigen.","We could make a trip to Potsdam and visit the palace."],
+ ["was er mitbringen soll","du","Bring bitte eine warme Jacke mit, denn abends wird es oft kühl.","Please bring a warm jacket, because it often gets cool in the evening."],
+ ["wo sie übernachten kann","du","Du kannst gern bei mir übernachten. Ich habe ein Gästezimmer.","You're welcome to stay with me. I have a guest room."],
+ ["warum Sie nicht kommen können","du","Leider kann ich nicht kommen, weil ich an diesem Tag arbeiten muss.","Unfortunately I can't come because I have to work that day."],
+ ["Glückwünsche","du","Herzlichen Glückwunsch zu deiner neuen Stelle! Ich freue mich sehr für dich.","Congratulations on your new job! I'm very happy for you."],
+ ["Vorschlag für ein Geschenk","du","Wie wäre es mit einem Gutschein für ein Restaurant?","How about a voucher for a restaurant?"],
+ ["Hilfe anbieten","du","Wenn du möchtest, helfe ich dir am Samstag beim Umzug.","If you like, I'll help you with the move on Saturday."],
+ ["was Ihnen besonders gut gefallen hat","du","Am besten hat mir die Altstadt gefallen, weil sie so schön und alt ist.","I liked the old town best because it's so beautiful and old."],
+ ["was nicht so gut war","du","Leider hat es oft geregnet, deshalb waren wir viel im Hotel.","Unfortunately it rained often, so we were in the hotel a lot."],
+ ["Ihre Erfahrungen","du","Letztes Jahr habe ich auch einen Kurs gemacht und viel gelernt.","Last year I also did a course and learned a lot."],
+ ["ein Treffen vorschlagen","du","Hast du Lust, nächsten Sonntag mit mir Kaffee zu trinken?","Would you like to have coffee with me next Sunday?"],
+ ["was Sie zur Party mitbringen","du","Ich bringe einen Salat und etwas zu trinken mit.","I'll bring a salad and something to drink."],
+ ["ob Sie teilnehmen","Sie","Ich nehme sehr gern an der Feier teil.","I'll be very happy to take part in the celebration."],
+ ["wann Sie zu Hause sind","Sie","Am Montag und am Mittwoch bin ich ab 15 Uhr zu Hause.","On Monday and Wednesday I'm at home from 3 pm."],
+ ["ein Problem in der Wohnung","Sie","Seit einer Woche funktioniert die Heizung im Bad nicht.","The heating in the bathroom hasn't worked for a week."],
+ ["Bitte um Reparatur","Sie","Könnten Sie bitte so schnell wie möglich einen Handwerker schicken?","Could you please send a tradesperson as soon as possible?"],
+ ["Frage nach den Kosten","Sie","Ich möchte gern wissen, wie viel der Kurs kostet.","I'd like to know how much the course costs."],
+ ["Grund für Ihr Schreiben","Sie","Ich schreibe Ihnen, weil ich Ihre Anzeige gelesen habe.","I'm writing to you because I read your advert."],
+ ["Angaben zu Ihrer Person","Sie","Ich bin 32 Jahre alt, arbeite als Ingenieur und wohne seit zwei Jahren in Berlin.","I'm 32, work as an engineer and have lived in Berlin for two years."],
+ ["Termin vorschlagen","Sie","Würde Ihnen Dienstag um 10 Uhr passen?","Would Tuesday at 10 suit you?"],
+ ["Entschuldigung","Sie","Entschuldigen Sie bitte, dass ich gestern nicht kommen konnte.","Please excuse me for not being able to come yesterday."],
+ ["Ihre Meinung zur Preiserhöhung","Sie","Ehrlich gesagt finde ich die Erhöhung zu hoch.","To be honest, I find the increase too high."],
+ ["Dank","Sie","Vielen Dank für Ihre Hilfe und Ihre Geduld.","Thank you very much for your help and patience."],
+ ["Vorschlag für den Ort","Sie","Ich schlage vor, dass wir im Kursraum feiern, weil es dort genug Platz gibt.","I suggest that we celebrate in the classroom because there's enough space there."],
+ ["ob Partner mitkommen dürfen","Sie","Dürfen wir auch unsere Partner mitbringen?","May we bring our partners too?"]
+];
+
+/* ---------- Ordering ---------- */
+const ORDER=[
+ {id:"o1",t:"Informal reply (du)",lines:["Betreff: Re: Einladung zum Grillen","Liebe Nina,","vielen Dank für deine Einladung zum Grillen!","Ich komme sehr gern, denn am Samstag habe ich frei.","Soll ich einen Salat oder lieber Getränke mitbringen?","Außerdem kann ich meine Gitarre mitbringen, dann können wir abends Musik machen.","Ich freue mich schon auf Samstag!","Liebe Grüße","Daniel"]},
+ {id:"o2",t:"Semi-formal request (Sie)",lines:["Betreff: Reparatur der Waschmaschine","Sehr geehrter Herr Krause,","leider funktioniert die Waschmaschine in meiner Wohnung seit Montag nicht mehr.","Könnten Sie bitte einen Techniker schicken?","Am Dienstag und am Donnerstag bin ich ab 15 Uhr zu Hause.","Vielen Dank im Voraus.","Mit freundlichen Grüßen","Ana Lopes"]}
+];
+
+/* ---------- Writing tasks ---------- */
+const TASKS=[
+ {id:1,reg:"du",to:"Jonas",g:"m",title:"Besuch in Berlin",from:"Jonas",sit:"Sie haben von Ihrem Freund Jonas folgende E-Mail erhalten.",sitEn:"You have received the following e-mail from your friend Jonas.",
+  mail:"Hallo,\nstell dir vor: Ich habe endlich Urlaub und möchte dich in Berlin besuchen! Ich war noch nie in Berlin. Wann passt es dir am besten? Und was können wir zusammen machen? Ich weiß auch noch nicht, ob ich ein Hotel buchen soll. Gibt es noch etwas, das ich wissen muss?\nSchreib mir bald!\nViele Grüße\nJonas",
+  lp:[["wann der Besuch am besten passt","when the visit suits best"],["was Sie zusammen unternehmen können","what you can do together"],["wo Jonas schlafen kann","where Jonas can sleep"],["was er mitbringen soll","what he should bring"]],
+  model:"Betreff: Re: Mein Besuch in Berlin\n\nLieber Jonas,\n\nvielen Dank für deine E-Mail! Ich freue mich sehr, dass du mich besuchen möchtest.\n\nAm besten kommst du im Mai, denn dann ist das Wetter schön und es ist noch nicht so heiß. Im Dezember habe ich leider viel Arbeit.\n\nNatürlich musst du kein Hotel buchen. Meine Wohnung ist zwar nicht groß, aber im Wohnzimmer steht ein bequemes Sofa. Dort kannst du gern schlafen.\n\nIn Berlin gibt es viel zu sehen. Ich schlage vor, dass wir zuerst eine Stadtrundfahrt machen. Danach könnten wir ins Museum gehen oder abends in ein gutes Restaurant.\n\nAußerdem solltest du bequeme Schuhe mitbringen, weil wir viel zu Fuß gehen werden. Vergiss auch deinen Regenschirm nicht!\n\nIch freue mich schon auf dich!\n\nLiebe Grüße\n[Name]",
+  en:"Dear Jonas, thank you very much for your e-mail! I'm really happy that you want to visit me. It's best if you come in May, because the weather is nice then and it's not so hot yet. In December I unfortunately have a lot of work. Of course you don't need to book a hotel. My flat isn't big, but there's a comfortable sofa in the living room. You're welcome to sleep there. There's a lot to see in Berlin. I suggest that we do a city tour first. After that we could go to a museum, or to a good restaurant in the evening. Also, you should bring comfortable shoes, because we'll walk a lot. Don't forget your umbrella either! I'm looking forward to seeing you! Love, [Name]",
+  words:[["zwar … aber","admittedly … but"],["bequem","comfortable"],["die Stadtrundfahrt","city tour"],["zu Fuß gehen","to walk"],["der Regenschirm","umbrella"],["Vergiss … nicht!","Don't forget …!"]],
+  note:"The order was changed on purpose (when → sleeping → activities → bring). Each point has a reason (denn, weil) or detail."},
+ {id:2,reg:"du",to:"Sara",g:"f",title:"Hochzeit — absagen",from:"Sara",sit:"Sie haben von Ihrer Freundin Sara folgende E-Mail erhalten.",sitEn:"You have received the following e-mail from your friend Sara.",
+  mail:"Hallo,\nich habe tolle Neuigkeiten: Max und ich heiraten am 14. Juni! Wir feiern in einem kleinen Restaurant am See und würden uns sehr freuen, wenn du kommst. Kannst du mir bis Ende Mai sagen, ob du dabei bist?\nLiebe Grüße\nSara",
+  lp:[["Glückwünsche zur Hochzeit","congratulations on the wedding"],["warum Sie nicht kommen können","why you can't come"],["was Sie als Geschenk schicken","what you send as a present"],["wann Sie das Paar besuchen können","when you can visit the couple"]],
+  model:"Betreff: Re: Eure Hochzeit\n\nLiebe Sara,\n\nherzlichen Glückwunsch! Ich habe mich riesig über deine Nachricht gefreut. Max und du, ihr seid wirklich ein tolles Paar.\n\nLeider kann ich am 14. Juni nicht kommen, weil meine Schwester an diesem Wochenende ihr Baby bekommt. Ich habe ihr versprochen, dass ich bei ihr bin. Das tut mir wirklich leid!\n\nTrotzdem möchte ich euch etwas schenken. Ich schicke euch ein Paket mit einem Gutschein für ein schönes Abendessen. Ich hoffe, die Idee gefällt euch.\n\nWie wäre es, wenn ich euch im Juli besuche? Dann können wir zusammen die Hochzeitsfotos ansehen und ihr erzählt mir alles.\n\nIch wünsche euch einen wunderschönen Tag!\n\nViele liebe Grüße\n[Name]",
+  en:"Dear Sara, congratulations! I was thrilled about your message. Max and you are a really great couple. Unfortunately I can't come on 14 June because my sister is having her baby that weekend. I promised her I'd be with her. I'm really sorry! Still, I'd like to give you something. I'm sending you a parcel with a voucher for a nice dinner. I hope you like the idea. How about I visit you in July? Then we can look at the wedding photos together and you can tell me everything. I wish you a wonderful day! Lots of love, [Name]",
+  words:[["sich riesig freuen","to be thrilled"],["versprechen (versprochen)","to promise"],["Trotzdem","nevertheless, still"],["der Gutschein","voucher"],["Wie wäre es, wenn …","How about if …"],["euch / ihr","you (plural: Sara and Max)"]],
+  note:"Two people → euch/ihr when you mean the couple. Declining still fulfils the point."},
+ {id:3,reg:"du",to:"Tim",g:"m",title:"Umzug — Hilfe",from:"Tim",sit:"Sie haben von Ihrem Freund Tim folgende E-Mail erhalten.",sitEn:"You have received the following e-mail from your friend Tim.",
+  mail:"Hi,\nwie geht's? Ich habe endlich eine neue Wohnung gefunden! Am Samstag, den 3. Mai, ziehe ich um. Kannst du mir vielleicht helfen? Ich habe leider kein Auto und so viele Kisten … Und du bist doch letztes Jahr auch umgezogen. Hast du ein paar Tipps für mich?\nViele Grüße\nTim",
+  lp:[["ob und wann Sie helfen können","whether and when you can help"],["wie man die Kisten transportieren kann","how the boxes can be transported"],["Ihre Erfahrungen mit Ihrem Umzug","your experience with your own move"],["Tipps für den Umzug","tips for the move"]],
+  model:"Betreff: Re: Dein Umzug\n\nLieber Tim,\n\nsuper, dass du eine neue Wohnung gefunden hast! Herzlichen Glückwunsch!\n\nNatürlich helfe ich dir. Am Samstagvormittag habe ich leider einen Termin, aber ab 13 Uhr bin ich frei.\n\nMein Bruder hat einen großen Transporter. Ich frage ihn, ob wir das Auto am Samstag nehmen können. Dann müssen wir nur einmal fahren.\n\nMein Umzug letztes Jahr war ziemlich anstrengend. Ich habe zu spät mit dem Packen angefangen und am Ende hatte ich viel Stress. Deshalb solltest du schon jetzt Kisten packen und auf jede Kiste das Zimmer schreiben. Außerdem musst du dich nach dem Umzug beim Bürgeramt anmelden.\n\nBis Samstag!\n\nViele Grüße\n[Name]",
+  en:"Dear Tim, great that you've found a new flat! Congratulations! Of course I'll help you. On Saturday morning I unfortunately have an appointment, but from 1 pm I'm free. My brother has a big van. I'll ask him whether we can take the car on Saturday. Then we only have to drive once. My move last year was quite exhausting. I started packing too late and at the end I was very stressed. That's why you should pack boxes now and write the room on each box. Also, after the move you have to register at the citizens' office. See you Saturday! Best, [Name]",
+  words:[["der Transporter","van"],["ob","whether"],["ziemlich anstrengend","quite exhausting"],["anfangen mit (angefangen)","to start with"],["das Packen","packing"],["sich anmelden beim Bürgeramt","register your address"]],
+  note:"Leitpunkt 3 needs the past: war, habe … angefangen, hatte. Leitpunkt 4 uses solltest + musst for tips."},
+ {id:4,reg:"du",to:"Lena",g:"f",title:"Deutsch lernen — Tipps",from:"Lena",sit:"Sie haben von Ihrer Freundin Lena folgende E-Mail erhalten.",sitEn:"You have received the following e-mail from your friend Lena.",
+  mail:"Hallo,\ndu lernst ja schon lange Deutsch. Ich möchte im Herbst auch einen Deutschkurs machen, weil ich vielleicht in Deutschland arbeiten möchte. Wie lernst du eigentlich? Was ist für dich am schwierigsten? Kannst du mir einen Kurs empfehlen?\nLiebe Grüße\nLena",
+  lp:[["wie Sie Deutsch lernen","how you learn German"],["was für Sie schwierig ist","what is difficult for you"],["welchen Kurs Sie empfehlen","which course you recommend"],["Vorschlag: gemeinsam üben","suggestion: practise together"]],
+  model:"Betreff: Re: Deutsch lernen\n\nLiebe Lena,\n\ndanke für deine E-Mail! Toll, dass du auch Deutsch lernen möchtest.\n\nIch besuche seit einem Jahr einen Kurs an der Volkshochschule. Außerdem lerne ich jeden Tag 20 Minuten mit einer App und höre deutsche Podcasts in der U-Bahn.\n\nAm schwierigsten finde ich die Artikel: der, die oder das? Auch die Vergangenheit ist nicht leicht für mich. Trotzdem macht mir die Sprache Spaß, weil ich sie jeden Tag benutzen kann.\n\nDeshalb empfehle ich dir die Volkshochschule. Die Kurse sind nicht so teuer und die Lehrer erklären sehr gut.\n\nHast du Lust, einmal pro Woche mit mir per Video zu sprechen? So können wir beide üben.\n\nIch freue mich auf deine Antwort!\n\nLiebe Grüße\n[Name]",
+  en:"Dear Lena, thanks for your e-mail! Great that you want to learn German too. For a year I've been attending a course at the adult education centre. I also study 20 minutes every day with an app and listen to German podcasts on the underground. I find the articles hardest: der, die or das? The past tense isn't easy for me either. Still, I enjoy the language, because I can use it every day. That's why I recommend the adult education centre. The courses aren't so expensive and the teachers explain very well. Do you feel like talking with me by video once a week? That way we can both practise. I look forward to your reply! Love, [Name]",
+  words:[["seit einem Jahr","for a year (and still)"],["die Volkshochschule (VHS)","adult education centre"],["am schwierigsten","most difficult"],["die Vergangenheit","past (tense)"],["empfehlen + Dat","to recommend to"],["Hast du Lust, … zu …?","Do you feel like …?"]],
+  note:"seit + present tense for something still going on: Ich besuche seit einem Jahr …"},
+ {id:5,reg:"du",to:"Mia",g:"f",title:"Die neue Wohnung",from:"Mia",sit:"Sie haben von Ihrer Freundin Mia folgende E-Mail erhalten.",sitEn:"You have received the following e-mail from your friend Mia.",
+  mail:"Hallo,\nich habe gehört, dass du umgezogen bist! Wie ist die neue Wohnung? Und wie sind die Nachbarn? Brauchst du noch etwas für die Wohnung? Ich würde dir gern etwas schenken. Ich hoffe, wir sehen uns bald!\nMia",
+  lp:[["wie die Wohnung ist","what the flat is like"],["wie die Nachbarn sind","what the neighbours are like"],["was Sie noch brauchen","what you still need"],["Einladung: wann Mia kommen kann","invitation: when Mia can come"]],
+  model:"Betreff: Re: Meine neue Wohnung\n\nLiebe Mia,\n\nvielen Dank für deine liebe Nachricht! Ja, ich bin vor drei Wochen umgezogen.\n\nDie neue Wohnung ist hell und viel größer als die alte. Sie hat zwei Zimmer, eine kleine Küche und einen Balkon. Am besten gefällt mir der Balkon, denn dort kann ich morgens Kaffee trinken.\n\nDie Nachbarn sind sehr freundlich. Neben mir wohnt eine ältere Frau. Sie hat mir am ersten Tag sogar Kuchen gebracht.\n\nDu bist wirklich lieb! Ich brauche noch eine Lampe für das Wohnzimmer. Wenn du möchtest, können wir zusammen eine aussuchen.\n\nKomm doch am Samstag, den 21. November, zum Abendessen zu mir! Dann zeige ich dir alles.\n\nBis bald und liebe Grüße\n[Name]",
+  en:"Dear Mia, thank you very much for your kind message! Yes, I moved three weeks ago. The new flat is bright and much bigger than the old one. It has two rooms, a small kitchen and a balcony. I like the balcony best, because I can drink coffee there in the mornings. The neighbours are very friendly. An older woman lives next to me. She even brought me cake on the first day. You're really sweet! I still need a lamp for the living room. If you like, we can choose one together. Come over for dinner on Saturday, 21 November! Then I'll show you everything. See you soon, love, [Name]",
+  words:[["vor drei Wochen","three weeks ago"],["hell","bright"],["größer als","bigger than"],["sogar","even"],["lieb","sweet, kind"],["aussuchen","to choose"]],
+  note:"Comparatives (größer als) and „Am besten gefällt mir …“ are easy B1 points."},
+ {id:6,reg:"du",to:"Paul",g:"m",title:"Urlaub — berichten",from:"Paul",sit:"Sie haben von Ihrem Freund Paul folgende E-Mail erhalten.",sitEn:"You have received the following e-mail from your friend Paul.",
+  mail:"Hey,\ndu bist doch gerade aus dem Urlaub zurück! Wie war es? Wo warst du genau? Ich möchte im Sommer auch wegfahren und brauche noch Ideen. Erzähl mal!\nPaul",
+  lp:[["wo und mit wem Sie waren","where and with whom you were"],["was Ihnen besonders gut gefallen hat","what you particularly liked"],["was nicht so gut war","what wasn't so good"],["ein Tipp für Pauls Urlaub","a tip for Paul's holiday"]],
+  model:"Betreff: Re: Mein Urlaub\n\nLieber Paul,\n\ndanke für deine Nachricht! Ja, ich bin seit Sonntag wieder zu Hause.\n\nIch war zwei Wochen mit einem Freund an der Ostsee. Wir haben in einer kleinen Pension direkt am Strand gewohnt.\n\nBesonders gut hat mir das Essen gefallen. Wir haben jeden Tag frischen Fisch gegessen. Außerdem sind wir viel Fahrrad gefahren.\n\nLeider hat es in der zweiten Woche oft geregnet. Deshalb waren wir zweimal im Museum, aber das war auch interessant.\n\nWenn du Ruhe und Natur magst, solltest du auch an die Ostsee fahren. Du musst aber früh buchen, weil die Hotels im Sommer schnell voll sind.\n\nSchreib mir, wohin du fährst!\n\nViele Grüße\n[Name]",
+  en:"Dear Paul, thanks for your message! Yes, I've been back home since Sunday. I spent two weeks with a friend on the Baltic coast. We stayed in a small guesthouse right on the beach. I especially liked the food. We ate fresh fish every day. We also cycled a lot. Unfortunately it often rained in the second week. So we went to the museum twice, but that was interesting too. If you like peace and nature, you should go to the Baltic Sea too. But you have to book early, because the hotels fill up quickly in summer. Write and tell me where you're going! Best, [Name]",
+  words:[["die Ostsee","the Baltic Sea"],["die Pension","guesthouse"],["direkt am Strand","right on the beach"],["Fahrrad fahren (ist gefahren)","to cycle"],["die Ruhe","peace and quiet"],["voll","full"]],
+  note:"Perfekt with sein (sind gefahren) and haben (haben gewohnt, gegessen, hat geregnet) plus war/waren."},
+ {id:7,reg:"Sie",to:"Frau Becker",g:"f",title:"Kursabschlussfest",from:"Birgit Becker (Kursleiterin)",sit:"Ihre Kursleiterin, Frau Becker, hat allen Teilnehmenden folgende E-Mail geschrieben.",sitEn:"Your course teacher, Ms Becker, has written the following e-mail to all participants.",
+  mail:"Liebe Kursteilnehmerinnen und Kursteilnehmer,\nunser Kurs endet am 15. Dezember. Zum Abschluss möchte ich mit Ihnen ein kleines Fest feiern. Bitte schreiben Sie mir, ob Sie kommen können. Haben Sie Ideen, wo wir feiern könnten? Jeder kann auch etwas zu essen mitbringen.\nHerzliche Grüße\nIhre Birgit Becker",
+  lp:[["ob Sie teilnehmen","whether you are taking part"],["Vorschlag für den Ort","suggestion for the place"],["was Sie mitbringen","what you will bring"],["Dank für den Kurs","thanks for the course"]],
+  model:"Betreff: Unser Kursabschlussfest\n\nLiebe Frau Becker,\n\nvielen Dank für Ihre E-Mail und die schöne Idee mit dem Fest!\n\nIch komme sehr gern am 15. Dezember, denn an diesem Tag habe ich zum Glück frei.\n\nIch schlage vor, dass wir im Kursraum feiern, weil wir dort genug Platz haben und es nichts kostet. Wenn das Wetter gut ist, könnten wir danach noch auf den Weihnachtsmarkt gehen.\n\nZum Fest bringe ich gern einen Salat und ein typisches Gericht aus meiner Heimat mit.\n\nZum Schluss möchte ich mich bei Ihnen bedanken. Ihr Unterricht hat mir sehr geholfen und ich habe viel gelernt.\n\nIch freue mich auf das Fest!\n\nHerzliche Grüße\n[Vorname Nachname]",
+  en:"Dear Ms Becker, thank you very much for your e-mail and the lovely idea of a party! I'd be very happy to come on 15 December, because luckily I'm off that day. I suggest that we celebrate in the classroom, because we have enough space there and it costs nothing. If the weather is good, we could go to the Christmas market afterwards. For the party I'm happy to bring a salad and a typical dish from my home country. Finally, I'd like to thank you. Your lessons helped me a lot and I learned a great deal. I'm looking forward to the party! Warm regards, [First name Last name]",
+  words:[["der Kursraum","classroom"],["genug Platz","enough space"],["der Weihnachtsmarkt","Christmas market"],["das Gericht","dish (food)"],["die Heimat","home country"],["sich bedanken bei","to thank (someone)"]],
+  note:"Warm but formal: Liebe Frau Becker + Sie/Ihr. She signed „Herzliche Grüße“, so you may too."},
+ {id:8,reg:"Sie",to:"Herr Schulz",g:"m",title:"Neue Fenster & Heizung",from:"Klaus Schulz (Hausverwaltung)",sit:"Die Hausverwaltung hat allen Mietern folgende E-Mail geschrieben.",sitEn:"The property management has sent the following e-mail to all tenants.",
+  mail:"Sehr geehrte Mieterinnen und Mieter,\nim März werden in allen Wohnungen neue Fenster eingebaut. Der Handwerker braucht dafür ca. zwei Stunden pro Wohnung. Bitte teilen Sie mir mit, wann Sie zu Hause sind. Wenn Sie andere Probleme in Ihrer Wohnung haben, schreiben Sie mir bitte auch.\nMit freundlichen Grüßen\nKlaus Schulz, Hausverwaltung",
+  lp:[["wann Sie zu Hause sind","when you are at home"],["ein Problem in Ihrer Wohnung","a problem in your flat"],["Bitte um Reparatur","request for repair"],["was passiert, wenn Sie nicht da sind","what happens if you're not there"]],
+  model:"Betreff: Neue Fenster – Termin und Heizung\n\nSehr geehrter Herr Schulz,\n\nvielen Dank für Ihre Information über die neuen Fenster.\n\nIm März bin ich meistens montags und mittwochs ab 14 Uhr zu Hause, weil ich dann frei habe. Deshalb passen mir diese Termine am besten.\n\nAußerdem habe ich leider noch ein anderes Problem: Seit zwei Wochen funktioniert die Heizung im Schlafzimmer nicht richtig. Sie wird nur ein bisschen warm und nachts ist es sehr kalt.\n\nKönnte der Handwerker die Heizung vielleicht am selben Tag reparieren? Das wäre sehr praktisch.\n\nFalls ich an dem Termin doch arbeiten muss, kann meine Nachbarin, Frau Yilmaz, dem Handwerker die Tür öffnen. Sie hat einen Schlüssel für meine Wohnung.\n\nVielen Dank im Voraus.\n\nMit freundlichen Grüßen\n[Vorname Nachname]",
+  en:"Dear Mr Schulz, thank you for the information about the new windows. In March I'm mostly at home on Mondays and Wednesdays from 2 pm, because I'm off then. That's why these times suit me best. Unfortunately I also have another problem: for two weeks the heating in the bedroom hasn't worked properly. It only gets a little warm and at night it's very cold. Could the tradesman perhaps repair the heating on the same day? That would be very practical. If I do have to work at that time, my neighbour, Ms Yilmaz, can open the door for the tradesman. She has a key to my flat. Thank you in advance. Yours sincerely, [First name Last name]",
+  words:[["meistens","mostly"],["montags","on Mondays"],["nicht richtig","not properly"],["am selben Tag","on the same day"],["Falls","in case, if"],["dem Handwerker die Tür öffnen","open the door for the tradesman"]],
+  note:"„Seit zwei Wochen funktioniert …“: seit + present tense. Requests use Konjunktiv II: Könnte …? Das wäre …"},
+ {id:9,reg:"Sie",to:"Frau Wagner",g:"f",title:"Blumen gießen",from:"Erika Wagner (Nachbarin)",sit:"Ihre Nachbarin, Frau Wagner, hat Ihnen folgende E-Mail geschrieben.",sitEn:"Your neighbour, Ms Wagner, has written you the following e-mail.",
+  mail:"Liebe Nachbarin, lieber Nachbar,\nich fahre vom 2. bis 16. August zu meiner Tochter nach Hamburg. Könnten Sie in dieser Zeit meine Blumen gießen? Ich lasse Ihnen gern den Schlüssel da. Wann passt es Ihnen, dass ich den Schlüssel vorbeibringe?\nHerzliche Grüße\nErika Wagner (2. Stock)",
+  lp:[["ob Sie helfen können","whether you can help"],["wann Sie den Schlüssel bekommen können","when you can get the key"],["eine Frage zu den Blumen","a question about the plants"],["Angebot: Briefkasten leeren","offer: empty the letterbox"]],
+  model:"Betreff: Ihre Blumen im August\n\nLiebe Frau Wagner,\n\nvielen Dank für Ihre Nachricht. Natürlich helfe ich Ihnen gern!\n\nDen Schlüssel kann ich am Donnerstagabend bei Ihnen abholen, weil ich dann früher von der Arbeit komme. Passt Ihnen 19 Uhr?\n\nAußerdem habe ich noch eine Frage zu den Blumen: Wie oft muss ich sie gießen? Und brauchen die Pflanzen auf dem Balkon mehr Wasser als die Pflanzen in der Wohnung?\n\nSoll ich auch Ihren Briefkasten leeren? Das mache ich gern, denn dann liegt keine Post vor Ihrer Tür.\n\nIch wünsche Ihnen eine schöne Zeit bei Ihrer Tochter in Hamburg!\n\nHerzliche Grüße\n[Vorname Nachname]",
+  en:"Dear Ms Wagner, thank you for your message. Of course I'm happy to help! I can pick up the key from you on Thursday evening, because I get home from work earlier then. Does 7 pm suit you? I also have a question about the plants: how often do I need to water them? And do the plants on the balcony need more water than the ones in the flat? Shall I empty your letterbox too? I'm happy to do that, because then there's no post lying in front of your door. I wish you a lovely time with your daughter in Hamburg! Warm regards, [First name Last name]",
+  words:[["abholen","to pick up"],["Passt Ihnen …?","Does … suit you?"],["wie oft","how often"],["gießen","to water"],["den Briefkasten leeren","empty the letterbox"],["Ich wünsche Ihnen …","I wish you …"]],
+  note:"Your own question and an offer turn a short reply into a full B1 answer."},
+ {id:10,reg:"Sie",to:"Damen und Herren",g:"x",title:"VHS: Kurszeit ändert sich",from:"Volkshochschule Mitte",sit:"Die Volkshochschule hat Ihnen folgende E-Mail geschrieben.",sitEn:"The adult education centre has written you the following e-mail.",
+  mail:"Sehr geehrte Teilnehmerin, sehr geehrter Teilnehmer,\nleider müssen wir Ihren Kurs „Deutsch im Beruf“ ab dem 1. Februar von Dienstag 18 Uhr auf Donnerstag 9 Uhr verschieben, weil die Kursleiterin wechselt. Bitte teilen Sie uns mit, ob Sie weiter am Kurs teilnehmen möchten.\nMit freundlichen Grüßen\nVolkshochschule Mitte, Anmeldung",
+  lp:[["warum der neue Termin ein Problem ist","why the new time is a problem"],["Vorschlag für eine andere Lösung","suggestion for another solution"],["Frage nach der Kursgebühr","question about the course fee"],["wie Sie den Kurs bisher finden","what you think of the course so far"]],
+  model:"Betreff: Ihre E-Mail – Kurs „Deutsch im Beruf“\n\nSehr geehrte Damen und Herren,\n\nvielen Dank für Ihre Information. Leider ist der neue Termin für mich ein großes Problem.\n\nIch arbeite von Montag bis Freitag von 8 bis 17 Uhr. Deshalb kann ich am Donnerstagvormittag nicht in den Kurs kommen.\n\nGibt es vielleicht einen anderen Abendkurs auf dem gleichen Niveau? Ich könnte auch am Samstag kommen. Sonst wäre ein Online-Kurs eine gute Lösung für mich.\n\nAußerdem möchte ich wissen, ob ich die Kursgebühr zurückbekomme, wenn ich nicht weiter teilnehmen kann.\n\nBis jetzt hat mir der Kurs sehr gut gefallen. Ich habe viele nützliche Wörter für meine Arbeit gelernt.\n\nIch freue mich auf Ihre Antwort.\n\nMit freundlichen Grüßen\n[Vorname Nachname]",
+  en:"Dear Sir or Madam, thank you for the information. Unfortunately the new time is a big problem for me. I work Monday to Friday from 8 to 5. So I can't come to the course on Thursday morning. Is there perhaps another evening course at the same level? I could also come on Saturday. Otherwise an online course would be a good solution for me. I'd also like to know whether I get the course fee back if I can't continue. So far I've really liked the course. I've learned many useful words for my work. I look forward to your reply. Yours sincerely, [First name Last name]",
+  words:[["verschieben","to move, postpone"],["auf dem gleichen Niveau","at the same level"],["Sonst","otherwise"],["die Lösung","solution"],["zurückbekommen","to get back"],["bis jetzt","so far"]],
+  note:"An office with no name → Sehr geehrte Damen und Herren. Indirect question: ob ich … zurückbekomme (verb last)."},
+ {id:11,reg:"Sie",to:"Herr Meier",g:"m",title:"Betriebsausflug",from:"Thomas Meier (Teamleiter)",sit:"Ihr Teamleiter, Herr Meier, hat allen Kollegen folgende E-Mail geschrieben.",sitEn:"Your team lead, Mr Meier, has sent the following e-mail to all colleagues.",
+  mail:"Liebe Kolleginnen und Kollegen,\nam Freitag, dem 20. Juni, machen wir unseren Betriebsausflug. Ich habe an eine Schifffahrt auf der Spree gedacht. Bitte sagen Sie mir bis Ende Mai Bescheid, ob Sie dabei sind. Ideen für das Programm sind willkommen!\nViele Grüße\nThomas Meier",
+  lp:[["ob Sie teilnehmen","whether you're taking part"],["Ihre Meinung zur Schifffahrt","your opinion on the boat trip"],["Vorschlag für das Essen","suggestion for food"],["ob Partner mitkommen dürfen","whether partners may come"]],
+  model:"Betreff: Re: Betriebsausflug am 20. Juni\n\nLieber Herr Meier,\n\nvielen Dank für die Einladung zum Betriebsausflug. Ich bin gern dabei, denn ich mag solche Ausflüge sehr.\n\nEine Schifffahrt auf der Spree finde ich eine sehr gute Idee, weil wir so viele Sehenswürdigkeiten sehen und uns gleichzeitig unterhalten können.\n\nDanach könnten wir zusammen grillen, zum Beispiel im Tiergarten. Wenn das Wetter schlecht ist, gibt es in der Nähe auch gute Restaurants.\n\nAußerdem habe ich noch eine Frage: Dürfen wir unsere Partner mitbringen? Meine Partnerin würde meine Kollegen gern kennenlernen.\n\nBitte geben Sie mir kurz Bescheid.\n\nViele Grüße\n[Vorname Nachname]",
+  en:"Dear Mr Meier, thank you for the invitation to the company outing. I'm happy to join, because I really like outings like this. I think a boat trip on the Spree is a very good idea, because that way we'll see many sights and can chat at the same time. Afterwards we could have a barbecue together, for example in the Tiergarten. If the weather is bad, there are good restaurants nearby too. I also have a question: may we bring our partners? My partner would like to meet my colleagues. Please let me know briefly. Best regards, [First name Last name]",
+  words:[["der Betriebsausflug","company outing"],["die Schifffahrt","boat trip"],["sich unterhalten","to chat"],["gleichzeitig","at the same time"],["in der Nähe","nearby"],["Bescheid geben","to let know"]],
+  note:"Colleague e-mail signed „Viele Grüße“ → you can mirror it, but keep Sie."},
+ {id:12,reg:"Sie",to:"Damen und Herren",g:"x",title:"Fitnessstudio: Preiserhöhung",from:"FitPlus Fitnessstudio",sit:"Ihr Fitnessstudio hat allen Mitgliedern folgende E-Mail geschrieben.",sitEn:"Your gym has sent the following e-mail to all members.",
+  mail:"Sehr geehrte Mitglieder,\nab dem 1. Januar erhöhen wir den Monatsbeitrag von 29 auf 39 Euro. Dafür bieten wir neue Kurse an. Für Fragen und Wünsche schreiben Sie uns gern.\nIhr FitPlus-Team",
+  lp:[["Ihre Meinung zur Preiserhöhung","your opinion on the price increase"],["was Sie im Studio stört","what bothers you at the gym"],["welche Kurse Sie sich wünschen","which courses you'd like"],["Frage zur Kündigung","question about cancelling"]],
+  model:"Betreff: Preiserhöhung ab 1. Januar\n\nSehr geehrte Damen und Herren,\n\nvielen Dank für Ihre Information. Ehrlich gesagt bin ich mit der Preiserhöhung nicht einverstanden, denn zehn Euro mehr pro Monat sind sehr viel.\n\nAußerdem gibt es im Moment ein Problem: Abends ist das Studio oft so voll, dass ich lange auf die Geräte warten muss. Auch die Duschen sind manchmal kalt.\n\nWenn es neue Kurse gibt, wünsche ich mir einen Yogakurs am Abend und einen Kurs für Anfänger am Wochenende.\n\nZum Schluss habe ich noch eine Frage: Kann ich meinen Vertrag kündigen, wenn ich den neuen Preis nicht bezahlen möchte? Wie lange ist die Kündigungsfrist?\n\nIch bitte um eine kurze Antwort.\n\nMit freundlichen Grüßen\n[Vorname Nachname]",
+  en:"Dear Sir or Madam, thank you for the information. To be honest, I don't agree with the price increase, because ten euros more per month is a lot. There's also a problem at the moment: in the evenings the gym is often so full that I have to wait a long time for the machines. The showers are sometimes cold too. If there are new courses, I'd like an evening yoga class and a beginners' course at the weekend. Finally, I have one more question: can I cancel my contract if I don't want to pay the new price? How long is the notice period? I'd appreciate a short reply. Yours sincerely, [First name Last name]",
+  words:[["die Preiserhöhung","price increase"],["einverstanden sein mit","to agree with"],["so voll, dass …","so full that …"],["das Gerät, -e","machine, equipment"],["den Vertrag kündigen","to cancel the contract"],["die Kündigungsfrist","notice period"]],
+  note:"A polite complaint: opinion + reason, a concrete problem, a wish, a question."}
+];
+
+const FINAL_CHECK=["Betreff written","Anrede matches the sender (Liebe/Lieber/Sehr geehrte/r) + comma","Line after the Anrede starts with a small letter","All 4 Leitpunkte answered (tick them!)","du or Sie the whole way through; Sie/Ihnen/Ihr capitalised","Verb 2nd in main clauses; verb last after weil/dass/wenn/ob","Perfekt: sein for movement (bin gefahren, bin gekommen)","At least 4 different connectors (denn, deshalb, außerdem, weil …)","Not every sentence starts with Ich","Schluss sentence + Gruß (no comma) + name"];
+
+/* ===================== STATE ===================== */
+const KEY="telcB1-schreiben-v1";
+let S;
+function load(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r)}catch(e){}return null}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+S=Object.assign({plan:{},quiz:{},cards:{},drafts:{},sprint:{},order:{},skel:{du:"",sie:"",show:{}},calc:{}},load()||{});
+const h=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const PTS={A:5,B:3,C:1,D:0};
+let ui={deck:"task",cardIdx:0,flip:false,listView:false,orderSel:{},phq:""};
+
+/* ===================== HELPERS ===================== */
+function planPct(){const all=PLAN.flatMap(d=>d.items);const done=all.filter(i=>S.plan[i[0]]).length;return Math.round(done/all.length*100)}
+function updateMeter(){const p=planPct();document.getElementById("pct").textContent=p+"%";document.getElementById("pctbar").style.width=p+"%"}
+function rot(n,qi){const k=(qi*2+1)%n;return Array.from({length:n},(_,i)=>(i+k)%n)}
+function quizScore(id){const q=QUIZ[id],a=(S.quiz[id]||{}).ans||{};const answered=Object.keys(a).length;const right=Object.values(a).filter(v=>v===0).length;return{answered,right,total:q.items.length}}
+function quizChip(id){const s=quizScore(id);if(!s.answered)return`<span class="chip">not started</span>`;const cls=s.answered<s.total?"":s.right/s.total>=.8?"ok":s.right/s.total>=.6?"warn":"bad";return`<span class="chip ${cls}">${s.right}/${s.total} correct${s.answered<s.total?` · ${s.answered} done`:""}</span>`}
+function renderQuiz(id){const q=QUIZ[id],a=(S.quiz[id]||{}).ans||{};
+ return `<div class="row" style="justify-content:space-between"><h4 style="margin:0">${h(q.t)}</h4><div class="row">${quizChip(id)}<button data-act="qreset" data-q="${id}">Reset</button></div></div>`+
+ q.items.map((it,qi)=>{const order=rot(it[1].length,qi);const chosen=a[qi];
+  return `<div class="q"><div class="stem">${qi+1}. ${h(it[0])}</div><div class="opts">${order.map(oi=>{let cls="";if(chosen!==undefined){if(oi===0)cls="right";else if(oi===chosen)cls="wrong"}return `<button class="${cls}" data-act="qa" data-q="${id}" data-i="${qi}" data-o="${oi}" ${chosen!==undefined?"disabled":""}>${h(it[1][oi])}</button>`}).join("")}</div>${chosen!==undefined?`<div class="expl">${chosen===0?"✓ Richtig. ":"✗ Not quite. "}${h(it[2])}</div>`:""}</div>`}).join("")}
+function bubbles(prefix,val){return `<span class="bub">${["A","B","C","D"].map(g=>`<button class="${val===g?"on":""}" data-act="${prefix}" data-g="${g}" aria-label="${g}">${g}</button>`).join("")}</span>`}
+
+/* ===================== VIEWS ===================== */
+function vPlan(){
+ const all=PLAN.flatMap(d=>d.items);const next=all.find(i=>!S.plan[i[0]]);
+ return `<p class="eyebrow">Zertifikat Deutsch · Schriftlicher Ausdruck</p><h2>Your 5-day plan</h2>
+ <p class="lead">Two hours a day. Tick each block when you finish it. Your progress stays in this browser.</p>
+ <div class="callout"><b>The target:</b> at least <b>B in all three criteria</b> = 9 × 3 = <b>27 of 45 points</b>. That level means: all four Leitpunkte answered, the e-mail format right, du/Sie consistent, and errors that don't block understanding. ABB or better (33+) gives you a buffer for the reading and listening parts.</div>
+ ${next?`<p>Next up: <a href="#${next[3]}" style="color:var(--pen);font-weight:700">${h(next[1])} →</a></p>`:`<div class="callout"><b>Plan complete.</b> Keep doing one timed task per day until the exam, and read the exam-day checklist in „Schreiben“.</div>`}
+ ${PLAN.map(d=>{const dn=d.items.filter(i=>S.plan[i[0]]).length;const mins=d.items.reduce((a,i)=>a+i[2],0);
+  return `<section class="day"><div class="dayhead"><div><span class="eyebrow">Tag ${d.d} · ${mins} min</span><h3>${h(d.t)}</h3></div><span class="chip ${dn===d.items.length?"ok":""}">${dn}/${d.items.length}</span></div>
+  ${d.items.map(i=>`<div class="item ${S.plan[i[0]]?"done":""} ${next&&next[0]===i[0]?"next":""}"><button class="tick ${S.plan[i[0]]?"on":""}" data-act="plan" data-id="${i[0]}" aria-label="Mark done"></button><div class="lbl">${h(i[1])} <span class="note mono">· ${i[2]} min</span></div><a href="#${i[3]}">Open →</a></div>`).join("")}</section>`}).join("")}
+ <p class="note">An honest note: no app can promise a result. What this plan does is drill exactly what the raters score. If your timed self-scores reach BBB on Day 4–5, you're in passing range for this part.</p>
+ <div class="row"><button data-act="resetall">Reset all progress</button><span id="resetconfirm"></span></div>`}
+
+function vExam(){
+ const c=S.calc;const tot=(PTS[c.I]??0)+(PTS[c.II]??0)+(PTS[c.III]??0);const ready=c.I&&c.II&&c.III;
+ return `<p class="eyebrow">Source: official telc Übungstest 1, Zertifikat Deutsch (revised edition)</p><h2>The writing exam, exactly</h2>
+ <div class="grid2">
+  <div class="card"><div class="eyebrow">When</div><b>Last part of the written exam</b><br><span class="en">After Lesen (90 min), Sprachbausteine and Hören (~30 min).</span></div>
+  <div class="card"><div class="eyebrow">Time</div><b class="big mono">30 min</b><br><span class="en">No dictionary, no phone.</span></div>
+  <div class="card"><div class="eyebrow">Task</div><b>Reply to one e-mail</b><br><span class="en">Informal (friend, du) or semi-formal (teacher, landlord, office, Sie).</span></div>
+  <div class="card"><div class="eyebrow">Content</div><b>4 Leitpunkte</b><br><span class="en">You must write something about all four.</span></div>
+ </div>
+ <h3>What the task sheet says, word by word</h3>
+ <div class="tbl"><table><tr><th>German</th><th>Meaning</th></tr>
+ <tr><td class="de">Sie haben von einer Freundin folgende E-Mail erhalten.</td><td class="en">You've received the following e-mail from a (female) friend.</td></tr>
+ <tr><td class="de">Antworten Sie auf die E-Mail.</td><td class="en">Reply to the e-mail.</td></tr>
+ <tr><td class="de">Schreiben Sie etwas zu allen vier Punkten.</td><td class="en">Write something about all four points.</td></tr>
+ <tr><td class="de">Überlegen Sie sich vor dem Schreiben …</td><td class="en">Before writing, think about …</td></tr>
+ <tr><td class="de">… eine passende Reihenfolge der Punkte</td><td class="en">… a suitable order of the points (you may reorder!)</td></tr>
+ <tr><td class="de">… einen passenden Betreff, eine passende Anrede</td><td class="en">… a suitable subject line, a suitable salutation</td></tr>
+ <tr><td class="de">… Einleitung und einen passenden Schluss</td><td class="en">… introduction and a suitable ending</td></tr></table></div>
+ <p class="note">Older test editions asked for a letter with „Datum und Anrede“. The current version is an e-mail: address and date are not required.</p>
+
+ <h3>How it is scored</h3>
+ <p>Two licensed raters mark three criteria. Each gets A, B, C or D. The sum is multiplied by 3.</p>
+ <div class="tbl"><table><tr><th>Criterion</th><th>What it means</th><th class="mono">A</th><th class="mono">B</th><th class="mono">C</th><th class="mono">D</th></tr>
+ <tr><td><b>I · Aufgabenbewältigung</b><br><span class="en">task completion</span></td><td>How many Leitpunkte are answered in a sensible, understandable way</td><td>4 → 5</td><td>3 → 3</td><td>2 → 1</td><td>0–1 → 0</td></tr>
+ <tr><td><b>II · Kommunikative Gestaltung</b><br><span class="en">communicative design</span></td><td>E-mail format, register (du/Sie), linking words, vocabulary range, logical text</td><td>5</td><td>3</td><td>1</td><td>0</td></tr>
+ <tr><td><b>III · Formale Richtigkeit</b><br><span class="en">accuracy</span></td><td>Grammar, spelling, punctuation. Understandability comes first.</td><td>5</td><td>3</td><td>1</td><td>0</td></tr></table></div>
+ <div class="grid2">
+  <div class="card"><h4 style="margin-top:0">A Leitpunkt counts when…</h4><ul><li>it makes sense, is understandable and fits the task</li><li>even if it's only one short sentence</li><li>even if two points share one sentence</li><li>for a plural or two-part point, one answer is enough</li><li>you accept, decline or counter-propose</li></ul></div>
+  <div class="card"><h4 style="margin-top:0">You lose the A in criterion II if…</h4><ul><li>e-mail features are missing (Betreff, Anrede, Gruß)</li><li>you pick the wrong register or switch du ↔ Sie</li><li>the Leitpunkte stand unconnected</li><li>most sentences start with Ich or Wir</li></ul></div>
+ </div>
+ <div class="callout warn"><b>Two traps.</b> <b>Thema verfehlt</b> (text has almost nothing to do with the task) → D in every criterion = 0 points. <b>Situierung verfehlt</b> (e.g. you write an invitation when you should accept one) → criterion I = D. Read the situation twice.</div>
+ <div class="callout">In criterion III, <b>ending and gender mistakes weigh less</b> than errors like wrong verb agreement. Clear sentences with correct verb position beat fancy sentences.</div>
+
+ <h3>Score calculator</h3>
+ <div class="card">
+  <div class="scoreline"><span><b>I</b> · Leitpunkte</span>${bubbles("calcI",c.I)}</div>
+  <div class="scoreline"><span><b>II</b> · Kommunikative Gestaltung</span>${bubbles("calcII",c.II)}</div>
+  <div class="scoreline"><span><b>III</b> · Formale Richtigkeit</span>${bubbles("calcIII",c.III)}</div>
+  <div class="row" style="margin-top:12px;justify-content:space-between"><span class="big mono">${ready?tot*3:"–"} <span class="note">/ 45</span></span><span class="note">${ready?`${tot} raw × 3 · ${Math.round(tot*3/45*100)}% of this part`:"Pick A–D for each criterion"}</span></div>
+ </div>
+
+ <h3>How writing fits the pass mark</h3>
+ <p>The written exam has 225 points: Lesen 75, Sprachbausteine 30, Hören 75, Schreiben 45. You need <b>135 of 225 (60%)</b> across the whole written exam, and separately 45 of 75 in the oral exam. Writing has no minimum of its own, so every point here offsets mistakes elsewhere. BBB = 27 points; ABB = 33; AAB = 39.</p>
+
+ <h3>Your 30 minutes</h3>
+ <div class="tbl"><table><tr><th class="mono">Min</th><th>What</th></tr>
+ <tr><td class="mono">0–5</td><td>Read the e-mail twice. Decide du/Sie. Number the Leitpunkte in your order. Write 2–3 keywords next to each.</td></tr>
+ <tr><td class="mono">5–25</td><td>Write with the skeleton: Betreff → Anrede → Einleitung → 4 points (2–3 sentences each, linked) → Schluss → Gruß → Name. Aim for 110–150 words.</td></tr>
+ <tr><td class="mono">25–30</td><td>Check with the 10-point list (Schreiben tab): verb positions, sein/haben, du/Sie, capitals.</td></tr></table></div>
+ <p class="note">There's no official word count for this e-mail. 110–150 words is enough to answer four points well and still leave time to check. Longer texts usually just add errors.</p>
+ <p><a class="btn" href="https://www.telc.net/" target="_blank" rel="noopener">telc.net: free official Übungstest ↗</a></p>`}
+
+function vParts(){
+ return `<p class="eyebrow">Component by component</p><h2>The six building blocks</h2>
+ <p class="lead">Every exam e-mail has the same six parts. Learn each one, then the skeleton that holds them together.</p>
+ ${PARTS.map((p,i)=>`<details ${i===0?"open":""}><summary>${i+1} · ${h(p.n)} <span class="en" style="font-weight:400">— ${h(p.en)}</span></summary><div>
+ <p>${h(p.what)}</p><ul>${p.rules.map(r=>`<li>${r}</li>`).join("")}</ul>
+ <h4>Phrases</h4>${p.ph.map(x=>`<div class="ph"><span class="de">${h(x[0])}</span><span class="en">${h(x[1])}</span></div>`).join("")}</div></details>`).join("")}
+ <h3>Quiz: components</h3>${renderQuiz("parts")}
+ <h3>Pronoun switch drill</h3><p>The Leitpunkte talk about you and your friend in the 3rd person. Practise turning them into e-mail sentences.</p>${renderQuiz("lp")}
+ <h3>The two skeletons</h3><p>Learn these by heart. In the exam you only fill the gaps with the four Leitpunkte.</p>
+ ${["du","sie"].map(k=>`<div class="card"><div class="row" style="justify-content:space-between"><h4 style="margin:0">${k==="du"?"Informal (du)":"Semi-formal (Sie)"}</h4><button data-act="skelshow" data-k="${k}">${S.skel.show[k]?"Hide":"Show"} skeleton</button></div>
+  ${S.skel.show[k]?`<pre class="model" style="font-family:var(--f-body);margin:10px 0">${h(SKELETONS[k])}</pre>`:""}
+  <label class="note" for="skel-${k}">Write it from memory, then reveal and compare:</label>
+  <textarea id="skel-${k}" data-in="skel" data-k="${k}" rows="9">${h(S.skel[k]||"")}</textarea></div>`).join("")}`}
+
+function vPhrases(){
+ const q=ui.phq.toLowerCase();
+ const cats=PHRASES.map(c=>({c:c.c,p:c.p.filter(x=>!q||x.join(" ").toLowerCase().includes(q))})).filter(c=>c.p.length);
+ return `<p class="eyebrow">Redemittel</p><h2>Phrase bank</h2><p class="lead">Ready-made sentences for every job a Leitpunkt can ask for. The orange note says what to watch.</p>
+ <input type="text" id="phsearch" data-in="phq" placeholder="Search German or English (e.g. suggest, weil, Termin)" value="${h(ui.phq)}">
+ <h4>Connectors and what they do to word order</h4>
+ <div class="tbl"><table><tr><th>Words</th><th>Effect</th><th>Example</th></tr>${CONNECTORS.map(r=>`<tr><td class="de">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("")}</table></div>
+ ${cats.map((c,i)=>`<details ${q||i<2?"open":""}><summary>${h(c.c)} <span class="note">(${c.p.length})</span></summary><div>${c.p.map(x=>`<div class="ph"><span class="de">${h(x[0])}</span><span class="en">${h(x[1])}</span>${x[2]?`<span class="n">${h(x[2])}</span>`:""}</div>`).join("")}</div></details>`).join("")||`<p class="note">No phrase matches „${h(ui.phq)}“.</p>`}`}
+
+function vGrammar(){
+ return `<p class="eyebrow">Grammatik</p><h2>The grammar that scores</h2><p class="lead">Only what B1 raters notice most: verb position, past tense, cases, polite forms. Each topic ends with a quiz.</p>
+ <div class="row">${GRAMMAR.map(g=>quizChip(g.id).replace("<span",`<span title="${h(g.t)}"`)).join("")}</div>
+ ${GRAMMAR.map(g=>`<details><summary>${h(g.t)} ${quizChip(g.id)}</summary><div>${g.html}<h4>Quiz</h4>${renderQuiz(g.id)}</div></details>`).join("")}`}
+
+function vWords(){
+ const d=DECKS.find(x=>x.id===ui.deck);const st=S.cards;
+ const known=d.w.filter(w=>st[w[0]]===2).length;
+ const queue=d.w.filter(w=>st[w[0]]!==2);
+ let body;
+ if(ui.listView){body=`<div class="tbl"><table><tr><th>German</th><th>English</th><th></th></tr>${d.w.map(w=>`<tr><td class="de">${h(w[0])}</td><td class="en">${h(w[1])}</td><td>${st[w[0]]===2?`<span class="chip ok">known</span>`:""}</td></tr>`).join("")}</table></div>`}
+ else if(!queue.length){body=`<div class="callout"><b>Deck done.</b> You marked all ${d.w.length} words as known. <button data-act="deckreset">Practise again</button></div>`}
+ else{const w=queue[ui.cardIdx%queue.length];
+  body=`<button class="fc" data-act="flip"><span class="w">${h(w[0])}</span>${ui.flip?`<span class="m">${h(w[1])}</span>`:`<span class="x">Tap to see the meaning</span>`}</button>
+  <div class="row" style="margin-top:10px;justify-content:center"><button data-act="card" data-v="1">Again</button><button class="primary" data-act="card" data-v="2">I know it</button></div>
+  <p class="note" style="text-align:center">${queue.length} left in this deck</p>`}
+ return `<p class="eyebrow">Wörter</p><h2>Vocabulary with meanings</h2><p class="lead">Seven decks: the words in the task sheet, then the topics that come up most.</p>
+ <div class="row">${DECKS.map(x=>{const k=x.w.filter(w=>st[w[0]]===2).length;return `<button class="${x.id===ui.deck?"primary":""}" data-act="deck" data-id="${x.id}">${h(x.t)} <span class="mono">${k}/${x.w.length}</span></button>`}).join("")}</div>
+ <div class="row" style="margin:14px 0;justify-content:space-between"><h3 style="margin:0">${h(d.t)} <span class="chip ${known===d.w.length?"ok":""}">${known}/${d.w.length}</span></h3><button data-act="listview">${ui.listView?"Flashcards":"Show as list"}</button></div>${body}`}
+
+function vDrills(){
+ const sp=S.sprint;const done=SPRINT.filter((_,i)=>sp[i]&&sp[i].m).length;
+ return `<p class="eyebrow">Übungen</p><h2>Drills</h2><p class="lead">Short, targeted practice. Wrong answers show why.</p>
+ <details open><summary>Register: du or Sie ${quizChip("register")}</summary><div>${renderQuiz("register")}</div></details>
+ <details><summary>Connectors & word order ${quizChip("conn")}</summary><div><div class="tbl"><table><tr><th>Words</th><th>Effect</th><th>Example</th></tr>${CONNECTORS.map(r=>`<tr><td class="de">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("")}</table></div>${renderQuiz("conn")}</div></details>
+ <details><summary>Error hunt ${quizChip("errors")}</summary><div>${renderQuiz("errors")}</div></details>
+ <details><summary>Put the e-mail in order</summary><div>${ORDER.map(vOrder).join("")}</div></details>
+ <details ${done<SPRINT.length&&done>0?"open":""}><summary>Leitpunkt sprint <span class="chip ${done===SPRINT.length?"ok":""}">${done}/${SPRINT.length}</span></summary><div>
+ <p>Write 1–2 sentences for each Leitpunkt, then reveal a model and mark yourself. Remember: „Sie“ in a Leitpunkt is you; er/sie is the person you write to.</p>
+ ${SPRINT.map((s,i)=>{const st=sp[i]||{};return `<div class="q"><div class="row" style="justify-content:space-between"><div class="stem">${i+1}. ${h(s[0])}</div><span class="chip">${s[1]}</span></div>
+  <textarea rows="2" id="sp-${i}" data-in="sprint" data-i="${i}" placeholder="Your sentence…">${h(st.t||"")}</textarea>
+  <div class="row" style="margin-top:6px"><button data-act="spshow" data-i="${i}">${st.show?"Hide":"Show"} model</button>${st.show?`<button class="${st.m==="ok"?"primary":""}" data-act="spmark" data-i="${i}" data-m="ok">Mine was fine</button><button class="${st.m==="redo"?"primary":""}" data-act="spmark" data-i="${i}" data-m="redo">Need to redo</button>`:""}</div>
+  ${st.show?`<div class="expl"><span class="de">${h(s[2])}</span><br><span class="en">${h(s[3])}</span></div>`:""}</div>`}).join("")}</div></details>`}
+
+function vOrder(o){
+ const sel=ui.orderSel[o.id]||[];const solved=S.order[o.id];
+ const shuffled=o.lines.map((l,i)=>i).sort((a,b)=>((a*7+3)%o.lines.length)-((b*7+3)%o.lines.length));
+ const complete=sel.length===o.lines.length;const correct=complete&&sel.every((v,i)=>v===i);
+ return `<div class="card order"><div class="row" style="justify-content:space-between"><h4 style="margin:0">${h(o.t)}</h4>${solved?`<span class="chip ok">solved</span>`:""}</div>
+ <p class="note">Tap the lines in the right order.</p>
+ ${sel.length?`<div>${sel.map(i=>`<button class="placed" disabled>${h(o.lines[i])}</button>`).join("")}</div>`:""}
+ ${shuffled.filter(i=>!sel.includes(i)).map(i=>`<button data-act="ord" data-o="${o.id}" data-i="${i}">${h(o.lines[i])}</button>`).join("")}
+ <div class="row">${complete?(correct?`<span class="chip ok">Correct order</span>`:`<span class="chip bad">Not quite. Look at Betreff → Anrede → Einleitung → points → Schluss → Gruß → Name.</span>`):""}<button data-act="ordreset" data-o="${o.id}">Start over</button></div></div>`}
+
+function vStudio(){
+ const anyScores=TASKS.filter(t=>(S.drafts[t.id]||{}).scores?.length);
+ return `<p class="eyebrow">Schreiben</p><h2>Writing studio</h2><p class="lead">Twelve exam-style tasks in the official format: one e-mail, four Leitpunkte, 30 minutes. Your text saves as you type.</p>
+ <div class="tasklist">${TASKS.map(t=>{const d=S.drafts[t.id]||{};const sc=d.scores||[];const best=sc.length?Math.max(...sc.map(s=>s.pts)):null;
+  return `<a class="task" href="#task-${t.id}"><div class="row" style="justify-content:space-between"><span class="mono note">Aufgabe ${t.id}</span><span class="chip">${t.reg}</span></div><b>${h(t.title)}</b><div class="note">${h(t.from)}</div><div style="margin-top:6px">${best!==null?`<span class="chip ${best>=33?"ok":best>=27?"warn":"bad"}">best ${best}/45</span>`:d.text?`<span class="chip">draft</span>`:`<span class="chip">new</span>`}</div></a>`}).join("")}</div>
+ ${anyScores.length?`<h3>Your self-scores</h3><div class="tbl"><table><tr><th>Task</th><th>Date</th><th>I</th><th>II</th><th>III</th><th>Points</th><th>Words</th></tr>${anyScores.flatMap(t=>S.drafts[t.id].scores.map(s=>`<tr><td>${t.id} · ${h(t.title)}</td><td class="mono">${h(s.date)}</td><td>${s.I}</td><td>${s.II}</td><td>${s.III}</td><td class="mono"><b>${s.pts}</b>/45</td><td class="mono">${s.words}</td></tr>`)).join("")}</table></div>`:""}
+ <h3>Exam-day checklist</h3><div class="card"><ol>${FINAL_CHECK.map(c=>`<li>${h(c)}</li>`).join("")}</ol>
+ <p class="note">Bring: passport/ID, the exam invitation, two pencils/pens. You write by hand, so practise at least one task on paper this week.</p></div>`}
+
+function vTask(id){
+ const t=TASKS.find(x=>x.id===id);if(!t)return vStudio();
+ const d=S.drafts[id]=S.drafts[id]||{text:"",lp:{},left:1800,self:{}};
+ const words=(d.text.match(/[A-Za-zÄÖÜäöüß]+(?:-[A-Za-zÄÖÜäöüß]+)*/g)||[]).length;
+ const sc=d.self;const raw=(PTS[sc.I]??0)+(PTS[sc.II]??0)+(PTS[sc.III]??0);
+ return `<p><a href="#studio" style="color:var(--pen);font-weight:700;text-decoration:none">← All tasks</a></p>
+ <p class="eyebrow">Aufgabe ${t.id} · ${t.reg==="du"?"informal (du)":"semi-formal (Sie)"}</p><h2>${h(t.title)}</h2>
+ <p><span class="de">${h(t.sit)}</span><br><span class="en">${h(t.sitEn)}</span></p>
+ <div class="mail"><div class="mailhead">Von: ${h(t.from)}</div><div class="mailbody">${h(t.mail)}</div></div>
+ <p style="margin-top:14px"><b>Antworten Sie auf die E-Mail. Schreiben Sie etwas zu allen vier Punkten:</b><br><span class="note">Tick each point once your text covers it.</span></p>
+ <ul class="lp">${t.lp.map((l,i)=>`<li><button class="tick ${d.lp[i]?"on":""}" data-act="lptick" data-t="${id}" data-i="${i}" aria-label="covered"></button><span><span class="de">${h(l[0])}</span> <span class="en">— ${h(l[1])}</span></span></li>`).join("")}</ul>
+ <div class="card"><div class="row" style="justify-content:space-between"><span id="tm" class="timer ${d.left<300?"low":""}">${fmt(d.left)}</span><div class="row"><button class="primary" data-act="tstart" data-t="${id}">${timer.id===id?"Pause":"Start 30-min timer"}</button><button data-act="treset" data-t="${id}">Reset timer</button></div></div>
+ <div id="timeup">${d.left<=0?`<div class="banner">Time's up. In the exam the sheet is collected now. Finish your sentence, then check.</div>`:""}</div></div>
+ <label class="note" for="w-${id}">Your e-mail (start with „Betreff: …“):</label>
+ <textarea class="writing" id="w-${id}" data-in="write" data-t="${id}" spellcheck="false" placeholder="Betreff: Re: …&#10;&#10;${t.reg==="du"?(t.g==="m"?"Lieber":"Liebe")+" "+h(t.to):(t.g==="x"?"Sehr geehrte Damen und Herren":t.g==="m"?"Sehr geehrter "+h(t.to):"Sehr geehrte "+h(t.to))},&#10;&#10;vielen Dank für …">${h(d.text)}</textarea>
+ <div class="row" style="justify-content:space-between;margin-top:6px"><span class="mono note" id="wc">${words} words · aim 110–150</span><div class="row"><button class="primary" data-act="check" data-t="${id}">Check my e-mail</button><button data-act="model" data-t="${id}">${d.showModel?"Hide":"Show"} model answer</button><button data-act="clear" data-t="${id}">New attempt</button></div></div>
+ <div id="clearconfirm"></div>
+ <div id="findings">${d.findings?renderFindings(d.findings):""}</div>
+ ${d.showModel?`<h3>Model answer</h3><div class="card"><div class="model">${markConn(h(t.model))}</div></div>
+ <p class="note"><mark>Highlighted</mark> = connectors and transition words. ${h(t.note)}</p>
+ <h4>In English</h4><p class="en">${h(t.en)}</p>
+ <h4>Key words</h4><div class="tbl"><table>${t.words.map(w=>`<tr><td class="de">${h(w[0])}</td><td class="en">${h(w[1])}</td></tr>`).join("")}</table></div>`:""}
+ <h3>Score yourself like a rater</h3><p class="note">Compare with the model and the criteria. Be strict: B means „errors, but everything is clear“.</p>
+ <div class="card">
+  <div class="scoreline"><span><b>I</b> · Leitpunkte: 4 = A · 3 = B · 2 = C</span>${bubbles("selfI",sc.I)}</div>
+  <div class="scoreline"><span><b>II</b> · Format, du/Sie, linking, varied openings</span>${bubbles("selfII",sc.II)}</div>
+  <div class="scoreline"><span><b>III</b> · Grammar & spelling</span>${bubbles("selfIII",sc.III)}</div>
+  <div class="row" style="justify-content:space-between;margin-top:10px"><span class="big mono">${sc.I&&sc.II&&sc.III?raw*3:"–"} <span class="note">/ 45</span></span><button class="primary" data-act="savescore" data-t="${id}" ${sc.I&&sc.II&&sc.III?"":"disabled"}>Save this score</button></div>
+  ${(d.scores||[]).length?`<p class="note">Saved: ${d.scores.map(s=>`${s.date} → ${s.pts}`).join(" · ")}</p>`:""}
+ </div>`}
+
+function fmt(s){s=Math.max(0,s);return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
+const CONN_RE=/\b(weil|denn|deshalb|deswegen|trotzdem|außerdem|aber|dass|wenn|ob|obwohl|damit|danach|dann|zuerst|zum Schluss|übrigens|natürlich|leider|zum Glück|sonst|falls|zwar|als|Am besten|Was .{1,30}? betrifft)\b/gi;
+function markConn(s){return s.replace(CONN_RE,m=>`<mark>${m}</mark>`)}
+
+/* ===================== AUTO-CHECK ===================== */
+function analyse(t,text){
+ const F=[];const add=(lvl,msg)=>F.push([lvl,msg]);
+ const lines=text.split(/\n/).map(l=>l.trim());const nonEmpty=lines.filter(Boolean);
+ const words=(text.match(/[A-Za-zÄÖÜäöüß]+(?:-[A-Za-zÄÖÜäöüß]+)*/g)||[]).length;
+ if(!words){add("bad","Nothing written yet.");return F}
+ // Betreff
+ if(nonEmpty.length&&/^(betreff|re:|aw:)/i.test(nonEmpty[0]))add("ok","Betreff present.");else add("warn","No Betreff found in the first line. Start with „Betreff: …“ (the task asks for one).");
+ // Anrede
+ const aIdx=lines.findIndex(l=>/^(liebe[rs]?|hallo|hi|sehr geehrte[rs]?|guten tag)\b/i.test(l));
+ if(aIdx<0)add("bad","No Anrede found (Liebe/Lieber …, Sehr geehrte/r …).");
+ else{const a=lines[aIdx];
+  if(!/,\s*$/.test(a))add("warn","Put a comma at the end of the Anrede line: „"+a.replace(/[!.:]?\s*$/,"")+",“");
+  if(/sehr geehrte\s+herr/i.test(a))add("bad","„Sehr geehrte Herr“ → „Sehr geehrter Herr“ (masculine).");
+  if(/sehr geehrter\s+frau/i.test(a))add("bad","„Sehr geehrter Frau“ → „Sehr geehrte Frau“.");
+  if(/^liebe\s+herr\b/i.test(a))add("bad","„Liebe Herr …“ → „Lieber Herr …“.");
+  if(/^lieber\s+frau\b/i.test(a))add("bad","„Lieber Frau …“ → „Liebe Frau …“.");
+  if(t.reg==="du"&&/sehr geehrte/i.test(a))add("bad","This is a friend: use Liebe/Lieber or Hallo, not „Sehr geehrte“.");
+  if(t.reg==="Sie"&&/^(hallo|hi)\b/i.test(a)&&t.g!=="x")add("warn","„Hallo“ is too casual for this person. Use „Liebe Frau …/Lieber Herr …“ or „Sehr geehrte/r …“.");
+  if(t.reg==="du"&&t.g==="m"&&new RegExp("^liebe\\s+"+t.to,"i").test(a))add("bad","„"+t.to+"“ is a man: „Lieber "+t.to+",“");
+  if(t.reg==="du"&&t.g==="f"&&new RegExp("^lieber\\s+"+t.to,"i").test(a))add("bad","„"+t.to+"“ is a woman: „Liebe "+t.to+",“");
+  const nxt=lines.slice(aIdx+1).find(Boolean);
+  if(nxt){const fw=nxt.split(/\s+/)[0].replace(/[^A-Za-zÄÖÜäöüß]/g,"");
+   if(/^(Vielen|Ich|Danke|Wie|Schön|Es|Gern|Gerne|Entschuldige|Entschuldigen|Leider|Herzlichen|Toll|Super|Endlich|Wir|Heute|Jetzt|Ja|Natürlich|Was|Hoffentlich|Mit|Vor|Nach|Hier|Das)$/.test(fw))add("warn","After the Anrede comma, continue with a small letter: „"+fw.toLowerCase()+" …“ (nouns stay capital).");}}
+ // Gruß
+ const gIdx=lines.findIndex(l=>/(viele|liebe|herzliche|beste|freundlichen?)\s+grüße|grüßen|bis bald|bis samstag|bis dann/i.test(l)&&l.split(/\s+/).length<=6);
+ if(gIdx<0)add("bad","No Gruß found (Viele Grüße / Liebe Grüße / Mit freundlichen Grüßen).");
+ else{const g=lines[gIdx];if(/,\s*$/.test(g))add("warn","No comma after the Gruß in German: „"+g.replace(/,\s*$/,"")+"“");
+  if(t.reg==="du"&&/freundlichen/i.test(g))add("warn","„Mit freundlichen Grüßen“ is too formal for a friend. Use „Liebe/Viele Grüße“.");
+  if(t.reg==="Sie"&&/liebe grüße/i.test(g))add("warn","„Liebe Grüße“ is too personal here. Use „Mit freundlichen Grüßen“ (or „Viele/Herzliche Grüße“ if the sender used it).");
+  if(!lines.slice(gIdx+1).some(Boolean)&&!/,?\s*[A-ZÄÖÜ][a-zäöüß]+\s*$/.test(g.replace(/grüße|grüßen/i,"")))add("warn","Write your name on the line after the Gruß.");}
+ // Register
+ const body=text;
+ const inf=(body.match(/\b(du|dich|dir|dein|deine|deinen|deinem|deiner|euch|euer|eure)\b/gi)||[]).length;
+ const formal=(body.match(/(?<![.!?:]\s|^|\n)\b(Sie|Ihnen|Ihr|Ihre|Ihren|Ihrem|Ihrer)\b/g)||[]).length;
+ if(t.reg==="du"&&formal>0)add("bad","You wrote Sie/Ihnen/Ihr to a friend ("+formal+"×). Stay with du the whole way through.");
+ if(t.reg==="Sie"&&inf>0)add("bad","du/dich/dir/dein found ("+inf+"×) in a Sie e-mail. Mixed register costs points in criterion II.");
+ if(t.reg==="Sie"&&/\b(ihnen|ihren|ihrem)\b/.test(body))add("warn","Formal „Ihnen/Ihren/Ihrem“ must be capitalised.");
+ if(t.reg==="du"&&inf===0&&formal===0)add("warn","No du/dich/dir/dein at all. Talk directly to your friend.");
+ if((t.reg==="du"&&formal===0&&inf>0)||(t.reg==="Sie"&&inf===0&&formal>0))add("ok","Register is consistent ("+t.reg+").");
+ // Length
+ if(words<80)add("bad",words+" words: too short to cover four points well. Aim for 110–150.");
+ else if(words<95)add("warn",words+" words: OK, but add a reason or detail to the thinnest point.");
+ else if(words<=170)add("ok",words+" words: good length.");
+ else add("warn",words+" words: longer than needed. More text means more chances for errors and less time to check.");
+ // Sentence openings
+ const sents=text.replace(/\n+/g," . ").split(/[.!?]+\s+/).map(s=>s.trim()).filter(s=>s.split(/\s+/).length>2&&!/^(betreff|liebe|lieber|hallo|sehr geehrte|viele grüße|liebe grüße|mit freundlichen)/i.test(s));
+ if(sents.length>=4){const ichs=sents.filter(s=>/^(ich|wir)\b/i.test(s)).length;const pct=Math.round(ichs/sents.length*100);
+  if(pct>50)add("bad",pct+"% of your sentences start with Ich/Wir. Raters won't give A in criterion II. Start some with Am besten / Deshalb / Leider / Außerdem / time words.");
+  else if(pct>40)add("warn",pct+"% of sentences start with Ich/Wir. Vary a few more openings.");
+  else add("ok","Varied sentence openings ("+pct+"% start with Ich/Wir).");}
+ // Connectors
+ const conns=new Set((text.match(/\b(weil|denn|deshalb|deswegen|trotzdem|außerdem|aber|dass|wenn|ob|obwohl|damit|danach|dann|zuerst|übrigens|sonst|falls|als|zum schluss|am besten|leider|natürlich|zum glück|zwar|sondern|nachdem|bevor|während|ehrlich gesagt)\b/gi)||[]).map(x=>x.toLowerCase()));
+ if(conns.size>=5)add("ok",conns.size+" different connectors: "+[...conns].join(", ")+".");
+ else if(conns.size>=3)add("warn","Only "+conns.size+" different connectors ("+[...conns].join(", ")+"). Add deshalb, außerdem or weil to link the points.");
+ else add("bad","Hardly any connectors ("+([...conns].join(", ")||"none")+"). Link the Leitpunkte: außerdem, deshalb, weil, denn, zum Schluss.");
+ // Verb-last errors
+ const vl=/\b(weil|dass|wenn|ob|obwohl|damit|bevor|nachdem|falls)\s+(ich|du|er|sie|es|wir|ihr|man|Sie)\s+(bin|bist|ist|sind|seid|habe|hast|hat|haben|habt|kann|kannst|können|könnt|muss|musst|müssen|will|willst|wollen|möchte|möchtest|möchten|werde|wirst|wird|werden|war|warst|waren|hatte|hattest|hatten|darf|darfst|dürfen|soll|sollst|sollen|komme|kommst|kommt|kommen|gehe|gehst|geht|gehen|fahre|fährst|fährt|fahren|arbeite|arbeitest|arbeitet|arbeiten|mache|machst|macht|machen|wohne|wohnst|wohnt|wohnen|finde|findest|findet|finden)\s+(?=[A-Za-zÄÖÜäöüß])/gi;
+ const vlm=[...text.matchAll(vl)];
+ vlm.slice(0,4).forEach(m=>add("bad","Verb position: „"+m[0].trim()+" …“ → after „"+m[1]+"“ the verb „"+m[3]+"“ goes to the END of the clause."));
+ // Inversion errors
+ const inv=/(^|[.!?:]\s+|\n)(Deshalb|Deswegen|Trotzdem|Dann|Danach|Außerdem|Leider|Morgen|Heute|Gestern|Zuerst|Natürlich|Vielleicht|Jetzt|Übrigens|Zum Glück|Am Wochenende|Am Samstag|Am Sonntag|Im Sommer|Im Winter|Letztes Jahr|Nächste Woche)\s+(ich|du|wir|er|sie|es|man|ihr)\s+/g;
+ [...text.matchAll(inv)].slice(0,4).forEach(m=>add("bad","Word order: „"+m[2]+" "+m[3]+" …“ → the verb comes right after „"+m[2]+"“: „"+m[2]+" [verb] "+m[3]+" …“."));
+ // haben + sein-verb
+ const hs=/\b(habe|hast|hat|haben|habt)\b[^.!?\n]{0,40}?\b(gegangen|gekommen|geflogen|geblieben|gewesen|gelaufen|umgezogen|angekommen|aufgestanden|passiert|geworden|eingeschlafen|gereist|mitgekommen|zurückgekommen|losgefahren|ausgestiegen|eingestiegen|gestorben|gewandert|gefahren)\b/gi;
+ [...text.matchAll(hs)].slice(0,3).forEach(m=>add("bad","Perfekt: „"+m[1]+" … "+m[2]+"“ → „"+m[2]+"“ goes with sein (bin/bist/ist/sind)."+(m[2].toLowerCase()==="gefahren"?" (Only „Ich habe das Auto gefahren“ uses haben.)":"")));
+ // gender of die-words after für
+ const fe=/\b(deinen|Ihren|einen|meinen|den)\s+(E-?Mail|Nachricht|Einladung|Frage|Antwort|Idee|Hilfe)\b/gi;
+ [...text.matchAll(fe)].slice(0,3).forEach(m=>add("warn","„"+m[0]+"“: "+m[2]+" is feminine (die) → "+({deinen:"deine",ihren:"Ihre",einen:"eine",meinen:"meine",den:"die"}[m[1].toLowerCase()])+" "+m[2]+"."));
+ // dative verbs
+ const dv=/\b(helfe|hilfst|hilft|helfen|danke|dankst|gratuliere|gratulierst|antworte)\s+(dich|mich|ihn)\b/gi;
+ [...text.matchAll(dv)].forEach(m=>add("bad","„"+m[0]+"“ → this verb takes Dativ: "+m[1]+" "+({dich:"dir",mich:"mir",ihn:"ihm"}[m[2].toLowerCase()])+"."));
+ // Leitpunkte ticks
+ const d=S.drafts[t.id];const ticked=t.lp.filter((_,i)=>d.lp[i]).length;
+ if(ticked<4)add("warn","You've ticked "+ticked+"/4 Leitpunkte. Each missing point drops criterion I by one grade (4=A, 3=B, 2=C).");else add("ok","All 4 Leitpunkte ticked.");
+ return F}
+function renderFindings(F){const order={bad:0,warn:1,ok:2};const s=[...F].sort((a,b)=>order[a[0]]-order[b[0]]);
+ const n={bad:F.filter(f=>f[0]==="bad").length,warn:F.filter(f=>f[0]==="warn").length};
+ return `<div class="card"><div class="row" style="justify-content:space-between"><h4 style="margin:0">Automatic check</h4><span class="row"><span class="chip bad">${n.bad} fix</span><span class="chip warn">${n.warn} improve</span></span></div>
+ ${s.map(f=>`<div class="find"><span class="dot ${f[0]}"></span><span>${h(f[1])}</span></div>`).join("")}
+ <p class="note" style="margin-top:8px">This checker catches format, register and the most common B1 word-order and Perfekt errors. It can't judge meaning, so also compare with the model answer.</p></div>`}
+
+/* ===================== TIMER ===================== */
+let timer={id:null,iv:null};
+function stopTimer(){clearInterval(timer.iv);timer={id:null,iv:null}}
+function startTimer(id){stopTimer();const d=S.drafts[id];if(d.left<=0)d.left=1800;timer.id=id;
+ timer.iv=setInterval(()=>{d.left--;save();const el=document.getElementById("tm");if(el){el.textContent=fmt(d.left);el.classList.toggle("low",d.left<300)}
+  if(d.left<=0){stopTimer();const tu=document.getElementById("timeup");if(tu)tu.innerHTML=`<div class="banner">Time's up. In the exam the sheet is collected now. Finish your sentence, then check.</div>`;const b=document.querySelector('[data-act="tstart"]');if(b)b.textContent="Start 30-min timer"}},1000)}
+
+/* ===================== ROUTER ===================== */
+function route(){
+ const hash=(location.hash||"#plan").slice(1);let html;let tab=hash;
+ if(/^task-\d+$/.test(hash)){html=vTask(+hash.split("-")[1]);tab="studio"}
+ else html=({plan:vPlan,exam:vExam,parts:vParts,phrases:vPhrases,grammar:vGrammar,words:vWords,drills:vDrills,studio:vStudio}[hash]||vPlan)();
+ if(timer.id&&hash!=="task-"+timer.id)stopTimer();
+ document.getElementById("tabs").innerHTML=TABS.map(t=>`<a href="#${t[0]}" class="${t[0]===tab?"on":""}">${t[1]}</a>`).join("");
+ document.getElementById("view").innerHTML=html;updateMeter()}
+function rerender(keepScroll=true){const y=window.scrollY;const open=[...document.querySelectorAll("details")].map(d=>d.open);route();
+ const ds=document.querySelectorAll("details");if(ds.length===open.length)ds.forEach((d,i)=>d.open=open[i]);if(keepScroll)window.scrollTo(0,y)}
+window.addEventListener("hashchange",()=>{route();window.scrollTo(0,0)});
+
+/* ===================== EVENTS ===================== */
+document.addEventListener("click",e=>{
+ const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act;const D=b.dataset;
+ switch(a){
+  case "plan":S.plan[D.id]=!S.plan[D.id];break;
+  case "resetall":{const c=document.getElementById("resetconfirm");c.innerHTML=`<span class="note">Delete everything?</span> <button data-act="resetyes">Yes, reset</button>`;return}
+  case "resetyes":S={plan:{},quiz:{},cards:{},drafts:{},sprint:{},order:{},skel:{du:"",sie:"",show:{}},calc:{}};break;
+  case "qa":{const q=S.quiz[D.q]=S.quiz[D.q]||{ans:{}};q.ans[D.i]=+D.o;break}
+  case "qreset":S.quiz[D.q]={ans:{}};break;
+  case "calcI":case "calcII":case "calcIII":S.calc[a.slice(4)]=D.g;break;
+  case "skelshow":S.skel.show[D.k]=!S.skel.show[D.k];break;
+  case "deck":ui.deck=D.id;ui.cardIdx=0;ui.flip=false;break;
+  case "flip":ui.flip=!ui.flip;break;
+  case "card":{const d=DECKS.find(x=>x.id===ui.deck);const q=d.w.filter(w=>S.cards[w[0]]!==2);const w=q[ui.cardIdx%q.length];if(D.v==="2")S.cards[w[0]]=2;else{S.cards[w[0]]=1;ui.cardIdx++}ui.flip=false;break}
+  case "deckreset":DECKS.find(x=>x.id===ui.deck).w.forEach(w=>delete S.cards[w[0]]);break;
+  case "listview":ui.listView=!ui.listView;break;
+  case "ord":{const s=ui.orderSel[D.o]=ui.orderSel[D.o]||[];s.push(+D.i);const o=ORDER.find(x=>x.id===D.o);if(s.length===o.lines.length&&s.every((v,i)=>v===i))S.order[D.o]=true;break}
+  case "ordreset":ui.orderSel[D.o]=[];break;
+  case "spshow":{const s=S.sprint[D.i]=S.sprint[D.i]||{};s.show=!s.show;break}
+  case "spmark":{const s=S.sprint[D.i]=S.sprint[D.i]||{};s.m=D.m;break}
+  case "lptick":{const d=S.drafts[D.t];d.lp[D.i]=!d.lp[D.i];break}
+  case "tstart":{const id=+D.t;if(timer.id===id){stopTimer();b.textContent="Start 30-min timer"}else{startTimer(id);b.textContent="Pause"}save();return}
+  case "treset":{stopTimer();S.drafts[D.t].left=1800;break}
+  case "check":{const t=TASKS.find(x=>x.id===+D.t);const d=S.drafts[t.id];d.findings=analyse(t,d.text);save();document.getElementById("findings").innerHTML=renderFindings(d.findings);document.getElementById("findings").scrollIntoView({behavior:"smooth",block:"start"});return}
+  case "model":{const d=S.drafts[D.t];d.showModel=!d.showModel;break}
+  case "clear":{document.getElementById("clearconfirm").innerHTML=`<p class="note" style="margin-top:8px">Clear the text, ticks and timer? Saved scores stay. <button data-act="clearyes" data-t="${D.t}">Yes, start over</button></p>`;return}
+  case "clearyes":{const d=S.drafts[D.t];stopTimer();Object.assign(d,{text:"",lp:{},left:1800,findings:null,showModel:false,self:{}});break}
+  case "selfI":case "selfII":case "selfIII":{const id=+location.hash.split("-")[1];S.drafts[id].self[a.slice(4)]=D.g;break}
+  case "savescore":{const d=S.drafts[D.t];const s=d.self;const pts=(PTS[s.I]+PTS[s.II]+PTS[s.III])*3;d.scores=d.scores||[];
+   const words=(d.text.match(/[A-Za-zÄÖÜäöüß]+(?:-[A-Za-zÄÖÜäöüß]+)*/g)||[]).length;const dt=new Date();
+   d.scores.push({date:dt.getDate()+"."+(dt.getMonth()+1)+".",I:s.I,II:s.II,III:s.III,pts,words});break}
+  default:return}
+ save();rerender()});
+let saveT;
+document.addEventListener("input",e=>{
+ const el=e.target;const k=el.dataset.in;if(!k)return;
+ if(k==="write"){const d=S.drafts[el.dataset.t];d.text=el.value;const w=(el.value.match(/[A-Za-zÄÖÜäöüß]+(?:-[A-Za-zÄÖÜäöüß]+)*/g)||[]).length;const wc=document.getElementById("wc");if(wc)wc.textContent=w+" words · aim 110–150"}
+ else if(k==="skel")S.skel[el.dataset.k]=el.value;
+ else if(k==="sprint"){const s=S.sprint[el.dataset.i]=S.sprint[el.dataset.i]||{};s.t=el.value}
+ else if(k==="phq"){ui.phq=el.value;const pos=el.selectionStart;rerender();const n=document.getElementById("phsearch");n.focus();n.setSelectionRange(pos,pos);return}
+ clearTimeout(saveT);saveT=setTimeout(save,300)});
+route();
+</script>
+
+</body></html>
